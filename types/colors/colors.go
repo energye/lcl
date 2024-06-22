@@ -10,7 +10,6 @@ package colors
 
 import (
 	"fmt"
-	"github.com/energye/lcl/types"
 	"strconv"
 )
 
@@ -315,15 +314,17 @@ func RGBToBGR(rgb uint32) uint32 {
 	return uint32(byte(rgb>>16)) | (uint32(byte(rgb>>8)) << 8) | (uint32(byte(rgb)) << 16)
 }
 
-type TCefARGB struct {
+type ARGB = uint32
+
+type TARGB struct {
 	A uint32
 	R uint32
 	G uint32
 	B uint32
 }
 
-func NewCefARGB(a, r, g, b uint32) *TCefARGB {
-	return &TCefARGB{
+func NewARGB(a, r, g, b uint32) *TARGB {
+	return &TARGB{
 		A: a,
 		R: r,
 		G: g,
@@ -331,7 +332,7 @@ func NewCefARGB(a, r, g, b uint32) *TCefARGB {
 	}
 }
 
-func (m *TCefARGB) ARGB() types.ARGB {
+func (m *TARGB) ARGB() ARGB {
 	ca, _ := strconv.ParseUint(fmt.Sprintf("%02X%02X%02X%02X", m.A, m.R, m.G, m.B), 16, 32)
-	return types.ARGB(ca)
+	return ARGB(ca)
 }
