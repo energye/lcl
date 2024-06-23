@@ -7,10 +7,6 @@ package macapp
 //  2. 如果基于cef，需要指定cef frameworks 根目录【/homt/xxx/cef_binary_xxxxxxx_macosx64/Release】
 var MacApp = &macApp{}
 
-const (
-	envDev = "dev" //MacOS ENERGY的开发环境常量配置
-)
-
 type macApp struct {
 	execName             string
 	execFile             string
@@ -26,4 +22,12 @@ type macApp struct {
 	cefFrameworksDir     string
 	browseSubprocessPath string
 	lsUIElement          string
+	energyEnv            string
+}
+
+// SetEnergyEnv 启动应用时，用于在MacOSX开发环境使用
+//
+// 命令行参数 energy_env=dev
+func (m *macApp) SetEnergyEnv(energyEnv string) {
+	m.energyEnv = energyEnv
 }
