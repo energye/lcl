@@ -73,3 +73,14 @@ const (
 	CF_HTML      = 701
 	CF_COMPONENT = 702
 )
+
+// CombineRgn Mode flags
+type RNGFnCombineMode = int32
+
+const (
+	RGN_AND RNGFnCombineMode = iota + 1
+	RGN_OR
+	RGN_XOR
+	RGN_DIFF
+	RGN_COPY
+)

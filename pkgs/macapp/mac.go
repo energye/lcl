@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/energye/lcl/api/libname"
-	"github.com/energye/lcl/cef/process"
 	"github.com/energye/lcl/tools/command"
 	"github.com/energye/lcl/types"
 	"io"
@@ -196,7 +195,15 @@ func (m *macApp) cefHelper() {
 
 func (m *macApp) runMacOSApp() {
 	//MacOS环境, ide开发环境需命令行参数[env=dev]以保证应用正常运行
-	var isRunDev = process.Args.Args("env") == envDev
+	var env string
+	for _, v := range os.Args {
+		a := strings.Split(v, "=")
+		if len(a) == 2 && a[0] == "env" && a[1] == "dev" {
+			env = "dev"
+		}
+	}
+
+	var isRunDev = env == envDev
 	if isRunDev {
 		cmd := exec.Command(m.execFile, os.Args...)
 		cmd.Stderr = os.Stderr
