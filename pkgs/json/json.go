@@ -16,10 +16,16 @@ package json
 
 import (
 	"encoding/json"
-	"github.com/energye/lcl/common"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/tools/conv"
 	"reflect"
 	"strconv"
+)
+
+// Go Kind 扩展常量
+const (
+	SLICE_BYTE reflect.Kind = iota + 30 // []byte
+	JD                                  // JsonData
+	NIL                                 // nil
 )
 
 // JSON object
@@ -398,31 +404,31 @@ func toBytes(s interface{}) []byte {
 	case string:
 		return []byte(s.(string))
 	case bool:
-		return []byte{common.BoolToByte(s.(bool))}
+		return []byte{conv.BoolToByte(s.(bool))}
 	case float32:
-		return common.Float32ToBytes(s.(float32))
+		return conv.Float32ToBytes(s.(float32))
 	case float64:
-		return common.Float64ToBytes(s.(float64))
+		return conv.Float64ToBytes(s.(float64))
 	case int:
-		return common.IntToBytes(s.(int))
+		return conv.IntToBytes(s.(int))
 	case int8:
-		return common.Int8ToBytes(s.(int8))
+		return conv.Int8ToBytes(s.(int8))
 	case int16:
-		return common.Int16ToBytes(s.(int16))
+		return conv.Int16ToBytes(s.(int16))
 	case int32:
-		return common.Int32ToBytes(s.(int32))
+		return conv.Int32ToBytes(s.(int32))
 	case int64:
-		return common.Int64ToBytes(s.(int64))
+		return conv.Int64ToBytes(s.(int64))
 	case uint:
-		return common.UIntToBytes(s.(uint))
+		return conv.UIntToBytes(s.(uint))
 	case uint8:
-		return common.UInt8ToBytes(s.(uint8))
+		return conv.UInt8ToBytes(s.(uint8))
 	case uint16:
-		return common.UInt16ToBytes(s.(uint16))
+		return conv.UInt16ToBytes(s.(uint16))
 	case uint32:
-		return common.UInt32ToBytes(s.(uint32))
+		return conv.UInt32ToBytes(s.(uint32))
 	case uint64:
-		return common.UInt64ToBytes(s.(uint64))
+		return conv.UInt64ToBytes(s.(uint64))
 	default:
 		if r, err := json.Marshal(s); err == nil {
 			return r

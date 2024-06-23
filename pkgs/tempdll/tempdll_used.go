@@ -13,7 +13,7 @@ package tempdll
 import (
 	"fmt"
 	"github.com/energye/lcl/emfs"
-	"github.com/energye/lcl/types"
+	"github.com/energye/lcl/tools/exec"
 	"hash/crc32"
 	"io/ioutil"
 	"os"
@@ -44,9 +44,9 @@ func CheckAndReleaseDLL(dllName string) (filePath string, fileFullPath string, o
 	var tempDLLDir = fmt.Sprintf("%s/liblcl/%x", os.TempDir(), crc32Val)
 	switch TempDLL.DllSaveDirType() {
 	case TddCurrent:
-		tempDLLDir = types.ExeDir
+		tempDLLDir = exec.Dir
 	case TddEnergyHome:
-		tempDLLDir = os.Getenv(types.ENERGY_HOME_KEY)
+		tempDLLDir = os.Getenv("ENERGY_HOME")
 	case TddCustom:
 		if TempDLL.DllSaveDir() != "" {
 			tempDLLDir = TempDLL.DllSaveDir()

@@ -16,7 +16,6 @@ package json
 
 import (
 	"encoding/json"
-	"github.com/energye/lcl/types"
 	"reflect"
 	"strconv"
 	"strings"
@@ -313,7 +312,7 @@ func (m *JsonData) GetByKey(key string) JSON {
 			return &JsonData{t: reflect.Uint, v: v, s: strconv.IntSize, p: m, pKey: key}
 		case []byte:
 			v := value.([]byte)
-			return &JsonData{t: types.SLICE_BYTE, v: v, s: len(v), p: m, pKey: key}
+			return &JsonData{t: SLICE_BYTE, v: v, s: len(v), p: m, pKey: key}
 		case float32, float64: // to float64
 			sv, _ := toFloat64(value)
 			if strings.Index(strconv.FormatFloat(sv, 'G', -1, 64), ".") != -1 {
@@ -332,7 +331,7 @@ func (m *JsonData) GetByKey(key string) JSON {
 				return &JsonData{t: reflect.Map, v: v, s: len(v), p: m, pKey: key}
 			}
 		default:
-			return &JsonData{t: types.NIL, v: nil, s: 0, p: m, pKey: key}
+			return &JsonData{t: NIL, v: nil, s: 0, p: m, pKey: key}
 		}
 	}
 	return nil
