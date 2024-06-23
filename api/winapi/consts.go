@@ -26,9 +26,9 @@ const (
 	MK_ALT         = 0x20000000
 )
 
-//------------
+// ------------
 // KeyFlags (High word part !!!)
-//------------
+// ------------
 const (
 	KF_EXTENDED = 0x100
 	KF_DLGMODE  = 0x800
@@ -38,15 +38,14 @@ const (
 	KF_UP       = 0x8000
 )
 
-//-------------
+// -------------
 // Virtual keys
-//-------------
+// -------------
 //
 // Basic keys up to $FF have values and meaning compatible with the Windows API as described here:
 // http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/WinUI/WindowsUserInterface/UserInput/VirtualKeyCodes.asp
 //
 // Starting with $100 and upwards the key constants are LCL additions
-//
 const (
 	VK_UNKNOWN  = 0 // defined by LCL
 	VK_LBUTTON  = 1
