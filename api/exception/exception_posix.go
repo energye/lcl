@@ -17,7 +17,7 @@ package exception
 // #cgo darwin CFLAGS: -mmacosx-version-min=10.10
 // #cgo darwin LDFLAGS: -mmacosx-version-min=10.10
 //
-// extern void* doExceptionHandlerProc(void* f);
+// extern void* doExceptionHandlerProc(void* funcName, void* message);
 // static void* doExceptionHandlerProcEventAddr() {
 //    return &doExceptionHandlerProc;
 // }
@@ -28,8 +28,8 @@ import (
 )
 
 //export doExceptionHandlerProc
-func doExceptionHandlerProc(f unsafe.Pointer) unsafe.Pointer {
-	exceptionHandlerProc(uintptr(f))
+func doExceptionHandlerProc(funcName, message unsafe.Pointer) unsafe.Pointer {
+	exceptionHandlerProc(uintptr(funcName), uintptr(message))
 	return nil
 }
 

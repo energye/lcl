@@ -146,10 +146,6 @@ func SetRemoveEventCallback(ptr uintptr) {
 	defSyscallN(lcl.SetRemoveEventCallback, ptr)
 }
 
-func SetIPCEventCallback(ptr uintptr) {
-	defSyscallN(lcl.SetIPCEventCallback, ptr)
-}
-
 func SetExceptionHandlerCallback(ptr uintptr) {
 	defSyscallN(lcl.SetExceptionHandlerCallback, ptr)
 }

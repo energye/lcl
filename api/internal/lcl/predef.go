@@ -33,7 +33,6 @@ var preImportDefs = []*imports.Table{
 	imports.NewTable("SetRequestCallFormCreateCallback", 0),
 	imports.NewTable("SetRemoveEventCallback", 0),
 	imports.NewTable("SetThreadAsyncCallback", 0),
-	imports.NewTable("SetIPCEventCallback", 0),
 	imports.NewTable("DRunMainAsyncCall", 0),
 	imports.NewTable("DGetStringArrOf", 0),
 	imports.NewTable("DStrLen", 0),
@@ -190,7 +189,6 @@ const (
 	SetRequestCallFormCreateCallback
 	SetRemoveEventCallback
 	SetThreadAsyncCallback
-	SetIPCEventCallback
 	DRunMainAsyncCall
 	DGETSTRINGARROF
 	DSTRLEN

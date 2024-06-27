@@ -18,7 +18,7 @@ import (
 	"github.com/energye/lcl/api"
 )
 
-type callback func(message string)
+type callback func(funcName, message string)
 
 var exceptionHandlerCallback callback
 
@@ -31,9 +31,9 @@ func SetOnException(fn callback) {
 	}
 }
 
-func exceptionHandlerProc(message uintptr) uintptr {
+func exceptionHandlerProc(funcName, message uintptr) uintptr {
 	if exceptionHandlerCallback != nil {
-		exceptionHandlerCallback(api.GoStr(message))
+		exceptionHandlerCallback(api.GoStr(funcName), api.GoStr(message))
 	}
 	return 0
 }
