@@ -10,7 +10,7 @@ package lcl
 
 import (
 	"github.com/energye/lcl/api"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/types"
 )
 
 // TRawImagePosition
@@ -18,8 +18,8 @@ import (
 //	Record describing a position in Raw Image data.
 //	Byte is the byte offset, Bit the bit number/offset in that byte.
 type TRawImagePosition struct {
-	Byte PtrUInt
-	Bit  Cardinal
+	Byte types.PtrUInt
+	Bit  types.Cardinal
 }
 
 // TColumnIndex int32
@@ -30,38 +30,38 @@ type TColumnIndex = int32
 type TNodeArray = uintptr
 
 // TColumnPosition Cardinal
-type TColumnPosition = Cardinal
+type TColumnPosition = types.Cardinal
 
 // TVTPaintInfo Record
 type TVTPaintInfo struct {
-	Canvas           ICanvas                 // the canvas to paint on
-	PaintOptions     TVTInternalPaintOptions // a copy of the paint options passed to PaintTree
-	Node             IVirtualNode            // the node to paint
-	Column           TColumnIndex            // the node's column index to paint
-	Position         TColumnPosition         // the column position of the node
-	CellRect         TRect                   // the node cell
-	ContentRect      TRect                   // the area of the cell used for the node's content
-	NodeWidth        Integer                 // the actual node width
-	Alignment        TAlignment              // how to align within the node rectangle
-	CaptionAlignment TAlignment              // how to align text within the caption rectangle
-	BidiMode         TBiDiMode               // directionality to be used for painting
-	BrushOrigin      TPoint                  // the alignment for the brush used to draw dotted lines
-	imageInfoPtr     unsafePointer           // [4]TVTImageInfo // info about each possible node image, array[TVTImageInfoIndex] of TVTImageInfo
+	Canvas           ICanvas                       // the canvas to paint on
+	PaintOptions     types.TVTInternalPaintOptions // a copy of the paint options passed to PaintTree
+	Node             IVirtualNode                  // the node to paint
+	Column           TColumnIndex                  // the node's column index to paint
+	Position         TColumnPosition               // the column position of the node
+	CellRect         types.TRect                   // the node cell
+	ContentRect      types.TRect                   // the area of the cell used for the node's content
+	NodeWidth        types.Integer                 // the actual node width
+	Alignment        types.TAlignment              // how to align within the node rectangle
+	CaptionAlignment types.TAlignment              // how to align text within the caption rectangle
+	BidiMode         types.TBiDiMode               // directionality to be used for painting
+	BrushOrigin      types.TPoint                  // the alignment for the brush used to draw dotted lines
+	imageInfoPtr     unsafePointer                 // [4]TVTImageInfo // info about each possible node image, array[TVTImageInfoIndex] of TVTImageInfo
 }
 
 // TVTImageInfo Record
 //
 //	For painting a node and its columns/cells a lot of information must be passed frequently around.
 type TVTImageInfo struct {
-	Index   Integer          // Index in the associated image list.
-	XPos    Integer          // Horizontal position in the current target canvas.
-	YPos    Integer          // Vertical position in the current target canvas.
-	Ghosted Boolean          // Flag to indicate that the image must be drawn slightly lighter.
+	Index   types.Integer    // Index in the associated image list.
+	XPos    types.Integer    // Horizontal position in the current target canvas.
+	YPos    types.Integer    // Vertical position in the current target canvas.
+	Ghosted types.Boolean    // Flag to indicate that the image must be drawn slightly lighter.
 	Images  TCustomImageList // The image list to be used for painting.
 }
 
 // ImageInfo array[TVTImageInfoIndex] of TVTImageInfo
-func (m *TVTPaintInfo) ImageInfo(index TVTImageInfoIndex) *TVTImageInfo {
+func (m *TVTPaintInfo) ImageInfo(index types.TVTImageInfoIndex) *TVTImageInfo {
 	if index >= 0 && index <= 3 {
 		var result uintptr
 		api.LCLPreDef().SysCallN(api.VTImageInfoGet(), uintptr(m.imageInfoPtr), uintptr(index), uintptr(unsafePointer(&result)))
@@ -73,12 +73,12 @@ func (m *TVTPaintInfo) ImageInfo(index TVTImageInfoIndex) *TVTImageInfo {
 //
 //	Structure used when info about a certain position in the header is needed.
 type TVTHeaderHitInfo struct {
-	X           Integer
-	Y           Integer
-	Button      TMouseButton
-	Shift       TShiftState
+	X           types.Integer
+	Y           types.Integer
+	Button      types.TMouseButton
+	Shift       types.TShiftState
 	Column      TColumnIndex
-	HitPosition TVTHeaderHitPositions
+	HitPosition types.TVTHeaderHitPositions
 }
 
 // THeaderPaintInfo Record
@@ -88,48 +88,48 @@ type THeaderPaintInfo struct {
 	instance        *tHeaderPaintInfo
 	TargetCanvas    ICanvas
 	Column          IVirtualTreeColumn
-	PaintRectangle  *TRect
-	TextRectangle   *TRect
-	IsHoverIndex    Boolean
-	IsDownIndex     Boolean
-	IsEnabled       Boolean
-	ShowHeaderGlyph Boolean
-	ShowSortGlyph   Boolean
-	ShowRightBorder Boolean
-	DropMark        TVTDropMarkMode
-	GlyphPos        *TPoint
-	SortGlyphPos    *TPoint
+	PaintRectangle  *types.TRect
+	TextRectangle   *types.TRect
+	IsHoverIndex    types.Boolean
+	IsDownIndex     types.Boolean
+	IsEnabled       types.Boolean
+	ShowHeaderGlyph types.Boolean
+	ShowSortGlyph   types.Boolean
+	ShowRightBorder types.Boolean
+	DropMark        types.TVTDropMarkMode
+	GlyphPos        *types.TPoint
+	SortGlyphPos    *types.TPoint
 }
 
 func (m *THeaderPaintInfo) SetInstanceValue() {
 	if m.instance == nil {
 		return
 	}
-	var setRectPtrVal = func(src, target *TRect) {
+	var setRectPtrVal = func(src, target *types.TRect) {
 		target.Left = src.Left
 		target.Top = src.Top
 		target.Right = src.Right
 		target.Bottom = src.Bottom
 	}
-	var setPointPtrVal = func(src, target *TPoint) {
+	var setPointPtrVal = func(src, target *types.TPoint) {
 		target.X = src.X
 		target.Y = src.Y
 	}
 	*(*uintptr)(unsafePointer(m.instance.TargetCanvas)) = m.TargetCanvas.Instance()
 	*(*uintptr)(unsafePointer(m.instance.Column)) = m.Column.Instance()
-	paintRectangle := (*TRect)(unsafePointer(m.instance.PaintRectangle))
-	textRectangleL := (*TRect)(unsafePointer(m.instance.TextRectangle))
+	paintRectangle := (*types.TRect)(unsafePointer(m.instance.PaintRectangle))
+	textRectangleL := (*types.TRect)(unsafePointer(m.instance.TextRectangle))
 	setRectPtrVal(m.PaintRectangle, paintRectangle)
 	setRectPtrVal(m.TextRectangle, textRectangleL)
-	*(*Boolean)(unsafePointer(m.instance.IsHoverIndex)) = m.IsHoverIndex
-	*(*Boolean)(unsafePointer(m.instance.IsDownIndex)) = m.IsDownIndex
-	*(*Boolean)(unsafePointer(m.instance.IsEnabled)) = m.IsEnabled
-	*(*Boolean)(unsafePointer(m.instance.ShowHeaderGlyph)) = m.ShowHeaderGlyph
-	*(*Boolean)(unsafePointer(m.instance.ShowSortGlyph)) = m.ShowSortGlyph
-	*(*Boolean)(unsafePointer(m.instance.ShowRightBorder)) = m.ShowRightBorder
-	*(*TVTDropMarkMode)(unsafePointer(m.instance.DropMark)) = m.DropMark
-	glyphPos := (*TPoint)(unsafePointer(m.instance.GlyphPos))
-	sortGlyphPos := (*TPoint)(unsafePointer(m.instance.SortGlyphPos))
+	*(*types.Boolean)(unsafePointer(m.instance.IsHoverIndex)) = m.IsHoverIndex
+	*(*types.Boolean)(unsafePointer(m.instance.IsDownIndex)) = m.IsDownIndex
+	*(*types.Boolean)(unsafePointer(m.instance.IsEnabled)) = m.IsEnabled
+	*(*types.Boolean)(unsafePointer(m.instance.ShowHeaderGlyph)) = m.ShowHeaderGlyph
+	*(*types.Boolean)(unsafePointer(m.instance.ShowSortGlyph)) = m.ShowSortGlyph
+	*(*types.Boolean)(unsafePointer(m.instance.ShowRightBorder)) = m.ShowRightBorder
+	*(*types.TVTDropMarkMode)(unsafePointer(m.instance.DropMark)) = m.DropMark
+	glyphPos := (*types.TPoint)(unsafePointer(m.instance.GlyphPos))
+	sortGlyphPos := (*types.TPoint)(unsafePointer(m.instance.SortGlyphPos))
 	setPointPtrVal(m.GlyphPos, glyphPos)
 	setPointPtrVal(m.SortGlyphPos, sortGlyphPos)
 }
@@ -139,50 +139,50 @@ func (m *THeaderPaintInfo) SetInstanceValue() {
 //	Structure used when info about a certain position in the tree is needed.
 type THitInfo struct {
 	HitNode      IVirtualNode
-	HitPositions THitPositions
+	HitPositions types.THitPositions
 	HitColumn    TColumnIndex
-	HitPoint     TPoint
+	HitPoint     types.TPoint
 }
 
 // THintInfo record
 type THintInfo struct {
 	instance        *tHintInfo
 	HintControl     IControl
-	HintWindowClass TWinControlClass
-	HintPos         *TPoint // screen coordinates
+	HintWindowClass types.TWinControlClass
+	HintPos         *types.TPoint // screen coordinates
 	HintMaxWidth    int32
-	HintColor       TColor
-	CursorRect      *TRect
-	CursorPos       *TPoint
+	HintColor       types.TColor
+	CursorRect      *types.TRect
+	CursorPos       *types.TPoint
 	ReshowTimeout   int32
 	HideTimeout     int32
 	HintStr         string
-	HintData        Pointer
+	HintData        types.Pointer
 }
 
 func (m *THintInfo) SetInstanceValue() {
 	if m.instance == nil {
 		return
 	}
-	var setRectPtrVal = func(src, target *TRect) {
+	var setRectPtrVal = func(src, target *types.TRect) {
 		target.Left = src.Left
 		target.Top = src.Top
 		target.Right = src.Right
 		target.Bottom = src.Bottom
 	}
-	var setPointPtrVal = func(src, target *TPoint) {
+	var setPointPtrVal = func(src, target *types.TPoint) {
 		target.X = src.X
 		target.Y = src.Y
 	}
 	*(*uintptr)(unsafePointer(m.instance.HintControl)) = m.HintControl.Instance()
-	*(*TWinControlClass)(unsafePointer(m.instance.HintWindowClass)) = m.HintWindowClass
-	hintPos := (*TPoint)(unsafePointer(m.instance.HintPos))
+	*(*types.TWinControlClass)(unsafePointer(m.instance.HintWindowClass)) = m.HintWindowClass
+	hintPos := (*types.TPoint)(unsafePointer(m.instance.HintPos))
 	setPointPtrVal(m.HintPos, hintPos)
 	*(*int32)(unsafePointer(m.instance.HintMaxWidth)) = m.HintMaxWidth
-	*(*TColor)(unsafePointer(m.instance.HintColor)) = m.HintColor
-	cursorRect := (*TRect)(unsafePointer(m.instance.CursorRect))
+	*(*types.TColor)(unsafePointer(m.instance.HintColor)) = m.HintColor
+	cursorRect := (*types.TRect)(unsafePointer(m.instance.CursorRect))
 	setRectPtrVal(m.CursorRect, cursorRect)
-	cursorPos := (*TPoint)(unsafePointer(m.instance.CursorPos))
+	cursorPos := (*types.TPoint)(unsafePointer(m.instance.CursorPos))
 	setPointPtrVal(m.CursorPos, cursorPos)
 	*(*int32)(unsafePointer(m.instance.ReshowTimeout)) = m.ReshowTimeout
 	*(*int32)(unsafePointer(m.instance.HideTimeout)) = m.HideTimeout
