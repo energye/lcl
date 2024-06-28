@@ -12,8 +12,6 @@ package imports
 
 import (
 	"errors"
-	"github.com/energye/lcl/api/internal/exception"
-	"syscall"
 )
 
 // CallImport 调用导入表接口
@@ -64,11 +62,12 @@ func (m *Imports) SysCallN(index int, args ...uintptr) (result uintptr) {
 	if m.IsOk() {
 		proc := internalGetImportFunc(m.dll, m.table, index)
 		if proc > 0 {
-			var errno syscall.Errno
-			result, _, errno = proc.Call(args...)
-			if errno != 0 {
-				exception.CallException(m.table[index].Name(), errno.Error())
-			}
+			//defer func() {
+			//	if err := recover(); err != nil {
+			//		exception.CallException(m.table[index].Name(), err.(error).Error())
+			//	}
+			//}()
+			result, _, _ = proc.Call(args...)
 		}
 	}
 	return
