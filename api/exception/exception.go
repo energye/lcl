@@ -16,24 +16,21 @@ package exception
 
 import (
 	"github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/internal/exception"
 )
 
-type callback func(funcName, message string)
-
-var exceptionHandlerCallback callback
-
 // SetOnException
-// 底层库异常
-func SetOnException(fn callback) {
-	if exceptionHandlerCallback == nil {
+// 捕获底层库异常
+func SetOnException(fn exception.Callback) {
+	if exception.HandlerCallback == nil {
 		api.SetExceptionHandlerCallback(exceptionHandlerProcEventAddr)
-		exceptionHandlerCallback = fn
+		exception.HandlerCallback = fn
 	}
 }
 
 func exceptionHandlerProc(funcName, message uintptr) uintptr {
-	if exceptionHandlerCallback != nil {
-		exceptionHandlerCallback(api.GoStr(funcName), api.GoStr(message))
+	if exception.HandlerCallback != nil {
+		exception.HandlerCallback(api.GoStr(funcName), api.GoStr(message))
 	}
 	return 0
 }

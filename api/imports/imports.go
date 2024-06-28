@@ -10,7 +10,11 @@
 
 package imports
 
-import "errors"
+import (
+	"errors"
+	"github.com/energye/lcl/api/internal/exception"
+	"syscall"
+)
 
 // CallImport 调用导入表接口
 type CallImport interface {
@@ -41,8 +45,9 @@ func LoadLib(libName string) (*Imports, error) {
 }
 
 // Proc 返回api实例
-//  参数
-//	index: 导入表索引
+//
+//	 参数
+//		index: 导入表索引
 func (m *Imports) Proc(index int) ProcAddr {
 	if m.IsOk() {
 		return internalGetImportFunc(m.dll, m.table, index)
@@ -51,14 +56,19 @@ func (m *Imports) Proc(index int) ProcAddr {
 }
 
 // SysCallN 调用api
-//  参数
-//	index: 导入表索引
-//	args: 调用api参数, 指针数组
+//
+//	 参数
+//		index: 导入表索引
+//		args: 调用api参数, 指针数组
 func (m *Imports) SysCallN(index int, args ...uintptr) (result uintptr) {
 	if m.IsOk() {
 		proc := internalGetImportFunc(m.dll, m.table, index)
 		if proc > 0 {
-			result, _, _ = proc.Call(args...)
+			var errno syscall.Errno
+			result, _, errno = proc.Call(args...)
+			if errno != 0 {
+				exception.CallException(m.table[index].Name(), errno.Error())
+			}
 		}
 	}
 	return
