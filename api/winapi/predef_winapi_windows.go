@@ -8,9 +8,6 @@
 //
 //----------------------------------------
 
-// Package winapi energy - lcl window api
-// export in Lazarus ascinc
-
 //go:build windows
 // +build windows
 
@@ -63,47 +60,47 @@ func EndDeferWindowPos(hWinPosInfo types.HDWP) bool {
 	return r1 > 0
 }
 
-func GetWindowLongPtr(hWnd types.HWND, nIndex types.LongInt) types.LongPtr {
-	r1, _, _ := api.WinAPI().Proc(cef_win_GetWindowLongPtr).Call(uintptr(hWnd), uintptr(nIndex))
-	return types.LongPtr(r1)
+func GetWindowLongPtr(hWnd types.HWND, nIndex int32) uintptr {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetWindowLongPtr).Call(uintptr(hWnd), uintptr(nIndex))
+	return uintptr(r1)
 }
 
-func SetWindowLongPtr(hWnd types.HWND, nIndex types.LongInt, dwNewLong types.LongPtr) types.LongPtr {
-	r1, _, _ := api.WinAPI().Proc(cef_win_SetWindowLongPtr).Call(uintptr(hWnd), uintptr(nIndex), uintptr(dwNewLong))
-	return types.LongPtr(r1)
+func SetWindowLongPtr(hWnd types.HWND, nIndex int32, dwNewLong uintptr) uintptr {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_SetWindowLongPtr).Call(uintptr(hWnd), uintptr(nIndex), uintptr(dwNewLong))
+	return uintptr(r1)
 }
 
-func GetClassLongPtr(hWnd types.HWND, nIndex types.LongInt) types.LongPtr {
-	r1, _, _ := api.WinAPI().Proc(cef_win_GetClassLongPtr).Call(uintptr(hWnd), uintptr(nIndex))
-	return types.LongPtr(r1)
+func GetClassLongPtr(hWnd types.HWND, nIndex int32) uintptr {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetClassLongPtr).Call(uintptr(hWnd), uintptr(nIndex))
+	return uintptr(r1)
 }
 
-func SetClassLongPtr(hWnd types.HWND, nIndex types.LongInt, dwNewLong types.LongPtr) types.LongPtr {
-	r1, _, _ := api.WinAPI().Proc(cef_win_SetClassLongPtr).Call(uintptr(hWnd), uintptr(nIndex), uintptr(dwNewLong))
-	return types.LongPtr(r1)
+func SetClassLongPtr(hWnd types.HWND, nIndex int32, dwNewLong uintptr) uintptr {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_SetClassLongPtr).Call(uintptr(hWnd), uintptr(nIndex), uintptr(dwNewLong))
+	return uintptr(r1)
 }
 
 func FindWindow(lpClassName string, lpWindowName string) types.HWND {
-	r1, _, _ := api.WinAPI().Proc(cef_win_FindWindow).Call(api.PascalStr(lpClassName), api.PascalStr(lpWindowName))
+	r1, _, _ := winapiImportAPI().Proc(winAPI_FindWindow).Call(api.PascalStr(lpClassName), api.PascalStr(lpWindowName))
 	return types.HWND(r1)
 }
 
 func FindWindowEx(_para1 types.HWND, _para2 types.HWND, _para3 string, _para4 string) types.HWND {
-	r1, _, _ := api.WinAPI().Proc(cef_win_FindWindowEx).Call(uintptr(_para1), uintptr(_para2), api.PascalStr(_para3), api.PascalStr(_para4))
+	r1, _, _ := winapiImportAPI().Proc(winAPI_FindWindowEx).Call(uintptr(_para1), uintptr(_para2), api.PascalStr(_para3), api.PascalStr(_para4))
 	return types.HWND(r1)
 }
 
 func SetWindowText(hWnd types.HWND, lpString string) types.LongBool {
-	r1, _, _ := api.WinAPI().Proc(cef_win_SetWindowText).Call(uintptr(hWnd), api.PascalStr(lpString))
+	r1, _, _ := winapiImportAPI().Proc(winAPI_SetWindowText).Call(uintptr(hWnd), api.PascalStr(lpString))
 	return types.LongBool(api.GoBool(r1))
 }
 
-func GetWindowText(hWnd types.HWND, lpString string, nMaxCount types.LongInt) types.LongInt {
-	r1, _, _ := api.WinAPI().Proc(cef_win_GetWindowText).Call(uintptr(hWnd), api.PascalStr(lpString), uintptr(nMaxCount))
-	return types.LongInt(r1)
+func GetWindowText(hWnd types.HWND, lpString string, nMaxCount int32) int32 {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetWindowText).Call(uintptr(hWnd), api.PascalStr(lpString), uintptr(nMaxCount))
+	return int32(r1)
 }
 
-func GetWindowTextLength(hWnd types.HWND) types.LongInt {
-	r1, _, _ := api.WinAPI().Proc(cef_win_GetWindowTextLength).Call(uintptr(hWnd))
-	return types.LongInt(r1)
+func GetWindowTextLength(hWnd types.HWND) int32 {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetWindowTextLength).Call(uintptr(hWnd))
+	return int32(r1)
 }

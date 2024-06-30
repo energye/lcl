@@ -70,10 +70,6 @@ const (
 	PoWorkAreaCenter                   // center form on working area (depends on DefaultMonitor)
 )
 
-// TCursor = -32768..32767;
-// 相关常量见 lcl/types/cussors.go
-type TCursor int16
-
 // TSeekOrigin ENUM
 type TSeekOrigin = int32
 

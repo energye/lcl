@@ -8,6 +8,9 @@
 
 package types
 
+// TCursor = -32768..32767;
+type TCursor int16
+
 // 鼠标光标定义
 // mouse cursor definition.
 const (

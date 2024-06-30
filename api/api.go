@@ -12,7 +12,6 @@ import (
 	"github.com/energye/lcl/api/imports"
 	"github.com/energye/lcl/api/internal"
 	"github.com/energye/lcl/api/internal/lcl"
-	"github.com/energye/lcl/api/internal/winapi"
 	"github.com/energye/lcl/api/internal/wk"
 )
 
@@ -20,7 +19,6 @@ var (
 	releaseCallback    func()
 	canWidgetSetInit   bool
 	customWidgetImport *imports.Imports // 自定义组件初始化导入
-	winapiImport       *imports.Imports // winapi 导入
 	liblclImport       *imports.Imports // LCL 导入
 	liblclPreDefImport *imports.Imports // LCL 预定义导入
 	wkImport           *imports.Imports // WK 导入
@@ -29,7 +27,6 @@ var (
 
 func init() {
 	customWidgetImport = new(imports.Imports) // 自定义组件初始化导入
-	winapiImport = new(imports.Imports)       // winapi 导入
 	liblclImport = new(imports.Imports)       // LCL 导入
 	liblclPreDefImport = new(imports.Imports) // LCL 预定义导入
 	wkImport = new(imports.Imports)           // WK 导入
@@ -56,10 +53,6 @@ func APIInit() {
 	// 自定义组件初始化导入
 	customWidgetImport.SetDll(uiLib)
 	internal.InitCustomWidgetImport(customWidgetImport)
-
-	// winapi 导入
-	winapiImport.SetDll(uiLib)
-	winapi.InitWinAPIPreDefsImport(winapiImport)
 
 	// LCL 导入
 	liblclImport.SetDll(uiLib)
@@ -103,11 +96,6 @@ func LCL() imports.CallImport {
 // LCLPreDef 预定义LcL导入表
 func LCLPreDef() imports.CallImport {
 	return liblclPreDefImport
-}
-
-// WinAPI 导入表
-func WinAPI() imports.CallImport {
-	return winapiImport
 }
 
 // WK webkit2 导入表

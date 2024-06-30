@@ -10,22 +10,6 @@
 
 package winapi
 
-const (
-	// Mouse message key states
-	MK_LBUTTON  = 1
-	MK_RBUTTON  = 2
-	MK_SHIFT    = 4
-	MK_CONTROL  = 8
-	MK_MBUTTON  = 0x10
-	MK_XBUTTON1 = 0x20
-	MK_XBUTTON2 = 0x40
-	// following are "virtual" key states
-	MK_DOUBLECLICK = 0x80
-	MK_TRIPLECLICK = 0x100
-	MK_QUADCLICK   = 0x200
-	MK_ALT         = 0x20000000
-)
-
 // ------------
 // KeyFlags (High word part !!!)
 // ------------
