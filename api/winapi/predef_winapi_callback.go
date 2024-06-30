@@ -8,7 +8,6 @@
 //
 //----------------------------------------
 
-// energy - lcl window api - callback
 // TODO : All functions of this API have not been fully tested yet
 
 package winapi

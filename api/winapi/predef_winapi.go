@@ -9,6 +9,7 @@
 //----------------------------------------
 
 // Package winapi LCL winAPI and RTL commonly used function APIs
+// Some functions have certain cross-platform characteristics
 package winapi
 
 import (
