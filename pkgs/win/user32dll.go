@@ -24,6 +24,7 @@ var (
 	_LoadIcon         = user32dll.NewProc("LoadIconW")
 	_GetSystemMetrics = user32dll.NewProc("GetSystemMetrics")
 
+	_DefWindowProcW = user32dll.NewProc("DefWindowProcW")
 	_CallWindowProc = user32dll.NewProc("CallWindowProcW")
 
 	_PostMessage = user32dll.NewProc("PostMessageW")
@@ -145,6 +146,12 @@ func SetWindowLongPtr(hWnd HWND, nIndex int32, dwNewLong uintptr) uintptr {
 // SetWindowLong
 func SetWindowLong(hWnd HWND, nIndex int32, dwNewLong uintptr) uintptr {
 	return SetWindowLongPtr(hWnd, nIndex, dwNewLong)
+}
+
+// DefWindowProc
+func DefWindowProc(hWnd HWND, Msg uint32, wParam, lParam uintptr) uintptr {
+	r, _, _ := _DefWindowProcW.Call(uintptr(hWnd), uintptr(Msg), wParam, lParam)
+	return r
 }
 
 // CallWindowProc
