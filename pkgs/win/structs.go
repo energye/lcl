@@ -122,3 +122,12 @@ type TSHFileInfo struct {
 	SzDisplayName [MAX_PATH]uint16 /* out: display name (or path) */
 	SzTypeName    [80]uint16       /* out: type name */
 }
+
+type WINDOWPLACEMENT struct {
+	Length           uint32
+	Flags            uint32
+	ShowCmd          uint32
+	PtMinPosition    TPoint
+	PtMaxPosition    TPoint
+	RcNormalPosition TRect
+}

@@ -100,6 +100,9 @@ var (
 
 	_DrawText         = user32dll.NewProc("DrawTextW")
 	_GetDesktopWindow = user32dll.NewProc("GetDesktopWindow")
+
+	_GetWindowPlacement = user32dll.NewProc("GetWindowPlacement")
+	_SetWindowPlacement = user32dll.NewProc("SetWindowPlacement")
 )
 
 // MessageBox 消息框
@@ -525,4 +528,14 @@ func DrawText(hDC HDC, lpString string, nCount int32, lpRect *TRect, uFormat uin
 func GetDesktopWindow() HWND {
 	r, _, _ := _GetDesktopWindow.Call()
 	return r
+}
+
+func GetWindowPlacement(hWnd HWND, lpwndpl *WINDOWPLACEMENT) bool {
+	ret, _, _ := _GetWindowPlacement.Call(hWnd, uintptr(unsafe.Pointer(lpwndpl)))
+	return ret != 0
+}
+
+func SetWindowPlacement(hWnd HWND, lpwndpl *WINDOWPLACEMENT) bool {
+	ret, _, _ := _SetWindowPlacement.Call(hWnd, uintptr(unsafe.Pointer(lpwndpl)))
+	return ret != 0
 }
