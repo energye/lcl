@@ -15,20 +15,19 @@ import (
 
 var (
 	createParamsMap sync.Map
-	formCreate      sync.Map
+	newFormCreate   IForm
 )
+
+func addNewFormCreate(form IForm) {
+	newFormCreate = form
+}
 
 func addRequestCreateParamsMap(ptr uintptr, proc IForm) {
 	createParamsMap.Store(ptr, proc)
 }
 
-func addRequestFormCreateMap(ptr uintptr, proc IForm) {
-	formCreate.Store(ptr, proc)
-}
-
 func requestCallCreateParamsCallbackProc(ptr uintptr, sender, params uintptr) uintptr {
 	if val, ok := createParamsMap.Load(ptr); ok {
-		//val.(reflect.Value).Call([]reflect.Value{reflect.ValueOf((*types.TCreateParams)(unsafe.Pointer(params)))})
 		if form, ok := val.(IForm); ok {
 			form.SetInstance(unsafePointer(sender))
 			switch form.(type) {
@@ -42,15 +41,14 @@ func requestCallCreateParamsCallbackProc(ptr uintptr, sender, params uintptr) ui
 }
 
 func requestCallFormCreateCallbackProc(ptr uintptr, sender uintptr) uintptr {
-	if val, ok := formCreate.Load(ptr); ok {
-		if form, ok := val.(IForm); ok {
-			form.SetInstance(unsafePointer(sender))
-			switch form.(type) {
-			case IOnCreate:
-				form.(IOnCreate).FormCreate(form)
-			}
+	if newFormCreate != nil {
+		currentForm := newFormCreate
+		newFormCreate = nil
+		currentForm.SetInstance(unsafePointer(sender))
+		switch currentForm.(type) {
+		case IOnCreate:
+			currentForm.(IOnCreate).FormCreate(currentForm)
 		}
-		formCreate.Delete(ptr)
 	}
 	return 0
 }

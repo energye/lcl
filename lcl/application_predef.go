@@ -87,21 +87,20 @@ func (m *TApplication) CreateForm(forms ...IForm) IForm {
 		var (
 			mainForm        = Application.MainForm()
 			isMain          = mainForm == nil || mainForm.Instance() == 0 // 0 | nil = main
-			v               = reflect.ValueOf(form)
 			createParamsPtr uintptr
 		)
 		if !isMain {
-			createParamsPtr = v.Pointer()
+			// CreateParamsCallback
+			createParamsPtr = reflect.ValueOf(form).Pointer()
 		}
 		// OnCreate 实现回调
 		if _, ok := form.(IOnCreate); ok {
-			addRequestFormCreateMap(createParamsPtr, form)
+			addNewFormCreate(form)
 		}
 		// CreateParams 实现回调
 		if _, ok := form.(IOnCreateParams); ok {
 			addRequestCreateParamsMap(createParamsPtr, form)
 		}
-
 		formPtr := Application_CreateForm(m.Instance())
 		form.SetInstance(unsafePointer(formPtr))
 		if !isMain {
@@ -109,10 +108,6 @@ func (m *TApplication) CreateForm(forms ...IForm) IForm {
 		}
 	}
 	return nil
-}
-
-func (m *TApplication) CreateResForm(forms ...IForm) {
-
 }
 
 // Run
