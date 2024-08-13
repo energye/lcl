@@ -43,14 +43,6 @@ func GET_Y_LPARAM(lp uintptr) int32 {
 	return int32(int16(HIWORD(uint32(lp))))
 }
 
-type HCursor struct {
-	instance unsafe.Pointer
-}
-
-func (m *HCursor) Free() {
-	m.instance = nil
-}
-
 func CreateRectRgn(X1, Y1, X2, Y2 int32) types.HRGN {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_CreateRectRgn).Call(uintptr(X1), uintptr(Y1), uintptr(X2), uintptr(Y2))
 	return types.HRGN(r1)
@@ -106,18 +98,14 @@ func SetWindowRgn(handle types.HWND, hRgn types.HRGN, bRedraw bool) int32 {
 	return int32(r1)
 }
 
-func SetCursor(hCursor *HCursor) *HCursor {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_SetCursor).Call(uintptr(hCursor.instance))
-	return &HCursor{
-		instance: unsafe.Pointer(r1),
-	}
+func SetCursor(hCursor types.HCURSOR) types.HCURSOR {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_SetCursor).Call(uintptr(hCursor))
+	return types.HCURSOR(r1)
 }
 
-func LoadCursor(handle types.HWND, lpCursorName int32) *HCursor {
+func LoadCursor(handle types.HWND, lpCursorName int32) types.HCURSOR {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_LoadCursor).Call(uintptr(handle), uintptr(lpCursorName))
-	return &HCursor{
-		instance: unsafe.Pointer(r1),
-	}
+	return types.HCURSOR(r1)
 }
 
 func OnPaint(handle types.HWND) {
@@ -142,13 +130,13 @@ func OnPaint(handle types.HWND) {
 //	winapiImportAPI().Proc(winAPI_SetDraggableRegions).Call(aRGN, uintptr(int32(len(regions))), uintptr(unsafe.Pointer(&regions[0])), uintptr(int32(len(regions))))
 //}
 
-func EndPaint(Handle types.HWND, PS types.TagPaintStruct) int32 {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_EndPaint).Call(uintptr(Handle), uintptr(unsafe.Pointer(&PS)))
+func EndPaint(Handle types.HWND, PS *types.TagPaintStruct) int32 {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_EndPaint).Call(uintptr(Handle), uintptr(unsafe.Pointer(PS)))
 	return int32(r1)
 }
 
-func BeginPaint(Handle types.HWND, PS types.TagPaintStruct) types.HDC {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_BeginPaint).Call(uintptr(Handle), uintptr(unsafe.Pointer(&PS)))
+func BeginPaint(Handle types.HWND, PS *types.TagPaintStruct) types.HDC {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_BeginPaint).Call(uintptr(Handle), uintptr(unsafe.Pointer(PS)))
 	return types.HDC(r1)
 }
 
@@ -207,8 +195,8 @@ func CreateCompatibleDC(DC types.HDC) types.HDC {
 	return types.HDC(r1)
 }
 
-func CreateDIBitmap(DC types.HDC, InfoHeader types.TagBitmapInfoHeader, dwUsage types.DWORD, InitBits types.PChar, InitInfo types.TagBitmapInfo, wUsage uint32) types.HBITMAP {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_CreateDIBitmap).Call(uintptr(DC), uintptr(unsafe.Pointer(&InfoHeader)), uintptr(dwUsage), api.PascalStr(InitBits), uintptr(unsafe.Pointer(&InitInfo)), uintptr(wUsage))
+func CreateDIBitmap(DC types.HDC, InfoHeader *types.TagBitmapInfoHeader, dwUsage types.DWORD, InitBits string, InitInfo *types.TagBitmapInfo, wUsage uint32) types.HBITMAP {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_CreateDIBitmap).Call(uintptr(DC), uintptr(unsafe.Pointer(InfoHeader)), uintptr(dwUsage), api.PascalStr(InitBits), uintptr(unsafe.Pointer(InitInfo)), uintptr(wUsage))
 	return types.HBITMAP(r1)
 }
 
@@ -227,7 +215,7 @@ func CreateFontIndirect(LogFont types.LogFontA) types.HFONT {
 	return types.HFONT(r1)
 }
 
-func CreateFontIndirectEx(LogFont types.LogFontA, LongFontName types.PChar) types.HFONT {
+func CreateFontIndirectEx(LogFont types.LogFontA, LongFontName string) types.HFONT {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_CreateFontIndirectEx).Call(uintptr(unsafe.Pointer(&LogFont)), api.PascalStr(LongFontName))
 	return types.HFONT(r1)
 }
@@ -281,7 +269,7 @@ func DestroyIcon(Handle types.HICON) bool {
 	return bool(api.GoBool(r1))
 }
 
-func DrawFrameControl(DC types.HDC, Rect types.TRect, uType, uState types.Cardinal) bool {
+func DrawFrameControl(DC types.HDC, Rect types.TRect, uType, uState uint32) bool {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_DrawFrameControl).Call(uintptr(DC), uintptr(unsafe.Pointer(&Rect)), uintptr(uType), uintptr(uState))
 	return bool(api.GoBool(r1))
 }
@@ -291,17 +279,17 @@ func DrawFocusRect(DC types.HDC, Rect types.TRect) bool {
 	return bool(api.GoBool(r1))
 }
 
-func DrawEdge(DC types.HDC, Rect types.TRect, edge types.Cardinal, grfFlags types.Cardinal) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_DrawEdge).Call(uintptr(DC), uintptr(unsafe.Pointer(&Rect)), uintptr(edge), uintptr(grfFlags))
+func DrawEdge(DC types.HDC, Rect *types.TRect, edge uint32, grfFlags uint32) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_DrawEdge).Call(uintptr(DC), uintptr(unsafe.Pointer(Rect)), uintptr(edge), uintptr(grfFlags))
 	return bool(api.GoBool(r1))
 }
 
-func DrawText(DC types.HDC, Str types.PChar, Count int32, Rect types.TRect, Flags types.Cardinal) int32 {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_DrawText).Call(uintptr(DC), api.PascalStr(Str), uintptr(Count), uintptr(unsafe.Pointer(&Rect)), uintptr(Flags))
+func DrawText(DC types.HDC, Str string, Count int32, Rect *types.TRect, Flags uint32) int32 {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_DrawText).Call(uintptr(DC), api.PascalStr(Str), uintptr(Count), uintptr(unsafe.Pointer(Rect)), uintptr(Flags))
 	return int32(r1)
 }
 
-func EnableScrollBar(Wnd types.HWND, wSBflags, wArrows types.Cardinal) bool {
+func EnableScrollBar(Wnd types.HWND, wSBflags, wArrows uint32) bool {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_EnableScrollBar).Call(uintptr(Wnd), uintptr(wSBflags), uintptr(wArrows))
 	return bool(api.GoBool(r1))
 }
@@ -335,7 +323,7 @@ func ExtCreatePen(dwPenStyle, dwWidth types.DWORD, lplb types.TagLogBrush, dwSty
 	return types.HPEN(r1)
 }
 
-func ExtTextOut(DC types.HDC, X, Y int32, Options int32, Rect types.TRect, Str types.PChar, Count int32, Dx int32) bool {
+func ExtTextOut(DC types.HDC, X, Y int32, Options int32, Rect types.TRect, Str string, Count int32, Dx int32) bool {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_ExtTextOut).Call(uintptr(DC), uintptr(X), uintptr(Y), uintptr(Options), uintptr(unsafe.Pointer(&Rect)), api.PascalStr(Str), uintptr(Count), uintptr(Dx))
 	return bool(api.GoBool(r1))
 }
@@ -385,13 +373,13 @@ func GetCapture() types.HWND {
 	return types.HWND(r1)
 }
 
-func GetCaretPos(lpPoint types.TPoint) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetCaretPos).Call(uintptr(unsafe.Pointer(&lpPoint)))
+func GetCaretPos(lpPoint *types.TPoint) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetCaretPos).Call(uintptr(unsafe.Pointer(lpPoint)))
 	return bool(api.GoBool(r1))
 }
 
-func GetClientRect(handle types.HWND, Rect types.TRect) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetClientRect).Call(uintptr(handle), uintptr(unsafe.Pointer(&Rect)))
+func GetClientRect(handle types.HWND, Rect *types.TRect) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetClientRect).Call(uintptr(handle), uintptr(unsafe.Pointer(Rect)))
 	return bool(api.GoBool(r1))
 }
 
@@ -410,8 +398,8 @@ func GetCurrentObject(DC types.HDC, uObjectType uint32) types.HGDIOBJ {
 	return types.HGDIOBJ(r1)
 }
 
-func GetCursorPos(lpPoint types.TPoint) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetCursorPos).Call(uintptr(unsafe.Pointer(&lpPoint)))
+func GetCursorPos(lpPoint *types.TPoint) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetCursorPos).Call(uintptr(unsafe.Pointer(lpPoint)))
 	return bool(api.GoBool(r1))
 }
 
@@ -425,8 +413,8 @@ func GetDeviceCaps(DC types.HDC, Index int32) int32 {
 	return int32(r1)
 }
 
-func GetDIBits(DC types.HDC, Bitmap types.HBITMAP, StartScan, NumScans uint32, Bits types.Pointer, BitInfo types.TagBitmapInfo, Usage uint32) int32 {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetDIBits).Call(uintptr(DC), uintptr(Bitmap), uintptr(StartScan), uintptr(NumScans), uintptr(Bits), uintptr(unsafe.Pointer(&BitInfo)), uintptr(Usage))
+func GetDIBits(DC types.HDC, Bitmap types.HBITMAP, StartScan, NumScans uint32, Bits types.Pointer, BitInfo *types.TagBitmapInfo, Usage uint32) int32 {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetDIBits).Call(uintptr(DC), uintptr(Bitmap), uintptr(StartScan), uintptr(NumScans), uintptr(Bits), uintptr(unsafe.Pointer(BitInfo)), uintptr(Usage))
 	return int32(r1)
 }
 
@@ -465,8 +453,8 @@ func GetMapMode(DC types.HDC) int32 {
 	return int32(r1)
 }
 
-func GetMonitorInfo(hMonitor types.HMONITOR, lpmi types.TagMonitorInfo) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetMonitorInfo).Call(uintptr(hMonitor), uintptr(unsafe.Pointer(&lpmi)))
+func GetMonitorInfo(hMonitor types.HMONITOR, lpmi *types.TagMonitorInfo) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetMonitorInfo).Call(uintptr(hMonitor), uintptr(unsafe.Pointer(lpmi)))
 	return bool(api.GoBool(r1))
 }
 
@@ -491,7 +479,7 @@ func GetParent(Handle types.HWND) types.HWND {
 	return types.HWND(r1)
 }
 
-func GetProp(Handle types.HWND, Str types.PChar) types.Pointer {
+func GetProp(Handle types.HWND, Str string) types.Pointer {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_GetProp).Call(uintptr(Handle), api.PascalStr(Str))
 	return types.HWND(r1)
 }
@@ -506,8 +494,8 @@ func GetROP2(DC types.HDC) int32 {
 	return int32(r1)
 }
 
-func GetScrollInfo(Handle types.HWND, SBStyle int32, ScrollInfo types.TagScrollInfo) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetScrollInfo).Call(uintptr(Handle), uintptr(SBStyle), uintptr(unsafe.Pointer(&ScrollInfo)))
+func GetScrollInfo(Handle types.HWND, SBStyle int32, ScrollInfo *types.TagScrollInfo) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetScrollInfo).Call(uintptr(Handle), uintptr(SBStyle), uintptr(unsafe.Pointer(ScrollInfo)))
 	return bool(api.GoBool(r1))
 }
 
@@ -536,23 +524,23 @@ func GetTextColor(DC types.HDC) types.TColorRef {
 	return types.TColorRef(r1)
 }
 
-func GetTextExtentExPoint(DC types.HDC, Str types.PChar, Count, MaxWidth int32, MaxCount, PartialWidths int32, Size types.TSize) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetTextExtentExPoint).Call(uintptr(DC), api.PascalStr(Str), uintptr(Count), uintptr(MaxWidth), uintptr(MaxCount), uintptr(PartialWidths), uintptr(unsafe.Pointer(&Size)))
+func GetTextExtentExPoint(DC types.HDC, Str string, Count, MaxWidth int32, MaxCount, PartialWidths int32, Size *types.TSize) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetTextExtentExPoint).Call(uintptr(DC), api.PascalStr(Str), uintptr(Count), uintptr(MaxWidth), uintptr(MaxCount), uintptr(PartialWidths), uintptr(unsafe.Pointer(Size)))
 	return bool(api.GoBool(r1))
 }
 
-func GetTextExtentPoint(DC types.HDC, Str types.PChar, Count int32, Size types.TSize) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetTextExtentPoint).Call(uintptr(DC), api.PascalStr(Str), uintptr(Count), uintptr(unsafe.Pointer(&Size)))
+func GetTextExtentPoint(DC types.HDC, Str string, Count int32, Size *types.TSize) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetTextExtentPoint).Call(uintptr(DC), api.PascalStr(Str), uintptr(Count), uintptr(unsafe.Pointer(Size)))
 	return bool(api.GoBool(r1))
 }
 
-func GetTextExtentPoint32(DC types.HDC, Str types.PChar, Count int32, Size types.TSize) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetTextExtentPoint32).Call(uintptr(DC), api.PascalStr(Str), uintptr(Count), uintptr(unsafe.Pointer(&Size)))
+func GetTextExtentPoint32(DC types.HDC, Str string, Count int32, Size *types.TSize) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetTextExtentPoint32).Call(uintptr(DC), api.PascalStr(Str), uintptr(Count), uintptr(unsafe.Pointer(Size)))
 	return bool(api.GoBool(r1))
 }
 
-func GetTextMetrics(DC types.HDC, TM types.TagTextMetricA) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetTextMetrics).Call(uintptr(DC), uintptr(unsafe.Pointer(&TM)))
+func GetTextMetrics(DC types.HDC, TM *types.TagTextMetricA) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetTextMetrics).Call(uintptr(DC), uintptr(unsafe.Pointer(TM)))
 	return bool(api.GoBool(r1))
 }
 
@@ -576,18 +564,18 @@ func GetWindowLong(Handle types.HWND, int int32) types.PtrInt {
 	return types.PtrInt(r1)
 }
 
-func GetWindowRect(Handle types.HWND, Rect types.TRect) int32 {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetWindowRect).Call(uintptr(Handle), uintptr(unsafe.Pointer(&Rect)))
+func GetWindowRect(Handle types.HWND, Rect *types.TRect) int32 {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetWindowRect).Call(uintptr(Handle), uintptr(unsafe.Pointer(Rect)))
 	return int32(r1)
 }
 
-func GetWindowSize(Handle types.HWND, Width, Height int32) bool {
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetWindowSize).Call(uintptr(Handle), uintptr(Width), uintptr(Height))
+func GetWindowSize(Handle types.HWND, Width, Height *int32) bool {
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetWindowSize).Call(uintptr(Handle), uintptr(unsafe.Pointer(Width)), uintptr(unsafe.Pointer(Height)))
 	return bool(api.GoBool(r1))
 }
 
-func GetWindowOrgEx(dc types.HDC, P types.TPoint) int32 { // because of delphi compatibility
-	r1, _, _ := winapiImportAPI().Proc(winAPI_GetWindowOrgEx).Call(uintptr(dc), uintptr(unsafe.Pointer(&P)))
+func GetWindowOrgEx(dc types.HDC, P *types.TPoint) int32 { // because of delphi compatibility
+	r1, _, _ := winapiImportAPI().Proc(winAPI_GetWindowOrgEx).Call(uintptr(dc), uintptr(unsafe.Pointer(P)))
 	return int32(r1)
 }
 
@@ -601,8 +589,8 @@ func HideCaret(hWnd types.HWND) bool {
 	return bool(api.GoBool(r1))
 }
 
-func InitializeCriticalSection(CritSection types.TCriticalSection) {
-	winapiImportAPI().Proc(winAPI_InitializeCriticalSection).Call(uintptr(CritSection))
+func InitializeCriticalSection(CritSection *types.TCriticalSection) {
+	winapiImportAPI().Proc(winAPI_InitializeCriticalSection).Call(uintptr(unsafe.Pointer(CritSection)))
 }
 
 func IntersectClipRect(dc types.HDC, Left, Top, Right, Bottom int32) int32 {
@@ -650,8 +638,8 @@ func IsZoomed(handle types.HWND) bool {
 	return bool(api.GoBool(r1))
 }
 
-func LeaveCriticalSection(CritSection types.TCriticalSection) {
-	winapiImportAPI().Proc(winAPI_LeaveCriticalSection).Call(uintptr(CritSection))
+func LeaveCriticalSection(CritSection *types.TCriticalSection) {
+	winapiImportAPI().Proc(winAPI_LeaveCriticalSection).Call(uintptr(unsafe.Pointer(CritSection)))
 }
 
 func LineTo(DC types.HDC, X, Y int32) bool {
@@ -659,12 +647,12 @@ func LineTo(DC types.HDC, X, Y int32) bool {
 	return bool(api.GoBool(r1))
 }
 
-func LoadBitmap(hInstance types.THandle, lpBitmapName types.PChar) types.HBITMAP {
+func LoadBitmap(hInstance types.THandle, lpBitmapName string) types.HBITMAP {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_LoadBitmap).Call(uintptr(hInstance), api.PascalStr(lpBitmapName))
 	return types.HBITMAP(r1)
 }
 
-func LoadIcon(hInstance types.THandle, lpIconName types.PChar) types.HICON {
+func LoadIcon(hInstance types.THandle, lpIconName string) types.HICON {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_LoadIcon).Call(uintptr(hInstance), api.PascalStr(lpIconName))
 	return types.HICON(r1)
 }
@@ -679,7 +667,7 @@ func MaskBlt(DestDC types.HDC, X, Y, Width, Height int32, SrcDC types.HDC, XSrc,
 	return bool(api.GoBool(r1))
 }
 
-func MessageBox(hWnd types.HWND, lpText, lpCaption types.PChar, uType types.Cardinal) int32 { //def MB_OK
+func MessageBox(hWnd types.HWND, lpText, lpCaption string, uType uint32) int32 { //def MB_OK
 	r1, _, _ := winapiImportAPI().Proc(winAPI_MessageBox).Call(uintptr(hWnd), api.PascalStr(lpText), api.PascalStr(lpCaption), uintptr(uType))
 	return int32(r1)
 }
@@ -734,14 +722,14 @@ func Polyline(DC types.HDC, Points types.TPoint, NumPts int32) bool {
 	return bool(api.GoBool(r1))
 }
 
-func PostMessage(Handle types.HWND, Msg types.Cardinal, WParam types.WPARAM, LParam types.LPARAM) bool {
+func PostMessage(Handle types.HWND, Msg uint32, WParam types.WPARAM, LParam types.LPARAM) bool {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_PostMessage).Call(uintptr(Handle), uintptr(Msg), uintptr(WParam), uintptr(LParam))
 	return bool(api.GoBool(r1))
 }
 
-func RealizePalette(DC types.HDC) types.Cardinal {
+func RealizePalette(DC types.HDC) uint32 {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_RealizePalette).Call(uintptr(DC))
-	return types.Cardinal(r1)
+	return uint32(r1)
 }
 
 func Rectangle(DC types.HDC, X1, Y1, X2, Y2 int32) bool {
@@ -774,7 +762,7 @@ func ReleaseDC(hWnd types.HWND, DC types.HDC) int32 {
 	return int32(r1)
 }
 
-func RemoveProp(Handle types.HWND, Str types.PChar) types.THandle {
+func RemoveProp(Handle types.HWND, Str string) types.THandle {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_RemoveProp).Call(uintptr(Handle), api.PascalStr(Str))
 	return types.THandle(r1)
 }
@@ -814,7 +802,7 @@ func SelectPalette(DC types.HDC, Palette types.HPALETTE, ForceBackground bool) t
 	return types.HPALETTE(r1)
 }
 
-func SendMessage(HandleWnd types.HWND, Msg types.Cardinal, WParam types.WPARAM, LParam types.LPARAM) types.LResult {
+func SendMessage(HandleWnd types.HWND, Msg uint32, WParam types.WPARAM, LParam types.LPARAM) types.LResult {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_SendMessage).Call(uintptr(HandleWnd), uintptr(Msg), uintptr(WParam), uintptr(LParam))
 	return types.LResult(r1)
 }
@@ -879,7 +867,7 @@ func SetParent(hWndChild types.HWND, hWndParent types.HWND) types.HWND {
 	return types.HWND(r1)
 }
 
-func SetProp(Handle types.HWND, Str types.PChar, Data types.Pointer) bool {
+func SetProp(Handle types.HWND, Str string, Data types.Pointer) bool {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_SetProp).Call(uintptr(Handle), api.PascalStr(Str), uintptr(Data))
 	return bool(api.GoBool(r1))
 }
@@ -954,7 +942,7 @@ func ShowWindow(hWnd types.HWND, nCmdShow int32) bool {
 	return bool(api.GoBool(r1))
 }
 
-func StretchBlt(DestDC types.HDC, X, Y, Width, Height int32, SrcDC types.HDC, XSrc, YSrc, SrcWidth, SrcHeight int32, Rop types.Cardinal) bool {
+func StretchBlt(DestDC types.HDC, X, Y, Width, Height int32, SrcDC types.HDC, XSrc, YSrc, SrcWidth, SrcHeight int32, Rop uint32) bool {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_StretchBlt).Call(uintptr(DestDC), uintptr(X), uintptr(Y), uintptr(Width), uintptr(Height), uintptr(SrcDC), uintptr(XSrc), uintptr(YSrc), uintptr(SrcWidth), uintptr(SrcHeight), uintptr(Rop))
 	return bool(api.GoBool(r1))
 }
@@ -969,7 +957,7 @@ func SystemParametersInfo(uiAction types.DWORD, uiParam types.DWORD, pvParam typ
 	return bool(api.GoBool(r1))
 }
 
-func TextOut(DC types.HDC, X, Y int32, Str types.PChar, Count int32) bool {
+func TextOut(DC types.HDC, X, Y int32, Str string, Count int32) bool {
 	r1, _, _ := winapiImportAPI().Proc(winAPI_TextOut).Call(uintptr(DC), uintptr(X), uintptr(Y), api.PascalStr(Str), uintptr(Count))
 	return bool(api.GoBool(r1))
 }
