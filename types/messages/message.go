@@ -828,3 +828,20 @@ const (
 	CN_SYSCHAR           = CN_BASE + WM_SYSCHAR
 	CN_NOTIFY            = CN_BASE + WM_NOTIFY
 )
+
+const (
+	// PBT_APMPOWERSTATUSCHANGE - Power status has changed.
+	PBT_APMPOWERSTATUSCHANGE = 10
+
+	// PBT_APMRESUMEAUTOMATIC -Operation is resuming automatically from a low-power state. This message is sent every time the system resumes.
+	PBT_APMRESUMEAUTOMATIC = 18
+
+	// PBT_APMRESUMESUSPEND - Operation is resuming from a low-power state. This message is sent after PBT_APMRESUMEAUTOMATIC if the resume is triggered by user input, such as pressing a key.
+	PBT_APMRESUMESUSPEND = 7
+
+	// PBT_APMSUSPEND - System is suspending operation.
+	PBT_APMSUSPEND = 4
+
+	// PBT_POWERSETTINGCHANGE - A power setting change event has been received.
+	PBT_POWERSETTINGCHANGE = 32787
+)
