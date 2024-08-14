@@ -113,12 +113,17 @@ func (m *TForm) ScaleSelf() {
 	}
 }
 
-// IOnCreate TForm OnCreate 事件函数
+// IOnCreate TForm OnCreate
 type IOnCreate interface {
 	FormCreate(sender IObject)
 }
 
-// IOnCreateParams TForm CreateParams 事件函数
+// IOnAfterCreate TForm OnAfterCreate
+type IOnAfterCreate interface {
+	FormAfterCreate(sender IObject)
+}
+
+// IOnCreateParams TForm CreateParams
 type IOnCreateParams interface {
 	CreateParams(params *types.TCreateParams)
 }

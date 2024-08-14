@@ -32,11 +32,11 @@ func (m *TApplication) CreateForm(forms ...IForm) IForm {
 			// CreateParamsCallback
 			createParamsPtr = reflect.ValueOf(form).Pointer()
 		}
-		// OnCreate 实现回调
+		// OnCreate
 		if _, ok := form.(IOnCreate); ok {
 			addNewFormCreate(form)
 		}
-		// CreateParams 实现回调
+		// CreateParams
 		if _, ok := form.(IOnCreateParams); ok {
 			addRequestCreateParamsMap(createParamsPtr, form)
 		}
@@ -44,6 +44,10 @@ func (m *TApplication) CreateForm(forms ...IForm) IForm {
 		form.SetInstance(unsafePointer(formPtr))
 		if !isMain {
 			Form_SetGoPtr(formPtr, createParamsPtr)
+		}
+		// OnAfterCreate
+		if fn, ok := form.(IOnAfterCreate); ok {
+			fn.FormAfterCreate(form)
 		}
 	}
 	return nil
