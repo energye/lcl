@@ -362,6 +362,10 @@ func DFreeAndNil(obj uintptr) {
 	defSyscallN(lcl.DFreeAndNil, obj)
 }
 
+func DSetNil(obj uintptr) {
+	defSyscallN(lcl.DSetNil, obj)
+}
+
 func DDateTimeToUnix(dateTime float64) (result int64) {
 	defSyscallN(lcl.DToUnixTime, uintptr(unsafe.Pointer(&dateTime)), uintptr(unsafe.Pointer(&result)))
 	return

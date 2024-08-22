@@ -137,6 +137,7 @@ var preImportDefs = []*imports.Table{
 	imports.NewTable("InterfacedObject_Create", 0), // TInterfacedObject
 	imports.NewTable("InterfacedObject_RefCount", 0),
 	imports.NewTable("DFreeAndNil", 0),                          // FreeAndNil
+	imports.NewTable("DSetNil", 0),                              // Obj := nil
 	imports.NewTable("DToUnixTime", 0),                          // DateTime
 	imports.NewTable("DUnixToTime", 0),                          // DateTime
 	imports.NewTable("SetCEFEventCallback", 0),                  // CEF
@@ -293,6 +294,7 @@ const (
 	InterfacedObject_Create
 	InterfacedObject_RefCount
 	DFreeAndNil
+	DSetNil
 	DToUnixTime
 	DUnixToTime
 	SetCEFEventCallback

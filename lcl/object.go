@@ -20,6 +20,8 @@ type IObject interface {
 	IsValid() bool
 	Is() TIs
 	SetInstance(instance unsafePointer)
+	FreeAndNil()                       // free and set nil
+	Nil()                              // set nil
 	Equals(Obj IObject) bool           // function
 	GetHashCode() uint32               // function
 	ToString() string                  // function

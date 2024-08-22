@@ -50,3 +50,17 @@ func (m *TObject) free(index int) {
 		m.instance = nil
 	}
 }
+
+func (m *TObject) FreeAndNil() {
+	var instance = m.Instance()
+	if instance != 0 {
+		api.DFreeAndNil(uintptr(unsafePointer(&instance)))
+	}
+}
+
+func (m *TObject) Nil() {
+	var instance = m.Instance()
+	if instance != 0 {
+		api.DSetNil(uintptr(unsafePointer(&instance)))
+	}
+}
