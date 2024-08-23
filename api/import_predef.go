@@ -359,11 +359,11 @@ func DFindDragTarget(position TPoint, allowDisabled bool) uintptr {
 }
 
 func DFreeAndNil(obj uintptr) {
-	defSyscallN(lcl.DFreeAndNil, obj)
+	defSyscallN(lcl.DFreeAndNil, uintptr(unsafe.Pointer(&obj)))
 }
 
 func DSetNil(obj uintptr) {
-	defSyscallN(lcl.DSetNil, obj)
+	defSyscallN(lcl.DSetNil, uintptr(unsafe.Pointer(&obj)))
 }
 
 func DDateTimeToUnix(dateTime float64) (result int64) {
