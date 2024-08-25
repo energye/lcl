@@ -9,7 +9,8 @@
 package lcl
 
 import (
-	"github.com/energye/lcl/api"
+	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	"unsafe"
 )
 
@@ -19,7 +20,8 @@ type IUnknown interface {
 	UnsafeAddr() unsafe.Pointer
 	IsValid() bool
 	SetInstance(instance unsafe.Pointer)
-	free(index int)
+	AddRef() bool
+	Release() bool
 }
 
 // Unknown 接口
@@ -49,9 +51,35 @@ func (m *Unknown) SetInstance(instance unsafe.Pointer) {
 	m.instance = instance
 }
 
-func (m *Unknown) free(index int) {
-	if m.instance != nil {
-		api.LCL().SysCallN(index, m.Instance())
-		m.instance = nil
+func (m *Unknown) AddRef() bool {
+	r1 := unknownImportAPI().SysCallN(0, m.Instance())
+	return GoBool(r1)
+}
+
+func (m *Unknown) Release() bool {
+	if m.IsValid() {
+		r1 := unknownImportAPI().SysCallN(1, m.Instance())
+		if GoBool(r1) {
+			m.instance = nil
+			return true
+		}
 	}
+	return false
+}
+
+var (
+	unknownImport       *imports.Imports = nil
+	unknownImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("COMUnknown_AddRef", 0),
+		/*1*/ imports.NewTable("COMUnknown_Release", 0),
+	}
+)
+
+func unknownImportAPI() *imports.Imports {
+	if unknownImport == nil {
+		unknownImport = NewDefaultImports()
+		unknownImport.SetImportTable(unknownImportTables)
+		unknownImportTables = nil
+	}
+	return unknownImport
 }
