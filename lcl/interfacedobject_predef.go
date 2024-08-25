@@ -15,12 +15,14 @@ import (
 // IInterfacedObject Parent: IObject
 type IInterfacedObject interface {
 	IObject
+	IUnknown
 	RefCount() int32 // property
 }
 
 // TInterfacedObject Parent: TObject
 type TInterfacedObject struct {
 	TObject
+	Unknown
 }
 
 func NewInterfacedObject() IInterfacedObject {

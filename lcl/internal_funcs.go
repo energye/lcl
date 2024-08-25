@@ -43,18 +43,8 @@ func GetObjectUintptr(object IObject) uintptr {
 	switch object.(type) {
 	case IObject:
 		return object.Instance()
-	case IUnknown:
-		return GetUnknownUintptr(object.(IUnknown))
 	}
 	return 0
-}
-
-// GetUnknownUintptr 获取接口指针
-func GetUnknownUintptr(unknown IUnknown) uintptr {
-	if unknown == nil {
-		return 0
-	}
-	return unknown.Instance()
 }
 
 func getUIntPtr(v interface{}) uintptr {

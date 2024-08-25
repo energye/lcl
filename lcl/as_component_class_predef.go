@@ -18,14 +18,6 @@ func SetObjectInstance(object IObject, instance unsafe.Pointer) {
 	object.SetInstance(instance)
 }
 
-// SetUnknownInstance 设置实例值, 用于外部组件创建
-func SetUnknownInstance(unknown IUnknown, instance unsafe.Pointer) {
-	if unknown == nil {
-		return
-	}
-	unknown.SetInstance(instance)
-}
-
 // AsUnknown Convert a pointer object to an existing class object
 func AsUnknown(obj uintptr) IUnknown {
 	instance := GetInstance(obj)
@@ -33,7 +25,6 @@ func AsUnknown(obj uintptr) IUnknown {
 		return nil
 	}
 	unknown := new(Unknown)
-	SetUnknownInstance(unknown, instance)
 	return unknown
 }
 
@@ -77,7 +68,6 @@ func AsDataObject(obj uintptr) IDataObject {
 		return nil
 	}
 	dataObject := new(DataObject)
-	SetUnknownInstance(dataObject, instance)
 	return dataObject
 }
 

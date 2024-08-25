@@ -11,56 +11,28 @@ package lcl
 import (
 	. "github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	"unsafe"
 )
 
 // IUnknown 底层接口
 type IUnknown interface {
-	Instance() uintptr
-	UnsafeAddr() unsafe.Pointer
-	IsValid() bool
-	SetInstance(instance unsafe.Pointer)
-	AddRef() bool
-	Release() bool
+	AddRef(instance uintptr) bool
+	Release(instance uintptr) bool
 }
 
-// Unknown 接口
-type Unknown struct {
-	instance unsafe.Pointer
-}
+type Unknown uintptr
 
-func (m *Unknown) Instance() uintptr {
-	if m.instance == nil {
-		return 0
+func (Unknown) AddRef(instance uintptr) bool {
+	if instance != 0 {
+		r1 := unknownImportAPI().SysCallN(0, instance)
+		return GoBool(r1)
 	}
-	return uintptr(m.instance)
+	return false
 }
 
-func (m *Unknown) UnsafeAddr() unsafe.Pointer {
-	return m.instance
-}
-
-func (m *Unknown) IsValid() bool {
-	if m == nil || m.instance == nil {
-		return false
-	}
-	return true
-}
-
-func (m *Unknown) SetInstance(instance unsafe.Pointer) {
-	m.instance = instance
-}
-
-func (m *Unknown) AddRef() bool {
-	r1 := unknownImportAPI().SysCallN(0, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *Unknown) Release() bool {
-	if m.IsValid() {
-		r1 := unknownImportAPI().SysCallN(1, m.Instance())
+func (Unknown) Release(instance uintptr) bool {
+	if instance != 0 {
+		r1 := unknownImportAPI().SysCallN(1, instance)
 		if GoBool(r1) {
-			m.instance = nil
 			return true
 		}
 	}
