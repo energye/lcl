@@ -26,7 +26,7 @@ This project is under development in version 3.0 of [energy](https://github.com/
 ---
 
 ### 项目简介
-
+- 该项目已完全重构
 > [Go LCL](https://github.com/energye/lcl)
 > 是 Go 基于
 > [LCL](https://www.lazarus-ide.org/)
@@ -110,4 +110,4 @@ energy底层由多个项目模块组成, 因过于复杂扔处于建设的过程
 
 ### 开源协议
 
-[![license](https://img.shields.io/github/license/energye/wv.svg?logo=git&logoColor=green)](http://www.apache.org/licenses/LICENSE-2.0)
+[![license](https://img.shields.io/github/license/energye/lcl.svg?logo=git&logoColor=green)](http://www.apache.org/licenses/LICENSE-2.0)
