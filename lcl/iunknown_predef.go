@@ -23,7 +23,7 @@ type Unknown uintptr
 
 func (Unknown) AddRef(instance uintptr) bool {
 	if instance != 0 {
-		r1 := unknownImportAPI().SysCallN(0, instance)
+		r1 := unknownImportAPI().SysCallN(0, uintptr(unsafePointer(&instance)))
 		return GoBool(r1)
 	}
 	return false
@@ -31,7 +31,7 @@ func (Unknown) AddRef(instance uintptr) bool {
 
 func (Unknown) Release(instance uintptr) bool {
 	if instance != 0 {
-		r1 := unknownImportAPI().SysCallN(1, instance)
+		r1 := unknownImportAPI().SysCallN(1, uintptr(unsafePointer(&instance)))
 		if GoBool(r1) {
 			return true
 		}
@@ -42,8 +42,8 @@ func (Unknown) Release(instance uintptr) bool {
 var (
 	unknownImport       *imports.Imports = nil
 	unknownImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("COMUnknown_AddRef", 0),
-		/*1*/ imports.NewTable("COMUnknown_Release", 0),
+		/*0*/ imports.NewTable("Unknown_AddRef", 0),
+		/*1*/ imports.NewTable("Unknown_Release", 0),
 	}
 )
 
