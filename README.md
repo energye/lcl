@@ -13,7 +13,7 @@
 
 ---
 
-This project is under development in version 3.0 of [energy](https://github.com/energye/energy)
+This project is the underlying support library for [energy3.0](https://github.com/energye/energy)
 
 ---
 ![go-version](https://img.shields.io/github/go-mod/go-version/energye/lcl?logo=git&logoColor=green)
@@ -29,7 +29,7 @@ This project is under development in version 3.0 of [energy](https://github.com/
 - 该项目已完全重构
 > [Go LCL](https://github.com/energye/lcl)
 > 是 Go 基于
-> [LCL](https://www.lazarus-ide.org/)
+> [LCL(Lazarus Component Library)](https://www.lazarus-ide.org/)
 > 开发的框架
 >
 >> LCL - 基础库, 图形用户界面(GUI)组件库, 提供了非常丰富的系统原生控件
@@ -37,7 +37,6 @@ This project is under development in version 3.0 of [energy](https://github.com/
 > 构建&使用
 >
 >> LCL 开发原生图形用户界面(GUI)应用. 轻量级, 丰富的系统原生控件
-
 
 
 ### 特点
@@ -53,6 +52,8 @@ This project is under development in version 3.0 of [energy](https://github.com/
 
 > - Golang >= 1.20
 > - 动态链接库 `liblcl.dll` 当前仅提供了Windows测试版本
+
+#### [示例](https://github.com/energye/examples/tree/main/lcl)
 
 #### 开发环境
 
