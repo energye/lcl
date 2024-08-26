@@ -13,7 +13,7 @@ import (
 	"github.com/energye/lcl/api/imports"
 )
 
-// IUnknown 底层接口
+// IUnknown COM
 type IUnknown interface {
 	AddRef(instance uintptr) bool
 	Release(instance uintptr) bool
