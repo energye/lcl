@@ -59,174 +59,174 @@ type TDockZone struct {
 }
 
 func NewDockZone(TheTree IDockTree, TheChildControl IControl) IDockZone {
-	r1 := LCL().SysCallN(2656, GetObjectUintptr(TheTree), GetObjectUintptr(TheChildControl))
+	r1 := LCL().SysCallN(2685, GetObjectUintptr(TheTree), GetObjectUintptr(TheChildControl))
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) ChildControl() IControl {
-	r1 := LCL().SysCallN(2653, m.Instance())
+	r1 := LCL().SysCallN(2682, m.Instance())
 	return AsControl(r1)
 }
 
 func (m *TDockZone) ChildCount() int32 {
-	r1 := LCL().SysCallN(2654, m.Instance())
+	r1 := LCL().SysCallN(2683, m.Instance())
 	return int32(r1)
 }
 
 func (m *TDockZone) FirstChild() IDockZone {
-	r1 := LCL().SysCallN(2658, m.Instance())
+	r1 := LCL().SysCallN(2687, m.Instance())
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) Height() int32 {
-	r1 := LCL().SysCallN(2663, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2692, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDockZone) SetHeight(AValue int32) {
-	LCL().SysCallN(2663, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2692, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDockZone) Left() int32 {
-	r1 := LCL().SysCallN(2664, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2693, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDockZone) SetLeft(AValue int32) {
-	LCL().SysCallN(2664, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2693, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDockZone) LimitBegin() int32 {
-	r1 := LCL().SysCallN(2665, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2694, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDockZone) SetLimitBegin(AValue int32) {
-	LCL().SysCallN(2665, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2694, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDockZone) LimitSize() int32 {
-	r1 := LCL().SysCallN(2666, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2695, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDockZone) SetLimitSize(AValue int32) {
-	LCL().SysCallN(2666, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2695, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDockZone) Orientation() TDockOrientation {
-	r1 := LCL().SysCallN(2669, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2698, 0, m.Instance(), 0)
 	return TDockOrientation(r1)
 }
 
 func (m *TDockZone) SetOrientation(AValue TDockOrientation) {
-	LCL().SysCallN(2669, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2698, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDockZone) Parent() IDockZone {
-	r1 := LCL().SysCallN(2670, m.Instance())
+	r1 := LCL().SysCallN(2699, m.Instance())
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) Top() int32 {
-	r1 := LCL().SysCallN(2675, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2704, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDockZone) SetTop(AValue int32) {
-	LCL().SysCallN(2675, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2704, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDockZone) Tree() IDockTree {
-	r1 := LCL().SysCallN(2676, m.Instance())
+	r1 := LCL().SysCallN(2705, m.Instance())
 	return AsDockTree(r1)
 }
 
 func (m *TDockZone) Visible() bool {
-	r1 := LCL().SysCallN(2677, m.Instance())
+	r1 := LCL().SysCallN(2706, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TDockZone) VisibleChildCount() int32 {
-	r1 := LCL().SysCallN(2678, m.Instance())
+	r1 := LCL().SysCallN(2707, m.Instance())
 	return int32(r1)
 }
 
 func (m *TDockZone) Width() int32 {
-	r1 := LCL().SysCallN(2679, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2708, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDockZone) SetWidth(AValue int32) {
-	LCL().SysCallN(2679, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2708, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDockZone) NextSibling() IDockZone {
-	r1 := LCL().SysCallN(2667, m.Instance())
+	r1 := LCL().SysCallN(2696, m.Instance())
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) PrevSibling() IDockZone {
-	r1 := LCL().SysCallN(2671, m.Instance())
+	r1 := LCL().SysCallN(2700, m.Instance())
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) FindZone(AControl IControl) IDockZone {
-	r1 := LCL().SysCallN(2657, m.Instance(), GetObjectUintptr(AControl))
+	r1 := LCL().SysCallN(2686, m.Instance(), GetObjectUintptr(AControl))
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) FirstVisibleChild() IDockZone {
-	r1 := LCL().SysCallN(2659, m.Instance())
+	r1 := LCL().SysCallN(2688, m.Instance())
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) GetNextVisibleZone() IDockZone {
-	r1 := LCL().SysCallN(2662, m.Instance())
+	r1 := LCL().SysCallN(2691, m.Instance())
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) NextVisible() IDockZone {
-	r1 := LCL().SysCallN(2668, m.Instance())
+	r1 := LCL().SysCallN(2697, m.Instance())
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) PrevVisible() IDockZone {
-	r1 := LCL().SysCallN(2672, m.Instance())
+	r1 := LCL().SysCallN(2701, m.Instance())
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) GetLastChild() IDockZone {
-	r1 := LCL().SysCallN(2661, m.Instance())
+	r1 := LCL().SysCallN(2690, m.Instance())
 	return AsDockZone(r1)
 }
 
 func (m *TDockZone) GetIndex() int32 {
-	r1 := LCL().SysCallN(2660, m.Instance())
+	r1 := LCL().SysCallN(2689, m.Instance())
 	return int32(r1)
 }
 
 func DockZoneClass() TClass {
-	ret := LCL().SysCallN(2655)
+	ret := LCL().SysCallN(2684)
 	return TClass(ret)
 }
 
 func (m *TDockZone) AddSibling(NewZone IDockZone, InsertAt TAlign) {
-	LCL().SysCallN(2652, m.Instance(), GetObjectUintptr(NewZone), uintptr(InsertAt))
+	LCL().SysCallN(2681, m.Instance(), GetObjectUintptr(NewZone), uintptr(InsertAt))
 }
 
 func (m *TDockZone) AddAsFirstChild(NewChildZone IDockZone) {
-	LCL().SysCallN(2650, m.Instance(), GetObjectUintptr(NewChildZone))
+	LCL().SysCallN(2679, m.Instance(), GetObjectUintptr(NewChildZone))
 }
 
 func (m *TDockZone) AddAsLastChild(NewChildZone IDockZone) {
-	LCL().SysCallN(2651, m.Instance(), GetObjectUintptr(NewChildZone))
+	LCL().SysCallN(2680, m.Instance(), GetObjectUintptr(NewChildZone))
 }
 
 func (m *TDockZone) ReplaceChild(OldChild, NewChild IDockZone) {
-	LCL().SysCallN(2674, m.Instance(), GetObjectUintptr(OldChild), GetObjectUintptr(NewChild))
+	LCL().SysCallN(2703, m.Instance(), GetObjectUintptr(OldChild), GetObjectUintptr(NewChild))
 }
 
 func (m *TDockZone) Remove(ChildZone IDockZone) {
-	LCL().SysCallN(2673, m.Instance(), GetObjectUintptr(ChildZone))
+	LCL().SysCallN(2702, m.Instance(), GetObjectUintptr(ChildZone))
 }

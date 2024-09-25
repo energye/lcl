@@ -49,118 +49,118 @@ type TCustomStringGrid struct {
 }
 
 func NewCustomStringGrid(AOwner IComponent) ICustomStringGrid {
-	r1 := LCL().SysCallN(2281, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(2310, GetObjectUintptr(AOwner))
 	return AsCustomStringGrid(r1)
 }
 
 func (m *TCustomStringGrid) Cells(ACol, ARow int32) string {
-	r1 := LCL().SysCallN(2273, 0, m.Instance(), uintptr(ACol), uintptr(ARow))
+	r1 := LCL().SysCallN(2302, 0, m.Instance(), uintptr(ACol), uintptr(ARow))
 	return GoStr(r1)
 }
 
 func (m *TCustomStringGrid) SetCells(ACol, ARow int32, AValue string) {
-	LCL().SysCallN(2273, 1, m.Instance(), uintptr(ACol), uintptr(ARow), PascalStr(AValue))
+	LCL().SysCallN(2302, 1, m.Instance(), uintptr(ACol), uintptr(ARow), PascalStr(AValue))
 }
 
 func (m *TCustomStringGrid) Cols(index int32) IStrings {
-	r1 := LCL().SysCallN(2279, 0, m.Instance(), uintptr(index))
+	r1 := LCL().SysCallN(2308, 0, m.Instance(), uintptr(index))
 	return AsStrings(r1)
 }
 
 func (m *TCustomStringGrid) SetCols(index int32, AValue IStrings) {
-	LCL().SysCallN(2279, 1, m.Instance(), uintptr(index), GetObjectUintptr(AValue))
+	LCL().SysCallN(2308, 1, m.Instance(), uintptr(index), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomStringGrid) DefaultTextStyle() (resultTextStyle TTextStyle) {
-	LCL().SysCallN(2282, 0, m.Instance(), uintptr(unsafePointer(&resultTextStyle)), uintptr(unsafePointer(&resultTextStyle)))
+	LCL().SysCallN(2311, 0, m.Instance(), uintptr(unsafePointer(&resultTextStyle)), uintptr(unsafePointer(&resultTextStyle)))
 	return
 }
 
 func (m *TCustomStringGrid) SetDefaultTextStyle(AValue *TTextStyle) {
-	LCL().SysCallN(2282, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	LCL().SysCallN(2311, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TCustomStringGrid) ExtendedSelect() bool {
-	r1 := LCL().SysCallN(2283, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2312, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomStringGrid) SetExtendedSelect(AValue bool) {
-	LCL().SysCallN(2283, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(2312, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomStringGrid) Objects(ACol, ARow int32) IObject {
-	r1 := LCL().SysCallN(2286, 0, m.Instance(), uintptr(ACol), uintptr(ARow))
+	r1 := LCL().SysCallN(2315, 0, m.Instance(), uintptr(ACol), uintptr(ARow))
 	return AsObject(r1)
 }
 
 func (m *TCustomStringGrid) SetObjects(ACol, ARow int32, AValue IObject) {
-	LCL().SysCallN(2286, 1, m.Instance(), uintptr(ACol), uintptr(ARow), GetObjectUintptr(AValue))
+	LCL().SysCallN(2315, 1, m.Instance(), uintptr(ACol), uintptr(ARow), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomStringGrid) Rows(index int32) IStrings {
-	r1 := LCL().SysCallN(2287, 0, m.Instance(), uintptr(index))
+	r1 := LCL().SysCallN(2316, 0, m.Instance(), uintptr(index))
 	return AsStrings(r1)
 }
 
 func (m *TCustomStringGrid) SetRows(index int32, AValue IStrings) {
-	LCL().SysCallN(2287, 1, m.Instance(), uintptr(index), GetObjectUintptr(AValue))
+	LCL().SysCallN(2316, 1, m.Instance(), uintptr(index), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomStringGrid) ValidateOnSetSelection() bool {
-	r1 := LCL().SysCallN(2290, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2319, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomStringGrid) SetValidateOnSetSelection(AValue bool) {
-	LCL().SysCallN(2290, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(2319, 1, m.Instance(), PascalBool(AValue))
 }
 
 func CustomStringGridClass() TClass {
-	ret := LCL().SysCallN(2274)
+	ret := LCL().SysCallN(2303)
 	return TClass(ret)
 }
 
 func (m *TCustomStringGrid) AutoSizeColumn(aCol int32) {
-	LCL().SysCallN(2271, m.Instance(), uintptr(aCol))
+	LCL().SysCallN(2300, m.Instance(), uintptr(aCol))
 }
 
 func (m *TCustomStringGrid) AutoSizeColumns() {
-	LCL().SysCallN(2272, m.Instance())
+	LCL().SysCallN(2301, m.Instance())
 }
 
 func (m *TCustomStringGrid) Clean() {
-	LCL().SysCallN(2275, m.Instance())
+	LCL().SysCallN(2304, m.Instance())
 }
 
 func (m *TCustomStringGrid) Clean1(CleanOptions TGridZoneSet) {
-	LCL().SysCallN(2276, m.Instance(), uintptr(CleanOptions))
+	LCL().SysCallN(2305, m.Instance(), uintptr(CleanOptions))
 }
 
 func (m *TCustomStringGrid) Clean2(aRect *TRect, CleanOptions TGridZoneSet) {
-	LCL().SysCallN(2277, m.Instance(), uintptr(unsafePointer(aRect)), uintptr(CleanOptions))
+	LCL().SysCallN(2306, m.Instance(), uintptr(unsafePointer(aRect)), uintptr(CleanOptions))
 }
 
 func (m *TCustomStringGrid) Clean3(StartCol, StartRow, EndCol, EndRow int32, CleanOptions TGridZoneSet) {
-	LCL().SysCallN(2278, m.Instance(), uintptr(StartCol), uintptr(StartRow), uintptr(EndCol), uintptr(EndRow), uintptr(CleanOptions))
+	LCL().SysCallN(2307, m.Instance(), uintptr(StartCol), uintptr(StartRow), uintptr(EndCol), uintptr(EndRow), uintptr(CleanOptions))
 }
 
 func (m *TCustomStringGrid) CopyToClipboard(AUseSelection bool) {
-	LCL().SysCallN(2280, m.Instance(), PascalBool(AUseSelection))
+	LCL().SysCallN(2309, m.Instance(), PascalBool(AUseSelection))
 }
 
 func (m *TCustomStringGrid) LoadFromCSVStream(AStream IStream, ADelimiter Char, UseTitles bool, FromLine int32, SkipEmptyLines bool) {
-	LCL().SysCallN(2285, m.Instance(), GetObjectUintptr(AStream), uintptr(ADelimiter), PascalBool(UseTitles), uintptr(FromLine), PascalBool(SkipEmptyLines))
+	LCL().SysCallN(2314, m.Instance(), GetObjectUintptr(AStream), uintptr(ADelimiter), PascalBool(UseTitles), uintptr(FromLine), PascalBool(SkipEmptyLines))
 }
 
 func (m *TCustomStringGrid) LoadFromCSVFile(AFilename string, ADelimiter Char, UseTitles bool, FromLine int32, SkipEmptyLines bool) {
-	LCL().SysCallN(2284, m.Instance(), PascalStr(AFilename), uintptr(ADelimiter), PascalBool(UseTitles), uintptr(FromLine), PascalBool(SkipEmptyLines))
+	LCL().SysCallN(2313, m.Instance(), PascalStr(AFilename), uintptr(ADelimiter), PascalBool(UseTitles), uintptr(FromLine), PascalBool(SkipEmptyLines))
 }
 
 func (m *TCustomStringGrid) SaveToCSVStream(AStream IStream, ADelimiter Char, WriteTitles bool, VisibleColumnsOnly bool) {
-	LCL().SysCallN(2289, m.Instance(), GetObjectUintptr(AStream), uintptr(ADelimiter), PascalBool(WriteTitles), PascalBool(VisibleColumnsOnly))
+	LCL().SysCallN(2318, m.Instance(), GetObjectUintptr(AStream), uintptr(ADelimiter), PascalBool(WriteTitles), PascalBool(VisibleColumnsOnly))
 }
 
 func (m *TCustomStringGrid) SaveToCSVFile(AFileName string, ADelimiter Char, WriteTitles bool, VisibleColumnsOnly bool) {
-	LCL().SysCallN(2288, m.Instance(), PascalStr(AFileName), uintptr(ADelimiter), PascalBool(WriteTitles), PascalBool(VisibleColumnsOnly))
+	LCL().SysCallN(2317, m.Instance(), PascalStr(AFileName), uintptr(ADelimiter), PascalBool(WriteTitles), PascalBool(VisibleColumnsOnly))
 }

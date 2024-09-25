@@ -26,20 +26,20 @@ type TPreviewFileControl struct {
 }
 
 func NewPreviewFileControl(TheOwner IComponent) IPreviewFileControl {
-	r1 := LCL().SysCallN(4573, GetObjectUintptr(TheOwner))
+	r1 := LCL().SysCallN(4616, GetObjectUintptr(TheOwner))
 	return AsPreviewFileControl(r1)
 }
 
 func (m *TPreviewFileControl) PreviewFileDialog() IPreviewFileDialog {
-	r1 := LCL().SysCallN(4574, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4617, 0, m.Instance(), 0)
 	return AsPreviewFileDialog(r1)
 }
 
 func (m *TPreviewFileControl) SetPreviewFileDialog(AValue IPreviewFileDialog) {
-	LCL().SysCallN(4574, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(4617, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func PreviewFileControlClass() TClass {
-	ret := LCL().SysCallN(4572)
+	ret := LCL().SysCallN(4615)
 	return TClass(ret)
 }

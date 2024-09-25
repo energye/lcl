@@ -45,106 +45,106 @@ type TListItems struct {
 }
 
 func NewListItems(AOwner ICustomListView) IListItems {
-	r1 := LCL().SysCallN(4058, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(4087, GetObjectUintptr(AOwner))
 	return AsListItems(r1)
 }
 
 func (m *TListItems) Flags() TListItemsFlags {
-	r1 := LCL().SysCallN(4065, m.Instance())
+	r1 := LCL().SysCallN(4094, m.Instance())
 	return TListItemsFlags(r1)
 }
 
 func (m *TListItems) Count() int32 {
-	r1 := LCL().SysCallN(4057, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4086, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TListItems) SetCount(AValue int32) {
-	LCL().SysCallN(4057, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(4086, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TListItems) Item(AIndex int32) IListItem {
-	r1 := LCL().SysCallN(4070, 0, m.Instance(), uintptr(AIndex))
+	r1 := LCL().SysCallN(4099, 0, m.Instance(), uintptr(AIndex))
 	return AsListItem(r1)
 }
 
 func (m *TListItems) SetItem(AIndex int32, AValue IListItem) {
-	LCL().SysCallN(4070, 1, m.Instance(), uintptr(AIndex), GetObjectUintptr(AValue))
+	LCL().SysCallN(4099, 1, m.Instance(), uintptr(AIndex), GetObjectUintptr(AValue))
 }
 
 func (m *TListItems) Owner() ICustomListView {
-	r1 := LCL().SysCallN(4072, m.Instance())
+	r1 := LCL().SysCallN(4101, m.Instance())
 	return AsCustomListView(r1)
 }
 
 func (m *TListItems) Add() IListItem {
-	r1 := LCL().SysCallN(4052, m.Instance())
+	r1 := LCL().SysCallN(4081, m.Instance())
 	return AsListItem(r1)
 }
 
 func (m *TListItems) FindCaption(StartIndex int32, Value string, Partial, Inclusive, Wrap bool, PartStart bool) IListItem {
-	r1 := LCL().SysCallN(4062, m.Instance(), uintptr(StartIndex), PascalStr(Value), PascalBool(Partial), PascalBool(Inclusive), PascalBool(Wrap), PascalBool(PartStart))
+	r1 := LCL().SysCallN(4091, m.Instance(), uintptr(StartIndex), PascalStr(Value), PascalBool(Partial), PascalBool(Inclusive), PascalBool(Wrap), PascalBool(PartStart))
 	return AsListItem(r1)
 }
 
 func (m *TListItems) FindData(AData uintptr) IListItem {
-	r1 := LCL().SysCallN(4063, m.Instance(), uintptr(AData))
+	r1 := LCL().SysCallN(4092, m.Instance(), uintptr(AData))
 	return AsListItem(r1)
 }
 
 func (m *TListItems) FindData1(StartIndex int32, Value uintptr, Inclusive, Wrap bool) IListItem {
-	r1 := LCL().SysCallN(4064, m.Instance(), uintptr(StartIndex), uintptr(Value), PascalBool(Inclusive), PascalBool(Wrap))
+	r1 := LCL().SysCallN(4093, m.Instance(), uintptr(StartIndex), uintptr(Value), PascalBool(Inclusive), PascalBool(Wrap))
 	return AsListItem(r1)
 }
 
 func (m *TListItems) GetEnumerator() IListItemsEnumerator {
-	r1 := LCL().SysCallN(4066, m.Instance())
+	r1 := LCL().SysCallN(4095, m.Instance())
 	return AsListItemsEnumerator(r1)
 }
 
 func (m *TListItems) IndexOf(AItem IListItem) int32 {
-	r1 := LCL().SysCallN(4067, m.Instance(), GetObjectUintptr(AItem))
+	r1 := LCL().SysCallN(4096, m.Instance(), GetObjectUintptr(AItem))
 	return int32(r1)
 }
 
 func (m *TListItems) Insert(AIndex int32) IListItem {
-	r1 := LCL().SysCallN(4068, m.Instance(), uintptr(AIndex))
+	r1 := LCL().SysCallN(4097, m.Instance(), uintptr(AIndex))
 	return AsListItem(r1)
 }
 
 func ListItemsClass() TClass {
-	ret := LCL().SysCallN(4055)
+	ret := LCL().SysCallN(4084)
 	return TClass(ret)
 }
 
 func (m *TListItems) AddItem(AItem IListItem) {
-	LCL().SysCallN(4053, m.Instance(), GetObjectUintptr(AItem))
+	LCL().SysCallN(4082, m.Instance(), GetObjectUintptr(AItem))
 }
 
 func (m *TListItems) BeginUpdate() {
-	LCL().SysCallN(4054, m.Instance())
+	LCL().SysCallN(4083, m.Instance())
 }
 
 func (m *TListItems) Clear() {
-	LCL().SysCallN(4056, m.Instance())
+	LCL().SysCallN(4085, m.Instance())
 }
 
 func (m *TListItems) Delete(AIndex int32) {
-	LCL().SysCallN(4059, m.Instance(), uintptr(AIndex))
+	LCL().SysCallN(4088, m.Instance(), uintptr(AIndex))
 }
 
 func (m *TListItems) EndUpdate() {
-	LCL().SysCallN(4060, m.Instance())
+	LCL().SysCallN(4089, m.Instance())
 }
 
 func (m *TListItems) Exchange(AIndex1, AIndex2 int32) {
-	LCL().SysCallN(4061, m.Instance(), uintptr(AIndex1), uintptr(AIndex2))
+	LCL().SysCallN(4090, m.Instance(), uintptr(AIndex1), uintptr(AIndex2))
 }
 
 func (m *TListItems) Move(AFromIndex, AToIndex int32) {
-	LCL().SysCallN(4071, m.Instance(), uintptr(AFromIndex), uintptr(AToIndex))
+	LCL().SysCallN(4100, m.Instance(), uintptr(AFromIndex), uintptr(AToIndex))
 }
 
 func (m *TListItems) InsertItem(AItem IListItem, AIndex int32) {
-	LCL().SysCallN(4069, m.Instance(), GetObjectUintptr(AItem), uintptr(AIndex))
+	LCL().SysCallN(4098, m.Instance(), GetObjectUintptr(AItem), uintptr(AIndex))
 }

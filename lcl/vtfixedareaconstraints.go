@@ -34,48 +34,48 @@ type TVTFixedAreaConstraints struct {
 }
 
 func NewVTFixedAreaConstraints(AOwner IVTHeader) IVTFixedAreaConstraints {
-	r1 := LCL().SysCallN(5850, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(5893, GetObjectUintptr(AOwner))
 	return AsVTFixedAreaConstraints(r1)
 }
 
 func (m *TVTFixedAreaConstraints) MaxHeightPercent() TVTConstraintPercent {
-	r1 := LCL().SysCallN(5851, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5894, 0, m.Instance(), 0)
 	return TVTConstraintPercent(r1)
 }
 
 func (m *TVTFixedAreaConstraints) SetMaxHeightPercent(AValue TVTConstraintPercent) {
-	LCL().SysCallN(5851, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5894, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTFixedAreaConstraints) MaxWidthPercent() TVTConstraintPercent {
-	r1 := LCL().SysCallN(5852, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5895, 0, m.Instance(), 0)
 	return TVTConstraintPercent(r1)
 }
 
 func (m *TVTFixedAreaConstraints) SetMaxWidthPercent(AValue TVTConstraintPercent) {
-	LCL().SysCallN(5852, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5895, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTFixedAreaConstraints) MinHeightPercent() TVTConstraintPercent {
-	r1 := LCL().SysCallN(5853, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5896, 0, m.Instance(), 0)
 	return TVTConstraintPercent(r1)
 }
 
 func (m *TVTFixedAreaConstraints) SetMinHeightPercent(AValue TVTConstraintPercent) {
-	LCL().SysCallN(5853, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5896, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTFixedAreaConstraints) MinWidthPercent() TVTConstraintPercent {
-	r1 := LCL().SysCallN(5854, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5897, 0, m.Instance(), 0)
 	return TVTConstraintPercent(r1)
 }
 
 func (m *TVTFixedAreaConstraints) SetMinWidthPercent(AValue TVTConstraintPercent) {
-	LCL().SysCallN(5854, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5897, 1, m.Instance(), uintptr(AValue))
 }
 
 func VTFixedAreaConstraintsClass() TClass {
-	ret := LCL().SysCallN(5849)
+	ret := LCL().SysCallN(5892)
 	return TClass(ret)
 }
 
@@ -84,5 +84,5 @@ func (m *TVTFixedAreaConstraints) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5855, m.Instance(), m.changePtr)
+	LCL().SysCallN(5898, m.Instance(), m.changePtr)
 }

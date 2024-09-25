@@ -26,12 +26,12 @@ type TFPCustomImageHandler struct {
 }
 
 func NewFPCustomImageHandler() IFPCustomImageHandler {
-	r1 := LCL().SysCallN(2910)
+	r1 := LCL().SysCallN(2939)
 	return AsFPCustomImageHandler(r1)
 }
 
 func FPCustomImageHandlerClass() TClass {
-	ret := LCL().SysCallN(2909)
+	ret := LCL().SysCallN(2938)
 	return TClass(ret)
 }
 
@@ -40,5 +40,5 @@ func (m *TFPCustomImageHandler) SetOnProgress(fn TFPImgProgressEvent) {
 		RemoveEventElement(m.progressPtr)
 	}
 	m.progressPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2911, m.Instance(), m.progressPtr)
+	LCL().SysCallN(2940, m.Instance(), m.progressPtr)
 }

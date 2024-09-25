@@ -26,11 +26,11 @@ type TCustomVirtualDrawTree struct {
 }
 
 func NewCustomVirtualDrawTree(AOwner IComponent) ICustomVirtualDrawTree {
-	r1 := LCL().SysCallN(2479, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(2508, GetObjectUintptr(AOwner))
 	return AsCustomVirtualDrawTree(r1)
 }
 
 func CustomVirtualDrawTreeClass() TClass {
-	ret := LCL().SysCallN(2478)
+	ret := LCL().SysCallN(2507)
 	return TClass(ret)
 }

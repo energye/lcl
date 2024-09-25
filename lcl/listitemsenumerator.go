@@ -26,21 +26,21 @@ type TListItemsEnumerator struct {
 }
 
 func NewListItemsEnumerator(AItems IListItems) IListItemsEnumerator {
-	r1 := LCL().SysCallN(4049, GetObjectUintptr(AItems))
+	r1 := LCL().SysCallN(4078, GetObjectUintptr(AItems))
 	return AsListItemsEnumerator(r1)
 }
 
 func (m *TListItemsEnumerator) Current() IListItem {
-	r1 := LCL().SysCallN(4050, m.Instance())
+	r1 := LCL().SysCallN(4079, m.Instance())
 	return AsListItem(r1)
 }
 
 func (m *TListItemsEnumerator) MoveNext() bool {
-	r1 := LCL().SysCallN(4051, m.Instance())
+	r1 := LCL().SysCallN(4080, m.Instance())
 	return GoBool(r1)
 }
 
 func ListItemsEnumeratorClass() TClass {
-	ret := LCL().SysCallN(4048)
+	ret := LCL().SysCallN(4077)
 	return TClass(ret)
 }

@@ -32,47 +32,47 @@ type TCustomSpinEdit struct {
 }
 
 func NewCustomSpinEdit(TheOwner IComponent) ICustomSpinEdit {
-	r1 := LCL().SysCallN(2243, GetObjectUintptr(TheOwner))
+	r1 := LCL().SysCallN(2272, GetObjectUintptr(TheOwner))
 	return AsCustomSpinEdit(r1)
 }
 
 func (m *TCustomSpinEdit) ValueForInteger() int32 {
-	r1 := LCL().SysCallN(2247, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2276, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomSpinEdit) SetValueForInteger(AValue int32) {
-	LCL().SysCallN(2247, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2276, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpinEdit) MinValueForInteger() int32 {
-	r1 := LCL().SysCallN(2246, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2275, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomSpinEdit) SetMinValueForInteger(AValue int32) {
-	LCL().SysCallN(2246, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2275, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpinEdit) MaxValueForInteger() int32 {
-	r1 := LCL().SysCallN(2245, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2274, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomSpinEdit) SetMaxValueForInteger(AValue int32) {
-	LCL().SysCallN(2245, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2274, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpinEdit) IncrementForInteger() int32 {
-	r1 := LCL().SysCallN(2244, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2273, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomSpinEdit) SetIncrementForInteger(AValue int32) {
-	LCL().SysCallN(2244, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2273, 1, m.Instance(), uintptr(AValue))
 }
 
 func CustomSpinEditClass() TClass {
-	ret := LCL().SysCallN(2242)
+	ret := LCL().SysCallN(2271)
 	return TClass(ret)
 }

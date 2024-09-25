@@ -50,125 +50,125 @@ type TSizeConstraints struct {
 }
 
 func NewSizeConstraints(AControl IControl) ISizeConstraints {
-	r1 := LCL().SysCallN(5007, GetObjectUintptr(AControl))
+	r1 := LCL().SysCallN(5050, GetObjectUintptr(AControl))
 	return AsSizeConstraints(r1)
 }
 
 func (m *TSizeConstraints) MaxInterfaceHeight() int32 {
-	r1 := LCL().SysCallN(5013, m.Instance())
+	r1 := LCL().SysCallN(5056, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) MaxInterfaceWidth() int32 {
-	r1 := LCL().SysCallN(5014, m.Instance())
+	r1 := LCL().SysCallN(5057, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) MinInterfaceHeight() int32 {
-	r1 := LCL().SysCallN(5017, m.Instance())
+	r1 := LCL().SysCallN(5060, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) MinInterfaceWidth() int32 {
-	r1 := LCL().SysCallN(5018, m.Instance())
+	r1 := LCL().SysCallN(5061, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) Control() IControl {
-	r1 := LCL().SysCallN(5006, m.Instance())
+	r1 := LCL().SysCallN(5049, m.Instance())
 	return AsControl(r1)
 }
 
 func (m *TSizeConstraints) Options() TSizeConstraintsOptions {
-	r1 := LCL().SysCallN(5022, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5065, 0, m.Instance(), 0)
 	return TSizeConstraintsOptions(r1)
 }
 
 func (m *TSizeConstraints) SetOptions(AValue TSizeConstraintsOptions) {
-	LCL().SysCallN(5022, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5065, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSizeConstraints) MaxHeight() TConstraintSize {
-	r1 := LCL().SysCallN(5012, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5055, 0, m.Instance(), 0)
 	return TConstraintSize(r1)
 }
 
 func (m *TSizeConstraints) SetMaxHeight(AValue TConstraintSize) {
-	LCL().SysCallN(5012, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5055, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSizeConstraints) MaxWidth() TConstraintSize {
-	r1 := LCL().SysCallN(5015, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5058, 0, m.Instance(), 0)
 	return TConstraintSize(r1)
 }
 
 func (m *TSizeConstraints) SetMaxWidth(AValue TConstraintSize) {
-	LCL().SysCallN(5015, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5058, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSizeConstraints) MinHeight() TConstraintSize {
-	r1 := LCL().SysCallN(5016, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5059, 0, m.Instance(), 0)
 	return TConstraintSize(r1)
 }
 
 func (m *TSizeConstraints) SetMinHeight(AValue TConstraintSize) {
-	LCL().SysCallN(5016, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5059, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSizeConstraints) MinWidth() TConstraintSize {
-	r1 := LCL().SysCallN(5021, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5064, 0, m.Instance(), 0)
 	return TConstraintSize(r1)
 }
 
 func (m *TSizeConstraints) SetMinWidth(AValue TConstraintSize) {
-	LCL().SysCallN(5021, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5064, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSizeConstraints) EffectiveMinWidth() int32 {
-	r1 := LCL().SysCallN(5011, m.Instance())
+	r1 := LCL().SysCallN(5054, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) EffectiveMinHeight() int32 {
-	r1 := LCL().SysCallN(5010, m.Instance())
+	r1 := LCL().SysCallN(5053, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) EffectiveMaxWidth() int32 {
-	r1 := LCL().SysCallN(5009, m.Instance())
+	r1 := LCL().SysCallN(5052, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) EffectiveMaxHeight() int32 {
-	r1 := LCL().SysCallN(5008, m.Instance())
+	r1 := LCL().SysCallN(5051, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) MinMaxWidth(Width int32) int32 {
-	r1 := LCL().SysCallN(5020, m.Instance(), uintptr(Width))
+	r1 := LCL().SysCallN(5063, m.Instance(), uintptr(Width))
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) MinMaxHeight(Height int32) int32 {
-	r1 := LCL().SysCallN(5019, m.Instance(), uintptr(Height))
+	r1 := LCL().SysCallN(5062, m.Instance(), uintptr(Height))
 	return int32(r1)
 }
 
 func SizeConstraintsClass() TClass {
-	ret := LCL().SysCallN(5005)
+	ret := LCL().SysCallN(5048)
 	return TClass(ret)
 }
 
 func (m *TSizeConstraints) UpdateInterfaceConstraints() {
-	LCL().SysCallN(5025, m.Instance())
+	LCL().SysCallN(5068, m.Instance())
 }
 
 func (m *TSizeConstraints) SetInterfaceConstraints(MinW, MinH, MaxW, MaxH int32) {
-	LCL().SysCallN(5023, m.Instance(), uintptr(MinW), uintptr(MinH), uintptr(MaxW), uintptr(MaxH))
+	LCL().SysCallN(5066, m.Instance(), uintptr(MinW), uintptr(MinH), uintptr(MaxW), uintptr(MaxH))
 }
 
 func (m *TSizeConstraints) AutoAdjustLayout(AXProportion, AYProportion float64) {
-	LCL().SysCallN(5004, m.Instance(), uintptr(unsafePointer(&AXProportion)), uintptr(unsafePointer(&AYProportion)))
+	LCL().SysCallN(5047, m.Instance(), uintptr(unsafePointer(&AXProportion)), uintptr(unsafePointer(&AYProportion)))
 }
 
 func (m *TSizeConstraints) SetOnChange(fn TNotifyEvent) {
@@ -176,5 +176,5 @@ func (m *TSizeConstraints) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5024, m.Instance(), m.changePtr)
+	LCL().SysCallN(5067, m.Instance(), m.changePtr)
 }

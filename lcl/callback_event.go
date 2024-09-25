@@ -1139,6 +1139,8 @@ func eventCallbackProc(f uintptr, args uintptr, _ int) uintptr {
 				GoStr(getVal(4)), *getI32Ptr(5), &result, getBoolPtr(6))
 			setPtrVal(6, PascalStr(result))
 
+		case TOpenGlCtrlMakeCurrentEvent:
+			fn.(TOpenGlCtrlMakeCurrentEvent)(AsObject(getVal(0)), getBoolPtr(1))
 		default:
 		}
 	}

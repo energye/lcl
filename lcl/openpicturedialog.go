@@ -26,21 +26,21 @@ type TOpenPictureDialog struct {
 }
 
 func NewOpenPictureDialog(TheOwner IComponent) IOpenPictureDialog {
-	r1 := LCL().SysCallN(4378, GetObjectUintptr(TheOwner))
+	r1 := LCL().SysCallN(4421, GetObjectUintptr(TheOwner))
 	return AsOpenPictureDialog(r1)
 }
 
 func (m *TOpenPictureDialog) DefaultFilter() string {
-	r1 := LCL().SysCallN(4379, m.Instance())
+	r1 := LCL().SysCallN(4422, m.Instance())
 	return GoStr(r1)
 }
 
 func (m *TOpenPictureDialog) GetFilterExt() string {
-	r1 := LCL().SysCallN(4380, m.Instance())
+	r1 := LCL().SysCallN(4423, m.Instance())
 	return GoStr(r1)
 }
 
 func OpenPictureDialogClass() TClass {
-	ret := LCL().SysCallN(4377)
+	ret := LCL().SysCallN(4420)
 	return TClass(ret)
 }

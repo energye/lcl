@@ -93,153 +93,153 @@ type TStatusBar struct {
 }
 
 func NewStatusBar(TheOwner IComponent) IStatusBar {
-	r1 := LCL().SysCallN(5106, GetObjectUintptr(TheOwner))
+	r1 := LCL().SysCallN(5149, GetObjectUintptr(TheOwner))
 	return AsStatusBar(r1)
 }
 
 func (m *TStatusBar) Canvas() ICanvas {
-	r1 := LCL().SysCallN(5104, m.Instance())
+	r1 := LCL().SysCallN(5147, m.Instance())
 	return AsCanvas(r1)
 }
 
 func (m *TStatusBar) AutoHint() bool {
-	r1 := LCL().SysCallN(5102, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5145, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStatusBar) SetAutoHint(AValue bool) {
-	LCL().SysCallN(5102, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5145, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStatusBar) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5107, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5150, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TStatusBar) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5107, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5150, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStatusBar) DragKind() TDragKind {
-	r1 := LCL().SysCallN(5108, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5151, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TStatusBar) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(5108, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5151, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStatusBar) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5109, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5152, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TStatusBar) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5109, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5152, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStatusBar) Panels() IStatusPanels {
-	r1 := LCL().SysCallN(5113, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5156, 0, m.Instance(), 0)
 	return AsStatusPanels(r1)
 }
 
 func (m *TStatusBar) SetPanels(AValue IStatusPanels) {
-	LCL().SysCallN(5113, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(5156, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TStatusBar) ParentColor() bool {
-	r1 := LCL().SysCallN(5114, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5157, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStatusBar) SetParentColor(AValue bool) {
-	LCL().SysCallN(5114, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5157, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStatusBar) ParentFont() bool {
-	r1 := LCL().SysCallN(5115, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5158, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStatusBar) SetParentFont(AValue bool) {
-	LCL().SysCallN(5115, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5158, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStatusBar) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5116, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5159, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStatusBar) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5116, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5159, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStatusBar) SimpleText() string {
-	r1 := LCL().SysCallN(5137, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5180, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TStatusBar) SetSimpleText(AValue string) {
-	LCL().SysCallN(5137, 1, m.Instance(), PascalStr(AValue))
+	LCL().SysCallN(5180, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TStatusBar) SimplePanel() bool {
-	r1 := LCL().SysCallN(5136, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5179, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStatusBar) SetSimplePanel(AValue bool) {
-	LCL().SysCallN(5136, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5179, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStatusBar) SizeGrip() bool {
-	r1 := LCL().SysCallN(5138, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5181, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStatusBar) SetSizeGrip(AValue bool) {
-	LCL().SysCallN(5138, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5181, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStatusBar) UseSystemFont() bool {
-	r1 := LCL().SysCallN(5141, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5184, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStatusBar) SetUseSystemFont(AValue bool) {
-	LCL().SysCallN(5141, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5184, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStatusBar) GetPanelIndexAt(X, Y int32) int32 {
-	r1 := LCL().SysCallN(5111, m.Instance(), uintptr(X), uintptr(Y))
+	r1 := LCL().SysCallN(5154, m.Instance(), uintptr(X), uintptr(Y))
 	return int32(r1)
 }
 
 func (m *TStatusBar) SizeGripEnabled() bool {
-	r1 := LCL().SysCallN(5139, m.Instance())
+	r1 := LCL().SysCallN(5182, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TStatusBar) UpdatingStatusBar() bool {
-	r1 := LCL().SysCallN(5140, m.Instance())
+	r1 := LCL().SysCallN(5183, m.Instance())
 	return GoBool(r1)
 }
 
 func StatusBarClass() TClass {
-	ret := LCL().SysCallN(5105)
+	ret := LCL().SysCallN(5148)
 	return TClass(ret)
 }
 
 func (m *TStatusBar) InvalidatePanel(PanelIndex int32, PanelParts TPanelParts) {
-	LCL().SysCallN(5112, m.Instance(), uintptr(PanelIndex), uintptr(PanelParts))
+	LCL().SysCallN(5155, m.Instance(), uintptr(PanelIndex), uintptr(PanelParts))
 }
 
 func (m *TStatusBar) BeginUpdate() {
-	LCL().SysCallN(5103, m.Instance())
+	LCL().SysCallN(5146, m.Instance())
 }
 
 func (m *TStatusBar) EndUpdate() {
-	LCL().SysCallN(5110, m.Instance())
+	LCL().SysCallN(5153, m.Instance())
 }
 
 func (m *TStatusBar) SetOnContextPopup(fn TContextPopupEvent) {
@@ -247,7 +247,7 @@ func (m *TStatusBar) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5117, m.Instance(), m.contextPopupPtr)
+	LCL().SysCallN(5160, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TStatusBar) SetOnCreatePanelClass(fn TSBCreatePanelClassEvent) {
@@ -255,7 +255,7 @@ func (m *TStatusBar) SetOnCreatePanelClass(fn TSBCreatePanelClassEvent) {
 		RemoveEventElement(m.createPanelClassPtr)
 	}
 	m.createPanelClassPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5118, m.Instance(), m.createPanelClassPtr)
+	LCL().SysCallN(5161, m.Instance(), m.createPanelClassPtr)
 }
 
 func (m *TStatusBar) SetOnDblClick(fn TNotifyEvent) {
@@ -263,7 +263,7 @@ func (m *TStatusBar) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5119, m.Instance(), m.dblClickPtr)
+	LCL().SysCallN(5162, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TStatusBar) SetOnDragDrop(fn TDragDropEvent) {
@@ -271,7 +271,7 @@ func (m *TStatusBar) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5120, m.Instance(), m.dragDropPtr)
+	LCL().SysCallN(5163, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TStatusBar) SetOnDragOver(fn TDragOverEvent) {
@@ -279,7 +279,7 @@ func (m *TStatusBar) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5121, m.Instance(), m.dragOverPtr)
+	LCL().SysCallN(5164, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TStatusBar) SetOnDrawPanel(fn TDrawPanelEvent) {
@@ -287,7 +287,7 @@ func (m *TStatusBar) SetOnDrawPanel(fn TDrawPanelEvent) {
 		RemoveEventElement(m.drawPanelPtr)
 	}
 	m.drawPanelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5122, m.Instance(), m.drawPanelPtr)
+	LCL().SysCallN(5165, m.Instance(), m.drawPanelPtr)
 }
 
 func (m *TStatusBar) SetOnEndDock(fn TEndDragEvent) {
@@ -295,7 +295,7 @@ func (m *TStatusBar) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5123, m.Instance(), m.endDockPtr)
+	LCL().SysCallN(5166, m.Instance(), m.endDockPtr)
 }
 
 func (m *TStatusBar) SetOnEndDrag(fn TEndDragEvent) {
@@ -303,7 +303,7 @@ func (m *TStatusBar) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5124, m.Instance(), m.endDragPtr)
+	LCL().SysCallN(5167, m.Instance(), m.endDragPtr)
 }
 
 func (m *TStatusBar) SetOnHint(fn TNotifyEvent) {
@@ -311,7 +311,7 @@ func (m *TStatusBar) SetOnHint(fn TNotifyEvent) {
 		RemoveEventElement(m.hintPtr)
 	}
 	m.hintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5125, m.Instance(), m.hintPtr)
+	LCL().SysCallN(5168, m.Instance(), m.hintPtr)
 }
 
 func (m *TStatusBar) SetOnMouseDown(fn TMouseEvent) {
@@ -319,7 +319,7 @@ func (m *TStatusBar) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5126, m.Instance(), m.mouseDownPtr)
+	LCL().SysCallN(5169, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TStatusBar) SetOnMouseEnter(fn TNotifyEvent) {
@@ -327,7 +327,7 @@ func (m *TStatusBar) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5127, m.Instance(), m.mouseEnterPtr)
+	LCL().SysCallN(5170, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TStatusBar) SetOnMouseLeave(fn TNotifyEvent) {
@@ -335,7 +335,7 @@ func (m *TStatusBar) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5128, m.Instance(), m.mouseLeavePtr)
+	LCL().SysCallN(5171, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TStatusBar) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -343,7 +343,7 @@ func (m *TStatusBar) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5129, m.Instance(), m.mouseMovePtr)
+	LCL().SysCallN(5172, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TStatusBar) SetOnMouseUp(fn TMouseEvent) {
@@ -351,7 +351,7 @@ func (m *TStatusBar) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5130, m.Instance(), m.mouseUpPtr)
+	LCL().SysCallN(5173, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TStatusBar) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -359,7 +359,7 @@ func (m *TStatusBar) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5131, m.Instance(), m.mouseWheelPtr)
+	LCL().SysCallN(5174, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TStatusBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -367,7 +367,7 @@ func (m *TStatusBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5132, m.Instance(), m.mouseWheelDownPtr)
+	LCL().SysCallN(5175, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TStatusBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -375,7 +375,7 @@ func (m *TStatusBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5133, m.Instance(), m.mouseWheelUpPtr)
+	LCL().SysCallN(5176, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TStatusBar) SetOnStartDock(fn TStartDockEvent) {
@@ -383,7 +383,7 @@ func (m *TStatusBar) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5134, m.Instance(), m.startDockPtr)
+	LCL().SysCallN(5177, m.Instance(), m.startDockPtr)
 }
 
 func (m *TStatusBar) SetOnStartDrag(fn TStartDragEvent) {
@@ -391,5 +391,5 @@ func (m *TStatusBar) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5135, m.Instance(), m.startDragPtr)
+	LCL().SysCallN(5178, m.Instance(), m.startDragPtr)
 }

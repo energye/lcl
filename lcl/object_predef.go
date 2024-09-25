@@ -51,6 +51,7 @@ func (m *TObject) free(index int) {
 	}
 }
 
+// FreeAndNil Free and set nil, auto release memory and set pointer to nil
 func (m *TObject) FreeAndNil() {
 	if m.instance != nil {
 		api.DFreeAndNil(m.Instance())
@@ -58,6 +59,7 @@ func (m *TObject) FreeAndNil() {
 	}
 }
 
+// Nil Set the current object instance to nil, similar to obj = nil
 func (m *TObject) Nil() {
 	if m.instance != nil {
 		api.DSetNil(m.Instance())

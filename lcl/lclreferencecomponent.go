@@ -28,16 +28,16 @@ type TLCLReferenceComponent struct {
 }
 
 func (m *TLCLReferenceComponent) HandleAllocated() bool {
-	r1 := LCL().SysCallN(3428, m.Instance())
+	r1 := LCL().SysCallN(3457, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TLCLReferenceComponent) ReferenceAllocated() bool {
-	r1 := LCL().SysCallN(3429, m.Instance())
+	r1 := LCL().SysCallN(3458, m.Instance())
 	return GoBool(r1)
 }
 
 func LCLReferenceComponentClass() TClass {
-	ret := LCL().SysCallN(3427)
+	ret := LCL().SysCallN(3456)
 	return TClass(ret)
 }

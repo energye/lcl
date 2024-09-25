@@ -4943,3 +4943,14 @@ const (
 	HlbForceSingleLine                                 // Use single line hint.
 	HlbForceMultiLine                                  // Use multi line hint.
 )
+
+// TOpenGLControlOption ENUM
+type TOpenGLControlOption = int32
+
+const (
+	OcoMacRetinaMode TOpenGLControlOption = iota
+	OcoRenderAtDesignTime
+)
+
+// TOpenGLControlOptions SET: TOpenGLControlOption
+type TOpenGLControlOptions = TSet

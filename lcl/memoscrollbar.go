@@ -24,11 +24,11 @@ type TMemoScrollBar struct {
 }
 
 func NewMemoScrollBar(AControl IWinControl, AKind TScrollBarKind) IMemoScrollBar {
-	r1 := LCL().SysCallN(4204, GetObjectUintptr(AControl), uintptr(AKind))
+	r1 := LCL().SysCallN(4233, GetObjectUintptr(AControl), uintptr(AKind))
 	return AsMemoScrollBar(r1)
 }
 
 func MemoScrollBarClass() TClass {
-	ret := LCL().SysCallN(4203)
+	ret := LCL().SysCallN(4232)
 	return TClass(ret)
 }

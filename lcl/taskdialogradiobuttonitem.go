@@ -24,11 +24,11 @@ type TTaskDialogRadioButtonItem struct {
 }
 
 func NewTaskDialogRadioButtonItem(ACollection ICollection) ITaskDialogRadioButtonItem {
-	r1 := LCL().SysCallN(5364, GetObjectUintptr(ACollection))
+	r1 := LCL().SysCallN(5407, GetObjectUintptr(ACollection))
 	return AsTaskDialogRadioButtonItem(r1)
 }
 
 func TaskDialogRadioButtonItemClass() TClass {
-	ret := LCL().SysCallN(5363)
+	ret := LCL().SysCallN(5406)
 	return TClass(ret)
 }

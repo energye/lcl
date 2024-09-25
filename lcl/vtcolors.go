@@ -63,179 +63,179 @@ type TVTColors struct {
 }
 
 func NewVTColors(AOwner IBaseVirtualTree) IVTColors {
-	r1 := LCL().SysCallN(5814, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(5857, GetObjectUintptr(AOwner))
 	return AsVTColors(r1)
 }
 
 func (m *TVTColors) BackGroundColor() TColor {
-	r1 := LCL().SysCallN(5811, m.Instance())
+	r1 := LCL().SysCallN(5854, m.Instance())
 	return TColor(r1)
 }
 
 func (m *TVTColors) HeaderFontColor() TColor {
-	r1 := LCL().SysCallN(5822, m.Instance())
+	r1 := LCL().SysCallN(5865, m.Instance())
 	return TColor(r1)
 }
 
 func (m *TVTColors) NodeFontColor() TColor {
-	r1 := LCL().SysCallN(5825, m.Instance())
+	r1 := LCL().SysCallN(5868, m.Instance())
 	return TColor(r1)
 }
 
 func (m *TVTColors) BorderColor() TColor {
-	r1 := LCL().SysCallN(5812, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5855, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetBorderColor(AValue TColor) {
-	LCL().SysCallN(5812, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5855, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) DisabledColor() TColor {
-	r1 := LCL().SysCallN(5815, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5858, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetDisabledColor(AValue TColor) {
-	LCL().SysCallN(5815, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5858, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) DropMarkColor() TColor {
-	r1 := LCL().SysCallN(5816, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5859, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetDropMarkColor(AValue TColor) {
-	LCL().SysCallN(5816, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5859, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) DropTargetColor() TColor {
-	r1 := LCL().SysCallN(5818, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5861, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetDropTargetColor(AValue TColor) {
-	LCL().SysCallN(5818, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5861, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) DropTargetBorderColor() TColor {
-	r1 := LCL().SysCallN(5817, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5860, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetDropTargetBorderColor(AValue TColor) {
-	LCL().SysCallN(5817, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5860, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) FocusedSelectionColor() TColor {
-	r1 := LCL().SysCallN(5820, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5863, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetFocusedSelectionColor(AValue TColor) {
-	LCL().SysCallN(5820, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5863, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) FocusedSelectionBorderColor() TColor {
-	r1 := LCL().SysCallN(5819, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5862, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetFocusedSelectionBorderColor(AValue TColor) {
-	LCL().SysCallN(5819, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5862, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) GridLineColor() TColor {
-	r1 := LCL().SysCallN(5821, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5864, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetGridLineColor(AValue TColor) {
-	LCL().SysCallN(5821, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5864, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) HeaderHotColor() TColor {
-	r1 := LCL().SysCallN(5823, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5866, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetHeaderHotColor(AValue TColor) {
-	LCL().SysCallN(5823, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5866, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) HotColor() TColor {
-	r1 := LCL().SysCallN(5824, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5867, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetHotColor(AValue TColor) {
-	LCL().SysCallN(5824, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5867, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) SelectionRectangleBlendColor() TColor {
-	r1 := LCL().SysCallN(5826, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5869, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetSelectionRectangleBlendColor(AValue TColor) {
-	LCL().SysCallN(5826, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5869, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) SelectionRectangleBorderColor() TColor {
-	r1 := LCL().SysCallN(5827, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5870, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetSelectionRectangleBorderColor(AValue TColor) {
-	LCL().SysCallN(5827, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5870, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) SelectionTextColor() TColor {
-	r1 := LCL().SysCallN(5828, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5871, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetSelectionTextColor(AValue TColor) {
-	LCL().SysCallN(5828, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5871, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) TreeLineColor() TColor {
-	r1 := LCL().SysCallN(5829, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5872, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetTreeLineColor(AValue TColor) {
-	LCL().SysCallN(5829, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5872, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) UnfocusedColor() TColor {
-	r1 := LCL().SysCallN(5830, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5873, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetUnfocusedColor(AValue TColor) {
-	LCL().SysCallN(5830, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5873, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) UnfocusedSelectionColor() TColor {
-	r1 := LCL().SysCallN(5832, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5875, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetUnfocusedSelectionColor(AValue TColor) {
-	LCL().SysCallN(5832, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5875, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) UnfocusedSelectionBorderColor() TColor {
-	r1 := LCL().SysCallN(5831, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5874, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetUnfocusedSelectionBorderColor(AValue TColor) {
-	LCL().SysCallN(5831, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5874, 1, m.Instance(), uintptr(AValue))
 }
 
 func VTColorsClass() TClass {
-	ret := LCL().SysCallN(5813)
+	ret := LCL().SysCallN(5856)
 	return TClass(ret)
 }

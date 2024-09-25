@@ -27,26 +27,26 @@ type TFPListEnumerator struct {
 }
 
 func NewFPListEnumerator(AList IFPList) IFPListEnumerator {
-	r1 := LCL().SysCallN(2954, GetObjectUintptr(AList))
+	r1 := LCL().SysCallN(2983, GetObjectUintptr(AList))
 	return AsFPListEnumerator(r1)
 }
 
 func (m *TFPListEnumerator) Current() uintptr {
-	r1 := LCL().SysCallN(2955, m.Instance())
+	r1 := LCL().SysCallN(2984, m.Instance())
 	return uintptr(r1)
 }
 
 func (m *TFPListEnumerator) GetCurrent() uintptr {
-	r1 := LCL().SysCallN(2956, m.Instance())
+	r1 := LCL().SysCallN(2985, m.Instance())
 	return uintptr(r1)
 }
 
 func (m *TFPListEnumerator) MoveNext() bool {
-	r1 := LCL().SysCallN(2957, m.Instance())
+	r1 := LCL().SysCallN(2986, m.Instance())
 	return GoBool(r1)
 }
 
 func FPListEnumeratorClass() TClass {
-	ret := LCL().SysCallN(2953)
+	ret := LCL().SysCallN(2982)
 	return TClass(ret)
 }

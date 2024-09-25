@@ -72,129 +72,129 @@ type TDividerBevel struct {
 }
 
 func NewDividerBevel(AOwner IComponent) IDividerBevel {
-	r1 := LCL().SysCallN(2602, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(2631, GetObjectUintptr(AOwner))
 	return AsDividerBevel(r1)
 }
 
 func (m *TDividerBevel) BevelStyle() TBevelStyle {
-	r1 := LCL().SysCallN(2598, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2627, 0, m.Instance(), 0)
 	return TBevelStyle(r1)
 }
 
 func (m *TDividerBevel) SetBevelStyle(AValue TBevelStyle) {
-	LCL().SysCallN(2598, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2627, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDividerBevel) BevelWidth() int32 {
-	r1 := LCL().SysCallN(2599, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2628, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDividerBevel) SetBevelWidth(AValue int32) {
-	LCL().SysCallN(2599, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2628, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDividerBevel) CaptionSpacing() int32 {
-	r1 := LCL().SysCallN(2600, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2629, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDividerBevel) SetCaptionSpacing(AValue int32) {
-	LCL().SysCallN(2600, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2629, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDividerBevel) DragCursor() TCursor {
-	r1 := LCL().SysCallN(2603, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2632, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TDividerBevel) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(2603, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2632, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDividerBevel) DragKind() TDragKind {
-	r1 := LCL().SysCallN(2604, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2633, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TDividerBevel) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(2604, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2633, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDividerBevel) DragMode() TDragMode {
-	r1 := LCL().SysCallN(2605, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2634, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TDividerBevel) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(2605, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2634, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDividerBevel) LeftIndent() int32 {
-	r1 := LCL().SysCallN(2606, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2635, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDividerBevel) SetLeftIndent(AValue int32) {
-	LCL().SysCallN(2606, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2635, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDividerBevel) Orientation() TTrackBarOrientation {
-	r1 := LCL().SysCallN(2607, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2636, 0, m.Instance(), 0)
 	return TTrackBarOrientation(r1)
 }
 
 func (m *TDividerBevel) SetOrientation(AValue TTrackBarOrientation) {
-	LCL().SysCallN(2607, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2636, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDividerBevel) ParentColor() bool {
-	r1 := LCL().SysCallN(2608, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2637, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDividerBevel) SetParentColor(AValue bool) {
-	LCL().SysCallN(2608, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(2637, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDividerBevel) ParentFont() bool {
-	r1 := LCL().SysCallN(2609, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2638, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDividerBevel) SetParentFont(AValue bool) {
-	LCL().SysCallN(2609, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(2638, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDividerBevel) ParentShowHint() bool {
-	r1 := LCL().SysCallN(2610, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2639, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDividerBevel) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(2610, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(2639, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDividerBevel) Style() TGrabStyle {
-	r1 := LCL().SysCallN(2622, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2651, 0, m.Instance(), 0)
 	return TGrabStyle(r1)
 }
 
 func (m *TDividerBevel) SetStyle(AValue TGrabStyle) {
-	LCL().SysCallN(2622, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2651, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDividerBevel) Transparent() bool {
-	r1 := LCL().SysCallN(2623, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2652, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDividerBevel) SetTransparent(AValue bool) {
-	LCL().SysCallN(2623, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(2652, 1, m.Instance(), PascalBool(AValue))
 }
 
 func DividerBevelClass() TClass {
-	ret := LCL().SysCallN(2601)
+	ret := LCL().SysCallN(2630)
 	return TClass(ret)
 }
 
@@ -203,7 +203,7 @@ func (m *TDividerBevel) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2611, m.Instance(), m.contextPopupPtr)
+	LCL().SysCallN(2640, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TDividerBevel) SetOnDblClick(fn TNotifyEvent) {
@@ -211,7 +211,7 @@ func (m *TDividerBevel) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2612, m.Instance(), m.dblClickPtr)
+	LCL().SysCallN(2641, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TDividerBevel) SetOnDragDrop(fn TDragDropEvent) {
@@ -219,7 +219,7 @@ func (m *TDividerBevel) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2613, m.Instance(), m.dragDropPtr)
+	LCL().SysCallN(2642, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TDividerBevel) SetOnDragOver(fn TDragOverEvent) {
@@ -227,7 +227,7 @@ func (m *TDividerBevel) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2614, m.Instance(), m.dragOverPtr)
+	LCL().SysCallN(2643, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TDividerBevel) SetOnEndDrag(fn TEndDragEvent) {
@@ -235,7 +235,7 @@ func (m *TDividerBevel) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2615, m.Instance(), m.endDragPtr)
+	LCL().SysCallN(2644, m.Instance(), m.endDragPtr)
 }
 
 func (m *TDividerBevel) SetOnMouseDown(fn TMouseEvent) {
@@ -243,7 +243,7 @@ func (m *TDividerBevel) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2616, m.Instance(), m.mouseDownPtr)
+	LCL().SysCallN(2645, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TDividerBevel) SetOnMouseEnter(fn TNotifyEvent) {
@@ -251,7 +251,7 @@ func (m *TDividerBevel) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2617, m.Instance(), m.mouseEnterPtr)
+	LCL().SysCallN(2646, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TDividerBevel) SetOnMouseLeave(fn TNotifyEvent) {
@@ -259,7 +259,7 @@ func (m *TDividerBevel) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2618, m.Instance(), m.mouseLeavePtr)
+	LCL().SysCallN(2647, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TDividerBevel) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -267,7 +267,7 @@ func (m *TDividerBevel) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2619, m.Instance(), m.mouseMovePtr)
+	LCL().SysCallN(2648, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TDividerBevel) SetOnMouseUp(fn TMouseEvent) {
@@ -275,7 +275,7 @@ func (m *TDividerBevel) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2620, m.Instance(), m.mouseUpPtr)
+	LCL().SysCallN(2649, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TDividerBevel) SetOnStartDrag(fn TStartDragEvent) {
@@ -283,5 +283,5 @@ func (m *TDividerBevel) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2621, m.Instance(), m.startDragPtr)
+	LCL().SysCallN(2650, m.Instance(), m.startDragPtr)
 }

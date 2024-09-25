@@ -34,61 +34,61 @@ type TMonitor struct {
 }
 
 func NewMonitor() IMonitor {
-	r1 := LCL().SysCallN(4340)
+	r1 := LCL().SysCallN(4369)
 	return AsMonitor(r1)
 }
 
 func (m *TMonitor) Handle() HMONITOR {
-	r1 := LCL().SysCallN(4341, m.Instance())
+	r1 := LCL().SysCallN(4370, m.Instance())
 	return HMONITOR(r1)
 }
 
 func (m *TMonitor) MonitorNum() int32 {
-	r1 := LCL().SysCallN(4344, m.Instance())
+	r1 := LCL().SysCallN(4373, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMonitor) Left() int32 {
-	r1 := LCL().SysCallN(4343, m.Instance())
+	r1 := LCL().SysCallN(4372, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMonitor) Height() int32 {
-	r1 := LCL().SysCallN(4342, m.Instance())
+	r1 := LCL().SysCallN(4371, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMonitor) Top() int32 {
-	r1 := LCL().SysCallN(4347, m.Instance())
+	r1 := LCL().SysCallN(4376, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMonitor) Width() int32 {
-	r1 := LCL().SysCallN(4348, m.Instance())
+	r1 := LCL().SysCallN(4377, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMonitor) BoundsRect() (resultRect TRect) {
-	LCL().SysCallN(4338, m.Instance(), uintptr(unsafePointer(&resultRect)))
+	LCL().SysCallN(4367, m.Instance(), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TMonitor) WorkareaRect() (resultRect TRect) {
-	LCL().SysCallN(4349, m.Instance(), uintptr(unsafePointer(&resultRect)))
+	LCL().SysCallN(4378, m.Instance(), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TMonitor) Primary() bool {
-	r1 := LCL().SysCallN(4346, m.Instance())
+	r1 := LCL().SysCallN(4375, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TMonitor) PixelsPerInch() int32 {
-	r1 := LCL().SysCallN(4345, m.Instance())
+	r1 := LCL().SysCallN(4374, m.Instance())
 	return int32(r1)
 }
 
 func MonitorClass() TClass {
-	ret := LCL().SysCallN(4339)
+	ret := LCL().SysCallN(4368)
 	return TClass(ret)
 }

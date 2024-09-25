@@ -37,62 +37,62 @@ type TFontDialog struct {
 }
 
 func NewFontDialog(AOwner IComponent) IFontDialog {
-	r1 := LCL().SysCallN(3073, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(3102, GetObjectUintptr(AOwner))
 	return AsFontDialog(r1)
 }
 
 func (m *TFontDialog) Font() IFont {
-	r1 := LCL().SysCallN(3074, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3103, 0, m.Instance(), 0)
 	return AsFont(r1)
 }
 
 func (m *TFontDialog) SetFont(AValue IFont) {
-	LCL().SysCallN(3074, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(3103, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TFontDialog) MinFontSize() int32 {
-	r1 := LCL().SysCallN(3076, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3105, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFontDialog) SetMinFontSize(AValue int32) {
-	LCL().SysCallN(3076, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(3105, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFontDialog) MaxFontSize() int32 {
-	r1 := LCL().SysCallN(3075, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3104, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFontDialog) SetMaxFontSize(AValue int32) {
-	LCL().SysCallN(3075, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(3104, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFontDialog) Options() TFontDialogOptions {
-	r1 := LCL().SysCallN(3077, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3106, 0, m.Instance(), 0)
 	return TFontDialogOptions(r1)
 }
 
 func (m *TFontDialog) SetOptions(AValue TFontDialogOptions) {
-	LCL().SysCallN(3077, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(3106, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFontDialog) PreviewText() string {
-	r1 := LCL().SysCallN(3078, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3107, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TFontDialog) SetPreviewText(AValue string) {
-	LCL().SysCallN(3078, 1, m.Instance(), PascalStr(AValue))
+	LCL().SysCallN(3107, 1, m.Instance(), PascalStr(AValue))
 }
 
 func FontDialogClass() TClass {
-	ret := LCL().SysCallN(3072)
+	ret := LCL().SysCallN(3101)
 	return TClass(ret)
 }
 
 func (m *TFontDialog) ApplyClicked() {
-	LCL().SysCallN(3071, m.Instance())
+	LCL().SysCallN(3100, m.Instance())
 }
 
 func (m *TFontDialog) SetOnApplyClicked(fn TNotifyEvent) {
@@ -100,5 +100,5 @@ func (m *TFontDialog) SetOnApplyClicked(fn TNotifyEvent) {
 		RemoveEventElement(m.applyClickedPtr)
 	}
 	m.applyClickedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3079, m.Instance(), m.applyClickedPtr)
+	LCL().SysCallN(3108, m.Instance(), m.applyClickedPtr)
 }

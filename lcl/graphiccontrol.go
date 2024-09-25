@@ -25,16 +25,16 @@ type TGraphicControl struct {
 }
 
 func NewGraphicControl(AOwner IComponent) IGraphicControl {
-	r1 := LCL().SysCallN(3174, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(3203, GetObjectUintptr(AOwner))
 	return AsGraphicControl(r1)
 }
 
 func (m *TGraphicControl) Canvas() ICanvas {
-	r1 := LCL().SysCallN(3172, m.Instance())
+	r1 := LCL().SysCallN(3201, m.Instance())
 	return AsCanvas(r1)
 }
 
 func GraphicControlClass() TClass {
-	ret := LCL().SysCallN(3173)
+	ret := LCL().SysCallN(3202)
 	return TClass(ret)
 }

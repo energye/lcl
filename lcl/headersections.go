@@ -29,35 +29,35 @@ type THeaderSections struct {
 }
 
 func NewHeaderSections(HeaderControl ICustomHeaderControl) IHeaderSections {
-	r1 := LCL().SysCallN(3327, GetObjectUintptr(HeaderControl))
+	r1 := LCL().SysCallN(3356, GetObjectUintptr(HeaderControl))
 	return AsHeaderSections(r1)
 }
 
 func (m *THeaderSections) ItemsForHeaderSection(Index int32) IHeaderSection {
-	r1 := LCL().SysCallN(3329, 0, m.Instance(), uintptr(Index))
+	r1 := LCL().SysCallN(3358, 0, m.Instance(), uintptr(Index))
 	return AsHeaderSection(r1)
 }
 
 func (m *THeaderSections) SetItemsForHeaderSection(Index int32, AValue IHeaderSection) {
-	LCL().SysCallN(3329, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
+	LCL().SysCallN(3358, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
 }
 
 func (m *THeaderSections) AddForHeaderSection() IHeaderSection {
-	r1 := LCL().SysCallN(3324, m.Instance())
+	r1 := LCL().SysCallN(3353, m.Instance())
 	return AsHeaderSection(r1)
 }
 
 func (m *THeaderSections) AddItem(Item IHeaderSection, Index int32) IHeaderSection {
-	r1 := LCL().SysCallN(3325, m.Instance(), GetObjectUintptr(Item), uintptr(Index))
+	r1 := LCL().SysCallN(3354, m.Instance(), GetObjectUintptr(Item), uintptr(Index))
 	return AsHeaderSection(r1)
 }
 
 func (m *THeaderSections) InsertForHeaderSection(Index int32) IHeaderSection {
-	r1 := LCL().SysCallN(3328, m.Instance(), uintptr(Index))
+	r1 := LCL().SysCallN(3357, m.Instance(), uintptr(Index))
 	return AsHeaderSection(r1)
 }
 
 func HeaderSectionsClass() TClass {
-	ret := LCL().SysCallN(3326)
+	ret := LCL().SysCallN(3355)
 	return TClass(ret)
 }

@@ -37,67 +37,67 @@ type TIDesigner struct {
 }
 
 func (m *TIDesigner) LookupRoot() IComponent {
-	r1 := LCL().SysCallN(3334, m.Instance())
+	r1 := LCL().SysCallN(3363, m.Instance())
 	return AsComponent(r1)
 }
 
 func (m *TIDesigner) DefaultFormBoundsValid() bool {
-	r1 := LCL().SysCallN(3331, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3360, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TIDesigner) SetDefaultFormBoundsValid(AValue bool) {
-	LCL().SysCallN(3331, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(3360, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TIDesigner) IsDesignMsg(Sender IControl, Message *TLMessage) bool {
 	var result1 uintptr
-	r1 := LCL().SysCallN(3333, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)))
+	r1 := LCL().SysCallN(3362, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)))
 	*Message = *(*TLMessage)(getPointer(result1))
 	return GoBool(r1)
 }
 
 func (m *TIDesigner) GetShiftState() TShiftState {
-	r1 := LCL().SysCallN(3332, m.Instance())
+	r1 := LCL().SysCallN(3361, m.Instance())
 	return TShiftState(r1)
 }
 
 func (m *TIDesigner) UniqueName(BaseName string) string {
-	r1 := LCL().SysCallN(3341, m.Instance(), PascalStr(BaseName))
+	r1 := LCL().SysCallN(3370, m.Instance(), PascalStr(BaseName))
 	return GoStr(r1)
 }
 
 func IDesignerClass() TClass {
-	ret := LCL().SysCallN(3330)
+	ret := LCL().SysCallN(3359)
 	return TClass(ret)
 }
 
 func (m *TIDesigner) UTF8KeyPress(UTF8Key *TUTF8Char) {
 	var result0 uintptr
-	LCL().SysCallN(3340, m.Instance(), uintptr(unsafePointer(&result0)))
+	LCL().SysCallN(3369, m.Instance(), uintptr(unsafePointer(&result0)))
 	*UTF8Key = *(*TUTF8Char)(getPointer(result0))
 }
 
 func (m *TIDesigner) Modified() {
-	LCL().SysCallN(3335, m.Instance())
+	LCL().SysCallN(3364, m.Instance())
 }
 
 func (m *TIDesigner) Notification(AComponent IComponent, Operation TOperation) {
-	LCL().SysCallN(3336, m.Instance(), GetObjectUintptr(AComponent), uintptr(Operation))
+	LCL().SysCallN(3365, m.Instance(), GetObjectUintptr(AComponent), uintptr(Operation))
 }
 
 func (m *TIDesigner) PaintGrid() {
-	LCL().SysCallN(3337, m.Instance())
+	LCL().SysCallN(3366, m.Instance())
 }
 
 func (m *TIDesigner) ValidateRename(AComponent IComponent, CurName, NewName string) {
-	LCL().SysCallN(3342, m.Instance(), GetObjectUintptr(AComponent), PascalStr(CurName), PascalStr(NewName))
+	LCL().SysCallN(3371, m.Instance(), GetObjectUintptr(AComponent), PascalStr(CurName), PascalStr(NewName))
 }
 
 func (m *TIDesigner) SelectOnlyThisComponent(AComponent IComponent) {
-	LCL().SysCallN(3339, m.Instance(), GetObjectUintptr(AComponent))
+	LCL().SysCallN(3368, m.Instance(), GetObjectUintptr(AComponent))
 }
 
 func (m *TIDesigner) PrepareFreeDesigner(AFreeComponent bool) {
-	LCL().SysCallN(3338, m.Instance(), PascalBool(AFreeComponent))
+	LCL().SysCallN(3367, m.Instance(), PascalBool(AFreeComponent))
 }

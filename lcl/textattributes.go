@@ -38,74 +38,74 @@ type TTextAttributes struct {
 }
 
 func NewTextAttributes(AOwner IRichMemo, AType TAttributeType) ITextAttributes {
-	r1 := LCL().SysCallN(5370, GetObjectUintptr(AOwner), uintptr(AType))
+	r1 := LCL().SysCallN(5413, GetObjectUintptr(AOwner), uintptr(AType))
 	return AsTextAttributes(r1)
 }
 
 func (m *TTextAttributes) Name() string {
-	r1 := LCL().SysCallN(5372, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5415, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TTextAttributes) SetName(AValue string) {
-	LCL().SysCallN(5372, 1, m.Instance(), PascalStr(AValue))
+	LCL().SysCallN(5415, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TTextAttributes) Pitch() TFontPitch {
-	r1 := LCL().SysCallN(5373, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5416, 0, m.Instance(), 0)
 	return TFontPitch(r1)
 }
 
 func (m *TTextAttributes) SetPitch(AValue TFontPitch) {
-	LCL().SysCallN(5373, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5416, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTextAttributes) Charset() TFontCharSet {
-	r1 := LCL().SysCallN(5367, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5410, 0, m.Instance(), 0)
 	return TFontCharSet(r1)
 }
 
 func (m *TTextAttributes) SetCharset(AValue TFontCharSet) {
-	LCL().SysCallN(5367, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5410, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTextAttributes) Color() TColor {
-	r1 := LCL().SysCallN(5369, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5412, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TTextAttributes) SetColor(AValue TColor) {
-	LCL().SysCallN(5369, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5412, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTextAttributes) Size() int32 {
-	r1 := LCL().SysCallN(5374, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5417, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TTextAttributes) SetSize(AValue int32) {
-	LCL().SysCallN(5374, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5417, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTextAttributes) Style() TFontStyles {
-	r1 := LCL().SysCallN(5375, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5418, 0, m.Instance(), 0)
 	return TFontStyles(r1)
 }
 
 func (m *TTextAttributes) SetStyle(AValue TFontStyles) {
-	LCL().SysCallN(5375, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5418, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTextAttributes) Height() int32 {
-	r1 := LCL().SysCallN(5371, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5414, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TTextAttributes) SetHeight(AValue int32) {
-	LCL().SysCallN(5371, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5414, 1, m.Instance(), uintptr(AValue))
 }
 
 func TextAttributesClass() TClass {
-	ret := LCL().SysCallN(5368)
+	ret := LCL().SysCallN(5411)
 	return TClass(ret)
 }

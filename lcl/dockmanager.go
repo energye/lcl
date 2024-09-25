@@ -42,88 +42,88 @@ type TDockManager struct {
 }
 
 func (m *TDockManager) GetDockEdge(ADockObject IDragDockObject) bool {
-	r1 := LCL().SysCallN(2630, m.Instance(), GetObjectUintptr(ADockObject))
+	r1 := LCL().SysCallN(2659, m.Instance(), GetObjectUintptr(ADockObject))
 	return GoBool(r1)
 }
 
 func (m *TDockManager) AutoFreeByControl() bool {
-	r1 := LCL().SysCallN(2624, m.Instance())
+	r1 := LCL().SysCallN(2653, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TDockManager) IsEnabledControl(Control IControl) bool {
-	r1 := LCL().SysCallN(2633, m.Instance(), GetObjectUintptr(Control))
+	r1 := LCL().SysCallN(2662, m.Instance(), GetObjectUintptr(Control))
 	return GoBool(r1)
 }
 
 func (m *TDockManager) CanBeDoubleDocked() bool {
-	r1 := LCL().SysCallN(2626, m.Instance())
+	r1 := LCL().SysCallN(2655, m.Instance())
 	return GoBool(r1)
 }
 
 func DockManagerClass() TClass {
-	ret := LCL().SysCallN(2627)
+	ret := LCL().SysCallN(2656)
 	return TClass(ret)
 }
 
 func (m *TDockManager) BeginUpdate() {
-	LCL().SysCallN(2625, m.Instance())
+	LCL().SysCallN(2654, m.Instance())
 }
 
 func (m *TDockManager) EndUpdate() {
-	LCL().SysCallN(2628, m.Instance())
+	LCL().SysCallN(2657, m.Instance())
 }
 
 func (m *TDockManager) GetControlBounds(Control IControl, OutControlBounds *TRect) {
 	var result1 uintptr
-	LCL().SysCallN(2629, m.Instance(), GetObjectUintptr(Control), uintptr(unsafePointer(&result1)))
+	LCL().SysCallN(2658, m.Instance(), GetObjectUintptr(Control), uintptr(unsafePointer(&result1)))
 	*OutControlBounds = *(*TRect)(getPointer(result1))
 }
 
 func (m *TDockManager) InsertControl(ADockObject IDragDockObject) {
-	LCL().SysCallN(2631, m.Instance(), GetObjectUintptr(ADockObject))
+	LCL().SysCallN(2660, m.Instance(), GetObjectUintptr(ADockObject))
 }
 
 func (m *TDockManager) InsertControl1(Control IControl, InsertAt TAlign, DropCtl IControl) {
-	LCL().SysCallN(2632, m.Instance(), GetObjectUintptr(Control), uintptr(InsertAt), GetObjectUintptr(DropCtl))
+	LCL().SysCallN(2661, m.Instance(), GetObjectUintptr(Control), uintptr(InsertAt), GetObjectUintptr(DropCtl))
 }
 
 func (m *TDockManager) LoadFromStream(Stream IStream) {
-	LCL().SysCallN(2634, m.Instance(), GetObjectUintptr(Stream))
+	LCL().SysCallN(2663, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TDockManager) PaintSite(DC HDC) {
-	LCL().SysCallN(2636, m.Instance(), uintptr(DC))
+	LCL().SysCallN(2665, m.Instance(), uintptr(DC))
 }
 
 func (m *TDockManager) MessageHandler(Sender IControl, Message *TLMessage) {
 	var result1 uintptr
-	LCL().SysCallN(2635, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)))
+	LCL().SysCallN(2664, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)))
 	*Message = *(*TLMessage)(getPointer(result1))
 }
 
 func (m *TDockManager) PositionDockRect(ADockObject IDragDockObject) {
-	LCL().SysCallN(2637, m.Instance(), GetObjectUintptr(ADockObject))
+	LCL().SysCallN(2666, m.Instance(), GetObjectUintptr(ADockObject))
 }
 
 func (m *TDockManager) PositionDockRect1(Client, DropCtl IControl, DropAlign TAlign, DockRect *TRect) {
 	var result2 uintptr
-	LCL().SysCallN(2638, m.Instance(), GetObjectUintptr(Client), GetObjectUintptr(DropCtl), uintptr(DropAlign), uintptr(unsafePointer(&result2)))
+	LCL().SysCallN(2667, m.Instance(), GetObjectUintptr(Client), GetObjectUintptr(DropCtl), uintptr(DropAlign), uintptr(unsafePointer(&result2)))
 	*DockRect = *(*TRect)(getPointer(result2))
 }
 
 func (m *TDockManager) RemoveControl(Control IControl) {
-	LCL().SysCallN(2639, m.Instance(), GetObjectUintptr(Control))
+	LCL().SysCallN(2668, m.Instance(), GetObjectUintptr(Control))
 }
 
 func (m *TDockManager) ResetBounds(Force bool) {
-	LCL().SysCallN(2640, m.Instance(), PascalBool(Force))
+	LCL().SysCallN(2669, m.Instance(), PascalBool(Force))
 }
 
 func (m *TDockManager) SaveToStream(Stream IStream) {
-	LCL().SysCallN(2641, m.Instance(), GetObjectUintptr(Stream))
+	LCL().SysCallN(2670, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TDockManager) SetReplacingControl(Control IControl) {
-	LCL().SysCallN(2642, m.Instance(), GetObjectUintptr(Control))
+	LCL().SysCallN(2671, m.Instance(), GetObjectUintptr(Control))
 }

@@ -37,70 +37,70 @@ type TRichEdit struct {
 }
 
 func NewRichEdit(AOnwer IComponent) IRichEdit {
-	r1 := LCL().SysCallN(4807, GetObjectUintptr(AOnwer))
+	r1 := LCL().SysCallN(4850, GetObjectUintptr(AOnwer))
 	return AsRichEdit(r1)
 }
 
 func (m *TRichEdit) Zoom() int32 {
-	r1 := LCL().SysCallN(4814, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4857, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TRichEdit) SetZoom(AValue int32) {
-	LCL().SysCallN(4814, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(4857, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TRichEdit) HideScrollBars() bool {
-	r1 := LCL().SysCallN(4810, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4853, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRichEdit) SetHideScrollBars(AValue bool) {
-	LCL().SysCallN(4810, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(4853, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRichEdit) PlainText() bool {
-	r1 := LCL().SysCallN(4812, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4855, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRichEdit) SetPlainText(AValue bool) {
-	LCL().SysCallN(4812, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(4855, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRichEdit) DefAttributes() ITextAttributes {
-	r1 := LCL().SysCallN(4808, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4851, 0, m.Instance(), 0)
 	return AsTextAttributes(r1)
 }
 
 func (m *TRichEdit) SetDefAttributes(AValue ITextAttributes) {
-	LCL().SysCallN(4808, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(4851, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TRichEdit) SelAttributes() ITextAttributes {
-	r1 := LCL().SysCallN(4813, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4856, 0, m.Instance(), 0)
 	return AsTextAttributes(r1)
 }
 
 func (m *TRichEdit) SetSelAttributes(AValue ITextAttributes) {
-	LCL().SysCallN(4813, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(4856, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TRichEdit) Paragraph() IParaAttributes {
-	r1 := LCL().SysCallN(4811, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4854, 0, m.Instance(), 0)
 	return AsParaAttributes(r1)
 }
 
 func (m *TRichEdit) SetParagraph(AValue IParaAttributes) {
-	LCL().SysCallN(4811, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(4854, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TRichEdit) FindText(ASearchStr string, AStartPos int32, ALength int32, AOptions TSearchTypes) int32 {
-	r1 := LCL().SysCallN(4809, m.Instance(), PascalStr(ASearchStr), uintptr(AStartPos), uintptr(ALength), uintptr(AOptions))
+	r1 := LCL().SysCallN(4852, m.Instance(), PascalStr(ASearchStr), uintptr(AStartPos), uintptr(ALength), uintptr(AOptions))
 	return int32(r1)
 }
 
 func RichEditClass() TClass {
-	ret := LCL().SysCallN(4806)
+	ret := LCL().SysCallN(4849)
 	return TClass(ret)
 }

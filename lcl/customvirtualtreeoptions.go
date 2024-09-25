@@ -26,20 +26,20 @@ type TCustomVirtualTreeOptions struct {
 }
 
 func NewCustomVirtualTreeOptions(AOwner IBaseVirtualTree) ICustomVirtualTreeOptions {
-	r1 := LCL().SysCallN(2501, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(2530, GetObjectUintptr(AOwner))
 	return AsCustomVirtualTreeOptions(r1)
 }
 
 func (m *TCustomVirtualTreeOptions) Owner() IBaseVirtualTree {
-	r1 := LCL().SysCallN(2502, m.Instance())
+	r1 := LCL().SysCallN(2531, m.Instance())
 	return AsBaseVirtualTree(r1)
 }
 
 func CustomVirtualTreeOptionsClass() TClass {
-	ret := LCL().SysCallN(2500)
+	ret := LCL().SysCallN(2529)
 	return TClass(ret)
 }
 
 func (m *TCustomVirtualTreeOptions) AssignTo(Dest IPersistent) {
-	LCL().SysCallN(2499, m.Instance(), GetObjectUintptr(Dest))
+	LCL().SysCallN(2528, m.Instance(), GetObjectUintptr(Dest))
 }

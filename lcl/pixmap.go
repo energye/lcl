@@ -24,11 +24,11 @@ type TPixmap struct {
 }
 
 func NewPixmap() IPixmap {
-	r1 := LCL().SysCallN(4554)
+	r1 := LCL().SysCallN(4597)
 	return AsPixmap(r1)
 }
 
 func PixmapClass() TClass {
-	ret := LCL().SysCallN(4553)
+	ret := LCL().SysCallN(4596)
 	return TClass(ret)
 }

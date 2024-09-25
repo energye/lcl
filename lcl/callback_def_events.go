@@ -325,3 +325,7 @@ type TVSTGetHintEvent func(sender IBaseVirtualTree, node IVirtualNode, column TC
 type TVTMeasureTextEvent func(sender IBaseVirtualTree, targetCanvas ICanvas, Node IVirtualNode, column TColumnIndex, cellText string, extent *int32)
 type TVSTNewTextEvent func(sender IBaseVirtualTree, node IVirtualNode, column TColumnIndex, newText string)
 type TVSTShortenstringEvent func(sender IBaseVirtualTree, targetCanvas ICanvas, node IVirtualNode, column TColumnIndex, str string, textSpace int32, result *string, done *bool)
+
+// open gl
+
+type TOpenGlCtrlMakeCurrentEvent func(sender IObject, allow *bool)

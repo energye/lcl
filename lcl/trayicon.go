@@ -24,11 +24,11 @@ type TTrayIcon struct {
 }
 
 func NewTrayIcon(TheOwner IComponent) ITrayIcon {
-	r1 := LCL().SysCallN(5571, GetObjectUintptr(TheOwner))
+	r1 := LCL().SysCallN(5614, GetObjectUintptr(TheOwner))
 	return AsTrayIcon(r1)
 }
 
 func TrayIconClass() TClass {
-	ret := LCL().SysCallN(5570)
+	ret := LCL().SysCallN(5613)
 	return TClass(ret)
 }

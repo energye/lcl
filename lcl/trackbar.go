@@ -66,57 +66,57 @@ type TTrackBar struct {
 }
 
 func NewTrackBar(AOwner IComponent) ITrackBar {
-	r1 := LCL().SysCallN(5548, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(5591, GetObjectUintptr(AOwner))
 	return AsTrackBar(r1)
 }
 
 func (m *TTrackBar) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5549, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5592, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TTrackBar) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5549, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5592, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTrackBar) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5550, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5593, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TTrackBar) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5550, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5593, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTrackBar) ParentColor() bool {
-	r1 := LCL().SysCallN(5551, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5594, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTrackBar) SetParentColor(AValue bool) {
-	LCL().SysCallN(5551, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5594, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTrackBar) ParentFont() bool {
-	r1 := LCL().SysCallN(5552, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5595, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTrackBar) SetParentFont(AValue bool) {
-	LCL().SysCallN(5552, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5595, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTrackBar) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5553, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5596, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTrackBar) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5553, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5596, 1, m.Instance(), PascalBool(AValue))
 }
 
 func TrackBarClass() TClass {
-	ret := LCL().SysCallN(5547)
+	ret := LCL().SysCallN(5590)
 	return TClass(ret)
 }
 
@@ -125,7 +125,7 @@ func (m *TTrackBar) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5554, m.Instance(), m.contextPopupPtr)
+	LCL().SysCallN(5597, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TTrackBar) SetOnDragDrop(fn TDragDropEvent) {
@@ -133,7 +133,7 @@ func (m *TTrackBar) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5555, m.Instance(), m.dragDropPtr)
+	LCL().SysCallN(5598, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TTrackBar) SetOnDragOver(fn TDragOverEvent) {
@@ -141,7 +141,7 @@ func (m *TTrackBar) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5556, m.Instance(), m.dragOverPtr)
+	LCL().SysCallN(5599, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TTrackBar) SetOnEndDrag(fn TEndDragEvent) {
@@ -149,7 +149,7 @@ func (m *TTrackBar) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5557, m.Instance(), m.endDragPtr)
+	LCL().SysCallN(5600, m.Instance(), m.endDragPtr)
 }
 
 func (m *TTrackBar) SetOnMouseDown(fn TMouseEvent) {
@@ -157,7 +157,7 @@ func (m *TTrackBar) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5558, m.Instance(), m.mouseDownPtr)
+	LCL().SysCallN(5601, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TTrackBar) SetOnMouseEnter(fn TNotifyEvent) {
@@ -165,7 +165,7 @@ func (m *TTrackBar) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5559, m.Instance(), m.mouseEnterPtr)
+	LCL().SysCallN(5602, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TTrackBar) SetOnMouseLeave(fn TNotifyEvent) {
@@ -173,7 +173,7 @@ func (m *TTrackBar) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5560, m.Instance(), m.mouseLeavePtr)
+	LCL().SysCallN(5603, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TTrackBar) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -181,7 +181,7 @@ func (m *TTrackBar) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5561, m.Instance(), m.mouseMovePtr)
+	LCL().SysCallN(5604, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TTrackBar) SetOnMouseUp(fn TMouseEvent) {
@@ -189,7 +189,7 @@ func (m *TTrackBar) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5562, m.Instance(), m.mouseUpPtr)
+	LCL().SysCallN(5605, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -197,7 +197,7 @@ func (m *TTrackBar) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5563, m.Instance(), m.mouseWheelPtr)
+	LCL().SysCallN(5606, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -205,7 +205,7 @@ func (m *TTrackBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5564, m.Instance(), m.mouseWheelDownPtr)
+	LCL().SysCallN(5607, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -213,7 +213,7 @@ func (m *TTrackBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5568, m.Instance(), m.mouseWheelUpPtr)
+	LCL().SysCallN(5611, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -221,7 +221,7 @@ func (m *TTrackBar) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5565, m.Instance(), m.mouseWheelHorzPtr)
+	LCL().SysCallN(5608, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -229,7 +229,7 @@ func (m *TTrackBar) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5566, m.Instance(), m.mouseWheelLeftPtr)
+	LCL().SysCallN(5609, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -237,7 +237,7 @@ func (m *TTrackBar) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5567, m.Instance(), m.mouseWheelRightPtr)
+	LCL().SysCallN(5610, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TTrackBar) SetOnStartDrag(fn TStartDragEvent) {
@@ -245,5 +245,5 @@ func (m *TTrackBar) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5569, m.Instance(), m.startDragPtr)
+	LCL().SysCallN(5612, m.Instance(), m.startDragPtr)
 }

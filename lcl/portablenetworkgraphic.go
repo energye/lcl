@@ -26,11 +26,11 @@ type TPortableNetworkGraphic struct {
 }
 
 func NewPortableNetworkGraphic() IPortableNetworkGraphic {
-	r1 := LCL().SysCallN(4571)
+	r1 := LCL().SysCallN(4614)
 	return AsPortableNetworkGraphic(r1)
 }
 
 func PortableNetworkGraphicClass() TClass {
-	ret := LCL().SysCallN(4570)
+	ret := LCL().SysCallN(4613)
 	return TClass(ret)
 }

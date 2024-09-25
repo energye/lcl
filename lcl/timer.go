@@ -24,11 +24,11 @@ type TTimer struct {
 }
 
 func NewTimer(AOwner IComponent) ITimer {
-	r1 := LCL().SysCallN(5432, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(5475, GetObjectUintptr(AOwner))
 	return AsTimer(r1)
 }
 
 func TimerClass() TClass {
-	ret := LCL().SysCallN(5431)
+	ret := LCL().SysCallN(5474)
 	return TClass(ret)
 }

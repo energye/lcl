@@ -64,57 +64,57 @@ type TSpeedButton struct {
 }
 
 func NewSpeedButton(AOwner IComponent) ISpeedButton {
-	r1 := LCL().SysCallN(5027, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(5070, GetObjectUintptr(AOwner))
 	return AsSpeedButton(r1)
 }
 
 func (m *TSpeedButton) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5028, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5071, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TSpeedButton) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5028, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5071, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSpeedButton) DragKind() TDragKind {
-	r1 := LCL().SysCallN(5029, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5072, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TSpeedButton) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(5029, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5072, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSpeedButton) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5030, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5073, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TSpeedButton) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5030, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5073, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSpeedButton) ParentFont() bool {
-	r1 := LCL().SysCallN(5031, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5074, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TSpeedButton) SetParentFont(AValue bool) {
-	LCL().SysCallN(5031, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5074, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TSpeedButton) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5032, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5075, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TSpeedButton) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5032, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5075, 1, m.Instance(), PascalBool(AValue))
 }
 
 func SpeedButtonClass() TClass {
-	ret := LCL().SysCallN(5026)
+	ret := LCL().SysCallN(5069)
 	return TClass(ret)
 }
 
@@ -123,7 +123,7 @@ func (m *TSpeedButton) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5033, m.Instance(), m.contextPopupPtr)
+	LCL().SysCallN(5076, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TSpeedButton) SetOnDblClick(fn TNotifyEvent) {
@@ -131,7 +131,7 @@ func (m *TSpeedButton) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5034, m.Instance(), m.dblClickPtr)
+	LCL().SysCallN(5077, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TSpeedButton) SetOnDragDrop(fn TDragDropEvent) {
@@ -139,7 +139,7 @@ func (m *TSpeedButton) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5035, m.Instance(), m.dragDropPtr)
+	LCL().SysCallN(5078, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TSpeedButton) SetOnDragOver(fn TDragOverEvent) {
@@ -147,7 +147,7 @@ func (m *TSpeedButton) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5036, m.Instance(), m.dragOverPtr)
+	LCL().SysCallN(5079, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TSpeedButton) SetOnEndDrag(fn TEndDragEvent) {
@@ -155,7 +155,7 @@ func (m *TSpeedButton) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5037, m.Instance(), m.endDragPtr)
+	LCL().SysCallN(5080, m.Instance(), m.endDragPtr)
 }
 
 func (m *TSpeedButton) SetOnMouseDown(fn TMouseEvent) {
@@ -163,7 +163,7 @@ func (m *TSpeedButton) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5038, m.Instance(), m.mouseDownPtr)
+	LCL().SysCallN(5081, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TSpeedButton) SetOnMouseEnter(fn TNotifyEvent) {
@@ -171,7 +171,7 @@ func (m *TSpeedButton) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5039, m.Instance(), m.mouseEnterPtr)
+	LCL().SysCallN(5082, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TSpeedButton) SetOnMouseLeave(fn TNotifyEvent) {
@@ -179,7 +179,7 @@ func (m *TSpeedButton) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5040, m.Instance(), m.mouseLeavePtr)
+	LCL().SysCallN(5083, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TSpeedButton) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -187,7 +187,7 @@ func (m *TSpeedButton) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5041, m.Instance(), m.mouseMovePtr)
+	LCL().SysCallN(5084, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TSpeedButton) SetOnMouseUp(fn TMouseEvent) {
@@ -195,7 +195,7 @@ func (m *TSpeedButton) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5042, m.Instance(), m.mouseUpPtr)
+	LCL().SysCallN(5085, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TSpeedButton) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -203,7 +203,7 @@ func (m *TSpeedButton) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5043, m.Instance(), m.mouseWheelPtr)
+	LCL().SysCallN(5086, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TSpeedButton) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -211,7 +211,7 @@ func (m *TSpeedButton) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5044, m.Instance(), m.mouseWheelDownPtr)
+	LCL().SysCallN(5087, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TSpeedButton) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -219,7 +219,7 @@ func (m *TSpeedButton) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5045, m.Instance(), m.mouseWheelUpPtr)
+	LCL().SysCallN(5088, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TSpeedButton) SetOnPaint(fn TNotifyEvent) {
@@ -227,7 +227,7 @@ func (m *TSpeedButton) SetOnPaint(fn TNotifyEvent) {
 		RemoveEventElement(m.paintPtr)
 	}
 	m.paintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5046, m.Instance(), m.paintPtr)
+	LCL().SysCallN(5089, m.Instance(), m.paintPtr)
 }
 
 func (m *TSpeedButton) SetOnStartDrag(fn TStartDragEvent) {
@@ -235,5 +235,5 @@ func (m *TSpeedButton) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5047, m.Instance(), m.startDragPtr)
+	LCL().SysCallN(5090, m.Instance(), m.startDragPtr)
 }

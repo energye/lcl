@@ -60,57 +60,57 @@ type TRadioGroup struct {
 }
 
 func NewRadioGroup(TheOwner IComponent) IRadioGroup {
-	r1 := LCL().SysCallN(4691, GetObjectUintptr(TheOwner))
+	r1 := LCL().SysCallN(4734, GetObjectUintptr(TheOwner))
 	return AsRadioGroup(r1)
 }
 
 func (m *TRadioGroup) DragCursor() TCursor {
-	r1 := LCL().SysCallN(4692, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4735, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TRadioGroup) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(4692, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(4735, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TRadioGroup) DragMode() TDragMode {
-	r1 := LCL().SysCallN(4693, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4736, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TRadioGroup) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(4693, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(4736, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TRadioGroup) ParentFont() bool {
-	r1 := LCL().SysCallN(4695, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4738, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRadioGroup) SetParentFont(AValue bool) {
-	LCL().SysCallN(4695, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(4738, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRadioGroup) ParentColor() bool {
-	r1 := LCL().SysCallN(4694, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4737, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRadioGroup) SetParentColor(AValue bool) {
-	LCL().SysCallN(4694, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(4737, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRadioGroup) ParentShowHint() bool {
-	r1 := LCL().SysCallN(4696, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4739, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRadioGroup) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(4696, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(4739, 1, m.Instance(), PascalBool(AValue))
 }
 
 func RadioGroupClass() TClass {
-	ret := LCL().SysCallN(4690)
+	ret := LCL().SysCallN(4733)
 	return TClass(ret)
 }
 
@@ -119,7 +119,7 @@ func (m *TRadioGroup) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4697, m.Instance(), m.dblClickPtr)
+	LCL().SysCallN(4740, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TRadioGroup) SetOnDragDrop(fn TDragDropEvent) {
@@ -127,7 +127,7 @@ func (m *TRadioGroup) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4698, m.Instance(), m.dragDropPtr)
+	LCL().SysCallN(4741, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TRadioGroup) SetOnDragOver(fn TDragOverEvent) {
@@ -135,7 +135,7 @@ func (m *TRadioGroup) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4699, m.Instance(), m.dragOverPtr)
+	LCL().SysCallN(4742, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TRadioGroup) SetOnEndDrag(fn TEndDragEvent) {
@@ -143,7 +143,7 @@ func (m *TRadioGroup) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4700, m.Instance(), m.endDragPtr)
+	LCL().SysCallN(4743, m.Instance(), m.endDragPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseDown(fn TMouseEvent) {
@@ -151,7 +151,7 @@ func (m *TRadioGroup) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4701, m.Instance(), m.mouseDownPtr)
+	LCL().SysCallN(4744, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseEnter(fn TNotifyEvent) {
@@ -159,7 +159,7 @@ func (m *TRadioGroup) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4702, m.Instance(), m.mouseEnterPtr)
+	LCL().SysCallN(4745, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseLeave(fn TNotifyEvent) {
@@ -167,7 +167,7 @@ func (m *TRadioGroup) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4703, m.Instance(), m.mouseLeavePtr)
+	LCL().SysCallN(4746, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TRadioGroup) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -175,7 +175,7 @@ func (m *TRadioGroup) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4704, m.Instance(), m.mouseMovePtr)
+	LCL().SysCallN(4747, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TRadioGroup) SetOnMouseUp(fn TMouseEvent) {
@@ -183,7 +183,7 @@ func (m *TRadioGroup) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4705, m.Instance(), m.mouseUpPtr)
+	LCL().SysCallN(4748, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -191,7 +191,7 @@ func (m *TRadioGroup) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4706, m.Instance(), m.mouseWheelPtr)
+	LCL().SysCallN(4749, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -199,7 +199,7 @@ func (m *TRadioGroup) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4707, m.Instance(), m.mouseWheelDownPtr)
+	LCL().SysCallN(4750, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -207,7 +207,7 @@ func (m *TRadioGroup) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4708, m.Instance(), m.mouseWheelUpPtr)
+	LCL().SysCallN(4751, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TRadioGroup) SetOnStartDrag(fn TStartDragEvent) {
@@ -215,5 +215,5 @@ func (m *TRadioGroup) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4709, m.Instance(), m.startDragPtr)
+	LCL().SysCallN(4752, m.Instance(), m.startDragPtr)
 }

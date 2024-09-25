@@ -26,16 +26,16 @@ type TFPCustomRegion struct {
 }
 
 func (m *TFPCustomRegion) GetBoundingRect() (resultRect TRect) {
-	LCL().SysCallN(2949, m.Instance(), uintptr(unsafePointer(&resultRect)))
+	LCL().SysCallN(2978, m.Instance(), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TFPCustomRegion) IsPointInRegion(AX, AY int32) bool {
-	r1 := LCL().SysCallN(2950, m.Instance(), uintptr(AX), uintptr(AY))
+	r1 := LCL().SysCallN(2979, m.Instance(), uintptr(AX), uintptr(AY))
 	return GoBool(r1)
 }
 
 func FPCustomRegionClass() TClass {
-	ret := LCL().SysCallN(2948)
+	ret := LCL().SysCallN(2977)
 	return TClass(ret)
 }

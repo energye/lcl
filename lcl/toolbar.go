@@ -99,218 +99,218 @@ type TToolBar struct {
 }
 
 func NewToolBar(TheOwner IComponent) IToolBar {
-	r1 := LCL().SysCallN(5465, GetObjectUintptr(TheOwner))
+	r1 := LCL().SysCallN(5508, GetObjectUintptr(TheOwner))
 	return AsToolBar(r1)
 }
 
 func (m *TToolBar) ButtonCount() int32 {
-	r1 := LCL().SysCallN(5458, m.Instance())
+	r1 := LCL().SysCallN(5501, m.Instance())
 	return int32(r1)
 }
 
 func (m *TToolBar) Buttons(Index int32) IToolButton {
-	r1 := LCL().SysCallN(5463, m.Instance(), uintptr(Index))
+	r1 := LCL().SysCallN(5506, m.Instance(), uintptr(Index))
 	return AsToolButton(r1)
 }
 
 func (m *TToolBar) ButtonList() IList {
-	r1 := LCL().SysCallN(5461, m.Instance())
+	r1 := LCL().SysCallN(5504, m.Instance())
 	return AsList(r1)
 }
 
 func (m *TToolBar) RowCount() int32 {
-	r1 := LCL().SysCallN(5481, m.Instance())
+	r1 := LCL().SysCallN(5524, m.Instance())
 	return int32(r1)
 }
 
 func (m *TToolBar) ButtonDropWidth() int32 {
-	r1 := LCL().SysCallN(5459, m.Instance())
+	r1 := LCL().SysCallN(5502, m.Instance())
 	return int32(r1)
 }
 
 func (m *TToolBar) ButtonHeight() int32 {
-	r1 := LCL().SysCallN(5460, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5503, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TToolBar) SetButtonHeight(AValue int32) {
-	LCL().SysCallN(5460, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5503, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToolBar) ButtonWidth() int32 {
-	r1 := LCL().SysCallN(5462, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5505, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TToolBar) SetButtonWidth(AValue int32) {
-	LCL().SysCallN(5462, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5505, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToolBar) DisabledImages() ICustomImageList {
-	r1 := LCL().SysCallN(5466, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5509, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TToolBar) SetDisabledImages(AValue ICustomImageList) {
-	LCL().SysCallN(5466, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(5509, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TToolBar) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5467, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5510, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TToolBar) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5467, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5510, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToolBar) DragKind() TDragKind {
-	r1 := LCL().SysCallN(5468, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5511, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TToolBar) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(5468, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5511, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToolBar) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5469, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5512, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TToolBar) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5469, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5512, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToolBar) DropDownWidth() int32 {
-	r1 := LCL().SysCallN(5470, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5513, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TToolBar) SetDropDownWidth(AValue int32) {
-	LCL().SysCallN(5470, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5513, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToolBar) Flat() bool {
-	r1 := LCL().SysCallN(5471, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5514, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToolBar) SetFlat(AValue bool) {
-	LCL().SysCallN(5471, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5514, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TToolBar) HotImages() ICustomImageList {
-	r1 := LCL().SysCallN(5473, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5516, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TToolBar) SetHotImages(AValue ICustomImageList) {
-	LCL().SysCallN(5473, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(5516, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TToolBar) Images() ICustomImageList {
-	r1 := LCL().SysCallN(5474, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5517, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TToolBar) SetImages(AValue ICustomImageList) {
-	LCL().SysCallN(5474, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(5517, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TToolBar) ImagesWidth() int32 {
-	r1 := LCL().SysCallN(5475, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5518, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TToolBar) SetImagesWidth(AValue int32) {
-	LCL().SysCallN(5475, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5518, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToolBar) Indent() int32 {
-	r1 := LCL().SysCallN(5476, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5519, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TToolBar) SetIndent(AValue int32) {
-	LCL().SysCallN(5476, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(5519, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToolBar) List() bool {
-	r1 := LCL().SysCallN(5477, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5520, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToolBar) SetList(AValue bool) {
-	LCL().SysCallN(5477, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5520, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TToolBar) ParentColor() bool {
-	r1 := LCL().SysCallN(5478, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5521, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToolBar) SetParentColor(AValue bool) {
-	LCL().SysCallN(5478, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5521, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TToolBar) ParentFont() bool {
-	r1 := LCL().SysCallN(5479, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5522, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToolBar) SetParentFont(AValue bool) {
-	LCL().SysCallN(5479, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5522, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TToolBar) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5480, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5523, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToolBar) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5480, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5523, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TToolBar) ShowCaptions() bool {
-	r1 := LCL().SysCallN(5498, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5541, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToolBar) SetShowCaptions(AValue bool) {
-	LCL().SysCallN(5498, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5541, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TToolBar) Transparent() bool {
-	r1 := LCL().SysCallN(5499, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5542, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToolBar) SetTransparent(AValue bool) {
-	LCL().SysCallN(5499, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5542, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TToolBar) Wrapable() bool {
-	r1 := LCL().SysCallN(5500, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(5543, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToolBar) SetWrapable(AValue bool) {
-	LCL().SysCallN(5500, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(5543, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TToolBar) GetEnumeratorForToolBarEnumerator() IToolBarEnumerator {
-	r1 := LCL().SysCallN(5472, m.Instance())
+	r1 := LCL().SysCallN(5515, m.Instance())
 	return AsToolBarEnumerator(r1)
 }
 
 func ToolBarClass() TClass {
-	ret := LCL().SysCallN(5464)
+	ret := LCL().SysCallN(5507)
 	return TClass(ret)
 }
 
 func (m *TToolBar) SetButtonSize(NewButtonWidth, NewButtonHeight int32) {
-	LCL().SysCallN(5482, m.Instance(), uintptr(NewButtonWidth), uintptr(NewButtonHeight))
+	LCL().SysCallN(5525, m.Instance(), uintptr(NewButtonWidth), uintptr(NewButtonHeight))
 }
 
 func (m *TToolBar) SetOnContextPopup(fn TContextPopupEvent) {
@@ -318,7 +318,7 @@ func (m *TToolBar) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5483, m.Instance(), m.contextPopupPtr)
+	LCL().SysCallN(5526, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TToolBar) SetOnDblClick(fn TNotifyEvent) {
@@ -326,7 +326,7 @@ func (m *TToolBar) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5484, m.Instance(), m.dblClickPtr)
+	LCL().SysCallN(5527, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TToolBar) SetOnDragDrop(fn TDragDropEvent) {
@@ -334,7 +334,7 @@ func (m *TToolBar) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5485, m.Instance(), m.dragDropPtr)
+	LCL().SysCallN(5528, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TToolBar) SetOnDragOver(fn TDragOverEvent) {
@@ -342,7 +342,7 @@ func (m *TToolBar) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5486, m.Instance(), m.dragOverPtr)
+	LCL().SysCallN(5529, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TToolBar) SetOnPaintButton(fn TToolBarOnPaintButton) {
@@ -350,7 +350,7 @@ func (m *TToolBar) SetOnPaintButton(fn TToolBarOnPaintButton) {
 		RemoveEventElement(m.paintButtonPtr)
 	}
 	m.paintButtonPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5496, m.Instance(), m.paintButtonPtr)
+	LCL().SysCallN(5539, m.Instance(), m.paintButtonPtr)
 }
 
 func (m *TToolBar) SetOnEndDrag(fn TEndDragEvent) {
@@ -358,7 +358,7 @@ func (m *TToolBar) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5487, m.Instance(), m.endDragPtr)
+	LCL().SysCallN(5530, m.Instance(), m.endDragPtr)
 }
 
 func (m *TToolBar) SetOnMouseDown(fn TMouseEvent) {
@@ -366,7 +366,7 @@ func (m *TToolBar) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5488, m.Instance(), m.mouseDownPtr)
+	LCL().SysCallN(5531, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TToolBar) SetOnMouseEnter(fn TNotifyEvent) {
@@ -374,7 +374,7 @@ func (m *TToolBar) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5489, m.Instance(), m.mouseEnterPtr)
+	LCL().SysCallN(5532, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TToolBar) SetOnMouseLeave(fn TNotifyEvent) {
@@ -382,7 +382,7 @@ func (m *TToolBar) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5490, m.Instance(), m.mouseLeavePtr)
+	LCL().SysCallN(5533, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TToolBar) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -390,7 +390,7 @@ func (m *TToolBar) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5491, m.Instance(), m.mouseMovePtr)
+	LCL().SysCallN(5534, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TToolBar) SetOnMouseUp(fn TMouseEvent) {
@@ -398,7 +398,7 @@ func (m *TToolBar) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5492, m.Instance(), m.mouseUpPtr)
+	LCL().SysCallN(5535, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TToolBar) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -406,7 +406,7 @@ func (m *TToolBar) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5493, m.Instance(), m.mouseWheelPtr)
+	LCL().SysCallN(5536, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TToolBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -414,7 +414,7 @@ func (m *TToolBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5494, m.Instance(), m.mouseWheelDownPtr)
+	LCL().SysCallN(5537, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TToolBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -422,7 +422,7 @@ func (m *TToolBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5495, m.Instance(), m.mouseWheelUpPtr)
+	LCL().SysCallN(5538, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TToolBar) SetOnStartDrag(fn TStartDragEvent) {
@@ -430,5 +430,5 @@ func (m *TToolBar) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5497, m.Instance(), m.startDragPtr)
+	LCL().SysCallN(5540, m.Instance(), m.startDragPtr)
 }

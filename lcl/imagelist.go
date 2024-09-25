@@ -24,11 +24,11 @@ type TImageList struct {
 }
 
 func NewImageList(AOwner IComponent) IImageList {
-	r1 := LCL().SysCallN(3379, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(3408, GetObjectUintptr(AOwner))
 	return AsImageList(r1)
 }
 
 func ImageListClass() TClass {
-	ret := LCL().SysCallN(3378)
+	ret := LCL().SysCallN(3407)
 	return TClass(ret)
 }

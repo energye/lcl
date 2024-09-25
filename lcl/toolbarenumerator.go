@@ -26,21 +26,21 @@ type TToolBarEnumerator struct {
 }
 
 func NewToolBarEnumerator(AToolBar IToolBar) IToolBarEnumerator {
-	r1 := LCL().SysCallN(5455, GetObjectUintptr(AToolBar))
+	r1 := LCL().SysCallN(5498, GetObjectUintptr(AToolBar))
 	return AsToolBarEnumerator(r1)
 }
 
 func (m *TToolBarEnumerator) Current() IToolButton {
-	r1 := LCL().SysCallN(5456, m.Instance())
+	r1 := LCL().SysCallN(5499, m.Instance())
 	return AsToolButton(r1)
 }
 
 func (m *TToolBarEnumerator) MoveNext() bool {
-	r1 := LCL().SysCallN(5457, m.Instance())
+	r1 := LCL().SysCallN(5500, m.Instance())
 	return GoBool(r1)
 }
 
 func ToolBarEnumeratorClass() TClass {
-	ret := LCL().SysCallN(5454)
+	ret := LCL().SysCallN(5497)
 	return TClass(ret)
 }

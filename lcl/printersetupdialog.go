@@ -28,21 +28,21 @@ type TPrinterSetupDialog struct {
 }
 
 func NewPrinterSetupDialog(TheOwner IComponent) IPrinterSetupDialog {
-	r1 := LCL().SysCallN(4605, GetObjectUintptr(TheOwner))
+	r1 := LCL().SysCallN(4648, GetObjectUintptr(TheOwner))
 	return AsPrinterSetupDialog(r1)
 }
 
 func (m *TPrinterSetupDialog) AttachTo() ICustomForm {
-	r1 := LCL().SysCallN(4603, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(4646, 0, m.Instance(), 0)
 	return AsCustomForm(r1)
 }
 
 func (m *TPrinterSetupDialog) SetAttachTo(AValue ICustomForm) {
-	LCL().SysCallN(4603, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(4646, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func PrinterSetupDialogClass() TClass {
-	ret := LCL().SysCallN(4604)
+	ret := LCL().SysCallN(4647)
 	return TClass(ret)
 }
 
@@ -51,5 +51,5 @@ func (m *TPrinterSetupDialog) SetOnDialogResult(fn TDialogResultEvent) {
 		RemoveEventElement(m.dialogResultPtr)
 	}
 	m.dialogResultPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4606, m.Instance(), m.dialogResultPtr)
+	LCL().SysCallN(4649, m.Instance(), m.dialogResultPtr)
 }

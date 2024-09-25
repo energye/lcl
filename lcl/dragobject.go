@@ -39,84 +39,84 @@ type TDragObject struct {
 }
 
 func NewDragObject(AControl IControl) IDragObject {
-	r1 := LCL().SysCallN(2721, GetObjectUintptr(AControl))
+	r1 := LCL().SysCallN(2750, GetObjectUintptr(AControl))
 	return AsDragObject(r1)
 }
 
 func NewDragObjectAuto(AControl IControl) IDragObject {
-	r1 := LCL().SysCallN(2716, GetObjectUintptr(AControl))
+	r1 := LCL().SysCallN(2745, GetObjectUintptr(AControl))
 	return AsDragObject(r1)
 }
 
 func (m *TDragObject) AlwaysShowDragImages() bool {
-	r1 := LCL().SysCallN(2715, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2744, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDragObject) SetAlwaysShowDragImages(AValue bool) {
-	LCL().SysCallN(2715, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(2744, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDragObject) AutoCreated() bool {
-	r1 := LCL().SysCallN(2717, m.Instance())
+	r1 := LCL().SysCallN(2746, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TDragObject) AutoFree() bool {
-	r1 := LCL().SysCallN(2718, m.Instance())
+	r1 := LCL().SysCallN(2747, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TDragObject) Control() IControl {
-	r1 := LCL().SysCallN(2720, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2749, 0, m.Instance(), 0)
 	return AsControl(r1)
 }
 
 func (m *TDragObject) SetControl(AValue IControl) {
-	LCL().SysCallN(2720, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(2749, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TDragObject) DragPos() (resultPoint TPoint) {
-	LCL().SysCallN(2722, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	LCL().SysCallN(2751, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TDragObject) SetDragPos(AValue *TPoint) {
-	LCL().SysCallN(2722, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	LCL().SysCallN(2751, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TDragObject) DragTarget() IControl {
-	r1 := LCL().SysCallN(2723, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2752, 0, m.Instance(), 0)
 	return AsControl(r1)
 }
 
 func (m *TDragObject) SetDragTarget(AValue IControl) {
-	LCL().SysCallN(2723, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(2752, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TDragObject) DragTargetPos() (resultPoint TPoint) {
-	LCL().SysCallN(2724, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	LCL().SysCallN(2753, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TDragObject) SetDragTargetPos(AValue *TPoint) {
-	LCL().SysCallN(2724, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	LCL().SysCallN(2753, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TDragObject) Dropped() bool {
-	r1 := LCL().SysCallN(2725, m.Instance())
+	r1 := LCL().SysCallN(2754, m.Instance())
 	return GoBool(r1)
 }
 
 func DragObjectClass() TClass {
-	ret := LCL().SysCallN(2719)
+	ret := LCL().SysCallN(2748)
 	return TClass(ret)
 }
 
 func (m *TDragObject) HideDragImage() {
-	LCL().SysCallN(2726, m.Instance())
+	LCL().SysCallN(2755, m.Instance())
 }
 
 func (m *TDragObject) ShowDragImage() {
-	LCL().SysCallN(2727, m.Instance())
+	LCL().SysCallN(2756, m.Instance())
 }

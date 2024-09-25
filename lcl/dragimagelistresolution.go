@@ -34,57 +34,57 @@ type TDragImageListResolution struct {
 }
 
 func NewDragImageListResolution(TheOwner IComponent) IDragImageListResolution {
-	r1 := LCL().SysCallN(2691, GetObjectUintptr(TheOwner))
+	r1 := LCL().SysCallN(2720, GetObjectUintptr(TheOwner))
 	return AsDragImageListResolution(r1)
 }
 
 func (m *TDragImageListResolution) DragHotspot() (resultPoint TPoint) {
-	LCL().SysCallN(2692, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	LCL().SysCallN(2721, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TDragImageListResolution) SetDragHotspot(AValue *TPoint) {
-	LCL().SysCallN(2692, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	LCL().SysCallN(2721, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TDragImageListResolution) Dragging() bool {
-	r1 := LCL().SysCallN(2696, m.Instance())
+	r1 := LCL().SysCallN(2725, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TDragImageListResolution) BeginDrag(Window HWND, X, Y int32) bool {
-	r1 := LCL().SysCallN(2689, m.Instance(), uintptr(Window), uintptr(X), uintptr(Y))
+	r1 := LCL().SysCallN(2718, m.Instance(), uintptr(Window), uintptr(X), uintptr(Y))
 	return GoBool(r1)
 }
 
 func (m *TDragImageListResolution) DragLock(Window HWND, XPos, YPos int32) bool {
-	r1 := LCL().SysCallN(2693, m.Instance(), uintptr(Window), uintptr(XPos), uintptr(YPos))
+	r1 := LCL().SysCallN(2722, m.Instance(), uintptr(Window), uintptr(XPos), uintptr(YPos))
 	return GoBool(r1)
 }
 
 func (m *TDragImageListResolution) DragMove(X, Y int32) bool {
-	r1 := LCL().SysCallN(2694, m.Instance(), uintptr(X), uintptr(Y))
+	r1 := LCL().SysCallN(2723, m.Instance(), uintptr(X), uintptr(Y))
 	return GoBool(r1)
 }
 
 func (m *TDragImageListResolution) EndDrag() bool {
-	r1 := LCL().SysCallN(2697, m.Instance())
+	r1 := LCL().SysCallN(2726, m.Instance())
 	return GoBool(r1)
 }
 
 func DragImageListResolutionClass() TClass {
-	ret := LCL().SysCallN(2690)
+	ret := LCL().SysCallN(2719)
 	return TClass(ret)
 }
 
 func (m *TDragImageListResolution) DragUnlock() {
-	LCL().SysCallN(2695, m.Instance())
+	LCL().SysCallN(2724, m.Instance())
 }
 
 func (m *TDragImageListResolution) HideDragImage() {
-	LCL().SysCallN(2698, m.Instance())
+	LCL().SysCallN(2727, m.Instance())
 }
 
 func (m *TDragImageListResolution) ShowDragImage() {
-	LCL().SysCallN(2699, m.Instance())
+	LCL().SysCallN(2728, m.Instance())
 }

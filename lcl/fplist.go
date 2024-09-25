@@ -48,113 +48,113 @@ type TFPList struct {
 }
 
 func NewFPList() IFPList {
-	r1 := LCL().SysCallN(2964)
+	r1 := LCL().SysCallN(2993)
 	return AsFPList(r1)
 }
 
 func (m *TFPList) Capacity() int32 {
-	r1 := LCL().SysCallN(2960, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2989, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFPList) SetCapacity(AValue int32) {
-	LCL().SysCallN(2960, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2989, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFPList) Count() int32 {
-	r1 := LCL().SysCallN(2963, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2992, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFPList) SetCount(AValue int32) {
-	LCL().SysCallN(2963, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2992, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFPList) Items(Index int32) uintptr {
-	r1 := LCL().SysCallN(2973, 0, m.Instance(), uintptr(Index))
+	r1 := LCL().SysCallN(3002, 0, m.Instance(), uintptr(Index))
 	return uintptr(r1)
 }
 
 func (m *TFPList) SetItems(Index int32, AValue uintptr) {
-	LCL().SysCallN(2973, 1, m.Instance(), uintptr(Index), uintptr(AValue))
+	LCL().SysCallN(3002, 1, m.Instance(), uintptr(Index), uintptr(AValue))
 }
 
 func (m *TFPList) List() uintptr {
-	r1 := LCL().SysCallN(2975, m.Instance())
+	r1 := LCL().SysCallN(3004, m.Instance())
 	return uintptr(r1)
 }
 
 func (m *TFPList) Add(Item uintptr) int32 {
-	r1 := LCL().SysCallN(2958, m.Instance(), uintptr(Item))
+	r1 := LCL().SysCallN(2987, m.Instance(), uintptr(Item))
 	return int32(r1)
 }
 
 func (m *TFPList) Expand() IFPList {
-	r1 := LCL().SysCallN(2967, m.Instance())
+	r1 := LCL().SysCallN(2996, m.Instance())
 	return AsFPList(r1)
 }
 
 func (m *TFPList) Extract(Item uintptr) uintptr {
-	r1 := LCL().SysCallN(2968, m.Instance(), uintptr(Item))
+	r1 := LCL().SysCallN(2997, m.Instance(), uintptr(Item))
 	return uintptr(r1)
 }
 
 func (m *TFPList) First() uintptr {
-	r1 := LCL().SysCallN(2969, m.Instance())
+	r1 := LCL().SysCallN(2998, m.Instance())
 	return uintptr(r1)
 }
 
 func (m *TFPList) GetEnumerator() IFPListEnumerator {
-	r1 := LCL().SysCallN(2970, m.Instance())
+	r1 := LCL().SysCallN(2999, m.Instance())
 	return AsFPListEnumerator(r1)
 }
 
 func (m *TFPList) IndexOf(Item uintptr) int32 {
-	r1 := LCL().SysCallN(2971, m.Instance(), uintptr(Item))
+	r1 := LCL().SysCallN(3000, m.Instance(), uintptr(Item))
 	return int32(r1)
 }
 
 func (m *TFPList) Last() uintptr {
-	r1 := LCL().SysCallN(2974, m.Instance())
+	r1 := LCL().SysCallN(3003, m.Instance())
 	return uintptr(r1)
 }
 
 func (m *TFPList) Remove(Item uintptr) int32 {
-	r1 := LCL().SysCallN(2978, m.Instance(), uintptr(Item))
+	r1 := LCL().SysCallN(3007, m.Instance(), uintptr(Item))
 	return int32(r1)
 }
 
 func FPListClass() TClass {
-	ret := LCL().SysCallN(2961)
+	ret := LCL().SysCallN(2990)
 	return TClass(ret)
 }
 
 func (m *TFPList) AddList(AList IFPList) {
-	LCL().SysCallN(2959, m.Instance(), GetObjectUintptr(AList))
+	LCL().SysCallN(2988, m.Instance(), GetObjectUintptr(AList))
 }
 
 func (m *TFPList) Clear() {
-	LCL().SysCallN(2962, m.Instance())
+	LCL().SysCallN(2991, m.Instance())
 }
 
 func (m *TFPList) Delete(Index int32) {
-	LCL().SysCallN(2965, m.Instance(), uintptr(Index))
+	LCL().SysCallN(2994, m.Instance(), uintptr(Index))
 }
 
 func (m *TFPList) Exchange(Index1, Index2 int32) {
-	LCL().SysCallN(2966, m.Instance(), uintptr(Index1), uintptr(Index2))
+	LCL().SysCallN(2995, m.Instance(), uintptr(Index1), uintptr(Index2))
 }
 
 func (m *TFPList) Insert(Index int32, Item uintptr) {
-	LCL().SysCallN(2972, m.Instance(), uintptr(Index), uintptr(Item))
+	LCL().SysCallN(3001, m.Instance(), uintptr(Index), uintptr(Item))
 }
 
 func (m *TFPList) Move(CurIndex, NewIndex int32) {
-	LCL().SysCallN(2976, m.Instance(), uintptr(CurIndex), uintptr(NewIndex))
+	LCL().SysCallN(3005, m.Instance(), uintptr(CurIndex), uintptr(NewIndex))
 }
 
 func (m *TFPList) Pack() {
-	LCL().SysCallN(2977, m.Instance())
+	LCL().SysCallN(3006, m.Instance())
 }
 
 func (m *TFPList) Sort(fn TListSortCompare) {
@@ -162,5 +162,5 @@ func (m *TFPList) Sort(fn TListSortCompare) {
 		RemoveEventElement(m.sortPtr)
 	}
 	m.sortPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2979, m.Instance(), m.sortPtr)
+	LCL().SysCallN(3008, m.Instance(), m.sortPtr)
 }

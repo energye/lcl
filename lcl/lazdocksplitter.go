@@ -24,11 +24,11 @@ type TLazDockSplitter struct {
 }
 
 func NewLazDockSplitter(AOwner IComponent) ILazDockSplitter {
-	r1 := LCL().SysCallN(3534, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(3563, GetObjectUintptr(AOwner))
 	return AsLazDockSplitter(r1)
 }
 
 func LazDockSplitterClass() TClass {
-	ret := LCL().SysCallN(3533)
+	ret := LCL().SysCallN(3562)
 	return TClass(ret)
 }

@@ -24,11 +24,11 @@ type TCustomStringTreeOptions struct {
 }
 
 func NewCustomStringTreeOptions(AOwner IBaseVirtualTree) ICustomStringTreeOptions {
-	r1 := LCL().SysCallN(2292, GetObjectUintptr(AOwner))
+	r1 := LCL().SysCallN(2321, GetObjectUintptr(AOwner))
 	return AsCustomStringTreeOptions(r1)
 }
 
 func CustomStringTreeOptionsClass() TClass {
-	ret := LCL().SysCallN(2291)
+	ret := LCL().SysCallN(2320)
 	return TClass(ret)
 }

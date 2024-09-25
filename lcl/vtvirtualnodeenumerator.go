@@ -26,21 +26,21 @@ type TVTVirtualNodeEnumerator struct {
 }
 
 func NewVTVirtualNodeEnumerator() IVTVirtualNodeEnumerator {
-	r1 := LCL().SysCallN(5891)
+	r1 := LCL().SysCallN(5934)
 	return AsVTVirtualNodeEnumerator(r1)
 }
 
 func (m *TVTVirtualNodeEnumerator) Current() IVirtualNode {
-	r1 := LCL().SysCallN(5892, m.Instance())
+	r1 := LCL().SysCallN(5935, m.Instance())
 	return AsVirtualNode(r1)
 }
 
 func (m *TVTVirtualNodeEnumerator) MoveNext() bool {
-	r1 := LCL().SysCallN(5893, m.Instance())
+	r1 := LCL().SysCallN(5936, m.Instance())
 	return GoBool(r1)
 }
 
 func VTVirtualNodeEnumeratorClass() TClass {
-	ret := LCL().SysCallN(5890)
+	ret := LCL().SysCallN(5933)
 	return TClass(ret)
 }

@@ -29,23 +29,23 @@ type TMemoryStream struct {
 }
 
 func NewMemoryStream() IMemoryStream {
-	r1 := LCL().SysCallN(4233)
+	r1 := LCL().SysCallN(4262)
 	return AsMemoryStream(r1)
 }
 
 func MemoryStreamClass() TClass {
-	ret := LCL().SysCallN(4231)
+	ret := LCL().SysCallN(4260)
 	return TClass(ret)
 }
 
 func (m *TMemoryStream) Clear() {
-	LCL().SysCallN(4232, m.Instance())
+	LCL().SysCallN(4261, m.Instance())
 }
 
 func (m *TMemoryStream) LoadFromStream(Stream IStream) {
-	LCL().SysCallN(4235, m.Instance(), GetObjectUintptr(Stream))
+	LCL().SysCallN(4264, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TMemoryStream) LoadFromFile(FileName string) {
-	LCL().SysCallN(4234, m.Instance(), PascalStr(FileName))
+	LCL().SysCallN(4263, m.Instance(), PascalStr(FileName))
 }

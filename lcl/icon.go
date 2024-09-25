@@ -29,25 +29,25 @@ type TIcon struct {
 }
 
 func NewIcon() IIcon {
-	r1 := LCL().SysCallN(3349)
+	r1 := LCL().SysCallN(3378)
 	return AsIcon(r1)
 }
 
 func (m *TIcon) Handle() HICON {
-	r1 := LCL().SysCallN(3350, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3379, 0, m.Instance(), 0)
 	return HICON(r1)
 }
 
 func (m *TIcon) SetHandle(AValue HICON) {
-	LCL().SysCallN(3350, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(3379, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TIcon) ReleaseHandle() HICON {
-	r1 := LCL().SysCallN(3351, m.Instance())
+	r1 := LCL().SysCallN(3380, m.Instance())
 	return HICON(r1)
 }
 
 func IconClass() TClass {
-	ret := LCL().SysCallN(3348)
+	ret := LCL().SysCallN(3377)
 	return TClass(ret)
 }

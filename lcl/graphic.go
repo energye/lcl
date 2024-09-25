@@ -59,138 +59,138 @@ type TGraphic struct {
 }
 
 func (m *TGraphic) Empty() bool {
-	r1 := LCL().SysCallN(3177, m.Instance())
+	r1 := LCL().SysCallN(3206, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TGraphic) Height() int32 {
-	r1 := LCL().SysCallN(3180, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3209, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TGraphic) SetHeight(AValue int32) {
-	LCL().SysCallN(3180, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(3209, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGraphic) Modified() bool {
-	r1 := LCL().SysCallN(3191, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3220, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TGraphic) SetModified(AValue bool) {
-	LCL().SysCallN(3191, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(3220, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TGraphic) MimeType() string {
-	r1 := LCL().SysCallN(3190, m.Instance())
+	r1 := LCL().SysCallN(3219, m.Instance())
 	return GoStr(r1)
 }
 
 func (m *TGraphic) Palette() HPALETTE {
-	r1 := LCL().SysCallN(3192, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3221, 0, m.Instance(), 0)
 	return HPALETTE(r1)
 }
 
 func (m *TGraphic) SetPalette(AValue HPALETTE) {
-	LCL().SysCallN(3192, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(3221, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGraphic) PaletteModified() bool {
-	r1 := LCL().SysCallN(3193, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3222, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TGraphic) SetPaletteModified(AValue bool) {
-	LCL().SysCallN(3193, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(3222, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TGraphic) Transparent() bool {
-	r1 := LCL().SysCallN(3200, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3229, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TGraphic) SetTransparent(AValue bool) {
-	LCL().SysCallN(3200, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(3229, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TGraphic) Width() int32 {
-	r1 := LCL().SysCallN(3201, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(3230, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TGraphic) SetWidth(AValue int32) {
-	LCL().SysCallN(3201, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(3230, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGraphic) LazarusResourceTypeValid(AResourceType string) bool {
-	r1 := LCL().SysCallN(3181, m.Instance(), PascalStr(AResourceType))
+	r1 := LCL().SysCallN(3210, m.Instance(), PascalStr(AResourceType))
 	return GoBool(r1)
 }
 
 func (m *TGraphic) GetResourceType() TResourceType {
-	r1 := LCL().SysCallN(3178, m.Instance())
+	r1 := LCL().SysCallN(3207, m.Instance())
 	return TResourceType(r1)
 }
 
 func GraphicClass() TClass {
-	ret := LCL().SysCallN(3175)
+	ret := LCL().SysCallN(3204)
 	return TClass(ret)
 }
 
 func (m *TGraphic) Clear() {
-	LCL().SysCallN(3176, m.Instance())
+	LCL().SysCallN(3205, m.Instance())
 }
 
 func (m *TGraphic) LoadFromFile(Filename string) {
-	LCL().SysCallN(3184, m.Instance(), PascalStr(Filename))
+	LCL().SysCallN(3213, m.Instance(), PascalStr(Filename))
 }
 
 func (m *TGraphic) LoadFromStream(Stream IStream) {
-	LCL().SysCallN(3189, m.Instance(), GetObjectUintptr(Stream))
+	LCL().SysCallN(3218, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TGraphic) LoadFromMimeStream(AStream IStream, AMimeType string) {
-	LCL().SysCallN(3186, m.Instance(), GetObjectUintptr(AStream), PascalStr(AMimeType))
+	LCL().SysCallN(3215, m.Instance(), GetObjectUintptr(AStream), PascalStr(AMimeType))
 }
 
 func (m *TGraphic) LoadFromLazarusResource(ResName string) {
-	LCL().SysCallN(3185, m.Instance(), PascalStr(ResName))
+	LCL().SysCallN(3214, m.Instance(), PascalStr(ResName))
 }
 
 func (m *TGraphic) LoadFromResourceName(Instance THandle, ResName string) {
-	LCL().SysCallN(3188, m.Instance(), uintptr(Instance), PascalStr(ResName))
+	LCL().SysCallN(3217, m.Instance(), uintptr(Instance), PascalStr(ResName))
 }
 
 func (m *TGraphic) LoadFromResourceID(Instance THandle, ResID uint32) {
-	LCL().SysCallN(3187, m.Instance(), uintptr(Instance), uintptr(ResID))
+	LCL().SysCallN(3216, m.Instance(), uintptr(Instance), uintptr(ResID))
 }
 
 func (m *TGraphic) LoadFromClipboardFormat(FormatID TClipboardFormat) {
-	LCL().SysCallN(3182, m.Instance(), uintptr(FormatID))
+	LCL().SysCallN(3211, m.Instance(), uintptr(FormatID))
 }
 
 func (m *TGraphic) LoadFromClipboardFormatID(ClipboardType TClipboardType, FormatID TClipboardFormat) {
-	LCL().SysCallN(3183, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
+	LCL().SysCallN(3212, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
 }
 
 func (m *TGraphic) SaveToFile(Filename string) {
-	LCL().SysCallN(3196, m.Instance(), PascalStr(Filename))
+	LCL().SysCallN(3225, m.Instance(), PascalStr(Filename))
 }
 
 func (m *TGraphic) SaveToStream(Stream IStream) {
-	LCL().SysCallN(3197, m.Instance(), GetObjectUintptr(Stream))
+	LCL().SysCallN(3226, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TGraphic) SaveToClipboardFormat(FormatID TClipboardFormat) {
-	LCL().SysCallN(3194, m.Instance(), uintptr(FormatID))
+	LCL().SysCallN(3223, m.Instance(), uintptr(FormatID))
 }
 
 func (m *TGraphic) SaveToClipboardFormatID(ClipboardType TClipboardType, FormatID TClipboardFormat) {
-	LCL().SysCallN(3195, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
+	LCL().SysCallN(3224, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
 }
 
 func (m *TGraphic) GetSupportedSourceMimeTypes(List IStrings) {
-	LCL().SysCallN(3179, m.Instance(), GetObjectUintptr(List))
+	LCL().SysCallN(3208, m.Instance(), GetObjectUintptr(List))
 }
 
 func (m *TGraphic) SetOnChange(fn TNotifyEvent) {
@@ -198,7 +198,7 @@ func (m *TGraphic) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3198, m.Instance(), m.changePtr)
+	LCL().SysCallN(3227, m.Instance(), m.changePtr)
 }
 
 func (m *TGraphic) SetOnProgress(fn TProgressEvent) {
@@ -206,5 +206,5 @@ func (m *TGraphic) SetOnProgress(fn TProgressEvent) {
 		RemoveEventElement(m.progressPtr)
 	}
 	m.progressPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3199, m.Instance(), m.progressPtr)
+	LCL().SysCallN(3228, m.Instance(), m.progressPtr)
 }

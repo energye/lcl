@@ -1042,6 +1042,17 @@ func AsCustomMemoryStream(obj interface{}) ICustomMemoryStream {
 	return customMemoryStream
 }
 
+// AsCustomOpenGLControl Convert a pointer object to an existing class object
+func AsCustomOpenGLControl(obj interface{}) ICustomOpenGLControl {
+	instance := GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	customOpenGLControl := new(TCustomOpenGLControl)
+	SetObjectInstance(customOpenGLControl, instance)
+	return customOpenGLControl
+}
+
 // AsCustomPage Convert a pointer object to an existing class object
 func AsCustomPage(obj interface{}) ICustomPage {
 	instance := GetInstance(obj)
@@ -2437,6 +2448,17 @@ func AsOpenDialog(obj interface{}) IOpenDialog {
 	openDialog := new(TOpenDialog)
 	SetObjectInstance(openDialog, instance)
 	return openDialog
+}
+
+// AsOpenGLControl Convert a pointer object to an existing class object
+func AsOpenGLControl(obj interface{}) IOpenGLControl {
+	instance := GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	openGLControl := new(TOpenGLControl)
+	SetObjectInstance(openGLControl, instance)
+	return openGLControl
 }
 
 // AsOpenPictureDialog Convert a pointer object to an existing class object

@@ -96,323 +96,323 @@ type TFPCustomCanvas struct {
 }
 
 func (m *TFPCustomCanvas) LockCount() int32 {
-	r1 := LCL().SysCallN(2873, m.Instance())
+	r1 := LCL().SysCallN(2902, m.Instance())
 	return int32(r1)
 }
 
 func (m *TFPCustomCanvas) Font() IFPCustomFont {
-	r1 := LCL().SysCallN(2859, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2888, 0, m.Instance(), 0)
 	return AsFPCustomFont(r1)
 }
 
 func (m *TFPCustomCanvas) SetFont(AValue IFPCustomFont) {
-	LCL().SysCallN(2859, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(2888, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TFPCustomCanvas) Pen() IFPCustomPen {
-	r1 := LCL().SysCallN(2878, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2907, 0, m.Instance(), 0)
 	return AsFPCustomPen(r1)
 }
 
 func (m *TFPCustomCanvas) SetPen(AValue IFPCustomPen) {
-	LCL().SysCallN(2878, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(2907, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TFPCustomCanvas) Brush() IFPCustomBrush {
-	r1 := LCL().SysCallN(2838, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2867, 0, m.Instance(), 0)
 	return AsFPCustomBrush(r1)
 }
 
 func (m *TFPCustomCanvas) SetBrush(AValue IFPCustomBrush) {
-	LCL().SysCallN(2838, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(2867, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TFPCustomCanvas) Colors(x, y int32) (resultFPColor TFPColor) {
-	r1 := LCL().SysCallN(2844, 0, m.Instance(), uintptr(x), uintptr(y))
+	r1 := LCL().SysCallN(2873, 0, m.Instance(), uintptr(x), uintptr(y))
 	return *(*TFPColor)(getPointer(r1))
 }
 
 func (m *TFPCustomCanvas) SetColors(x, y int32, AValue *TFPColor) {
-	LCL().SysCallN(2844, 1, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(AValue)))
+	LCL().SysCallN(2873, 1, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TFPCustomCanvas) ClipRect() (resultRect TRect) {
-	LCL().SysCallN(2841, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
+	LCL().SysCallN(2870, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TFPCustomCanvas) SetClipRect(AValue *TRect) {
-	LCL().SysCallN(2841, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	LCL().SysCallN(2870, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TFPCustomCanvas) ClipRegion() IFPCustomRegion {
-	r1 := LCL().SysCallN(2842, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2871, 0, m.Instance(), 0)
 	return AsFPCustomRegion(r1)
 }
 
 func (m *TFPCustomCanvas) SetClipRegion(AValue IFPCustomRegion) {
-	LCL().SysCallN(2842, 1, m.Instance(), GetObjectUintptr(AValue))
+	LCL().SysCallN(2871, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TFPCustomCanvas) Clipping() bool {
-	r1 := LCL().SysCallN(2843, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2872, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFPCustomCanvas) SetClipping(AValue bool) {
-	LCL().SysCallN(2843, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(2872, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFPCustomCanvas) PenPos() (resultPoint TPoint) {
-	LCL().SysCallN(2879, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	LCL().SysCallN(2908, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TFPCustomCanvas) SetPenPos(AValue *TPoint) {
-	LCL().SysCallN(2879, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	LCL().SysCallN(2908, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TFPCustomCanvas) Height() int32 {
-	r1 := LCL().SysCallN(2866, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TFPCustomCanvas) SetHeight(AValue int32) {
-	LCL().SysCallN(2866, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TFPCustomCanvas) Width() int32 {
 	r1 := LCL().SysCallN(2895, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
-func (m *TFPCustomCanvas) SetWidth(AValue int32) {
+func (m *TFPCustomCanvas) SetHeight(AValue int32) {
 	LCL().SysCallN(2895, 1, m.Instance(), uintptr(AValue))
 }
 
+func (m *TFPCustomCanvas) Width() int32 {
+	r1 := LCL().SysCallN(2924, 0, m.Instance(), 0)
+	return int32(r1)
+}
+
+func (m *TFPCustomCanvas) SetWidth(AValue int32) {
+	LCL().SysCallN(2924, 1, m.Instance(), uintptr(AValue))
+}
+
 func (m *TFPCustomCanvas) ManageResources() bool {
-	r1 := LCL().SysCallN(2875, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2904, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFPCustomCanvas) SetManageResources(AValue bool) {
-	LCL().SysCallN(2875, 1, m.Instance(), PascalBool(AValue))
+	LCL().SysCallN(2904, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFPCustomCanvas) DrawingMode() TFPDrawingMode {
-	r1 := LCL().SysCallN(2851, 0, m.Instance(), 0)
+	r1 := LCL().SysCallN(2880, 0, m.Instance(), 0)
 	return TFPDrawingMode(r1)
 }
 
 func (m *TFPCustomCanvas) SetDrawingMode(AValue TFPDrawingMode) {
-	LCL().SysCallN(2851, 1, m.Instance(), uintptr(AValue))
+	LCL().SysCallN(2880, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFPCustomCanvas) Locked() bool {
-	r1 := LCL().SysCallN(2874, m.Instance())
+	r1 := LCL().SysCallN(2903, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TFPCustomCanvas) CreateFont() IFPCustomFont {
-	r1 := LCL().SysCallN(2847, m.Instance())
+	r1 := LCL().SysCallN(2876, m.Instance())
 	return AsFPCustomFont(r1)
 }
 
 func (m *TFPCustomCanvas) CreatePen() IFPCustomPen {
-	r1 := LCL().SysCallN(2848, m.Instance())
+	r1 := LCL().SysCallN(2877, m.Instance())
 	return AsFPCustomPen(r1)
 }
 
 func (m *TFPCustomCanvas) CreateBrush() IFPCustomBrush {
-	r1 := LCL().SysCallN(2846, m.Instance())
+	r1 := LCL().SysCallN(2875, m.Instance())
 	return AsFPCustomBrush(r1)
 }
 
 func (m *TFPCustomCanvas) GetTextHeight(text string) int32 {
-	r1 := LCL().SysCallN(2860, m.Instance(), PascalStr(text))
+	r1 := LCL().SysCallN(2889, m.Instance(), PascalStr(text))
 	return int32(r1)
 }
 
 func (m *TFPCustomCanvas) GetTextWidth(text string) int32 {
-	r1 := LCL().SysCallN(2864, m.Instance(), PascalStr(text))
+	r1 := LCL().SysCallN(2893, m.Instance(), PascalStr(text))
 	return int32(r1)
 }
 
 func (m *TFPCustomCanvas) TextExtent(Text string) (resultSize TSize) {
-	LCL().SysCallN(2886, m.Instance(), PascalStr(Text), uintptr(unsafePointer(&resultSize)))
+	LCL().SysCallN(2915, m.Instance(), PascalStr(Text), uintptr(unsafePointer(&resultSize)))
 	return
 }
 
 func (m *TFPCustomCanvas) TextHeight(Text string) int32 {
-	r1 := LCL().SysCallN(2888, m.Instance(), PascalStr(Text))
+	r1 := LCL().SysCallN(2917, m.Instance(), PascalStr(Text))
 	return int32(r1)
 }
 
 func (m *TFPCustomCanvas) TextWidth(Text string) int32 {
-	r1 := LCL().SysCallN(2892, m.Instance(), PascalStr(Text))
+	r1 := LCL().SysCallN(2921, m.Instance(), PascalStr(Text))
 	return int32(r1)
 }
 
 func (m *TFPCustomCanvas) GetTextHeight1(text string) int32 {
-	r1 := LCL().SysCallN(2861, m.Instance(), PascalStr(text))
+	r1 := LCL().SysCallN(2890, m.Instance(), PascalStr(text))
 	return int32(r1)
 }
 
 func (m *TFPCustomCanvas) GetTextWidth1(text string) int32 {
-	r1 := LCL().SysCallN(2865, m.Instance(), PascalStr(text))
+	r1 := LCL().SysCallN(2894, m.Instance(), PascalStr(text))
 	return int32(r1)
 }
 
 func (m *TFPCustomCanvas) TextExtent1(Text string) (resultSize TSize) {
-	LCL().SysCallN(2887, m.Instance(), PascalStr(Text), uintptr(unsafePointer(&resultSize)))
+	LCL().SysCallN(2916, m.Instance(), PascalStr(Text), uintptr(unsafePointer(&resultSize)))
 	return
 }
 
 func (m *TFPCustomCanvas) TextHeight1(Text string) int32 {
-	r1 := LCL().SysCallN(2889, m.Instance(), PascalStr(Text))
+	r1 := LCL().SysCallN(2918, m.Instance(), PascalStr(Text))
 	return int32(r1)
 }
 
 func (m *TFPCustomCanvas) TextWidth1(Text string) int32 {
-	r1 := LCL().SysCallN(2893, m.Instance(), PascalStr(Text))
+	r1 := LCL().SysCallN(2922, m.Instance(), PascalStr(Text))
 	return int32(r1)
 }
 
 func FPCustomCanvasClass() TClass {
-	ret := LCL().SysCallN(2839)
+	ret := LCL().SysCallN(2868)
 	return TClass(ret)
 }
 
 func (m *TFPCustomCanvas) LockCanvas() {
-	LCL().SysCallN(2872, m.Instance())
+	LCL().SysCallN(2901, m.Instance())
 }
 
 func (m *TFPCustomCanvas) UnlockCanvas() {
-	LCL().SysCallN(2894, m.Instance())
+	LCL().SysCallN(2923, m.Instance())
 }
 
 func (m *TFPCustomCanvas) TextOut(x, y int32, text string) {
-	LCL().SysCallN(2890, m.Instance(), uintptr(x), uintptr(y), PascalStr(text))
+	LCL().SysCallN(2919, m.Instance(), uintptr(x), uintptr(y), PascalStr(text))
 }
 
 func (m *TFPCustomCanvas) GetTextSize(text string, w, h *int32) {
 	var result1 uintptr
 	var result2 uintptr
-	LCL().SysCallN(2862, m.Instance(), PascalStr(text), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
+	LCL().SysCallN(2891, m.Instance(), PascalStr(text), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
 	*w = int32(result1)
 	*h = int32(result2)
 }
 
 func (m *TFPCustomCanvas) TextOut1(x, y int32, text string) {
-	LCL().SysCallN(2891, m.Instance(), uintptr(x), uintptr(y), PascalStr(text))
+	LCL().SysCallN(2920, m.Instance(), uintptr(x), uintptr(y), PascalStr(text))
 }
 
 func (m *TFPCustomCanvas) GetTextSize1(text string, w, h *int32) {
 	var result1 uintptr
 	var result2 uintptr
-	LCL().SysCallN(2863, m.Instance(), PascalStr(text), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
+	LCL().SysCallN(2892, m.Instance(), PascalStr(text), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
 	*w = int32(result1)
 	*h = int32(result2)
 }
 
 func (m *TFPCustomCanvas) Arc(ALeft, ATop, ARight, ABottom, Angle16Deg, Angle16DegLength int32) {
-	LCL().SysCallN(2836, m.Instance(), uintptr(ALeft), uintptr(ATop), uintptr(ARight), uintptr(ABottom), uintptr(Angle16Deg), uintptr(Angle16DegLength))
+	LCL().SysCallN(2865, m.Instance(), uintptr(ALeft), uintptr(ATop), uintptr(ARight), uintptr(ABottom), uintptr(Angle16Deg), uintptr(Angle16DegLength))
 }
 
 func (m *TFPCustomCanvas) Arc1(ALeft, ATop, ARight, ABottom, SX, SY, EX, EY int32) {
-	LCL().SysCallN(2837, m.Instance(), uintptr(ALeft), uintptr(ATop), uintptr(ARight), uintptr(ABottom), uintptr(SX), uintptr(SY), uintptr(EX), uintptr(EY))
+	LCL().SysCallN(2866, m.Instance(), uintptr(ALeft), uintptr(ATop), uintptr(ARight), uintptr(ABottom), uintptr(SX), uintptr(SY), uintptr(EX), uintptr(EY))
 }
 
 func (m *TFPCustomCanvas) Ellipse(Bounds *TRect) {
-	LCL().SysCallN(2852, m.Instance(), uintptr(unsafePointer(Bounds)))
+	LCL().SysCallN(2881, m.Instance(), uintptr(unsafePointer(Bounds)))
 }
 
 func (m *TFPCustomCanvas) Ellipse1(left, top, right, bottom int32) {
-	LCL().SysCallN(2853, m.Instance(), uintptr(left), uintptr(top), uintptr(right), uintptr(bottom))
+	LCL().SysCallN(2882, m.Instance(), uintptr(left), uintptr(top), uintptr(right), uintptr(bottom))
 }
 
 func (m *TFPCustomCanvas) EllipseC(x, y int32, rx, ry uint32) {
-	LCL().SysCallN(2854, m.Instance(), uintptr(x), uintptr(y), uintptr(rx), uintptr(ry))
+	LCL().SysCallN(2883, m.Instance(), uintptr(x), uintptr(y), uintptr(rx), uintptr(ry))
 }
 
 func (m *TFPCustomCanvas) RadialPie(x1, y1, x2, y2, StartAngle16Deg, Angle16DegLength int32) {
-	LCL().SysCallN(2881, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2), uintptr(StartAngle16Deg), uintptr(Angle16DegLength))
+	LCL().SysCallN(2910, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2), uintptr(StartAngle16Deg), uintptr(Angle16DegLength))
 }
 
 func (m *TFPCustomCanvas) PolyBezier(Points []TPoint, Filled bool, Continuous bool) {
-	sysCallPoint(2880, m.Instance(), Points, PascalBool(Filled), PascalBool(Continuous))
+	sysCallPoint(2909, m.Instance(), Points, PascalBool(Filled), PascalBool(Continuous))
 }
 
 func (m *TFPCustomCanvas) Rectangle(Bounds *TRect) {
-	LCL().SysCallN(2882, m.Instance(), uintptr(unsafePointer(Bounds)))
+	LCL().SysCallN(2911, m.Instance(), uintptr(unsafePointer(Bounds)))
 }
 
 func (m *TFPCustomCanvas) Rectangle1(left, top, right, bottom int32) {
-	LCL().SysCallN(2883, m.Instance(), uintptr(left), uintptr(top), uintptr(right), uintptr(bottom))
+	LCL().SysCallN(2912, m.Instance(), uintptr(left), uintptr(top), uintptr(right), uintptr(bottom))
 }
 
 func (m *TFPCustomCanvas) FillRect(ARect *TRect) {
-	LCL().SysCallN(2856, m.Instance(), uintptr(unsafePointer(ARect)))
+	LCL().SysCallN(2885, m.Instance(), uintptr(unsafePointer(ARect)))
 }
 
 func (m *TFPCustomCanvas) FillRect1(X1, Y1, X2, Y2 int32) {
-	LCL().SysCallN(2857, m.Instance(), uintptr(X1), uintptr(Y1), uintptr(X2), uintptr(Y2))
+	LCL().SysCallN(2886, m.Instance(), uintptr(X1), uintptr(Y1), uintptr(X2), uintptr(Y2))
 }
 
 func (m *TFPCustomCanvas) FloodFill(x, y int32) {
-	LCL().SysCallN(2858, m.Instance(), uintptr(x), uintptr(y))
+	LCL().SysCallN(2887, m.Instance(), uintptr(x), uintptr(y))
 }
 
 func (m *TFPCustomCanvas) Clear() {
-	LCL().SysCallN(2840, m.Instance())
+	LCL().SysCallN(2869, m.Instance())
 }
 
 func (m *TFPCustomCanvas) MoveTo(x, y int32) {
-	LCL().SysCallN(2876, m.Instance(), uintptr(x), uintptr(y))
+	LCL().SysCallN(2905, m.Instance(), uintptr(x), uintptr(y))
 }
 
 func (m *TFPCustomCanvas) MoveTo1(p *TPoint) {
-	LCL().SysCallN(2877, m.Instance(), uintptr(unsafePointer(p)))
+	LCL().SysCallN(2906, m.Instance(), uintptr(unsafePointer(p)))
 }
 
 func (m *TFPCustomCanvas) LineTo(x, y int32) {
-	LCL().SysCallN(2870, m.Instance(), uintptr(x), uintptr(y))
+	LCL().SysCallN(2899, m.Instance(), uintptr(x), uintptr(y))
 }
 
 func (m *TFPCustomCanvas) LineTo1(p *TPoint) {
-	LCL().SysCallN(2871, m.Instance(), uintptr(unsafePointer(p)))
+	LCL().SysCallN(2900, m.Instance(), uintptr(unsafePointer(p)))
 }
 
 func (m *TFPCustomCanvas) Line(x1, y1, x2, y2 int32) {
-	LCL().SysCallN(2867, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2))
+	LCL().SysCallN(2896, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2))
 }
 
 func (m *TFPCustomCanvas) Line1(p1, p2 *TPoint) {
-	LCL().SysCallN(2868, m.Instance(), uintptr(unsafePointer(p1)), uintptr(unsafePointer(p2)))
+	LCL().SysCallN(2897, m.Instance(), uintptr(unsafePointer(p1)), uintptr(unsafePointer(p2)))
 }
 
 func (m *TFPCustomCanvas) Line2(points *TRect) {
-	LCL().SysCallN(2869, m.Instance(), uintptr(unsafePointer(points)))
+	LCL().SysCallN(2898, m.Instance(), uintptr(unsafePointer(points)))
 }
 
 func (m *TFPCustomCanvas) CopyRect(x, y int32, canvas IFPCustomCanvas, SourceRect *TRect) {
-	LCL().SysCallN(2845, m.Instance(), uintptr(x), uintptr(y), GetObjectUintptr(canvas), uintptr(unsafePointer(SourceRect)))
+	LCL().SysCallN(2874, m.Instance(), uintptr(x), uintptr(y), GetObjectUintptr(canvas), uintptr(unsafePointer(SourceRect)))
 }
 
 func (m *TFPCustomCanvas) Draw(x, y int32, image IFPCustomImage) {
-	LCL().SysCallN(2849, m.Instance(), uintptr(x), uintptr(y), GetObjectUintptr(image))
+	LCL().SysCallN(2878, m.Instance(), uintptr(x), uintptr(y), GetObjectUintptr(image))
 }
 
 func (m *TFPCustomCanvas) StretchDraw(x, y, w, h int32, source IFPCustomImage) {
-	LCL().SysCallN(2885, m.Instance(), uintptr(x), uintptr(y), uintptr(w), uintptr(h), GetObjectUintptr(source))
+	LCL().SysCallN(2914, m.Instance(), uintptr(x), uintptr(y), uintptr(w), uintptr(h), GetObjectUintptr(source))
 }
 
 func (m *TFPCustomCanvas) Erase() {
-	LCL().SysCallN(2855, m.Instance())
+	LCL().SysCallN(2884, m.Instance())
 }
 
 func (m *TFPCustomCanvas) DrawPixel(x, y int32, newcolor *TFPColor) {
-	LCL().SysCallN(2850, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(newcolor)))
+	LCL().SysCallN(2879, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(newcolor)))
 }
 
 func (m *TFPCustomCanvas) SetOnCombineColors(fn TFPCanvasCombineColors) {
@@ -420,5 +420,5 @@ func (m *TFPCustomCanvas) SetOnCombineColors(fn TFPCanvasCombineColors) {
 		RemoveEventElement(m.combineColorsPtr)
 	}
 	m.combineColorsPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2884, m.Instance(), m.combineColorsPtr)
+	LCL().SysCallN(2913, m.Instance(), m.combineColorsPtr)
 }

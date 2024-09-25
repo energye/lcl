@@ -28,28 +28,28 @@ type TRichMemoInline struct {
 }
 
 func NewRichMemoInline() IRichMemoInline {
-	r1 := LCL().SysCallN(4816)
+	r1 := LCL().SysCallN(4859)
 	return AsRichMemoInline(r1)
 }
 
 func (m *TRichMemoInline) Owner() ICustomRichMemo {
-	r1 := LCL().SysCallN(4819, m.Instance())
+	r1 := LCL().SysCallN(4862, m.Instance())
 	return AsCustomRichMemo(r1)
 }
 
 func RichMemoInlineClass() TClass {
-	ret := LCL().SysCallN(4815)
+	ret := LCL().SysCallN(4858)
 	return TClass(ret)
 }
 
 func (m *TRichMemoInline) Draw(Canvas ICanvas, ASize *TSize) {
-	LCL().SysCallN(4817, m.Instance(), GetObjectUintptr(Canvas), uintptr(unsafePointer(ASize)))
+	LCL().SysCallN(4860, m.Instance(), GetObjectUintptr(Canvas), uintptr(unsafePointer(ASize)))
 }
 
 func (m *TRichMemoInline) SetVisible(AVisible bool) {
-	LCL().SysCallN(4820, m.Instance(), PascalBool(AVisible))
+	LCL().SysCallN(4863, m.Instance(), PascalBool(AVisible))
 }
 
 func (m *TRichMemoInline) Invalidate() {
-	LCL().SysCallN(4818, m.Instance())
+	LCL().SysCallN(4861, m.Instance())
 }

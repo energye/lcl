@@ -24,11 +24,11 @@ type TEbEdit struct {
 }
 
 func NewEbEdit(TheOwner IComponent) IEbEdit {
-	r1 := LCL().SysCallN(2765, GetObjectUintptr(TheOwner))
+	r1 := LCL().SysCallN(2794, GetObjectUintptr(TheOwner))
 	return AsEbEdit(r1)
 }
 
 func EbEditClass() TClass {
-	ret := LCL().SysCallN(2764)
+	ret := LCL().SysCallN(2793)
 	return TClass(ret)
 }
