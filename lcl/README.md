@@ -1,6 +1,6 @@
 Go LCL
 
-生成类：[component class name].go, 由generate-tool生成
+控件类：[component class name].go
 
 预定义类：xxx_predef.go
 
