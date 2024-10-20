@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -29,32 +30,54 @@ type TPersistent struct {
 }
 
 func NewPersistent() IPersistent {
-	r1 := LCL().SysCallN(4565)
+	r1 := persistentImportAPI().SysCallN(2)
 	return AsPersistent(r1)
 }
 
 func (m *TPersistent) GetNamePath() string {
-	r1 := LCL().SysCallN(4569, m.Instance())
+	r1 := persistentImportAPI().SysCallN(6, m.Instance())
 	return GoStr(r1)
 }
 
 func PersistentClass() TClass {
-	ret := LCL().SysCallN(4564)
+	ret := persistentImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TPersistent) Assign(Source IPersistent) {
-	LCL().SysCallN(4563, m.Instance(), GetObjectUintptr(Source))
+	persistentImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(Source))
 }
 
 func (m *TPersistent) FPOAttachObserver(AObserver IObject) {
-	LCL().SysCallN(4566, m.Instance(), GetObjectUintptr(AObserver))
+	persistentImportAPI().SysCallN(3, m.Instance(), GetObjectUintptr(AObserver))
 }
 
 func (m *TPersistent) FPODetachObserver(AObserver IObject) {
-	LCL().SysCallN(4567, m.Instance(), GetObjectUintptr(AObserver))
+	persistentImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(AObserver))
 }
 
 func (m *TPersistent) FPONotifyObservers(ASender IObject, AOperation TFPObservedOperation, Data uintptr) {
-	LCL().SysCallN(4568, m.Instance(), GetObjectUintptr(ASender), uintptr(AOperation), uintptr(Data))
+	persistentImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(ASender), uintptr(AOperation), uintptr(Data))
+}
+
+var (
+	persistentImport       *imports.Imports = nil
+	persistentImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Persistent_Assign", 0),
+		/*1*/ imports.NewTable("Persistent_Class", 0),
+		/*2*/ imports.NewTable("Persistent_Create", 0),
+		/*3*/ imports.NewTable("Persistent_FPOAttachObserver", 0),
+		/*4*/ imports.NewTable("Persistent_FPODetachObserver", 0),
+		/*5*/ imports.NewTable("Persistent_FPONotifyObservers", 0),
+		/*6*/ imports.NewTable("Persistent_GetNamePath", 0),
+	}
+)
+
+func persistentImportAPI() *imports.Imports {
+	if persistentImport == nil {
+		persistentImport = NewDefaultImports()
+		persistentImport.SetImportTable(persistentImportTables)
+		persistentImportTables = nil
+	}
+	return persistentImport
 }

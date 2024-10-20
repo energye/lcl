@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -93,224 +94,224 @@ type TStringGrid struct {
 }
 
 func NewStringGrid(AOwner IComponent) IStringGrid {
-	r1 := LCL().SysCallN(5238, GetObjectUintptr(AOwner))
+	r1 := stringGridImportAPI().SysCallN(8, GetObjectUintptr(AOwner))
 	return AsStringGrid(r1)
 }
 
 func (m *TStringGrid) Modified() bool {
-	r1 := LCL().SysCallN(5247, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStringGrid) SetModified(AValue bool) {
-	LCL().SysCallN(5247, 1, m.Instance(), PascalBool(AValue))
+	stringGridImportAPI().SysCallN(17, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStringGrid) InplaceEditor() IWinControl {
-	r1 := LCL().SysCallN(5246, m.Instance())
+	r1 := stringGridImportAPI().SysCallN(16, m.Instance())
 	return AsWinControl(r1)
 }
 
 func (m *TStringGrid) AlternateColor() TColor {
-	r1 := LCL().SysCallN(5230, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TStringGrid) SetAlternateColor(AValue TColor) {
-	LCL().SysCallN(5230, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) AutoEdit() bool {
-	r1 := LCL().SysCallN(5231, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStringGrid) SetAutoEdit(AValue bool) {
-	LCL().SysCallN(5231, 1, m.Instance(), PascalBool(AValue))
+	stringGridImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStringGrid) CellHintPriority() TCellHintPriority {
-	r1 := LCL().SysCallN(5232, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCellHintPriority(r1)
 }
 
 func (m *TStringGrid) SetCellHintPriority(AValue TCellHintPriority) {
-	LCL().SysCallN(5232, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) ColRowDraggingCursor() TCursor {
-	r1 := LCL().SysCallN(5235, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TStringGrid) SetColRowDraggingCursor(AValue TCursor) {
-	LCL().SysCallN(5235, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) ColRowDragIndicatorColor() TColor {
-	r1 := LCL().SysCallN(5234, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TStringGrid) SetColRowDragIndicatorColor(AValue TColor) {
-	LCL().SysCallN(5234, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) ColSizingCursor() TCursor {
-	r1 := LCL().SysCallN(5236, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TStringGrid) SetColSizingCursor(AValue TCursor) {
-	LCL().SysCallN(5236, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) ColumnClickSorts() bool {
-	r1 := LCL().SysCallN(5237, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStringGrid) SetColumnClickSorts(AValue bool) {
-	LCL().SysCallN(5237, 1, m.Instance(), PascalBool(AValue))
+	stringGridImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStringGrid) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5239, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TStringGrid) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5239, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) DragKind() TDragKind {
-	r1 := LCL().SysCallN(5240, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TStringGrid) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(5240, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5241, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TStringGrid) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5241, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) HeaderHotZones() TGridZoneSet {
-	r1 := LCL().SysCallN(5242, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return TGridZoneSet(r1)
 }
 
 func (m *TStringGrid) SetHeaderHotZones(AValue TGridZoneSet) {
-	LCL().SysCallN(5242, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) HeaderPushZones() TGridZoneSet {
-	r1 := LCL().SysCallN(5243, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return TGridZoneSet(r1)
 }
 
 func (m *TStringGrid) SetHeaderPushZones(AValue TGridZoneSet) {
-	LCL().SysCallN(5243, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) ImageIndexSortAsc() TImageIndex {
-	r1 := LCL().SysCallN(5244, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TStringGrid) SetImageIndexSortAsc(AValue TImageIndex) {
-	LCL().SysCallN(5244, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) ImageIndexSortDesc() TImageIndex {
-	r1 := LCL().SysCallN(5245, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TStringGrid) SetImageIndexSortDesc(AValue TImageIndex) {
-	LCL().SysCallN(5245, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) MouseWheelOption() TMouseWheelOption {
-	r1 := LCL().SysCallN(5248, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return TMouseWheelOption(r1)
 }
 
 func (m *TStringGrid) SetMouseWheelOption(AValue TMouseWheelOption) {
-	LCL().SysCallN(5248, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) ParentColor() bool {
-	r1 := LCL().SysCallN(5249, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStringGrid) SetParentColor(AValue bool) {
-	LCL().SysCallN(5249, 1, m.Instance(), PascalBool(AValue))
+	stringGridImportAPI().SysCallN(19, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStringGrid) ParentFont() bool {
-	r1 := LCL().SysCallN(5250, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStringGrid) SetParentFont(AValue bool) {
-	LCL().SysCallN(5250, 1, m.Instance(), PascalBool(AValue))
+	stringGridImportAPI().SysCallN(20, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStringGrid) RangeSelectMode() TRangeSelectMode {
-	r1 := LCL().SysCallN(5251, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return TRangeSelectMode(r1)
 }
 
 func (m *TStringGrid) SetRangeSelectMode(AValue TRangeSelectMode) {
-	LCL().SysCallN(5251, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) RowSizingCursor() TCursor {
-	r1 := LCL().SysCallN(5252, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(22, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TStringGrid) SetRowSizingCursor(AValue TCursor) {
-	LCL().SysCallN(5252, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(22, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStringGrid) TitleFont() IFont {
-	r1 := LCL().SysCallN(5264, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(34, 0, m.Instance(), 0)
 	return AsFont(r1)
 }
 
 func (m *TStringGrid) SetTitleFont(AValue IFont) {
-	LCL().SysCallN(5264, 1, m.Instance(), GetObjectUintptr(AValue))
+	stringGridImportAPI().SysCallN(34, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TStringGrid) TitleImageList() IImageList {
-	r1 := LCL().SysCallN(5265, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(35, 0, m.Instance(), 0)
 	return AsImageList(r1)
 }
 
 func (m *TStringGrid) SetTitleImageList(AValue IImageList) {
-	LCL().SysCallN(5265, 1, m.Instance(), GetObjectUintptr(AValue))
+	stringGridImportAPI().SysCallN(35, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TStringGrid) TitleStyle() TTitleStyle {
-	r1 := LCL().SysCallN(5266, 0, m.Instance(), 0)
+	r1 := stringGridImportAPI().SysCallN(36, 0, m.Instance(), 0)
 	return TTitleStyle(r1)
 }
 
 func (m *TStringGrid) SetTitleStyle(AValue TTitleStyle) {
-	LCL().SysCallN(5266, 1, m.Instance(), uintptr(AValue))
+	stringGridImportAPI().SysCallN(36, 1, m.Instance(), uintptr(AValue))
 }
 
 func StringGridClass() TClass {
-	ret := LCL().SysCallN(5233)
+	ret := stringGridImportAPI().SysCallN(3)
 	return TClass(ret)
 }
 
@@ -319,7 +320,7 @@ func (m *TStringGrid) SetOnCellProcess(fn TCellProcessEvent) {
 		RemoveEventElement(m.cellProcessPtr)
 	}
 	m.cellProcessPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5253, m.Instance(), m.cellProcessPtr)
+	stringGridImportAPI().SysCallN(23, m.Instance(), m.cellProcessPtr)
 }
 
 func (m *TStringGrid) SetOnCheckboxToggled(fn TToggledCheckboxEvent) {
@@ -327,7 +328,7 @@ func (m *TStringGrid) SetOnCheckboxToggled(fn TToggledCheckboxEvent) {
 		RemoveEventElement(m.checkboxToggledPtr)
 	}
 	m.checkboxToggledPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5254, m.Instance(), m.checkboxToggledPtr)
+	stringGridImportAPI().SysCallN(24, m.Instance(), m.checkboxToggledPtr)
 }
 
 func (m *TStringGrid) SetOnEditingDone(fn TNotifyEvent) {
@@ -335,7 +336,7 @@ func (m *TStringGrid) SetOnEditingDone(fn TNotifyEvent) {
 		RemoveEventElement(m.editingDonePtr)
 	}
 	m.editingDonePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5255, m.Instance(), m.editingDonePtr)
+	stringGridImportAPI().SysCallN(25, m.Instance(), m.editingDonePtr)
 }
 
 func (m *TStringGrid) SetOnGetCellHint(fn TGetCellHintEvent) {
@@ -343,7 +344,7 @@ func (m *TStringGrid) SetOnGetCellHint(fn TGetCellHintEvent) {
 		RemoveEventElement(m.getCellHintPtr)
 	}
 	m.getCellHintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5256, m.Instance(), m.getCellHintPtr)
+	stringGridImportAPI().SysCallN(26, m.Instance(), m.getCellHintPtr)
 }
 
 func (m *TStringGrid) SetOnGetCheckboxState(fn TGetCheckboxStateEvent) {
@@ -351,7 +352,7 @@ func (m *TStringGrid) SetOnGetCheckboxState(fn TGetCheckboxStateEvent) {
 		RemoveEventElement(m.getCheckboxStatePtr)
 	}
 	m.getCheckboxStatePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5257, m.Instance(), m.getCheckboxStatePtr)
+	stringGridImportAPI().SysCallN(27, m.Instance(), m.getCheckboxStatePtr)
 }
 
 func (m *TStringGrid) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -359,7 +360,7 @@ func (m *TStringGrid) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5258, m.Instance(), m.mouseWheelHorzPtr)
+	stringGridImportAPI().SysCallN(28, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TStringGrid) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -367,7 +368,7 @@ func (m *TStringGrid) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5259, m.Instance(), m.mouseWheelLeftPtr)
+	stringGridImportAPI().SysCallN(29, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TStringGrid) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -375,7 +376,7 @@ func (m *TStringGrid) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5260, m.Instance(), m.mouseWheelRightPtr)
+	stringGridImportAPI().SysCallN(30, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TStringGrid) SetOnSetCheckboxState(fn TSetCheckboxStateEvent) {
@@ -383,7 +384,7 @@ func (m *TStringGrid) SetOnSetCheckboxState(fn TSetCheckboxStateEvent) {
 		RemoveEventElement(m.setCheckboxStatePtr)
 	}
 	m.setCheckboxStatePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5261, m.Instance(), m.setCheckboxStatePtr)
+	stringGridImportAPI().SysCallN(31, m.Instance(), m.setCheckboxStatePtr)
 }
 
 func (m *TStringGrid) SetOnUserCheckboxBitmap(fn TUserCheckBoxBitmapEvent) {
@@ -391,7 +392,7 @@ func (m *TStringGrid) SetOnUserCheckboxBitmap(fn TUserCheckBoxBitmapEvent) {
 		RemoveEventElement(m.userCheckboxBitmapPtr)
 	}
 	m.userCheckboxBitmapPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5262, m.Instance(), m.userCheckboxBitmapPtr)
+	stringGridImportAPI().SysCallN(32, m.Instance(), m.userCheckboxBitmapPtr)
 }
 
 func (m *TStringGrid) SetOnUserCheckboxImage(fn TUserCheckBoxImageEvent) {
@@ -399,5 +400,57 @@ func (m *TStringGrid) SetOnUserCheckboxImage(fn TUserCheckBoxImageEvent) {
 		RemoveEventElement(m.userCheckboxImagePtr)
 	}
 	m.userCheckboxImagePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5263, m.Instance(), m.userCheckboxImagePtr)
+	stringGridImportAPI().SysCallN(33, m.Instance(), m.userCheckboxImagePtr)
+}
+
+var (
+	stringGridImport       *imports.Imports = nil
+	stringGridImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("StringGrid_AlternateColor", 0),
+		/*1*/ imports.NewTable("StringGrid_AutoEdit", 0),
+		/*2*/ imports.NewTable("StringGrid_CellHintPriority", 0),
+		/*3*/ imports.NewTable("StringGrid_Class", 0),
+		/*4*/ imports.NewTable("StringGrid_ColRowDragIndicatorColor", 0),
+		/*5*/ imports.NewTable("StringGrid_ColRowDraggingCursor", 0),
+		/*6*/ imports.NewTable("StringGrid_ColSizingCursor", 0),
+		/*7*/ imports.NewTable("StringGrid_ColumnClickSorts", 0),
+		/*8*/ imports.NewTable("StringGrid_Create", 0),
+		/*9*/ imports.NewTable("StringGrid_DragCursor", 0),
+		/*10*/ imports.NewTable("StringGrid_DragKind", 0),
+		/*11*/ imports.NewTable("StringGrid_DragMode", 0),
+		/*12*/ imports.NewTable("StringGrid_HeaderHotZones", 0),
+		/*13*/ imports.NewTable("StringGrid_HeaderPushZones", 0),
+		/*14*/ imports.NewTable("StringGrid_ImageIndexSortAsc", 0),
+		/*15*/ imports.NewTable("StringGrid_ImageIndexSortDesc", 0),
+		/*16*/ imports.NewTable("StringGrid_InplaceEditor", 0),
+		/*17*/ imports.NewTable("StringGrid_Modified", 0),
+		/*18*/ imports.NewTable("StringGrid_MouseWheelOption", 0),
+		/*19*/ imports.NewTable("StringGrid_ParentColor", 0),
+		/*20*/ imports.NewTable("StringGrid_ParentFont", 0),
+		/*21*/ imports.NewTable("StringGrid_RangeSelectMode", 0),
+		/*22*/ imports.NewTable("StringGrid_RowSizingCursor", 0),
+		/*23*/ imports.NewTable("StringGrid_SetOnCellProcess", 0),
+		/*24*/ imports.NewTable("StringGrid_SetOnCheckboxToggled", 0),
+		/*25*/ imports.NewTable("StringGrid_SetOnEditingDone", 0),
+		/*26*/ imports.NewTable("StringGrid_SetOnGetCellHint", 0),
+		/*27*/ imports.NewTable("StringGrid_SetOnGetCheckboxState", 0),
+		/*28*/ imports.NewTable("StringGrid_SetOnMouseWheelHorz", 0),
+		/*29*/ imports.NewTable("StringGrid_SetOnMouseWheelLeft", 0),
+		/*30*/ imports.NewTable("StringGrid_SetOnMouseWheelRight", 0),
+		/*31*/ imports.NewTable("StringGrid_SetOnSetCheckboxState", 0),
+		/*32*/ imports.NewTable("StringGrid_SetOnUserCheckboxBitmap", 0),
+		/*33*/ imports.NewTable("StringGrid_SetOnUserCheckboxImage", 0),
+		/*34*/ imports.NewTable("StringGrid_TitleFont", 0),
+		/*35*/ imports.NewTable("StringGrid_TitleImageList", 0),
+		/*36*/ imports.NewTable("StringGrid_TitleStyle", 0),
+	}
+)
+
+func stringGridImportAPI() *imports.Imports {
+	if stringGridImport == nil {
+		stringGridImport = NewDefaultImports()
+		stringGridImport.SetImportTable(stringGridImportTables)
+		stringGridImportTables = nil
+	}
+	return stringGridImport
 }

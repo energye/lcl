@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -60,57 +61,57 @@ type TCheckGroup struct {
 }
 
 func NewCheckGroup(TheOwner IComponent) ICheckGroup {
-	r1 := LCL().SysCallN(623, GetObjectUintptr(TheOwner))
+	r1 := checkGroupImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsCheckGroup(r1)
 }
 
 func (m *TCheckGroup) DragCursor() TCursor {
-	r1 := LCL().SysCallN(624, 0, m.Instance(), 0)
+	r1 := checkGroupImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TCheckGroup) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(624, 1, m.Instance(), uintptr(AValue))
+	checkGroupImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCheckGroup) DragMode() TDragMode {
-	r1 := LCL().SysCallN(625, 0, m.Instance(), 0)
+	r1 := checkGroupImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TCheckGroup) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(625, 1, m.Instance(), uintptr(AValue))
+	checkGroupImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCheckGroup) ParentFont() bool {
-	r1 := LCL().SysCallN(627, 0, m.Instance(), 0)
+	r1 := checkGroupImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCheckGroup) SetParentFont(AValue bool) {
-	LCL().SysCallN(627, 1, m.Instance(), PascalBool(AValue))
+	checkGroupImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCheckGroup) ParentColor() bool {
-	r1 := LCL().SysCallN(626, 0, m.Instance(), 0)
+	r1 := checkGroupImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCheckGroup) SetParentColor(AValue bool) {
-	LCL().SysCallN(626, 1, m.Instance(), PascalBool(AValue))
+	checkGroupImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCheckGroup) ParentShowHint() bool {
-	r1 := LCL().SysCallN(628, 0, m.Instance(), 0)
+	r1 := checkGroupImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCheckGroup) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(628, 1, m.Instance(), PascalBool(AValue))
+	checkGroupImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func CheckGroupClass() TClass {
-	ret := LCL().SysCallN(622)
+	ret := checkGroupImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -119,7 +120,7 @@ func (m *TCheckGroup) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(629, m.Instance(), m.dblClickPtr)
+	checkGroupImportAPI().SysCallN(7, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TCheckGroup) SetOnDragDrop(fn TDragDropEvent) {
@@ -127,7 +128,7 @@ func (m *TCheckGroup) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(630, m.Instance(), m.dragDropPtr)
+	checkGroupImportAPI().SysCallN(8, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TCheckGroup) SetOnDragOver(fn TDragOverEvent) {
@@ -135,7 +136,7 @@ func (m *TCheckGroup) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(631, m.Instance(), m.dragOverPtr)
+	checkGroupImportAPI().SysCallN(9, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TCheckGroup) SetOnEndDrag(fn TEndDragEvent) {
@@ -143,7 +144,7 @@ func (m *TCheckGroup) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(632, m.Instance(), m.endDragPtr)
+	checkGroupImportAPI().SysCallN(10, m.Instance(), m.endDragPtr)
 }
 
 func (m *TCheckGroup) SetOnMouseDown(fn TMouseEvent) {
@@ -151,7 +152,7 @@ func (m *TCheckGroup) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(633, m.Instance(), m.mouseDownPtr)
+	checkGroupImportAPI().SysCallN(11, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TCheckGroup) SetOnMouseEnter(fn TNotifyEvent) {
@@ -159,7 +160,7 @@ func (m *TCheckGroup) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(634, m.Instance(), m.mouseEnterPtr)
+	checkGroupImportAPI().SysCallN(12, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TCheckGroup) SetOnMouseLeave(fn TNotifyEvent) {
@@ -167,7 +168,7 @@ func (m *TCheckGroup) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(635, m.Instance(), m.mouseLeavePtr)
+	checkGroupImportAPI().SysCallN(13, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TCheckGroup) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -175,7 +176,7 @@ func (m *TCheckGroup) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(636, m.Instance(), m.mouseMovePtr)
+	checkGroupImportAPI().SysCallN(14, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TCheckGroup) SetOnMouseUp(fn TMouseEvent) {
@@ -183,7 +184,7 @@ func (m *TCheckGroup) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(637, m.Instance(), m.mouseUpPtr)
+	checkGroupImportAPI().SysCallN(15, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TCheckGroup) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -191,7 +192,7 @@ func (m *TCheckGroup) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(638, m.Instance(), m.mouseWheelPtr)
+	checkGroupImportAPI().SysCallN(16, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TCheckGroup) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -199,7 +200,7 @@ func (m *TCheckGroup) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(639, m.Instance(), m.mouseWheelDownPtr)
+	checkGroupImportAPI().SysCallN(17, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TCheckGroup) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -207,7 +208,7 @@ func (m *TCheckGroup) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(640, m.Instance(), m.mouseWheelUpPtr)
+	checkGroupImportAPI().SysCallN(18, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TCheckGroup) SetOnStartDrag(fn TStartDragEvent) {
@@ -215,5 +216,40 @@ func (m *TCheckGroup) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(641, m.Instance(), m.startDragPtr)
+	checkGroupImportAPI().SysCallN(19, m.Instance(), m.startDragPtr)
+}
+
+var (
+	checkGroupImport       *imports.Imports = nil
+	checkGroupImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CheckGroup_Class", 0),
+		/*1*/ imports.NewTable("CheckGroup_Create", 0),
+		/*2*/ imports.NewTable("CheckGroup_DragCursor", 0),
+		/*3*/ imports.NewTable("CheckGroup_DragMode", 0),
+		/*4*/ imports.NewTable("CheckGroup_ParentColor", 0),
+		/*5*/ imports.NewTable("CheckGroup_ParentFont", 0),
+		/*6*/ imports.NewTable("CheckGroup_ParentShowHint", 0),
+		/*7*/ imports.NewTable("CheckGroup_SetOnDblClick", 0),
+		/*8*/ imports.NewTable("CheckGroup_SetOnDragDrop", 0),
+		/*9*/ imports.NewTable("CheckGroup_SetOnDragOver", 0),
+		/*10*/ imports.NewTable("CheckGroup_SetOnEndDrag", 0),
+		/*11*/ imports.NewTable("CheckGroup_SetOnMouseDown", 0),
+		/*12*/ imports.NewTable("CheckGroup_SetOnMouseEnter", 0),
+		/*13*/ imports.NewTable("CheckGroup_SetOnMouseLeave", 0),
+		/*14*/ imports.NewTable("CheckGroup_SetOnMouseMove", 0),
+		/*15*/ imports.NewTable("CheckGroup_SetOnMouseUp", 0),
+		/*16*/ imports.NewTable("CheckGroup_SetOnMouseWheel", 0),
+		/*17*/ imports.NewTable("CheckGroup_SetOnMouseWheelDown", 0),
+		/*18*/ imports.NewTable("CheckGroup_SetOnMouseWheelUp", 0),
+		/*19*/ imports.NewTable("CheckGroup_SetOnStartDrag", 0),
+	}
+)
+
+func checkGroupImportAPI() *imports.Imports {
+	if checkGroupImport == nil {
+		checkGroupImport = NewDefaultImports()
+		checkGroupImport.SetImportTable(checkGroupImportTables)
+		checkGroupImportTables = nil
+	}
+	return checkGroupImport
 }

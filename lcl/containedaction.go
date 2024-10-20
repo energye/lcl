@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -30,38 +31,58 @@ type TContainedAction struct {
 }
 
 func NewContainedAction(AOwner IComponent) IContainedAction {
-	r1 := LCL().SysCallN(908, GetObjectUintptr(AOwner))
+	r1 := containedActionImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
 	return AsContainedAction(r1)
 }
 
 func (m *TContainedAction) ActionList() ICustomActionList {
-	r1 := LCL().SysCallN(905, 0, m.Instance(), 0)
+	r1 := containedActionImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return AsCustomActionList(r1)
 }
 
 func (m *TContainedAction) SetActionList(AValue ICustomActionList) {
-	LCL().SysCallN(905, 1, m.Instance(), GetObjectUintptr(AValue))
+	containedActionImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TContainedAction) Index() int32 {
-	r1 := LCL().SysCallN(909, 0, m.Instance(), 0)
+	r1 := containedActionImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TContainedAction) SetIndex(AValue int32) {
-	LCL().SysCallN(909, 1, m.Instance(), uintptr(AValue))
+	containedActionImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TContainedAction) Category() string {
-	r1 := LCL().SysCallN(906, 0, m.Instance(), 0)
+	r1 := containedActionImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TContainedAction) SetCategory(AValue string) {
-	LCL().SysCallN(906, 1, m.Instance(), PascalStr(AValue))
+	containedActionImportAPI().SysCallN(1, 1, m.Instance(), PascalStr(AValue))
 }
 
 func ContainedActionClass() TClass {
-	ret := LCL().SysCallN(907)
+	ret := containedActionImportAPI().SysCallN(2)
 	return TClass(ret)
+}
+
+var (
+	containedActionImport       *imports.Imports = nil
+	containedActionImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ContainedAction_ActionList", 0),
+		/*1*/ imports.NewTable("ContainedAction_Category", 0),
+		/*2*/ imports.NewTable("ContainedAction_Class", 0),
+		/*3*/ imports.NewTable("ContainedAction_Create", 0),
+		/*4*/ imports.NewTable("ContainedAction_Index", 0),
+	}
+)
+
+func containedActionImportAPI() *imports.Imports {
+	if containedActionImport == nil {
+		containedActionImport = NewDefaultImports()
+		containedActionImport.SetImportTable(containedActionImportTables)
+		containedActionImportTables = nil
+	}
+	return containedActionImport
 }

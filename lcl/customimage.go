@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -72,139 +73,139 @@ type TCustomImage struct {
 }
 
 func NewCustomImage(AOwner IComponent) ICustomImage {
-	r1 := LCL().SysCallN(1922, GetObjectUintptr(AOwner))
+	r1 := customImageImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
 	return AsCustomImage(r1)
 }
 
 func (m *TCustomImage) HasGraphic() bool {
-	r1 := LCL().SysCallN(1924, m.Instance())
+	r1 := customImageImportAPI().SysCallN(5, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TCustomImage) AntialiasingMode() TAntialiasingMode {
-	r1 := LCL().SysCallN(1919, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TAntialiasingMode(r1)
 }
 
 func (m *TCustomImage) SetAntialiasingMode(AValue TAntialiasingMode) {
-	LCL().SysCallN(1919, 1, m.Instance(), uintptr(AValue))
+	customImageImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomImage) Center() bool {
-	r1 := LCL().SysCallN(1920, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImage) SetCenter(AValue bool) {
-	LCL().SysCallN(1920, 1, m.Instance(), PascalBool(AValue))
+	customImageImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImage) KeepOriginXWhenClipped() bool {
-	r1 := LCL().SysCallN(1928, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImage) SetKeepOriginXWhenClipped(AValue bool) {
-	LCL().SysCallN(1928, 1, m.Instance(), PascalBool(AValue))
+	customImageImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImage) KeepOriginYWhenClipped() bool {
-	r1 := LCL().SysCallN(1929, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImage) SetKeepOriginYWhenClipped(AValue bool) {
-	LCL().SysCallN(1929, 1, m.Instance(), PascalBool(AValue))
+	customImageImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImage) ImageIndex() int32 {
-	r1 := LCL().SysCallN(1925, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomImage) SetImageIndex(AValue int32) {
-	LCL().SysCallN(1925, 1, m.Instance(), uintptr(AValue))
+	customImageImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomImage) ImageWidth() int32 {
-	r1 := LCL().SysCallN(1926, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomImage) SetImageWidth(AValue int32) {
-	LCL().SysCallN(1926, 1, m.Instance(), uintptr(AValue))
+	customImageImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomImage) Images() ICustomImageList {
-	r1 := LCL().SysCallN(1927, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TCustomImage) SetImages(AValue ICustomImageList) {
-	LCL().SysCallN(1927, 1, m.Instance(), GetObjectUintptr(AValue))
+	customImageImportAPI().SysCallN(8, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomImage) Picture() IPicture {
-	r1 := LCL().SysCallN(1930, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return AsPicture(r1)
 }
 
 func (m *TCustomImage) SetPicture(AValue IPicture) {
-	LCL().SysCallN(1930, 1, m.Instance(), GetObjectUintptr(AValue))
+	customImageImportAPI().SysCallN(11, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomImage) Stretch() bool {
-	r1 := LCL().SysCallN(1942, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImage) SetStretch(AValue bool) {
-	LCL().SysCallN(1942, 1, m.Instance(), PascalBool(AValue))
+	customImageImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImage) StretchOutEnabled() bool {
-	r1 := LCL().SysCallN(1944, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImage) SetStretchOutEnabled(AValue bool) {
-	LCL().SysCallN(1944, 1, m.Instance(), PascalBool(AValue))
+	customImageImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImage) StretchInEnabled() bool {
-	r1 := LCL().SysCallN(1943, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(24, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImage) SetStretchInEnabled(AValue bool) {
-	LCL().SysCallN(1943, 1, m.Instance(), PascalBool(AValue))
+	customImageImportAPI().SysCallN(24, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImage) Transparent() bool {
-	r1 := LCL().SysCallN(1945, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(26, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImage) SetTransparent(AValue bool) {
-	LCL().SysCallN(1945, 1, m.Instance(), PascalBool(AValue))
+	customImageImportAPI().SysCallN(26, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImage) Proportional() bool {
-	r1 := LCL().SysCallN(1931, 0, m.Instance(), 0)
+	r1 := customImageImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImage) SetProportional(AValue bool) {
-	LCL().SysCallN(1931, 1, m.Instance(), PascalBool(AValue))
+	customImageImportAPI().SysCallN(12, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImage) DestRect() (resultRect TRect) {
-	LCL().SysCallN(1923, m.Instance(), uintptr(unsafePointer(&resultRect)))
+	customImageImportAPI().SysCallN(4, m.Instance(), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func CustomImageClass() TClass {
-	ret := LCL().SysCallN(1921)
+	ret := customImageImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
@@ -213,7 +214,7 @@ func (m *TCustomImage) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1932, m.Instance(), m.mouseDownPtr)
+	customImageImportAPI().SysCallN(13, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TCustomImage) SetOnMouseEnter(fn TNotifyEvent) {
@@ -221,7 +222,7 @@ func (m *TCustomImage) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1933, m.Instance(), m.mouseEnterPtr)
+	customImageImportAPI().SysCallN(14, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TCustomImage) SetOnMouseLeave(fn TNotifyEvent) {
@@ -229,7 +230,7 @@ func (m *TCustomImage) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1934, m.Instance(), m.mouseLeavePtr)
+	customImageImportAPI().SysCallN(15, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TCustomImage) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -237,7 +238,7 @@ func (m *TCustomImage) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1935, m.Instance(), m.mouseMovePtr)
+	customImageImportAPI().SysCallN(16, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TCustomImage) SetOnMouseUp(fn TMouseEvent) {
@@ -245,7 +246,7 @@ func (m *TCustomImage) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1936, m.Instance(), m.mouseUpPtr)
+	customImageImportAPI().SysCallN(17, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TCustomImage) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -253,7 +254,7 @@ func (m *TCustomImage) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1937, m.Instance(), m.mouseWheelPtr)
+	customImageImportAPI().SysCallN(18, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TCustomImage) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -261,7 +262,7 @@ func (m *TCustomImage) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1938, m.Instance(), m.mouseWheelDownPtr)
+	customImageImportAPI().SysCallN(19, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TCustomImage) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -269,7 +270,7 @@ func (m *TCustomImage) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1939, m.Instance(), m.mouseWheelUpPtr)
+	customImageImportAPI().SysCallN(20, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TCustomImage) SetOnPictureChanged(fn TNotifyEvent) {
@@ -277,7 +278,7 @@ func (m *TCustomImage) SetOnPictureChanged(fn TNotifyEvent) {
 		RemoveEventElement(m.pictureChangedPtr)
 	}
 	m.pictureChangedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1941, m.Instance(), m.pictureChangedPtr)
+	customImageImportAPI().SysCallN(22, m.Instance(), m.pictureChangedPtr)
 }
 
 func (m *TCustomImage) SetOnPaintBackground(fn TImagePaintBackgroundEvent) {
@@ -285,5 +286,47 @@ func (m *TCustomImage) SetOnPaintBackground(fn TImagePaintBackgroundEvent) {
 		RemoveEventElement(m.paintBackgroundPtr)
 	}
 	m.paintBackgroundPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1940, m.Instance(), m.paintBackgroundPtr)
+	customImageImportAPI().SysCallN(21, m.Instance(), m.paintBackgroundPtr)
+}
+
+var (
+	customImageImport       *imports.Imports = nil
+	customImageImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomImage_AntialiasingMode", 0),
+		/*1*/ imports.NewTable("CustomImage_Center", 0),
+		/*2*/ imports.NewTable("CustomImage_Class", 0),
+		/*3*/ imports.NewTable("CustomImage_Create", 0),
+		/*4*/ imports.NewTable("CustomImage_DestRect", 0),
+		/*5*/ imports.NewTable("CustomImage_HasGraphic", 0),
+		/*6*/ imports.NewTable("CustomImage_ImageIndex", 0),
+		/*7*/ imports.NewTable("CustomImage_ImageWidth", 0),
+		/*8*/ imports.NewTable("CustomImage_Images", 0),
+		/*9*/ imports.NewTable("CustomImage_KeepOriginXWhenClipped", 0),
+		/*10*/ imports.NewTable("CustomImage_KeepOriginYWhenClipped", 0),
+		/*11*/ imports.NewTable("CustomImage_Picture", 0),
+		/*12*/ imports.NewTable("CustomImage_Proportional", 0),
+		/*13*/ imports.NewTable("CustomImage_SetOnMouseDown", 0),
+		/*14*/ imports.NewTable("CustomImage_SetOnMouseEnter", 0),
+		/*15*/ imports.NewTable("CustomImage_SetOnMouseLeave", 0),
+		/*16*/ imports.NewTable("CustomImage_SetOnMouseMove", 0),
+		/*17*/ imports.NewTable("CustomImage_SetOnMouseUp", 0),
+		/*18*/ imports.NewTable("CustomImage_SetOnMouseWheel", 0),
+		/*19*/ imports.NewTable("CustomImage_SetOnMouseWheelDown", 0),
+		/*20*/ imports.NewTable("CustomImage_SetOnMouseWheelUp", 0),
+		/*21*/ imports.NewTable("CustomImage_SetOnPaintBackground", 0),
+		/*22*/ imports.NewTable("CustomImage_SetOnPictureChanged", 0),
+		/*23*/ imports.NewTable("CustomImage_Stretch", 0),
+		/*24*/ imports.NewTable("CustomImage_StretchInEnabled", 0),
+		/*25*/ imports.NewTable("CustomImage_StretchOutEnabled", 0),
+		/*26*/ imports.NewTable("CustomImage_Transparent", 0),
+	}
+)
+
+func customImageImportAPI() *imports.Imports {
+	if customImageImport == nil {
+		customImageImport = NewDefaultImports()
+		customImageImport.SetImportTable(customImageImportTables)
+		customImageImportTables = nil
+	}
+	return customImageImport
 }

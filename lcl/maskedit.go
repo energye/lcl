@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -77,107 +78,107 @@ type TMaskEdit struct {
 }
 
 func NewMaskEdit(TheOwner IComponent) IMaskEdit {
-	r1 := LCL().SysCallN(4205, GetObjectUintptr(TheOwner))
+	r1 := maskEditImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
 	return AsMaskEdit(r1)
 }
 
 func (m *TMaskEdit) IsMasked() bool {
-	r1 := LCL().SysCallN(4211, m.Instance())
+	r1 := maskEditImportAPI().SysCallN(8, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TMaskEdit) EditText() string {
-	r1 := LCL().SysCallN(4210, 0, m.Instance(), 0)
+	r1 := maskEditImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TMaskEdit) SetEditText(AValue string) {
-	LCL().SysCallN(4210, 1, m.Instance(), PascalStr(AValue))
+	maskEditImportAPI().SysCallN(7, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TMaskEdit) AutoSelect() bool {
-	r1 := LCL().SysCallN(4203, 0, m.Instance(), 0)
+	r1 := maskEditImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMaskEdit) SetAutoSelect(AValue bool) {
-	LCL().SysCallN(4203, 1, m.Instance(), PascalBool(AValue))
+	maskEditImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TMaskEdit) DragCursor() TCursor {
-	r1 := LCL().SysCallN(4206, 0, m.Instance(), 0)
+	r1 := maskEditImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TMaskEdit) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(4206, 1, m.Instance(), uintptr(AValue))
+	maskEditImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TMaskEdit) DragKind() TDragKind {
-	r1 := LCL().SysCallN(4207, 0, m.Instance(), 0)
+	r1 := maskEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TMaskEdit) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(4207, 1, m.Instance(), uintptr(AValue))
+	maskEditImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TMaskEdit) DragMode() TDragMode {
-	r1 := LCL().SysCallN(4208, 0, m.Instance(), 0)
+	r1 := maskEditImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TMaskEdit) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(4208, 1, m.Instance(), uintptr(AValue))
+	maskEditImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TMaskEdit) ParentColor() bool {
-	r1 := LCL().SysCallN(4212, 0, m.Instance(), 0)
+	r1 := maskEditImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMaskEdit) SetParentColor(AValue bool) {
-	LCL().SysCallN(4212, 1, m.Instance(), PascalBool(AValue))
+	maskEditImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TMaskEdit) ParentFont() bool {
-	r1 := LCL().SysCallN(4213, 0, m.Instance(), 0)
+	r1 := maskEditImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMaskEdit) SetParentFont(AValue bool) {
-	LCL().SysCallN(4213, 1, m.Instance(), PascalBool(AValue))
+	maskEditImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TMaskEdit) ParentShowHint() bool {
-	r1 := LCL().SysCallN(4214, 0, m.Instance(), 0)
+	r1 := maskEditImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMaskEdit) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(4214, 1, m.Instance(), PascalBool(AValue))
+	maskEditImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TMaskEdit) EditMask() string {
-	r1 := LCL().SysCallN(4209, 0, m.Instance(), 0)
+	r1 := maskEditImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TMaskEdit) SetEditMask(AValue string) {
-	LCL().SysCallN(4209, 1, m.Instance(), PascalStr(AValue))
+	maskEditImportAPI().SysCallN(6, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TMaskEdit) SpaceChar() Char {
-	r1 := LCL().SysCallN(4231, 0, m.Instance(), 0)
+	r1 := maskEditImportAPI().SysCallN(28, 0, m.Instance(), 0)
 	return Char(r1)
 }
 
 func (m *TMaskEdit) SetSpaceChar(AValue Char) {
-	LCL().SysCallN(4231, 1, m.Instance(), uintptr(AValue))
+	maskEditImportAPI().SysCallN(28, 1, m.Instance(), uintptr(AValue))
 }
 
 func MaskEditClass() TClass {
-	ret := LCL().SysCallN(4204)
+	ret := maskEditImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
@@ -186,7 +187,7 @@ func (m *TMaskEdit) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4215, m.Instance(), m.dblClickPtr)
+	maskEditImportAPI().SysCallN(12, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TMaskEdit) SetOnDragDrop(fn TDragDropEvent) {
@@ -194,7 +195,7 @@ func (m *TMaskEdit) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4216, m.Instance(), m.dragDropPtr)
+	maskEditImportAPI().SysCallN(13, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TMaskEdit) SetOnDragOver(fn TDragOverEvent) {
@@ -202,7 +203,7 @@ func (m *TMaskEdit) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4217, m.Instance(), m.dragOverPtr)
+	maskEditImportAPI().SysCallN(14, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TMaskEdit) SetOnEditingDone(fn TNotifyEvent) {
@@ -210,7 +211,7 @@ func (m *TMaskEdit) SetOnEditingDone(fn TNotifyEvent) {
 		RemoveEventElement(m.editingDonePtr)
 	}
 	m.editingDonePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4218, m.Instance(), m.editingDonePtr)
+	maskEditImportAPI().SysCallN(15, m.Instance(), m.editingDonePtr)
 }
 
 func (m *TMaskEdit) SetOnEndDock(fn TEndDragEvent) {
@@ -218,7 +219,7 @@ func (m *TMaskEdit) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4219, m.Instance(), m.endDockPtr)
+	maskEditImportAPI().SysCallN(16, m.Instance(), m.endDockPtr)
 }
 
 func (m *TMaskEdit) SetOnEndDrag(fn TEndDragEvent) {
@@ -226,7 +227,7 @@ func (m *TMaskEdit) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4220, m.Instance(), m.endDragPtr)
+	maskEditImportAPI().SysCallN(17, m.Instance(), m.endDragPtr)
 }
 
 func (m *TMaskEdit) SetOnMouseDown(fn TMouseEvent) {
@@ -234,7 +235,7 @@ func (m *TMaskEdit) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4221, m.Instance(), m.mouseDownPtr)
+	maskEditImportAPI().SysCallN(18, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TMaskEdit) SetOnMouseEnter(fn TNotifyEvent) {
@@ -242,7 +243,7 @@ func (m *TMaskEdit) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4222, m.Instance(), m.mouseEnterPtr)
+	maskEditImportAPI().SysCallN(19, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TMaskEdit) SetOnMouseLeave(fn TNotifyEvent) {
@@ -250,7 +251,7 @@ func (m *TMaskEdit) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4223, m.Instance(), m.mouseLeavePtr)
+	maskEditImportAPI().SysCallN(20, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TMaskEdit) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -258,7 +259,7 @@ func (m *TMaskEdit) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4224, m.Instance(), m.mouseMovePtr)
+	maskEditImportAPI().SysCallN(21, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TMaskEdit) SetOnMouseUp(fn TMouseEvent) {
@@ -266,7 +267,7 @@ func (m *TMaskEdit) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4225, m.Instance(), m.mouseUpPtr)
+	maskEditImportAPI().SysCallN(22, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TMaskEdit) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -274,7 +275,7 @@ func (m *TMaskEdit) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4226, m.Instance(), m.mouseWheelPtr)
+	maskEditImportAPI().SysCallN(23, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TMaskEdit) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -282,7 +283,7 @@ func (m *TMaskEdit) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4227, m.Instance(), m.mouseWheelDownPtr)
+	maskEditImportAPI().SysCallN(24, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TMaskEdit) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -290,7 +291,7 @@ func (m *TMaskEdit) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4228, m.Instance(), m.mouseWheelUpPtr)
+	maskEditImportAPI().SysCallN(25, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TMaskEdit) SetOnStartDock(fn TStartDockEvent) {
@@ -298,7 +299,7 @@ func (m *TMaskEdit) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4229, m.Instance(), m.startDockPtr)
+	maskEditImportAPI().SysCallN(26, m.Instance(), m.startDockPtr)
 }
 
 func (m *TMaskEdit) SetOnStartDrag(fn TStartDragEvent) {
@@ -306,5 +307,49 @@ func (m *TMaskEdit) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4230, m.Instance(), m.startDragPtr)
+	maskEditImportAPI().SysCallN(27, m.Instance(), m.startDragPtr)
+}
+
+var (
+	maskEditImport       *imports.Imports = nil
+	maskEditImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("MaskEdit_AutoSelect", 0),
+		/*1*/ imports.NewTable("MaskEdit_Class", 0),
+		/*2*/ imports.NewTable("MaskEdit_Create", 0),
+		/*3*/ imports.NewTable("MaskEdit_DragCursor", 0),
+		/*4*/ imports.NewTable("MaskEdit_DragKind", 0),
+		/*5*/ imports.NewTable("MaskEdit_DragMode", 0),
+		/*6*/ imports.NewTable("MaskEdit_EditMask", 0),
+		/*7*/ imports.NewTable("MaskEdit_EditText", 0),
+		/*8*/ imports.NewTable("MaskEdit_IsMasked", 0),
+		/*9*/ imports.NewTable("MaskEdit_ParentColor", 0),
+		/*10*/ imports.NewTable("MaskEdit_ParentFont", 0),
+		/*11*/ imports.NewTable("MaskEdit_ParentShowHint", 0),
+		/*12*/ imports.NewTable("MaskEdit_SetOnDblClick", 0),
+		/*13*/ imports.NewTable("MaskEdit_SetOnDragDrop", 0),
+		/*14*/ imports.NewTable("MaskEdit_SetOnDragOver", 0),
+		/*15*/ imports.NewTable("MaskEdit_SetOnEditingDone", 0),
+		/*16*/ imports.NewTable("MaskEdit_SetOnEndDock", 0),
+		/*17*/ imports.NewTable("MaskEdit_SetOnEndDrag", 0),
+		/*18*/ imports.NewTable("MaskEdit_SetOnMouseDown", 0),
+		/*19*/ imports.NewTable("MaskEdit_SetOnMouseEnter", 0),
+		/*20*/ imports.NewTable("MaskEdit_SetOnMouseLeave", 0),
+		/*21*/ imports.NewTable("MaskEdit_SetOnMouseMove", 0),
+		/*22*/ imports.NewTable("MaskEdit_SetOnMouseUp", 0),
+		/*23*/ imports.NewTable("MaskEdit_SetOnMouseWheel", 0),
+		/*24*/ imports.NewTable("MaskEdit_SetOnMouseWheelDown", 0),
+		/*25*/ imports.NewTable("MaskEdit_SetOnMouseWheelUp", 0),
+		/*26*/ imports.NewTable("MaskEdit_SetOnStartDock", 0),
+		/*27*/ imports.NewTable("MaskEdit_SetOnStartDrag", 0),
+		/*28*/ imports.NewTable("MaskEdit_SpaceChar", 0),
+	}
+)
+
+func maskEditImportAPI() *imports.Imports {
+	if maskEditImport == nil {
+		maskEditImport = NewDefaultImports()
+		maskEditImport.SetImportTable(maskEditImportTables)
+		maskEditImportTables = nil
+	}
+	return maskEditImport
 }

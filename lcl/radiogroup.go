@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -60,57 +61,57 @@ type TRadioGroup struct {
 }
 
 func NewRadioGroup(TheOwner IComponent) IRadioGroup {
-	r1 := LCL().SysCallN(4734, GetObjectUintptr(TheOwner))
+	r1 := radioGroupImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsRadioGroup(r1)
 }
 
 func (m *TRadioGroup) DragCursor() TCursor {
-	r1 := LCL().SysCallN(4735, 0, m.Instance(), 0)
+	r1 := radioGroupImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TRadioGroup) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(4735, 1, m.Instance(), uintptr(AValue))
+	radioGroupImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TRadioGroup) DragMode() TDragMode {
-	r1 := LCL().SysCallN(4736, 0, m.Instance(), 0)
+	r1 := radioGroupImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TRadioGroup) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(4736, 1, m.Instance(), uintptr(AValue))
+	radioGroupImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TRadioGroup) ParentFont() bool {
-	r1 := LCL().SysCallN(4738, 0, m.Instance(), 0)
+	r1 := radioGroupImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRadioGroup) SetParentFont(AValue bool) {
-	LCL().SysCallN(4738, 1, m.Instance(), PascalBool(AValue))
+	radioGroupImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRadioGroup) ParentColor() bool {
-	r1 := LCL().SysCallN(4737, 0, m.Instance(), 0)
+	r1 := radioGroupImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRadioGroup) SetParentColor(AValue bool) {
-	LCL().SysCallN(4737, 1, m.Instance(), PascalBool(AValue))
+	radioGroupImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRadioGroup) ParentShowHint() bool {
-	r1 := LCL().SysCallN(4739, 0, m.Instance(), 0)
+	r1 := radioGroupImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRadioGroup) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(4739, 1, m.Instance(), PascalBool(AValue))
+	radioGroupImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func RadioGroupClass() TClass {
-	ret := LCL().SysCallN(4733)
+	ret := radioGroupImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -119,7 +120,7 @@ func (m *TRadioGroup) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4740, m.Instance(), m.dblClickPtr)
+	radioGroupImportAPI().SysCallN(7, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TRadioGroup) SetOnDragDrop(fn TDragDropEvent) {
@@ -127,7 +128,7 @@ func (m *TRadioGroup) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4741, m.Instance(), m.dragDropPtr)
+	radioGroupImportAPI().SysCallN(8, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TRadioGroup) SetOnDragOver(fn TDragOverEvent) {
@@ -135,7 +136,7 @@ func (m *TRadioGroup) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4742, m.Instance(), m.dragOverPtr)
+	radioGroupImportAPI().SysCallN(9, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TRadioGroup) SetOnEndDrag(fn TEndDragEvent) {
@@ -143,7 +144,7 @@ func (m *TRadioGroup) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4743, m.Instance(), m.endDragPtr)
+	radioGroupImportAPI().SysCallN(10, m.Instance(), m.endDragPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseDown(fn TMouseEvent) {
@@ -151,7 +152,7 @@ func (m *TRadioGroup) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4744, m.Instance(), m.mouseDownPtr)
+	radioGroupImportAPI().SysCallN(11, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseEnter(fn TNotifyEvent) {
@@ -159,7 +160,7 @@ func (m *TRadioGroup) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4745, m.Instance(), m.mouseEnterPtr)
+	radioGroupImportAPI().SysCallN(12, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseLeave(fn TNotifyEvent) {
@@ -167,7 +168,7 @@ func (m *TRadioGroup) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4746, m.Instance(), m.mouseLeavePtr)
+	radioGroupImportAPI().SysCallN(13, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TRadioGroup) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -175,7 +176,7 @@ func (m *TRadioGroup) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4747, m.Instance(), m.mouseMovePtr)
+	radioGroupImportAPI().SysCallN(14, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TRadioGroup) SetOnMouseUp(fn TMouseEvent) {
@@ -183,7 +184,7 @@ func (m *TRadioGroup) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4748, m.Instance(), m.mouseUpPtr)
+	radioGroupImportAPI().SysCallN(15, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -191,7 +192,7 @@ func (m *TRadioGroup) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4749, m.Instance(), m.mouseWheelPtr)
+	radioGroupImportAPI().SysCallN(16, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -199,7 +200,7 @@ func (m *TRadioGroup) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4750, m.Instance(), m.mouseWheelDownPtr)
+	radioGroupImportAPI().SysCallN(17, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TRadioGroup) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -207,7 +208,7 @@ func (m *TRadioGroup) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4751, m.Instance(), m.mouseWheelUpPtr)
+	radioGroupImportAPI().SysCallN(18, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TRadioGroup) SetOnStartDrag(fn TStartDragEvent) {
@@ -215,5 +216,40 @@ func (m *TRadioGroup) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4752, m.Instance(), m.startDragPtr)
+	radioGroupImportAPI().SysCallN(19, m.Instance(), m.startDragPtr)
+}
+
+var (
+	radioGroupImport       *imports.Imports = nil
+	radioGroupImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("RadioGroup_Class", 0),
+		/*1*/ imports.NewTable("RadioGroup_Create", 0),
+		/*2*/ imports.NewTable("RadioGroup_DragCursor", 0),
+		/*3*/ imports.NewTable("RadioGroup_DragMode", 0),
+		/*4*/ imports.NewTable("RadioGroup_ParentColor", 0),
+		/*5*/ imports.NewTable("RadioGroup_ParentFont", 0),
+		/*6*/ imports.NewTable("RadioGroup_ParentShowHint", 0),
+		/*7*/ imports.NewTable("RadioGroup_SetOnDblClick", 0),
+		/*8*/ imports.NewTable("RadioGroup_SetOnDragDrop", 0),
+		/*9*/ imports.NewTable("RadioGroup_SetOnDragOver", 0),
+		/*10*/ imports.NewTable("RadioGroup_SetOnEndDrag", 0),
+		/*11*/ imports.NewTable("RadioGroup_SetOnMouseDown", 0),
+		/*12*/ imports.NewTable("RadioGroup_SetOnMouseEnter", 0),
+		/*13*/ imports.NewTable("RadioGroup_SetOnMouseLeave", 0),
+		/*14*/ imports.NewTable("RadioGroup_SetOnMouseMove", 0),
+		/*15*/ imports.NewTable("RadioGroup_SetOnMouseUp", 0),
+		/*16*/ imports.NewTable("RadioGroup_SetOnMouseWheel", 0),
+		/*17*/ imports.NewTable("RadioGroup_SetOnMouseWheelDown", 0),
+		/*18*/ imports.NewTable("RadioGroup_SetOnMouseWheelUp", 0),
+		/*19*/ imports.NewTable("RadioGroup_SetOnStartDrag", 0),
+	}
+)
+
+func radioGroupImportAPI() *imports.Imports {
+	if radioGroupImport == nil {
+		radioGroupImport = NewDefaultImports()
+		radioGroupImport.SetImportTable(radioGroupImportTables)
+		radioGroupImportTables = nil
+	}
+	return radioGroupImport
 }

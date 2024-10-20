@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -64,189 +65,189 @@ type TCustomApplication struct {
 }
 
 func NewCustomApplication(AOwner IComponent) ICustomApplication {
-	r1 := LCL().SysCallN(1276, GetObjectUintptr(AOwner))
+	r1 := customApplicationImportAPI().SysCallN(5, GetObjectUintptr(AOwner))
 	return AsCustomApplication(r1)
 }
 
 func (m *TCustomApplication) ExeName() string {
-	r1 := LCL().SysCallN(1280, m.Instance())
+	r1 := customApplicationImportAPI().SysCallN(9, m.Instance())
 	return GoStr(r1)
 }
 
 func (m *TCustomApplication) HelpFile() string {
-	r1 := LCL().SysCallN(1290, 0, m.Instance(), 0)
+	r1 := customApplicationImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomApplication) SetHelpFile(AValue string) {
-	LCL().SysCallN(1290, 1, m.Instance(), PascalStr(AValue))
+	customApplicationImportAPI().SysCallN(19, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomApplication) Terminated() bool {
-	r1 := LCL().SysCallN(1303, m.Instance())
+	r1 := customApplicationImportAPI().SysCallN(32, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TCustomApplication) Title() string {
-	r1 := LCL().SysCallN(1304, 0, m.Instance(), 0)
+	r1 := customApplicationImportAPI().SysCallN(33, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomApplication) SetTitle(AValue string) {
-	LCL().SysCallN(1304, 1, m.Instance(), PascalStr(AValue))
+	customApplicationImportAPI().SysCallN(33, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomApplication) Location() string {
-	r1 := LCL().SysCallN(1292, m.Instance())
+	r1 := customApplicationImportAPI().SysCallN(21, m.Instance())
 	return GoStr(r1)
 }
 
 func (m *TCustomApplication) Params(Index int32) string {
-	r1 := LCL().SysCallN(1296, m.Instance(), uintptr(Index))
+	r1 := customApplicationImportAPI().SysCallN(25, m.Instance(), uintptr(Index))
 	return GoStr(r1)
 }
 
 func (m *TCustomApplication) ParamCount() int32 {
-	r1 := LCL().SysCallN(1295, m.Instance())
+	r1 := customApplicationImportAPI().SysCallN(24, m.Instance())
 	return int32(r1)
 }
 
 func (m *TCustomApplication) EnvironmentVariable(envName string) string {
-	r1 := LCL().SysCallN(1277, m.Instance(), PascalStr(envName))
+	r1 := customApplicationImportAPI().SysCallN(6, m.Instance(), PascalStr(envName))
 	return GoStr(r1)
 }
 
 func (m *TCustomApplication) OptionChar() Char {
-	r1 := LCL().SysCallN(1294, 0, m.Instance(), 0)
+	r1 := customApplicationImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return Char(r1)
 }
 
 func (m *TCustomApplication) SetOptionChar(AValue Char) {
-	LCL().SysCallN(1294, 1, m.Instance(), uintptr(AValue))
+	customApplicationImportAPI().SysCallN(23, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomApplication) CaseSensitiveOptions() bool {
-	r1 := LCL().SysCallN(1271, 0, m.Instance(), 0)
+	r1 := customApplicationImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomApplication) SetCaseSensitiveOptions(AValue bool) {
-	LCL().SysCallN(1271, 1, m.Instance(), PascalBool(AValue))
+	customApplicationImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomApplication) StopOnException() bool {
-	r1 := LCL().SysCallN(1300, 0, m.Instance(), 0)
+	r1 := customApplicationImportAPI().SysCallN(29, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomApplication) SetStopOnException(AValue bool) {
-	LCL().SysCallN(1300, 1, m.Instance(), PascalBool(AValue))
+	customApplicationImportAPI().SysCallN(29, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomApplication) ExceptionExitCode() int32 {
-	r1 := LCL().SysCallN(1279, 0, m.Instance(), 0)
+	r1 := customApplicationImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomApplication) SetExceptionExitCode(AValue int32) {
-	LCL().SysCallN(1279, 1, m.Instance(), uintptr(AValue))
+	customApplicationImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomApplication) EventLogFilter() TEventLogTypes {
-	r1 := LCL().SysCallN(1278, 0, m.Instance(), 0)
+	r1 := customApplicationImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return TEventLogTypes(r1)
 }
 
 func (m *TCustomApplication) SetEventLogFilter(AValue TEventLogTypes) {
-	LCL().SysCallN(1278, 1, m.Instance(), uintptr(AValue))
+	customApplicationImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomApplication) FindOptionIndex(S string, Longopt *bool, StartAt int32) int32 {
 	var result1 uintptr
-	r1 := LCL().SysCallN(1281, m.Instance(), PascalStr(S), uintptr(unsafePointer(&result1)), uintptr(StartAt))
+	r1 := customApplicationImportAPI().SysCallN(10, m.Instance(), PascalStr(S), uintptr(unsafePointer(&result1)), uintptr(StartAt))
 	*Longopt = GoBool(result1)
 	return int32(r1)
 }
 
 func (m *TCustomApplication) GetOptionValue(S string) string {
-	r1 := LCL().SysCallN(1284, m.Instance(), PascalStr(S))
+	r1 := customApplicationImportAPI().SysCallN(13, m.Instance(), PascalStr(S))
 	return GoStr(r1)
 }
 
 func (m *TCustomApplication) GetOptionValue1(C Char, S string) string {
-	r1 := LCL().SysCallN(1285, m.Instance(), uintptr(C), PascalStr(S))
+	r1 := customApplicationImportAPI().SysCallN(14, m.Instance(), uintptr(C), PascalStr(S))
 	return GoStr(r1)
 }
 
 func (m *TCustomApplication) GetOptionValues(C Char, S string) TStringArray {
-	r1 := LCL().SysCallN(1286, m.Instance(), uintptr(C), PascalStr(S))
+	r1 := customApplicationImportAPI().SysCallN(15, m.Instance(), uintptr(C), PascalStr(S))
 	return TStringArray(r1)
 }
 
 func (m *TCustomApplication) HasOption(S string) bool {
-	r1 := LCL().SysCallN(1288, m.Instance(), PascalStr(S))
+	r1 := customApplicationImportAPI().SysCallN(17, m.Instance(), PascalStr(S))
 	return GoBool(r1)
 }
 
 func (m *TCustomApplication) HasOption1(C Char, S string) bool {
-	r1 := LCL().SysCallN(1289, m.Instance(), uintptr(C), PascalStr(S))
+	r1 := customApplicationImportAPI().SysCallN(18, m.Instance(), uintptr(C), PascalStr(S))
 	return GoBool(r1)
 }
 
 func (m *TCustomApplication) CheckOptions(ShortOptions string, Longopts IStrings, Opts, NonOpts IStrings, AllErrors bool) string {
-	r1 := LCL().SysCallN(1272, m.Instance(), PascalStr(ShortOptions), GetObjectUintptr(Longopts), GetObjectUintptr(Opts), GetObjectUintptr(NonOpts), PascalBool(AllErrors))
+	r1 := customApplicationImportAPI().SysCallN(1, m.Instance(), PascalStr(ShortOptions), GetObjectUintptr(Longopts), GetObjectUintptr(Opts), GetObjectUintptr(NonOpts), PascalBool(AllErrors))
 	return GoStr(r1)
 }
 
 func (m *TCustomApplication) CheckOptions1(ShortOptions string, Longopts IStrings, AllErrors bool) string {
-	r1 := LCL().SysCallN(1273, m.Instance(), PascalStr(ShortOptions), GetObjectUintptr(Longopts), PascalBool(AllErrors))
+	r1 := customApplicationImportAPI().SysCallN(2, m.Instance(), PascalStr(ShortOptions), GetObjectUintptr(Longopts), PascalBool(AllErrors))
 	return GoStr(r1)
 }
 
 func (m *TCustomApplication) CheckOptions2(ShortOptions string, LongOpts string, AllErrors bool) string {
-	r1 := LCL().SysCallN(1274, m.Instance(), PascalStr(ShortOptions), PascalStr(LongOpts), PascalBool(AllErrors))
+	r1 := customApplicationImportAPI().SysCallN(3, m.Instance(), PascalStr(ShortOptions), PascalStr(LongOpts), PascalBool(AllErrors))
 	return GoStr(r1)
 }
 
 func CustomApplicationClass() TClass {
-	ret := LCL().SysCallN(1275)
+	ret := customApplicationImportAPI().SysCallN(4)
 	return TClass(ret)
 }
 
 func (m *TCustomApplication) HandleException(Sender IObject) {
-	LCL().SysCallN(1287, m.Instance(), GetObjectUintptr(Sender))
+	customApplicationImportAPI().SysCallN(16, m.Instance(), GetObjectUintptr(Sender))
 }
 
 func (m *TCustomApplication) Initialize() {
-	LCL().SysCallN(1291, m.Instance())
+	customApplicationImportAPI().SysCallN(20, m.Instance())
 }
 
 func (m *TCustomApplication) Run() {
-	LCL().SysCallN(1297, m.Instance())
+	customApplicationImportAPI().SysCallN(26, m.Instance())
 }
 
 func (m *TCustomApplication) ShowException(E IException) {
-	LCL().SysCallN(1299, m.Instance(), GetObjectUintptr(E))
+	customApplicationImportAPI().SysCallN(28, m.Instance(), GetObjectUintptr(E))
 }
 
 func (m *TCustomApplication) Terminate() {
-	LCL().SysCallN(1301, m.Instance())
+	customApplicationImportAPI().SysCallN(30, m.Instance())
 }
 
 func (m *TCustomApplication) Terminate1(AExitCode int32) {
-	LCL().SysCallN(1302, m.Instance(), uintptr(AExitCode))
+	customApplicationImportAPI().SysCallN(31, m.Instance(), uintptr(AExitCode))
 }
 
 func (m *TCustomApplication) GetEnvironmentList(List IStrings, NamesOnly bool) {
-	LCL().SysCallN(1282, m.Instance(), GetObjectUintptr(List), PascalBool(NamesOnly))
+	customApplicationImportAPI().SysCallN(11, m.Instance(), GetObjectUintptr(List), PascalBool(NamesOnly))
 }
 
 func (m *TCustomApplication) GetEnvironmentList1(List IStrings) {
-	LCL().SysCallN(1283, m.Instance(), GetObjectUintptr(List))
+	customApplicationImportAPI().SysCallN(12, m.Instance(), GetObjectUintptr(List))
 }
 
 func (m *TCustomApplication) Log(EventType TEventType, Msg string) {
-	LCL().SysCallN(1293, m.Instance(), uintptr(EventType), PascalStr(Msg))
+	customApplicationImportAPI().SysCallN(22, m.Instance(), uintptr(EventType), PascalStr(Msg))
 }
 
 func (m *TCustomApplication) SetOnException(fn TExceptionEvent) {
@@ -254,5 +255,54 @@ func (m *TCustomApplication) SetOnException(fn TExceptionEvent) {
 		RemoveEventElement(m.exceptionPtr)
 	}
 	m.exceptionPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1298, m.Instance(), m.exceptionPtr)
+	customApplicationImportAPI().SysCallN(27, m.Instance(), m.exceptionPtr)
+}
+
+var (
+	customApplicationImport       *imports.Imports = nil
+	customApplicationImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomApplication_CaseSensitiveOptions", 0),
+		/*1*/ imports.NewTable("CustomApplication_CheckOptions", 0),
+		/*2*/ imports.NewTable("CustomApplication_CheckOptions1", 0),
+		/*3*/ imports.NewTable("CustomApplication_CheckOptions2", 0),
+		/*4*/ imports.NewTable("CustomApplication_Class", 0),
+		/*5*/ imports.NewTable("CustomApplication_Create", 0),
+		/*6*/ imports.NewTable("CustomApplication_EnvironmentVariable", 0),
+		/*7*/ imports.NewTable("CustomApplication_EventLogFilter", 0),
+		/*8*/ imports.NewTable("CustomApplication_ExceptionExitCode", 0),
+		/*9*/ imports.NewTable("CustomApplication_ExeName", 0),
+		/*10*/ imports.NewTable("CustomApplication_FindOptionIndex", 0),
+		/*11*/ imports.NewTable("CustomApplication_GetEnvironmentList", 0),
+		/*12*/ imports.NewTable("CustomApplication_GetEnvironmentList1", 0),
+		/*13*/ imports.NewTable("CustomApplication_GetOptionValue", 0),
+		/*14*/ imports.NewTable("CustomApplication_GetOptionValue1", 0),
+		/*15*/ imports.NewTable("CustomApplication_GetOptionValues", 0),
+		/*16*/ imports.NewTable("CustomApplication_HandleException", 0),
+		/*17*/ imports.NewTable("CustomApplication_HasOption", 0),
+		/*18*/ imports.NewTable("CustomApplication_HasOption1", 0),
+		/*19*/ imports.NewTable("CustomApplication_HelpFile", 0),
+		/*20*/ imports.NewTable("CustomApplication_Initialize", 0),
+		/*21*/ imports.NewTable("CustomApplication_Location", 0),
+		/*22*/ imports.NewTable("CustomApplication_Log", 0),
+		/*23*/ imports.NewTable("CustomApplication_OptionChar", 0),
+		/*24*/ imports.NewTable("CustomApplication_ParamCount", 0),
+		/*25*/ imports.NewTable("CustomApplication_Params", 0),
+		/*26*/ imports.NewTable("CustomApplication_Run", 0),
+		/*27*/ imports.NewTable("CustomApplication_SetOnException", 0),
+		/*28*/ imports.NewTable("CustomApplication_ShowException", 0),
+		/*29*/ imports.NewTable("CustomApplication_StopOnException", 0),
+		/*30*/ imports.NewTable("CustomApplication_Terminate", 0),
+		/*31*/ imports.NewTable("CustomApplication_Terminate1", 0),
+		/*32*/ imports.NewTable("CustomApplication_Terminated", 0),
+		/*33*/ imports.NewTable("CustomApplication_Title", 0),
+	}
+)
+
+func customApplicationImportAPI() *imports.Imports {
+	if customApplicationImport == nil {
+		customApplicationImport = NewDefaultImports()
+		customApplicationImport.SetImportTable(customApplicationImportTables)
+		customApplicationImportTables = nil
+	}
+	return customApplicationImport
 }

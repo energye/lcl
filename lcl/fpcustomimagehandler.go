@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -26,12 +27,12 @@ type TFPCustomImageHandler struct {
 }
 
 func NewFPCustomImageHandler() IFPCustomImageHandler {
-	r1 := LCL().SysCallN(2939)
+	r1 := fPCustomImageHandlerImportAPI().SysCallN(1)
 	return AsFPCustomImageHandler(r1)
 }
 
 func FPCustomImageHandlerClass() TClass {
-	ret := LCL().SysCallN(2938)
+	ret := fPCustomImageHandlerImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -40,5 +41,23 @@ func (m *TFPCustomImageHandler) SetOnProgress(fn TFPImgProgressEvent) {
 		RemoveEventElement(m.progressPtr)
 	}
 	m.progressPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2940, m.Instance(), m.progressPtr)
+	fPCustomImageHandlerImportAPI().SysCallN(2, m.Instance(), m.progressPtr)
+}
+
+var (
+	fPCustomImageHandlerImport       *imports.Imports = nil
+	fPCustomImageHandlerImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FPCustomImageHandler_Class", 0),
+		/*1*/ imports.NewTable("FPCustomImageHandler_Create", 0),
+		/*2*/ imports.NewTable("FPCustomImageHandler_SetOnProgress", 0),
+	}
+)
+
+func fPCustomImageHandlerImportAPI() *imports.Imports {
+	if fPCustomImageHandlerImport == nil {
+		fPCustomImageHandlerImport = NewDefaultImports()
+		fPCustomImageHandlerImport.SetImportTable(fPCustomImageHandlerImportTables)
+		fPCustomImageHandlerImportTables = nil
+	}
+	return fPCustomImageHandlerImport
 }

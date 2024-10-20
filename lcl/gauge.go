@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -32,47 +33,68 @@ type TGauge struct {
 }
 
 func NewGauge(AOwner IComponent) IGauge {
-	r1 := LCL().SysCallN(3197, GetObjectUintptr(AOwner))
+	r1 := gaugeImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsGauge(r1)
 }
 
 func (m *TGauge) ParentFont() bool {
-	r1 := LCL().SysCallN(3200, 0, m.Instance(), 0)
+	r1 := gaugeImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TGauge) SetParentFont(AValue bool) {
-	LCL().SysCallN(3200, 1, m.Instance(), PascalBool(AValue))
+	gaugeImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TGauge) ForeColor() TColor {
-	r1 := LCL().SysCallN(3198, 0, m.Instance(), 0)
+	r1 := gaugeImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TGauge) SetForeColor(AValue TColor) {
-	LCL().SysCallN(3198, 1, m.Instance(), uintptr(AValue))
+	gaugeImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGauge) BackColor() TColor {
-	r1 := LCL().SysCallN(3195, 0, m.Instance(), 0)
+	r1 := gaugeImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TGauge) SetBackColor(AValue TColor) {
-	LCL().SysCallN(3195, 1, m.Instance(), uintptr(AValue))
+	gaugeImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGauge) KindForGaugeKind() TGaugeKind {
-	r1 := LCL().SysCallN(3199, 0, m.Instance(), 0)
+	r1 := gaugeImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TGaugeKind(r1)
 }
 
 func (m *TGauge) SetKindForGaugeKind(AValue TGaugeKind) {
-	LCL().SysCallN(3199, 1, m.Instance(), uintptr(AValue))
+	gaugeImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func GaugeClass() TClass {
-	ret := LCL().SysCallN(3196)
+	ret := gaugeImportAPI().SysCallN(1)
 	return TClass(ret)
+}
+
+var (
+	gaugeImport       *imports.Imports = nil
+	gaugeImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Gauge_BackColor", 0),
+		/*1*/ imports.NewTable("Gauge_Class", 0),
+		/*2*/ imports.NewTable("Gauge_Create", 0),
+		/*3*/ imports.NewTable("Gauge_ForeColor", 0),
+		/*4*/ imports.NewTable("Gauge_KindForGaugeKind", 0),
+		/*5*/ imports.NewTable("Gauge_ParentFont", 0),
+	}
+)
+
+func gaugeImportAPI() *imports.Imports {
+	if gaugeImport == nil {
+		gaugeImport = NewDefaultImports()
+		gaugeImport.SetImportTable(gaugeImportTables)
+		gaugeImportTables = nil
+	}
+	return gaugeImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -27,24 +28,43 @@ type TRegion struct {
 }
 
 func NewRegion() IRegion {
-	r1 := LCL().SysCallN(4783)
+	r1 := regionImportAPI().SysCallN(3)
 	return AsRegion(r1)
 }
 
 func (m *TRegion) ClipRect() (resultRect TRect) {
-	LCL().SysCallN(4782, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
+	regionImportAPI().SysCallN(2, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TRegion) SetClipRect(AValue *TRect) {
-	LCL().SysCallN(4782, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	regionImportAPI().SysCallN(2, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func RegionClass() TClass {
-	ret := LCL().SysCallN(4781)
+	ret := regionImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TRegion) AddRectangle(X1, Y1, X2, Y2 int32) {
-	LCL().SysCallN(4780, m.Instance(), uintptr(X1), uintptr(Y1), uintptr(X2), uintptr(Y2))
+	regionImportAPI().SysCallN(0, m.Instance(), uintptr(X1), uintptr(Y1), uintptr(X2), uintptr(Y2))
+}
+
+var (
+	regionImport       *imports.Imports = nil
+	regionImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Region_AddRectangle", 0),
+		/*1*/ imports.NewTable("Region_Class", 0),
+		/*2*/ imports.NewTable("Region_ClipRect", 0),
+		/*3*/ imports.NewTable("Region_Create", 0),
+	}
+)
+
+func regionImportAPI() *imports.Imports {
+	if regionImport == nil {
+		regionImport = NewDefaultImports()
+		regionImport.SetImportTable(regionImportTables)
+		regionImportTables = nil
+	}
+	return regionImport
 }

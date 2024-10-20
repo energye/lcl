@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -52,129 +53,129 @@ type TPageSetupDialog struct {
 }
 
 func NewPageSetupDialog(TheOwner IComponent) IPageSetupDialog {
-	r1 := LCL().SysCallN(4466, GetObjectUintptr(TheOwner))
+	r1 := pageSetupDialogImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
 	return AsPageSetupDialog(r1)
 }
 
 func (m *TPageSetupDialog) AttachTo() ICustomForm {
-	r1 := LCL().SysCallN(4464, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return AsCustomForm(r1)
 }
 
 func (m *TPageSetupDialog) SetAttachTo(AValue ICustomForm) {
-	LCL().SysCallN(4464, 1, m.Instance(), GetObjectUintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TPageSetupDialog) PageWidth() int32 {
-	r1 := LCL().SysCallN(4477, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPageSetupDialog) SetPageWidth(AValue int32) {
-	LCL().SysCallN(4477, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) PageHeight() int32 {
-	r1 := LCL().SysCallN(4476, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPageSetupDialog) SetPageHeight(AValue int32) {
-	LCL().SysCallN(4476, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) MarginLeft() int32 {
-	r1 := LCL().SysCallN(4468, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPageSetupDialog) SetMarginLeft(AValue int32) {
-	LCL().SysCallN(4468, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) MarginTop() int32 {
-	r1 := LCL().SysCallN(4470, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPageSetupDialog) SetMarginTop(AValue int32) {
-	LCL().SysCallN(4470, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) MarginRight() int32 {
-	r1 := LCL().SysCallN(4469, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPageSetupDialog) SetMarginRight(AValue int32) {
-	LCL().SysCallN(4469, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) MarginBottom() int32 {
-	r1 := LCL().SysCallN(4467, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPageSetupDialog) SetMarginBottom(AValue int32) {
-	LCL().SysCallN(4467, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) MinMarginLeft() int32 {
-	r1 := LCL().SysCallN(4472, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPageSetupDialog) SetMinMarginLeft(AValue int32) {
-	LCL().SysCallN(4472, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) MinMarginTop() int32 {
-	r1 := LCL().SysCallN(4474, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPageSetupDialog) SetMinMarginTop(AValue int32) {
-	LCL().SysCallN(4474, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) MinMarginRight() int32 {
-	r1 := LCL().SysCallN(4473, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPageSetupDialog) SetMinMarginRight(AValue int32) {
-	LCL().SysCallN(4473, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) MinMarginBottom() int32 {
-	r1 := LCL().SysCallN(4471, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPageSetupDialog) SetMinMarginBottom(AValue int32) {
-	LCL().SysCallN(4471, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) Options() TPageSetupDialogOptions {
-	r1 := LCL().SysCallN(4475, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return TPageSetupDialogOptions(r1)
 }
 
 func (m *TPageSetupDialog) SetOptions(AValue TPageSetupDialogOptions) {
-	LCL().SysCallN(4475, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPageSetupDialog) Units() TPageMeasureUnits {
-	r1 := LCL().SysCallN(4479, 0, m.Instance(), 0)
+	r1 := pageSetupDialogImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return TPageMeasureUnits(r1)
 }
 
 func (m *TPageSetupDialog) SetUnits(AValue TPageMeasureUnits) {
-	LCL().SysCallN(4479, 1, m.Instance(), uintptr(AValue))
+	pageSetupDialogImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
 }
 
 func PageSetupDialogClass() TClass {
-	ret := LCL().SysCallN(4465)
+	ret := pageSetupDialogImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
@@ -183,5 +184,36 @@ func (m *TPageSetupDialog) SetOnDialogResult(fn TDialogResultEvent) {
 		RemoveEventElement(m.dialogResultPtr)
 	}
 	m.dialogResultPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4478, m.Instance(), m.dialogResultPtr)
+	pageSetupDialogImportAPI().SysCallN(14, m.Instance(), m.dialogResultPtr)
+}
+
+var (
+	pageSetupDialogImport       *imports.Imports = nil
+	pageSetupDialogImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("PageSetupDialog_AttachTo", 0),
+		/*1*/ imports.NewTable("PageSetupDialog_Class", 0),
+		/*2*/ imports.NewTable("PageSetupDialog_Create", 0),
+		/*3*/ imports.NewTable("PageSetupDialog_MarginBottom", 0),
+		/*4*/ imports.NewTable("PageSetupDialog_MarginLeft", 0),
+		/*5*/ imports.NewTable("PageSetupDialog_MarginRight", 0),
+		/*6*/ imports.NewTable("PageSetupDialog_MarginTop", 0),
+		/*7*/ imports.NewTable("PageSetupDialog_MinMarginBottom", 0),
+		/*8*/ imports.NewTable("PageSetupDialog_MinMarginLeft", 0),
+		/*9*/ imports.NewTable("PageSetupDialog_MinMarginRight", 0),
+		/*10*/ imports.NewTable("PageSetupDialog_MinMarginTop", 0),
+		/*11*/ imports.NewTable("PageSetupDialog_Options", 0),
+		/*12*/ imports.NewTable("PageSetupDialog_PageHeight", 0),
+		/*13*/ imports.NewTable("PageSetupDialog_PageWidth", 0),
+		/*14*/ imports.NewTable("PageSetupDialog_SetOnDialogResult", 0),
+		/*15*/ imports.NewTable("PageSetupDialog_Units", 0),
+	}
+)
+
+func pageSetupDialogImportAPI() *imports.Imports {
+	if pageSetupDialogImport == nil {
+		pageSetupDialogImport = NewDefaultImports()
+		pageSetupDialogImport.SetImportTable(pageSetupDialogImportTables)
+		pageSetupDialogImportTables = nil
+	}
+	return pageSetupDialogImport
 }

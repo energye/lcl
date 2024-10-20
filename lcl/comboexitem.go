@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -30,38 +31,58 @@ type TComboExItem struct {
 }
 
 func NewComboExItem(ACollection ICollection) IComboExItem {
-	r1 := LCL().SysCallN(850, GetObjectUintptr(ACollection))
+	r1 := comboExItemImportAPI().SysCallN(1, GetObjectUintptr(ACollection))
 	return AsComboExItem(r1)
 }
 
 func (m *TComboExItem) Indent() int32 {
-	r1 := LCL().SysCallN(851, 0, m.Instance(), 0)
+	r1 := comboExItemImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TComboExItem) SetIndent(AValue int32) {
-	LCL().SysCallN(851, 1, m.Instance(), uintptr(AValue))
+	comboExItemImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TComboExItem) OverlayImageIndex() TImageIndex {
-	r1 := LCL().SysCallN(852, 0, m.Instance(), 0)
+	r1 := comboExItemImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TComboExItem) SetOverlayImageIndex(AValue TImageIndex) {
-	LCL().SysCallN(852, 1, m.Instance(), uintptr(AValue))
+	comboExItemImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TComboExItem) SelectedImageIndex() TImageIndex {
-	r1 := LCL().SysCallN(853, 0, m.Instance(), 0)
+	r1 := comboExItemImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TComboExItem) SetSelectedImageIndex(AValue TImageIndex) {
-	LCL().SysCallN(853, 1, m.Instance(), uintptr(AValue))
+	comboExItemImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func ComboExItemClass() TClass {
-	ret := LCL().SysCallN(849)
+	ret := comboExItemImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	comboExItemImport       *imports.Imports = nil
+	comboExItemImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ComboExItem_Class", 0),
+		/*1*/ imports.NewTable("ComboExItem_Create", 0),
+		/*2*/ imports.NewTable("ComboExItem_Indent", 0),
+		/*3*/ imports.NewTable("ComboExItem_OverlayImageIndex", 0),
+		/*4*/ imports.NewTable("ComboExItem_SelectedImageIndex", 0),
+	}
+)
+
+func comboExItemImportAPI() *imports.Imports {
+	if comboExItemImport == nil {
+		comboExItemImport = NewDefaultImports()
+		comboExItemImport.SetImportTable(comboExItemImportTables)
+		comboExItemImportTables = nil
+	}
+	return comboExItemImport
 }

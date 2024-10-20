@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -34,49 +35,49 @@ type TCustomCheckBox struct {
 }
 
 func NewCustomCheckBox(TheOwner IComponent) ICustomCheckBox {
-	r1 := LCL().SysCallN(1359, GetObjectUintptr(TheOwner))
+	r1 := customCheckBoxImportAPI().SysCallN(3, GetObjectUintptr(TheOwner))
 	return AsCustomCheckBox(r1)
 }
 
 func (m *TCustomCheckBox) Alignment() TLeftRight {
-	r1 := LCL().SysCallN(1356, 0, m.Instance(), 0)
+	r1 := customCheckBoxImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TLeftRight(r1)
 }
 
 func (m *TCustomCheckBox) SetAlignment(AValue TLeftRight) {
-	LCL().SysCallN(1356, 1, m.Instance(), uintptr(AValue))
+	customCheckBoxImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomCheckBox) AllowGrayed() bool {
-	r1 := LCL().SysCallN(1357, 0, m.Instance(), 0)
+	r1 := customCheckBoxImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomCheckBox) SetAllowGrayed(AValue bool) {
-	LCL().SysCallN(1357, 1, m.Instance(), PascalBool(AValue))
+	customCheckBoxImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomCheckBox) State() TCheckBoxState {
-	r1 := LCL().SysCallN(1363, 0, m.Instance(), 0)
+	r1 := customCheckBoxImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return TCheckBoxState(r1)
 }
 
 func (m *TCustomCheckBox) SetState(AValue TCheckBoxState) {
-	LCL().SysCallN(1363, 1, m.Instance(), uintptr(AValue))
+	customCheckBoxImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomCheckBox) ShortCut() TShortCut {
-	r1 := LCL().SysCallN(1361, m.Instance())
+	r1 := customCheckBoxImportAPI().SysCallN(5, m.Instance())
 	return TShortCut(r1)
 }
 
 func (m *TCustomCheckBox) ShortCutKey2() TShortCut {
-	r1 := LCL().SysCallN(1362, m.Instance())
+	r1 := customCheckBoxImportAPI().SysCallN(6, m.Instance())
 	return TShortCut(r1)
 }
 
 func CustomCheckBoxClass() TClass {
-	ret := LCL().SysCallN(1358)
+	ret := customCheckBoxImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
@@ -85,5 +86,28 @@ func (m *TCustomCheckBox) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1360, m.Instance(), m.changePtr)
+	customCheckBoxImportAPI().SysCallN(4, m.Instance(), m.changePtr)
+}
+
+var (
+	customCheckBoxImport       *imports.Imports = nil
+	customCheckBoxImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomCheckBox_Alignment", 0),
+		/*1*/ imports.NewTable("CustomCheckBox_AllowGrayed", 0),
+		/*2*/ imports.NewTable("CustomCheckBox_Class", 0),
+		/*3*/ imports.NewTable("CustomCheckBox_Create", 0),
+		/*4*/ imports.NewTable("CustomCheckBox_SetOnChange", 0),
+		/*5*/ imports.NewTable("CustomCheckBox_ShortCut", 0),
+		/*6*/ imports.NewTable("CustomCheckBox_ShortCutKey2", 0),
+		/*7*/ imports.NewTable("CustomCheckBox_State", 0),
+	}
+)
+
+func customCheckBoxImportAPI() *imports.Imports {
+	if customCheckBoxImport == nil {
+		customCheckBoxImport = NewDefaultImports()
+		customCheckBoxImport.SetImportTable(customCheckBoxImportTables)
+		customCheckBoxImportTables = nil
+	}
+	return customCheckBoxImport
 }

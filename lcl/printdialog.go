@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -28,21 +29,21 @@ type TPrintDialog struct {
 }
 
 func NewPrintDialog(TheOwner IComponent) IPrintDialog {
-	r1 := LCL().SysCallN(4623, GetObjectUintptr(TheOwner))
+	r1 := printDialogImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
 	return AsPrintDialog(r1)
 }
 
 func (m *TPrintDialog) AttachTo() ICustomForm {
-	r1 := LCL().SysCallN(4621, 0, m.Instance(), 0)
+	r1 := printDialogImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return AsCustomForm(r1)
 }
 
 func (m *TPrintDialog) SetAttachTo(AValue ICustomForm) {
-	LCL().SysCallN(4621, 1, m.Instance(), GetObjectUintptr(AValue))
+	printDialogImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func PrintDialogClass() TClass {
-	ret := LCL().SysCallN(4622)
+	ret := printDialogImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
@@ -51,5 +52,24 @@ func (m *TPrintDialog) SetOnDialogResult(fn TDialogResultEvent) {
 		RemoveEventElement(m.dialogResultPtr)
 	}
 	m.dialogResultPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4624, m.Instance(), m.dialogResultPtr)
+	printDialogImportAPI().SysCallN(3, m.Instance(), m.dialogResultPtr)
+}
+
+var (
+	printDialogImport       *imports.Imports = nil
+	printDialogImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("PrintDialog_AttachTo", 0),
+		/*1*/ imports.NewTable("PrintDialog_Class", 0),
+		/*2*/ imports.NewTable("PrintDialog_Create", 0),
+		/*3*/ imports.NewTable("PrintDialog_SetOnDialogResult", 0),
+	}
+)
+
+func printDialogImportAPI() *imports.Imports {
+	if printDialogImport == nil {
+		printDialogImport = NewDefaultImports()
+		printDialogImport.SetImportTable(printDialogImportTables)
+		printDialogImportTables = nil
+	}
+	return printDialogImport
 }

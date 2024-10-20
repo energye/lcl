@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -29,25 +30,44 @@ type TIcon struct {
 }
 
 func NewIcon() IIcon {
-	r1 := LCL().SysCallN(3378)
+	r1 := conImportAPI().SysCallN(1)
 	return AsIcon(r1)
 }
 
 func (m *TIcon) Handle() HICON {
-	r1 := LCL().SysCallN(3379, 0, m.Instance(), 0)
+	r1 := conImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return HICON(r1)
 }
 
 func (m *TIcon) SetHandle(AValue HICON) {
-	LCL().SysCallN(3379, 1, m.Instance(), uintptr(AValue))
+	conImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TIcon) ReleaseHandle() HICON {
-	r1 := LCL().SysCallN(3380, m.Instance())
+	r1 := conImportAPI().SysCallN(3, m.Instance())
 	return HICON(r1)
 }
 
 func IconClass() TClass {
-	ret := LCL().SysCallN(3377)
+	ret := conImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	conImport       *imports.Imports = nil
+	conImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Icon_Class", 0),
+		/*1*/ imports.NewTable("Icon_Create", 0),
+		/*2*/ imports.NewTable("Icon_Handle", 0),
+		/*3*/ imports.NewTable("Icon_ReleaseHandle", 0),
+	}
+)
+
+func conImportAPI() *imports.Imports {
+	if conImport == nil {
+		conImport = NewDefaultImports()
+		conImport.SetImportTable(conImportTables)
+		conImportTables = nil
+	}
+	return conImport
 }

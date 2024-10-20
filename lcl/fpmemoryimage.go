@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TFPMemoryImage struct {
 }
 
 func NewFPMemoryImage(AWidth, AHeight int32) IFPMemoryImage {
-	r1 := LCL().SysCallN(3010, uintptr(AWidth), uintptr(AHeight))
+	r1 := fPMemoryImageImportAPI().SysCallN(1, uintptr(AWidth), uintptr(AHeight))
 	return AsFPMemoryImage(r1)
 }
 
 func FPMemoryImageClass() TClass {
-	ret := LCL().SysCallN(3009)
+	ret := fPMemoryImageImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	fPMemoryImageImport       *imports.Imports = nil
+	fPMemoryImageImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FPMemoryImage_Class", 0),
+		/*1*/ imports.NewTable("FPMemoryImage_Create", 0),
+	}
+)
+
+func fPMemoryImageImportAPI() *imports.Imports {
+	if fPMemoryImageImport == nil {
+		fPMemoryImageImport = NewDefaultImports()
+		fPMemoryImageImport.SetImportTable(fPMemoryImageImportTables)
+		fPMemoryImageImportTables = nil
+	}
+	return fPMemoryImageImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -70,66 +71,66 @@ type TCoolBar struct {
 }
 
 func NewCoolBar(AOwner IComponent) ICoolBar {
-	r1 := LCL().SysCallN(1176, GetObjectUintptr(AOwner))
+	r1 := coolBarImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsCoolBar(r1)
 }
 
 func (m *TCoolBar) DragCursor() TCursor {
-	r1 := LCL().SysCallN(1177, 0, m.Instance(), 0)
+	r1 := coolBarImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TCoolBar) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(1177, 1, m.Instance(), uintptr(AValue))
+	coolBarImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCoolBar) DragKind() TDragKind {
-	r1 := LCL().SysCallN(1178, 0, m.Instance(), 0)
+	r1 := coolBarImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TCoolBar) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(1178, 1, m.Instance(), uintptr(AValue))
+	coolBarImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCoolBar) DragMode() TDragMode {
-	r1 := LCL().SysCallN(1179, 0, m.Instance(), 0)
+	r1 := coolBarImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TCoolBar) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(1179, 1, m.Instance(), uintptr(AValue))
+	coolBarImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCoolBar) ParentColor() bool {
-	r1 := LCL().SysCallN(1180, 0, m.Instance(), 0)
+	r1 := coolBarImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCoolBar) SetParentColor(AValue bool) {
-	LCL().SysCallN(1180, 1, m.Instance(), PascalBool(AValue))
+	coolBarImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCoolBar) ParentFont() bool {
-	r1 := LCL().SysCallN(1181, 0, m.Instance(), 0)
+	r1 := coolBarImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCoolBar) SetParentFont(AValue bool) {
-	LCL().SysCallN(1181, 1, m.Instance(), PascalBool(AValue))
+	coolBarImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCoolBar) ParentShowHint() bool {
-	r1 := LCL().SysCallN(1182, 0, m.Instance(), 0)
+	r1 := coolBarImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCoolBar) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(1182, 1, m.Instance(), PascalBool(AValue))
+	coolBarImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func CoolBarClass() TClass {
-	ret := LCL().SysCallN(1175)
+	ret := coolBarImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -138,7 +139,7 @@ func (m *TCoolBar) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1183, m.Instance(), m.contextPopupPtr)
+	coolBarImportAPI().SysCallN(8, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TCoolBar) SetOnDblClick(fn TNotifyEvent) {
@@ -146,7 +147,7 @@ func (m *TCoolBar) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1184, m.Instance(), m.dblClickPtr)
+	coolBarImportAPI().SysCallN(9, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TCoolBar) SetOnDragDrop(fn TDragDropEvent) {
@@ -154,7 +155,7 @@ func (m *TCoolBar) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1185, m.Instance(), m.dragDropPtr)
+	coolBarImportAPI().SysCallN(10, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TCoolBar) SetOnDragOver(fn TDragOverEvent) {
@@ -162,7 +163,7 @@ func (m *TCoolBar) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1186, m.Instance(), m.dragOverPtr)
+	coolBarImportAPI().SysCallN(11, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TCoolBar) SetOnEndDock(fn TEndDragEvent) {
@@ -170,7 +171,7 @@ func (m *TCoolBar) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1187, m.Instance(), m.endDockPtr)
+	coolBarImportAPI().SysCallN(12, m.Instance(), m.endDockPtr)
 }
 
 func (m *TCoolBar) SetOnEndDrag(fn TEndDragEvent) {
@@ -178,7 +179,7 @@ func (m *TCoolBar) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1188, m.Instance(), m.endDragPtr)
+	coolBarImportAPI().SysCallN(13, m.Instance(), m.endDragPtr)
 }
 
 func (m *TCoolBar) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
@@ -186,7 +187,7 @@ func (m *TCoolBar) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
 		RemoveEventElement(m.getSiteInfoPtr)
 	}
 	m.getSiteInfoPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1189, m.Instance(), m.getSiteInfoPtr)
+	coolBarImportAPI().SysCallN(14, m.Instance(), m.getSiteInfoPtr)
 }
 
 func (m *TCoolBar) SetOnMouseDown(fn TMouseEvent) {
@@ -194,7 +195,7 @@ func (m *TCoolBar) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1190, m.Instance(), m.mouseDownPtr)
+	coolBarImportAPI().SysCallN(15, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TCoolBar) SetOnMouseEnter(fn TNotifyEvent) {
@@ -202,7 +203,7 @@ func (m *TCoolBar) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1191, m.Instance(), m.mouseEnterPtr)
+	coolBarImportAPI().SysCallN(16, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TCoolBar) SetOnMouseLeave(fn TNotifyEvent) {
@@ -210,7 +211,7 @@ func (m *TCoolBar) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1192, m.Instance(), m.mouseLeavePtr)
+	coolBarImportAPI().SysCallN(17, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TCoolBar) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -218,7 +219,7 @@ func (m *TCoolBar) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1193, m.Instance(), m.mouseMovePtr)
+	coolBarImportAPI().SysCallN(18, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TCoolBar) SetOnMouseUp(fn TMouseEvent) {
@@ -226,7 +227,7 @@ func (m *TCoolBar) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1194, m.Instance(), m.mouseUpPtr)
+	coolBarImportAPI().SysCallN(19, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TCoolBar) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -234,7 +235,7 @@ func (m *TCoolBar) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1195, m.Instance(), m.mouseWheelPtr)
+	coolBarImportAPI().SysCallN(20, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TCoolBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -242,7 +243,7 @@ func (m *TCoolBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1196, m.Instance(), m.mouseWheelDownPtr)
+	coolBarImportAPI().SysCallN(21, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TCoolBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -250,7 +251,7 @@ func (m *TCoolBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1197, m.Instance(), m.mouseWheelUpPtr)
+	coolBarImportAPI().SysCallN(22, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TCoolBar) SetOnStartDock(fn TStartDockEvent) {
@@ -258,7 +259,7 @@ func (m *TCoolBar) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1198, m.Instance(), m.startDockPtr)
+	coolBarImportAPI().SysCallN(23, m.Instance(), m.startDockPtr)
 }
 
 func (m *TCoolBar) SetOnStartDrag(fn TStartDragEvent) {
@@ -266,5 +267,45 @@ func (m *TCoolBar) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1199, m.Instance(), m.startDragPtr)
+	coolBarImportAPI().SysCallN(24, m.Instance(), m.startDragPtr)
+}
+
+var (
+	coolBarImport       *imports.Imports = nil
+	coolBarImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CoolBar_Class", 0),
+		/*1*/ imports.NewTable("CoolBar_Create", 0),
+		/*2*/ imports.NewTable("CoolBar_DragCursor", 0),
+		/*3*/ imports.NewTable("CoolBar_DragKind", 0),
+		/*4*/ imports.NewTable("CoolBar_DragMode", 0),
+		/*5*/ imports.NewTable("CoolBar_ParentColor", 0),
+		/*6*/ imports.NewTable("CoolBar_ParentFont", 0),
+		/*7*/ imports.NewTable("CoolBar_ParentShowHint", 0),
+		/*8*/ imports.NewTable("CoolBar_SetOnContextPopup", 0),
+		/*9*/ imports.NewTable("CoolBar_SetOnDblClick", 0),
+		/*10*/ imports.NewTable("CoolBar_SetOnDragDrop", 0),
+		/*11*/ imports.NewTable("CoolBar_SetOnDragOver", 0),
+		/*12*/ imports.NewTable("CoolBar_SetOnEndDock", 0),
+		/*13*/ imports.NewTable("CoolBar_SetOnEndDrag", 0),
+		/*14*/ imports.NewTable("CoolBar_SetOnGetSiteInfo", 0),
+		/*15*/ imports.NewTable("CoolBar_SetOnMouseDown", 0),
+		/*16*/ imports.NewTable("CoolBar_SetOnMouseEnter", 0),
+		/*17*/ imports.NewTable("CoolBar_SetOnMouseLeave", 0),
+		/*18*/ imports.NewTable("CoolBar_SetOnMouseMove", 0),
+		/*19*/ imports.NewTable("CoolBar_SetOnMouseUp", 0),
+		/*20*/ imports.NewTable("CoolBar_SetOnMouseWheel", 0),
+		/*21*/ imports.NewTable("CoolBar_SetOnMouseWheelDown", 0),
+		/*22*/ imports.NewTable("CoolBar_SetOnMouseWheelUp", 0),
+		/*23*/ imports.NewTable("CoolBar_SetOnStartDock", 0),
+		/*24*/ imports.NewTable("CoolBar_SetOnStartDrag", 0),
+	}
+)
+
+func coolBarImportAPI() *imports.Imports {
+	if coolBarImport == nil {
+		coolBarImport = NewDefaultImports()
+		coolBarImport.SetImportTable(coolBarImportTables)
+		coolBarImportTables = nil
+	}
+	return coolBarImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -54,136 +55,136 @@ type TMenu struct {
 }
 
 func NewMenu(AOwner IComponent) IMenu {
-	r1 := LCL().SysCallN(4340, GetObjectUintptr(AOwner))
+	r1 := menuImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsMenu(r1)
 }
 
 func (m *TMenu) Handle() HMENU {
-	r1 := LCL().SysCallN(4345, m.Instance())
+	r1 := menuImportAPI().SysCallN(7, m.Instance())
 	return HMENU(r1)
 }
 
 func (m *TMenu) Parent() IComponent {
-	r1 := LCL().SysCallN(4354, 0, m.Instance(), 0)
+	r1 := menuImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return AsComponent(r1)
 }
 
 func (m *TMenu) SetParent(AValue IComponent) {
-	LCL().SysCallN(4354, 1, m.Instance(), GetObjectUintptr(AValue))
+	menuImportAPI().SysCallN(16, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TMenu) ShortcutHandled() bool {
-	r1 := LCL().SysCallN(4358, 0, m.Instance(), 0)
+	r1 := menuImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMenu) SetShortcutHandled(AValue bool) {
-	LCL().SysCallN(4358, 1, m.Instance(), PascalBool(AValue))
+	menuImportAPI().SysCallN(20, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TMenu) BidiMode() TBiDiMode {
-	r1 := LCL().SysCallN(4338, 0, m.Instance(), 0)
+	r1 := menuImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TBiDiMode(r1)
 }
 
 func (m *TMenu) SetBidiMode(AValue TBiDiMode) {
-	LCL().SysCallN(4338, 1, m.Instance(), uintptr(AValue))
+	menuImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TMenu) ParentBidiMode() bool {
-	r1 := LCL().SysCallN(4355, 0, m.Instance(), 0)
+	r1 := menuImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMenu) SetParentBidiMode(AValue bool) {
-	LCL().SysCallN(4355, 1, m.Instance(), PascalBool(AValue))
+	menuImportAPI().SysCallN(17, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TMenu) Items() IMenuItem {
-	r1 := LCL().SysCallN(4352, m.Instance())
+	r1 := menuImportAPI().SysCallN(14, m.Instance())
 	return AsMenuItem(r1)
 }
 
 func (m *TMenu) Images() ICustomImageList {
-	r1 := LCL().SysCallN(4348, 0, m.Instance(), 0)
+	r1 := menuImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TMenu) SetImages(AValue ICustomImageList) {
-	LCL().SysCallN(4348, 1, m.Instance(), GetObjectUintptr(AValue))
+	menuImportAPI().SysCallN(10, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TMenu) ImagesWidth() int32 {
-	r1 := LCL().SysCallN(4349, 0, m.Instance(), 0)
+	r1 := menuImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TMenu) SetImagesWidth(AValue int32) {
-	LCL().SysCallN(4349, 1, m.Instance(), uintptr(AValue))
+	menuImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TMenu) OwnerDraw() bool {
-	r1 := LCL().SysCallN(4353, 0, m.Instance(), 0)
+	r1 := menuImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMenu) SetOwnerDraw(AValue bool) {
-	LCL().SysCallN(4353, 1, m.Instance(), PascalBool(AValue))
+	menuImportAPI().SysCallN(15, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TMenu) FindItem(AValue uint32, Kind TFindItemKind) IMenuItem {
-	r1 := LCL().SysCallN(4343, m.Instance(), uintptr(AValue), uintptr(Kind))
+	r1 := menuImportAPI().SysCallN(5, m.Instance(), uintptr(AValue), uintptr(Kind))
 	return AsMenuItem(r1)
 }
 
 func (m *TMenu) GetHelpContext(AValue uint32, ByCommand bool) THelpContext {
-	r1 := LCL().SysCallN(4344, m.Instance(), uintptr(AValue), PascalBool(ByCommand))
+	r1 := menuImportAPI().SysCallN(6, m.Instance(), uintptr(AValue), PascalBool(ByCommand))
 	return THelpContext(r1)
 }
 
 func (m *TMenu) IsShortcut(Message *TLMKey) bool {
 	var result0 uintptr
-	r1 := LCL().SysCallN(4351, m.Instance(), uintptr(unsafePointer(&result0)))
+	r1 := menuImportAPI().SysCallN(13, m.Instance(), uintptr(unsafePointer(&result0)))
 	*Message = *(*TLMKey)(getPointer(result0))
 	return GoBool(r1)
 }
 
 func (m *TMenu) HandleAllocated() bool {
-	r1 := LCL().SysCallN(4346, m.Instance())
+	r1 := menuImportAPI().SysCallN(8, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TMenu) IsRightToLeft() bool {
-	r1 := LCL().SysCallN(4350, m.Instance())
+	r1 := menuImportAPI().SysCallN(12, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TMenu) UseRightToLeftAlignment() bool {
-	r1 := LCL().SysCallN(4359, m.Instance())
+	r1 := menuImportAPI().SysCallN(21, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TMenu) UseRightToLeftReading() bool {
-	r1 := LCL().SysCallN(4360, m.Instance())
+	r1 := menuImportAPI().SysCallN(22, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TMenu) DispatchCommand(ACommand Word) bool {
-	r1 := LCL().SysCallN(4342, m.Instance(), uintptr(ACommand))
+	r1 := menuImportAPI().SysCallN(4, m.Instance(), uintptr(ACommand))
 	return GoBool(r1)
 }
 
 func MenuClass() TClass {
-	ret := LCL().SysCallN(4339)
+	ret := menuImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TMenu) DestroyHandle() {
-	LCL().SysCallN(4341, m.Instance())
+	menuImportAPI().SysCallN(3, m.Instance())
 }
 
 func (m *TMenu) HandleNeeded() {
-	LCL().SysCallN(4347, m.Instance())
+	menuImportAPI().SysCallN(9, m.Instance())
 }
 
 func (m *TMenu) SetOnDrawItem(fn TMenuDrawItemEvent) {
@@ -191,7 +192,7 @@ func (m *TMenu) SetOnDrawItem(fn TMenuDrawItemEvent) {
 		RemoveEventElement(m.drawItemPtr)
 	}
 	m.drawItemPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4356, m.Instance(), m.drawItemPtr)
+	menuImportAPI().SysCallN(18, m.Instance(), m.drawItemPtr)
 }
 
 func (m *TMenu) SetOnMeasureItem(fn TMenuMeasureItemEvent) {
@@ -199,5 +200,43 @@ func (m *TMenu) SetOnMeasureItem(fn TMenuMeasureItemEvent) {
 		RemoveEventElement(m.measureItemPtr)
 	}
 	m.measureItemPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4357, m.Instance(), m.measureItemPtr)
+	menuImportAPI().SysCallN(19, m.Instance(), m.measureItemPtr)
+}
+
+var (
+	menuImport       *imports.Imports = nil
+	menuImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Menu_BidiMode", 0),
+		/*1*/ imports.NewTable("Menu_Class", 0),
+		/*2*/ imports.NewTable("Menu_Create", 0),
+		/*3*/ imports.NewTable("Menu_DestroyHandle", 0),
+		/*4*/ imports.NewTable("Menu_DispatchCommand", 0),
+		/*5*/ imports.NewTable("Menu_FindItem", 0),
+		/*6*/ imports.NewTable("Menu_GetHelpContext", 0),
+		/*7*/ imports.NewTable("Menu_Handle", 0),
+		/*8*/ imports.NewTable("Menu_HandleAllocated", 0),
+		/*9*/ imports.NewTable("Menu_HandleNeeded", 0),
+		/*10*/ imports.NewTable("Menu_Images", 0),
+		/*11*/ imports.NewTable("Menu_ImagesWidth", 0),
+		/*12*/ imports.NewTable("Menu_IsRightToLeft", 0),
+		/*13*/ imports.NewTable("Menu_IsShortcut", 0),
+		/*14*/ imports.NewTable("Menu_Items", 0),
+		/*15*/ imports.NewTable("Menu_OwnerDraw", 0),
+		/*16*/ imports.NewTable("Menu_Parent", 0),
+		/*17*/ imports.NewTable("Menu_ParentBidiMode", 0),
+		/*18*/ imports.NewTable("Menu_SetOnDrawItem", 0),
+		/*19*/ imports.NewTable("Menu_SetOnMeasureItem", 0),
+		/*20*/ imports.NewTable("Menu_ShortcutHandled", 0),
+		/*21*/ imports.NewTable("Menu_UseRightToLeftAlignment", 0),
+		/*22*/ imports.NewTable("Menu_UseRightToLeftReading", 0),
+	}
+)
+
+func menuImportAPI() *imports.Imports {
+	if menuImport == nil {
+		menuImport = NewDefaultImports()
+		menuImport.SetImportTable(menuImportTables)
+		menuImportTables = nil
+	}
+	return menuImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -82,84 +83,84 @@ type TPanel struct {
 }
 
 func NewPanel(TheOwner IComponent) IPanel {
-	r1 := LCL().SysCallN(4506, GetObjectUintptr(TheOwner))
+	r1 := panelImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsPanel(r1)
 }
 
 func (m *TPanel) DragCursor() TCursor {
-	r1 := LCL().SysCallN(4507, 0, m.Instance(), 0)
+	r1 := panelImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TPanel) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(4507, 1, m.Instance(), uintptr(AValue))
+	panelImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPanel) DragKind() TDragKind {
-	r1 := LCL().SysCallN(4508, 0, m.Instance(), 0)
+	r1 := panelImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TPanel) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(4508, 1, m.Instance(), uintptr(AValue))
+	panelImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPanel) DragMode() TDragMode {
-	r1 := LCL().SysCallN(4509, 0, m.Instance(), 0)
+	r1 := panelImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TPanel) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(4509, 1, m.Instance(), uintptr(AValue))
+	panelImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPanel) ParentFont() bool {
-	r1 := LCL().SysCallN(4510, 0, m.Instance(), 0)
+	r1 := panelImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TPanel) SetParentFont(AValue bool) {
-	LCL().SysCallN(4510, 1, m.Instance(), PascalBool(AValue))
+	panelImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TPanel) ParentShowHint() bool {
-	r1 := LCL().SysCallN(4511, 0, m.Instance(), 0)
+	r1 := panelImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TPanel) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(4511, 1, m.Instance(), PascalBool(AValue))
+	panelImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TPanel) ShowAccelChar() bool {
-	r1 := LCL().SysCallN(4533, 0, m.Instance(), 0)
+	r1 := panelImportAPI().SysCallN(28, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TPanel) SetShowAccelChar(AValue bool) {
-	LCL().SysCallN(4533, 1, m.Instance(), PascalBool(AValue))
+	panelImportAPI().SysCallN(28, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TPanel) VerticalAlignment() TVerticalAlignment {
-	r1 := LCL().SysCallN(4534, 0, m.Instance(), 0)
+	r1 := panelImportAPI().SysCallN(29, 0, m.Instance(), 0)
 	return TVerticalAlignment(r1)
 }
 
 func (m *TPanel) SetVerticalAlignment(AValue TVerticalAlignment) {
-	LCL().SysCallN(4534, 1, m.Instance(), uintptr(AValue))
+	panelImportAPI().SysCallN(29, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPanel) Wordwrap() bool {
-	r1 := LCL().SysCallN(4535, 0, m.Instance(), 0)
+	r1 := panelImportAPI().SysCallN(30, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TPanel) SetWordwrap(AValue bool) {
-	LCL().SysCallN(4535, 1, m.Instance(), PascalBool(AValue))
+	panelImportAPI().SysCallN(30, 1, m.Instance(), PascalBool(AValue))
 }
 
 func PanelClass() TClass {
-	ret := LCL().SysCallN(4505)
+	ret := panelImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -168,7 +169,7 @@ func (m *TPanel) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4512, m.Instance(), m.contextPopupPtr)
+	panelImportAPI().SysCallN(7, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TPanel) SetOnDblClick(fn TNotifyEvent) {
@@ -176,7 +177,7 @@ func (m *TPanel) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4513, m.Instance(), m.dblClickPtr)
+	panelImportAPI().SysCallN(8, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TPanel) SetOnDragDrop(fn TDragDropEvent) {
@@ -184,7 +185,7 @@ func (m *TPanel) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4514, m.Instance(), m.dragDropPtr)
+	panelImportAPI().SysCallN(9, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TPanel) SetOnDragOver(fn TDragOverEvent) {
@@ -192,7 +193,7 @@ func (m *TPanel) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4515, m.Instance(), m.dragOverPtr)
+	panelImportAPI().SysCallN(10, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TPanel) SetOnEndDock(fn TEndDragEvent) {
@@ -200,7 +201,7 @@ func (m *TPanel) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4516, m.Instance(), m.endDockPtr)
+	panelImportAPI().SysCallN(11, m.Instance(), m.endDockPtr)
 }
 
 func (m *TPanel) SetOnEndDrag(fn TEndDragEvent) {
@@ -208,7 +209,7 @@ func (m *TPanel) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4517, m.Instance(), m.endDragPtr)
+	panelImportAPI().SysCallN(12, m.Instance(), m.endDragPtr)
 }
 
 func (m *TPanel) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
@@ -216,7 +217,7 @@ func (m *TPanel) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
 		RemoveEventElement(m.getSiteInfoPtr)
 	}
 	m.getSiteInfoPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4519, m.Instance(), m.getSiteInfoPtr)
+	panelImportAPI().SysCallN(14, m.Instance(), m.getSiteInfoPtr)
 }
 
 func (m *TPanel) SetOnGetDockCaption(fn TGetDockCaptionEvent) {
@@ -224,7 +225,7 @@ func (m *TPanel) SetOnGetDockCaption(fn TGetDockCaptionEvent) {
 		RemoveEventElement(m.getDockCaptionPtr)
 	}
 	m.getDockCaptionPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4518, m.Instance(), m.getDockCaptionPtr)
+	panelImportAPI().SysCallN(13, m.Instance(), m.getDockCaptionPtr)
 }
 
 func (m *TPanel) SetOnMouseDown(fn TMouseEvent) {
@@ -232,7 +233,7 @@ func (m *TPanel) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4520, m.Instance(), m.mouseDownPtr)
+	panelImportAPI().SysCallN(15, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TPanel) SetOnMouseEnter(fn TNotifyEvent) {
@@ -240,7 +241,7 @@ func (m *TPanel) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4521, m.Instance(), m.mouseEnterPtr)
+	panelImportAPI().SysCallN(16, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TPanel) SetOnMouseLeave(fn TNotifyEvent) {
@@ -248,7 +249,7 @@ func (m *TPanel) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4522, m.Instance(), m.mouseLeavePtr)
+	panelImportAPI().SysCallN(17, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TPanel) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -256,7 +257,7 @@ func (m *TPanel) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4523, m.Instance(), m.mouseMovePtr)
+	panelImportAPI().SysCallN(18, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TPanel) SetOnMouseUp(fn TMouseEvent) {
@@ -264,7 +265,7 @@ func (m *TPanel) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4524, m.Instance(), m.mouseUpPtr)
+	panelImportAPI().SysCallN(19, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TPanel) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -272,7 +273,7 @@ func (m *TPanel) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4525, m.Instance(), m.mouseWheelPtr)
+	panelImportAPI().SysCallN(20, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TPanel) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -280,7 +281,7 @@ func (m *TPanel) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4526, m.Instance(), m.mouseWheelDownPtr)
+	panelImportAPI().SysCallN(21, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TPanel) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -288,7 +289,7 @@ func (m *TPanel) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4530, m.Instance(), m.mouseWheelUpPtr)
+	panelImportAPI().SysCallN(25, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TPanel) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -296,7 +297,7 @@ func (m *TPanel) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4527, m.Instance(), m.mouseWheelHorzPtr)
+	panelImportAPI().SysCallN(22, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TPanel) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -304,7 +305,7 @@ func (m *TPanel) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4528, m.Instance(), m.mouseWheelLeftPtr)
+	panelImportAPI().SysCallN(23, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TPanel) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -312,7 +313,7 @@ func (m *TPanel) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4529, m.Instance(), m.mouseWheelRightPtr)
+	panelImportAPI().SysCallN(24, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TPanel) SetOnStartDock(fn TStartDockEvent) {
@@ -320,7 +321,7 @@ func (m *TPanel) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4531, m.Instance(), m.startDockPtr)
+	panelImportAPI().SysCallN(26, m.Instance(), m.startDockPtr)
 }
 
 func (m *TPanel) SetOnStartDrag(fn TStartDragEvent) {
@@ -328,5 +329,51 @@ func (m *TPanel) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4532, m.Instance(), m.startDragPtr)
+	panelImportAPI().SysCallN(27, m.Instance(), m.startDragPtr)
+}
+
+var (
+	panelImport       *imports.Imports = nil
+	panelImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Panel_Class", 0),
+		/*1*/ imports.NewTable("Panel_Create", 0),
+		/*2*/ imports.NewTable("Panel_DragCursor", 0),
+		/*3*/ imports.NewTable("Panel_DragKind", 0),
+		/*4*/ imports.NewTable("Panel_DragMode", 0),
+		/*5*/ imports.NewTable("Panel_ParentFont", 0),
+		/*6*/ imports.NewTable("Panel_ParentShowHint", 0),
+		/*7*/ imports.NewTable("Panel_SetOnContextPopup", 0),
+		/*8*/ imports.NewTable("Panel_SetOnDblClick", 0),
+		/*9*/ imports.NewTable("Panel_SetOnDragDrop", 0),
+		/*10*/ imports.NewTable("Panel_SetOnDragOver", 0),
+		/*11*/ imports.NewTable("Panel_SetOnEndDock", 0),
+		/*12*/ imports.NewTable("Panel_SetOnEndDrag", 0),
+		/*13*/ imports.NewTable("Panel_SetOnGetDockCaption", 0),
+		/*14*/ imports.NewTable("Panel_SetOnGetSiteInfo", 0),
+		/*15*/ imports.NewTable("Panel_SetOnMouseDown", 0),
+		/*16*/ imports.NewTable("Panel_SetOnMouseEnter", 0),
+		/*17*/ imports.NewTable("Panel_SetOnMouseLeave", 0),
+		/*18*/ imports.NewTable("Panel_SetOnMouseMove", 0),
+		/*19*/ imports.NewTable("Panel_SetOnMouseUp", 0),
+		/*20*/ imports.NewTable("Panel_SetOnMouseWheel", 0),
+		/*21*/ imports.NewTable("Panel_SetOnMouseWheelDown", 0),
+		/*22*/ imports.NewTable("Panel_SetOnMouseWheelHorz", 0),
+		/*23*/ imports.NewTable("Panel_SetOnMouseWheelLeft", 0),
+		/*24*/ imports.NewTable("Panel_SetOnMouseWheelRight", 0),
+		/*25*/ imports.NewTable("Panel_SetOnMouseWheelUp", 0),
+		/*26*/ imports.NewTable("Panel_SetOnStartDock", 0),
+		/*27*/ imports.NewTable("Panel_SetOnStartDrag", 0),
+		/*28*/ imports.NewTable("Panel_ShowAccelChar", 0),
+		/*29*/ imports.NewTable("Panel_VerticalAlignment", 0),
+		/*30*/ imports.NewTable("Panel_Wordwrap", 0),
+	}
+)
+
+func panelImportAPI() *imports.Imports {
+	if panelImport == nil {
+		panelImport = NewDefaultImports()
+		panelImport.SetImportTable(panelImportTables)
+		panelImportTables = nil
+	}
+	return panelImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -34,48 +35,48 @@ type TVTFixedAreaConstraints struct {
 }
 
 func NewVTFixedAreaConstraints(AOwner IVTHeader) IVTFixedAreaConstraints {
-	r1 := LCL().SysCallN(5893, GetObjectUintptr(AOwner))
+	r1 := vTFixedAreaConstraintsImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsVTFixedAreaConstraints(r1)
 }
 
 func (m *TVTFixedAreaConstraints) MaxHeightPercent() TVTConstraintPercent {
-	r1 := LCL().SysCallN(5894, 0, m.Instance(), 0)
+	r1 := vTFixedAreaConstraintsImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TVTConstraintPercent(r1)
 }
 
 func (m *TVTFixedAreaConstraints) SetMaxHeightPercent(AValue TVTConstraintPercent) {
-	LCL().SysCallN(5894, 1, m.Instance(), uintptr(AValue))
+	vTFixedAreaConstraintsImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTFixedAreaConstraints) MaxWidthPercent() TVTConstraintPercent {
-	r1 := LCL().SysCallN(5895, 0, m.Instance(), 0)
+	r1 := vTFixedAreaConstraintsImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TVTConstraintPercent(r1)
 }
 
 func (m *TVTFixedAreaConstraints) SetMaxWidthPercent(AValue TVTConstraintPercent) {
-	LCL().SysCallN(5895, 1, m.Instance(), uintptr(AValue))
+	vTFixedAreaConstraintsImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTFixedAreaConstraints) MinHeightPercent() TVTConstraintPercent {
-	r1 := LCL().SysCallN(5896, 0, m.Instance(), 0)
+	r1 := vTFixedAreaConstraintsImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TVTConstraintPercent(r1)
 }
 
 func (m *TVTFixedAreaConstraints) SetMinHeightPercent(AValue TVTConstraintPercent) {
-	LCL().SysCallN(5896, 1, m.Instance(), uintptr(AValue))
+	vTFixedAreaConstraintsImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTFixedAreaConstraints) MinWidthPercent() TVTConstraintPercent {
-	r1 := LCL().SysCallN(5897, 0, m.Instance(), 0)
+	r1 := vTFixedAreaConstraintsImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TVTConstraintPercent(r1)
 }
 
 func (m *TVTFixedAreaConstraints) SetMinWidthPercent(AValue TVTConstraintPercent) {
-	LCL().SysCallN(5897, 1, m.Instance(), uintptr(AValue))
+	vTFixedAreaConstraintsImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func VTFixedAreaConstraintsClass() TClass {
-	ret := LCL().SysCallN(5892)
+	ret := vTFixedAreaConstraintsImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -84,5 +85,27 @@ func (m *TVTFixedAreaConstraints) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5898, m.Instance(), m.changePtr)
+	vTFixedAreaConstraintsImportAPI().SysCallN(6, m.Instance(), m.changePtr)
+}
+
+var (
+	vTFixedAreaConstraintsImport       *imports.Imports = nil
+	vTFixedAreaConstraintsImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("VTFixedAreaConstraints_Class", 0),
+		/*1*/ imports.NewTable("VTFixedAreaConstraints_Create", 0),
+		/*2*/ imports.NewTable("VTFixedAreaConstraints_MaxHeightPercent", 0),
+		/*3*/ imports.NewTable("VTFixedAreaConstraints_MaxWidthPercent", 0),
+		/*4*/ imports.NewTable("VTFixedAreaConstraints_MinHeightPercent", 0),
+		/*5*/ imports.NewTable("VTFixedAreaConstraints_MinWidthPercent", 0),
+		/*6*/ imports.NewTable("VTFixedAreaConstraints_SetOnChange", 0),
+	}
+)
+
+func vTFixedAreaConstraintsImportAPI() *imports.Imports {
+	if vTFixedAreaConstraintsImport == nil {
+		vTFixedAreaConstraintsImport = NewDefaultImports()
+		vTFixedAreaConstraintsImport.SetImportTable(vTFixedAreaConstraintsImportTables)
+		vTFixedAreaConstraintsImportTables = nil
+	}
+	return vTFixedAreaConstraintsImport
 }

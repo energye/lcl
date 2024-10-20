@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -53,128 +54,128 @@ type TFPCustomImage struct {
 }
 
 func (m *TFPCustomImage) Height() int32 {
-	r1 := LCL().SysCallN(2953, 0, m.Instance(), 0)
+	r1 := fPCustomImageImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFPCustomImage) SetHeight(AValue int32) {
-	LCL().SysCallN(2953, 1, m.Instance(), uintptr(AValue))
+	fPCustomImageImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFPCustomImage) Width() int32 {
-	r1 := LCL().SysCallN(2967, 0, m.Instance(), 0)
+	r1 := fPCustomImageImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFPCustomImage) SetWidth(AValue int32) {
-	LCL().SysCallN(2967, 1, m.Instance(), uintptr(AValue))
+	fPCustomImageImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFPCustomImage) Colors(x, y int32) (resultFPColor TFPColor) {
-	r1 := LCL().SysCallN(2948, 0, m.Instance(), uintptr(x), uintptr(y))
+	r1 := fPCustomImageImportAPI().SysCallN(1, 0, m.Instance(), uintptr(x), uintptr(y))
 	return *(*TFPColor)(getPointer(r1))
 }
 
 func (m *TFPCustomImage) SetColors(x, y int32, AValue *TFPColor) {
-	LCL().SysCallN(2948, 1, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(AValue)))
+	fPCustomImageImportAPI().SysCallN(1, 1, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TFPCustomImage) UsePalette() bool {
-	r1 := LCL().SysCallN(2966, 0, m.Instance(), 0)
+	r1 := fPCustomImageImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFPCustomImage) SetUsePalette(AValue bool) {
-	LCL().SysCallN(2966, 1, m.Instance(), PascalBool(AValue))
+	fPCustomImageImportAPI().SysCallN(19, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFPCustomImage) Palette() IFPPalette {
-	r1 := LCL().SysCallN(2958, m.Instance())
+	r1 := fPCustomImageImportAPI().SysCallN(11, m.Instance())
 	return AsFPPalette(r1)
 }
 
 func (m *TFPCustomImage) Pixels(x, y int32) int32 {
-	r1 := LCL().SysCallN(2959, 0, m.Instance(), uintptr(x), uintptr(y))
+	r1 := fPCustomImageImportAPI().SysCallN(12, 0, m.Instance(), uintptr(x), uintptr(y))
 	return int32(r1)
 }
 
 func (m *TFPCustomImage) SetPixels(x, y int32, AValue int32) {
-	LCL().SysCallN(2959, 1, m.Instance(), uintptr(x), uintptr(y), uintptr(AValue))
+	fPCustomImageImportAPI().SysCallN(12, 1, m.Instance(), uintptr(x), uintptr(y), uintptr(AValue))
 }
 
 func (m *TFPCustomImage) Extra(key string) string {
-	r1 := LCL().SysCallN(2949, 0, m.Instance(), PascalStr(key))
+	r1 := fPCustomImageImportAPI().SysCallN(2, 0, m.Instance(), PascalStr(key))
 	return GoStr(r1)
 }
 
 func (m *TFPCustomImage) SetExtra(key string, AValue string) {
-	LCL().SysCallN(2949, 1, m.Instance(), PascalStr(key), PascalStr(AValue))
+	fPCustomImageImportAPI().SysCallN(2, 1, m.Instance(), PascalStr(key), PascalStr(AValue))
 }
 
 func (m *TFPCustomImage) ExtraValue(index int32) string {
-	r1 := LCL().SysCallN(2952, 0, m.Instance(), uintptr(index))
+	r1 := fPCustomImageImportAPI().SysCallN(5, 0, m.Instance(), uintptr(index))
 	return GoStr(r1)
 }
 
 func (m *TFPCustomImage) SetExtraValue(index int32, AValue string) {
-	LCL().SysCallN(2952, 1, m.Instance(), uintptr(index), PascalStr(AValue))
+	fPCustomImageImportAPI().SysCallN(5, 1, m.Instance(), uintptr(index), PascalStr(AValue))
 }
 
 func (m *TFPCustomImage) ExtraKey(index int32) string {
-	r1 := LCL().SysCallN(2951, 0, m.Instance(), uintptr(index))
+	r1 := fPCustomImageImportAPI().SysCallN(4, 0, m.Instance(), uintptr(index))
 	return GoStr(r1)
 }
 
 func (m *TFPCustomImage) SetExtraKey(index int32, AValue string) {
-	LCL().SysCallN(2951, 1, m.Instance(), uintptr(index), PascalStr(AValue))
+	fPCustomImageImportAPI().SysCallN(4, 1, m.Instance(), uintptr(index), PascalStr(AValue))
 }
 
 func (m *TFPCustomImage) LoadFromFile(filename string) bool {
-	r1 := LCL().SysCallN(2954, m.Instance(), PascalStr(filename))
+	r1 := fPCustomImageImportAPI().SysCallN(7, m.Instance(), PascalStr(filename))
 	return GoBool(r1)
 }
 
 func (m *TFPCustomImage) SaveToFile(filename string) bool {
-	r1 := LCL().SysCallN(2961, m.Instance(), PascalStr(filename))
+	r1 := fPCustomImageImportAPI().SysCallN(14, m.Instance(), PascalStr(filename))
 	return GoBool(r1)
 }
 
 func (m *TFPCustomImage) ExtraCount() int32 {
-	r1 := LCL().SysCallN(2950, m.Instance())
+	r1 := fPCustomImageImportAPI().SysCallN(3, m.Instance())
 	return int32(r1)
 }
 
 func FPCustomImageClass() TClass {
-	ret := LCL().SysCallN(2947)
+	ret := fPCustomImageImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TFPCustomImage) LoadFromStream(Str IStream, Handler IFPCustomImageReader) {
-	LCL().SysCallN(2956, m.Instance(), GetObjectUintptr(Str), GetObjectUintptr(Handler))
+	fPCustomImageImportAPI().SysCallN(9, m.Instance(), GetObjectUintptr(Str), GetObjectUintptr(Handler))
 }
 
 func (m *TFPCustomImage) LoadFromStream1(Str IStream) {
-	LCL().SysCallN(2957, m.Instance(), GetObjectUintptr(Str))
+	fPCustomImageImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(Str))
 }
 
 func (m *TFPCustomImage) LoadFromFile1(filename string, Handler IFPCustomImageReader) {
-	LCL().SysCallN(2955, m.Instance(), PascalStr(filename), GetObjectUintptr(Handler))
+	fPCustomImageImportAPI().SysCallN(8, m.Instance(), PascalStr(filename), GetObjectUintptr(Handler))
 }
 
 func (m *TFPCustomImage) SaveToStream(Str IStream, Handler IFPCustomImageWriter) {
-	LCL().SysCallN(2963, m.Instance(), GetObjectUintptr(Str), GetObjectUintptr(Handler))
+	fPCustomImageImportAPI().SysCallN(16, m.Instance(), GetObjectUintptr(Str), GetObjectUintptr(Handler))
 }
 
 func (m *TFPCustomImage) SaveToFile1(filename string, Handler IFPCustomImageWriter) {
-	LCL().SysCallN(2962, m.Instance(), PascalStr(filename), GetObjectUintptr(Handler))
+	fPCustomImageImportAPI().SysCallN(15, m.Instance(), PascalStr(filename), GetObjectUintptr(Handler))
 }
 
 func (m *TFPCustomImage) SetSize(AWidth, AHeight int32) {
-	LCL().SysCallN(2965, m.Instance(), uintptr(AWidth), uintptr(AHeight))
+	fPCustomImageImportAPI().SysCallN(18, m.Instance(), uintptr(AWidth), uintptr(AHeight))
 }
 
 func (m *TFPCustomImage) RemoveExtra(key string) {
-	LCL().SysCallN(2960, m.Instance(), PascalStr(key))
+	fPCustomImageImportAPI().SysCallN(13, m.Instance(), PascalStr(key))
 }
 
 func (m *TFPCustomImage) SetOnProgress(fn TFPImgProgressEvent) {
@@ -182,5 +183,41 @@ func (m *TFPCustomImage) SetOnProgress(fn TFPImgProgressEvent) {
 		RemoveEventElement(m.progressPtr)
 	}
 	m.progressPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2964, m.Instance(), m.progressPtr)
+	fPCustomImageImportAPI().SysCallN(17, m.Instance(), m.progressPtr)
+}
+
+var (
+	fPCustomImageImport       *imports.Imports = nil
+	fPCustomImageImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FPCustomImage_Class", 0),
+		/*1*/ imports.NewTable("FPCustomImage_Colors", 0),
+		/*2*/ imports.NewTable("FPCustomImage_Extra", 0),
+		/*3*/ imports.NewTable("FPCustomImage_ExtraCount", 0),
+		/*4*/ imports.NewTable("FPCustomImage_ExtraKey", 0),
+		/*5*/ imports.NewTable("FPCustomImage_ExtraValue", 0),
+		/*6*/ imports.NewTable("FPCustomImage_Height", 0),
+		/*7*/ imports.NewTable("FPCustomImage_LoadFromFile", 0),
+		/*8*/ imports.NewTable("FPCustomImage_LoadFromFile1", 0),
+		/*9*/ imports.NewTable("FPCustomImage_LoadFromStream", 0),
+		/*10*/ imports.NewTable("FPCustomImage_LoadFromStream1", 0),
+		/*11*/ imports.NewTable("FPCustomImage_Palette", 0),
+		/*12*/ imports.NewTable("FPCustomImage_Pixels", 0),
+		/*13*/ imports.NewTable("FPCustomImage_RemoveExtra", 0),
+		/*14*/ imports.NewTable("FPCustomImage_SaveToFile", 0),
+		/*15*/ imports.NewTable("FPCustomImage_SaveToFile1", 0),
+		/*16*/ imports.NewTable("FPCustomImage_SaveToStream", 0),
+		/*17*/ imports.NewTable("FPCustomImage_SetOnProgress", 0),
+		/*18*/ imports.NewTable("FPCustomImage_SetSize", 0),
+		/*19*/ imports.NewTable("FPCustomImage_UsePalette", 0),
+		/*20*/ imports.NewTable("FPCustomImage_Width", 0),
+	}
+)
+
+func fPCustomImageImportAPI() *imports.Imports {
+	if fPCustomImageImport == nil {
+		fPCustomImageImport = NewDefaultImports()
+		fPCustomImageImport.SetImportTable(fPCustomImageImportTables)
+		fPCustomImageImportTables = nil
+	}
+	return fPCustomImageImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -43,94 +44,124 @@ type TCustomComboBoxEx struct {
 }
 
 func NewCustomComboBoxEx(TheOwner IComponent) ICustomComboBoxEx {
-	r1 := LCL().SysCallN(1431, GetObjectUintptr(TheOwner))
+	r1 := customComboBoxExImportAPI().SysCallN(6, GetObjectUintptr(TheOwner))
 	return AsCustomComboBoxEx(r1)
 }
 
 func (m *TCustomComboBoxEx) AutoCompleteOptions() TAutoCompleteOptions {
-	r1 := LCL().SysCallN(1429, 0, m.Instance(), 0)
+	r1 := customComboBoxExImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TAutoCompleteOptions(r1)
 }
 
 func (m *TCustomComboBoxEx) SetAutoCompleteOptions(AValue TAutoCompleteOptions) {
-	LCL().SysCallN(1429, 1, m.Instance(), uintptr(AValue))
+	customComboBoxExImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBoxEx) Images() ICustomImageList {
-	r1 := LCL().SysCallN(1434, 0, m.Instance(), 0)
+	r1 := customComboBoxExImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TCustomComboBoxEx) SetImages(AValue ICustomImageList) {
-	LCL().SysCallN(1434, 1, m.Instance(), GetObjectUintptr(AValue))
+	customComboBoxExImportAPI().SysCallN(9, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomComboBoxEx) ImagesWidth() int32 {
-	r1 := LCL().SysCallN(1435, 0, m.Instance(), 0)
+	r1 := customComboBoxExImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomComboBoxEx) SetImagesWidth(AValue int32) {
-	LCL().SysCallN(1435, 1, m.Instance(), uintptr(AValue))
+	customComboBoxExImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBoxEx) ItemsEx() IComboExItems {
-	r1 := LCL().SysCallN(1437, 0, m.Instance(), 0)
+	r1 := customComboBoxExImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return AsComboExItems(r1)
 }
 
 func (m *TCustomComboBoxEx) SetItemsEx(AValue IComboExItems) {
-	LCL().SysCallN(1437, 1, m.Instance(), GetObjectUintptr(AValue))
+	customComboBoxExImportAPI().SysCallN(12, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomComboBoxEx) StyleForComboBoxExStyle() TComboBoxExStyle {
-	r1 := LCL().SysCallN(1439, 0, m.Instance(), 0)
+	r1 := customComboBoxExImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return TComboBoxExStyle(r1)
 }
 
 func (m *TCustomComboBoxEx) SetStyleForComboBoxExStyle(AValue TComboBoxExStyle) {
-	LCL().SysCallN(1439, 1, m.Instance(), uintptr(AValue))
+	customComboBoxExImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBoxEx) StyleEx() TComboBoxExStyles {
-	r1 := LCL().SysCallN(1438, 0, m.Instance(), 0)
+	r1 := customComboBoxExImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return TComboBoxExStyles(r1)
 }
 
 func (m *TCustomComboBoxEx) SetStyleEx(AValue TComboBoxExStyles) {
-	LCL().SysCallN(1438, 1, m.Instance(), uintptr(AValue))
+	customComboBoxExImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBoxEx) Add() int32 {
-	r1 := LCL().SysCallN(1425, m.Instance())
+	r1 := customComboBoxExImportAPI().SysCallN(0, m.Instance())
 	return int32(r1)
 }
 
 func CustomComboBoxExClass() TClass {
-	ret := LCL().SysCallN(1430)
+	ret := customComboBoxExImportAPI().SysCallN(5)
 	return TClass(ret)
 }
 
 func (m *TCustomComboBoxEx) Add1(ACaption string, AIndent int32, AImgIdx TImageIndex, AOverlayImgIdx TImageIndex, ASelectedImgIdx TImageIndex) {
-	LCL().SysCallN(1426, m.Instance(), PascalStr(ACaption), uintptr(AIndent), uintptr(AImgIdx), uintptr(AOverlayImgIdx), uintptr(ASelectedImgIdx))
+	customComboBoxExImportAPI().SysCallN(1, m.Instance(), PascalStr(ACaption), uintptr(AIndent), uintptr(AImgIdx), uintptr(AOverlayImgIdx), uintptr(ASelectedImgIdx))
 }
 
 func (m *TCustomComboBoxEx) AssignItemsEx(AItems IStrings) {
-	LCL().SysCallN(1427, m.Instance(), GetObjectUintptr(AItems))
+	customComboBoxExImportAPI().SysCallN(2, m.Instance(), GetObjectUintptr(AItems))
 }
 
 func (m *TCustomComboBoxEx) AssignItemsEx1(AItemsEx IComboExItems) {
-	LCL().SysCallN(1428, m.Instance(), GetObjectUintptr(AItemsEx))
+	customComboBoxExImportAPI().SysCallN(3, m.Instance(), GetObjectUintptr(AItemsEx))
 }
 
 func (m *TCustomComboBoxEx) Delete(AIndex int32) {
-	LCL().SysCallN(1432, m.Instance(), uintptr(AIndex))
+	customComboBoxExImportAPI().SysCallN(7, m.Instance(), uintptr(AIndex))
 }
 
 func (m *TCustomComboBoxEx) DeleteSelected() {
-	LCL().SysCallN(1433, m.Instance())
+	customComboBoxExImportAPI().SysCallN(8, m.Instance())
 }
 
 func (m *TCustomComboBoxEx) Insert(AIndex int32, ACaption string, AIndent int32, AImgIdx TImageIndex, AOverlayImgIdx TImageIndex, ASelectedImgIdx TImageIndex) {
-	LCL().SysCallN(1436, m.Instance(), uintptr(AIndex), PascalStr(ACaption), uintptr(AIndent), uintptr(AImgIdx), uintptr(AOverlayImgIdx), uintptr(ASelectedImgIdx))
+	customComboBoxExImportAPI().SysCallN(11, m.Instance(), uintptr(AIndex), PascalStr(ACaption), uintptr(AIndent), uintptr(AImgIdx), uintptr(AOverlayImgIdx), uintptr(ASelectedImgIdx))
+}
+
+var (
+	customComboBoxExImport       *imports.Imports = nil
+	customComboBoxExImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomComboBoxEx_Add", 0),
+		/*1*/ imports.NewTable("CustomComboBoxEx_Add1", 0),
+		/*2*/ imports.NewTable("CustomComboBoxEx_AssignItemsEx", 0),
+		/*3*/ imports.NewTable("CustomComboBoxEx_AssignItemsEx1", 0),
+		/*4*/ imports.NewTable("CustomComboBoxEx_AutoCompleteOptions", 0),
+		/*5*/ imports.NewTable("CustomComboBoxEx_Class", 0),
+		/*6*/ imports.NewTable("CustomComboBoxEx_Create", 0),
+		/*7*/ imports.NewTable("CustomComboBoxEx_Delete", 0),
+		/*8*/ imports.NewTable("CustomComboBoxEx_DeleteSelected", 0),
+		/*9*/ imports.NewTable("CustomComboBoxEx_Images", 0),
+		/*10*/ imports.NewTable("CustomComboBoxEx_ImagesWidth", 0),
+		/*11*/ imports.NewTable("CustomComboBoxEx_Insert", 0),
+		/*12*/ imports.NewTable("CustomComboBoxEx_ItemsEx", 0),
+		/*13*/ imports.NewTable("CustomComboBoxEx_StyleEx", 0),
+		/*14*/ imports.NewTable("CustomComboBoxEx_StyleForComboBoxExStyle", 0),
+	}
+)
+
+func customComboBoxExImportAPI() *imports.Imports {
+	if customComboBoxExImport == nil {
+		customComboBoxExImport = NewDefaultImports()
+		customComboBoxExImport.SetImportTable(customComboBoxExImportTables)
+		customComboBoxExImportTables = nil
+	}
+	return customComboBoxExImport
 }

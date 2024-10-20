@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -59,138 +60,138 @@ type TPicture struct {
 }
 
 func NewPicture() IPicture {
-	r1 := LCL().SysCallN(4573)
+	r1 := pictureImportAPI().SysCallN(3)
 	return AsPicture(r1)
 }
 
 func (m *TPicture) Bitmap() IBitmap {
-	r1 := LCL().SysCallN(4570, 0, m.Instance(), 0)
+	r1 := pictureImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return AsBitmap(r1)
 }
 
 func (m *TPicture) SetBitmap(AValue IBitmap) {
-	LCL().SysCallN(4570, 1, m.Instance(), GetObjectUintptr(AValue))
+	pictureImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TPicture) Icon() IIcon {
-	r1 := LCL().SysCallN(4576, 0, m.Instance(), 0)
+	r1 := pictureImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return AsIcon(r1)
 }
 
 func (m *TPicture) SetIcon(AValue IIcon) {
-	LCL().SysCallN(4576, 1, m.Instance(), GetObjectUintptr(AValue))
+	pictureImportAPI().SysCallN(6, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TPicture) Jpeg() IJPEGImage {
-	r1 := LCL().SysCallN(4577, 0, m.Instance(), 0)
+	r1 := pictureImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return AsJPEGImage(r1)
 }
 
 func (m *TPicture) SetJpeg(AValue IJPEGImage) {
-	LCL().SysCallN(4577, 1, m.Instance(), GetObjectUintptr(AValue))
+	pictureImportAPI().SysCallN(7, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TPicture) Pixmap() IPixmap {
-	r1 := LCL().SysCallN(4588, 0, m.Instance(), 0)
+	r1 := pictureImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return AsPixmap(r1)
 }
 
 func (m *TPicture) SetPixmap(AValue IPixmap) {
-	LCL().SysCallN(4588, 1, m.Instance(), GetObjectUintptr(AValue))
+	pictureImportAPI().SysCallN(18, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TPicture) PNG() IPortableNetworkGraphic {
-	r1 := LCL().SysCallN(4586, 0, m.Instance(), 0)
+	r1 := pictureImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return AsPortableNetworkGraphic(r1)
 }
 
 func (m *TPicture) SetPNG(AValue IPortableNetworkGraphic) {
-	LCL().SysCallN(4586, 1, m.Instance(), GetObjectUintptr(AValue))
+	pictureImportAPI().SysCallN(16, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TPicture) PNM() IPortableAnyMapGraphic {
-	r1 := LCL().SysCallN(4587, 0, m.Instance(), 0)
+	r1 := pictureImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return AsPortableAnyMapGraphic(r1)
 }
 
 func (m *TPicture) SetPNM(AValue IPortableAnyMapGraphic) {
-	LCL().SysCallN(4587, 1, m.Instance(), GetObjectUintptr(AValue))
+	pictureImportAPI().SysCallN(17, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TPicture) Graphic() IGraphic {
-	r1 := LCL().SysCallN(4574, 0, m.Instance(), 0)
+	r1 := pictureImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return AsGraphic(r1)
 }
 
 func (m *TPicture) SetGraphic(AValue IGraphic) {
-	LCL().SysCallN(4574, 1, m.Instance(), GetObjectUintptr(AValue))
+	pictureImportAPI().SysCallN(4, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TPicture) Height() int32 {
-	r1 := LCL().SysCallN(4575, m.Instance())
+	r1 := pictureImportAPI().SysCallN(5, m.Instance())
 	return int32(r1)
 }
 
 func (m *TPicture) Width() int32 {
-	r1 := LCL().SysCallN(4595, m.Instance())
+	r1 := pictureImportAPI().SysCallN(25, m.Instance())
 	return int32(r1)
 }
 
 func PictureClass() TClass {
-	ret := LCL().SysCallN(4571)
+	ret := pictureImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TPicture) Clear() {
-	LCL().SysCallN(4572, m.Instance())
+	pictureImportAPI().SysCallN(2, m.Instance())
 }
 
 func (m *TPicture) LoadFromClipboardFormat(FormatID TClipboardFormat) {
-	LCL().SysCallN(4578, m.Instance(), uintptr(FormatID))
+	pictureImportAPI().SysCallN(8, m.Instance(), uintptr(FormatID))
 }
 
 func (m *TPicture) LoadFromClipboardFormatID(ClipboardType TClipboardType, FormatID TClipboardFormat) {
-	LCL().SysCallN(4579, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
+	pictureImportAPI().SysCallN(9, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
 }
 
 func (m *TPicture) LoadFromFile(Filename string) {
-	LCL().SysCallN(4580, m.Instance(), PascalStr(Filename))
+	pictureImportAPI().SysCallN(10, m.Instance(), PascalStr(Filename))
 }
 
 func (m *TPicture) LoadFromResourceName(Instance THandle, ResName string) {
-	LCL().SysCallN(4582, m.Instance(), uintptr(Instance), PascalStr(ResName))
+	pictureImportAPI().SysCallN(12, m.Instance(), uintptr(Instance), PascalStr(ResName))
 }
 
 func (m *TPicture) LoadFromResourceName1(Instance THandle, ResName string, AClass TGraphicClass) {
-	LCL().SysCallN(4583, m.Instance(), uintptr(Instance), PascalStr(ResName), uintptr(AClass))
+	pictureImportAPI().SysCallN(13, m.Instance(), uintptr(Instance), PascalStr(ResName), uintptr(AClass))
 }
 
 func (m *TPicture) LoadFromLazarusResource(AName string) {
-	LCL().SysCallN(4581, m.Instance(), PascalStr(AName))
+	pictureImportAPI().SysCallN(11, m.Instance(), PascalStr(AName))
 }
 
 func (m *TPicture) LoadFromStream(Stream IStream) {
-	LCL().SysCallN(4584, m.Instance(), GetObjectUintptr(Stream))
+	pictureImportAPI().SysCallN(14, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TPicture) LoadFromStreamWithFileExt(Stream IStream, FileExt string) {
-	LCL().SysCallN(4585, m.Instance(), GetObjectUintptr(Stream), PascalStr(FileExt))
+	pictureImportAPI().SysCallN(15, m.Instance(), GetObjectUintptr(Stream), PascalStr(FileExt))
 }
 
 func (m *TPicture) SaveToClipboardFormat(FormatID TClipboardFormat) {
-	LCL().SysCallN(4589, m.Instance(), uintptr(FormatID))
+	pictureImportAPI().SysCallN(19, m.Instance(), uintptr(FormatID))
 }
 
 func (m *TPicture) SaveToFile(Filename string, FileExt string) {
-	LCL().SysCallN(4590, m.Instance(), PascalStr(Filename), PascalStr(FileExt))
+	pictureImportAPI().SysCallN(20, m.Instance(), PascalStr(Filename), PascalStr(FileExt))
 }
 
 func (m *TPicture) SaveToStream(Stream IStream) {
-	LCL().SysCallN(4591, m.Instance(), GetObjectUintptr(Stream))
+	pictureImportAPI().SysCallN(21, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TPicture) SaveToStreamWithFileExt(Stream IStream, FileExt string) {
-	LCL().SysCallN(4592, m.Instance(), GetObjectUintptr(Stream), PascalStr(FileExt))
+	pictureImportAPI().SysCallN(22, m.Instance(), GetObjectUintptr(Stream), PascalStr(FileExt))
 }
 
 func (m *TPicture) SetOnChange(fn TNotifyEvent) {
@@ -198,7 +199,7 @@ func (m *TPicture) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4593, m.Instance(), m.changePtr)
+	pictureImportAPI().SysCallN(23, m.Instance(), m.changePtr)
 }
 
 func (m *TPicture) SetOnProgress(fn TProgressEvent) {
@@ -206,5 +207,46 @@ func (m *TPicture) SetOnProgress(fn TProgressEvent) {
 		RemoveEventElement(m.progressPtr)
 	}
 	m.progressPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4594, m.Instance(), m.progressPtr)
+	pictureImportAPI().SysCallN(24, m.Instance(), m.progressPtr)
+}
+
+var (
+	pictureImport       *imports.Imports = nil
+	pictureImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Picture_Bitmap", 0),
+		/*1*/ imports.NewTable("Picture_Class", 0),
+		/*2*/ imports.NewTable("Picture_Clear", 0),
+		/*3*/ imports.NewTable("Picture_Create", 0),
+		/*4*/ imports.NewTable("Picture_Graphic", 0),
+		/*5*/ imports.NewTable("Picture_Height", 0),
+		/*6*/ imports.NewTable("Picture_Icon", 0),
+		/*7*/ imports.NewTable("Picture_Jpeg", 0),
+		/*8*/ imports.NewTable("Picture_LoadFromClipboardFormat", 0),
+		/*9*/ imports.NewTable("Picture_LoadFromClipboardFormatID", 0),
+		/*10*/ imports.NewTable("Picture_LoadFromFile", 0),
+		/*11*/ imports.NewTable("Picture_LoadFromLazarusResource", 0),
+		/*12*/ imports.NewTable("Picture_LoadFromResourceName", 0),
+		/*13*/ imports.NewTable("Picture_LoadFromResourceName1", 0),
+		/*14*/ imports.NewTable("Picture_LoadFromStream", 0),
+		/*15*/ imports.NewTable("Picture_LoadFromStreamWithFileExt", 0),
+		/*16*/ imports.NewTable("Picture_PNG", 0),
+		/*17*/ imports.NewTable("Picture_PNM", 0),
+		/*18*/ imports.NewTable("Picture_Pixmap", 0),
+		/*19*/ imports.NewTable("Picture_SaveToClipboardFormat", 0),
+		/*20*/ imports.NewTable("Picture_SaveToFile", 0),
+		/*21*/ imports.NewTable("Picture_SaveToStream", 0),
+		/*22*/ imports.NewTable("Picture_SaveToStreamWithFileExt", 0),
+		/*23*/ imports.NewTable("Picture_SetOnChange", 0),
+		/*24*/ imports.NewTable("Picture_SetOnProgress", 0),
+		/*25*/ imports.NewTable("Picture_Width", 0),
+	}
+)
+
+func pictureImportAPI() *imports.Imports {
+	if pictureImport == nil {
+		pictureImport = NewDefaultImports()
+		pictureImport.SetImportTable(pictureImportTables)
+		pictureImportTables = nil
+	}
+	return pictureImport
 }

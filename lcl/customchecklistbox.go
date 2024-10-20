@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -44,93 +45,93 @@ type TCustomCheckListBox struct {
 }
 
 func NewCustomCheckListBox(AOwner IComponent) ICustomCheckListBox {
-	r1 := LCL().SysCallN(1392, GetObjectUintptr(AOwner))
+	r1 := customCheckListBoxImportAPI().SysCallN(5, GetObjectUintptr(AOwner))
 	return AsCustomCheckListBox(r1)
 }
 
 func (m *TCustomCheckListBox) AllowGrayed() bool {
-	r1 := LCL().SysCallN(1387, 0, m.Instance(), 0)
+	r1 := customCheckListBoxImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomCheckListBox) SetAllowGrayed(AValue bool) {
-	LCL().SysCallN(1387, 1, m.Instance(), PascalBool(AValue))
+	customCheckListBoxImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomCheckListBox) Checked(AIndex int32) bool {
-	r1 := LCL().SysCallN(1390, 0, m.Instance(), uintptr(AIndex))
+	r1 := customCheckListBoxImportAPI().SysCallN(3, 0, m.Instance(), uintptr(AIndex))
 	return GoBool(r1)
 }
 
 func (m *TCustomCheckListBox) SetChecked(AIndex int32, AValue bool) {
-	LCL().SysCallN(1390, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
+	customCheckListBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
 }
 
 func (m *TCustomCheckListBox) Header(AIndex int32) bool {
-	r1 := LCL().SysCallN(1394, 0, m.Instance(), uintptr(AIndex))
+	r1 := customCheckListBoxImportAPI().SysCallN(7, 0, m.Instance(), uintptr(AIndex))
 	return GoBool(r1)
 }
 
 func (m *TCustomCheckListBox) SetHeader(AIndex int32, AValue bool) {
-	LCL().SysCallN(1394, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
+	customCheckListBoxImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
 }
 
 func (m *TCustomCheckListBox) HeaderBackgroundColor() TColor {
-	r1 := LCL().SysCallN(1395, 0, m.Instance(), 0)
+	r1 := customCheckListBoxImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomCheckListBox) SetHeaderBackgroundColor(AValue TColor) {
-	LCL().SysCallN(1395, 1, m.Instance(), uintptr(AValue))
+	customCheckListBoxImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomCheckListBox) HeaderColor() TColor {
-	r1 := LCL().SysCallN(1396, 0, m.Instance(), 0)
+	r1 := customCheckListBoxImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomCheckListBox) SetHeaderColor(AValue TColor) {
-	LCL().SysCallN(1396, 1, m.Instance(), uintptr(AValue))
+	customCheckListBoxImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomCheckListBox) ItemEnabled(AIndex int32) bool {
-	r1 := LCL().SysCallN(1397, 0, m.Instance(), uintptr(AIndex))
+	r1 := customCheckListBoxImportAPI().SysCallN(10, 0, m.Instance(), uintptr(AIndex))
 	return GoBool(r1)
 }
 
 func (m *TCustomCheckListBox) SetItemEnabled(AIndex int32, AValue bool) {
-	LCL().SysCallN(1397, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
+	customCheckListBoxImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
 }
 
 func (m *TCustomCheckListBox) State(AIndex int32) TCheckBoxState {
-	r1 := LCL().SysCallN(1399, 0, m.Instance(), uintptr(AIndex))
+	r1 := customCheckListBoxImportAPI().SysCallN(12, 0, m.Instance(), uintptr(AIndex))
 	return TCheckBoxState(r1)
 }
 
 func (m *TCustomCheckListBox) SetState(AIndex int32, AValue TCheckBoxState) {
-	LCL().SysCallN(1399, 1, m.Instance(), uintptr(AIndex), uintptr(AValue))
+	customCheckListBoxImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AIndex), uintptr(AValue))
 }
 
 func (m *TCustomCheckListBox) CalculateStandardItemHeight() int32 {
-	r1 := LCL().SysCallN(1388, m.Instance())
+	r1 := customCheckListBoxImportAPI().SysCallN(1, m.Instance())
 	return int32(r1)
 }
 
 func CustomCheckListBoxClass() TClass {
-	ret := LCL().SysCallN(1391)
+	ret := customCheckListBoxImportAPI().SysCallN(4)
 	return TClass(ret)
 }
 
 func (m *TCustomCheckListBox) Toggle(AIndex int32) {
-	LCL().SysCallN(1400, m.Instance(), uintptr(AIndex))
+	customCheckListBoxImportAPI().SysCallN(13, m.Instance(), uintptr(AIndex))
 }
 
 func (m *TCustomCheckListBox) CheckAll(AState TCheckBoxState, aAllowGrayed bool, aAllowDisabled bool) {
-	LCL().SysCallN(1389, m.Instance(), uintptr(AState), PascalBool(aAllowGrayed), PascalBool(aAllowDisabled))
+	customCheckListBoxImportAPI().SysCallN(2, m.Instance(), uintptr(AState), PascalBool(aAllowGrayed), PascalBool(aAllowDisabled))
 }
 
 func (m *TCustomCheckListBox) Exchange(AIndex1, AIndex2 int32) {
-	LCL().SysCallN(1393, m.Instance(), uintptr(AIndex1), uintptr(AIndex2))
+	customCheckListBoxImportAPI().SysCallN(6, m.Instance(), uintptr(AIndex1), uintptr(AIndex2))
 }
 
 func (m *TCustomCheckListBox) SetOnClickCheck(fn TNotifyEvent) {
@@ -138,5 +139,34 @@ func (m *TCustomCheckListBox) SetOnClickCheck(fn TNotifyEvent) {
 		RemoveEventElement(m.clickCheckPtr)
 	}
 	m.clickCheckPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1398, m.Instance(), m.clickCheckPtr)
+	customCheckListBoxImportAPI().SysCallN(11, m.Instance(), m.clickCheckPtr)
+}
+
+var (
+	customCheckListBoxImport       *imports.Imports = nil
+	customCheckListBoxImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomCheckListBox_AllowGrayed", 0),
+		/*1*/ imports.NewTable("CustomCheckListBox_CalculateStandardItemHeight", 0),
+		/*2*/ imports.NewTable("CustomCheckListBox_CheckAll", 0),
+		/*3*/ imports.NewTable("CustomCheckListBox_Checked", 0),
+		/*4*/ imports.NewTable("CustomCheckListBox_Class", 0),
+		/*5*/ imports.NewTable("CustomCheckListBox_Create", 0),
+		/*6*/ imports.NewTable("CustomCheckListBox_Exchange", 0),
+		/*7*/ imports.NewTable("CustomCheckListBox_Header", 0),
+		/*8*/ imports.NewTable("CustomCheckListBox_HeaderBackgroundColor", 0),
+		/*9*/ imports.NewTable("CustomCheckListBox_HeaderColor", 0),
+		/*10*/ imports.NewTable("CustomCheckListBox_ItemEnabled", 0),
+		/*11*/ imports.NewTable("CustomCheckListBox_SetOnClickCheck", 0),
+		/*12*/ imports.NewTable("CustomCheckListBox_State", 0),
+		/*13*/ imports.NewTable("CustomCheckListBox_Toggle", 0),
+	}
+)
+
+func customCheckListBoxImportAPI() *imports.Imports {
+	if customCheckListBoxImport == nil {
+		customCheckListBoxImport = NewDefaultImports()
+		customCheckListBoxImport.SetImportTable(customCheckListBoxImportTables)
+		customCheckListBoxImportTables = nil
+	}
+	return customCheckListBoxImport
 }

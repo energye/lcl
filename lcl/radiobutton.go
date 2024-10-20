@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -64,75 +65,75 @@ type TRadioButton struct {
 }
 
 func NewRadioButton(TheOwner IComponent) IRadioButton {
-	r1 := LCL().SysCallN(4713, GetObjectUintptr(TheOwner))
+	r1 := radioButtonImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
 	return AsRadioButton(r1)
 }
 
 func (m *TRadioButton) Checked() bool {
-	r1 := LCL().SysCallN(4711, 0, m.Instance(), 0)
+	r1 := radioButtonImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRadioButton) SetChecked(AValue bool) {
-	LCL().SysCallN(4711, 1, m.Instance(), PascalBool(AValue))
+	radioButtonImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRadioButton) DragCursor() TCursor {
-	r1 := LCL().SysCallN(4714, 0, m.Instance(), 0)
+	r1 := radioButtonImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TRadioButton) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(4714, 1, m.Instance(), uintptr(AValue))
+	radioButtonImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TRadioButton) DragKind() TDragKind {
-	r1 := LCL().SysCallN(4715, 0, m.Instance(), 0)
+	r1 := radioButtonImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TRadioButton) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(4715, 1, m.Instance(), uintptr(AValue))
+	radioButtonImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TRadioButton) DragMode() TDragMode {
-	r1 := LCL().SysCallN(4716, 0, m.Instance(), 0)
+	r1 := radioButtonImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TRadioButton) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(4716, 1, m.Instance(), uintptr(AValue))
+	radioButtonImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TRadioButton) ParentColor() bool {
-	r1 := LCL().SysCallN(4717, 0, m.Instance(), 0)
+	r1 := radioButtonImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRadioButton) SetParentColor(AValue bool) {
-	LCL().SysCallN(4717, 1, m.Instance(), PascalBool(AValue))
+	radioButtonImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRadioButton) ParentFont() bool {
-	r1 := LCL().SysCallN(4718, 0, m.Instance(), 0)
+	r1 := radioButtonImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRadioButton) SetParentFont(AValue bool) {
-	LCL().SysCallN(4718, 1, m.Instance(), PascalBool(AValue))
+	radioButtonImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRadioButton) ParentShowHint() bool {
-	r1 := LCL().SysCallN(4719, 0, m.Instance(), 0)
+	r1 := radioButtonImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRadioButton) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(4719, 1, m.Instance(), PascalBool(AValue))
+	radioButtonImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
 }
 
 func RadioButtonClass() TClass {
-	ret := LCL().SysCallN(4712)
+	ret := radioButtonImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
@@ -141,7 +142,7 @@ func (m *TRadioButton) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4720, m.Instance(), m.contextPopupPtr)
+	radioButtonImportAPI().SysCallN(9, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TRadioButton) SetOnDragDrop(fn TDragDropEvent) {
@@ -149,7 +150,7 @@ func (m *TRadioButton) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4721, m.Instance(), m.dragDropPtr)
+	radioButtonImportAPI().SysCallN(10, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TRadioButton) SetOnDragOver(fn TDragOverEvent) {
@@ -157,7 +158,7 @@ func (m *TRadioButton) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4722, m.Instance(), m.dragOverPtr)
+	radioButtonImportAPI().SysCallN(11, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TRadioButton) SetOnEndDrag(fn TEndDragEvent) {
@@ -165,7 +166,7 @@ func (m *TRadioButton) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4723, m.Instance(), m.endDragPtr)
+	radioButtonImportAPI().SysCallN(12, m.Instance(), m.endDragPtr)
 }
 
 func (m *TRadioButton) SetOnMouseDown(fn TMouseEvent) {
@@ -173,7 +174,7 @@ func (m *TRadioButton) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4724, m.Instance(), m.mouseDownPtr)
+	radioButtonImportAPI().SysCallN(13, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TRadioButton) SetOnMouseEnter(fn TNotifyEvent) {
@@ -181,7 +182,7 @@ func (m *TRadioButton) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4725, m.Instance(), m.mouseEnterPtr)
+	radioButtonImportAPI().SysCallN(14, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TRadioButton) SetOnMouseLeave(fn TNotifyEvent) {
@@ -189,7 +190,7 @@ func (m *TRadioButton) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4726, m.Instance(), m.mouseLeavePtr)
+	radioButtonImportAPI().SysCallN(15, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TRadioButton) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -197,7 +198,7 @@ func (m *TRadioButton) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4727, m.Instance(), m.mouseMovePtr)
+	radioButtonImportAPI().SysCallN(16, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TRadioButton) SetOnMouseUp(fn TMouseEvent) {
@@ -205,7 +206,7 @@ func (m *TRadioButton) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4728, m.Instance(), m.mouseUpPtr)
+	radioButtonImportAPI().SysCallN(17, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TRadioButton) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -213,7 +214,7 @@ func (m *TRadioButton) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4729, m.Instance(), m.mouseWheelPtr)
+	radioButtonImportAPI().SysCallN(18, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TRadioButton) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -221,7 +222,7 @@ func (m *TRadioButton) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4730, m.Instance(), m.mouseWheelDownPtr)
+	radioButtonImportAPI().SysCallN(19, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TRadioButton) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -229,7 +230,7 @@ func (m *TRadioButton) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4731, m.Instance(), m.mouseWheelUpPtr)
+	radioButtonImportAPI().SysCallN(20, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TRadioButton) SetOnStartDrag(fn TStartDragEvent) {
@@ -237,5 +238,42 @@ func (m *TRadioButton) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4732, m.Instance(), m.startDragPtr)
+	radioButtonImportAPI().SysCallN(21, m.Instance(), m.startDragPtr)
+}
+
+var (
+	radioButtonImport       *imports.Imports = nil
+	radioButtonImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("RadioButton_Checked", 0),
+		/*1*/ imports.NewTable("RadioButton_Class", 0),
+		/*2*/ imports.NewTable("RadioButton_Create", 0),
+		/*3*/ imports.NewTable("RadioButton_DragCursor", 0),
+		/*4*/ imports.NewTable("RadioButton_DragKind", 0),
+		/*5*/ imports.NewTable("RadioButton_DragMode", 0),
+		/*6*/ imports.NewTable("RadioButton_ParentColor", 0),
+		/*7*/ imports.NewTable("RadioButton_ParentFont", 0),
+		/*8*/ imports.NewTable("RadioButton_ParentShowHint", 0),
+		/*9*/ imports.NewTable("RadioButton_SetOnContextPopup", 0),
+		/*10*/ imports.NewTable("RadioButton_SetOnDragDrop", 0),
+		/*11*/ imports.NewTable("RadioButton_SetOnDragOver", 0),
+		/*12*/ imports.NewTable("RadioButton_SetOnEndDrag", 0),
+		/*13*/ imports.NewTable("RadioButton_SetOnMouseDown", 0),
+		/*14*/ imports.NewTable("RadioButton_SetOnMouseEnter", 0),
+		/*15*/ imports.NewTable("RadioButton_SetOnMouseLeave", 0),
+		/*16*/ imports.NewTable("RadioButton_SetOnMouseMove", 0),
+		/*17*/ imports.NewTable("RadioButton_SetOnMouseUp", 0),
+		/*18*/ imports.NewTable("RadioButton_SetOnMouseWheel", 0),
+		/*19*/ imports.NewTable("RadioButton_SetOnMouseWheelDown", 0),
+		/*20*/ imports.NewTable("RadioButton_SetOnMouseWheelUp", 0),
+		/*21*/ imports.NewTable("RadioButton_SetOnStartDrag", 0),
+	}
+)
+
+func radioButtonImportAPI() *imports.Imports {
+	if radioButtonImport == nil {
+		radioButtonImport = NewDefaultImports()
+		radioButtonImport.SetImportTable(radioButtonImportTables)
+		radioButtonImportTables = nil
+	}
+	return radioButtonImport
 }

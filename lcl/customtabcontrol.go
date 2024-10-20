@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -75,221 +76,221 @@ type TCustomTabControl struct {
 }
 
 func NewCustomTabControl(TheOwner IComponent) ICustomTabControl {
-	r1 := LCL().SysCallN(2324, GetObjectUintptr(TheOwner))
+	r1 := customTabControlImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
 	return AsCustomTabControl(r1)
 }
 
 func (m *TCustomTabControl) HotTrack() bool {
-	r1 := LCL().SysCallN(2331, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomTabControl) SetHotTrack(AValue bool) {
-	LCL().SysCallN(2331, 1, m.Instance(), PascalBool(AValue))
+	customTabControlImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTabControl) Images() ICustomImageList {
-	r1 := LCL().SysCallN(2332, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TCustomTabControl) SetImages(AValue ICustomImageList) {
-	LCL().SysCallN(2332, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTabControlImportAPI().SysCallN(10, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTabControl) ImagesWidth() int32 {
-	r1 := LCL().SysCallN(2333, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomTabControl) SetImagesWidth(AValue int32) {
-	LCL().SysCallN(2333, 1, m.Instance(), uintptr(AValue))
+	customTabControlImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTabControl) MultiLine() bool {
-	r1 := LCL().SysCallN(2335, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomTabControl) SetMultiLine(AValue bool) {
-	LCL().SysCallN(2335, 1, m.Instance(), PascalBool(AValue))
+	customTabControlImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTabControl) MultiSelect() bool {
-	r1 := LCL().SysCallN(2336, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomTabControl) SetMultiSelect(AValue bool) {
-	LCL().SysCallN(2336, 1, m.Instance(), PascalBool(AValue))
+	customTabControlImportAPI().SysCallN(14, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTabControl) Options() TCTabControlOptions {
-	r1 := LCL().SysCallN(2337, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return TCTabControlOptions(r1)
 }
 
 func (m *TCustomTabControl) SetOptions(AValue TCTabControlOptions) {
-	LCL().SysCallN(2337, 1, m.Instance(), uintptr(AValue))
+	customTabControlImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTabControl) OwnerDraw() bool {
-	r1 := LCL().SysCallN(2338, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomTabControl) SetOwnerDraw(AValue bool) {
-	LCL().SysCallN(2338, 1, m.Instance(), PascalBool(AValue))
+	customTabControlImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTabControl) Page(Index int32) ICustomPage {
-	r1 := LCL().SysCallN(2339, m.Instance(), uintptr(Index))
+	r1 := customTabControlImportAPI().SysCallN(17, m.Instance(), uintptr(Index))
 	return AsCustomPage(r1)
 }
 
 func (m *TCustomTabControl) PageCount() int32 {
-	r1 := LCL().SysCallN(2340, m.Instance())
+	r1 := customTabControlImportAPI().SysCallN(18, m.Instance())
 	return int32(r1)
 }
 
 func (m *TCustomTabControl) PageIndex() int32 {
-	r1 := LCL().SysCallN(2341, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomTabControl) SetPageIndex(AValue int32) {
-	LCL().SysCallN(2341, 1, m.Instance(), uintptr(AValue))
+	customTabControlImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTabControl) Pages() IStrings {
-	r1 := LCL().SysCallN(2343, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return AsStrings(r1)
 }
 
 func (m *TCustomTabControl) SetPages(AValue IStrings) {
-	LCL().SysCallN(2343, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTabControlImportAPI().SysCallN(21, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTabControl) RaggedRight() bool {
-	r1 := LCL().SysCallN(2344, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(22, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomTabControl) SetRaggedRight(AValue bool) {
-	LCL().SysCallN(2344, 1, m.Instance(), PascalBool(AValue))
+	customTabControlImportAPI().SysCallN(22, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTabControl) ScrollOpposite() bool {
-	r1 := LCL().SysCallN(2345, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomTabControl) SetScrollOpposite(AValue bool) {
-	LCL().SysCallN(2345, 1, m.Instance(), PascalBool(AValue))
+	customTabControlImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTabControl) ShowTabs() bool {
-	r1 := LCL().SysCallN(2349, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(27, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomTabControl) SetShowTabs(AValue bool) {
-	LCL().SysCallN(2349, 1, m.Instance(), PascalBool(AValue))
+	customTabControlImportAPI().SysCallN(27, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTabControl) Style() TTabStyle {
-	r1 := LCL().SysCallN(2350, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(28, 0, m.Instance(), 0)
 	return TTabStyle(r1)
 }
 
 func (m *TCustomTabControl) SetStyle(AValue TTabStyle) {
-	LCL().SysCallN(2350, 1, m.Instance(), uintptr(AValue))
+	customTabControlImportAPI().SysCallN(28, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTabControl) TabHeight() SmallInt {
-	r1 := LCL().SysCallN(2351, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(29, 0, m.Instance(), 0)
 	return SmallInt(r1)
 }
 
 func (m *TCustomTabControl) SetTabHeight(AValue SmallInt) {
-	LCL().SysCallN(2351, 1, m.Instance(), uintptr(AValue))
+	customTabControlImportAPI().SysCallN(29, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTabControl) TabPosition() TTabPosition {
-	r1 := LCL().SysCallN(2352, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(30, 0, m.Instance(), 0)
 	return TTabPosition(r1)
 }
 
 func (m *TCustomTabControl) SetTabPosition(AValue TTabPosition) {
-	LCL().SysCallN(2352, 1, m.Instance(), uintptr(AValue))
+	customTabControlImportAPI().SysCallN(30, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTabControl) TabWidth() SmallInt {
-	r1 := LCL().SysCallN(2355, 0, m.Instance(), 0)
+	r1 := customTabControlImportAPI().SysCallN(33, 0, m.Instance(), 0)
 	return SmallInt(r1)
 }
 
 func (m *TCustomTabControl) SetTabWidth(AValue SmallInt) {
-	LCL().SysCallN(2355, 1, m.Instance(), uintptr(AValue))
+	customTabControlImportAPI().SysCallN(33, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTabControl) TabRect(AIndex int32) (resultRect TRect) {
-	LCL().SysCallN(2353, m.Instance(), uintptr(AIndex), uintptr(unsafePointer(&resultRect)))
+	customTabControlImportAPI().SysCallN(31, m.Instance(), uintptr(AIndex), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TCustomTabControl) GetImageIndex(ThePageIndex int32) int32 {
-	r1 := LCL().SysCallN(2328, m.Instance(), uintptr(ThePageIndex))
+	r1 := customTabControlImportAPI().SysCallN(6, m.Instance(), uintptr(ThePageIndex))
 	return int32(r1)
 }
 
 func (m *TCustomTabControl) IndexOf(APage IPersistent) int32 {
-	r1 := LCL().SysCallN(2334, m.Instance(), GetObjectUintptr(APage))
+	r1 := customTabControlImportAPI().SysCallN(12, m.Instance(), GetObjectUintptr(APage))
 	return int32(r1)
 }
 
 func (m *TCustomTabControl) CustomPage(Index int32) ICustomPage {
-	r1 := LCL().SysCallN(2325, m.Instance(), uintptr(Index))
+	r1 := customTabControlImportAPI().SysCallN(3, m.Instance(), uintptr(Index))
 	return AsCustomPage(r1)
 }
 
 func (m *TCustomTabControl) CanChangePageIndex() bool {
-	r1 := LCL().SysCallN(2322, m.Instance())
+	r1 := customTabControlImportAPI().SysCallN(0, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TCustomTabControl) GetMinimumTabWidth() int32 {
-	r1 := LCL().SysCallN(2330, m.Instance())
+	r1 := customTabControlImportAPI().SysCallN(8, m.Instance())
 	return int32(r1)
 }
 
 func (m *TCustomTabControl) GetMinimumTabHeight() int32 {
-	r1 := LCL().SysCallN(2329, m.Instance())
+	r1 := customTabControlImportAPI().SysCallN(7, m.Instance())
 	return int32(r1)
 }
 
 func (m *TCustomTabControl) GetCapabilities() TCTabControlCapabilities {
-	r1 := LCL().SysCallN(2327, m.Instance())
+	r1 := customTabControlImportAPI().SysCallN(5, m.Instance())
 	return TCTabControlCapabilities(r1)
 }
 
 func (m *TCustomTabControl) TabToPageIndex(AIndex int32) int32 {
-	r1 := LCL().SysCallN(2354, m.Instance(), uintptr(AIndex))
+	r1 := customTabControlImportAPI().SysCallN(32, m.Instance(), uintptr(AIndex))
 	return int32(r1)
 }
 
 func (m *TCustomTabControl) PageToTabIndex(AIndex int32) int32 {
-	r1 := LCL().SysCallN(2342, m.Instance(), uintptr(AIndex))
+	r1 := customTabControlImportAPI().SysCallN(20, m.Instance(), uintptr(AIndex))
 	return int32(r1)
 }
 
 func CustomTabControlClass() TClass {
-	ret := LCL().SysCallN(2323)
+	ret := customTabControlImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TCustomTabControl) DoCloseTabClicked(APage ICustomPage) {
-	LCL().SysCallN(2326, m.Instance(), GetObjectUintptr(APage))
+	customTabControlImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(APage))
 }
 
 func (m *TCustomTabControl) SetOnChanging(fn TTabChangingEvent) {
@@ -297,7 +298,7 @@ func (m *TCustomTabControl) SetOnChanging(fn TTabChangingEvent) {
 		RemoveEventElement(m.changingPtr)
 	}
 	m.changingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2346, m.Instance(), m.changingPtr)
+	customTabControlImportAPI().SysCallN(24, m.Instance(), m.changingPtr)
 }
 
 func (m *TCustomTabControl) SetOnCloseTabClicked(fn TNotifyEvent) {
@@ -305,7 +306,7 @@ func (m *TCustomTabControl) SetOnCloseTabClicked(fn TNotifyEvent) {
 		RemoveEventElement(m.closeTabClickedPtr)
 	}
 	m.closeTabClickedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2347, m.Instance(), m.closeTabClickedPtr)
+	customTabControlImportAPI().SysCallN(25, m.Instance(), m.closeTabClickedPtr)
 }
 
 func (m *TCustomTabControl) SetOnGetImageIndex(fn TTabGetImageEvent) {
@@ -313,5 +314,54 @@ func (m *TCustomTabControl) SetOnGetImageIndex(fn TTabGetImageEvent) {
 		RemoveEventElement(m.getImageIndexPtr)
 	}
 	m.getImageIndexPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2348, m.Instance(), m.getImageIndexPtr)
+	customTabControlImportAPI().SysCallN(26, m.Instance(), m.getImageIndexPtr)
+}
+
+var (
+	customTabControlImport       *imports.Imports = nil
+	customTabControlImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomTabControl_CanChangePageIndex", 0),
+		/*1*/ imports.NewTable("CustomTabControl_Class", 0),
+		/*2*/ imports.NewTable("CustomTabControl_Create", 0),
+		/*3*/ imports.NewTable("CustomTabControl_CustomPage", 0),
+		/*4*/ imports.NewTable("CustomTabControl_DoCloseTabClicked", 0),
+		/*5*/ imports.NewTable("CustomTabControl_GetCapabilities", 0),
+		/*6*/ imports.NewTable("CustomTabControl_GetImageIndex", 0),
+		/*7*/ imports.NewTable("CustomTabControl_GetMinimumTabHeight", 0),
+		/*8*/ imports.NewTable("CustomTabControl_GetMinimumTabWidth", 0),
+		/*9*/ imports.NewTable("CustomTabControl_HotTrack", 0),
+		/*10*/ imports.NewTable("CustomTabControl_Images", 0),
+		/*11*/ imports.NewTable("CustomTabControl_ImagesWidth", 0),
+		/*12*/ imports.NewTable("CustomTabControl_IndexOf", 0),
+		/*13*/ imports.NewTable("CustomTabControl_MultiLine", 0),
+		/*14*/ imports.NewTable("CustomTabControl_MultiSelect", 0),
+		/*15*/ imports.NewTable("CustomTabControl_Options", 0),
+		/*16*/ imports.NewTable("CustomTabControl_OwnerDraw", 0),
+		/*17*/ imports.NewTable("CustomTabControl_Page", 0),
+		/*18*/ imports.NewTable("CustomTabControl_PageCount", 0),
+		/*19*/ imports.NewTable("CustomTabControl_PageIndex", 0),
+		/*20*/ imports.NewTable("CustomTabControl_PageToTabIndex", 0),
+		/*21*/ imports.NewTable("CustomTabControl_Pages", 0),
+		/*22*/ imports.NewTable("CustomTabControl_RaggedRight", 0),
+		/*23*/ imports.NewTable("CustomTabControl_ScrollOpposite", 0),
+		/*24*/ imports.NewTable("CustomTabControl_SetOnChanging", 0),
+		/*25*/ imports.NewTable("CustomTabControl_SetOnCloseTabClicked", 0),
+		/*26*/ imports.NewTable("CustomTabControl_SetOnGetImageIndex", 0),
+		/*27*/ imports.NewTable("CustomTabControl_ShowTabs", 0),
+		/*28*/ imports.NewTable("CustomTabControl_Style", 0),
+		/*29*/ imports.NewTable("CustomTabControl_TabHeight", 0),
+		/*30*/ imports.NewTable("CustomTabControl_TabPosition", 0),
+		/*31*/ imports.NewTable("CustomTabControl_TabRect", 0),
+		/*32*/ imports.NewTable("CustomTabControl_TabToPageIndex", 0),
+		/*33*/ imports.NewTable("CustomTabControl_TabWidth", 0),
+	}
+)
+
+func customTabControlImportAPI() *imports.Imports {
+	if customTabControlImport == nil {
+		customTabControlImport = NewDefaultImports()
+		customTabControlImport.SetImportTable(customTabControlImportTables)
+		customTabControlImportTables = nil
+	}
+	return customTabControlImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -31,26 +32,26 @@ type TChangeLink struct {
 }
 
 func NewChangeLink() IChangeLink {
-	r1 := LCL().SysCallN(562)
+	r1 := changeLinkImportAPI().SysCallN(2)
 	return AsChangeLink(r1)
 }
 
 func (m *TChangeLink) Sender() ICustomImageList {
-	r1 := LCL().SysCallN(563, 0, m.Instance(), 0)
+	r1 := changeLinkImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TChangeLink) SetSender(AValue ICustomImageList) {
-	LCL().SysCallN(563, 1, m.Instance(), GetObjectUintptr(AValue))
+	changeLinkImportAPI().SysCallN(3, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func ChangeLinkClass() TClass {
-	ret := LCL().SysCallN(561)
+	ret := changeLinkImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TChangeLink) Change() {
-	LCL().SysCallN(560, m.Instance())
+	changeLinkImportAPI().SysCallN(0, m.Instance())
 }
 
 func (m *TChangeLink) SetOnChange(fn TNotifyEvent) {
@@ -58,7 +59,7 @@ func (m *TChangeLink) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(564, m.Instance(), m.changePtr)
+	changeLinkImportAPI().SysCallN(4, m.Instance(), m.changePtr)
 }
 
 func (m *TChangeLink) SetOnDestroyResolutionHandle(fn TDestroyResolutionHandleEvent) {
@@ -66,5 +67,26 @@ func (m *TChangeLink) SetOnDestroyResolutionHandle(fn TDestroyResolutionHandleEv
 		RemoveEventElement(m.destroyResolutionHandlePtr)
 	}
 	m.destroyResolutionHandlePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(565, m.Instance(), m.destroyResolutionHandlePtr)
+	changeLinkImportAPI().SysCallN(5, m.Instance(), m.destroyResolutionHandlePtr)
+}
+
+var (
+	changeLinkImport       *imports.Imports = nil
+	changeLinkImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ChangeLink_Change", 0),
+		/*1*/ imports.NewTable("ChangeLink_Class", 0),
+		/*2*/ imports.NewTable("ChangeLink_Create", 0),
+		/*3*/ imports.NewTable("ChangeLink_Sender", 0),
+		/*4*/ imports.NewTable("ChangeLink_SetOnChange", 0),
+		/*5*/ imports.NewTable("ChangeLink_SetOnDestroyResolutionHandle", 0),
+	}
+)
+
+func changeLinkImportAPI() *imports.Imports {
+	if changeLinkImport == nil {
+		changeLinkImport = NewDefaultImports()
+		changeLinkImport.SetImportTable(changeLinkImportTables)
+		changeLinkImportTables = nil
+	}
+	return changeLinkImport
 }

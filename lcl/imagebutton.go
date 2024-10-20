@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -71,125 +72,125 @@ type TImageButton struct {
 }
 
 func NewImageButton(AOwner IComponent) IImageButton {
-	r1 := LCL().SysCallN(3384, GetObjectUintptr(AOwner))
+	r1 := mageButtonImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
 	return AsImageButton(r1)
 }
 
 func (m *TImageButton) Caption() string {
-	r1 := LCL().SysCallN(3381, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TImageButton) SetCaption(AValue string) {
-	LCL().SysCallN(3381, 1, m.Instance(), PascalStr(AValue))
+	mageButtonImportAPI().SysCallN(0, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TImageButton) DragCursor() TCursor {
-	r1 := LCL().SysCallN(3385, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TImageButton) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(3385, 1, m.Instance(), uintptr(AValue))
+	mageButtonImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TImageButton) DragKind() TDragKind {
-	r1 := LCL().SysCallN(3386, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TImageButton) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(3386, 1, m.Instance(), uintptr(AValue))
+	mageButtonImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TImageButton) DragMode() TDragMode {
-	r1 := LCL().SysCallN(3387, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TImageButton) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(3387, 1, m.Instance(), uintptr(AValue))
+	mageButtonImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TImageButton) ImageCount() int32 {
-	r1 := LCL().SysCallN(3388, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TImageButton) SetImageCount(AValue int32) {
-	LCL().SysCallN(3388, 1, m.Instance(), uintptr(AValue))
+	mageButtonImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TImageButton) Orientation() TImageOrientation {
-	r1 := LCL().SysCallN(3390, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TImageOrientation(r1)
 }
 
 func (m *TImageButton) SetOrientation(AValue TImageOrientation) {
-	LCL().SysCallN(3390, 1, m.Instance(), uintptr(AValue))
+	mageButtonImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TImageButton) ModalResult() TModalResult {
-	r1 := LCL().SysCallN(3389, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return TModalResult(r1)
 }
 
 func (m *TImageButton) SetModalResult(AValue TModalResult) {
-	LCL().SysCallN(3389, 1, m.Instance(), uintptr(AValue))
+	mageButtonImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TImageButton) ParentShowHint() bool {
-	r1 := LCL().SysCallN(3392, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TImageButton) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(3392, 1, m.Instance(), PascalBool(AValue))
+	mageButtonImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TImageButton) ParentFont() bool {
-	r1 := LCL().SysCallN(3391, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TImageButton) SetParentFont(AValue bool) {
-	LCL().SysCallN(3391, 1, m.Instance(), PascalBool(AValue))
+	mageButtonImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TImageButton) Picture() IPicture {
-	r1 := LCL().SysCallN(3393, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return AsPicture(r1)
 }
 
 func (m *TImageButton) SetPicture(AValue IPicture) {
-	LCL().SysCallN(3393, 1, m.Instance(), GetObjectUintptr(AValue))
+	mageButtonImportAPI().SysCallN(12, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TImageButton) ShowCaption() bool {
-	r1 := LCL().SysCallN(3405, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(24, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TImageButton) SetShowCaption(AValue bool) {
-	LCL().SysCallN(3405, 1, m.Instance(), PascalBool(AValue))
+	mageButtonImportAPI().SysCallN(24, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TImageButton) Wordwarp() bool {
-	r1 := LCL().SysCallN(3406, 0, m.Instance(), 0)
+	r1 := mageButtonImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TImageButton) SetWordwarp(AValue bool) {
-	LCL().SysCallN(3406, 1, m.Instance(), PascalBool(AValue))
+	mageButtonImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
 }
 
 func ImageButtonClass() TClass {
-	ret := LCL().SysCallN(3382)
+	ret := mageButtonImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TImageButton) Click() {
-	LCL().SysCallN(3383, m.Instance())
+	mageButtonImportAPI().SysCallN(2, m.Instance())
 }
 
 func (m *TImageButton) SetOnContextPopup(fn TContextPopupEvent) {
@@ -197,7 +198,7 @@ func (m *TImageButton) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3394, m.Instance(), m.contextPopupPtr)
+	mageButtonImportAPI().SysCallN(13, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TImageButton) SetOnDblClick(fn TNotifyEvent) {
@@ -205,7 +206,7 @@ func (m *TImageButton) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3395, m.Instance(), m.dblClickPtr)
+	mageButtonImportAPI().SysCallN(14, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TImageButton) SetOnDragDrop(fn TDragDropEvent) {
@@ -213,7 +214,7 @@ func (m *TImageButton) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3396, m.Instance(), m.dragDropPtr)
+	mageButtonImportAPI().SysCallN(15, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TImageButton) SetOnDragOver(fn TDragOverEvent) {
@@ -221,7 +222,7 @@ func (m *TImageButton) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3397, m.Instance(), m.dragOverPtr)
+	mageButtonImportAPI().SysCallN(16, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TImageButton) SetOnEndDock(fn TEndDragEvent) {
@@ -229,7 +230,7 @@ func (m *TImageButton) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3398, m.Instance(), m.endDockPtr)
+	mageButtonImportAPI().SysCallN(17, m.Instance(), m.endDockPtr)
 }
 
 func (m *TImageButton) SetOnEndDrag(fn TEndDragEvent) {
@@ -237,7 +238,7 @@ func (m *TImageButton) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3399, m.Instance(), m.endDragPtr)
+	mageButtonImportAPI().SysCallN(18, m.Instance(), m.endDragPtr)
 }
 
 func (m *TImageButton) SetOnMouseDown(fn TMouseEvent) {
@@ -245,7 +246,7 @@ func (m *TImageButton) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3400, m.Instance(), m.mouseDownPtr)
+	mageButtonImportAPI().SysCallN(19, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TImageButton) SetOnMouseEnter(fn TNotifyEvent) {
@@ -253,7 +254,7 @@ func (m *TImageButton) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3401, m.Instance(), m.mouseEnterPtr)
+	mageButtonImportAPI().SysCallN(20, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TImageButton) SetOnMouseLeave(fn TNotifyEvent) {
@@ -261,7 +262,7 @@ func (m *TImageButton) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3402, m.Instance(), m.mouseLeavePtr)
+	mageButtonImportAPI().SysCallN(21, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TImageButton) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -269,7 +270,7 @@ func (m *TImageButton) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3403, m.Instance(), m.mouseMovePtr)
+	mageButtonImportAPI().SysCallN(22, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TImageButton) SetOnMouseUp(fn TMouseEvent) {
@@ -277,5 +278,46 @@ func (m *TImageButton) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3404, m.Instance(), m.mouseUpPtr)
+	mageButtonImportAPI().SysCallN(23, m.Instance(), m.mouseUpPtr)
+}
+
+var (
+	mageButtonImport       *imports.Imports = nil
+	mageButtonImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ImageButton_Caption", 0),
+		/*1*/ imports.NewTable("ImageButton_Class", 0),
+		/*2*/ imports.NewTable("ImageButton_Click", 0),
+		/*3*/ imports.NewTable("ImageButton_Create", 0),
+		/*4*/ imports.NewTable("ImageButton_DragCursor", 0),
+		/*5*/ imports.NewTable("ImageButton_DragKind", 0),
+		/*6*/ imports.NewTable("ImageButton_DragMode", 0),
+		/*7*/ imports.NewTable("ImageButton_ImageCount", 0),
+		/*8*/ imports.NewTable("ImageButton_ModalResult", 0),
+		/*9*/ imports.NewTable("ImageButton_Orientation", 0),
+		/*10*/ imports.NewTable("ImageButton_ParentFont", 0),
+		/*11*/ imports.NewTable("ImageButton_ParentShowHint", 0),
+		/*12*/ imports.NewTable("ImageButton_Picture", 0),
+		/*13*/ imports.NewTable("ImageButton_SetOnContextPopup", 0),
+		/*14*/ imports.NewTable("ImageButton_SetOnDblClick", 0),
+		/*15*/ imports.NewTable("ImageButton_SetOnDragDrop", 0),
+		/*16*/ imports.NewTable("ImageButton_SetOnDragOver", 0),
+		/*17*/ imports.NewTable("ImageButton_SetOnEndDock", 0),
+		/*18*/ imports.NewTable("ImageButton_SetOnEndDrag", 0),
+		/*19*/ imports.NewTable("ImageButton_SetOnMouseDown", 0),
+		/*20*/ imports.NewTable("ImageButton_SetOnMouseEnter", 0),
+		/*21*/ imports.NewTable("ImageButton_SetOnMouseLeave", 0),
+		/*22*/ imports.NewTable("ImageButton_SetOnMouseMove", 0),
+		/*23*/ imports.NewTable("ImageButton_SetOnMouseUp", 0),
+		/*24*/ imports.NewTable("ImageButton_ShowCaption", 0),
+		/*25*/ imports.NewTable("ImageButton_Wordwarp", 0),
+	}
+)
+
+func mageButtonImportAPI() *imports.Imports {
+	if mageButtonImport == nil {
+		mageButtonImport = NewDefaultImports()
+		mageButtonImport.SetImportTable(mageButtonImportTables)
+		mageButtonImportTables = nil
+	}
+	return mageButtonImport
 }

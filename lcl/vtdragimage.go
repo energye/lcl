@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -46,101 +47,132 @@ type TVTDragImage struct {
 }
 
 func NewVTDragImage(AOwner IBaseVirtualTree) IVTDragImage {
-	r1 := LCL().SysCallN(5878, GetObjectUintptr(AOwner))
+	r1 := vTDragImageImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsVTDragImage(r1)
 }
 
 func (m *TVTDragImage) ColorKey() TColor {
-	r1 := LCL().SysCallN(5877, 0, m.Instance(), 0)
+	r1 := vTDragImageImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTDragImage) SetColorKey(AValue TColor) {
-	LCL().SysCallN(5877, 1, m.Instance(), uintptr(AValue))
+	vTDragImageImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTDragImage) Fade() bool {
-	r1 := LCL().SysCallN(5881, 0, m.Instance(), 0)
+	r1 := vTDragImageImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TVTDragImage) SetFade(AValue bool) {
-	LCL().SysCallN(5881, 1, m.Instance(), PascalBool(AValue))
+	vTDragImageImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TVTDragImage) MoveRestriction() TVTDragMoveRestriction {
-	r1 := LCL().SysCallN(5884, 0, m.Instance(), 0)
+	r1 := vTDragImageImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return TVTDragMoveRestriction(r1)
 }
 
 func (m *TVTDragImage) SetMoveRestriction(AValue TVTDragMoveRestriction) {
-	LCL().SysCallN(5884, 1, m.Instance(), uintptr(AValue))
+	vTDragImageImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTDragImage) PostBlendBias() TVTBias {
-	r1 := LCL().SysCallN(5885, 0, m.Instance(), 0)
+	r1 := vTDragImageImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TVTBias(r1)
 }
 
 func (m *TVTDragImage) SetPostBlendBias(AValue TVTBias) {
-	LCL().SysCallN(5885, 1, m.Instance(), uintptr(AValue))
+	vTDragImageImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTDragImage) PreBlendBias() TVTBias {
-	r1 := LCL().SysCallN(5886, 0, m.Instance(), 0)
+	r1 := vTDragImageImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TVTBias(r1)
 }
 
 func (m *TVTDragImage) SetPreBlendBias(AValue TVTBias) {
-	LCL().SysCallN(5886, 1, m.Instance(), uintptr(AValue))
+	vTDragImageImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTDragImage) Transparency() TVTTransparency {
-	r1 := LCL().SysCallN(5889, 0, m.Instance(), 0)
+	r1 := vTDragImageImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return TVTTransparency(r1)
 }
 
 func (m *TVTDragImage) SetTransparency(AValue TVTTransparency) {
-	LCL().SysCallN(5889, 1, m.Instance(), uintptr(AValue))
+	vTDragImageImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTDragImage) Visible() bool {
-	r1 := LCL().SysCallN(5890, m.Instance())
+	r1 := vTDragImageImportAPI().SysCallN(14, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TVTDragImage) DragTo(P *TPoint, ForceRepaint bool) bool {
-	r1 := LCL().SysCallN(5879, m.Instance(), uintptr(unsafePointer(P)), PascalBool(ForceRepaint))
+	r1 := vTDragImageImportAPI().SysCallN(3, m.Instance(), uintptr(unsafePointer(P)), PascalBool(ForceRepaint))
 	return GoBool(r1)
 }
 
 func (m *TVTDragImage) GetDragImageRect() (resultRect TRect) {
-	LCL().SysCallN(5882, m.Instance(), uintptr(unsafePointer(&resultRect)))
+	vTDragImageImportAPI().SysCallN(6, m.Instance(), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TVTDragImage) WillMove(P *TPoint) bool {
-	r1 := LCL().SysCallN(5891, m.Instance(), uintptr(unsafePointer(P)))
+	r1 := vTDragImageImportAPI().SysCallN(15, m.Instance(), uintptr(unsafePointer(P)))
 	return GoBool(r1)
 }
 
 func VTDragImageClass() TClass {
-	ret := LCL().SysCallN(5876)
+	ret := vTDragImageImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TVTDragImage) EndDrag() {
-	LCL().SysCallN(5880, m.Instance())
+	vTDragImageImportAPI().SysCallN(4, m.Instance())
 }
 
 func (m *TVTDragImage) HideDragImage() {
-	LCL().SysCallN(5883, m.Instance())
+	vTDragImageImportAPI().SysCallN(7, m.Instance())
 }
 
 func (m *TVTDragImage) RecaptureBackground(Tree IBaseVirtualTree, R *TRect, VisibleRegion HRGN, CaptureNCArea, ReshowDragImage bool) {
-	LCL().SysCallN(5887, m.Instance(), GetObjectUintptr(Tree), uintptr(unsafePointer(R)), uintptr(VisibleRegion), PascalBool(CaptureNCArea), PascalBool(ReshowDragImage))
+	vTDragImageImportAPI().SysCallN(11, m.Instance(), GetObjectUintptr(Tree), uintptr(unsafePointer(R)), uintptr(VisibleRegion), PascalBool(CaptureNCArea), PascalBool(ReshowDragImage))
 }
 
 func (m *TVTDragImage) ShowDragImage() {
-	LCL().SysCallN(5888, m.Instance())
+	vTDragImageImportAPI().SysCallN(12, m.Instance())
+}
+
+var (
+	vTDragImageImport       *imports.Imports = nil
+	vTDragImageImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("VTDragImage_Class", 0),
+		/*1*/ imports.NewTable("VTDragImage_ColorKey", 0),
+		/*2*/ imports.NewTable("VTDragImage_Create", 0),
+		/*3*/ imports.NewTable("VTDragImage_DragTo", 0),
+		/*4*/ imports.NewTable("VTDragImage_EndDrag", 0),
+		/*5*/ imports.NewTable("VTDragImage_Fade", 0),
+		/*6*/ imports.NewTable("VTDragImage_GetDragImageRect", 0),
+		/*7*/ imports.NewTable("VTDragImage_HideDragImage", 0),
+		/*8*/ imports.NewTable("VTDragImage_MoveRestriction", 0),
+		/*9*/ imports.NewTable("VTDragImage_PostBlendBias", 0),
+		/*10*/ imports.NewTable("VTDragImage_PreBlendBias", 0),
+		/*11*/ imports.NewTable("VTDragImage_RecaptureBackground", 0),
+		/*12*/ imports.NewTable("VTDragImage_ShowDragImage", 0),
+		/*13*/ imports.NewTable("VTDragImage_Transparency", 0),
+		/*14*/ imports.NewTable("VTDragImage_Visible", 0),
+		/*15*/ imports.NewTable("VTDragImage_WillMove", 0),
+	}
+)
+
+func vTDragImageImportAPI() *imports.Imports {
+	if vTDragImageImport == nil {
+		vTDragImageImport = NewDefaultImports()
+		vTDragImageImport.SetImportTable(vTDragImageImportTables)
+		vTDragImageImportTables = nil
+	}
+	return vTDragImageImport
 }

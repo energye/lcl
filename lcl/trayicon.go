@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TTrayIcon struct {
 }
 
 func NewTrayIcon(TheOwner IComponent) ITrayIcon {
-	r1 := LCL().SysCallN(5614, GetObjectUintptr(TheOwner))
+	r1 := rayIconImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsTrayIcon(r1)
 }
 
 func TrayIconClass() TClass {
-	ret := LCL().SysCallN(5613)
+	ret := rayIconImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	rayIconImport       *imports.Imports = nil
+	rayIconImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("TrayIcon_Class", 0),
+		/*1*/ imports.NewTable("TrayIcon_Create", 0),
+	}
+)
+
+func rayIconImportAPI() *imports.Imports {
+	if rayIconImport == nil {
+		rayIconImport = NewDefaultImports()
+		rayIconImport.SetImportTable(rayIconImportTables)
+		rayIconImportTables = nil
+	}
+	return rayIconImport
 }

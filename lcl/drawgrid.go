@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -91,224 +92,224 @@ type TDrawGrid struct {
 }
 
 func NewDrawGrid(AOwner IComponent) IDrawGrid {
-	r1 := LCL().SysCallN(2764, GetObjectUintptr(AOwner))
+	r1 := drawGridImportAPI().SysCallN(7, GetObjectUintptr(AOwner))
 	return AsDrawGrid(r1)
 }
 
 func (m *TDrawGrid) InplaceEditor() IWinControl {
-	r1 := LCL().SysCallN(2773, m.Instance())
+	r1 := drawGridImportAPI().SysCallN(16, m.Instance())
 	return AsWinControl(r1)
 }
 
 func (m *TDrawGrid) AlternateColor() TColor {
-	r1 := LCL().SysCallN(2757, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TDrawGrid) SetAlternateColor(AValue TColor) {
-	LCL().SysCallN(2757, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) AutoEdit() bool {
-	r1 := LCL().SysCallN(2758, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDrawGrid) SetAutoEdit(AValue bool) {
-	LCL().SysCallN(2758, 1, m.Instance(), PascalBool(AValue))
+	drawGridImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDrawGrid) ColRowDraggingCursor() TCursor {
-	r1 := LCL().SysCallN(2761, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TDrawGrid) SetColRowDraggingCursor(AValue TCursor) {
-	LCL().SysCallN(2761, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) ColRowDragIndicatorColor() TColor {
-	r1 := LCL().SysCallN(2760, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TDrawGrid) SetColRowDragIndicatorColor(AValue TColor) {
-	LCL().SysCallN(2760, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) ColSizingCursor() TCursor {
-	r1 := LCL().SysCallN(2762, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TDrawGrid) SetColSizingCursor(AValue TCursor) {
-	LCL().SysCallN(2762, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) ColumnClickSorts() bool {
-	r1 := LCL().SysCallN(2763, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDrawGrid) SetColumnClickSorts(AValue bool) {
-	LCL().SysCallN(2763, 1, m.Instance(), PascalBool(AValue))
+	drawGridImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDrawGrid) DragCursor() TCursor {
-	r1 := LCL().SysCallN(2765, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TDrawGrid) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(2765, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) DragKind() TDragKind {
-	r1 := LCL().SysCallN(2766, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TDrawGrid) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(2766, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) DragMode() TDragMode {
-	r1 := LCL().SysCallN(2767, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TDrawGrid) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(2767, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) ExtendedSelect() bool {
-	r1 := LCL().SysCallN(2768, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDrawGrid) SetExtendedSelect(AValue bool) {
-	LCL().SysCallN(2768, 1, m.Instance(), PascalBool(AValue))
+	drawGridImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDrawGrid) HeaderHotZones() TGridZoneSet {
-	r1 := LCL().SysCallN(2769, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return TGridZoneSet(r1)
 }
 
 func (m *TDrawGrid) SetHeaderHotZones(AValue TGridZoneSet) {
-	LCL().SysCallN(2769, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) HeaderPushZones() TGridZoneSet {
-	r1 := LCL().SysCallN(2770, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return TGridZoneSet(r1)
 }
 
 func (m *TDrawGrid) SetHeaderPushZones(AValue TGridZoneSet) {
-	LCL().SysCallN(2770, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) ImageIndexSortAsc() TImageIndex {
-	r1 := LCL().SysCallN(2771, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TDrawGrid) SetImageIndexSortAsc(AValue TImageIndex) {
-	LCL().SysCallN(2771, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) ImageIndexSortDesc() TImageIndex {
-	r1 := LCL().SysCallN(2772, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TDrawGrid) SetImageIndexSortDesc(AValue TImageIndex) {
-	LCL().SysCallN(2772, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) MouseWheelOption() TMouseWheelOption {
-	r1 := LCL().SysCallN(2774, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return TMouseWheelOption(r1)
 }
 
 func (m *TDrawGrid) SetMouseWheelOption(AValue TMouseWheelOption) {
-	LCL().SysCallN(2774, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) ParentColor() bool {
-	r1 := LCL().SysCallN(2775, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDrawGrid) SetParentColor(AValue bool) {
-	LCL().SysCallN(2775, 1, m.Instance(), PascalBool(AValue))
+	drawGridImportAPI().SysCallN(18, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDrawGrid) ParentFont() bool {
-	r1 := LCL().SysCallN(2776, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDrawGrid) SetParentFont(AValue bool) {
-	LCL().SysCallN(2776, 1, m.Instance(), PascalBool(AValue))
+	drawGridImportAPI().SysCallN(19, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDrawGrid) RangeSelectMode() TRangeSelectMode {
-	r1 := LCL().SysCallN(2777, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return TRangeSelectMode(r1)
 }
 
 func (m *TDrawGrid) SetRangeSelectMode(AValue TRangeSelectMode) {
-	LCL().SysCallN(2777, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) RowSizingCursor() TCursor {
-	r1 := LCL().SysCallN(2778, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TDrawGrid) SetRowSizingCursor(AValue TCursor) {
-	LCL().SysCallN(2778, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) TitleFont() IFont {
-	r1 := LCL().SysCallN(2789, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(32, 0, m.Instance(), 0)
 	return AsFont(r1)
 }
 
 func (m *TDrawGrid) SetTitleFont(AValue IFont) {
-	LCL().SysCallN(2789, 1, m.Instance(), GetObjectUintptr(AValue))
+	drawGridImportAPI().SysCallN(32, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TDrawGrid) TitleImageList() IImageList {
-	r1 := LCL().SysCallN(2790, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(33, 0, m.Instance(), 0)
 	return AsImageList(r1)
 }
 
 func (m *TDrawGrid) SetTitleImageList(AValue IImageList) {
-	LCL().SysCallN(2790, 1, m.Instance(), GetObjectUintptr(AValue))
+	drawGridImportAPI().SysCallN(33, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TDrawGrid) TitleImageListWidth() int32 {
-	r1 := LCL().SysCallN(2791, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(34, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDrawGrid) SetTitleImageListWidth(AValue int32) {
-	LCL().SysCallN(2791, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(34, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDrawGrid) TitleStyle() TTitleStyle {
-	r1 := LCL().SysCallN(2792, 0, m.Instance(), 0)
+	r1 := drawGridImportAPI().SysCallN(35, 0, m.Instance(), 0)
 	return TTitleStyle(r1)
 }
 
 func (m *TDrawGrid) SetTitleStyle(AValue TTitleStyle) {
-	LCL().SysCallN(2792, 1, m.Instance(), uintptr(AValue))
+	drawGridImportAPI().SysCallN(35, 1, m.Instance(), uintptr(AValue))
 }
 
 func DrawGridClass() TClass {
-	ret := LCL().SysCallN(2759)
+	ret := drawGridImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
@@ -317,7 +318,7 @@ func (m *TDrawGrid) SetOnCheckboxToggled(fn TToggledCheckboxEvent) {
 		RemoveEventElement(m.checkboxToggledPtr)
 	}
 	m.checkboxToggledPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2779, m.Instance(), m.checkboxToggledPtr)
+	drawGridImportAPI().SysCallN(22, m.Instance(), m.checkboxToggledPtr)
 }
 
 func (m *TDrawGrid) SetOnEditingDone(fn TNotifyEvent) {
@@ -325,7 +326,7 @@ func (m *TDrawGrid) SetOnEditingDone(fn TNotifyEvent) {
 		RemoveEventElement(m.editingDonePtr)
 	}
 	m.editingDonePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2780, m.Instance(), m.editingDonePtr)
+	drawGridImportAPI().SysCallN(23, m.Instance(), m.editingDonePtr)
 }
 
 func (m *TDrawGrid) SetOnGetCellHint(fn TGetCellHintEvent) {
@@ -333,7 +334,7 @@ func (m *TDrawGrid) SetOnGetCellHint(fn TGetCellHintEvent) {
 		RemoveEventElement(m.getCellHintPtr)
 	}
 	m.getCellHintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2781, m.Instance(), m.getCellHintPtr)
+	drawGridImportAPI().SysCallN(24, m.Instance(), m.getCellHintPtr)
 }
 
 func (m *TDrawGrid) SetOnGetCheckboxState(fn TGetCheckboxStateEvent) {
@@ -341,7 +342,7 @@ func (m *TDrawGrid) SetOnGetCheckboxState(fn TGetCheckboxStateEvent) {
 		RemoveEventElement(m.getCheckboxStatePtr)
 	}
 	m.getCheckboxStatePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2782, m.Instance(), m.getCheckboxStatePtr)
+	drawGridImportAPI().SysCallN(25, m.Instance(), m.getCheckboxStatePtr)
 }
 
 func (m *TDrawGrid) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -349,7 +350,7 @@ func (m *TDrawGrid) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2783, m.Instance(), m.mouseWheelHorzPtr)
+	drawGridImportAPI().SysCallN(26, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TDrawGrid) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -357,7 +358,7 @@ func (m *TDrawGrid) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2784, m.Instance(), m.mouseWheelLeftPtr)
+	drawGridImportAPI().SysCallN(27, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TDrawGrid) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -365,7 +366,7 @@ func (m *TDrawGrid) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2785, m.Instance(), m.mouseWheelRightPtr)
+	drawGridImportAPI().SysCallN(28, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TDrawGrid) SetOnSetCheckboxState(fn TSetCheckboxStateEvent) {
@@ -373,7 +374,7 @@ func (m *TDrawGrid) SetOnSetCheckboxState(fn TSetCheckboxStateEvent) {
 		RemoveEventElement(m.setCheckboxStatePtr)
 	}
 	m.setCheckboxStatePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2786, m.Instance(), m.setCheckboxStatePtr)
+	drawGridImportAPI().SysCallN(29, m.Instance(), m.setCheckboxStatePtr)
 }
 
 func (m *TDrawGrid) SetOnUserCheckboxBitmap(fn TUserCheckBoxBitmapEvent) {
@@ -381,7 +382,7 @@ func (m *TDrawGrid) SetOnUserCheckboxBitmap(fn TUserCheckBoxBitmapEvent) {
 		RemoveEventElement(m.userCheckboxBitmapPtr)
 	}
 	m.userCheckboxBitmapPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2787, m.Instance(), m.userCheckboxBitmapPtr)
+	drawGridImportAPI().SysCallN(30, m.Instance(), m.userCheckboxBitmapPtr)
 }
 
 func (m *TDrawGrid) SetOnUserCheckboxImage(fn TUserCheckBoxImageEvent) {
@@ -389,5 +390,56 @@ func (m *TDrawGrid) SetOnUserCheckboxImage(fn TUserCheckBoxImageEvent) {
 		RemoveEventElement(m.userCheckboxImagePtr)
 	}
 	m.userCheckboxImagePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2788, m.Instance(), m.userCheckboxImagePtr)
+	drawGridImportAPI().SysCallN(31, m.Instance(), m.userCheckboxImagePtr)
+}
+
+var (
+	drawGridImport       *imports.Imports = nil
+	drawGridImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("DrawGrid_AlternateColor", 0),
+		/*1*/ imports.NewTable("DrawGrid_AutoEdit", 0),
+		/*2*/ imports.NewTable("DrawGrid_Class", 0),
+		/*3*/ imports.NewTable("DrawGrid_ColRowDragIndicatorColor", 0),
+		/*4*/ imports.NewTable("DrawGrid_ColRowDraggingCursor", 0),
+		/*5*/ imports.NewTable("DrawGrid_ColSizingCursor", 0),
+		/*6*/ imports.NewTable("DrawGrid_ColumnClickSorts", 0),
+		/*7*/ imports.NewTable("DrawGrid_Create", 0),
+		/*8*/ imports.NewTable("DrawGrid_DragCursor", 0),
+		/*9*/ imports.NewTable("DrawGrid_DragKind", 0),
+		/*10*/ imports.NewTable("DrawGrid_DragMode", 0),
+		/*11*/ imports.NewTable("DrawGrid_ExtendedSelect", 0),
+		/*12*/ imports.NewTable("DrawGrid_HeaderHotZones", 0),
+		/*13*/ imports.NewTable("DrawGrid_HeaderPushZones", 0),
+		/*14*/ imports.NewTable("DrawGrid_ImageIndexSortAsc", 0),
+		/*15*/ imports.NewTable("DrawGrid_ImageIndexSortDesc", 0),
+		/*16*/ imports.NewTable("DrawGrid_InplaceEditor", 0),
+		/*17*/ imports.NewTable("DrawGrid_MouseWheelOption", 0),
+		/*18*/ imports.NewTable("DrawGrid_ParentColor", 0),
+		/*19*/ imports.NewTable("DrawGrid_ParentFont", 0),
+		/*20*/ imports.NewTable("DrawGrid_RangeSelectMode", 0),
+		/*21*/ imports.NewTable("DrawGrid_RowSizingCursor", 0),
+		/*22*/ imports.NewTable("DrawGrid_SetOnCheckboxToggled", 0),
+		/*23*/ imports.NewTable("DrawGrid_SetOnEditingDone", 0),
+		/*24*/ imports.NewTable("DrawGrid_SetOnGetCellHint", 0),
+		/*25*/ imports.NewTable("DrawGrid_SetOnGetCheckboxState", 0),
+		/*26*/ imports.NewTable("DrawGrid_SetOnMouseWheelHorz", 0),
+		/*27*/ imports.NewTable("DrawGrid_SetOnMouseWheelLeft", 0),
+		/*28*/ imports.NewTable("DrawGrid_SetOnMouseWheelRight", 0),
+		/*29*/ imports.NewTable("DrawGrid_SetOnSetCheckboxState", 0),
+		/*30*/ imports.NewTable("DrawGrid_SetOnUserCheckboxBitmap", 0),
+		/*31*/ imports.NewTable("DrawGrid_SetOnUserCheckboxImage", 0),
+		/*32*/ imports.NewTable("DrawGrid_TitleFont", 0),
+		/*33*/ imports.NewTable("DrawGrid_TitleImageList", 0),
+		/*34*/ imports.NewTable("DrawGrid_TitleImageListWidth", 0),
+		/*35*/ imports.NewTable("DrawGrid_TitleStyle", 0),
+	}
+)
+
+func drawGridImportAPI() *imports.Imports {
+	if drawGridImport == nil {
+		drawGridImport = NewDefaultImports()
+		drawGridImport.SetImportTable(drawGridImportTables)
+		drawGridImportTables = nil
+	}
+	return drawGridImport
 }

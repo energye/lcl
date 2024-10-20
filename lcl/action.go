@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TAction struct {
 }
 
 func NewAction(AOwner IComponent) IAction {
-	r1 := LCL().SysCallN(86, GetObjectUintptr(AOwner))
+	r1 := actionImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsAction(r1)
 }
 
 func ActionClass() TClass {
-	ret := LCL().SysCallN(85)
+	ret := actionImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	actionImport       *imports.Imports = nil
+	actionImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Action_Class", 0),
+		/*1*/ imports.NewTable("Action_Create", 0),
+	}
+)
+
+func actionImportAPI() *imports.Imports {
+	if actionImport == nil {
+		actionImport = NewDefaultImports()
+		actionImport.SetImportTable(actionImportTables)
+		actionImportTables = nil
+	}
+	return actionImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -76,84 +77,84 @@ type TShape struct {
 }
 
 func NewShape(TheOwner IComponent) IShape {
-	r1 := LCL().SysCallN(5016, GetObjectUintptr(TheOwner))
+	r1 := shapeImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
 	return AsShape(r1)
 }
 
 func (m *TShape) Brush() IBrush {
-	r1 := LCL().SysCallN(5014, 0, m.Instance(), 0)
+	r1 := shapeImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return AsBrush(r1)
 }
 
 func (m *TShape) SetBrush(AValue IBrush) {
-	LCL().SysCallN(5014, 1, m.Instance(), GetObjectUintptr(AValue))
+	shapeImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TShape) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5017, 0, m.Instance(), 0)
+	r1 := shapeImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TShape) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5017, 1, m.Instance(), uintptr(AValue))
+	shapeImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TShape) DragKind() TDragKind {
-	r1 := LCL().SysCallN(5018, 0, m.Instance(), 0)
+	r1 := shapeImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TShape) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(5018, 1, m.Instance(), uintptr(AValue))
+	shapeImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TShape) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5019, 0, m.Instance(), 0)
+	r1 := shapeImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TShape) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5019, 1, m.Instance(), uintptr(AValue))
+	shapeImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TShape) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5021, 0, m.Instance(), 0)
+	r1 := shapeImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TShape) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5021, 1, m.Instance(), PascalBool(AValue))
+	shapeImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TShape) Pen() IPen {
-	r1 := LCL().SysCallN(5022, 0, m.Instance(), 0)
+	r1 := shapeImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return AsPen(r1)
 }
 
 func (m *TShape) SetPen(AValue IPen) {
-	LCL().SysCallN(5022, 1, m.Instance(), GetObjectUintptr(AValue))
+	shapeImportAPI().SysCallN(8, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TShape) Shape() TShapeType {
-	r1 := LCL().SysCallN(5041, 0, m.Instance(), 0)
+	r1 := shapeImportAPI().SysCallN(27, 0, m.Instance(), 0)
 	return TShapeType(r1)
 }
 
 func (m *TShape) SetShape(AValue TShapeType) {
-	LCL().SysCallN(5041, 1, m.Instance(), uintptr(AValue))
+	shapeImportAPI().SysCallN(27, 1, m.Instance(), uintptr(AValue))
 }
 
 func ShapeClass() TClass {
-	ret := LCL().SysCallN(5015)
+	ret := shapeImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TShape) Paint() {
-	LCL().SysCallN(5020, m.Instance())
+	shapeImportAPI().SysCallN(6, m.Instance())
 }
 
 func (m *TShape) StyleChanged(Sender IObject) {
-	LCL().SysCallN(5042, m.Instance(), GetObjectUintptr(Sender))
+	shapeImportAPI().SysCallN(28, m.Instance(), GetObjectUintptr(Sender))
 }
 
 func (m *TShape) SetOnDragDrop(fn TDragDropEvent) {
@@ -161,7 +162,7 @@ func (m *TShape) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5023, m.Instance(), m.dragDropPtr)
+	shapeImportAPI().SysCallN(9, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TShape) SetOnDragOver(fn TDragOverEvent) {
@@ -169,7 +170,7 @@ func (m *TShape) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5024, m.Instance(), m.dragOverPtr)
+	shapeImportAPI().SysCallN(10, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TShape) SetOnEndDock(fn TEndDragEvent) {
@@ -177,7 +178,7 @@ func (m *TShape) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5025, m.Instance(), m.endDockPtr)
+	shapeImportAPI().SysCallN(11, m.Instance(), m.endDockPtr)
 }
 
 func (m *TShape) SetOnEndDrag(fn TEndDragEvent) {
@@ -185,7 +186,7 @@ func (m *TShape) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5026, m.Instance(), m.endDragPtr)
+	shapeImportAPI().SysCallN(12, m.Instance(), m.endDragPtr)
 }
 
 func (m *TShape) SetOnMouseDown(fn TMouseEvent) {
@@ -193,7 +194,7 @@ func (m *TShape) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5027, m.Instance(), m.mouseDownPtr)
+	shapeImportAPI().SysCallN(13, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TShape) SetOnMouseEnter(fn TNotifyEvent) {
@@ -201,7 +202,7 @@ func (m *TShape) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5028, m.Instance(), m.mouseEnterPtr)
+	shapeImportAPI().SysCallN(14, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TShape) SetOnMouseLeave(fn TNotifyEvent) {
@@ -209,7 +210,7 @@ func (m *TShape) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5029, m.Instance(), m.mouseLeavePtr)
+	shapeImportAPI().SysCallN(15, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TShape) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -217,7 +218,7 @@ func (m *TShape) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5030, m.Instance(), m.mouseMovePtr)
+	shapeImportAPI().SysCallN(16, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TShape) SetOnMouseUp(fn TMouseEvent) {
@@ -225,7 +226,7 @@ func (m *TShape) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5031, m.Instance(), m.mouseUpPtr)
+	shapeImportAPI().SysCallN(17, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TShape) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -233,7 +234,7 @@ func (m *TShape) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5032, m.Instance(), m.mouseWheelPtr)
+	shapeImportAPI().SysCallN(18, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TShape) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -241,7 +242,7 @@ func (m *TShape) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5033, m.Instance(), m.mouseWheelDownPtr)
+	shapeImportAPI().SysCallN(19, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TShape) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -249,7 +250,7 @@ func (m *TShape) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5037, m.Instance(), m.mouseWheelUpPtr)
+	shapeImportAPI().SysCallN(23, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TShape) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -257,7 +258,7 @@ func (m *TShape) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5034, m.Instance(), m.mouseWheelHorzPtr)
+	shapeImportAPI().SysCallN(20, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TShape) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -265,7 +266,7 @@ func (m *TShape) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5035, m.Instance(), m.mouseWheelLeftPtr)
+	shapeImportAPI().SysCallN(21, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TShape) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -273,7 +274,7 @@ func (m *TShape) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5036, m.Instance(), m.mouseWheelRightPtr)
+	shapeImportAPI().SysCallN(22, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TShape) SetOnPaint(fn TNotifyEvent) {
@@ -281,7 +282,7 @@ func (m *TShape) SetOnPaint(fn TNotifyEvent) {
 		RemoveEventElement(m.paintPtr)
 	}
 	m.paintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5038, m.Instance(), m.paintPtr)
+	shapeImportAPI().SysCallN(24, m.Instance(), m.paintPtr)
 }
 
 func (m *TShape) SetOnStartDock(fn TStartDockEvent) {
@@ -289,7 +290,7 @@ func (m *TShape) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5039, m.Instance(), m.startDockPtr)
+	shapeImportAPI().SysCallN(25, m.Instance(), m.startDockPtr)
 }
 
 func (m *TShape) SetOnStartDrag(fn TStartDragEvent) {
@@ -297,5 +298,49 @@ func (m *TShape) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5040, m.Instance(), m.startDragPtr)
+	shapeImportAPI().SysCallN(26, m.Instance(), m.startDragPtr)
+}
+
+var (
+	shapeImport       *imports.Imports = nil
+	shapeImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Shape_Brush", 0),
+		/*1*/ imports.NewTable("Shape_Class", 0),
+		/*2*/ imports.NewTable("Shape_Create", 0),
+		/*3*/ imports.NewTable("Shape_DragCursor", 0),
+		/*4*/ imports.NewTable("Shape_DragKind", 0),
+		/*5*/ imports.NewTable("Shape_DragMode", 0),
+		/*6*/ imports.NewTable("Shape_Paint", 0),
+		/*7*/ imports.NewTable("Shape_ParentShowHint", 0),
+		/*8*/ imports.NewTable("Shape_Pen", 0),
+		/*9*/ imports.NewTable("Shape_SetOnDragDrop", 0),
+		/*10*/ imports.NewTable("Shape_SetOnDragOver", 0),
+		/*11*/ imports.NewTable("Shape_SetOnEndDock", 0),
+		/*12*/ imports.NewTable("Shape_SetOnEndDrag", 0),
+		/*13*/ imports.NewTable("Shape_SetOnMouseDown", 0),
+		/*14*/ imports.NewTable("Shape_SetOnMouseEnter", 0),
+		/*15*/ imports.NewTable("Shape_SetOnMouseLeave", 0),
+		/*16*/ imports.NewTable("Shape_SetOnMouseMove", 0),
+		/*17*/ imports.NewTable("Shape_SetOnMouseUp", 0),
+		/*18*/ imports.NewTable("Shape_SetOnMouseWheel", 0),
+		/*19*/ imports.NewTable("Shape_SetOnMouseWheelDown", 0),
+		/*20*/ imports.NewTable("Shape_SetOnMouseWheelHorz", 0),
+		/*21*/ imports.NewTable("Shape_SetOnMouseWheelLeft", 0),
+		/*22*/ imports.NewTable("Shape_SetOnMouseWheelRight", 0),
+		/*23*/ imports.NewTable("Shape_SetOnMouseWheelUp", 0),
+		/*24*/ imports.NewTable("Shape_SetOnPaint", 0),
+		/*25*/ imports.NewTable("Shape_SetOnStartDock", 0),
+		/*26*/ imports.NewTable("Shape_SetOnStartDrag", 0),
+		/*27*/ imports.NewTable("Shape_Shape", 0),
+		/*28*/ imports.NewTable("Shape_StyleChanged", 0),
+	}
+)
+
+func shapeImportAPI() *imports.Imports {
+	if shapeImport == nil {
+		shapeImport = NewDefaultImports()
+		shapeImport.SetImportTable(shapeImportTables)
+		shapeImportTables = nil
+	}
+	return shapeImport
 }

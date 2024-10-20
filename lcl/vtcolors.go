@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -63,179 +64,216 @@ type TVTColors struct {
 }
 
 func NewVTColors(AOwner IBaseVirtualTree) IVTColors {
-	r1 := LCL().SysCallN(5857, GetObjectUintptr(AOwner))
+	r1 := vTColorsImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
 	return AsVTColors(r1)
 }
 
 func (m *TVTColors) BackGroundColor() TColor {
-	r1 := LCL().SysCallN(5854, m.Instance())
+	r1 := vTColorsImportAPI().SysCallN(0, m.Instance())
 	return TColor(r1)
 }
 
 func (m *TVTColors) HeaderFontColor() TColor {
-	r1 := LCL().SysCallN(5865, m.Instance())
+	r1 := vTColorsImportAPI().SysCallN(11, m.Instance())
 	return TColor(r1)
 }
 
 func (m *TVTColors) NodeFontColor() TColor {
-	r1 := LCL().SysCallN(5868, m.Instance())
+	r1 := vTColorsImportAPI().SysCallN(14, m.Instance())
 	return TColor(r1)
 }
 
 func (m *TVTColors) BorderColor() TColor {
-	r1 := LCL().SysCallN(5855, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetBorderColor(AValue TColor) {
-	LCL().SysCallN(5855, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) DisabledColor() TColor {
-	r1 := LCL().SysCallN(5858, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetDisabledColor(AValue TColor) {
-	LCL().SysCallN(5858, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) DropMarkColor() TColor {
-	r1 := LCL().SysCallN(5859, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetDropMarkColor(AValue TColor) {
-	LCL().SysCallN(5859, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) DropTargetColor() TColor {
-	r1 := LCL().SysCallN(5861, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetDropTargetColor(AValue TColor) {
-	LCL().SysCallN(5861, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) DropTargetBorderColor() TColor {
-	r1 := LCL().SysCallN(5860, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetDropTargetBorderColor(AValue TColor) {
-	LCL().SysCallN(5860, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) FocusedSelectionColor() TColor {
-	r1 := LCL().SysCallN(5863, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetFocusedSelectionColor(AValue TColor) {
-	LCL().SysCallN(5863, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) FocusedSelectionBorderColor() TColor {
-	r1 := LCL().SysCallN(5862, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetFocusedSelectionBorderColor(AValue TColor) {
-	LCL().SysCallN(5862, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) GridLineColor() TColor {
-	r1 := LCL().SysCallN(5864, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetGridLineColor(AValue TColor) {
-	LCL().SysCallN(5864, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) HeaderHotColor() TColor {
-	r1 := LCL().SysCallN(5866, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetHeaderHotColor(AValue TColor) {
-	LCL().SysCallN(5866, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) HotColor() TColor {
-	r1 := LCL().SysCallN(5867, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetHotColor(AValue TColor) {
-	LCL().SysCallN(5867, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) SelectionRectangleBlendColor() TColor {
-	r1 := LCL().SysCallN(5869, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetSelectionRectangleBlendColor(AValue TColor) {
-	LCL().SysCallN(5869, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) SelectionRectangleBorderColor() TColor {
-	r1 := LCL().SysCallN(5870, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetSelectionRectangleBorderColor(AValue TColor) {
-	LCL().SysCallN(5870, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(16, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) SelectionTextColor() TColor {
-	r1 := LCL().SysCallN(5871, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetSelectionTextColor(AValue TColor) {
-	LCL().SysCallN(5871, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) TreeLineColor() TColor {
-	r1 := LCL().SysCallN(5872, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetTreeLineColor(AValue TColor) {
-	LCL().SysCallN(5872, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) UnfocusedColor() TColor {
-	r1 := LCL().SysCallN(5873, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetUnfocusedColor(AValue TColor) {
-	LCL().SysCallN(5873, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) UnfocusedSelectionColor() TColor {
-	r1 := LCL().SysCallN(5875, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetUnfocusedSelectionColor(AValue TColor) {
-	LCL().SysCallN(5875, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TVTColors) UnfocusedSelectionBorderColor() TColor {
-	r1 := LCL().SysCallN(5874, 0, m.Instance(), 0)
+	r1 := vTColorsImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TVTColors) SetUnfocusedSelectionBorderColor(AValue TColor) {
-	LCL().SysCallN(5874, 1, m.Instance(), uintptr(AValue))
+	vTColorsImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
 }
 
 func VTColorsClass() TClass {
-	ret := LCL().SysCallN(5856)
+	ret := vTColorsImportAPI().SysCallN(2)
 	return TClass(ret)
+}
+
+var (
+	vTColorsImport       *imports.Imports = nil
+	vTColorsImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("VTColors_BackGroundColor", 0),
+		/*1*/ imports.NewTable("VTColors_BorderColor", 0),
+		/*2*/ imports.NewTable("VTColors_Class", 0),
+		/*3*/ imports.NewTable("VTColors_Create", 0),
+		/*4*/ imports.NewTable("VTColors_DisabledColor", 0),
+		/*5*/ imports.NewTable("VTColors_DropMarkColor", 0),
+		/*6*/ imports.NewTable("VTColors_DropTargetBorderColor", 0),
+		/*7*/ imports.NewTable("VTColors_DropTargetColor", 0),
+		/*8*/ imports.NewTable("VTColors_FocusedSelectionBorderColor", 0),
+		/*9*/ imports.NewTable("VTColors_FocusedSelectionColor", 0),
+		/*10*/ imports.NewTable("VTColors_GridLineColor", 0),
+		/*11*/ imports.NewTable("VTColors_HeaderFontColor", 0),
+		/*12*/ imports.NewTable("VTColors_HeaderHotColor", 0),
+		/*13*/ imports.NewTable("VTColors_HotColor", 0),
+		/*14*/ imports.NewTable("VTColors_NodeFontColor", 0),
+		/*15*/ imports.NewTable("VTColors_SelectionRectangleBlendColor", 0),
+		/*16*/ imports.NewTable("VTColors_SelectionRectangleBorderColor", 0),
+		/*17*/ imports.NewTable("VTColors_SelectionTextColor", 0),
+		/*18*/ imports.NewTable("VTColors_TreeLineColor", 0),
+		/*19*/ imports.NewTable("VTColors_UnfocusedColor", 0),
+		/*20*/ imports.NewTable("VTColors_UnfocusedSelectionBorderColor", 0),
+		/*21*/ imports.NewTable("VTColors_UnfocusedSelectionColor", 0),
+	}
+)
+
+func vTColorsImportAPI() *imports.Imports {
+	if vTColorsImport == nil {
+		vTColorsImport = NewDefaultImports()
+		vTColorsImport.SetImportTable(vTColorsImportTables)
+		vTColorsImportTables = nil
+	}
+	return vTColorsImport
 }

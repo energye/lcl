@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -26,20 +27,38 @@ type TCustomGroupBox struct {
 }
 
 func NewCustomGroupBox(AOwner IComponent) ICustomGroupBox {
-	r1 := LCL().SysCallN(1779, GetObjectUintptr(AOwner))
+	r1 := customGroupBoxImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsCustomGroupBox(r1)
 }
 
 func (m *TCustomGroupBox) ParentBackground() bool {
-	r1 := LCL().SysCallN(1780, 0, m.Instance(), 0)
+	r1 := customGroupBoxImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomGroupBox) SetParentBackground(AValue bool) {
-	LCL().SysCallN(1780, 1, m.Instance(), PascalBool(AValue))
+	customGroupBoxImportAPI().SysCallN(2, 1, m.Instance(), PascalBool(AValue))
 }
 
 func CustomGroupBoxClass() TClass {
-	ret := LCL().SysCallN(1778)
+	ret := customGroupBoxImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	customGroupBoxImport       *imports.Imports = nil
+	customGroupBoxImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomGroupBox_Class", 0),
+		/*1*/ imports.NewTable("CustomGroupBox_Create", 0),
+		/*2*/ imports.NewTable("CustomGroupBox_ParentBackground", 0),
+	}
+)
+
+func customGroupBoxImportAPI() *imports.Imports {
+	if customGroupBoxImport == nil {
+		customGroupBoxImport = NewDefaultImports()
+		customGroupBoxImport.SetImportTable(customGroupBoxImportTables)
+		customGroupBoxImportTables = nil
+	}
+	return customGroupBoxImport
 }

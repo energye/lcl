@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -30,39 +31,60 @@ type TFlowPanelControl struct {
 }
 
 func NewFlowPanelControl(ACollection ICollection) IFlowPanelControl {
-	r1 := LCL().SysCallN(3076, GetObjectUintptr(ACollection))
+	r1 := flowPanelControlImportAPI().SysCallN(4, GetObjectUintptr(ACollection))
 	return AsFlowPanelControl(r1)
 }
 
 func (m *TFlowPanelControl) Control() IControl {
-	r1 := LCL().SysCallN(3075, 0, m.Instance(), 0)
+	r1 := flowPanelControlImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return AsControl(r1)
 }
 
 func (m *TFlowPanelControl) SetControl(AValue IControl) {
-	LCL().SysCallN(3075, 1, m.Instance(), GetObjectUintptr(AValue))
+	flowPanelControlImportAPI().SysCallN(3, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TFlowPanelControl) WrapAfter() TWrapAfter {
-	r1 := LCL().SysCallN(3077, 0, m.Instance(), 0)
+	r1 := flowPanelControlImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TWrapAfter(r1)
 }
 
 func (m *TFlowPanelControl) SetWrapAfter(AValue TWrapAfter) {
-	LCL().SysCallN(3077, 1, m.Instance(), uintptr(AValue))
+	flowPanelControlImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFlowPanelControl) AllowAdd() bool {
-	r1 := LCL().SysCallN(3072, m.Instance())
+	r1 := flowPanelControlImportAPI().SysCallN(0, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TFlowPanelControl) AllowDelete() bool {
-	r1 := LCL().SysCallN(3073, m.Instance())
+	r1 := flowPanelControlImportAPI().SysCallN(1, m.Instance())
 	return GoBool(r1)
 }
 
 func FlowPanelControlClass() TClass {
-	ret := LCL().SysCallN(3074)
+	ret := flowPanelControlImportAPI().SysCallN(2)
 	return TClass(ret)
+}
+
+var (
+	flowPanelControlImport       *imports.Imports = nil
+	flowPanelControlImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FlowPanelControl_AllowAdd", 0),
+		/*1*/ imports.NewTable("FlowPanelControl_AllowDelete", 0),
+		/*2*/ imports.NewTable("FlowPanelControl_Class", 0),
+		/*3*/ imports.NewTable("FlowPanelControl_Control", 0),
+		/*4*/ imports.NewTable("FlowPanelControl_Create", 0),
+		/*5*/ imports.NewTable("FlowPanelControl_WrapAfter", 0),
+	}
+)
+
+func flowPanelControlImportAPI() *imports.Imports {
+	if flowPanelControlImport == nil {
+		flowPanelControlImport = NewDefaultImports()
+		flowPanelControlImport.SetImportTable(flowPanelControlImportTables)
+		flowPanelControlImportTables = nil
+	}
+	return flowPanelControlImport
 }

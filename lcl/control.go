@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -245,993 +246,993 @@ type TControl struct {
 }
 
 func NewControl(TheOwner IComponent) IControl {
-	r1 := LCL().SysCallN(1031, GetObjectUintptr(TheOwner))
+	r1 := controlImportAPI().SysCallN(57, GetObjectUintptr(TheOwner))
 	return AsControl(r1)
 }
 
 func (m *TControl) AnchoredControls(Index int32) IControl {
-	r1 := LCL().SysCallN(996, m.Instance(), uintptr(Index))
+	r1 := controlImportAPI().SysCallN(22, m.Instance(), uintptr(Index))
 	return AsControl(r1)
 }
 
 func (m *TControl) BaseBounds() (resultRect TRect) {
-	LCL().SysCallN(1004, m.Instance(), uintptr(unsafePointer(&resultRect)))
+	controlImportAPI().SysCallN(30, m.Instance(), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TControl) ReadBounds() (resultRect TRect) {
-	LCL().SysCallN(1101, m.Instance(), uintptr(unsafePointer(&resultRect)))
+	controlImportAPI().SysCallN(127, m.Instance(), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TControl) BaseParentClientSize() (resultSize TSize) {
-	LCL().SysCallN(1005, m.Instance(), uintptr(unsafePointer(&resultSize)))
+	controlImportAPI().SysCallN(31, m.Instance(), uintptr(unsafePointer(&resultSize)))
 	return
 }
 
 func (m *TControl) AccessibleName() string {
-	r1 := LCL().SysCallN(975, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TControl) SetAccessibleName(AValue string) {
-	LCL().SysCallN(975, 1, m.Instance(), PascalStr(AValue))
+	controlImportAPI().SysCallN(1, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TControl) AccessibleDescription() string {
-	r1 := LCL().SysCallN(974, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TControl) SetAccessibleDescription(AValue string) {
-	LCL().SysCallN(974, 1, m.Instance(), PascalStr(AValue))
+	controlImportAPI().SysCallN(0, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TControl) AccessibleValue() string {
-	r1 := LCL().SysCallN(977, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TControl) SetAccessibleValue(AValue string) {
-	LCL().SysCallN(977, 1, m.Instance(), PascalStr(AValue))
+	controlImportAPI().SysCallN(3, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TControl) AccessibleRole() TLazAccessibilityRole {
-	r1 := LCL().SysCallN(976, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TLazAccessibilityRole(r1)
 }
 
 func (m *TControl) SetAccessibleRole(AValue TLazAccessibilityRole) {
-	LCL().SysCallN(976, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) Action() IBasicAction {
-	r1 := LCL().SysCallN(978, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return AsBasicAction(r1)
 }
 
 func (m *TControl) SetAction(AValue IBasicAction) {
-	LCL().SysCallN(978, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(4, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) Align() TAlign {
-	r1 := LCL().SysCallN(981, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return TAlign(r1)
 }
 
 func (m *TControl) SetAlign(AValue TAlign) {
-	LCL().SysCallN(981, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) Anchors() TAnchors {
-	r1 := LCL().SysCallN(997, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return TAnchors(r1)
 }
 
 func (m *TControl) SetAnchors(AValue TAnchors) {
-	LCL().SysCallN(997, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(23, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) AnchorSide(Kind TAnchorKind) IAnchorSide {
-	r1 := LCL().SysCallN(987, m.Instance(), uintptr(Kind))
+	r1 := controlImportAPI().SysCallN(13, m.Instance(), uintptr(Kind))
 	return AsAnchorSide(r1)
 }
 
 func (m *TControl) AutoSize() bool {
-	r1 := LCL().SysCallN(999, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TControl) SetAutoSize(AValue bool) {
-	LCL().SysCallN(999, 1, m.Instance(), PascalBool(AValue))
+	controlImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TControl) BorderSpacing() IControlBorderSpacing {
-	r1 := LCL().SysCallN(1008, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(34, 0, m.Instance(), 0)
 	return AsControlBorderSpacing(r1)
 }
 
 func (m *TControl) SetBorderSpacing(AValue IControlBorderSpacing) {
-	LCL().SysCallN(1008, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(34, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) BoundsRect() (resultRect TRect) {
-	LCL().SysCallN(1009, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
+	controlImportAPI().SysCallN(35, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TControl) SetBoundsRect(AValue *TRect) {
-	LCL().SysCallN(1009, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	controlImportAPI().SysCallN(35, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TControl) BoundsRectForNewParent() (resultRect TRect) {
-	LCL().SysCallN(1010, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
+	controlImportAPI().SysCallN(36, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TControl) SetBoundsRectForNewParent(AValue *TRect) {
-	LCL().SysCallN(1010, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	controlImportAPI().SysCallN(36, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TControl) Caption() string {
-	r1 := LCL().SysCallN(1013, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(39, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TControl) SetCaption(AValue string) {
-	LCL().SysCallN(1013, 1, m.Instance(), PascalStr(AValue))
+	controlImportAPI().SysCallN(39, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TControl) CaptureMouseButtons() TCaptureMouseButtons {
-	r1 := LCL().SysCallN(1014, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(40, 0, m.Instance(), 0)
 	return TCaptureMouseButtons(r1)
 }
 
 func (m *TControl) SetCaptureMouseButtons(AValue TCaptureMouseButtons) {
-	LCL().SysCallN(1014, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(40, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) ClientHeight() int32 {
-	r1 := LCL().SysCallN(1018, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(44, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControl) SetClientHeight(AValue int32) {
-	LCL().SysCallN(1018, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(44, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) ClientOrigin() (resultPoint TPoint) {
-	LCL().SysCallN(1019, m.Instance(), uintptr(unsafePointer(&resultPoint)))
+	controlImportAPI().SysCallN(45, m.Instance(), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TControl) ClientRect() (resultRect TRect) {
-	LCL().SysCallN(1020, m.Instance(), uintptr(unsafePointer(&resultRect)))
+	controlImportAPI().SysCallN(46, m.Instance(), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TControl) ClientWidth() int32 {
-	r1 := LCL().SysCallN(1024, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(50, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControl) SetClientWidth(AValue int32) {
-	LCL().SysCallN(1024, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(50, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) Color() TColor {
-	r1 := LCL().SysCallN(1025, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(51, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TControl) SetColor(AValue TColor) {
-	LCL().SysCallN(1025, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(51, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) Constraints() ISizeConstraints {
-	r1 := LCL().SysCallN(1026, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(52, 0, m.Instance(), 0)
 	return AsSizeConstraints(r1)
 }
 
 func (m *TControl) SetConstraints(AValue ISizeConstraints) {
-	LCL().SysCallN(1026, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(52, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) ControlOrigin() (resultPoint TPoint) {
-	LCL().SysCallN(1027, m.Instance(), uintptr(unsafePointer(&resultPoint)))
+	controlImportAPI().SysCallN(53, m.Instance(), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TControl) ControlState() TControlState {
-	r1 := LCL().SysCallN(1028, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(54, 0, m.Instance(), 0)
 	return TControlState(r1)
 }
 
 func (m *TControl) SetControlState(AValue TControlState) {
-	LCL().SysCallN(1028, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(54, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) ControlStyle() TControlStyle {
-	r1 := LCL().SysCallN(1029, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(55, 0, m.Instance(), 0)
 	return TControlStyle(r1)
 }
 
 func (m *TControl) SetControlStyle(AValue TControlStyle) {
-	LCL().SysCallN(1029, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(55, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) Enabled() bool {
-	r1 := LCL().SysCallN(1042, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(68, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TControl) SetEnabled(AValue bool) {
-	LCL().SysCallN(1042, 1, m.Instance(), PascalBool(AValue))
+	controlImportAPI().SysCallN(68, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TControl) Font() IFont {
-	r1 := LCL().SysCallN(1050, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(76, 0, m.Instance(), 0)
 	return AsFont(r1)
 }
 
 func (m *TControl) SetFont(AValue IFont) {
-	LCL().SysCallN(1050, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(76, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) IsControl() bool {
-	r1 := LCL().SysCallN(1080, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(106, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TControl) SetIsControl(AValue bool) {
-	LCL().SysCallN(1080, 1, m.Instance(), PascalBool(AValue))
+	controlImportAPI().SysCallN(106, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TControl) MouseInClient() bool {
-	r1 := LCL().SysCallN(1093, m.Instance())
+	r1 := controlImportAPI().SysCallN(119, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) Parent() IWinControl {
-	r1 := LCL().SysCallN(1094, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(120, 0, m.Instance(), 0)
 	return AsWinControl(r1)
 }
 
 func (m *TControl) SetParent(AValue IWinControl) {
-	LCL().SysCallN(1094, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(120, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) PopupMenu() IPopupMenu {
-	r1 := LCL().SysCallN(1100, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(126, 0, m.Instance(), 0)
 	return AsPopupMenu(r1)
 }
 
 func (m *TControl) SetPopupMenu(AValue IPopupMenu) {
-	LCL().SysCallN(1100, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(126, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) ShowHint() bool {
-	r1 := LCL().SysCallN(1131, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(157, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TControl) SetShowHint(AValue bool) {
-	LCL().SysCallN(1131, 1, m.Instance(), PascalBool(AValue))
+	controlImportAPI().SysCallN(157, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TControl) Visible() bool {
-	r1 := LCL().SysCallN(1142, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(168, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TControl) SetVisible(AValue bool) {
-	LCL().SysCallN(1142, 1, m.Instance(), PascalBool(AValue))
+	controlImportAPI().SysCallN(168, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TControl) DockOrientation() TDockOrientation {
-	r1 := LCL().SysCallN(1036, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(62, 0, m.Instance(), 0)
 	return TDockOrientation(r1)
 }
 
 func (m *TControl) SetDockOrientation(AValue TDockOrientation) {
-	LCL().SysCallN(1036, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(62, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) Floating() bool {
-	r1 := LCL().SysCallN(1048, m.Instance())
+	r1 := controlImportAPI().SysCallN(74, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) FloatingDockSiteClass() TWinControlClass {
-	r1 := LCL().SysCallN(1049, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(75, 0, m.Instance(), 0)
 	return TWinControlClass(r1)
 }
 
 func (m *TControl) SetFloatingDockSiteClass(AValue TWinControlClass) {
-	LCL().SysCallN(1049, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(75, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) HostDockSite() IWinControl {
-	r1 := LCL().SysCallN(1076, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(102, 0, m.Instance(), 0)
 	return AsWinControl(r1)
 }
 
 func (m *TControl) SetHostDockSite(AValue IWinControl) {
-	LCL().SysCallN(1076, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(102, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) LRDockWidth() int32 {
-	r1 := LCL().SysCallN(1089, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(115, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControl) SetLRDockWidth(AValue int32) {
-	LCL().SysCallN(1089, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(115, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) TBDockHeight() int32 {
-	r1 := LCL().SysCallN(1132, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(158, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControl) SetTBDockHeight(AValue int32) {
-	LCL().SysCallN(1132, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(158, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) UndockHeight() int32 {
-	r1 := LCL().SysCallN(1134, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(160, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControl) SetUndockHeight(AValue int32) {
-	LCL().SysCallN(1134, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(160, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) UndockWidth() int32 {
-	r1 := LCL().SysCallN(1135, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(161, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControl) SetUndockWidth(AValue int32) {
-	LCL().SysCallN(1135, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(161, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) BiDiMode() TBiDiMode {
-	r1 := LCL().SysCallN(1007, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(33, 0, m.Instance(), 0)
 	return TBiDiMode(r1)
 }
 
 func (m *TControl) SetBiDiMode(AValue TBiDiMode) {
-	LCL().SysCallN(1007, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(33, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) ParentBiDiMode() bool {
-	r1 := LCL().SysCallN(1095, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(121, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TControl) SetParentBiDiMode(AValue bool) {
-	LCL().SysCallN(1095, 1, m.Instance(), PascalBool(AValue))
+	controlImportAPI().SysCallN(121, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TControl) AnchorSideLeft() IAnchorSide {
-	r1 := LCL().SysCallN(989, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return AsAnchorSide(r1)
 }
 
 func (m *TControl) SetAnchorSideLeft(AValue IAnchorSide) {
-	LCL().SysCallN(989, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(15, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) AnchorSideTop() IAnchorSide {
-	r1 := LCL().SysCallN(991, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return AsAnchorSide(r1)
 }
 
 func (m *TControl) SetAnchorSideTop(AValue IAnchorSide) {
-	LCL().SysCallN(991, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(17, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) AnchorSideRight() IAnchorSide {
-	r1 := LCL().SysCallN(990, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return AsAnchorSide(r1)
 }
 
 func (m *TControl) SetAnchorSideRight(AValue IAnchorSide) {
-	LCL().SysCallN(990, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(16, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) AnchorSideBottom() IAnchorSide {
-	r1 := LCL().SysCallN(988, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return AsAnchorSide(r1)
 }
 
 func (m *TControl) SetAnchorSideBottom(AValue IAnchorSide) {
-	LCL().SysCallN(988, 1, m.Instance(), GetObjectUintptr(AValue))
+	controlImportAPI().SysCallN(14, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TControl) Cursor() TCursor {
-	r1 := LCL().SysCallN(1033, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(59, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TControl) SetCursor(AValue TCursor) {
-	LCL().SysCallN(1033, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(59, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) Left() int32 {
-	r1 := LCL().SysCallN(1090, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(116, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControl) SetLeft(AValue int32) {
-	LCL().SysCallN(1090, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(116, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) Height() int32 {
-	r1 := LCL().SysCallN(1070, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(96, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControl) SetHeight(AValue int32) {
-	LCL().SysCallN(1070, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(96, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) Hint() string {
-	r1 := LCL().SysCallN(1075, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(101, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TControl) SetHint(AValue string) {
-	LCL().SysCallN(1075, 1, m.Instance(), PascalStr(AValue))
+	controlImportAPI().SysCallN(101, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TControl) Top() int32 {
-	r1 := LCL().SysCallN(1133, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(159, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControl) SetTop(AValue int32) {
-	LCL().SysCallN(1133, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(159, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) Width() int32 {
-	r1 := LCL().SysCallN(1143, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(169, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControl) SetWidth(AValue int32) {
-	LCL().SysCallN(1143, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(169, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) HelpType() THelpType {
-	r1 := LCL().SysCallN(1073, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(99, 0, m.Instance(), 0)
 	return THelpType(r1)
 }
 
 func (m *TControl) SetHelpType(AValue THelpType) {
-	LCL().SysCallN(1073, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(99, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) HelpKeyword() string {
-	r1 := LCL().SysCallN(1072, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(98, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TControl) SetHelpKeyword(AValue string) {
-	LCL().SysCallN(1072, 1, m.Instance(), PascalStr(AValue))
+	controlImportAPI().SysCallN(98, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TControl) HelpContext() THelpContext {
-	r1 := LCL().SysCallN(1071, 0, m.Instance(), 0)
+	r1 := controlImportAPI().SysCallN(97, 0, m.Instance(), 0)
 	return THelpContext(r1)
 }
 
 func (m *TControl) SetHelpContext(AValue THelpContext) {
-	LCL().SysCallN(1071, 1, m.Instance(), uintptr(AValue))
+	controlImportAPI().SysCallN(97, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControl) ManualDock(NewDockSite IWinControl, DropControl IControl, ControlSide TAlign, KeepDockSiteSize bool) bool {
-	r1 := LCL().SysCallN(1091, m.Instance(), GetObjectUintptr(NewDockSite), GetObjectUintptr(DropControl), uintptr(ControlSide), PascalBool(KeepDockSiteSize))
+	r1 := controlImportAPI().SysCallN(117, m.Instance(), GetObjectUintptr(NewDockSite), GetObjectUintptr(DropControl), uintptr(ControlSide), PascalBool(KeepDockSiteSize))
 	return GoBool(r1)
 }
 
 func (m *TControl) ManualFloat(TheScreenRect *TRect, KeepDockSiteSize bool) bool {
-	r1 := LCL().SysCallN(1092, m.Instance(), uintptr(unsafePointer(TheScreenRect)), PascalBool(KeepDockSiteSize))
+	r1 := controlImportAPI().SysCallN(118, m.Instance(), uintptr(unsafePointer(TheScreenRect)), PascalBool(KeepDockSiteSize))
 	return GoBool(r1)
 }
 
 func (m *TControl) ReplaceDockedControl(Control IControl, NewDockSite IWinControl, DropControl IControl, ControlSide TAlign) bool {
-	r1 := LCL().SysCallN(1104, m.Instance(), GetObjectUintptr(Control), GetObjectUintptr(NewDockSite), GetObjectUintptr(DropControl), uintptr(ControlSide))
+	r1 := controlImportAPI().SysCallN(130, m.Instance(), GetObjectUintptr(Control), GetObjectUintptr(NewDockSite), GetObjectUintptr(DropControl), uintptr(ControlSide))
 	return GoBool(r1)
 }
 
 func (m *TControl) Docked() bool {
-	r1 := LCL().SysCallN(1037, m.Instance())
+	r1 := controlImportAPI().SysCallN(63, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) Dragging() bool {
-	r1 := LCL().SysCallN(1039, m.Instance())
+	r1 := controlImportAPI().SysCallN(65, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) GetAccessibleObject() ILazAccessibleObject {
-	r1 := LCL().SysCallN(1052, m.Instance())
+	r1 := controlImportAPI().SysCallN(78, m.Instance())
 	return AsLazAccessibleObject(r1)
 }
 
 func (m *TControl) CreateAccessibleObject() ILazAccessibleObject {
-	r1 := LCL().SysCallN(1032, m.Instance())
+	r1 := controlImportAPI().SysCallN(58, m.Instance())
 	return AsLazAccessibleObject(r1)
 }
 
 func (m *TControl) GetSelectedChildAccessibleObject() ILazAccessibleObject {
-	r1 := LCL().SysCallN(1063, m.Instance())
+	r1 := controlImportAPI().SysCallN(89, m.Instance())
 	return AsLazAccessibleObject(r1)
 }
 
 func (m *TControl) GetChildAccessibleObjectAtPos(APos *TPoint) ILazAccessibleObject {
-	r1 := LCL().SysCallN(1055, m.Instance(), uintptr(unsafePointer(APos)))
+	r1 := controlImportAPI().SysCallN(81, m.Instance(), uintptr(unsafePointer(APos)))
 	return AsLazAccessibleObject(r1)
 }
 
 func (m *TControl) ScaleDesignToForm(ASize int32) int32 {
-	r1 := LCL().SysCallN(1108, m.Instance(), uintptr(ASize))
+	r1 := controlImportAPI().SysCallN(134, m.Instance(), uintptr(ASize))
 	return int32(r1)
 }
 
 func (m *TControl) ScaleFormToDesign(ASize int32) int32 {
-	r1 := LCL().SysCallN(1113, m.Instance(), uintptr(ASize))
+	r1 := controlImportAPI().SysCallN(139, m.Instance(), uintptr(ASize))
 	return int32(r1)
 }
 
 func (m *TControl) Scale96ToForm(ASize int32) int32 {
-	r1 := LCL().SysCallN(1106, m.Instance(), uintptr(ASize))
+	r1 := controlImportAPI().SysCallN(132, m.Instance(), uintptr(ASize))
 	return int32(r1)
 }
 
 func (m *TControl) ScaleFormTo96(ASize int32) int32 {
-	r1 := LCL().SysCallN(1112, m.Instance(), uintptr(ASize))
+	r1 := controlImportAPI().SysCallN(138, m.Instance(), uintptr(ASize))
 	return int32(r1)
 }
 
 func (m *TControl) Scale96ToFont(ASize int32) int32 {
-	r1 := LCL().SysCallN(1105, m.Instance(), uintptr(ASize))
+	r1 := controlImportAPI().SysCallN(131, m.Instance(), uintptr(ASize))
 	return int32(r1)
 }
 
 func (m *TControl) ScaleFontTo96(ASize int32) int32 {
-	r1 := LCL().SysCallN(1109, m.Instance(), uintptr(ASize))
+	r1 := controlImportAPI().SysCallN(135, m.Instance(), uintptr(ASize))
 	return int32(r1)
 }
 
 func (m *TControl) ScaleScreenToFont(ASize int32) int32 {
-	r1 := LCL().SysCallN(1115, m.Instance(), uintptr(ASize))
+	r1 := controlImportAPI().SysCallN(141, m.Instance(), uintptr(ASize))
 	return int32(r1)
 }
 
 func (m *TControl) ScaleFontToScreen(ASize int32) int32 {
-	r1 := LCL().SysCallN(1110, m.Instance(), uintptr(ASize))
+	r1 := controlImportAPI().SysCallN(136, m.Instance(), uintptr(ASize))
 	return int32(r1)
 }
 
 func (m *TControl) Scale96ToScreen(ASize int32) int32 {
-	r1 := LCL().SysCallN(1107, m.Instance(), uintptr(ASize))
+	r1 := controlImportAPI().SysCallN(133, m.Instance(), uintptr(ASize))
 	return int32(r1)
 }
 
 func (m *TControl) ScaleScreenTo96(ASize int32) int32 {
-	r1 := LCL().SysCallN(1114, m.Instance(), uintptr(ASize))
+	r1 := controlImportAPI().SysCallN(140, m.Instance(), uintptr(ASize))
 	return int32(r1)
 }
 
 func (m *TControl) AutoSizePhases() TControlAutoSizePhases {
-	r1 := LCL().SysCallN(1003, m.Instance())
+	r1 := controlImportAPI().SysCallN(29, m.Instance())
 	return TControlAutoSizePhases(r1)
 }
 
 func (m *TControl) AutoSizeDelayed() bool {
-	r1 := LCL().SysCallN(1000, m.Instance())
+	r1 := controlImportAPI().SysCallN(26, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) AutoSizeDelayedReport() string {
-	r1 := LCL().SysCallN(1002, m.Instance())
+	r1 := controlImportAPI().SysCallN(28, m.Instance())
 	return GoStr(r1)
 }
 
 func (m *TControl) AutoSizeDelayedHandle() bool {
-	r1 := LCL().SysCallN(1001, m.Instance())
+	r1 := controlImportAPI().SysCallN(27, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) AnchoredControlCount() int32 {
-	r1 := LCL().SysCallN(995, m.Instance())
+	r1 := controlImportAPI().SysCallN(21, m.Instance())
 	return int32(r1)
 }
 
 func (m *TControl) GetCanvasScaleFactor() (resultDouble float64) {
-	LCL().SysCallN(1054, m.Instance(), uintptr(unsafePointer(&resultDouble)))
+	controlImportAPI().SysCallN(80, m.Instance(), uintptr(unsafePointer(&resultDouble)))
 	return
 }
 
 func (m *TControl) GetDefaultWidth() int32 {
-	r1 := LCL().SysCallN(1060, m.Instance())
+	r1 := controlImportAPI().SysCallN(86, m.Instance())
 	return int32(r1)
 }
 
 func (m *TControl) GetDefaultHeight() int32 {
-	r1 := LCL().SysCallN(1059, m.Instance())
+	r1 := controlImportAPI().SysCallN(85, m.Instance())
 	return int32(r1)
 }
 
 func (m *TControl) GetDefaultColor(DefaultColorType TDefaultColorType) TColor {
-	r1 := LCL().SysCallN(1058, m.Instance(), uintptr(DefaultColorType))
+	r1 := controlImportAPI().SysCallN(84, m.Instance(), uintptr(DefaultColorType))
 	return TColor(r1)
 }
 
 func (m *TControl) GetColorResolvingParent() TColor {
-	r1 := LCL().SysCallN(1057, m.Instance())
+	r1 := controlImportAPI().SysCallN(83, m.Instance())
 	return TColor(r1)
 }
 
 func (m *TControl) GetRGBColorResolvingParent() TColor {
-	r1 := LCL().SysCallN(1062, m.Instance())
+	r1 := controlImportAPI().SysCallN(88, m.Instance())
 	return TColor(r1)
 }
 
 func (m *TControl) GetSidePosition(Side TAnchorKind) int32 {
-	r1 := LCL().SysCallN(1064, m.Instance(), uintptr(Side))
+	r1 := controlImportAPI().SysCallN(90, m.Instance(), uintptr(Side))
 	return int32(r1)
 }
 
 func (m *TControl) GetAnchorsDependingOnParent(WithNormalAnchors bool) TAnchors {
-	r1 := LCL().SysCallN(1053, m.Instance(), PascalBool(WithNormalAnchors))
+	r1 := controlImportAPI().SysCallN(79, m.Instance(), PascalBool(WithNormalAnchors))
 	return TAnchors(r1)
 }
 
 func (m *TControl) IsParentOf(AControl IControl) bool {
-	r1 := LCL().SysCallN(1085, m.Instance(), GetObjectUintptr(AControl))
+	r1 := controlImportAPI().SysCallN(111, m.Instance(), GetObjectUintptr(AControl))
 	return GoBool(r1)
 }
 
 func (m *TControl) GetTopParent() IControl {
-	r1 := LCL().SysCallN(1067, m.Instance())
+	r1 := controlImportAPI().SysCallN(93, m.Instance())
 	return AsControl(r1)
 }
 
 func (m *TControl) FindSubComponent(AName string) IComponent {
-	r1 := LCL().SysCallN(1046, m.Instance(), PascalStr(AName))
+	r1 := controlImportAPI().SysCallN(72, m.Instance(), PascalStr(AName))
 	return AsComponent(r1)
 }
 
 func (m *TControl) IsVisible() bool {
-	r1 := LCL().SysCallN(1088, m.Instance())
+	r1 := controlImportAPI().SysCallN(114, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) IsControlVisible() bool {
-	r1 := LCL().SysCallN(1081, m.Instance())
+	r1 := controlImportAPI().SysCallN(107, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) IsEnabled() bool {
-	r1 := LCL().SysCallN(1082, m.Instance())
+	r1 := controlImportAPI().SysCallN(108, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) IsParentColor() bool {
-	r1 := LCL().SysCallN(1083, m.Instance())
+	r1 := controlImportAPI().SysCallN(109, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) IsParentFont() bool {
-	r1 := LCL().SysCallN(1084, m.Instance())
+	r1 := controlImportAPI().SysCallN(110, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) FormIsUpdating() bool {
-	r1 := LCL().SysCallN(1051, m.Instance())
+	r1 := controlImportAPI().SysCallN(77, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) IsProcessingPaintMsg() bool {
-	r1 := LCL().SysCallN(1086, m.Instance())
+	r1 := controlImportAPI().SysCallN(112, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) CheckChildClassAllowed(ChildClass TClass, ExceptionOnInvalid bool) bool {
-	r1 := LCL().SysCallN(1015, m.Instance(), uintptr(ChildClass), PascalBool(ExceptionOnInvalid))
+	r1 := controlImportAPI().SysCallN(41, m.Instance(), uintptr(ChildClass), PascalBool(ExceptionOnInvalid))
 	return GoBool(r1)
 }
 
 func (m *TControl) GetTextBuf(Buffer *string, BufSize int32) int32 {
-	r1 := sysCallGetTextBuf(1065, m.Instance(), Buffer, BufSize)
+	r1 := sysCallGetTextBuf(controlImportAPI(), 91, m.Instance(), Buffer, BufSize)
 	return int32(r1)
 }
 
 func (m *TControl) GetTextLen() int32 {
-	r1 := LCL().SysCallN(1066, m.Instance())
+	r1 := controlImportAPI().SysCallN(92, m.Instance())
 	return int32(r1)
 }
 
 func (m *TControl) Perform(Msg uint32, WParam WPARAM, LParam LPARAM) LRESULT {
-	r1 := LCL().SysCallN(1099, m.Instance(), uintptr(Msg), uintptr(WParam), uintptr(LParam))
+	r1 := controlImportAPI().SysCallN(125, m.Instance(), uintptr(Msg), uintptr(WParam), uintptr(LParam))
 	return LRESULT(r1)
 }
 
 func (m *TControl) ScreenToClient(APoint *TPoint) (resultPoint TPoint) {
-	LCL().SysCallN(1116, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
+	controlImportAPI().SysCallN(142, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TControl) ClientToScreen(APoint *TPoint) (resultPoint TPoint) {
-	LCL().SysCallN(1022, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
+	controlImportAPI().SysCallN(48, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TControl) ClientToScreen1(ARect *TRect) (resultRect TRect) {
-	LCL().SysCallN(1023, m.Instance(), uintptr(unsafePointer(ARect)), uintptr(unsafePointer(&resultRect)))
+	controlImportAPI().SysCallN(49, m.Instance(), uintptr(unsafePointer(ARect)), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TControl) ScreenToControl(APoint *TPoint) (resultPoint TPoint) {
-	LCL().SysCallN(1117, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
+	controlImportAPI().SysCallN(143, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TControl) ControlToScreen(APoint *TPoint) (resultPoint TPoint) {
-	LCL().SysCallN(1030, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
+	controlImportAPI().SysCallN(56, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TControl) ClientToParent(Point *TPoint, AParent IWinControl) (resultPoint TPoint) {
-	LCL().SysCallN(1021, m.Instance(), uintptr(unsafePointer(Point)), GetObjectUintptr(AParent), uintptr(unsafePointer(&resultPoint)))
+	controlImportAPI().SysCallN(47, m.Instance(), uintptr(unsafePointer(Point)), GetObjectUintptr(AParent), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TControl) ParentToClient(Point *TPoint, AParent IWinControl) (resultPoint TPoint) {
-	LCL().SysCallN(1098, m.Instance(), uintptr(unsafePointer(Point)), GetObjectUintptr(AParent), uintptr(unsafePointer(&resultPoint)))
+	controlImportAPI().SysCallN(124, m.Instance(), uintptr(unsafePointer(Point)), GetObjectUintptr(AParent), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TControl) GetChildrenRect(Scrolled bool) (resultRect TRect) {
-	LCL().SysCallN(1056, m.Instance(), PascalBool(Scrolled), uintptr(unsafePointer(&resultRect)))
+	controlImportAPI().SysCallN(82, m.Instance(), PascalBool(Scrolled), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TControl) HandleObjectShouldBeVisible() bool {
-	r1 := LCL().SysCallN(1068, m.Instance())
+	r1 := controlImportAPI().SysCallN(94, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) ParentDestroyingHandle() bool {
-	r1 := LCL().SysCallN(1096, m.Instance())
+	r1 := controlImportAPI().SysCallN(122, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) ParentHandlesAllocated() bool {
-	r1 := LCL().SysCallN(1097, m.Instance())
+	r1 := controlImportAPI().SysCallN(123, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) HasHelp() bool {
-	r1 := LCL().SysCallN(1069, m.Instance())
+	r1 := controlImportAPI().SysCallN(95, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) UseRightToLeftAlignment() bool {
-	r1 := LCL().SysCallN(1139, m.Instance())
+	r1 := controlImportAPI().SysCallN(165, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) UseRightToLeftReading() bool {
-	r1 := LCL().SysCallN(1140, m.Instance())
+	r1 := controlImportAPI().SysCallN(166, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) UseRightToLeftScrollBar() bool {
-	r1 := LCL().SysCallN(1141, m.Instance())
+	r1 := controlImportAPI().SysCallN(167, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControl) IsRightToLeft() bool {
-	r1 := LCL().SysCallN(1087, m.Instance())
+	r1 := controlImportAPI().SysCallN(113, m.Instance())
 	return GoBool(r1)
 }
 
 func ControlClass() TClass {
-	ret := LCL().SysCallN(1017)
+	ret := controlImportAPI().SysCallN(43)
 	return TClass(ret)
 }
 
 func (m *TControl) DragDrop(Source IObject, X, Y int32) {
-	LCL().SysCallN(1038, m.Instance(), GetObjectUintptr(Source), uintptr(X), uintptr(Y))
+	controlImportAPI().SysCallN(64, m.Instance(), GetObjectUintptr(Source), uintptr(X), uintptr(Y))
 }
 
 func (m *TControl) Dock(NewDockSite IWinControl, ARect *TRect) {
-	LCL().SysCallN(1035, m.Instance(), GetObjectUintptr(NewDockSite), uintptr(unsafePointer(ARect)))
+	controlImportAPI().SysCallN(61, m.Instance(), GetObjectUintptr(NewDockSite), uintptr(unsafePointer(ARect)))
 }
 
 func (m *TControl) AdjustSize() {
-	LCL().SysCallN(980, m.Instance())
+	controlImportAPI().SysCallN(6, m.Instance())
 }
 
 func (m *TControl) AnchorToNeighbour(Side TAnchorKind, Space TSpacingSize, Sibling IControl) {
-	LCL().SysCallN(993, m.Instance(), uintptr(Side), uintptr(Space), GetObjectUintptr(Sibling))
+	controlImportAPI().SysCallN(19, m.Instance(), uintptr(Side), uintptr(Space), GetObjectUintptr(Sibling))
 }
 
 func (m *TControl) AnchorParallel(Side TAnchorKind, Space TSpacingSize, Sibling IControl) {
-	LCL().SysCallN(985, m.Instance(), uintptr(Side), uintptr(Space), GetObjectUintptr(Sibling))
+	controlImportAPI().SysCallN(11, m.Instance(), uintptr(Side), uintptr(Space), GetObjectUintptr(Sibling))
 }
 
 func (m *TControl) AnchorHorizontalCenterTo(Sibling IControl) {
-	LCL().SysCallN(984, m.Instance(), GetObjectUintptr(Sibling))
+	controlImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(Sibling))
 }
 
 func (m *TControl) AnchorVerticalCenterTo(Sibling IControl) {
-	LCL().SysCallN(994, m.Instance(), GetObjectUintptr(Sibling))
+	controlImportAPI().SysCallN(20, m.Instance(), GetObjectUintptr(Sibling))
 }
 
 func (m *TControl) AnchorToCompanion(Side TAnchorKind, Space TSpacingSize, Sibling IControl, FreeCompositeSide bool) {
-	LCL().SysCallN(992, m.Instance(), uintptr(Side), uintptr(Space), GetObjectUintptr(Sibling), PascalBool(FreeCompositeSide))
+	controlImportAPI().SysCallN(18, m.Instance(), uintptr(Side), uintptr(Space), GetObjectUintptr(Sibling), PascalBool(FreeCompositeSide))
 }
 
 func (m *TControl) AnchorSame(Side TAnchorKind, Sibling IControl) {
-	LCL().SysCallN(986, m.Instance(), uintptr(Side), GetObjectUintptr(Sibling))
+	controlImportAPI().SysCallN(12, m.Instance(), uintptr(Side), GetObjectUintptr(Sibling))
 }
 
 func (m *TControl) AnchorAsAlign(TheAlign TAlign, Space TSpacingSize) {
-	LCL().SysCallN(982, m.Instance(), uintptr(TheAlign), uintptr(Space))
+	controlImportAPI().SysCallN(8, m.Instance(), uintptr(TheAlign), uintptr(Space))
 }
 
 func (m *TControl) AnchorClient(Space TSpacingSize) {
-	LCL().SysCallN(983, m.Instance(), uintptr(Space))
+	controlImportAPI().SysCallN(9, m.Instance(), uintptr(Space))
 }
 
 func (m *TControl) SetBounds(aLeft, aTop, aWidth, aHeight int32) {
-	LCL().SysCallN(1119, m.Instance(), uintptr(aLeft), uintptr(aTop), uintptr(aWidth), uintptr(aHeight))
+	controlImportAPI().SysCallN(145, m.Instance(), uintptr(aLeft), uintptr(aTop), uintptr(aWidth), uintptr(aHeight))
 }
 
 func (m *TControl) SetInitialBounds(aLeft, aTop, aWidth, aHeight int32) {
-	LCL().SysCallN(1121, m.Instance(), uintptr(aLeft), uintptr(aTop), uintptr(aWidth), uintptr(aHeight))
+	controlImportAPI().SysCallN(147, m.Instance(), uintptr(aLeft), uintptr(aTop), uintptr(aWidth), uintptr(aHeight))
 }
 
 func (m *TControl) SetBoundsKeepBase(aLeft, aTop, aWidth, aHeight int32) {
-	LCL().SysCallN(1120, m.Instance(), uintptr(aLeft), uintptr(aTop), uintptr(aWidth), uintptr(aHeight))
+	controlImportAPI().SysCallN(146, m.Instance(), uintptr(aLeft), uintptr(aTop), uintptr(aWidth), uintptr(aHeight))
 }
 
 func (m *TControl) GetPreferredSize(PreferredWidth, PreferredHeight *int32, Raw bool, WithThemeSpace bool) {
 	var result0 uintptr
 	var result1 uintptr
-	LCL().SysCallN(1061, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)), PascalBool(Raw), PascalBool(WithThemeSpace))
+	controlImportAPI().SysCallN(87, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)), PascalBool(Raw), PascalBool(WithThemeSpace))
 	*PreferredWidth = int32(result0)
 	*PreferredHeight = int32(result1)
 }
 
 func (m *TControl) CNPreferredSizeChanged() {
-	LCL().SysCallN(1012, m.Instance())
+	controlImportAPI().SysCallN(38, m.Instance())
 }
 
 func (m *TControl) InvalidatePreferredSize() {
-	LCL().SysCallN(1079, m.Instance())
+	controlImportAPI().SysCallN(105, m.Instance())
 }
 
 func (m *TControl) DisableAutoSizing() {
-	LCL().SysCallN(1034, m.Instance())
+	controlImportAPI().SysCallN(60, m.Instance())
 }
 
 func (m *TControl) EnableAutoSizing() {
-	LCL().SysCallN(1041, m.Instance())
+	controlImportAPI().SysCallN(67, m.Instance())
 }
 
 func (m *TControl) UpdateBaseBounds(StoreBounds, StoreParentClientSize, UseLoadedValues bool) {
-	LCL().SysCallN(1137, m.Instance(), PascalBool(StoreBounds), PascalBool(StoreParentClientSize), PascalBool(UseLoadedValues))
+	controlImportAPI().SysCallN(163, m.Instance(), PascalBool(StoreBounds), PascalBool(StoreParentClientSize), PascalBool(UseLoadedValues))
 }
 
 func (m *TControl) WriteLayoutDebugReport(Prefix string) {
-	LCL().SysCallN(1144, m.Instance(), PascalStr(Prefix))
+	controlImportAPI().SysCallN(170, m.Instance(), PascalStr(Prefix))
 }
 
 func (m *TControl) AutoAdjustLayout(AMode TLayoutAdjustmentPolicy, AFromPPI, AToPPI, AOldFormWidth, ANewFormWidth int32) {
-	LCL().SysCallN(998, m.Instance(), uintptr(AMode), uintptr(AFromPPI), uintptr(AToPPI), uintptr(AOldFormWidth), uintptr(ANewFormWidth))
+	controlImportAPI().SysCallN(24, m.Instance(), uintptr(AMode), uintptr(AFromPPI), uintptr(AToPPI), uintptr(AOldFormWidth), uintptr(ANewFormWidth))
 }
 
 func (m *TControl) ShouldAutoAdjust(AWidth, AHeight *bool) {
 	var result0 uintptr
 	var result1 uintptr
-	LCL().SysCallN(1128, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)))
+	controlImportAPI().SysCallN(154, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)))
 	*AWidth = GoBool(result0)
 	*AHeight = GoBool(result1)
 }
 
 func (m *TControl) FixDesignFontsPPI(ADesignTimePPI int32) {
-	LCL().SysCallN(1047, m.Instance(), uintptr(ADesignTimePPI))
+	controlImportAPI().SysCallN(73, m.Instance(), uintptr(ADesignTimePPI))
 }
 
 func (m *TControl) ScaleFontsPPI(AToPPI int32, AProportion float64) {
-	LCL().SysCallN(1111, m.Instance(), uintptr(AToPPI), uintptr(unsafePointer(&AProportion)))
+	controlImportAPI().SysCallN(137, m.Instance(), uintptr(AToPPI), uintptr(unsafePointer(&AProportion)))
 }
 
 func (m *TControl) EditingDone() {
-	LCL().SysCallN(1040, m.Instance())
+	controlImportAPI().SysCallN(66, m.Instance())
 }
 
 func (m *TControl) ExecuteDefaultAction() {
-	LCL().SysCallN(1045, m.Instance())
+	controlImportAPI().SysCallN(71, m.Instance())
 }
 
 func (m *TControl) ExecuteCancelAction() {
-	LCL().SysCallN(1044, m.Instance())
+	controlImportAPI().SysCallN(70, m.Instance())
 }
 
 func (m *TControl) BeginDrag(Immediate bool, Threshold int32) {
-	LCL().SysCallN(1006, m.Instance(), PascalBool(Immediate), uintptr(Threshold))
+	controlImportAPI().SysCallN(32, m.Instance(), PascalBool(Immediate), uintptr(Threshold))
 }
 
 func (m *TControl) EndDrag(Drop bool) {
-	LCL().SysCallN(1043, m.Instance(), PascalBool(Drop))
+	controlImportAPI().SysCallN(69, m.Instance(), PascalBool(Drop))
 }
 
 func (m *TControl) BringToFront() {
-	LCL().SysCallN(1011, m.Instance())
+	controlImportAPI().SysCallN(37, m.Instance())
 }
 
 func (m *TControl) Hide() {
-	LCL().SysCallN(1074, m.Instance())
+	controlImportAPI().SysCallN(100, m.Instance())
 }
 
 func (m *TControl) Refresh() {
-	LCL().SysCallN(1102, m.Instance())
+	controlImportAPI().SysCallN(128, m.Instance())
 }
 
 func (m *TControl) Repaint() {
-	LCL().SysCallN(1103, m.Instance())
+	controlImportAPI().SysCallN(129, m.Instance())
 }
 
 func (m *TControl) Invalidate() {
-	LCL().SysCallN(1078, m.Instance())
+	controlImportAPI().SysCallN(104, m.Instance())
 }
 
 func (m *TControl) CheckNewParent(AParent IWinControl) {
-	LCL().SysCallN(1016, m.Instance(), GetObjectUintptr(AParent))
+	controlImportAPI().SysCallN(42, m.Instance(), GetObjectUintptr(AParent))
 }
 
 func (m *TControl) SendToBack() {
-	LCL().SysCallN(1118, m.Instance())
+	controlImportAPI().SysCallN(144, m.Instance())
 }
 
 func (m *TControl) SetTempCursor(Value TCursor) {
-	LCL().SysCallN(1126, m.Instance(), uintptr(Value))
+	controlImportAPI().SysCallN(152, m.Instance(), uintptr(Value))
 }
 
 func (m *TControl) UpdateRolesForForm() {
-	LCL().SysCallN(1138, m.Instance())
+	controlImportAPI().SysCallN(164, m.Instance())
 }
 
 func (m *TControl) ActiveDefaultControlChanged(NewControl IControl) {
-	LCL().SysCallN(979, m.Instance(), GetObjectUintptr(NewControl))
+	controlImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(NewControl))
 }
 
 func (m *TControl) SetTextBuf(Buffer string) {
-	LCL().SysCallN(1127, m.Instance(), PascalStr(Buffer))
+	controlImportAPI().SysCallN(153, m.Instance(), PascalStr(Buffer))
 }
 
 func (m *TControl) Show() {
-	LCL().SysCallN(1129, m.Instance())
+	controlImportAPI().SysCallN(155, m.Instance())
 }
 
 func (m *TControl) Update() {
-	LCL().SysCallN(1136, m.Instance())
+	controlImportAPI().SysCallN(162, m.Instance())
 }
 
 func (m *TControl) InitiateAction() {
-	LCL().SysCallN(1077, m.Instance())
+	controlImportAPI().SysCallN(103, m.Instance())
 }
 
 func (m *TControl) ShowHelp() {
-	LCL().SysCallN(1130, m.Instance())
+	controlImportAPI().SysCallN(156, m.Instance())
 }
 
 func (m *TControl) SetOnChangeBounds(fn TNotifyEvent) {
@@ -1239,7 +1240,7 @@ func (m *TControl) SetOnChangeBounds(fn TNotifyEvent) {
 		RemoveEventElement(m.changeBoundsPtr)
 	}
 	m.changeBoundsPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1122, m.Instance(), m.changeBoundsPtr)
+	controlImportAPI().SysCallN(148, m.Instance(), m.changeBoundsPtr)
 }
 
 func (m *TControl) SetOnClick(fn TNotifyEvent) {
@@ -1247,7 +1248,7 @@ func (m *TControl) SetOnClick(fn TNotifyEvent) {
 		RemoveEventElement(m.clickPtr)
 	}
 	m.clickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1123, m.Instance(), m.clickPtr)
+	controlImportAPI().SysCallN(149, m.Instance(), m.clickPtr)
 }
 
 func (m *TControl) SetOnResize(fn TNotifyEvent) {
@@ -1255,7 +1256,7 @@ func (m *TControl) SetOnResize(fn TNotifyEvent) {
 		RemoveEventElement(m.resizePtr)
 	}
 	m.resizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1124, m.Instance(), m.resizePtr)
+	controlImportAPI().SysCallN(150, m.Instance(), m.resizePtr)
 }
 
 func (m *TControl) SetOnShowHint(fn TControlShowHintEvent) {
@@ -1263,5 +1264,191 @@ func (m *TControl) SetOnShowHint(fn TControlShowHintEvent) {
 		RemoveEventElement(m.showHintPtr)
 	}
 	m.showHintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1125, m.Instance(), m.showHintPtr)
+	controlImportAPI().SysCallN(151, m.Instance(), m.showHintPtr)
+}
+
+var (
+	controlImport       *imports.Imports = nil
+	controlImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Control_AccessibleDescription", 0),
+		/*1*/ imports.NewTable("Control_AccessibleName", 0),
+		/*2*/ imports.NewTable("Control_AccessibleRole", 0),
+		/*3*/ imports.NewTable("Control_AccessibleValue", 0),
+		/*4*/ imports.NewTable("Control_Action", 0),
+		/*5*/ imports.NewTable("Control_ActiveDefaultControlChanged", 0),
+		/*6*/ imports.NewTable("Control_AdjustSize", 0),
+		/*7*/ imports.NewTable("Control_Align", 0),
+		/*8*/ imports.NewTable("Control_AnchorAsAlign", 0),
+		/*9*/ imports.NewTable("Control_AnchorClient", 0),
+		/*10*/ imports.NewTable("Control_AnchorHorizontalCenterTo", 0),
+		/*11*/ imports.NewTable("Control_AnchorParallel", 0),
+		/*12*/ imports.NewTable("Control_AnchorSame", 0),
+		/*13*/ imports.NewTable("Control_AnchorSide", 0),
+		/*14*/ imports.NewTable("Control_AnchorSideBottom", 0),
+		/*15*/ imports.NewTable("Control_AnchorSideLeft", 0),
+		/*16*/ imports.NewTable("Control_AnchorSideRight", 0),
+		/*17*/ imports.NewTable("Control_AnchorSideTop", 0),
+		/*18*/ imports.NewTable("Control_AnchorToCompanion", 0),
+		/*19*/ imports.NewTable("Control_AnchorToNeighbour", 0),
+		/*20*/ imports.NewTable("Control_AnchorVerticalCenterTo", 0),
+		/*21*/ imports.NewTable("Control_AnchoredControlCount", 0),
+		/*22*/ imports.NewTable("Control_AnchoredControls", 0),
+		/*23*/ imports.NewTable("Control_Anchors", 0),
+		/*24*/ imports.NewTable("Control_AutoAdjustLayout", 0),
+		/*25*/ imports.NewTable("Control_AutoSize", 0),
+		/*26*/ imports.NewTable("Control_AutoSizeDelayed", 0),
+		/*27*/ imports.NewTable("Control_AutoSizeDelayedHandle", 0),
+		/*28*/ imports.NewTable("Control_AutoSizeDelayedReport", 0),
+		/*29*/ imports.NewTable("Control_AutoSizePhases", 0),
+		/*30*/ imports.NewTable("Control_BaseBounds", 0),
+		/*31*/ imports.NewTable("Control_BaseParentClientSize", 0),
+		/*32*/ imports.NewTable("Control_BeginDrag", 0),
+		/*33*/ imports.NewTable("Control_BiDiMode", 0),
+		/*34*/ imports.NewTable("Control_BorderSpacing", 0),
+		/*35*/ imports.NewTable("Control_BoundsRect", 0),
+		/*36*/ imports.NewTable("Control_BoundsRectForNewParent", 0),
+		/*37*/ imports.NewTable("Control_BringToFront", 0),
+		/*38*/ imports.NewTable("Control_CNPreferredSizeChanged", 0),
+		/*39*/ imports.NewTable("Control_Caption", 0),
+		/*40*/ imports.NewTable("Control_CaptureMouseButtons", 0),
+		/*41*/ imports.NewTable("Control_CheckChildClassAllowed", 0),
+		/*42*/ imports.NewTable("Control_CheckNewParent", 0),
+		/*43*/ imports.NewTable("Control_Class", 0),
+		/*44*/ imports.NewTable("Control_ClientHeight", 0),
+		/*45*/ imports.NewTable("Control_ClientOrigin", 0),
+		/*46*/ imports.NewTable("Control_ClientRect", 0),
+		/*47*/ imports.NewTable("Control_ClientToParent", 0),
+		/*48*/ imports.NewTable("Control_ClientToScreen", 0),
+		/*49*/ imports.NewTable("Control_ClientToScreen1", 0),
+		/*50*/ imports.NewTable("Control_ClientWidth", 0),
+		/*51*/ imports.NewTable("Control_Color", 0),
+		/*52*/ imports.NewTable("Control_Constraints", 0),
+		/*53*/ imports.NewTable("Control_ControlOrigin", 0),
+		/*54*/ imports.NewTable("Control_ControlState", 0),
+		/*55*/ imports.NewTable("Control_ControlStyle", 0),
+		/*56*/ imports.NewTable("Control_ControlToScreen", 0),
+		/*57*/ imports.NewTable("Control_Create", 0),
+		/*58*/ imports.NewTable("Control_CreateAccessibleObject", 0),
+		/*59*/ imports.NewTable("Control_Cursor", 0),
+		/*60*/ imports.NewTable("Control_DisableAutoSizing", 0),
+		/*61*/ imports.NewTable("Control_Dock", 0),
+		/*62*/ imports.NewTable("Control_DockOrientation", 0),
+		/*63*/ imports.NewTable("Control_Docked", 0),
+		/*64*/ imports.NewTable("Control_DragDrop", 0),
+		/*65*/ imports.NewTable("Control_Dragging", 0),
+		/*66*/ imports.NewTable("Control_EditingDone", 0),
+		/*67*/ imports.NewTable("Control_EnableAutoSizing", 0),
+		/*68*/ imports.NewTable("Control_Enabled", 0),
+		/*69*/ imports.NewTable("Control_EndDrag", 0),
+		/*70*/ imports.NewTable("Control_ExecuteCancelAction", 0),
+		/*71*/ imports.NewTable("Control_ExecuteDefaultAction", 0),
+		/*72*/ imports.NewTable("Control_FindSubComponent", 0),
+		/*73*/ imports.NewTable("Control_FixDesignFontsPPI", 0),
+		/*74*/ imports.NewTable("Control_Floating", 0),
+		/*75*/ imports.NewTable("Control_FloatingDockSiteClass", 0),
+		/*76*/ imports.NewTable("Control_Font", 0),
+		/*77*/ imports.NewTable("Control_FormIsUpdating", 0),
+		/*78*/ imports.NewTable("Control_GetAccessibleObject", 0),
+		/*79*/ imports.NewTable("Control_GetAnchorsDependingOnParent", 0),
+		/*80*/ imports.NewTable("Control_GetCanvasScaleFactor", 0),
+		/*81*/ imports.NewTable("Control_GetChildAccessibleObjectAtPos", 0),
+		/*82*/ imports.NewTable("Control_GetChildrenRect", 0),
+		/*83*/ imports.NewTable("Control_GetColorResolvingParent", 0),
+		/*84*/ imports.NewTable("Control_GetDefaultColor", 0),
+		/*85*/ imports.NewTable("Control_GetDefaultHeight", 0),
+		/*86*/ imports.NewTable("Control_GetDefaultWidth", 0),
+		/*87*/ imports.NewTable("Control_GetPreferredSize", 0),
+		/*88*/ imports.NewTable("Control_GetRGBColorResolvingParent", 0),
+		/*89*/ imports.NewTable("Control_GetSelectedChildAccessibleObject", 0),
+		/*90*/ imports.NewTable("Control_GetSidePosition", 0),
+		/*91*/ imports.NewTable("Control_GetTextBuf", 0),
+		/*92*/ imports.NewTable("Control_GetTextLen", 0),
+		/*93*/ imports.NewTable("Control_GetTopParent", 0),
+		/*94*/ imports.NewTable("Control_HandleObjectShouldBeVisible", 0),
+		/*95*/ imports.NewTable("Control_HasHelp", 0),
+		/*96*/ imports.NewTable("Control_Height", 0),
+		/*97*/ imports.NewTable("Control_HelpContext", 0),
+		/*98*/ imports.NewTable("Control_HelpKeyword", 0),
+		/*99*/ imports.NewTable("Control_HelpType", 0),
+		/*100*/ imports.NewTable("Control_Hide", 0),
+		/*101*/ imports.NewTable("Control_Hint", 0),
+		/*102*/ imports.NewTable("Control_HostDockSite", 0),
+		/*103*/ imports.NewTable("Control_InitiateAction", 0),
+		/*104*/ imports.NewTable("Control_Invalidate", 0),
+		/*105*/ imports.NewTable("Control_InvalidatePreferredSize", 0),
+		/*106*/ imports.NewTable("Control_IsControl", 0),
+		/*107*/ imports.NewTable("Control_IsControlVisible", 0),
+		/*108*/ imports.NewTable("Control_IsEnabled", 0),
+		/*109*/ imports.NewTable("Control_IsParentColor", 0),
+		/*110*/ imports.NewTable("Control_IsParentFont", 0),
+		/*111*/ imports.NewTable("Control_IsParentOf", 0),
+		/*112*/ imports.NewTable("Control_IsProcessingPaintMsg", 0),
+		/*113*/ imports.NewTable("Control_IsRightToLeft", 0),
+		/*114*/ imports.NewTable("Control_IsVisible", 0),
+		/*115*/ imports.NewTable("Control_LRDockWidth", 0),
+		/*116*/ imports.NewTable("Control_Left", 0),
+		/*117*/ imports.NewTable("Control_ManualDock", 0),
+		/*118*/ imports.NewTable("Control_ManualFloat", 0),
+		/*119*/ imports.NewTable("Control_MouseInClient", 0),
+		/*120*/ imports.NewTable("Control_Parent", 0),
+		/*121*/ imports.NewTable("Control_ParentBiDiMode", 0),
+		/*122*/ imports.NewTable("Control_ParentDestroyingHandle", 0),
+		/*123*/ imports.NewTable("Control_ParentHandlesAllocated", 0),
+		/*124*/ imports.NewTable("Control_ParentToClient", 0),
+		/*125*/ imports.NewTable("Control_Perform", 0),
+		/*126*/ imports.NewTable("Control_PopupMenu", 0),
+		/*127*/ imports.NewTable("Control_ReadBounds", 0),
+		/*128*/ imports.NewTable("Control_Refresh", 0),
+		/*129*/ imports.NewTable("Control_Repaint", 0),
+		/*130*/ imports.NewTable("Control_ReplaceDockedControl", 0),
+		/*131*/ imports.NewTable("Control_Scale96ToFont", 0),
+		/*132*/ imports.NewTable("Control_Scale96ToForm", 0),
+		/*133*/ imports.NewTable("Control_Scale96ToScreen", 0),
+		/*134*/ imports.NewTable("Control_ScaleDesignToForm", 0),
+		/*135*/ imports.NewTable("Control_ScaleFontTo96", 0),
+		/*136*/ imports.NewTable("Control_ScaleFontToScreen", 0),
+		/*137*/ imports.NewTable("Control_ScaleFontsPPI", 0),
+		/*138*/ imports.NewTable("Control_ScaleFormTo96", 0),
+		/*139*/ imports.NewTable("Control_ScaleFormToDesign", 0),
+		/*140*/ imports.NewTable("Control_ScaleScreenTo96", 0),
+		/*141*/ imports.NewTable("Control_ScaleScreenToFont", 0),
+		/*142*/ imports.NewTable("Control_ScreenToClient", 0),
+		/*143*/ imports.NewTable("Control_ScreenToControl", 0),
+		/*144*/ imports.NewTable("Control_SendToBack", 0),
+		/*145*/ imports.NewTable("Control_SetBounds", 0),
+		/*146*/ imports.NewTable("Control_SetBoundsKeepBase", 0),
+		/*147*/ imports.NewTable("Control_SetInitialBounds", 0),
+		/*148*/ imports.NewTable("Control_SetOnChangeBounds", 0),
+		/*149*/ imports.NewTable("Control_SetOnClick", 0),
+		/*150*/ imports.NewTable("Control_SetOnResize", 0),
+		/*151*/ imports.NewTable("Control_SetOnShowHint", 0),
+		/*152*/ imports.NewTable("Control_SetTempCursor", 0),
+		/*153*/ imports.NewTable("Control_SetTextBuf", 0),
+		/*154*/ imports.NewTable("Control_ShouldAutoAdjust", 0),
+		/*155*/ imports.NewTable("Control_Show", 0),
+		/*156*/ imports.NewTable("Control_ShowHelp", 0),
+		/*157*/ imports.NewTable("Control_ShowHint", 0),
+		/*158*/ imports.NewTable("Control_TBDockHeight", 0),
+		/*159*/ imports.NewTable("Control_Top", 0),
+		/*160*/ imports.NewTable("Control_UndockHeight", 0),
+		/*161*/ imports.NewTable("Control_UndockWidth", 0),
+		/*162*/ imports.NewTable("Control_Update", 0),
+		/*163*/ imports.NewTable("Control_UpdateBaseBounds", 0),
+		/*164*/ imports.NewTable("Control_UpdateRolesForForm", 0),
+		/*165*/ imports.NewTable("Control_UseRightToLeftAlignment", 0),
+		/*166*/ imports.NewTable("Control_UseRightToLeftReading", 0),
+		/*167*/ imports.NewTable("Control_UseRightToLeftScrollBar", 0),
+		/*168*/ imports.NewTable("Control_Visible", 0),
+		/*169*/ imports.NewTable("Control_Width", 0),
+		/*170*/ imports.NewTable("Control_WriteLayoutDebugReport", 0),
+	}
+)
+
+func controlImportAPI() *imports.Imports {
+	if controlImport == nil {
+		controlImport = NewDefaultImports()
+		controlImport.SetImportTable(controlImportTables)
+		controlImportTables = nil
+	}
+	return controlImport
 }

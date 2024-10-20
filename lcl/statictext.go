@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -70,66 +71,66 @@ type TStaticText struct {
 }
 
 func NewStaticText(AOwner IComponent) IStaticText {
-	r1 := LCL().SysCallN(5121, GetObjectUintptr(AOwner))
+	r1 := staticTextImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsStaticText(r1)
 }
 
 func (m *TStaticText) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5122, 0, m.Instance(), 0)
+	r1 := staticTextImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TStaticText) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5122, 1, m.Instance(), uintptr(AValue))
+	staticTextImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStaticText) DragKind() TDragKind {
-	r1 := LCL().SysCallN(5123, 0, m.Instance(), 0)
+	r1 := staticTextImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TStaticText) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(5123, 1, m.Instance(), uintptr(AValue))
+	staticTextImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStaticText) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5124, 0, m.Instance(), 0)
+	r1 := staticTextImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TStaticText) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5124, 1, m.Instance(), uintptr(AValue))
+	staticTextImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStaticText) ParentFont() bool {
-	r1 := LCL().SysCallN(5126, 0, m.Instance(), 0)
+	r1 := staticTextImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStaticText) SetParentFont(AValue bool) {
-	LCL().SysCallN(5126, 1, m.Instance(), PascalBool(AValue))
+	staticTextImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStaticText) ParentColor() bool {
-	r1 := LCL().SysCallN(5125, 0, m.Instance(), 0)
+	r1 := staticTextImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStaticText) SetParentColor(AValue bool) {
-	LCL().SysCallN(5125, 1, m.Instance(), PascalBool(AValue))
+	staticTextImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStaticText) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5127, 0, m.Instance(), 0)
+	r1 := staticTextImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStaticText) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5127, 1, m.Instance(), PascalBool(AValue))
+	staticTextImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func StaticTextClass() TClass {
-	ret := LCL().SysCallN(5120)
+	ret := staticTextImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -138,7 +139,7 @@ func (m *TStaticText) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5128, m.Instance(), m.contextPopupPtr)
+	staticTextImportAPI().SysCallN(8, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TStaticText) SetOnDblClick(fn TNotifyEvent) {
@@ -146,7 +147,7 @@ func (m *TStaticText) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5129, m.Instance(), m.dblClickPtr)
+	staticTextImportAPI().SysCallN(9, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TStaticText) SetOnDragDrop(fn TDragDropEvent) {
@@ -154,7 +155,7 @@ func (m *TStaticText) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5130, m.Instance(), m.dragDropPtr)
+	staticTextImportAPI().SysCallN(10, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TStaticText) SetOnDragOver(fn TDragOverEvent) {
@@ -162,7 +163,7 @@ func (m *TStaticText) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5131, m.Instance(), m.dragOverPtr)
+	staticTextImportAPI().SysCallN(11, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TStaticText) SetOnEndDrag(fn TEndDragEvent) {
@@ -170,7 +171,7 @@ func (m *TStaticText) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5132, m.Instance(), m.endDragPtr)
+	staticTextImportAPI().SysCallN(12, m.Instance(), m.endDragPtr)
 }
 
 func (m *TStaticText) SetOnMouseDown(fn TMouseEvent) {
@@ -178,7 +179,7 @@ func (m *TStaticText) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5133, m.Instance(), m.mouseDownPtr)
+	staticTextImportAPI().SysCallN(13, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TStaticText) SetOnMouseEnter(fn TNotifyEvent) {
@@ -186,7 +187,7 @@ func (m *TStaticText) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5134, m.Instance(), m.mouseEnterPtr)
+	staticTextImportAPI().SysCallN(14, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TStaticText) SetOnMouseLeave(fn TNotifyEvent) {
@@ -194,7 +195,7 @@ func (m *TStaticText) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5135, m.Instance(), m.mouseLeavePtr)
+	staticTextImportAPI().SysCallN(15, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TStaticText) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -202,7 +203,7 @@ func (m *TStaticText) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5136, m.Instance(), m.mouseMovePtr)
+	staticTextImportAPI().SysCallN(16, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TStaticText) SetOnMouseUp(fn TMouseEvent) {
@@ -210,7 +211,7 @@ func (m *TStaticText) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5137, m.Instance(), m.mouseUpPtr)
+	staticTextImportAPI().SysCallN(17, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TStaticText) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -218,7 +219,7 @@ func (m *TStaticText) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5138, m.Instance(), m.mouseWheelPtr)
+	staticTextImportAPI().SysCallN(18, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TStaticText) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -226,7 +227,7 @@ func (m *TStaticText) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5139, m.Instance(), m.mouseWheelDownPtr)
+	staticTextImportAPI().SysCallN(19, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TStaticText) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -234,7 +235,7 @@ func (m *TStaticText) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5143, m.Instance(), m.mouseWheelUpPtr)
+	staticTextImportAPI().SysCallN(23, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TStaticText) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -242,7 +243,7 @@ func (m *TStaticText) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5140, m.Instance(), m.mouseWheelHorzPtr)
+	staticTextImportAPI().SysCallN(20, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TStaticText) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -250,7 +251,7 @@ func (m *TStaticText) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5141, m.Instance(), m.mouseWheelLeftPtr)
+	staticTextImportAPI().SysCallN(21, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TStaticText) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -258,7 +259,7 @@ func (m *TStaticText) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5142, m.Instance(), m.mouseWheelRightPtr)
+	staticTextImportAPI().SysCallN(22, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TStaticText) SetOnStartDrag(fn TStartDragEvent) {
@@ -266,5 +267,45 @@ func (m *TStaticText) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5144, m.Instance(), m.startDragPtr)
+	staticTextImportAPI().SysCallN(24, m.Instance(), m.startDragPtr)
+}
+
+var (
+	staticTextImport       *imports.Imports = nil
+	staticTextImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("StaticText_Class", 0),
+		/*1*/ imports.NewTable("StaticText_Create", 0),
+		/*2*/ imports.NewTable("StaticText_DragCursor", 0),
+		/*3*/ imports.NewTable("StaticText_DragKind", 0),
+		/*4*/ imports.NewTable("StaticText_DragMode", 0),
+		/*5*/ imports.NewTable("StaticText_ParentColor", 0),
+		/*6*/ imports.NewTable("StaticText_ParentFont", 0),
+		/*7*/ imports.NewTable("StaticText_ParentShowHint", 0),
+		/*8*/ imports.NewTable("StaticText_SetOnContextPopup", 0),
+		/*9*/ imports.NewTable("StaticText_SetOnDblClick", 0),
+		/*10*/ imports.NewTable("StaticText_SetOnDragDrop", 0),
+		/*11*/ imports.NewTable("StaticText_SetOnDragOver", 0),
+		/*12*/ imports.NewTable("StaticText_SetOnEndDrag", 0),
+		/*13*/ imports.NewTable("StaticText_SetOnMouseDown", 0),
+		/*14*/ imports.NewTable("StaticText_SetOnMouseEnter", 0),
+		/*15*/ imports.NewTable("StaticText_SetOnMouseLeave", 0),
+		/*16*/ imports.NewTable("StaticText_SetOnMouseMove", 0),
+		/*17*/ imports.NewTable("StaticText_SetOnMouseUp", 0),
+		/*18*/ imports.NewTable("StaticText_SetOnMouseWheel", 0),
+		/*19*/ imports.NewTable("StaticText_SetOnMouseWheelDown", 0),
+		/*20*/ imports.NewTable("StaticText_SetOnMouseWheelHorz", 0),
+		/*21*/ imports.NewTable("StaticText_SetOnMouseWheelLeft", 0),
+		/*22*/ imports.NewTable("StaticText_SetOnMouseWheelRight", 0),
+		/*23*/ imports.NewTable("StaticText_SetOnMouseWheelUp", 0),
+		/*24*/ imports.NewTable("StaticText_SetOnStartDrag", 0),
+	}
+)
+
+func staticTextImportAPI() *imports.Imports {
+	if staticTextImport == nil {
+		staticTextImport = NewDefaultImports()
+		staticTextImport.SetImportTable(staticTextImportTables)
+		staticTextImportTables = nil
+	}
+	return staticTextImport
 }

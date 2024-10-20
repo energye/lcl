@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -39,78 +40,103 @@ type TCustomMemo struct {
 }
 
 func NewCustomMemo(AOwner IComponent) ICustomMemo {
-	r1 := LCL().SysCallN(2094, GetObjectUintptr(AOwner))
+	r1 := customMemoImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsCustomMemo(r1)
 }
 
 func (m *TCustomMemo) Lines() IStrings {
-	r1 := LCL().SysCallN(2096, 0, m.Instance(), 0)
+	r1 := customMemoImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return AsStrings(r1)
 }
 
 func (m *TCustomMemo) SetLines(AValue IStrings) {
-	LCL().SysCallN(2096, 1, m.Instance(), GetObjectUintptr(AValue))
+	customMemoImportAPI().SysCallN(4, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomMemo) HorzScrollBar() IMemoScrollBar {
-	r1 := LCL().SysCallN(2095, 0, m.Instance(), 0)
+	r1 := customMemoImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return AsMemoScrollBar(r1)
 }
 
 func (m *TCustomMemo) SetHorzScrollBar(AValue IMemoScrollBar) {
-	LCL().SysCallN(2095, 1, m.Instance(), GetObjectUintptr(AValue))
+	customMemoImportAPI().SysCallN(3, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomMemo) VertScrollBar() IMemoScrollBar {
-	r1 := LCL().SysCallN(2098, 0, m.Instance(), 0)
+	r1 := customMemoImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return AsMemoScrollBar(r1)
 }
 
 func (m *TCustomMemo) SetVertScrollBar(AValue IMemoScrollBar) {
-	LCL().SysCallN(2098, 1, m.Instance(), GetObjectUintptr(AValue))
+	customMemoImportAPI().SysCallN(6, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomMemo) ScrollBars() TScrollStyle {
-	r1 := LCL().SysCallN(2097, 0, m.Instance(), 0)
+	r1 := customMemoImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TScrollStyle(r1)
 }
 
 func (m *TCustomMemo) SetScrollBars(AValue TScrollStyle) {
-	LCL().SysCallN(2097, 1, m.Instance(), uintptr(AValue))
+	customMemoImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomMemo) WantReturns() bool {
-	r1 := LCL().SysCallN(2099, 0, m.Instance(), 0)
+	r1 := customMemoImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomMemo) SetWantReturns(AValue bool) {
-	LCL().SysCallN(2099, 1, m.Instance(), PascalBool(AValue))
+	customMemoImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomMemo) WantTabs() bool {
-	r1 := LCL().SysCallN(2100, 0, m.Instance(), 0)
+	r1 := customMemoImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomMemo) SetWantTabs(AValue bool) {
-	LCL().SysCallN(2100, 1, m.Instance(), PascalBool(AValue))
+	customMemoImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomMemo) WordWrap() bool {
-	r1 := LCL().SysCallN(2101, 0, m.Instance(), 0)
+	r1 := customMemoImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomMemo) SetWordWrap(AValue bool) {
-	LCL().SysCallN(2101, 1, m.Instance(), PascalBool(AValue))
+	customMemoImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
 }
 
 func CustomMemoClass() TClass {
-	ret := LCL().SysCallN(2093)
+	ret := customMemoImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TCustomMemo) Append(AValue string) {
-	LCL().SysCallN(2092, m.Instance(), PascalStr(AValue))
+	customMemoImportAPI().SysCallN(0, m.Instance(), PascalStr(AValue))
+}
+
+var (
+	customMemoImport       *imports.Imports = nil
+	customMemoImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomMemo_Append", 0),
+		/*1*/ imports.NewTable("CustomMemo_Class", 0),
+		/*2*/ imports.NewTable("CustomMemo_Create", 0),
+		/*3*/ imports.NewTable("CustomMemo_HorzScrollBar", 0),
+		/*4*/ imports.NewTable("CustomMemo_Lines", 0),
+		/*5*/ imports.NewTable("CustomMemo_ScrollBars", 0),
+		/*6*/ imports.NewTable("CustomMemo_VertScrollBar", 0),
+		/*7*/ imports.NewTable("CustomMemo_WantReturns", 0),
+		/*8*/ imports.NewTable("CustomMemo_WantTabs", 0),
+		/*9*/ imports.NewTable("CustomMemo_WordWrap", 0),
+	}
+)
+
+func customMemoImportAPI() *imports.Imports {
+	if customMemoImport == nil {
+		customMemoImport = NewDefaultImports()
+		customMemoImport.SetImportTable(customMemoImportTables)
+		customMemoImportTables = nil
+	}
+	return customMemoImport
 }

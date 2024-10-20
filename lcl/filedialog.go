@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -43,80 +44,80 @@ type TFileDialog struct {
 }
 
 func NewFileDialog(TheOwner IComponent) IFileDialog {
-	r1 := LCL().SysCallN(3025, GetObjectUintptr(TheOwner))
+	r1 := fileDialogImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsFileDialog(r1)
 }
 
 func (m *TFileDialog) Files() IStrings {
-	r1 := LCL().SysCallN(3029, m.Instance())
+	r1 := fileDialogImportAPI().SysCallN(5, m.Instance())
 	return AsStrings(r1)
 }
 
 func (m *TFileDialog) HistoryList() IStrings {
-	r1 := LCL().SysCallN(3032, 0, m.Instance(), 0)
+	r1 := fileDialogImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return AsStrings(r1)
 }
 
 func (m *TFileDialog) SetHistoryList(AValue IStrings) {
-	LCL().SysCallN(3032, 1, m.Instance(), GetObjectUintptr(AValue))
+	fileDialogImportAPI().SysCallN(8, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TFileDialog) DefaultExt() string {
-	r1 := LCL().SysCallN(3026, 0, m.Instance(), 0)
+	r1 := fileDialogImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TFileDialog) SetDefaultExt(AValue string) {
-	LCL().SysCallN(3026, 1, m.Instance(), PascalStr(AValue))
+	fileDialogImportAPI().SysCallN(2, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TFileDialog) FileName() string {
-	r1 := LCL().SysCallN(3028, 0, m.Instance(), 0)
+	r1 := fileDialogImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TFileDialog) SetFileName(AValue string) {
-	LCL().SysCallN(3028, 1, m.Instance(), PascalStr(AValue))
+	fileDialogImportAPI().SysCallN(4, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TFileDialog) Filter() string {
-	r1 := LCL().SysCallN(3030, 0, m.Instance(), 0)
+	r1 := fileDialogImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TFileDialog) SetFilter(AValue string) {
-	LCL().SysCallN(3030, 1, m.Instance(), PascalStr(AValue))
+	fileDialogImportAPI().SysCallN(6, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TFileDialog) FilterIndex() int32 {
-	r1 := LCL().SysCallN(3031, 0, m.Instance(), 0)
+	r1 := fileDialogImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFileDialog) SetFilterIndex(AValue int32) {
-	LCL().SysCallN(3031, 1, m.Instance(), uintptr(AValue))
+	fileDialogImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFileDialog) InitialDir() string {
-	r1 := LCL().SysCallN(3033, 0, m.Instance(), 0)
+	r1 := fileDialogImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TFileDialog) SetInitialDir(AValue string) {
-	LCL().SysCallN(3033, 1, m.Instance(), PascalStr(AValue))
+	fileDialogImportAPI().SysCallN(9, 1, m.Instance(), PascalStr(AValue))
 }
 
 func FileDialogClass() TClass {
-	ret := LCL().SysCallN(3024)
+	ret := fileDialogImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TFileDialog) DoTypeChange() {
-	LCL().SysCallN(3027, m.Instance())
+	fileDialogImportAPI().SysCallN(3, m.Instance())
 }
 
 func (m *TFileDialog) IntfFileTypeChanged(NewFilterIndex int32) {
-	LCL().SysCallN(3034, m.Instance(), uintptr(NewFilterIndex))
+	fileDialogImportAPI().SysCallN(10, m.Instance(), uintptr(NewFilterIndex))
 }
 
 func (m *TFileDialog) SetOnHelpClicked(fn TNotifyEvent) {
@@ -124,7 +125,7 @@ func (m *TFileDialog) SetOnHelpClicked(fn TNotifyEvent) {
 		RemoveEventElement(m.helpClickedPtr)
 	}
 	m.helpClickedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3035, m.Instance(), m.helpClickedPtr)
+	fileDialogImportAPI().SysCallN(11, m.Instance(), m.helpClickedPtr)
 }
 
 func (m *TFileDialog) SetOnTypeChange(fn TNotifyEvent) {
@@ -132,5 +133,33 @@ func (m *TFileDialog) SetOnTypeChange(fn TNotifyEvent) {
 		RemoveEventElement(m.typeChangePtr)
 	}
 	m.typeChangePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3036, m.Instance(), m.typeChangePtr)
+	fileDialogImportAPI().SysCallN(12, m.Instance(), m.typeChangePtr)
+}
+
+var (
+	fileDialogImport       *imports.Imports = nil
+	fileDialogImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FileDialog_Class", 0),
+		/*1*/ imports.NewTable("FileDialog_Create", 0),
+		/*2*/ imports.NewTable("FileDialog_DefaultExt", 0),
+		/*3*/ imports.NewTable("FileDialog_DoTypeChange", 0),
+		/*4*/ imports.NewTable("FileDialog_FileName", 0),
+		/*5*/ imports.NewTable("FileDialog_Files", 0),
+		/*6*/ imports.NewTable("FileDialog_Filter", 0),
+		/*7*/ imports.NewTable("FileDialog_FilterIndex", 0),
+		/*8*/ imports.NewTable("FileDialog_HistoryList", 0),
+		/*9*/ imports.NewTable("FileDialog_InitialDir", 0),
+		/*10*/ imports.NewTable("FileDialog_IntfFileTypeChanged", 0),
+		/*11*/ imports.NewTable("FileDialog_SetOnHelpClicked", 0),
+		/*12*/ imports.NewTable("FileDialog_SetOnTypeChange", 0),
+	}
+)
+
+func fileDialogImportAPI() *imports.Imports {
+	if fileDialogImport == nil {
+		fileDialogImport = NewDefaultImports()
+		fileDialogImport.SetImportTable(fileDialogImportTables)
+		fileDialogImportTables = nil
+	}
+	return fileDialogImport
 }

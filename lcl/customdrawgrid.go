@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -207,494 +208,494 @@ type TCustomDrawGrid struct {
 }
 
 func NewCustomDrawGrid(AOwner IComponent) ICustomDrawGrid {
-	r1 := LCL().SysCallN(1519, GetObjectUintptr(AOwner))
+	r1 := customDrawGridImportAPI().SysCallN(11, GetObjectUintptr(AOwner))
 	return AsCustomDrawGrid(r1)
 }
 
 func (m *TCustomDrawGrid) AllowOutboundEvents() bool {
-	r1 := LCL().SysCallN(1508, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetAllowOutboundEvents(AValue bool) {
-	LCL().SysCallN(1508, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) BorderColor() TColor {
-	r1 := LCL().SysCallN(1512, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomDrawGrid) SetBorderColor(AValue TColor) {
-	LCL().SysCallN(1512, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) Col() int32 {
-	r1 := LCL().SysCallN(1514, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetCol(AValue int32) {
-	LCL().SysCallN(1514, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) ColWidths(aCol int32) int32 {
-	r1 := LCL().SysCallN(1517, 0, m.Instance(), uintptr(aCol))
+	r1 := customDrawGridImportAPI().SysCallN(9, 0, m.Instance(), uintptr(aCol))
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetColWidths(aCol int32, AValue int32) {
-	LCL().SysCallN(1517, 1, m.Instance(), uintptr(aCol), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(9, 1, m.Instance(), uintptr(aCol), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) ColRow() (resultPoint TPoint) {
-	LCL().SysCallN(1516, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	customDrawGridImportAPI().SysCallN(8, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TCustomDrawGrid) SetColRow(AValue *TPoint) {
-	LCL().SysCallN(1516, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	customDrawGridImportAPI().SysCallN(8, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TCustomDrawGrid) DisabledFontColor() TColor {
-	r1 := LCL().SysCallN(1527, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomDrawGrid) SetDisabledFontColor(AValue TColor) {
-	LCL().SysCallN(1527, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) Editor() IWinControl {
-	r1 := LCL().SysCallN(1528, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return AsWinControl(r1)
 }
 
 func (m *TCustomDrawGrid) SetEditor(AValue IWinControl) {
-	LCL().SysCallN(1528, 1, m.Instance(), GetObjectUintptr(AValue))
+	customDrawGridImportAPI().SysCallN(20, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) EditorBorderStyle() TBorderStyle {
-	r1 := LCL().SysCallN(1529, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return TBorderStyle(r1)
 }
 
 func (m *TCustomDrawGrid) SetEditorBorderStyle(AValue TBorderStyle) {
-	LCL().SysCallN(1529, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) EditorMode() bool {
-	r1 := LCL().SysCallN(1530, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(22, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetEditorMode(AValue bool) {
-	LCL().SysCallN(1530, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(22, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) ExtendedColSizing() bool {
-	r1 := LCL().SysCallN(1532, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(24, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetExtendedColSizing(AValue bool) {
-	LCL().SysCallN(1532, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(24, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) AltColorStartNormal() bool {
-	r1 := LCL().SysCallN(1509, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetAltColorStartNormal(AValue bool) {
-	LCL().SysCallN(1509, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) FastEditing() bool {
-	r1 := LCL().SysCallN(1534, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(26, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetFastEditing(AValue bool) {
-	LCL().SysCallN(1534, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(26, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) FixedGridLineColor() TColor {
-	r1 := LCL().SysCallN(1537, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(29, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomDrawGrid) SetFixedGridLineColor(AValue TColor) {
-	LCL().SysCallN(1537, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(29, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) FocusColor() TColor {
-	r1 := LCL().SysCallN(1541, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(33, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomDrawGrid) SetFocusColor(AValue TColor) {
-	LCL().SysCallN(1541, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(33, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) FocusRectVisible() bool {
-	r1 := LCL().SysCallN(1542, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(34, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetFocusRectVisible(AValue bool) {
-	LCL().SysCallN(1542, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(34, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) GridHeight() int32 {
-	r1 := LCL().SysCallN(1543, m.Instance())
+	r1 := customDrawGridImportAPI().SysCallN(35, m.Instance())
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) GridWidth() int32 {
-	r1 := LCL().SysCallN(1547, m.Instance())
+	r1 := customDrawGridImportAPI().SysCallN(39, m.Instance())
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) IsCellSelected(aCol, aRow int32) bool {
-	r1 := LCL().SysCallN(1549, m.Instance(), uintptr(aCol), uintptr(aRow))
+	r1 := customDrawGridImportAPI().SysCallN(41, m.Instance(), uintptr(aCol), uintptr(aRow))
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) LeftCol() int32 {
-	r1 := LCL().SysCallN(1550, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(42, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetLeftCol(AValue int32) {
-	LCL().SysCallN(1550, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(42, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) Row() int32 {
-	r1 := LCL().SysCallN(1555, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(47, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetRow(AValue int32) {
-	LCL().SysCallN(1555, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(47, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) RowHeights(aRow int32) int32 {
-	r1 := LCL().SysCallN(1557, 0, m.Instance(), uintptr(aRow))
+	r1 := customDrawGridImportAPI().SysCallN(49, 0, m.Instance(), uintptr(aRow))
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetRowHeights(aRow int32, AValue int32) {
-	LCL().SysCallN(1557, 1, m.Instance(), uintptr(aRow), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(49, 1, m.Instance(), uintptr(aRow), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) SaveOptions() TSaveOptions {
-	r1 := LCL().SysCallN(1558, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(50, 0, m.Instance(), 0)
 	return TSaveOptions(r1)
 }
 
 func (m *TCustomDrawGrid) SetSaveOptions(AValue TSaveOptions) {
-	LCL().SysCallN(1558, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(50, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) SelectedColor() TColor {
-	r1 := LCL().SysCallN(1560, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(52, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomDrawGrid) SetSelectedColor(AValue TColor) {
-	LCL().SysCallN(1560, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(52, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) SelectedColumn() IGridColumn {
-	r1 := LCL().SysCallN(1561, m.Instance())
+	r1 := customDrawGridImportAPI().SysCallN(53, m.Instance())
 	return AsGridColumn(r1)
 }
 
 func (m *TCustomDrawGrid) Selection() (resultGridRect TGridRect) {
-	LCL().SysCallN(1562, 0, m.Instance(), uintptr(unsafePointer(&resultGridRect)), uintptr(unsafePointer(&resultGridRect)))
+	customDrawGridImportAPI().SysCallN(54, 0, m.Instance(), uintptr(unsafePointer(&resultGridRect)), uintptr(unsafePointer(&resultGridRect)))
 	return
 }
 
 func (m *TCustomDrawGrid) SetSelection(AValue *TGridRect) {
-	LCL().SysCallN(1562, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	customDrawGridImportAPI().SysCallN(54, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TCustomDrawGrid) StrictSort() bool {
-	r1 := LCL().SysCallN(1603, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(95, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetStrictSort(AValue bool) {
-	LCL().SysCallN(1603, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(95, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) TopRow() int32 {
-	r1 := LCL().SysCallN(1605, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(97, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetTopRow(AValue int32) {
-	LCL().SysCallN(1605, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(97, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) UseXORFeatures() bool {
-	r1 := LCL().SysCallN(1606, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(98, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetUseXORFeatures(AValue bool) {
-	LCL().SysCallN(1606, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(98, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) AutoAdvance() TAutoAdvance {
-	r1 := LCL().SysCallN(1510, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TAutoAdvance(r1)
 }
 
 func (m *TCustomDrawGrid) SetAutoAdvance(AValue TAutoAdvance) {
-	LCL().SysCallN(1510, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) AutoFillColumns() bool {
-	r1 := LCL().SysCallN(1511, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetAutoFillColumns(AValue bool) {
-	LCL().SysCallN(1511, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) ColCount() int32 {
-	r1 := LCL().SysCallN(1515, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetColCount(AValue int32) {
-	LCL().SysCallN(1515, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) Columns() IGridColumns {
-	r1 := LCL().SysCallN(1518, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return AsGridColumns(r1)
 }
 
 func (m *TCustomDrawGrid) SetColumns(AValue IGridColumns) {
-	LCL().SysCallN(1518, 1, m.Instance(), GetObjectUintptr(AValue))
+	customDrawGridImportAPI().SysCallN(10, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) DefaultColWidth() int32 {
-	r1 := LCL().SysCallN(1520, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetDefaultColWidth(AValue int32) {
-	LCL().SysCallN(1520, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) DefaultDrawing() bool {
-	r1 := LCL().SysCallN(1522, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetDefaultDrawing(AValue bool) {
-	LCL().SysCallN(1522, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(14, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) DefaultRowHeight() int32 {
-	r1 := LCL().SysCallN(1523, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetDefaultRowHeight(AValue int32) {
-	LCL().SysCallN(1523, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) FadeUnfocusedSelection() bool {
-	r1 := LCL().SysCallN(1533, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetFadeUnfocusedSelection(AValue bool) {
-	LCL().SysCallN(1533, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) FixedColor() TColor {
-	r1 := LCL().SysCallN(1535, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(27, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomDrawGrid) SetFixedColor(AValue TColor) {
-	LCL().SysCallN(1535, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(27, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) FixedCols() int32 {
-	r1 := LCL().SysCallN(1536, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(28, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetFixedCols(AValue int32) {
-	LCL().SysCallN(1536, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(28, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) FixedHotColor() TColor {
-	r1 := LCL().SysCallN(1538, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(30, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomDrawGrid) SetFixedHotColor(AValue TColor) {
-	LCL().SysCallN(1538, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(30, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) FixedRows() int32 {
-	r1 := LCL().SysCallN(1539, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(31, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetFixedRows(AValue int32) {
-	LCL().SysCallN(1539, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(31, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) Flat() bool {
-	r1 := LCL().SysCallN(1540, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(32, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetFlat(AValue bool) {
-	LCL().SysCallN(1540, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(32, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) GridLineColor() TColor {
-	r1 := LCL().SysCallN(1544, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(36, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomDrawGrid) SetGridLineColor(AValue TColor) {
-	LCL().SysCallN(1544, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(36, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) GridLineStyle() TPenStyle {
-	r1 := LCL().SysCallN(1545, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(37, 0, m.Instance(), 0)
 	return TPenStyle(r1)
 }
 
 func (m *TCustomDrawGrid) SetGridLineStyle(AValue TPenStyle) {
-	LCL().SysCallN(1545, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(37, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) GridLineWidth() int32 {
-	r1 := LCL().SysCallN(1546, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(38, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetGridLineWidth(AValue int32) {
-	LCL().SysCallN(1546, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(38, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) Options() TGridOptions {
-	r1 := LCL().SysCallN(1552, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(44, 0, m.Instance(), 0)
 	return TGridOptions(r1)
 }
 
 func (m *TCustomDrawGrid) SetOptions(AValue TGridOptions) {
-	LCL().SysCallN(1552, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(44, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) Options2() TGridOptions2 {
-	r1 := LCL().SysCallN(1553, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(45, 0, m.Instance(), 0)
 	return TGridOptions2(r1)
 }
 
 func (m *TCustomDrawGrid) SetOptions2(AValue TGridOptions2) {
-	LCL().SysCallN(1553, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(45, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) ParentShowHint() bool {
-	r1 := LCL().SysCallN(1554, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(46, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDrawGrid) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(1554, 1, m.Instance(), PascalBool(AValue))
+	customDrawGridImportAPI().SysCallN(46, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomDrawGrid) RowCount() int32 {
-	r1 := LCL().SysCallN(1556, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(48, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) SetRowCount(AValue int32) {
-	LCL().SysCallN(1556, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(48, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) ScrollBars() TScrollStyle {
-	r1 := LCL().SysCallN(1559, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(51, 0, m.Instance(), 0)
 	return TScrollStyle(r1)
 }
 
 func (m *TCustomDrawGrid) SetScrollBars(AValue TScrollStyle) {
-	LCL().SysCallN(1559, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(51, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) TabAdvance() TAutoAdvance {
-	r1 := LCL().SysCallN(1604, 0, m.Instance(), 0)
+	r1 := customDrawGridImportAPI().SysCallN(96, 0, m.Instance(), 0)
 	return TAutoAdvance(r1)
 }
 
 func (m *TCustomDrawGrid) SetTabAdvance(AValue TAutoAdvance) {
-	LCL().SysCallN(1604, 1, m.Instance(), uintptr(AValue))
+	customDrawGridImportAPI().SysCallN(96, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDrawGrid) VisibleColCount() int32 {
-	r1 := LCL().SysCallN(1607, m.Instance())
+	r1 := customDrawGridImportAPI().SysCallN(99, m.Instance())
 	return int32(r1)
 }
 
 func (m *TCustomDrawGrid) VisibleRowCount() int32 {
-	r1 := LCL().SysCallN(1608, m.Instance())
+	r1 := customDrawGridImportAPI().SysCallN(100, m.Instance())
 	return int32(r1)
 }
 
 func CustomDrawGridClass() TClass {
-	ret := LCL().SysCallN(1513)
+	ret := customDrawGridImportAPI().SysCallN(5)
 	return TClass(ret)
 }
 
 func (m *TCustomDrawGrid) DeleteColRow(IsColumn bool, index int32) {
-	LCL().SysCallN(1525, m.Instance(), PascalBool(IsColumn), uintptr(index))
+	customDrawGridImportAPI().SysCallN(17, m.Instance(), PascalBool(IsColumn), uintptr(index))
 }
 
 func (m *TCustomDrawGrid) DeleteCol(Index int32) {
-	LCL().SysCallN(1524, m.Instance(), uintptr(Index))
+	customDrawGridImportAPI().SysCallN(16, m.Instance(), uintptr(Index))
 }
 
 func (m *TCustomDrawGrid) DeleteRow(Index int32) {
-	LCL().SysCallN(1526, m.Instance(), uintptr(Index))
+	customDrawGridImportAPI().SysCallN(18, m.Instance(), uintptr(Index))
 }
 
 func (m *TCustomDrawGrid) ExchangeColRow(IsColumn bool, index, WithIndex int32) {
-	LCL().SysCallN(1531, m.Instance(), PascalBool(IsColumn), uintptr(index), uintptr(WithIndex))
+	customDrawGridImportAPI().SysCallN(23, m.Instance(), PascalBool(IsColumn), uintptr(index), uintptr(WithIndex))
 }
 
 func (m *TCustomDrawGrid) InsertColRow(IsColumn bool, index int32) {
-	LCL().SysCallN(1548, m.Instance(), PascalBool(IsColumn), uintptr(index))
+	customDrawGridImportAPI().SysCallN(40, m.Instance(), PascalBool(IsColumn), uintptr(index))
 }
 
 func (m *TCustomDrawGrid) MoveColRow(IsColumn bool, FromIndex, ToIndex int32) {
-	LCL().SysCallN(1551, m.Instance(), PascalBool(IsColumn), uintptr(FromIndex), uintptr(ToIndex))
+	customDrawGridImportAPI().SysCallN(43, m.Instance(), PascalBool(IsColumn), uintptr(FromIndex), uintptr(ToIndex))
 }
 
 func (m *TCustomDrawGrid) SortColRow(IsColumn bool, index int32) {
-	LCL().SysCallN(1601, m.Instance(), PascalBool(IsColumn), uintptr(index))
+	customDrawGridImportAPI().SysCallN(93, m.Instance(), PascalBool(IsColumn), uintptr(index))
 }
 
 func (m *TCustomDrawGrid) SortColRow1(IsColumn bool, Index, FromIndex, ToIndex int32) {
-	LCL().SysCallN(1602, m.Instance(), PascalBool(IsColumn), uintptr(Index), uintptr(FromIndex), uintptr(ToIndex))
+	customDrawGridImportAPI().SysCallN(94, m.Instance(), PascalBool(IsColumn), uintptr(Index), uintptr(FromIndex), uintptr(ToIndex))
 }
 
 func (m *TCustomDrawGrid) DefaultDrawCell(aCol, aRow int32, aRect *TRect, aState TGridDrawState) {
 	var result1 uintptr
-	LCL().SysCallN(1521, m.Instance(), uintptr(aCol), uintptr(aRow), uintptr(unsafePointer(&result1)), uintptr(aState))
+	customDrawGridImportAPI().SysCallN(13, m.Instance(), uintptr(aCol), uintptr(aRow), uintptr(unsafePointer(&result1)), uintptr(aState))
 	*aRect = *(*TRect)(getPointer(result1))
 }
 
@@ -703,7 +704,7 @@ func (m *TCustomDrawGrid) SetOnAfterSelection(fn TOnSelectEvent) {
 		RemoveEventElement(m.afterSelectionPtr)
 	}
 	m.afterSelectionPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1563, m.Instance(), m.afterSelectionPtr)
+	customDrawGridImportAPI().SysCallN(55, m.Instance(), m.afterSelectionPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnBeforeSelection(fn TOnSelectEvent) {
@@ -711,7 +712,7 @@ func (m *TCustomDrawGrid) SetOnBeforeSelection(fn TOnSelectEvent) {
 		RemoveEventElement(m.beforeSelectionPtr)
 	}
 	m.beforeSelectionPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1564, m.Instance(), m.beforeSelectionPtr)
+	customDrawGridImportAPI().SysCallN(56, m.Instance(), m.beforeSelectionPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnColRowDeleted(fn TGridOperationEvent) {
@@ -719,7 +720,7 @@ func (m *TCustomDrawGrid) SetOnColRowDeleted(fn TGridOperationEvent) {
 		RemoveEventElement(m.colRowDeletedPtr)
 	}
 	m.colRowDeletedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1566, m.Instance(), m.colRowDeletedPtr)
+	customDrawGridImportAPI().SysCallN(58, m.Instance(), m.colRowDeletedPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnColRowExchanged(fn TGridOperationEvent) {
@@ -727,7 +728,7 @@ func (m *TCustomDrawGrid) SetOnColRowExchanged(fn TGridOperationEvent) {
 		RemoveEventElement(m.colRowExchangedPtr)
 	}
 	m.colRowExchangedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1567, m.Instance(), m.colRowExchangedPtr)
+	customDrawGridImportAPI().SysCallN(59, m.Instance(), m.colRowExchangedPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnColRowInserted(fn TGridOperationEvent) {
@@ -735,7 +736,7 @@ func (m *TCustomDrawGrid) SetOnColRowInserted(fn TGridOperationEvent) {
 		RemoveEventElement(m.colRowInsertedPtr)
 	}
 	m.colRowInsertedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1568, m.Instance(), m.colRowInsertedPtr)
+	customDrawGridImportAPI().SysCallN(60, m.Instance(), m.colRowInsertedPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnColRowMoved(fn TGridOperationEvent) {
@@ -743,7 +744,7 @@ func (m *TCustomDrawGrid) SetOnColRowMoved(fn TGridOperationEvent) {
 		RemoveEventElement(m.colRowMovedPtr)
 	}
 	m.colRowMovedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1569, m.Instance(), m.colRowMovedPtr)
+	customDrawGridImportAPI().SysCallN(61, m.Instance(), m.colRowMovedPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnCompareCells(fn TOnCompareCells) {
@@ -751,7 +752,7 @@ func (m *TCustomDrawGrid) SetOnCompareCells(fn TOnCompareCells) {
 		RemoveEventElement(m.compareCellsPtr)
 	}
 	m.compareCellsPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1570, m.Instance(), m.compareCellsPtr)
+	customDrawGridImportAPI().SysCallN(62, m.Instance(), m.compareCellsPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnContextPopup(fn TContextPopupEvent) {
@@ -759,7 +760,7 @@ func (m *TCustomDrawGrid) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1571, m.Instance(), m.contextPopupPtr)
+	customDrawGridImportAPI().SysCallN(63, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnDblClick(fn TNotifyEvent) {
@@ -767,7 +768,7 @@ func (m *TCustomDrawGrid) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1572, m.Instance(), m.dblClickPtr)
+	customDrawGridImportAPI().SysCallN(64, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnDragDrop(fn TDragDropEvent) {
@@ -775,7 +776,7 @@ func (m *TCustomDrawGrid) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1573, m.Instance(), m.dragDropPtr)
+	customDrawGridImportAPI().SysCallN(65, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnDragOver(fn TDragOverEvent) {
@@ -783,7 +784,7 @@ func (m *TCustomDrawGrid) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1574, m.Instance(), m.dragOverPtr)
+	customDrawGridImportAPI().SysCallN(66, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnDrawCell(fn TOnDrawCell) {
@@ -791,7 +792,7 @@ func (m *TCustomDrawGrid) SetOnDrawCell(fn TOnDrawCell) {
 		RemoveEventElement(m.drawCellPtr)
 	}
 	m.drawCellPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1575, m.Instance(), m.drawCellPtr)
+	customDrawGridImportAPI().SysCallN(67, m.Instance(), m.drawCellPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnButtonClick(fn TOnSelectEvent) {
@@ -799,7 +800,7 @@ func (m *TCustomDrawGrid) SetOnButtonClick(fn TOnSelectEvent) {
 		RemoveEventElement(m.buttonClickPtr)
 	}
 	m.buttonClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1565, m.Instance(), m.buttonClickPtr)
+	customDrawGridImportAPI().SysCallN(57, m.Instance(), m.buttonClickPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnEndDock(fn TEndDragEvent) {
@@ -807,7 +808,7 @@ func (m *TCustomDrawGrid) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1576, m.Instance(), m.endDockPtr)
+	customDrawGridImportAPI().SysCallN(68, m.Instance(), m.endDockPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnEndDrag(fn TEndDragEvent) {
@@ -815,7 +816,7 @@ func (m *TCustomDrawGrid) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1577, m.Instance(), m.endDragPtr)
+	customDrawGridImportAPI().SysCallN(69, m.Instance(), m.endDragPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnGetEditMask(fn TGetEditEvent) {
@@ -823,7 +824,7 @@ func (m *TCustomDrawGrid) SetOnGetEditMask(fn TGetEditEvent) {
 		RemoveEventElement(m.getEditMaskPtr)
 	}
 	m.getEditMaskPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1578, m.Instance(), m.getEditMaskPtr)
+	customDrawGridImportAPI().SysCallN(70, m.Instance(), m.getEditMaskPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnGetEditText(fn TGetEditEvent) {
@@ -831,7 +832,7 @@ func (m *TCustomDrawGrid) SetOnGetEditText(fn TGetEditEvent) {
 		RemoveEventElement(m.getEditTextPtr)
 	}
 	m.getEditTextPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1579, m.Instance(), m.getEditTextPtr)
+	customDrawGridImportAPI().SysCallN(71, m.Instance(), m.getEditTextPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnHeaderClick(fn THdrEvent) {
@@ -839,7 +840,7 @@ func (m *TCustomDrawGrid) SetOnHeaderClick(fn THdrEvent) {
 		RemoveEventElement(m.headerClickPtr)
 	}
 	m.headerClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1580, m.Instance(), m.headerClickPtr)
+	customDrawGridImportAPI().SysCallN(72, m.Instance(), m.headerClickPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnHeaderSized(fn THdrEvent) {
@@ -847,7 +848,7 @@ func (m *TCustomDrawGrid) SetOnHeaderSized(fn THdrEvent) {
 		RemoveEventElement(m.headerSizedPtr)
 	}
 	m.headerSizedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1581, m.Instance(), m.headerSizedPtr)
+	customDrawGridImportAPI().SysCallN(73, m.Instance(), m.headerSizedPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnHeaderSizing(fn THeaderSizingEvent) {
@@ -855,7 +856,7 @@ func (m *TCustomDrawGrid) SetOnHeaderSizing(fn THeaderSizingEvent) {
 		RemoveEventElement(m.headerSizingPtr)
 	}
 	m.headerSizingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1582, m.Instance(), m.headerSizingPtr)
+	customDrawGridImportAPI().SysCallN(74, m.Instance(), m.headerSizingPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnMouseDown(fn TMouseEvent) {
@@ -863,7 +864,7 @@ func (m *TCustomDrawGrid) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1583, m.Instance(), m.mouseDownPtr)
+	customDrawGridImportAPI().SysCallN(75, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnMouseEnter(fn TNotifyEvent) {
@@ -871,7 +872,7 @@ func (m *TCustomDrawGrid) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1584, m.Instance(), m.mouseEnterPtr)
+	customDrawGridImportAPI().SysCallN(76, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnMouseLeave(fn TNotifyEvent) {
@@ -879,7 +880,7 @@ func (m *TCustomDrawGrid) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1585, m.Instance(), m.mouseLeavePtr)
+	customDrawGridImportAPI().SysCallN(77, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TCustomDrawGrid) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -887,7 +888,7 @@ func (m *TCustomDrawGrid) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1586, m.Instance(), m.mouseMovePtr)
+	customDrawGridImportAPI().SysCallN(78, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TCustomDrawGrid) SetOnMouseUp(fn TMouseEvent) {
@@ -895,7 +896,7 @@ func (m *TCustomDrawGrid) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1587, m.Instance(), m.mouseUpPtr)
+	customDrawGridImportAPI().SysCallN(79, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -903,7 +904,7 @@ func (m *TCustomDrawGrid) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1588, m.Instance(), m.mouseWheelPtr)
+	customDrawGridImportAPI().SysCallN(80, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -911,7 +912,7 @@ func (m *TCustomDrawGrid) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1589, m.Instance(), m.mouseWheelDownPtr)
+	customDrawGridImportAPI().SysCallN(81, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -919,7 +920,7 @@ func (m *TCustomDrawGrid) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1590, m.Instance(), m.mouseWheelUpPtr)
+	customDrawGridImportAPI().SysCallN(82, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnPickListSelect(fn TNotifyEvent) {
@@ -927,7 +928,7 @@ func (m *TCustomDrawGrid) SetOnPickListSelect(fn TNotifyEvent) {
 		RemoveEventElement(m.pickListSelectPtr)
 	}
 	m.pickListSelectPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1591, m.Instance(), m.pickListSelectPtr)
+	customDrawGridImportAPI().SysCallN(83, m.Instance(), m.pickListSelectPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnPrepareCanvas(fn TOnPrepareCanvasEvent) {
@@ -935,7 +936,7 @@ func (m *TCustomDrawGrid) SetOnPrepareCanvas(fn TOnPrepareCanvasEvent) {
 		RemoveEventElement(m.prepareCanvasPtr)
 	}
 	m.prepareCanvasPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1592, m.Instance(), m.prepareCanvasPtr)
+	customDrawGridImportAPI().SysCallN(84, m.Instance(), m.prepareCanvasPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnSelectEditor(fn TSelectEditorEvent) {
@@ -943,7 +944,7 @@ func (m *TCustomDrawGrid) SetOnSelectEditor(fn TSelectEditorEvent) {
 		RemoveEventElement(m.selectEditorPtr)
 	}
 	m.selectEditorPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1594, m.Instance(), m.selectEditorPtr)
+	customDrawGridImportAPI().SysCallN(86, m.Instance(), m.selectEditorPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnSelection(fn TOnSelectEvent) {
@@ -951,7 +952,7 @@ func (m *TCustomDrawGrid) SetOnSelection(fn TOnSelectEvent) {
 		RemoveEventElement(m.selectionPtr)
 	}
 	m.selectionPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1595, m.Instance(), m.selectionPtr)
+	customDrawGridImportAPI().SysCallN(87, m.Instance(), m.selectionPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnSelectCell(fn TOnSelectCellEvent) {
@@ -959,7 +960,7 @@ func (m *TCustomDrawGrid) SetOnSelectCell(fn TOnSelectCellEvent) {
 		RemoveEventElement(m.selectCellPtr)
 	}
 	m.selectCellPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1593, m.Instance(), m.selectCellPtr)
+	customDrawGridImportAPI().SysCallN(85, m.Instance(), m.selectCellPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnSetEditText(fn TSetEditEvent) {
@@ -967,7 +968,7 @@ func (m *TCustomDrawGrid) SetOnSetEditText(fn TSetEditEvent) {
 		RemoveEventElement(m.setEditTextPtr)
 	}
 	m.setEditTextPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1596, m.Instance(), m.setEditTextPtr)
+	customDrawGridImportAPI().SysCallN(88, m.Instance(), m.setEditTextPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnStartDock(fn TStartDockEvent) {
@@ -975,7 +976,7 @@ func (m *TCustomDrawGrid) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1597, m.Instance(), m.startDockPtr)
+	customDrawGridImportAPI().SysCallN(89, m.Instance(), m.startDockPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnStartDrag(fn TStartDragEvent) {
@@ -983,7 +984,7 @@ func (m *TCustomDrawGrid) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1598, m.Instance(), m.startDragPtr)
+	customDrawGridImportAPI().SysCallN(90, m.Instance(), m.startDragPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnTopleftChanged(fn TNotifyEvent) {
@@ -991,7 +992,7 @@ func (m *TCustomDrawGrid) SetOnTopleftChanged(fn TNotifyEvent) {
 		RemoveEventElement(m.topleftChangedPtr)
 	}
 	m.topleftChangedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1599, m.Instance(), m.topleftChangedPtr)
+	customDrawGridImportAPI().SysCallN(91, m.Instance(), m.topleftChangedPtr)
 }
 
 func (m *TCustomDrawGrid) SetOnValidateEntry(fn TValidateEntryEvent) {
@@ -999,5 +1000,121 @@ func (m *TCustomDrawGrid) SetOnValidateEntry(fn TValidateEntryEvent) {
 		RemoveEventElement(m.validateEntryPtr)
 	}
 	m.validateEntryPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1600, m.Instance(), m.validateEntryPtr)
+	customDrawGridImportAPI().SysCallN(92, m.Instance(), m.validateEntryPtr)
+}
+
+var (
+	customDrawGridImport       *imports.Imports = nil
+	customDrawGridImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomDrawGrid_AllowOutboundEvents", 0),
+		/*1*/ imports.NewTable("CustomDrawGrid_AltColorStartNormal", 0),
+		/*2*/ imports.NewTable("CustomDrawGrid_AutoAdvance", 0),
+		/*3*/ imports.NewTable("CustomDrawGrid_AutoFillColumns", 0),
+		/*4*/ imports.NewTable("CustomDrawGrid_BorderColor", 0),
+		/*5*/ imports.NewTable("CustomDrawGrid_Class", 0),
+		/*6*/ imports.NewTable("CustomDrawGrid_Col", 0),
+		/*7*/ imports.NewTable("CustomDrawGrid_ColCount", 0),
+		/*8*/ imports.NewTable("CustomDrawGrid_ColRow", 0),
+		/*9*/ imports.NewTable("CustomDrawGrid_ColWidths", 0),
+		/*10*/ imports.NewTable("CustomDrawGrid_Columns", 0),
+		/*11*/ imports.NewTable("CustomDrawGrid_Create", 0),
+		/*12*/ imports.NewTable("CustomDrawGrid_DefaultColWidth", 0),
+		/*13*/ imports.NewTable("CustomDrawGrid_DefaultDrawCell", 0),
+		/*14*/ imports.NewTable("CustomDrawGrid_DefaultDrawing", 0),
+		/*15*/ imports.NewTable("CustomDrawGrid_DefaultRowHeight", 0),
+		/*16*/ imports.NewTable("CustomDrawGrid_DeleteCol", 0),
+		/*17*/ imports.NewTable("CustomDrawGrid_DeleteColRow", 0),
+		/*18*/ imports.NewTable("CustomDrawGrid_DeleteRow", 0),
+		/*19*/ imports.NewTable("CustomDrawGrid_DisabledFontColor", 0),
+		/*20*/ imports.NewTable("CustomDrawGrid_Editor", 0),
+		/*21*/ imports.NewTable("CustomDrawGrid_EditorBorderStyle", 0),
+		/*22*/ imports.NewTable("CustomDrawGrid_EditorMode", 0),
+		/*23*/ imports.NewTable("CustomDrawGrid_ExchangeColRow", 0),
+		/*24*/ imports.NewTable("CustomDrawGrid_ExtendedColSizing", 0),
+		/*25*/ imports.NewTable("CustomDrawGrid_FadeUnfocusedSelection", 0),
+		/*26*/ imports.NewTable("CustomDrawGrid_FastEditing", 0),
+		/*27*/ imports.NewTable("CustomDrawGrid_FixedColor", 0),
+		/*28*/ imports.NewTable("CustomDrawGrid_FixedCols", 0),
+		/*29*/ imports.NewTable("CustomDrawGrid_FixedGridLineColor", 0),
+		/*30*/ imports.NewTable("CustomDrawGrid_FixedHotColor", 0),
+		/*31*/ imports.NewTable("CustomDrawGrid_FixedRows", 0),
+		/*32*/ imports.NewTable("CustomDrawGrid_Flat", 0),
+		/*33*/ imports.NewTable("CustomDrawGrid_FocusColor", 0),
+		/*34*/ imports.NewTable("CustomDrawGrid_FocusRectVisible", 0),
+		/*35*/ imports.NewTable("CustomDrawGrid_GridHeight", 0),
+		/*36*/ imports.NewTable("CustomDrawGrid_GridLineColor", 0),
+		/*37*/ imports.NewTable("CustomDrawGrid_GridLineStyle", 0),
+		/*38*/ imports.NewTable("CustomDrawGrid_GridLineWidth", 0),
+		/*39*/ imports.NewTable("CustomDrawGrid_GridWidth", 0),
+		/*40*/ imports.NewTable("CustomDrawGrid_InsertColRow", 0),
+		/*41*/ imports.NewTable("CustomDrawGrid_IsCellSelected", 0),
+		/*42*/ imports.NewTable("CustomDrawGrid_LeftCol", 0),
+		/*43*/ imports.NewTable("CustomDrawGrid_MoveColRow", 0),
+		/*44*/ imports.NewTable("CustomDrawGrid_Options", 0),
+		/*45*/ imports.NewTable("CustomDrawGrid_Options2", 0),
+		/*46*/ imports.NewTable("CustomDrawGrid_ParentShowHint", 0),
+		/*47*/ imports.NewTable("CustomDrawGrid_Row", 0),
+		/*48*/ imports.NewTable("CustomDrawGrid_RowCount", 0),
+		/*49*/ imports.NewTable("CustomDrawGrid_RowHeights", 0),
+		/*50*/ imports.NewTable("CustomDrawGrid_SaveOptions", 0),
+		/*51*/ imports.NewTable("CustomDrawGrid_ScrollBars", 0),
+		/*52*/ imports.NewTable("CustomDrawGrid_SelectedColor", 0),
+		/*53*/ imports.NewTable("CustomDrawGrid_SelectedColumn", 0),
+		/*54*/ imports.NewTable("CustomDrawGrid_Selection", 0),
+		/*55*/ imports.NewTable("CustomDrawGrid_SetOnAfterSelection", 0),
+		/*56*/ imports.NewTable("CustomDrawGrid_SetOnBeforeSelection", 0),
+		/*57*/ imports.NewTable("CustomDrawGrid_SetOnButtonClick", 0),
+		/*58*/ imports.NewTable("CustomDrawGrid_SetOnColRowDeleted", 0),
+		/*59*/ imports.NewTable("CustomDrawGrid_SetOnColRowExchanged", 0),
+		/*60*/ imports.NewTable("CustomDrawGrid_SetOnColRowInserted", 0),
+		/*61*/ imports.NewTable("CustomDrawGrid_SetOnColRowMoved", 0),
+		/*62*/ imports.NewTable("CustomDrawGrid_SetOnCompareCells", 0),
+		/*63*/ imports.NewTable("CustomDrawGrid_SetOnContextPopup", 0),
+		/*64*/ imports.NewTable("CustomDrawGrid_SetOnDblClick", 0),
+		/*65*/ imports.NewTable("CustomDrawGrid_SetOnDragDrop", 0),
+		/*66*/ imports.NewTable("CustomDrawGrid_SetOnDragOver", 0),
+		/*67*/ imports.NewTable("CustomDrawGrid_SetOnDrawCell", 0),
+		/*68*/ imports.NewTable("CustomDrawGrid_SetOnEndDock", 0),
+		/*69*/ imports.NewTable("CustomDrawGrid_SetOnEndDrag", 0),
+		/*70*/ imports.NewTable("CustomDrawGrid_SetOnGetEditMask", 0),
+		/*71*/ imports.NewTable("CustomDrawGrid_SetOnGetEditText", 0),
+		/*72*/ imports.NewTable("CustomDrawGrid_SetOnHeaderClick", 0),
+		/*73*/ imports.NewTable("CustomDrawGrid_SetOnHeaderSized", 0),
+		/*74*/ imports.NewTable("CustomDrawGrid_SetOnHeaderSizing", 0),
+		/*75*/ imports.NewTable("CustomDrawGrid_SetOnMouseDown", 0),
+		/*76*/ imports.NewTable("CustomDrawGrid_SetOnMouseEnter", 0),
+		/*77*/ imports.NewTable("CustomDrawGrid_SetOnMouseLeave", 0),
+		/*78*/ imports.NewTable("CustomDrawGrid_SetOnMouseMove", 0),
+		/*79*/ imports.NewTable("CustomDrawGrid_SetOnMouseUp", 0),
+		/*80*/ imports.NewTable("CustomDrawGrid_SetOnMouseWheel", 0),
+		/*81*/ imports.NewTable("CustomDrawGrid_SetOnMouseWheelDown", 0),
+		/*82*/ imports.NewTable("CustomDrawGrid_SetOnMouseWheelUp", 0),
+		/*83*/ imports.NewTable("CustomDrawGrid_SetOnPickListSelect", 0),
+		/*84*/ imports.NewTable("CustomDrawGrid_SetOnPrepareCanvas", 0),
+		/*85*/ imports.NewTable("CustomDrawGrid_SetOnSelectCell", 0),
+		/*86*/ imports.NewTable("CustomDrawGrid_SetOnSelectEditor", 0),
+		/*87*/ imports.NewTable("CustomDrawGrid_SetOnSelection", 0),
+		/*88*/ imports.NewTable("CustomDrawGrid_SetOnSetEditText", 0),
+		/*89*/ imports.NewTable("CustomDrawGrid_SetOnStartDock", 0),
+		/*90*/ imports.NewTable("CustomDrawGrid_SetOnStartDrag", 0),
+		/*91*/ imports.NewTable("CustomDrawGrid_SetOnTopleftChanged", 0),
+		/*92*/ imports.NewTable("CustomDrawGrid_SetOnValidateEntry", 0),
+		/*93*/ imports.NewTable("CustomDrawGrid_SortColRow", 0),
+		/*94*/ imports.NewTable("CustomDrawGrid_SortColRow1", 0),
+		/*95*/ imports.NewTable("CustomDrawGrid_StrictSort", 0),
+		/*96*/ imports.NewTable("CustomDrawGrid_TabAdvance", 0),
+		/*97*/ imports.NewTable("CustomDrawGrid_TopRow", 0),
+		/*98*/ imports.NewTable("CustomDrawGrid_UseXORFeatures", 0),
+		/*99*/ imports.NewTable("CustomDrawGrid_VisibleColCount", 0),
+		/*100*/ imports.NewTable("CustomDrawGrid_VisibleRowCount", 0),
+	}
+)
+
+func customDrawGridImportAPI() *imports.Imports {
+	if customDrawGridImport == nil {
+		customDrawGridImport = NewDefaultImports()
+		customDrawGridImport.SetImportTable(customDrawGridImportTables)
+		customDrawGridImportTables = nil
+	}
+	return customDrawGridImport
 }

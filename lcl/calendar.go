@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -48,12 +49,12 @@ type TCalendar struct {
 }
 
 func NewCalendar(AOwner IComponent) ICalendar {
-	r1 := LCL().SysCallN(497, GetObjectUintptr(AOwner))
+	r1 := calendarImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsCalendar(r1)
 }
 
 func CalendarClass() TClass {
-	ret := LCL().SysCallN(496)
+	ret := calendarImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -62,7 +63,7 @@ func (m *TCalendar) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(498, m.Instance(), m.dblClickPtr)
+	calendarImportAPI().SysCallN(2, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TCalendar) SetOnMouseDown(fn TMouseEvent) {
@@ -70,7 +71,7 @@ func (m *TCalendar) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(499, m.Instance(), m.mouseDownPtr)
+	calendarImportAPI().SysCallN(3, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TCalendar) SetOnMouseEnter(fn TNotifyEvent) {
@@ -78,7 +79,7 @@ func (m *TCalendar) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(500, m.Instance(), m.mouseEnterPtr)
+	calendarImportAPI().SysCallN(4, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TCalendar) SetOnMouseLeave(fn TNotifyEvent) {
@@ -86,7 +87,7 @@ func (m *TCalendar) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(501, m.Instance(), m.mouseLeavePtr)
+	calendarImportAPI().SysCallN(5, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TCalendar) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -94,7 +95,7 @@ func (m *TCalendar) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(502, m.Instance(), m.mouseMovePtr)
+	calendarImportAPI().SysCallN(6, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TCalendar) SetOnMouseUp(fn TMouseEvent) {
@@ -102,7 +103,7 @@ func (m *TCalendar) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(503, m.Instance(), m.mouseUpPtr)
+	calendarImportAPI().SysCallN(7, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TCalendar) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -110,7 +111,7 @@ func (m *TCalendar) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(504, m.Instance(), m.mouseWheelPtr)
+	calendarImportAPI().SysCallN(8, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TCalendar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -118,7 +119,7 @@ func (m *TCalendar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(505, m.Instance(), m.mouseWheelDownPtr)
+	calendarImportAPI().SysCallN(9, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TCalendar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -126,7 +127,7 @@ func (m *TCalendar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(509, m.Instance(), m.mouseWheelUpPtr)
+	calendarImportAPI().SysCallN(13, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TCalendar) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -134,7 +135,7 @@ func (m *TCalendar) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(506, m.Instance(), m.mouseWheelHorzPtr)
+	calendarImportAPI().SysCallN(10, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TCalendar) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -142,7 +143,7 @@ func (m *TCalendar) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(507, m.Instance(), m.mouseWheelLeftPtr)
+	calendarImportAPI().SysCallN(11, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TCalendar) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -150,5 +151,34 @@ func (m *TCalendar) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(508, m.Instance(), m.mouseWheelRightPtr)
+	calendarImportAPI().SysCallN(12, m.Instance(), m.mouseWheelRightPtr)
+}
+
+var (
+	calendarImport       *imports.Imports = nil
+	calendarImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Calendar_Class", 0),
+		/*1*/ imports.NewTable("Calendar_Create", 0),
+		/*2*/ imports.NewTable("Calendar_SetOnDblClick", 0),
+		/*3*/ imports.NewTable("Calendar_SetOnMouseDown", 0),
+		/*4*/ imports.NewTable("Calendar_SetOnMouseEnter", 0),
+		/*5*/ imports.NewTable("Calendar_SetOnMouseLeave", 0),
+		/*6*/ imports.NewTable("Calendar_SetOnMouseMove", 0),
+		/*7*/ imports.NewTable("Calendar_SetOnMouseUp", 0),
+		/*8*/ imports.NewTable("Calendar_SetOnMouseWheel", 0),
+		/*9*/ imports.NewTable("Calendar_SetOnMouseWheelDown", 0),
+		/*10*/ imports.NewTable("Calendar_SetOnMouseWheelHorz", 0),
+		/*11*/ imports.NewTable("Calendar_SetOnMouseWheelLeft", 0),
+		/*12*/ imports.NewTable("Calendar_SetOnMouseWheelRight", 0),
+		/*13*/ imports.NewTable("Calendar_SetOnMouseWheelUp", 0),
+	}
+)
+
+func calendarImportAPI() *imports.Imports {
+	if calendarImport == nil {
+		calendarImport = NewDefaultImports()
+		calendarImport.SetImportTable(calendarImportTables)
+		calendarImportTables = nil
+	}
+	return calendarImport
 }

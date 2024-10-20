@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -36,56 +37,78 @@ type TScrollBarOptions struct {
 }
 
 func NewScrollBarOptions(AOwner IBaseVirtualTree) IScrollBarOptions {
-	r1 := LCL().SysCallN(4960, GetObjectUintptr(AOwner))
+	r1 := scrollBarOptionsImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsScrollBarOptions(r1)
 }
 
 func (m *TScrollBarOptions) AlwaysVisible() bool {
-	r1 := LCL().SysCallN(4958, 0, m.Instance(), 0)
+	r1 := scrollBarOptionsImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TScrollBarOptions) SetAlwaysVisible(AValue bool) {
-	LCL().SysCallN(4958, 1, m.Instance(), PascalBool(AValue))
+	scrollBarOptionsImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TScrollBarOptions) HorizontalIncrement() TVTScrollIncrement {
-	r1 := LCL().SysCallN(4961, 0, m.Instance(), 0)
+	r1 := scrollBarOptionsImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TVTScrollIncrement(r1)
 }
 
 func (m *TScrollBarOptions) SetHorizontalIncrement(AValue TVTScrollIncrement) {
-	LCL().SysCallN(4961, 1, m.Instance(), uintptr(AValue))
+	scrollBarOptionsImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TScrollBarOptions) ScrollBars() TScrollStyle {
-	r1 := LCL().SysCallN(4963, 0, m.Instance(), 0)
+	r1 := scrollBarOptionsImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TScrollStyle(r1)
 }
 
 func (m *TScrollBarOptions) SetScrollBars(AValue TScrollStyle) {
-	LCL().SysCallN(4963, 1, m.Instance(), uintptr(AValue))
+	scrollBarOptionsImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TScrollBarOptions) ScrollBarStyle() TVTScrollBarStyle {
-	r1 := LCL().SysCallN(4962, 0, m.Instance(), 0)
+	r1 := scrollBarOptionsImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TVTScrollBarStyle(r1)
 }
 
 func (m *TScrollBarOptions) SetScrollBarStyle(AValue TVTScrollBarStyle) {
-	LCL().SysCallN(4962, 1, m.Instance(), uintptr(AValue))
+	scrollBarOptionsImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TScrollBarOptions) VerticalIncrement() TVTScrollIncrement {
-	r1 := LCL().SysCallN(4964, 0, m.Instance(), 0)
+	r1 := scrollBarOptionsImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return TVTScrollIncrement(r1)
 }
 
 func (m *TScrollBarOptions) SetVerticalIncrement(AValue TVTScrollIncrement) {
-	LCL().SysCallN(4964, 1, m.Instance(), uintptr(AValue))
+	scrollBarOptionsImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func ScrollBarOptionsClass() TClass {
-	ret := LCL().SysCallN(4959)
+	ret := scrollBarOptionsImportAPI().SysCallN(1)
 	return TClass(ret)
+}
+
+var (
+	scrollBarOptionsImport       *imports.Imports = nil
+	scrollBarOptionsImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ScrollBarOptions_AlwaysVisible", 0),
+		/*1*/ imports.NewTable("ScrollBarOptions_Class", 0),
+		/*2*/ imports.NewTable("ScrollBarOptions_Create", 0),
+		/*3*/ imports.NewTable("ScrollBarOptions_HorizontalIncrement", 0),
+		/*4*/ imports.NewTable("ScrollBarOptions_ScrollBarStyle", 0),
+		/*5*/ imports.NewTable("ScrollBarOptions_ScrollBars", 0),
+		/*6*/ imports.NewTable("ScrollBarOptions_VerticalIncrement", 0),
+	}
+)
+
+func scrollBarOptionsImportAPI() *imports.Imports {
+	if scrollBarOptionsImport == nil {
+		scrollBarOptionsImport = NewDefaultImports()
+		scrollBarOptionsImport.SetImportTable(scrollBarOptionsImportTables)
+		scrollBarOptionsImportTables = nil
+	}
+	return scrollBarOptionsImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -37,70 +38,94 @@ type TRichEdit struct {
 }
 
 func NewRichEdit(AOnwer IComponent) IRichEdit {
-	r1 := LCL().SysCallN(4850, GetObjectUintptr(AOnwer))
+	r1 := richEditImportAPI().SysCallN(1, GetObjectUintptr(AOnwer))
 	return AsRichEdit(r1)
 }
 
 func (m *TRichEdit) Zoom() int32 {
-	r1 := LCL().SysCallN(4857, 0, m.Instance(), 0)
+	r1 := richEditImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TRichEdit) SetZoom(AValue int32) {
-	LCL().SysCallN(4857, 1, m.Instance(), uintptr(AValue))
+	richEditImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TRichEdit) HideScrollBars() bool {
-	r1 := LCL().SysCallN(4853, 0, m.Instance(), 0)
+	r1 := richEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRichEdit) SetHideScrollBars(AValue bool) {
-	LCL().SysCallN(4853, 1, m.Instance(), PascalBool(AValue))
+	richEditImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRichEdit) PlainText() bool {
-	r1 := LCL().SysCallN(4855, 0, m.Instance(), 0)
+	r1 := richEditImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TRichEdit) SetPlainText(AValue bool) {
-	LCL().SysCallN(4855, 1, m.Instance(), PascalBool(AValue))
+	richEditImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TRichEdit) DefAttributes() ITextAttributes {
-	r1 := LCL().SysCallN(4851, 0, m.Instance(), 0)
+	r1 := richEditImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return AsTextAttributes(r1)
 }
 
 func (m *TRichEdit) SetDefAttributes(AValue ITextAttributes) {
-	LCL().SysCallN(4851, 1, m.Instance(), GetObjectUintptr(AValue))
+	richEditImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TRichEdit) SelAttributes() ITextAttributes {
-	r1 := LCL().SysCallN(4856, 0, m.Instance(), 0)
+	r1 := richEditImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return AsTextAttributes(r1)
 }
 
 func (m *TRichEdit) SetSelAttributes(AValue ITextAttributes) {
-	LCL().SysCallN(4856, 1, m.Instance(), GetObjectUintptr(AValue))
+	richEditImportAPI().SysCallN(7, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TRichEdit) Paragraph() IParaAttributes {
-	r1 := LCL().SysCallN(4854, 0, m.Instance(), 0)
+	r1 := richEditImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return AsParaAttributes(r1)
 }
 
 func (m *TRichEdit) SetParagraph(AValue IParaAttributes) {
-	LCL().SysCallN(4854, 1, m.Instance(), GetObjectUintptr(AValue))
+	richEditImportAPI().SysCallN(5, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TRichEdit) FindText(ASearchStr string, AStartPos int32, ALength int32, AOptions TSearchTypes) int32 {
-	r1 := LCL().SysCallN(4852, m.Instance(), PascalStr(ASearchStr), uintptr(AStartPos), uintptr(ALength), uintptr(AOptions))
+	r1 := richEditImportAPI().SysCallN(3, m.Instance(), PascalStr(ASearchStr), uintptr(AStartPos), uintptr(ALength), uintptr(AOptions))
 	return int32(r1)
 }
 
 func RichEditClass() TClass {
-	ret := LCL().SysCallN(4849)
+	ret := richEditImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	richEditImport       *imports.Imports = nil
+	richEditImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("RichEdit_Class", 0),
+		/*1*/ imports.NewTable("RichEdit_Create", 0),
+		/*2*/ imports.NewTable("RichEdit_DefAttributes", 0),
+		/*3*/ imports.NewTable("RichEdit_FindText", 0),
+		/*4*/ imports.NewTable("RichEdit_HideScrollBars", 0),
+		/*5*/ imports.NewTable("RichEdit_Paragraph", 0),
+		/*6*/ imports.NewTable("RichEdit_PlainText", 0),
+		/*7*/ imports.NewTable("RichEdit_SelAttributes", 0),
+		/*8*/ imports.NewTable("RichEdit_Zoom", 0),
+	}
+)
+
+func richEditImportAPI() *imports.Imports {
+	if richEditImport == nil {
+		richEditImport = NewDefaultImports()
+		richEditImport.SetImportTable(richEditImportTables)
+		richEditImportTables = nil
+	}
+	return richEditImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -36,58 +37,58 @@ type TDataModule struct {
 }
 
 func NewDataModule(AOwner IComponent) IDataModule {
-	r1 := LCL().SysCallN(2533, GetObjectUintptr(AOwner))
+	r1 := dataModuleImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsDataModule(r1)
 }
 
 func NewDataModuleNew(AOwner IComponent) IDataModule {
-	r1 := LCL().SysCallN(2534, GetObjectUintptr(AOwner))
+	r1 := dataModuleImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsDataModule(r1)
 }
 
 func NewDataModuleNew1(AOwner IComponent, CreateMode int32) IDataModule {
-	r1 := LCL().SysCallN(2535, GetObjectUintptr(AOwner), uintptr(CreateMode))
+	r1 := dataModuleImportAPI().SysCallN(3, GetObjectUintptr(AOwner), uintptr(CreateMode))
 	return AsDataModule(r1)
 }
 
 func (m *TDataModule) DesignOffset() (resultPoint TPoint) {
-	LCL().SysCallN(2536, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	dataModuleImportAPI().SysCallN(4, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TDataModule) SetDesignOffset(AValue *TPoint) {
-	LCL().SysCallN(2536, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	dataModuleImportAPI().SysCallN(4, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TDataModule) DesignSize() (resultPoint TPoint) {
-	LCL().SysCallN(2538, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	dataModuleImportAPI().SysCallN(6, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TDataModule) SetDesignSize(AValue *TPoint) {
-	LCL().SysCallN(2538, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	dataModuleImportAPI().SysCallN(6, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TDataModule) DesignPPI() int32 {
-	r1 := LCL().SysCallN(2537, 0, m.Instance(), 0)
+	r1 := dataModuleImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDataModule) SetDesignPPI(AValue int32) {
-	LCL().SysCallN(2537, 1, m.Instance(), uintptr(AValue))
+	dataModuleImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDataModule) OldCreateOrder() bool {
-	r1 := LCL().SysCallN(2539, 0, m.Instance(), 0)
+	r1 := dataModuleImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDataModule) SetOldCreateOrder(AValue bool) {
-	LCL().SysCallN(2539, 1, m.Instance(), PascalBool(AValue))
+	dataModuleImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func DataModuleClass() TClass {
-	ret := LCL().SysCallN(2532)
+	ret := dataModuleImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -96,7 +97,7 @@ func (m *TDataModule) SetOnCreate(fn TNotifyEvent) {
 		RemoveEventElement(m.createPtr)
 	}
 	m.createPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2540, m.Instance(), m.createPtr)
+	dataModuleImportAPI().SysCallN(8, m.Instance(), m.createPtr)
 }
 
 func (m *TDataModule) SetOnDestroy(fn TNotifyEvent) {
@@ -104,5 +105,30 @@ func (m *TDataModule) SetOnDestroy(fn TNotifyEvent) {
 		RemoveEventElement(m.destroyPtr)
 	}
 	m.destroyPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2541, m.Instance(), m.destroyPtr)
+	dataModuleImportAPI().SysCallN(9, m.Instance(), m.destroyPtr)
+}
+
+var (
+	dataModuleImport       *imports.Imports = nil
+	dataModuleImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("DataModule_Class", 0),
+		/*1*/ imports.NewTable("DataModule_Create", 0),
+		/*2*/ imports.NewTable("DataModule_CreateNew", 0),
+		/*3*/ imports.NewTable("DataModule_CreateNew1", 0),
+		/*4*/ imports.NewTable("DataModule_DesignOffset", 0),
+		/*5*/ imports.NewTable("DataModule_DesignPPI", 0),
+		/*6*/ imports.NewTable("DataModule_DesignSize", 0),
+		/*7*/ imports.NewTable("DataModule_OldCreateOrder", 0),
+		/*8*/ imports.NewTable("DataModule_SetOnCreate", 0),
+		/*9*/ imports.NewTable("DataModule_SetOnDestroy", 0),
+	}
+)
+
+func dataModuleImportAPI() *imports.Imports {
+	if dataModuleImport == nil {
+		dataModuleImport = NewDefaultImports()
+		dataModuleImport.SetImportTable(dataModuleImportTables)
+		dataModuleImportTables = nil
+	}
+	return dataModuleImport
 }

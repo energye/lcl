@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -66,193 +67,193 @@ type TEditButton struct {
 }
 
 func NewEditButton(AOwner IComponent) IEditButton {
-	r1 := LCL().SysCallN(2804, GetObjectUintptr(AOwner))
+	r1 := editButtonImportAPI().SysCallN(9, GetObjectUintptr(AOwner))
 	return AsEditButton(r1)
 }
 
 func (m *TEditButton) AutoSelected() bool {
-	r1 := LCL().SysCallN(2796, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TEditButton) SetAutoSelected(AValue bool) {
-	LCL().SysCallN(2796, 1, m.Instance(), PascalBool(AValue))
+	editButtonImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TEditButton) Button() ISpeedButton {
-	r1 := LCL().SysCallN(2797, m.Instance())
+	r1 := editButtonImportAPI().SysCallN(2, m.Instance())
 	return AsSpeedButton(r1)
 }
 
 func (m *TEditButton) Edit() IEbEdit {
-	r1 := LCL().SysCallN(2806, m.Instance())
+	r1 := editButtonImportAPI().SysCallN(11, m.Instance())
 	return AsEbEdit(r1)
 }
 
 func (m *TEditButton) AutoSelect() bool {
-	r1 := LCL().SysCallN(2795, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TEditButton) SetAutoSelect(AValue bool) {
-	LCL().SysCallN(2795, 1, m.Instance(), PascalBool(AValue))
+	editButtonImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TEditButton) ButtonCaption() string {
-	r1 := LCL().SysCallN(2798, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TEditButton) SetButtonCaption(AValue string) {
-	LCL().SysCallN(2798, 1, m.Instance(), PascalStr(AValue))
+	editButtonImportAPI().SysCallN(3, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TEditButton) ButtonCursor() TCursor {
-	r1 := LCL().SysCallN(2799, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TEditButton) SetButtonCursor(AValue TCursor) {
-	LCL().SysCallN(2799, 1, m.Instance(), uintptr(AValue))
+	editButtonImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TEditButton) ButtonHint() string {
-	r1 := LCL().SysCallN(2800, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TEditButton) SetButtonHint(AValue string) {
-	LCL().SysCallN(2800, 1, m.Instance(), PascalStr(AValue))
+	editButtonImportAPI().SysCallN(5, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TEditButton) ButtonOnlyWhenFocused() bool {
-	r1 := LCL().SysCallN(2801, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TEditButton) SetButtonOnlyWhenFocused(AValue bool) {
-	LCL().SysCallN(2801, 1, m.Instance(), PascalBool(AValue))
+	editButtonImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TEditButton) ButtonWidth() int32 {
-	r1 := LCL().SysCallN(2802, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TEditButton) SetButtonWidth(AValue int32) {
-	LCL().SysCallN(2802, 1, m.Instance(), uintptr(AValue))
+	editButtonImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TEditButton) DirectInput() bool {
-	r1 := LCL().SysCallN(2805, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TEditButton) SetDirectInput(AValue bool) {
-	LCL().SysCallN(2805, 1, m.Instance(), PascalBool(AValue))
+	editButtonImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TEditButton) Flat() bool {
-	r1 := LCL().SysCallN(2807, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TEditButton) SetFlat(AValue bool) {
-	LCL().SysCallN(2807, 1, m.Instance(), PascalBool(AValue))
+	editButtonImportAPI().SysCallN(12, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TEditButton) FocusOnButtonClick() bool {
-	r1 := LCL().SysCallN(2808, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TEditButton) SetFocusOnButtonClick(AValue bool) {
-	LCL().SysCallN(2808, 1, m.Instance(), PascalBool(AValue))
+	editButtonImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TEditButton) Glyph() IBitmap {
-	r1 := LCL().SysCallN(2809, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return AsBitmap(r1)
 }
 
 func (m *TEditButton) SetGlyph(AValue IBitmap) {
-	LCL().SysCallN(2809, 1, m.Instance(), GetObjectUintptr(AValue))
+	editButtonImportAPI().SysCallN(14, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TEditButton) Images() ICustomImageList {
-	r1 := LCL().SysCallN(2812, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TEditButton) SetImages(AValue ICustomImageList) {
-	LCL().SysCallN(2812, 1, m.Instance(), GetObjectUintptr(AValue))
+	editButtonImportAPI().SysCallN(17, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TEditButton) ImageIndex() TImageIndex {
-	r1 := LCL().SysCallN(2810, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TEditButton) SetImageIndex(AValue TImageIndex) {
-	LCL().SysCallN(2810, 1, m.Instance(), uintptr(AValue))
+	editButtonImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TEditButton) ImageWidth() int32 {
-	r1 := LCL().SysCallN(2811, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TEditButton) SetImageWidth(AValue int32) {
-	LCL().SysCallN(2811, 1, m.Instance(), uintptr(AValue))
+	editButtonImportAPI().SysCallN(16, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TEditButton) Layout() TLeftRight {
-	r1 := LCL().SysCallN(2813, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return TLeftRight(r1)
 }
 
 func (m *TEditButton) SetLayout(AValue TLeftRight) {
-	LCL().SysCallN(2813, 1, m.Instance(), uintptr(AValue))
+	editButtonImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TEditButton) NumGlyphs() int32 {
-	r1 := LCL().SysCallN(2814, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TEditButton) SetNumGlyphs(AValue int32) {
-	LCL().SysCallN(2814, 1, m.Instance(), uintptr(AValue))
+	editButtonImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TEditButton) ParentFont() bool {
-	r1 := LCL().SysCallN(2815, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TEditButton) SetParentFont(AValue bool) {
-	LCL().SysCallN(2815, 1, m.Instance(), PascalBool(AValue))
+	editButtonImportAPI().SysCallN(20, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TEditButton) ParentShowHint() bool {
-	r1 := LCL().SysCallN(2816, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TEditButton) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(2816, 1, m.Instance(), PascalBool(AValue))
+	editButtonImportAPI().SysCallN(21, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TEditButton) Spacing() int32 {
-	r1 := LCL().SysCallN(2818, 0, m.Instance(), 0)
+	r1 := editButtonImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TEditButton) SetSpacing(AValue int32) {
-	LCL().SysCallN(2818, 1, m.Instance(), uintptr(AValue))
+	editButtonImportAPI().SysCallN(23, 1, m.Instance(), uintptr(AValue))
 }
 
 func EditButtonClass() TClass {
-	ret := LCL().SysCallN(2803)
+	ret := editButtonImportAPI().SysCallN(8)
 	return TClass(ret)
 }
 
@@ -261,5 +262,44 @@ func (m *TEditButton) SetOnButtonClick(fn TNotifyEvent) {
 		RemoveEventElement(m.buttonClickPtr)
 	}
 	m.buttonClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2817, m.Instance(), m.buttonClickPtr)
+	editButtonImportAPI().SysCallN(22, m.Instance(), m.buttonClickPtr)
+}
+
+var (
+	editButtonImport       *imports.Imports = nil
+	editButtonImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("EditButton_AutoSelect", 0),
+		/*1*/ imports.NewTable("EditButton_AutoSelected", 0),
+		/*2*/ imports.NewTable("EditButton_Button", 0),
+		/*3*/ imports.NewTable("EditButton_ButtonCaption", 0),
+		/*4*/ imports.NewTable("EditButton_ButtonCursor", 0),
+		/*5*/ imports.NewTable("EditButton_ButtonHint", 0),
+		/*6*/ imports.NewTable("EditButton_ButtonOnlyWhenFocused", 0),
+		/*7*/ imports.NewTable("EditButton_ButtonWidth", 0),
+		/*8*/ imports.NewTable("EditButton_Class", 0),
+		/*9*/ imports.NewTable("EditButton_Create", 0),
+		/*10*/ imports.NewTable("EditButton_DirectInput", 0),
+		/*11*/ imports.NewTable("EditButton_Edit", 0),
+		/*12*/ imports.NewTable("EditButton_Flat", 0),
+		/*13*/ imports.NewTable("EditButton_FocusOnButtonClick", 0),
+		/*14*/ imports.NewTable("EditButton_Glyph", 0),
+		/*15*/ imports.NewTable("EditButton_ImageIndex", 0),
+		/*16*/ imports.NewTable("EditButton_ImageWidth", 0),
+		/*17*/ imports.NewTable("EditButton_Images", 0),
+		/*18*/ imports.NewTable("EditButton_Layout", 0),
+		/*19*/ imports.NewTable("EditButton_NumGlyphs", 0),
+		/*20*/ imports.NewTable("EditButton_ParentFont", 0),
+		/*21*/ imports.NewTable("EditButton_ParentShowHint", 0),
+		/*22*/ imports.NewTable("EditButton_SetOnButtonClick", 0),
+		/*23*/ imports.NewTable("EditButton_Spacing", 0),
+	}
+)
+
+func editButtonImportAPI() *imports.Imports {
+	if editButtonImport == nil {
+		editButtonImport = NewDefaultImports()
+		editButtonImport.SetImportTable(editButtonImportTables)
+		editButtonImportTables = nil
+	}
+	return editButtonImport
 }

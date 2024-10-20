@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -81,251 +82,251 @@ type TDirectoryEdit struct {
 }
 
 func NewDirectoryEdit(AOwner IComponent) IDirectoryEdit {
-	r1 := LCL().SysCallN(2604, GetObjectUintptr(AOwner))
+	r1 := directoryEditImportAPI().SysCallN(8, GetObjectUintptr(AOwner))
 	return AsDirectoryEdit(r1)
 }
 
 func (m *TDirectoryEdit) AutoSelected() bool {
-	r1 := LCL().SysCallN(2597, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDirectoryEdit) SetAutoSelected(AValue bool) {
-	LCL().SysCallN(2597, 1, m.Instance(), PascalBool(AValue))
+	directoryEditImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDirectoryEdit) Directory() string {
-	r1 := LCL().SysCallN(2608, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TDirectoryEdit) SetDirectory(AValue string) {
-	LCL().SysCallN(2608, 1, m.Instance(), PascalStr(AValue))
+	directoryEditImportAPI().SysCallN(12, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TDirectoryEdit) RootDir() string {
-	r1 := LCL().SysCallN(2621, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TDirectoryEdit) SetRootDir(AValue string) {
-	LCL().SysCallN(2621, 1, m.Instance(), PascalStr(AValue))
+	directoryEditImportAPI().SysCallN(25, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TDirectoryEdit) DialogTitle() string {
-	r1 := LCL().SysCallN(2606, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TDirectoryEdit) SetDialogTitle(AValue string) {
-	LCL().SysCallN(2606, 1, m.Instance(), PascalStr(AValue))
+	directoryEditImportAPI().SysCallN(10, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TDirectoryEdit) DialogOptions() TOpenOptions {
-	r1 := LCL().SysCallN(2605, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TOpenOptions(r1)
 }
 
 func (m *TDirectoryEdit) SetDialogOptions(AValue TOpenOptions) {
-	LCL().SysCallN(2605, 1, m.Instance(), uintptr(AValue))
+	directoryEditImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDirectoryEdit) ShowHidden() bool {
-	r1 := LCL().SysCallN(2625, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(29, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDirectoryEdit) SetShowHidden(AValue bool) {
-	LCL().SysCallN(2625, 1, m.Instance(), PascalBool(AValue))
+	directoryEditImportAPI().SysCallN(29, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDirectoryEdit) ButtonCaption() string {
-	r1 := LCL().SysCallN(2598, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TDirectoryEdit) SetButtonCaption(AValue string) {
-	LCL().SysCallN(2598, 1, m.Instance(), PascalStr(AValue))
+	directoryEditImportAPI().SysCallN(2, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TDirectoryEdit) ButtonCursor() TCursor {
-	r1 := LCL().SysCallN(2599, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TDirectoryEdit) SetButtonCursor(AValue TCursor) {
-	LCL().SysCallN(2599, 1, m.Instance(), uintptr(AValue))
+	directoryEditImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDirectoryEdit) ButtonHint() string {
-	r1 := LCL().SysCallN(2600, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TDirectoryEdit) SetButtonHint(AValue string) {
-	LCL().SysCallN(2600, 1, m.Instance(), PascalStr(AValue))
+	directoryEditImportAPI().SysCallN(4, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TDirectoryEdit) ButtonOnlyWhenFocused() bool {
-	r1 := LCL().SysCallN(2601, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDirectoryEdit) SetButtonOnlyWhenFocused(AValue bool) {
-	LCL().SysCallN(2601, 1, m.Instance(), PascalBool(AValue))
+	directoryEditImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDirectoryEdit) ButtonWidth() int32 {
-	r1 := LCL().SysCallN(2602, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDirectoryEdit) SetButtonWidth(AValue int32) {
-	LCL().SysCallN(2602, 1, m.Instance(), uintptr(AValue))
+	directoryEditImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDirectoryEdit) DirectInput() bool {
-	r1 := LCL().SysCallN(2607, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDirectoryEdit) SetDirectInput(AValue bool) {
-	LCL().SysCallN(2607, 1, m.Instance(), PascalBool(AValue))
+	directoryEditImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDirectoryEdit) Glyph() IBitmap {
-	r1 := LCL().SysCallN(2613, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return AsBitmap(r1)
 }
 
 func (m *TDirectoryEdit) SetGlyph(AValue IBitmap) {
-	LCL().SysCallN(2613, 1, m.Instance(), GetObjectUintptr(AValue))
+	directoryEditImportAPI().SysCallN(17, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TDirectoryEdit) NumGlyphs() int32 {
-	r1 := LCL().SysCallN(2618, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(22, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDirectoryEdit) SetNumGlyphs(AValue int32) {
-	LCL().SysCallN(2618, 1, m.Instance(), uintptr(AValue))
+	directoryEditImportAPI().SysCallN(22, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDirectoryEdit) Images() ICustomImageList {
-	r1 := LCL().SysCallN(2616, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TDirectoryEdit) SetImages(AValue ICustomImageList) {
-	LCL().SysCallN(2616, 1, m.Instance(), GetObjectUintptr(AValue))
+	directoryEditImportAPI().SysCallN(20, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TDirectoryEdit) ImageIndex() TImageIndex {
-	r1 := LCL().SysCallN(2614, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TDirectoryEdit) SetImageIndex(AValue TImageIndex) {
-	LCL().SysCallN(2614, 1, m.Instance(), uintptr(AValue))
+	directoryEditImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDirectoryEdit) ImageWidth() int32 {
-	r1 := LCL().SysCallN(2615, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDirectoryEdit) SetImageWidth(AValue int32) {
-	LCL().SysCallN(2615, 1, m.Instance(), uintptr(AValue))
+	directoryEditImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDirectoryEdit) Flat() bool {
-	r1 := LCL().SysCallN(2611, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDirectoryEdit) SetFlat(AValue bool) {
-	LCL().SysCallN(2611, 1, m.Instance(), PascalBool(AValue))
+	directoryEditImportAPI().SysCallN(15, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDirectoryEdit) FocusOnButtonClick() bool {
-	r1 := LCL().SysCallN(2612, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDirectoryEdit) SetFocusOnButtonClick(AValue bool) {
-	LCL().SysCallN(2612, 1, m.Instance(), PascalBool(AValue))
+	directoryEditImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDirectoryEdit) AutoSelect() bool {
-	r1 := LCL().SysCallN(2596, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDirectoryEdit) SetAutoSelect(AValue bool) {
-	LCL().SysCallN(2596, 1, m.Instance(), PascalBool(AValue))
+	directoryEditImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDirectoryEdit) DragCursor() TCursor {
-	r1 := LCL().SysCallN(2609, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TDirectoryEdit) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(2609, 1, m.Instance(), uintptr(AValue))
+	directoryEditImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDirectoryEdit) DragMode() TDragMode {
-	r1 := LCL().SysCallN(2610, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TDirectoryEdit) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(2610, 1, m.Instance(), uintptr(AValue))
+	directoryEditImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDirectoryEdit) Layout() TLeftRight {
-	r1 := LCL().SysCallN(2617, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return TLeftRight(r1)
 }
 
 func (m *TDirectoryEdit) SetLayout(AValue TLeftRight) {
-	LCL().SysCallN(2617, 1, m.Instance(), uintptr(AValue))
+	directoryEditImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDirectoryEdit) ParentFont() bool {
-	r1 := LCL().SysCallN(2619, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDirectoryEdit) SetParentFont(AValue bool) {
-	LCL().SysCallN(2619, 1, m.Instance(), PascalBool(AValue))
+	directoryEditImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDirectoryEdit) ParentShowHint() bool {
-	r1 := LCL().SysCallN(2620, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(24, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDirectoryEdit) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(2620, 1, m.Instance(), PascalBool(AValue))
+	directoryEditImportAPI().SysCallN(24, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDirectoryEdit) Spacing() int32 {
-	r1 := LCL().SysCallN(2626, 0, m.Instance(), 0)
+	r1 := directoryEditImportAPI().SysCallN(30, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TDirectoryEdit) SetSpacing(AValue int32) {
-	LCL().SysCallN(2626, 1, m.Instance(), uintptr(AValue))
+	directoryEditImportAPI().SysCallN(30, 1, m.Instance(), uintptr(AValue))
 }
 
 func DirectoryEditClass() TClass {
-	ret := LCL().SysCallN(2603)
+	ret := directoryEditImportAPI().SysCallN(7)
 	return TClass(ret)
 }
 
 func (m *TDirectoryEdit) RunDialog() {
-	LCL().SysCallN(2622, m.Instance())
+	directoryEditImportAPI().SysCallN(26, m.Instance())
 }
 
 func (m *TDirectoryEdit) SetOnAcceptDirectory(fn TAcceptFileNameEvent) {
@@ -333,7 +334,7 @@ func (m *TDirectoryEdit) SetOnAcceptDirectory(fn TAcceptFileNameEvent) {
 		RemoveEventElement(m.acceptDirectoryPtr)
 	}
 	m.acceptDirectoryPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2623, m.Instance(), m.acceptDirectoryPtr)
+	directoryEditImportAPI().SysCallN(27, m.Instance(), m.acceptDirectoryPtr)
 }
 
 func (m *TDirectoryEdit) SetOnButtonClick(fn TNotifyEvent) {
@@ -341,5 +342,51 @@ func (m *TDirectoryEdit) SetOnButtonClick(fn TNotifyEvent) {
 		RemoveEventElement(m.buttonClickPtr)
 	}
 	m.buttonClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2624, m.Instance(), m.buttonClickPtr)
+	directoryEditImportAPI().SysCallN(28, m.Instance(), m.buttonClickPtr)
+}
+
+var (
+	directoryEditImport       *imports.Imports = nil
+	directoryEditImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("DirectoryEdit_AutoSelect", 0),
+		/*1*/ imports.NewTable("DirectoryEdit_AutoSelected", 0),
+		/*2*/ imports.NewTable("DirectoryEdit_ButtonCaption", 0),
+		/*3*/ imports.NewTable("DirectoryEdit_ButtonCursor", 0),
+		/*4*/ imports.NewTable("DirectoryEdit_ButtonHint", 0),
+		/*5*/ imports.NewTable("DirectoryEdit_ButtonOnlyWhenFocused", 0),
+		/*6*/ imports.NewTable("DirectoryEdit_ButtonWidth", 0),
+		/*7*/ imports.NewTable("DirectoryEdit_Class", 0),
+		/*8*/ imports.NewTable("DirectoryEdit_Create", 0),
+		/*9*/ imports.NewTable("DirectoryEdit_DialogOptions", 0),
+		/*10*/ imports.NewTable("DirectoryEdit_DialogTitle", 0),
+		/*11*/ imports.NewTable("DirectoryEdit_DirectInput", 0),
+		/*12*/ imports.NewTable("DirectoryEdit_Directory", 0),
+		/*13*/ imports.NewTable("DirectoryEdit_DragCursor", 0),
+		/*14*/ imports.NewTable("DirectoryEdit_DragMode", 0),
+		/*15*/ imports.NewTable("DirectoryEdit_Flat", 0),
+		/*16*/ imports.NewTable("DirectoryEdit_FocusOnButtonClick", 0),
+		/*17*/ imports.NewTable("DirectoryEdit_Glyph", 0),
+		/*18*/ imports.NewTable("DirectoryEdit_ImageIndex", 0),
+		/*19*/ imports.NewTable("DirectoryEdit_ImageWidth", 0),
+		/*20*/ imports.NewTable("DirectoryEdit_Images", 0),
+		/*21*/ imports.NewTable("DirectoryEdit_Layout", 0),
+		/*22*/ imports.NewTable("DirectoryEdit_NumGlyphs", 0),
+		/*23*/ imports.NewTable("DirectoryEdit_ParentFont", 0),
+		/*24*/ imports.NewTable("DirectoryEdit_ParentShowHint", 0),
+		/*25*/ imports.NewTable("DirectoryEdit_RootDir", 0),
+		/*26*/ imports.NewTable("DirectoryEdit_RunDialog", 0),
+		/*27*/ imports.NewTable("DirectoryEdit_SetOnAcceptDirectory", 0),
+		/*28*/ imports.NewTable("DirectoryEdit_SetOnButtonClick", 0),
+		/*29*/ imports.NewTable("DirectoryEdit_ShowHidden", 0),
+		/*30*/ imports.NewTable("DirectoryEdit_Spacing", 0),
+	}
+)
+
+func directoryEditImportAPI() *imports.Imports {
+	if directoryEditImport == nil {
+		directoryEditImport = NewDefaultImports()
+		directoryEditImport.SetImportTable(directoryEditImportTables)
+		directoryEditImportTables = nil
+	}
+	return directoryEditImport
 }

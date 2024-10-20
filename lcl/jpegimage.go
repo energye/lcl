@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -42,83 +43,109 @@ type TJPEGImage struct {
 }
 
 func NewJPEGImage() IJPEGImage {
-	r1 := LCL().SysCallN(3442)
+	r1 := jPEGImageImportAPI().SysCallN(3)
 	return AsJPEGImage(r1)
 }
 
 func (m *TJPEGImage) CompressionQuality() TJPEGQualityRange {
-	r1 := LCL().SysCallN(3441, 0, m.Instance(), 0)
+	r1 := jPEGImageImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TJPEGQualityRange(r1)
 }
 
 func (m *TJPEGImage) SetCompressionQuality(AValue TJPEGQualityRange) {
-	LCL().SysCallN(3441, 1, m.Instance(), uintptr(AValue))
+	jPEGImageImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TJPEGImage) GrayScale() bool {
-	r1 := LCL().SysCallN(3443, m.Instance())
+	r1 := jPEGImageImportAPI().SysCallN(4, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TJPEGImage) MinHeight() int32 {
-	r1 := LCL().SysCallN(3444, 0, m.Instance(), 0)
+	r1 := jPEGImageImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TJPEGImage) SetMinHeight(AValue int32) {
-	LCL().SysCallN(3444, 1, m.Instance(), uintptr(AValue))
+	jPEGImageImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TJPEGImage) MinWidth() int32 {
-	r1 := LCL().SysCallN(3445, 0, m.Instance(), 0)
+	r1 := jPEGImageImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TJPEGImage) SetMinWidth(AValue int32) {
-	LCL().SysCallN(3445, 1, m.Instance(), uintptr(AValue))
+	jPEGImageImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TJPEGImage) ProgressiveEncoding() bool {
-	r1 := LCL().SysCallN(3447, 0, m.Instance(), 0)
+	r1 := jPEGImageImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TJPEGImage) SetProgressiveEncoding(AValue bool) {
-	LCL().SysCallN(3447, 1, m.Instance(), PascalBool(AValue))
+	jPEGImageImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TJPEGImage) Performance() TJPEGPerformance {
-	r1 := LCL().SysCallN(3446, 0, m.Instance(), 0)
+	r1 := jPEGImageImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return TJPEGPerformance(r1)
 }
 
 func (m *TJPEGImage) SetPerformance(AValue TJPEGPerformance) {
-	LCL().SysCallN(3446, 1, m.Instance(), uintptr(AValue))
+	jPEGImageImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TJPEGImage) Scale() TJPEGScale {
-	r1 := LCL().SysCallN(3448, 0, m.Instance(), 0)
+	r1 := jPEGImageImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TJPEGScale(r1)
 }
 
 func (m *TJPEGImage) SetScale(AValue TJPEGScale) {
-	LCL().SysCallN(3448, 1, m.Instance(), uintptr(AValue))
+	jPEGImageImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TJPEGImage) Smoothing() bool {
-	r1 := LCL().SysCallN(3449, 0, m.Instance(), 0)
+	r1 := jPEGImageImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TJPEGImage) SetSmoothing(AValue bool) {
-	LCL().SysCallN(3449, 1, m.Instance(), PascalBool(AValue))
+	jPEGImageImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
 }
 
 func JPEGImageClass() TClass {
-	ret := LCL().SysCallN(3439)
+	ret := jPEGImageImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TJPEGImage) Compress() {
-	LCL().SysCallN(3440, m.Instance())
+	jPEGImageImportAPI().SysCallN(1, m.Instance())
+}
+
+var (
+	jPEGImageImport       *imports.Imports = nil
+	jPEGImageImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("JPEGImage_Class", 0),
+		/*1*/ imports.NewTable("JPEGImage_Compress", 0),
+		/*2*/ imports.NewTable("JPEGImage_CompressionQuality", 0),
+		/*3*/ imports.NewTable("JPEGImage_Create", 0),
+		/*4*/ imports.NewTable("JPEGImage_GrayScale", 0),
+		/*5*/ imports.NewTable("JPEGImage_MinHeight", 0),
+		/*6*/ imports.NewTable("JPEGImage_MinWidth", 0),
+		/*7*/ imports.NewTable("JPEGImage_Performance", 0),
+		/*8*/ imports.NewTable("JPEGImage_ProgressiveEncoding", 0),
+		/*9*/ imports.NewTable("JPEGImage_Scale", 0),
+		/*10*/ imports.NewTable("JPEGImage_Smoothing", 0),
+	}
+)
+
+func jPEGImageImportAPI() *imports.Imports {
+	if jPEGImageImport == nil {
+		jPEGImageImport = NewDefaultImports()
+		jPEGImageImport.SetImportTable(jPEGImageImportTables)
+		jPEGImageImportTables = nil
+	}
+	return jPEGImageImport
 }

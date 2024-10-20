@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -39,62 +40,62 @@ type TFindDialog struct {
 }
 
 func NewFindDialog(AOwner IComponent) IFindDialog {
-	r1 := LCL().SysCallN(3039, GetObjectUintptr(AOwner))
+	r1 := findDialogImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsFindDialog(r1)
 }
 
 func (m *TFindDialog) Left() int32 {
-	r1 := LCL().SysCallN(3041, 0, m.Instance(), 0)
+	r1 := findDialogImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFindDialog) SetLeft(AValue int32) {
-	LCL().SysCallN(3041, 1, m.Instance(), uintptr(AValue))
+	findDialogImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFindDialog) Position() (resultPoint TPoint) {
-	LCL().SysCallN(3043, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	findDialogImportAPI().SysCallN(6, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TFindDialog) SetPosition(AValue *TPoint) {
-	LCL().SysCallN(3043, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	findDialogImportAPI().SysCallN(6, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TFindDialog) Top() int32 {
-	r1 := LCL().SysCallN(3046, 0, m.Instance(), 0)
+	r1 := findDialogImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFindDialog) SetTop(AValue int32) {
-	LCL().SysCallN(3046, 1, m.Instance(), uintptr(AValue))
+	findDialogImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFindDialog) FindText() string {
-	r1 := LCL().SysCallN(3040, 0, m.Instance(), 0)
+	r1 := findDialogImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TFindDialog) SetFindText(AValue string) {
-	LCL().SysCallN(3040, 1, m.Instance(), PascalStr(AValue))
+	findDialogImportAPI().SysCallN(3, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TFindDialog) Options() TFindOptions {
-	r1 := LCL().SysCallN(3042, 0, m.Instance(), 0)
+	r1 := findDialogImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TFindOptions(r1)
 }
 
 func (m *TFindDialog) SetOptions(AValue TFindOptions) {
-	LCL().SysCallN(3042, 1, m.Instance(), uintptr(AValue))
+	findDialogImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func FindDialogClass() TClass {
-	ret := LCL().SysCallN(3037)
+	ret := findDialogImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TFindDialog) CloseDialog() {
-	LCL().SysCallN(3038, m.Instance())
+	findDialogImportAPI().SysCallN(1, m.Instance())
 }
 
 func (m *TFindDialog) SetOnFind(fn TNotifyEvent) {
@@ -102,7 +103,7 @@ func (m *TFindDialog) SetOnFind(fn TNotifyEvent) {
 		RemoveEventElement(m.findPtr)
 	}
 	m.findPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3044, m.Instance(), m.findPtr)
+	findDialogImportAPI().SysCallN(7, m.Instance(), m.findPtr)
 }
 
 func (m *TFindDialog) SetOnHelpClicked(fn TNotifyEvent) {
@@ -110,5 +111,30 @@ func (m *TFindDialog) SetOnHelpClicked(fn TNotifyEvent) {
 		RemoveEventElement(m.helpClickedPtr)
 	}
 	m.helpClickedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3045, m.Instance(), m.helpClickedPtr)
+	findDialogImportAPI().SysCallN(8, m.Instance(), m.helpClickedPtr)
+}
+
+var (
+	findDialogImport       *imports.Imports = nil
+	findDialogImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FindDialog_Class", 0),
+		/*1*/ imports.NewTable("FindDialog_CloseDialog", 0),
+		/*2*/ imports.NewTable("FindDialog_Create", 0),
+		/*3*/ imports.NewTable("FindDialog_FindText", 0),
+		/*4*/ imports.NewTable("FindDialog_Left", 0),
+		/*5*/ imports.NewTable("FindDialog_Options", 0),
+		/*6*/ imports.NewTable("FindDialog_Position", 0),
+		/*7*/ imports.NewTable("FindDialog_SetOnFind", 0),
+		/*8*/ imports.NewTable("FindDialog_SetOnHelpClicked", 0),
+		/*9*/ imports.NewTable("FindDialog_Top", 0),
+	}
+)
+
+func findDialogImportAPI() *imports.Imports {
+	if findDialogImport == nil {
+		findDialogImport = NewDefaultImports()
+		findDialogImport.SetImportTable(findDialogImportTables)
+		findDialogImportTables = nil
+	}
+	return findDialogImport
 }

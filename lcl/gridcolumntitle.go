@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -47,114 +48,145 @@ type TGridColumnTitle struct {
 }
 
 func NewGridColumnTitle(TheColumn IGridColumn) IGridColumnTitle {
-	r1 := LCL().SysCallN(3240, GetObjectUintptr(TheColumn))
+	r1 := gridColumnTitleImportAPI().SysCallN(5, GetObjectUintptr(TheColumn))
 	return AsGridColumnTitle(r1)
 }
 
 func (m *TGridColumnTitle) Column() IGridColumn {
-	r1 := LCL().SysCallN(3239, m.Instance())
+	r1 := gridColumnTitleImportAPI().SysCallN(4, m.Instance())
 	return AsGridColumn(r1)
 }
 
 func (m *TGridColumnTitle) Alignment() TAlignment {
-	r1 := LCL().SysCallN(3235, 0, m.Instance(), 0)
+	r1 := gridColumnTitleImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TAlignment(r1)
 }
 
 func (m *TGridColumnTitle) SetAlignment(AValue TAlignment) {
-	LCL().SysCallN(3235, 1, m.Instance(), uintptr(AValue))
+	gridColumnTitleImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGridColumnTitle) Caption() string {
-	r1 := LCL().SysCallN(3236, 0, m.Instance(), 0)
+	r1 := gridColumnTitleImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TGridColumnTitle) SetCaption(AValue string) {
-	LCL().SysCallN(3236, 1, m.Instance(), PascalStr(AValue))
+	gridColumnTitleImportAPI().SysCallN(1, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TGridColumnTitle) Color() TColor {
-	r1 := LCL().SysCallN(3238, 0, m.Instance(), 0)
+	r1 := gridColumnTitleImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TGridColumnTitle) SetColor(AValue TColor) {
-	LCL().SysCallN(3238, 1, m.Instance(), uintptr(AValue))
+	gridColumnTitleImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGridColumnTitle) Font() IFont {
-	r1 := LCL().SysCallN(3243, 0, m.Instance(), 0)
+	r1 := gridColumnTitleImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return AsFont(r1)
 }
 
 func (m *TGridColumnTitle) SetFont(AValue IFont) {
-	LCL().SysCallN(3243, 1, m.Instance(), GetObjectUintptr(AValue))
+	gridColumnTitleImportAPI().SysCallN(8, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TGridColumnTitle) ImageIndex() TImageIndex {
-	r1 := LCL().SysCallN(3244, 0, m.Instance(), 0)
+	r1 := gridColumnTitleImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TGridColumnTitle) SetImageIndex(AValue TImageIndex) {
-	LCL().SysCallN(3244, 1, m.Instance(), uintptr(AValue))
+	gridColumnTitleImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGridColumnTitle) ImageLayout() TButtonLayout {
-	r1 := LCL().SysCallN(3245, 0, m.Instance(), 0)
+	r1 := gridColumnTitleImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TButtonLayout(r1)
 }
 
 func (m *TGridColumnTitle) SetImageLayout(AValue TButtonLayout) {
-	LCL().SysCallN(3245, 1, m.Instance(), uintptr(AValue))
+	gridColumnTitleImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGridColumnTitle) Layout() TTextLayout {
-	r1 := LCL().SysCallN(3247, 0, m.Instance(), 0)
+	r1 := gridColumnTitleImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return TTextLayout(r1)
 }
 
 func (m *TGridColumnTitle) SetLayout(AValue TTextLayout) {
-	LCL().SysCallN(3247, 1, m.Instance(), uintptr(AValue))
+	gridColumnTitleImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGridColumnTitle) MultiLine() bool {
-	r1 := LCL().SysCallN(3248, 0, m.Instance(), 0)
+	r1 := gridColumnTitleImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TGridColumnTitle) SetMultiLine(AValue bool) {
-	LCL().SysCallN(3248, 1, m.Instance(), PascalBool(AValue))
+	gridColumnTitleImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TGridColumnTitle) PrefixOption() TPrefixOption {
-	r1 := LCL().SysCallN(3249, 0, m.Instance(), 0)
+	r1 := gridColumnTitleImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return TPrefixOption(r1)
 }
 
 func (m *TGridColumnTitle) SetPrefixOption(AValue TPrefixOption) {
-	LCL().SysCallN(3249, 1, m.Instance(), uintptr(AValue))
+	gridColumnTitleImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGridColumnTitle) IsDefault() bool {
-	r1 := LCL().SysCallN(3246, m.Instance())
+	r1 := gridColumnTitleImportAPI().SysCallN(11, m.Instance())
 	return GoBool(r1)
 }
 
 func GridColumnTitleClass() TClass {
-	ret := LCL().SysCallN(3237)
+	ret := gridColumnTitleImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
 func (m *TGridColumnTitle) FillTitleDefaultFont() {
-	LCL().SysCallN(3241, m.Instance())
+	gridColumnTitleImportAPI().SysCallN(6, m.Instance())
 }
 
 func (m *TGridColumnTitle) FixDesignFontsPPI(ADesignTimePPI int32) {
-	LCL().SysCallN(3242, m.Instance(), uintptr(ADesignTimePPI))
+	gridColumnTitleImportAPI().SysCallN(7, m.Instance(), uintptr(ADesignTimePPI))
 }
 
 func (m *TGridColumnTitle) ScaleFontsPPI(AToPPI int32, AProportion float64) {
-	LCL().SysCallN(3250, m.Instance(), uintptr(AToPPI), uintptr(unsafePointer(&AProportion)))
+	gridColumnTitleImportAPI().SysCallN(15, m.Instance(), uintptr(AToPPI), uintptr(unsafePointer(&AProportion)))
+}
+
+var (
+	gridColumnTitleImport       *imports.Imports = nil
+	gridColumnTitleImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("GridColumnTitle_Alignment", 0),
+		/*1*/ imports.NewTable("GridColumnTitle_Caption", 0),
+		/*2*/ imports.NewTable("GridColumnTitle_Class", 0),
+		/*3*/ imports.NewTable("GridColumnTitle_Color", 0),
+		/*4*/ imports.NewTable("GridColumnTitle_Column", 0),
+		/*5*/ imports.NewTable("GridColumnTitle_Create", 0),
+		/*6*/ imports.NewTable("GridColumnTitle_FillTitleDefaultFont", 0),
+		/*7*/ imports.NewTable("GridColumnTitle_FixDesignFontsPPI", 0),
+		/*8*/ imports.NewTable("GridColumnTitle_Font", 0),
+		/*9*/ imports.NewTable("GridColumnTitle_ImageIndex", 0),
+		/*10*/ imports.NewTable("GridColumnTitle_ImageLayout", 0),
+		/*11*/ imports.NewTable("GridColumnTitle_IsDefault", 0),
+		/*12*/ imports.NewTable("GridColumnTitle_Layout", 0),
+		/*13*/ imports.NewTable("GridColumnTitle_MultiLine", 0),
+		/*14*/ imports.NewTable("GridColumnTitle_PrefixOption", 0),
+		/*15*/ imports.NewTable("GridColumnTitle_ScaleFontsPPI", 0),
+	}
+)
+
+func gridColumnTitleImportAPI() *imports.Imports {
+	if gridColumnTitleImport == nil {
+		gridColumnTitleImport = NewDefaultImports()
+		gridColumnTitleImport.SetImportTable(gridColumnTitleImportTables)
+		gridColumnTitleImportTables = nil
+	}
+	return gridColumnTitleImport
 }

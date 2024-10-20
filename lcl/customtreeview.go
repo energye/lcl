@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -125,274 +126,274 @@ type TCustomTreeView struct {
 }
 
 func NewCustomTreeView(AnOwner IComponent) ICustomTreeView {
-	r1 := LCL().SysCallN(2441, GetObjectUintptr(AnOwner))
+	r1 := customTreeViewImportAPI().SysCallN(10, GetObjectUintptr(AnOwner))
 	return AsCustomTreeView(r1)
 }
 
 func (m *TCustomTreeView) AccessibilityOn() bool {
-	r1 := LCL().SysCallN(2431, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomTreeView) SetAccessibilityOn(AValue bool) {
-	LCL().SysCallN(2431, 1, m.Instance(), PascalBool(AValue))
+	customTreeViewImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTreeView) BackgroundColor() TColor {
-	r1 := LCL().SysCallN(2434, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomTreeView) SetBackgroundColor(AValue TColor) {
-	LCL().SysCallN(2434, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) BottomItem() ITreeNode {
-	r1 := LCL().SysCallN(2436, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return AsTreeNode(r1)
 }
 
 func (m *TCustomTreeView) SetBottomItem(AValue ITreeNode) {
-	LCL().SysCallN(2436, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTreeViewImportAPI().SysCallN(5, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTreeView) DefaultItemHeight() int32 {
-	r1 := LCL().SysCallN(2443, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomTreeView) SetDefaultItemHeight(AValue int32) {
-	LCL().SysCallN(2443, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) DropTarget() ITreeNode {
-	r1 := LCL().SysCallN(2445, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return AsTreeNode(r1)
 }
 
 func (m *TCustomTreeView) SetDropTarget(AValue ITreeNode) {
-	LCL().SysCallN(2445, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTreeViewImportAPI().SysCallN(14, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTreeView) ExpandSignColor() TColor {
-	r1 := LCL().SysCallN(2447, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomTreeView) SetExpandSignColor(AValue TColor) {
-	LCL().SysCallN(2447, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(16, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) ExpandSignSize() int32 {
-	r1 := LCL().SysCallN(2448, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomTreeView) SetExpandSignSize(AValue int32) {
-	LCL().SysCallN(2448, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) ExpandSignWidth() int32 {
-	r1 := LCL().SysCallN(2450, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomTreeView) SetExpandSignWidth(AValue int32) {
-	LCL().SysCallN(2450, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) ExpandSignType() TTreeViewExpandSignType {
-	r1 := LCL().SysCallN(2449, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return TTreeViewExpandSignType(r1)
 }
 
 func (m *TCustomTreeView) SetExpandSignType(AValue TTreeViewExpandSignType) {
-	LCL().SysCallN(2449, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) Images() ICustomImageList {
-	r1 := LCL().SysCallN(2459, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(28, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TCustomTreeView) SetImages(AValue ICustomImageList) {
-	LCL().SysCallN(2459, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTreeViewImportAPI().SysCallN(28, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTreeView) ImagesWidth() int32 {
-	r1 := LCL().SysCallN(2460, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(29, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomTreeView) SetImagesWidth(AValue int32) {
-	LCL().SysCallN(2460, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(29, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) InsertMarkNode() ITreeNode {
-	r1 := LCL().SysCallN(2461, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(30, 0, m.Instance(), 0)
 	return AsTreeNode(r1)
 }
 
 func (m *TCustomTreeView) SetInsertMarkNode(AValue ITreeNode) {
-	LCL().SysCallN(2461, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTreeViewImportAPI().SysCallN(30, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTreeView) InsertMarkType() TTreeViewInsertMarkType {
-	r1 := LCL().SysCallN(2462, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(31, 0, m.Instance(), 0)
 	return TTreeViewInsertMarkType(r1)
 }
 
 func (m *TCustomTreeView) SetInsertMarkType(AValue TTreeViewInsertMarkType) {
-	LCL().SysCallN(2462, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(31, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) Items() ITreeNodes {
-	r1 := LCL().SysCallN(2464, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(33, 0, m.Instance(), 0)
 	return AsTreeNodes(r1)
 }
 
 func (m *TCustomTreeView) SetItems(AValue ITreeNodes) {
-	LCL().SysCallN(2464, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTreeViewImportAPI().SysCallN(33, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTreeView) KeepCollapsedNodes() bool {
-	r1 := LCL().SysCallN(2465, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(34, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomTreeView) SetKeepCollapsedNodes(AValue bool) {
-	LCL().SysCallN(2465, 1, m.Instance(), PascalBool(AValue))
+	customTreeViewImportAPI().SysCallN(34, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTreeView) MultiSelectStyle() TMultiSelectStyle {
-	r1 := LCL().SysCallN(2480, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(49, 0, m.Instance(), 0)
 	return TMultiSelectStyle(r1)
 }
 
 func (m *TCustomTreeView) SetMultiSelectStyle(AValue TMultiSelectStyle) {
-	LCL().SysCallN(2480, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(49, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) Options() TTreeViewOptions {
-	r1 := LCL().SysCallN(2481, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(50, 0, m.Instance(), 0)
 	return TTreeViewOptions(r1)
 }
 
 func (m *TCustomTreeView) SetOptions(AValue TTreeViewOptions) {
-	LCL().SysCallN(2481, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(50, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) ScrollBars() TScrollStyle {
-	r1 := LCL().SysCallN(2484, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(53, 0, m.Instance(), 0)
 	return TScrollStyle(r1)
 }
 
 func (m *TCustomTreeView) SetScrollBars(AValue TScrollStyle) {
-	LCL().SysCallN(2484, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(53, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) Selected() ITreeNode {
-	r1 := LCL().SysCallN(2487, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(56, 0, m.Instance(), 0)
 	return AsTreeNode(r1)
 }
 
 func (m *TCustomTreeView) SetSelected(AValue ITreeNode) {
-	LCL().SysCallN(2487, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTreeViewImportAPI().SysCallN(56, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTreeView) SelectionColor() TColor {
-	r1 := LCL().SysCallN(2488, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(57, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomTreeView) SetSelectionColor(AValue TColor) {
-	LCL().SysCallN(2488, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(57, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) SelectionCount() uint32 {
-	r1 := LCL().SysCallN(2489, m.Instance())
+	r1 := customTreeViewImportAPI().SysCallN(58, m.Instance())
 	return uint32(r1)
 }
 
 func (m *TCustomTreeView) SelectionFontColor() TColor {
-	r1 := LCL().SysCallN(2490, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(59, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomTreeView) SetSelectionFontColor(AValue TColor) {
-	LCL().SysCallN(2490, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(59, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) SelectionFontColorUsed() bool {
-	r1 := LCL().SysCallN(2491, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(60, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomTreeView) SetSelectionFontColorUsed(AValue bool) {
-	LCL().SysCallN(2491, 1, m.Instance(), PascalBool(AValue))
+	customTreeViewImportAPI().SysCallN(60, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTreeView) Selections(AIndex int32) ITreeNode {
-	r1 := LCL().SysCallN(2493, m.Instance(), uintptr(AIndex))
+	r1 := customTreeViewImportAPI().SysCallN(62, m.Instance(), uintptr(AIndex))
 	return AsTreeNode(r1)
 }
 
 func (m *TCustomTreeView) SeparatorColor() TColor {
-	r1 := LCL().SysCallN(2494, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(63, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomTreeView) SetSeparatorColor(AValue TColor) {
-	LCL().SysCallN(2494, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(63, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) StateImages() ICustomImageList {
-	r1 := LCL().SysCallN(2497, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(66, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TCustomTreeView) SetStateImages(AValue ICustomImageList) {
-	LCL().SysCallN(2497, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTreeViewImportAPI().SysCallN(66, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTreeView) StateImagesWidth() int32 {
-	r1 := LCL().SysCallN(2498, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(67, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomTreeView) SetStateImagesWidth(AValue int32) {
-	LCL().SysCallN(2498, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(67, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) TopItem() ITreeNode {
-	r1 := LCL().SysCallN(2500, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(69, 0, m.Instance(), 0)
 	return AsTreeNode(r1)
 }
 
 func (m *TCustomTreeView) SetTopItem(AValue ITreeNode) {
-	LCL().SysCallN(2500, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTreeViewImportAPI().SysCallN(69, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTreeView) TreeLineColor() TColor {
-	r1 := LCL().SysCallN(2501, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(70, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomTreeView) SetTreeLineColor(AValue TColor) {
-	LCL().SysCallN(2501, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(70, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) TreeLinePenStyle() TPenStyle {
-	r1 := LCL().SysCallN(2502, 0, m.Instance(), 0)
+	r1 := customTreeViewImportAPI().SysCallN(71, 0, m.Instance(), 0)
 	return TPenStyle(r1)
 }
 
 func (m *TCustomTreeView) SetTreeLinePenStyle(AValue TPenStyle) {
-	LCL().SysCallN(2502, 1, m.Instance(), uintptr(AValue))
+	customTreeViewImportAPI().SysCallN(71, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTreeView) AlphaSort() bool {
-	r1 := LCL().SysCallN(2432, m.Instance())
+	r1 := customTreeViewImportAPI().SysCallN(1, m.Instance())
 	return GoBool(r1)
 }
 
@@ -401,184 +402,273 @@ func (m *TCustomTreeView) CustomSort(fn TTreeNodeCompare) bool {
 		RemoveEventElement(m.customSortPtr)
 	}
 	m.customSortPtr = MakeEventDataPtr(fn)
-	r1 := LCL().SysCallN(2442, m.Instance(), m.customSortPtr)
+	r1 := customTreeViewImportAPI().SysCallN(11, m.Instance(), m.customSortPtr)
 	return GoBool(r1)
 }
 
 func (m *TCustomTreeView) DefaultTreeViewSort(Node1, Node2 ITreeNode) int32 {
-	r1 := LCL().SysCallN(2444, m.Instance(), GetObjectUintptr(Node1), GetObjectUintptr(Node2))
+	r1 := customTreeViewImportAPI().SysCallN(13, m.Instance(), GetObjectUintptr(Node1), GetObjectUintptr(Node2))
 	return int32(r1)
 }
 
 func (m *TCustomTreeView) GetHitTestInfoAt(X, Y int32) THitTests {
-	r1 := LCL().SysCallN(2454, m.Instance(), uintptr(X), uintptr(Y))
+	r1 := customTreeViewImportAPI().SysCallN(23, m.Instance(), uintptr(X), uintptr(Y))
 	return THitTests(r1)
 }
 
 func (m *TCustomTreeView) GetNodeAt(X, Y int32) ITreeNode {
-	r1 := LCL().SysCallN(2457, m.Instance(), uintptr(X), uintptr(Y))
+	r1 := customTreeViewImportAPI().SysCallN(26, m.Instance(), uintptr(X), uintptr(Y))
 	return AsTreeNode(r1)
 }
 
 func (m *TCustomTreeView) GetNodeWithExpandSignAt(X, Y int32) ITreeNode {
-	r1 := LCL().SysCallN(2458, m.Instance(), uintptr(X), uintptr(Y))
+	r1 := customTreeViewImportAPI().SysCallN(27, m.Instance(), uintptr(X), uintptr(Y))
 	return AsTreeNode(r1)
 }
 
 func (m *TCustomTreeView) IsEditing() bool {
-	r1 := LCL().SysCallN(2463, m.Instance())
+	r1 := customTreeViewImportAPI().SysCallN(32, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TCustomTreeView) GetFirstMultiSelected() ITreeNode {
-	r1 := LCL().SysCallN(2453, m.Instance())
+	r1 := customTreeViewImportAPI().SysCallN(22, m.Instance())
 	return AsTreeNode(r1)
 }
 
 func (m *TCustomTreeView) GetLastMultiSelected() ITreeNode {
-	r1 := LCL().SysCallN(2456, m.Instance())
+	r1 := customTreeViewImportAPI().SysCallN(25, m.Instance())
 	return AsTreeNode(r1)
 }
 
 func (m *TCustomTreeView) SelectionVisible() bool {
-	r1 := LCL().SysCallN(2492, m.Instance())
+	r1 := customTreeViewImportAPI().SysCallN(61, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TCustomTreeView) StoreCurrentSelection() IStringList {
-	r1 := LCL().SysCallN(2499, m.Instance())
+	r1 := customTreeViewImportAPI().SysCallN(68, m.Instance())
 	return AsStringList(r1)
 }
 
 func CustomTreeViewClass() TClass {
-	ret := LCL().SysCallN(2437)
+	ret := customTreeViewImportAPI().SysCallN(6)
 	return TClass(ret)
 }
 
 func (m *TCustomTreeView) ClearSelection(KeepPrimary bool) {
-	LCL().SysCallN(2439, m.Instance(), PascalBool(KeepPrimary))
+	customTreeViewImportAPI().SysCallN(8, m.Instance(), PascalBool(KeepPrimary))
 }
 
 func (m *TCustomTreeView) ConsistencyCheck() {
-	LCL().SysCallN(2440, m.Instance())
+	customTreeViewImportAPI().SysCallN(9, m.Instance())
 }
 
 func (m *TCustomTreeView) GetInsertMarkAt(X, Y int32, OutNInsertMarkNode *ITreeNode, OutNInsertMarkType *TTreeViewInsertMarkType) {
 	var result1 uintptr
 	var result2 uintptr
-	LCL().SysCallN(2455, m.Instance(), uintptr(X), uintptr(Y), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
+	customTreeViewImportAPI().SysCallN(24, m.Instance(), uintptr(X), uintptr(Y), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
 	*OutNInsertMarkNode = AsTreeNode(result1)
 	*OutNInsertMarkType = TTreeViewInsertMarkType(result2)
 }
 
 func (m *TCustomTreeView) SetInsertMark(AnInsertMarkNode ITreeNode, AnInsertMarkType TTreeViewInsertMarkType) {
-	LCL().SysCallN(2495, m.Instance(), GetObjectUintptr(AnInsertMarkNode), uintptr(AnInsertMarkType))
+	customTreeViewImportAPI().SysCallN(64, m.Instance(), GetObjectUintptr(AnInsertMarkNode), uintptr(AnInsertMarkType))
 }
 
 func (m *TCustomTreeView) SetInsertMarkAt(X, Y int32) {
-	LCL().SysCallN(2496, m.Instance(), uintptr(X), uintptr(Y))
+	customTreeViewImportAPI().SysCallN(65, m.Instance(), uintptr(X), uintptr(Y))
 }
 
 func (m *TCustomTreeView) BeginUpdate() {
-	LCL().SysCallN(2435, m.Instance())
+	customTreeViewImportAPI().SysCallN(4, m.Instance())
 }
 
 func (m *TCustomTreeView) EndUpdate() {
-	LCL().SysCallN(2446, m.Instance())
+	customTreeViewImportAPI().SysCallN(15, m.Instance())
 }
 
 func (m *TCustomTreeView) FullCollapse() {
-	LCL().SysCallN(2451, m.Instance())
+	customTreeViewImportAPI().SysCallN(20, m.Instance())
 }
 
 func (m *TCustomTreeView) FullExpand() {
-	LCL().SysCallN(2452, m.Instance())
+	customTreeViewImportAPI().SysCallN(21, m.Instance())
 }
 
 func (m *TCustomTreeView) LoadFromFile(FileName string) {
-	LCL().SysCallN(2466, m.Instance(), PascalStr(FileName))
+	customTreeViewImportAPI().SysCallN(35, m.Instance(), PascalStr(FileName))
 }
 
 func (m *TCustomTreeView) LoadFromStream(Stream IStream) {
-	LCL().SysCallN(2467, m.Instance(), GetObjectUintptr(Stream))
+	customTreeViewImportAPI().SysCallN(36, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TCustomTreeView) SaveToFile(FileName string) {
-	LCL().SysCallN(2482, m.Instance(), PascalStr(FileName))
+	customTreeViewImportAPI().SysCallN(51, m.Instance(), PascalStr(FileName))
 }
 
 func (m *TCustomTreeView) SaveToStream(Stream IStream) {
-	LCL().SysCallN(2483, m.Instance(), GetObjectUintptr(Stream))
+	customTreeViewImportAPI().SysCallN(52, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TCustomTreeView) WriteDebugReport(Prefix string, AllNodes bool) {
-	LCL().SysCallN(2504, m.Instance(), PascalStr(Prefix), PascalBool(AllNodes))
+	customTreeViewImportAPI().SysCallN(73, m.Instance(), PascalStr(Prefix), PascalBool(AllNodes))
 }
 
 func (m *TCustomTreeView) LockSelectionChangeEvent() {
-	LCL().SysCallN(2468, m.Instance())
+	customTreeViewImportAPI().SysCallN(37, m.Instance())
 }
 
 func (m *TCustomTreeView) UnlockSelectionChangeEvent() {
-	LCL().SysCallN(2503, m.Instance())
+	customTreeViewImportAPI().SysCallN(72, m.Instance())
 }
 
 func (m *TCustomTreeView) Select(Node ITreeNode, ShiftState TShiftState) {
-	LCL().SysCallN(2485, m.Instance(), GetObjectUintptr(Node), uintptr(ShiftState))
+	customTreeViewImportAPI().SysCallN(54, m.Instance(), GetObjectUintptr(Node), uintptr(ShiftState))
 }
 
 func (m *TCustomTreeView) Select1(Nodes IList) {
-	LCL().SysCallN(2486, m.Instance(), GetObjectUintptr(Nodes))
+	customTreeViewImportAPI().SysCallN(55, m.Instance(), GetObjectUintptr(Nodes))
 }
 
 func (m *TCustomTreeView) MakeSelectionVisible() {
-	LCL().SysCallN(2469, m.Instance())
+	customTreeViewImportAPI().SysCallN(38, m.Instance())
 }
 
 func (m *TCustomTreeView) ClearInvisibleSelection() {
-	LCL().SysCallN(2438, m.Instance())
+	customTreeViewImportAPI().SysCallN(7, m.Instance())
 }
 
 func (m *TCustomTreeView) ApplyStoredSelection(ASelection IStringList, FreeList bool) {
-	LCL().SysCallN(2433, m.Instance(), GetObjectUintptr(ASelection), PascalBool(FreeList))
+	customTreeViewImportAPI().SysCallN(2, m.Instance(), GetObjectUintptr(ASelection), PascalBool(FreeList))
 }
 
 func (m *TCustomTreeView) MoveToNextNode(ASelect bool) {
-	LCL().SysCallN(2478, m.Instance(), PascalBool(ASelect))
+	customTreeViewImportAPI().SysCallN(47, m.Instance(), PascalBool(ASelect))
 }
 
 func (m *TCustomTreeView) MoveToPrevNode(ASelect bool) {
-	LCL().SysCallN(2479, m.Instance(), PascalBool(ASelect))
+	customTreeViewImportAPI().SysCallN(48, m.Instance(), PascalBool(ASelect))
 }
 
 func (m *TCustomTreeView) MovePageDown(ASelect bool) {
-	LCL().SysCallN(2475, m.Instance(), PascalBool(ASelect))
+	customTreeViewImportAPI().SysCallN(44, m.Instance(), PascalBool(ASelect))
 }
 
 func (m *TCustomTreeView) MovePageUp(ASelect bool) {
-	LCL().SysCallN(2476, m.Instance(), PascalBool(ASelect))
+	customTreeViewImportAPI().SysCallN(45, m.Instance(), PascalBool(ASelect))
 }
 
 func (m *TCustomTreeView) MoveLeft(ASelect bool) {
-	LCL().SysCallN(2474, m.Instance(), PascalBool(ASelect))
+	customTreeViewImportAPI().SysCallN(43, m.Instance(), PascalBool(ASelect))
 }
 
 func (m *TCustomTreeView) MoveRight(ASelect bool) {
-	LCL().SysCallN(2477, m.Instance(), PascalBool(ASelect))
+	customTreeViewImportAPI().SysCallN(46, m.Instance(), PascalBool(ASelect))
 }
 
 func (m *TCustomTreeView) MoveExpand(ASelect bool) {
-	LCL().SysCallN(2472, m.Instance(), PascalBool(ASelect))
+	customTreeViewImportAPI().SysCallN(41, m.Instance(), PascalBool(ASelect))
 }
 
 func (m *TCustomTreeView) MoveCollapse(ASelect bool) {
-	LCL().SysCallN(2470, m.Instance(), PascalBool(ASelect))
+	customTreeViewImportAPI().SysCallN(39, m.Instance(), PascalBool(ASelect))
 }
 
 func (m *TCustomTreeView) MoveHome(ASelect bool) {
-	LCL().SysCallN(2473, m.Instance(), PascalBool(ASelect))
+	customTreeViewImportAPI().SysCallN(42, m.Instance(), PascalBool(ASelect))
 }
 
 func (m *TCustomTreeView) MoveEnd(ASelect bool) {
-	LCL().SysCallN(2471, m.Instance(), PascalBool(ASelect))
+	customTreeViewImportAPI().SysCallN(40, m.Instance(), PascalBool(ASelect))
+}
+
+var (
+	customTreeViewImport       *imports.Imports = nil
+	customTreeViewImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomTreeView_AccessibilityOn", 0),
+		/*1*/ imports.NewTable("CustomTreeView_AlphaSort", 0),
+		/*2*/ imports.NewTable("CustomTreeView_ApplyStoredSelection", 0),
+		/*3*/ imports.NewTable("CustomTreeView_BackgroundColor", 0),
+		/*4*/ imports.NewTable("CustomTreeView_BeginUpdate", 0),
+		/*5*/ imports.NewTable("CustomTreeView_BottomItem", 0),
+		/*6*/ imports.NewTable("CustomTreeView_Class", 0),
+		/*7*/ imports.NewTable("CustomTreeView_ClearInvisibleSelection", 0),
+		/*8*/ imports.NewTable("CustomTreeView_ClearSelection", 0),
+		/*9*/ imports.NewTable("CustomTreeView_ConsistencyCheck", 0),
+		/*10*/ imports.NewTable("CustomTreeView_Create", 0),
+		/*11*/ imports.NewTable("CustomTreeView_CustomSort", 0),
+		/*12*/ imports.NewTable("CustomTreeView_DefaultItemHeight", 0),
+		/*13*/ imports.NewTable("CustomTreeView_DefaultTreeViewSort", 0),
+		/*14*/ imports.NewTable("CustomTreeView_DropTarget", 0),
+		/*15*/ imports.NewTable("CustomTreeView_EndUpdate", 0),
+		/*16*/ imports.NewTable("CustomTreeView_ExpandSignColor", 0),
+		/*17*/ imports.NewTable("CustomTreeView_ExpandSignSize", 0),
+		/*18*/ imports.NewTable("CustomTreeView_ExpandSignType", 0),
+		/*19*/ imports.NewTable("CustomTreeView_ExpandSignWidth", 0),
+		/*20*/ imports.NewTable("CustomTreeView_FullCollapse", 0),
+		/*21*/ imports.NewTable("CustomTreeView_FullExpand", 0),
+		/*22*/ imports.NewTable("CustomTreeView_GetFirstMultiSelected", 0),
+		/*23*/ imports.NewTable("CustomTreeView_GetHitTestInfoAt", 0),
+		/*24*/ imports.NewTable("CustomTreeView_GetInsertMarkAt", 0),
+		/*25*/ imports.NewTable("CustomTreeView_GetLastMultiSelected", 0),
+		/*26*/ imports.NewTable("CustomTreeView_GetNodeAt", 0),
+		/*27*/ imports.NewTable("CustomTreeView_GetNodeWithExpandSignAt", 0),
+		/*28*/ imports.NewTable("CustomTreeView_Images", 0),
+		/*29*/ imports.NewTable("CustomTreeView_ImagesWidth", 0),
+		/*30*/ imports.NewTable("CustomTreeView_InsertMarkNode", 0),
+		/*31*/ imports.NewTable("CustomTreeView_InsertMarkType", 0),
+		/*32*/ imports.NewTable("CustomTreeView_IsEditing", 0),
+		/*33*/ imports.NewTable("CustomTreeView_Items", 0),
+		/*34*/ imports.NewTable("CustomTreeView_KeepCollapsedNodes", 0),
+		/*35*/ imports.NewTable("CustomTreeView_LoadFromFile", 0),
+		/*36*/ imports.NewTable("CustomTreeView_LoadFromStream", 0),
+		/*37*/ imports.NewTable("CustomTreeView_LockSelectionChangeEvent", 0),
+		/*38*/ imports.NewTable("CustomTreeView_MakeSelectionVisible", 0),
+		/*39*/ imports.NewTable("CustomTreeView_MoveCollapse", 0),
+		/*40*/ imports.NewTable("CustomTreeView_MoveEnd", 0),
+		/*41*/ imports.NewTable("CustomTreeView_MoveExpand", 0),
+		/*42*/ imports.NewTable("CustomTreeView_MoveHome", 0),
+		/*43*/ imports.NewTable("CustomTreeView_MoveLeft", 0),
+		/*44*/ imports.NewTable("CustomTreeView_MovePageDown", 0),
+		/*45*/ imports.NewTable("CustomTreeView_MovePageUp", 0),
+		/*46*/ imports.NewTable("CustomTreeView_MoveRight", 0),
+		/*47*/ imports.NewTable("CustomTreeView_MoveToNextNode", 0),
+		/*48*/ imports.NewTable("CustomTreeView_MoveToPrevNode", 0),
+		/*49*/ imports.NewTable("CustomTreeView_MultiSelectStyle", 0),
+		/*50*/ imports.NewTable("CustomTreeView_Options", 0),
+		/*51*/ imports.NewTable("CustomTreeView_SaveToFile", 0),
+		/*52*/ imports.NewTable("CustomTreeView_SaveToStream", 0),
+		/*53*/ imports.NewTable("CustomTreeView_ScrollBars", 0),
+		/*54*/ imports.NewTable("CustomTreeView_Select", 0),
+		/*55*/ imports.NewTable("CustomTreeView_Select1", 0),
+		/*56*/ imports.NewTable("CustomTreeView_Selected", 0),
+		/*57*/ imports.NewTable("CustomTreeView_SelectionColor", 0),
+		/*58*/ imports.NewTable("CustomTreeView_SelectionCount", 0),
+		/*59*/ imports.NewTable("CustomTreeView_SelectionFontColor", 0),
+		/*60*/ imports.NewTable("CustomTreeView_SelectionFontColorUsed", 0),
+		/*61*/ imports.NewTable("CustomTreeView_SelectionVisible", 0),
+		/*62*/ imports.NewTable("CustomTreeView_Selections", 0),
+		/*63*/ imports.NewTable("CustomTreeView_SeparatorColor", 0),
+		/*64*/ imports.NewTable("CustomTreeView_SetInsertMark", 0),
+		/*65*/ imports.NewTable("CustomTreeView_SetInsertMarkAt", 0),
+		/*66*/ imports.NewTable("CustomTreeView_StateImages", 0),
+		/*67*/ imports.NewTable("CustomTreeView_StateImagesWidth", 0),
+		/*68*/ imports.NewTable("CustomTreeView_StoreCurrentSelection", 0),
+		/*69*/ imports.NewTable("CustomTreeView_TopItem", 0),
+		/*70*/ imports.NewTable("CustomTreeView_TreeLineColor", 0),
+		/*71*/ imports.NewTable("CustomTreeView_TreeLinePenStyle", 0),
+		/*72*/ imports.NewTable("CustomTreeView_UnlockSelectionChangeEvent", 0),
+		/*73*/ imports.NewTable("CustomTreeView_WriteDebugReport", 0),
+	}
+)
+
+func customTreeViewImportAPI() *imports.Imports {
+	if customTreeViewImport == nil {
+		customTreeViewImport = NewDefaultImports()
+		customTreeViewImport.SetImportTable(customTreeViewImportTables)
+		customTreeViewImportTables = nil
+	}
+	return customTreeViewImport
 }

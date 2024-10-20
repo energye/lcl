@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TCustomUpDown struct {
 }
 
 func NewCustomUpDown(AOwner IComponent) ICustomUpDown {
-	r1 := LCL().SysCallN(2506, GetObjectUintptr(AOwner))
+	r1 := customUpDownImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsCustomUpDown(r1)
 }
 
 func CustomUpDownClass() TClass {
-	ret := LCL().SysCallN(2505)
+	ret := customUpDownImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	customUpDownImport       *imports.Imports = nil
+	customUpDownImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomUpDown_Class", 0),
+		/*1*/ imports.NewTable("CustomUpDown_Create", 0),
+	}
+)
+
+func customUpDownImportAPI() *imports.Imports {
+	if customUpDownImport == nil {
+		customUpDownImport = NewDefaultImports()
+		customUpDownImport.SetImportTable(customUpDownImportTables)
+		customUpDownImportTables = nil
+	}
+	return customUpDownImport
 }

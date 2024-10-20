@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -36,64 +37,90 @@ type TFPPalette struct {
 }
 
 func NewFPPalette(ACount int32) IFPPalette {
-	r1 := LCL().SysCallN(3019, uintptr(ACount))
+	r1 := fPPaletteImportAPI().SysCallN(8, uintptr(ACount))
 	return AsFPPalette(r1)
 }
 
 func (m *TFPPalette) Color(Index int32) (resultFPColor TFPColor) {
-	r1 := LCL().SysCallN(3016, 0, m.Instance(), uintptr(Index))
+	r1 := fPPaletteImportAPI().SysCallN(5, 0, m.Instance(), uintptr(Index))
 	return *(*TFPColor)(getPointer(r1))
 }
 
 func (m *TFPPalette) SetColor(Index int32, AValue *TFPColor) {
-	LCL().SysCallN(3016, 1, m.Instance(), uintptr(Index), uintptr(unsafePointer(AValue)))
+	fPPaletteImportAPI().SysCallN(5, 1, m.Instance(), uintptr(Index), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TFPPalette) Count() int32 {
-	r1 := LCL().SysCallN(3018, 0, m.Instance(), 0)
+	r1 := fPPaletteImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFPPalette) SetCount(AValue int32) {
-	LCL().SysCallN(3018, 1, m.Instance(), uintptr(AValue))
+	fPPaletteImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFPPalette) Capacity() int32 {
-	r1 := LCL().SysCallN(3013, 0, m.Instance(), 0)
+	r1 := fPPaletteImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TFPPalette) SetCapacity(AValue int32) {
-	LCL().SysCallN(3013, 1, m.Instance(), uintptr(AValue))
+	fPPaletteImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFPPalette) IndexOf(AColor *TFPColor) int32 {
-	r1 := LCL().SysCallN(3020, m.Instance(), uintptr(unsafePointer(AColor)))
+	r1 := fPPaletteImportAPI().SysCallN(9, m.Instance(), uintptr(unsafePointer(AColor)))
 	return int32(r1)
 }
 
 func (m *TFPPalette) Add(Value *TFPColor) int32 {
-	r1 := LCL().SysCallN(3011, m.Instance(), uintptr(unsafePointer(Value)))
+	r1 := fPPaletteImportAPI().SysCallN(0, m.Instance(), uintptr(unsafePointer(Value)))
 	return int32(r1)
 }
 
 func FPPaletteClass() TClass {
-	ret := LCL().SysCallN(3014)
+	ret := fPPaletteImportAPI().SysCallN(3)
 	return TClass(ret)
 }
 
 func (m *TFPPalette) Build(Img IFPCustomImage) {
-	LCL().SysCallN(3012, m.Instance(), GetObjectUintptr(Img))
+	fPPaletteImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Img))
 }
 
 func (m *TFPPalette) Copy(APalette IFPPalette) {
-	LCL().SysCallN(3017, m.Instance(), GetObjectUintptr(APalette))
+	fPPaletteImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(APalette))
 }
 
 func (m *TFPPalette) Merge(pal IFPPalette) {
-	LCL().SysCallN(3021, m.Instance(), GetObjectUintptr(pal))
+	fPPaletteImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(pal))
 }
 
 func (m *TFPPalette) Clear() {
-	LCL().SysCallN(3015, m.Instance())
+	fPPaletteImportAPI().SysCallN(4, m.Instance())
+}
+
+var (
+	fPPaletteImport       *imports.Imports = nil
+	fPPaletteImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FPPalette_Add", 0),
+		/*1*/ imports.NewTable("FPPalette_Build", 0),
+		/*2*/ imports.NewTable("FPPalette_Capacity", 0),
+		/*3*/ imports.NewTable("FPPalette_Class", 0),
+		/*4*/ imports.NewTable("FPPalette_Clear", 0),
+		/*5*/ imports.NewTable("FPPalette_Color", 0),
+		/*6*/ imports.NewTable("FPPalette_Copy", 0),
+		/*7*/ imports.NewTable("FPPalette_Count", 0),
+		/*8*/ imports.NewTable("FPPalette_Create", 0),
+		/*9*/ imports.NewTable("FPPalette_IndexOf", 0),
+		/*10*/ imports.NewTable("FPPalette_Merge", 0),
+	}
+)
+
+func fPPaletteImportAPI() *imports.Imports {
+	if fPPaletteImport == nil {
+		fPPaletteImport = NewDefaultImports()
+		fPPaletteImport.SetImportTable(fPPaletteImportTables)
+		fPPaletteImportTables = nil
+	}
+	return fPPaletteImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -29,35 +30,56 @@ type TFlowPanelControlList struct {
 }
 
 func NewFlowPanelControlList(AOwner IPersistent) IFlowPanelControlList {
-	r1 := LCL().SysCallN(3069, GetObjectUintptr(AOwner))
+	r1 := flowPanelControlListImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
 	return AsFlowPanelControlList(r1)
 }
 
 func (m *TFlowPanelControlList) ItemsForFlowPanelControl(Index int32) IFlowPanelControl {
-	r1 := LCL().SysCallN(3071, 0, m.Instance(), uintptr(Index))
+	r1 := flowPanelControlListImportAPI().SysCallN(5, 0, m.Instance(), uintptr(Index))
 	return AsFlowPanelControl(r1)
 }
 
 func (m *TFlowPanelControlList) SetItemsForFlowPanelControl(Index int32, AValue IFlowPanelControl) {
-	LCL().SysCallN(3071, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
+	flowPanelControlListImportAPI().SysCallN(5, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
 }
 
 func (m *TFlowPanelControlList) IndexOf(AControl IControl) int32 {
-	r1 := LCL().SysCallN(3070, m.Instance(), GetObjectUintptr(AControl))
+	r1 := flowPanelControlListImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(AControl))
 	return int32(r1)
 }
 
 func (m *TFlowPanelControlList) AllowAdd() bool {
-	r1 := LCL().SysCallN(3066, m.Instance())
+	r1 := flowPanelControlListImportAPI().SysCallN(0, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TFlowPanelControlList) AllowDelete() bool {
-	r1 := LCL().SysCallN(3067, m.Instance())
+	r1 := flowPanelControlListImportAPI().SysCallN(1, m.Instance())
 	return GoBool(r1)
 }
 
 func FlowPanelControlListClass() TClass {
-	ret := LCL().SysCallN(3068)
+	ret := flowPanelControlListImportAPI().SysCallN(2)
 	return TClass(ret)
+}
+
+var (
+	flowPanelControlListImport       *imports.Imports = nil
+	flowPanelControlListImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FlowPanelControlList_AllowAdd", 0),
+		/*1*/ imports.NewTable("FlowPanelControlList_AllowDelete", 0),
+		/*2*/ imports.NewTable("FlowPanelControlList_Class", 0),
+		/*3*/ imports.NewTable("FlowPanelControlList_Create", 0),
+		/*4*/ imports.NewTable("FlowPanelControlList_IndexOf", 0),
+		/*5*/ imports.NewTable("FlowPanelControlList_ItemsForFlowPanelControl", 0),
+	}
+)
+
+func flowPanelControlListImportAPI() *imports.Imports {
+	if flowPanelControlListImport == nil {
+		flowPanelControlListImport = NewDefaultImports()
+		flowPanelControlListImport.SetImportTable(flowPanelControlListImportTables)
+		flowPanelControlListImportTables = nil
+	}
+	return flowPanelControlListImport
 }

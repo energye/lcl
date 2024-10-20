@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -68,208 +69,249 @@ type TCustomSpeedButton struct {
 }
 
 func NewCustomSpeedButton(AOwner IComponent) ICustomSpeedButton {
-	r1 := LCL().SysCallN(2249, GetObjectUintptr(AOwner))
+	r1 := customSpeedButtonImportAPI().SysCallN(4, GetObjectUintptr(AOwner))
 	return AsCustomSpeedButton(r1)
 }
 
 func (m *TCustomSpeedButton) Alignment() TAlignment {
-	r1 := LCL().SysCallN(2245, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TAlignment(r1)
 }
 
 func (m *TCustomSpeedButton) SetAlignment(AValue TAlignment) {
-	LCL().SysCallN(2245, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) AllowAllUp() bool {
-	r1 := LCL().SysCallN(2246, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomSpeedButton) SetAllowAllUp(AValue bool) {
-	LCL().SysCallN(2246, 1, m.Instance(), PascalBool(AValue))
+	customSpeedButtonImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomSpeedButton) DisabledImageIndex() TImageIndex {
-	r1 := LCL().SysCallN(2250, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TCustomSpeedButton) SetDisabledImageIndex(AValue TImageIndex) {
-	LCL().SysCallN(2250, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) Down() bool {
-	r1 := LCL().SysCallN(2251, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomSpeedButton) SetDown(AValue bool) {
-	LCL().SysCallN(2251, 1, m.Instance(), PascalBool(AValue))
+	customSpeedButtonImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomSpeedButton) Flat() bool {
-	r1 := LCL().SysCallN(2253, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomSpeedButton) SetFlat(AValue bool) {
-	LCL().SysCallN(2253, 1, m.Instance(), PascalBool(AValue))
+	customSpeedButtonImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomSpeedButton) Glyph() IBitmap {
-	r1 := LCL().SysCallN(2254, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return AsBitmap(r1)
 }
 
 func (m *TCustomSpeedButton) SetGlyph(AValue IBitmap) {
-	LCL().SysCallN(2254, 1, m.Instance(), GetObjectUintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(9, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) GroupIndex() int32 {
-	r1 := LCL().SysCallN(2255, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomSpeedButton) SetGroupIndex(AValue int32) {
-	LCL().SysCallN(2255, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) HotImageIndex() TImageIndex {
-	r1 := LCL().SysCallN(2256, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TCustomSpeedButton) SetHotImageIndex(AValue TImageIndex) {
-	LCL().SysCallN(2256, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) Images() ICustomImageList {
-	r1 := LCL().SysCallN(2259, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TCustomSpeedButton) SetImages(AValue ICustomImageList) {
-	LCL().SysCallN(2259, 1, m.Instance(), GetObjectUintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(14, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) ImageIndex() TImageIndex {
-	r1 := LCL().SysCallN(2257, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TCustomSpeedButton) SetImageIndex(AValue TImageIndex) {
-	LCL().SysCallN(2257, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) ImageWidth() int32 {
-	r1 := LCL().SysCallN(2258, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomSpeedButton) SetImageWidth(AValue int32) {
-	LCL().SysCallN(2258, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) Layout() TButtonLayout {
-	r1 := LCL().SysCallN(2260, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return TButtonLayout(r1)
 }
 
 func (m *TCustomSpeedButton) SetLayout(AValue TButtonLayout) {
-	LCL().SysCallN(2260, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) Margin() int32 {
-	r1 := LCL().SysCallN(2263, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomSpeedButton) SetMargin(AValue int32) {
-	LCL().SysCallN(2263, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) NumGlyphs() int32 {
-	r1 := LCL().SysCallN(2264, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomSpeedButton) SetNumGlyphs(AValue int32) {
-	LCL().SysCallN(2264, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) PressedImageIndex() TImageIndex {
-	r1 := LCL().SysCallN(2265, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TCustomSpeedButton) SetPressedImageIndex(AValue TImageIndex) {
-	LCL().SysCallN(2265, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) SelectedImageIndex() TImageIndex {
-	r1 := LCL().SysCallN(2266, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return TImageIndex(r1)
 }
 
 func (m *TCustomSpeedButton) SetSelectedImageIndex(AValue TImageIndex) {
-	LCL().SysCallN(2266, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) ShowAccelChar() bool {
-	r1 := LCL().SysCallN(2267, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(22, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomSpeedButton) SetShowAccelChar(AValue bool) {
-	LCL().SysCallN(2267, 1, m.Instance(), PascalBool(AValue))
+	customSpeedButtonImportAPI().SysCallN(22, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomSpeedButton) ShowCaption() bool {
-	r1 := LCL().SysCallN(2268, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomSpeedButton) SetShowCaption(AValue bool) {
-	LCL().SysCallN(2268, 1, m.Instance(), PascalBool(AValue))
+	customSpeedButtonImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomSpeedButton) Spacing() int32 {
-	r1 := LCL().SysCallN(2269, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(24, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomSpeedButton) SetSpacing(AValue int32) {
-	LCL().SysCallN(2269, 1, m.Instance(), uintptr(AValue))
+	customSpeedButtonImportAPI().SysCallN(24, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomSpeedButton) Transparent() bool {
-	r1 := LCL().SysCallN(2270, 0, m.Instance(), 0)
+	r1 := customSpeedButtonImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomSpeedButton) SetTransparent(AValue bool) {
-	LCL().SysCallN(2270, 1, m.Instance(), PascalBool(AValue))
+	customSpeedButtonImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomSpeedButton) FindDownButton() ICustomSpeedButton {
-	r1 := LCL().SysCallN(2252, m.Instance())
+	r1 := customSpeedButtonImportAPI().SysCallN(7, m.Instance())
 	return AsCustomSpeedButton(r1)
 }
 
 func CustomSpeedButtonClass() TClass {
-	ret := LCL().SysCallN(2247)
+	ret := customSpeedButtonImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
 func (m *TCustomSpeedButton) Click() {
-	LCL().SysCallN(2248, m.Instance())
+	customSpeedButtonImportAPI().SysCallN(3, m.Instance())
 }
 
 func (m *TCustomSpeedButton) LoadGlyphFromResourceName(Instance THandle, AName string) {
-	LCL().SysCallN(2262, m.Instance(), uintptr(Instance), PascalStr(AName))
+	customSpeedButtonImportAPI().SysCallN(17, m.Instance(), uintptr(Instance), PascalStr(AName))
 }
 
 func (m *TCustomSpeedButton) LoadGlyphFromLazarusResource(AName string) {
-	LCL().SysCallN(2261, m.Instance(), PascalStr(AName))
+	customSpeedButtonImportAPI().SysCallN(16, m.Instance(), PascalStr(AName))
+}
+
+var (
+	customSpeedButtonImport       *imports.Imports = nil
+	customSpeedButtonImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomSpeedButton_Alignment", 0),
+		/*1*/ imports.NewTable("CustomSpeedButton_AllowAllUp", 0),
+		/*2*/ imports.NewTable("CustomSpeedButton_Class", 0),
+		/*3*/ imports.NewTable("CustomSpeedButton_Click", 0),
+		/*4*/ imports.NewTable("CustomSpeedButton_Create", 0),
+		/*5*/ imports.NewTable("CustomSpeedButton_DisabledImageIndex", 0),
+		/*6*/ imports.NewTable("CustomSpeedButton_Down", 0),
+		/*7*/ imports.NewTable("CustomSpeedButton_FindDownButton", 0),
+		/*8*/ imports.NewTable("CustomSpeedButton_Flat", 0),
+		/*9*/ imports.NewTable("CustomSpeedButton_Glyph", 0),
+		/*10*/ imports.NewTable("CustomSpeedButton_GroupIndex", 0),
+		/*11*/ imports.NewTable("CustomSpeedButton_HotImageIndex", 0),
+		/*12*/ imports.NewTable("CustomSpeedButton_ImageIndex", 0),
+		/*13*/ imports.NewTable("CustomSpeedButton_ImageWidth", 0),
+		/*14*/ imports.NewTable("CustomSpeedButton_Images", 0),
+		/*15*/ imports.NewTable("CustomSpeedButton_Layout", 0),
+		/*16*/ imports.NewTable("CustomSpeedButton_LoadGlyphFromLazarusResource", 0),
+		/*17*/ imports.NewTable("CustomSpeedButton_LoadGlyphFromResourceName", 0),
+		/*18*/ imports.NewTable("CustomSpeedButton_Margin", 0),
+		/*19*/ imports.NewTable("CustomSpeedButton_NumGlyphs", 0),
+		/*20*/ imports.NewTable("CustomSpeedButton_PressedImageIndex", 0),
+		/*21*/ imports.NewTable("CustomSpeedButton_SelectedImageIndex", 0),
+		/*22*/ imports.NewTable("CustomSpeedButton_ShowAccelChar", 0),
+		/*23*/ imports.NewTable("CustomSpeedButton_ShowCaption", 0),
+		/*24*/ imports.NewTable("CustomSpeedButton_Spacing", 0),
+		/*25*/ imports.NewTable("CustomSpeedButton_Transparent", 0),
+	}
+)
+
+func customSpeedButtonImportAPI() *imports.Imports {
+	if customSpeedButtonImport == nil {
+		customSpeedButtonImport = NewDefaultImports()
+		customSpeedButtonImport.SetImportTable(customSpeedButtonImportTables)
+		customSpeedButtonImportTables = nil
+	}
+	return customSpeedButtonImport
 }

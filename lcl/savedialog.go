@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TSaveDialog struct {
 }
 
 func NewSaveDialog(AOwner IComponent) ISaveDialog {
-	r1 := LCL().SysCallN(4889, GetObjectUintptr(AOwner))
+	r1 := saveDialogImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsSaveDialog(r1)
 }
 
 func SaveDialogClass() TClass {
-	ret := LCL().SysCallN(4888)
+	ret := saveDialogImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	saveDialogImport       *imports.Imports = nil
+	saveDialogImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("SaveDialog_Class", 0),
+		/*1*/ imports.NewTable("SaveDialog_Create", 0),
+	}
+)
+
+func saveDialogImportAPI() *imports.Imports {
+	if saveDialogImport == nil {
+		saveDialogImport = NewDefaultImports()
+		saveDialogImport.SetImportTable(saveDialogImportTables)
+		saveDialogImportTables = nil
+	}
+	return saveDialogImport
 }

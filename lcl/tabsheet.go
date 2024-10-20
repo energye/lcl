@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -57,44 +58,44 @@ type TTabSheet struct {
 }
 
 func NewTabSheet(TheOwner IComponent) ITabSheet {
-	r1 := LCL().SysCallN(5369, GetObjectUintptr(TheOwner))
+	r1 := abSheetImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsTabSheet(r1)
 }
 
 func (m *TTabSheet) PageControl() IPageControl {
-	r1 := LCL().SysCallN(5370, 0, m.Instance(), 0)
+	r1 := abSheetImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return AsPageControl(r1)
 }
 
 func (m *TTabSheet) SetPageControl(AValue IPageControl) {
-	LCL().SysCallN(5370, 1, m.Instance(), GetObjectUintptr(AValue))
+	abSheetImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TTabSheet) TabIndex() int32 {
-	r1 := LCL().SysCallN(5386, m.Instance())
+	r1 := abSheetImportAPI().SysCallN(18, m.Instance())
 	return int32(r1)
 }
 
 func (m *TTabSheet) ParentFont() bool {
-	r1 := LCL().SysCallN(5371, 0, m.Instance(), 0)
+	r1 := abSheetImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTabSheet) SetParentFont(AValue bool) {
-	LCL().SysCallN(5371, 1, m.Instance(), PascalBool(AValue))
+	abSheetImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTabSheet) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5372, 0, m.Instance(), 0)
+	r1 := abSheetImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTabSheet) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5372, 1, m.Instance(), PascalBool(AValue))
+	abSheetImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
 }
 
 func TabSheetClass() TClass {
-	ret := LCL().SysCallN(5368)
+	ret := abSheetImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -103,7 +104,7 @@ func (m *TTabSheet) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5373, m.Instance(), m.contextPopupPtr)
+	abSheetImportAPI().SysCallN(5, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TTabSheet) SetOnDragDrop(fn TDragDropEvent) {
@@ -111,7 +112,7 @@ func (m *TTabSheet) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5374, m.Instance(), m.dragDropPtr)
+	abSheetImportAPI().SysCallN(6, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TTabSheet) SetOnDragOver(fn TDragOverEvent) {
@@ -119,7 +120,7 @@ func (m *TTabSheet) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5375, m.Instance(), m.dragOverPtr)
+	abSheetImportAPI().SysCallN(7, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TTabSheet) SetOnEndDrag(fn TEndDragEvent) {
@@ -127,7 +128,7 @@ func (m *TTabSheet) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5376, m.Instance(), m.endDragPtr)
+	abSheetImportAPI().SysCallN(8, m.Instance(), m.endDragPtr)
 }
 
 func (m *TTabSheet) SetOnMouseDown(fn TMouseEvent) {
@@ -135,7 +136,7 @@ func (m *TTabSheet) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5377, m.Instance(), m.mouseDownPtr)
+	abSheetImportAPI().SysCallN(9, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TTabSheet) SetOnMouseEnter(fn TNotifyEvent) {
@@ -143,7 +144,7 @@ func (m *TTabSheet) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5378, m.Instance(), m.mouseEnterPtr)
+	abSheetImportAPI().SysCallN(10, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TTabSheet) SetOnMouseLeave(fn TNotifyEvent) {
@@ -151,7 +152,7 @@ func (m *TTabSheet) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5379, m.Instance(), m.mouseLeavePtr)
+	abSheetImportAPI().SysCallN(11, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TTabSheet) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -159,7 +160,7 @@ func (m *TTabSheet) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5380, m.Instance(), m.mouseMovePtr)
+	abSheetImportAPI().SysCallN(12, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TTabSheet) SetOnMouseUp(fn TMouseEvent) {
@@ -167,7 +168,7 @@ func (m *TTabSheet) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5381, m.Instance(), m.mouseUpPtr)
+	abSheetImportAPI().SysCallN(13, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TTabSheet) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -175,7 +176,7 @@ func (m *TTabSheet) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5382, m.Instance(), m.mouseWheelPtr)
+	abSheetImportAPI().SysCallN(14, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TTabSheet) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -183,7 +184,7 @@ func (m *TTabSheet) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5383, m.Instance(), m.mouseWheelDownPtr)
+	abSheetImportAPI().SysCallN(15, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TTabSheet) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -191,7 +192,7 @@ func (m *TTabSheet) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5384, m.Instance(), m.mouseWheelUpPtr)
+	abSheetImportAPI().SysCallN(16, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TTabSheet) SetOnStartDrag(fn TStartDragEvent) {
@@ -199,5 +200,39 @@ func (m *TTabSheet) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5385, m.Instance(), m.startDragPtr)
+	abSheetImportAPI().SysCallN(17, m.Instance(), m.startDragPtr)
+}
+
+var (
+	abSheetImport       *imports.Imports = nil
+	abSheetImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("TabSheet_Class", 0),
+		/*1*/ imports.NewTable("TabSheet_Create", 0),
+		/*2*/ imports.NewTable("TabSheet_PageControl", 0),
+		/*3*/ imports.NewTable("TabSheet_ParentFont", 0),
+		/*4*/ imports.NewTable("TabSheet_ParentShowHint", 0),
+		/*5*/ imports.NewTable("TabSheet_SetOnContextPopup", 0),
+		/*6*/ imports.NewTable("TabSheet_SetOnDragDrop", 0),
+		/*7*/ imports.NewTable("TabSheet_SetOnDragOver", 0),
+		/*8*/ imports.NewTable("TabSheet_SetOnEndDrag", 0),
+		/*9*/ imports.NewTable("TabSheet_SetOnMouseDown", 0),
+		/*10*/ imports.NewTable("TabSheet_SetOnMouseEnter", 0),
+		/*11*/ imports.NewTable("TabSheet_SetOnMouseLeave", 0),
+		/*12*/ imports.NewTable("TabSheet_SetOnMouseMove", 0),
+		/*13*/ imports.NewTable("TabSheet_SetOnMouseUp", 0),
+		/*14*/ imports.NewTable("TabSheet_SetOnMouseWheel", 0),
+		/*15*/ imports.NewTable("TabSheet_SetOnMouseWheelDown", 0),
+		/*16*/ imports.NewTable("TabSheet_SetOnMouseWheelUp", 0),
+		/*17*/ imports.NewTable("TabSheet_SetOnStartDrag", 0),
+		/*18*/ imports.NewTable("TabSheet_TabIndex", 0),
+	}
+)
+
+func abSheetImportAPI() *imports.Imports {
+	if abSheetImport == nil {
+		abSheetImport = NewDefaultImports()
+		abSheetImport.SetImportTable(abSheetImportTables)
+		abSheetImportTables = nil
+	}
+	return abSheetImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TEbEdit struct {
 }
 
 func NewEbEdit(TheOwner IComponent) IEbEdit {
-	r1 := LCL().SysCallN(2794, GetObjectUintptr(TheOwner))
+	r1 := ebEditImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsEbEdit(r1)
 }
 
 func EbEditClass() TClass {
-	ret := LCL().SysCallN(2793)
+	ret := ebEditImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	ebEditImport       *imports.Imports = nil
+	ebEditImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("EbEdit_Class", 0),
+		/*1*/ imports.NewTable("EbEdit_Create", 0),
+	}
+)
+
+func ebEditImportAPI() *imports.Imports {
+	if ebEditImport == nil {
+		ebEditImport = NewDefaultImports()
+		ebEditImport.SetImportTable(ebEditImportTables)
+		ebEditImportTables = nil
+	}
+	return ebEditImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -30,38 +31,58 @@ type TCustomDesignControl struct {
 }
 
 func NewCustomDesignControl(TheOwner IComponent) ICustomDesignControl {
-	r1 := LCL().SysCallN(1504, GetObjectUintptr(TheOwner))
+	r1 := customDesignControlImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsCustomDesignControl(r1)
 }
 
 func (m *TCustomDesignControl) DesignTimePPI() int32 {
-	r1 := LCL().SysCallN(1505, 0, m.Instance(), 0)
+	r1 := customDesignControlImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDesignControl) SetDesignTimePPI(AValue int32) {
-	LCL().SysCallN(1505, 1, m.Instance(), uintptr(AValue))
+	customDesignControlImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDesignControl) PixelsPerInch() int32 {
-	r1 := LCL().SysCallN(1506, 0, m.Instance(), 0)
+	r1 := customDesignControlImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomDesignControl) SetPixelsPerInch(AValue int32) {
-	LCL().SysCallN(1506, 1, m.Instance(), uintptr(AValue))
+	customDesignControlImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomDesignControl) Scaled() bool {
-	r1 := LCL().SysCallN(1507, 0, m.Instance(), 0)
+	r1 := customDesignControlImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomDesignControl) SetScaled(AValue bool) {
-	LCL().SysCallN(1507, 1, m.Instance(), PascalBool(AValue))
+	customDesignControlImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
 }
 
 func CustomDesignControlClass() TClass {
-	ret := LCL().SysCallN(1503)
+	ret := customDesignControlImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	customDesignControlImport       *imports.Imports = nil
+	customDesignControlImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomDesignControl_Class", 0),
+		/*1*/ imports.NewTable("CustomDesignControl_Create", 0),
+		/*2*/ imports.NewTable("CustomDesignControl_DesignTimePPI", 0),
+		/*3*/ imports.NewTable("CustomDesignControl_PixelsPerInch", 0),
+		/*4*/ imports.NewTable("CustomDesignControl_Scaled", 0),
+	}
+)
+
+func customDesignControlImportAPI() *imports.Imports {
+	if customDesignControlImport == nil {
+		customDesignControlImport = NewDefaultImports()
+		customDesignControlImport.SetImportTable(customDesignControlImportTables)
+		customDesignControlImportTables = nil
+	}
+	return customDesignControlImport
 }

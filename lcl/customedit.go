@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -67,195 +68,195 @@ type TCustomEdit struct {
 }
 
 func NewCustomEdit(AOwner IComponent) ICustomEdit {
-	r1 := LCL().SysCallN(1620, GetObjectUintptr(AOwner))
+	r1 := customEditImportAPI().SysCallN(9, GetObjectUintptr(AOwner))
 	return AsCustomEdit(r1)
 }
 
 func (m *TCustomEdit) Alignment() TAlignment {
-	r1 := LCL().SysCallN(1611, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TAlignment(r1)
 }
 
 func (m *TCustomEdit) SetAlignment(AValue TAlignment) {
-	LCL().SysCallN(1611, 1, m.Instance(), uintptr(AValue))
+	customEditImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomEdit) BorderStyle() TBorderStyle {
-	r1 := LCL().SysCallN(1612, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return TBorderStyle(r1)
 }
 
 func (m *TCustomEdit) SetBorderStyle(AValue TBorderStyle) {
-	LCL().SysCallN(1612, 1, m.Instance(), uintptr(AValue))
+	customEditImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomEdit) CanUndo() bool {
-	r1 := LCL().SysCallN(1613, m.Instance())
+	r1 := customEditImportAPI().SysCallN(2, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TCustomEdit) CaretPos() (resultPoint TPoint) {
-	LCL().SysCallN(1614, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	customEditImportAPI().SysCallN(3, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TCustomEdit) SetCaretPos(AValue *TPoint) {
-	LCL().SysCallN(1614, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	customEditImportAPI().SysCallN(3, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TCustomEdit) CharCase() TEditCharCase {
-	r1 := LCL().SysCallN(1615, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TEditCharCase(r1)
 }
 
 func (m *TCustomEdit) SetCharCase(AValue TEditCharCase) {
-	LCL().SysCallN(1615, 1, m.Instance(), uintptr(AValue))
+	customEditImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomEdit) EchoMode() TEchoMode {
-	r1 := LCL().SysCallN(1622, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return TEchoMode(r1)
 }
 
 func (m *TCustomEdit) SetEchoMode(AValue TEchoMode) {
-	LCL().SysCallN(1622, 1, m.Instance(), uintptr(AValue))
+	customEditImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomEdit) EmulatedTextHintStatus() TEmulatedTextHintStatus {
-	r1 := LCL().SysCallN(1623, m.Instance())
+	r1 := customEditImportAPI().SysCallN(12, m.Instance())
 	return TEmulatedTextHintStatus(r1)
 }
 
 func (m *TCustomEdit) HideSelection() bool {
-	r1 := LCL().SysCallN(1624, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomEdit) SetHideSelection(AValue bool) {
-	LCL().SysCallN(1624, 1, m.Instance(), PascalBool(AValue))
+	customEditImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomEdit) MaxLength() int32 {
-	r1 := LCL().SysCallN(1625, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomEdit) SetMaxLength(AValue int32) {
-	LCL().SysCallN(1625, 1, m.Instance(), uintptr(AValue))
+	customEditImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomEdit) Modified() bool {
-	r1 := LCL().SysCallN(1626, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomEdit) SetModified(AValue bool) {
-	LCL().SysCallN(1626, 1, m.Instance(), PascalBool(AValue))
+	customEditImportAPI().SysCallN(15, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomEdit) NumbersOnly() bool {
-	r1 := LCL().SysCallN(1627, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomEdit) SetNumbersOnly(AValue bool) {
-	LCL().SysCallN(1627, 1, m.Instance(), PascalBool(AValue))
+	customEditImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomEdit) PasswordChar() Char {
-	r1 := LCL().SysCallN(1628, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return Char(r1)
 }
 
 func (m *TCustomEdit) SetPasswordChar(AValue Char) {
-	LCL().SysCallN(1628, 1, m.Instance(), uintptr(AValue))
+	customEditImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomEdit) ReadOnly() bool {
-	r1 := LCL().SysCallN(1630, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomEdit) SetReadOnly(AValue bool) {
-	LCL().SysCallN(1630, 1, m.Instance(), PascalBool(AValue))
+	customEditImportAPI().SysCallN(19, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomEdit) SelLength() int32 {
-	r1 := LCL().SysCallN(1631, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomEdit) SetSelLength(AValue int32) {
-	LCL().SysCallN(1631, 1, m.Instance(), uintptr(AValue))
+	customEditImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomEdit) SelStart() int32 {
-	r1 := LCL().SysCallN(1632, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomEdit) SetSelStart(AValue int32) {
-	LCL().SysCallN(1632, 1, m.Instance(), uintptr(AValue))
+	customEditImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomEdit) SelText() string {
-	r1 := LCL().SysCallN(1633, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(22, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomEdit) SetSelText(AValue string) {
-	LCL().SysCallN(1633, 1, m.Instance(), PascalStr(AValue))
+	customEditImportAPI().SysCallN(22, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomEdit) Text() string {
-	r1 := LCL().SysCallN(1636, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomEdit) SetText(AValue string) {
-	LCL().SysCallN(1636, 1, m.Instance(), PascalStr(AValue))
+	customEditImportAPI().SysCallN(25, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomEdit) TextHint() string {
-	r1 := LCL().SysCallN(1637, 0, m.Instance(), 0)
+	r1 := customEditImportAPI().SysCallN(26, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomEdit) SetTextHint(AValue string) {
-	LCL().SysCallN(1637, 1, m.Instance(), PascalStr(AValue))
+	customEditImportAPI().SysCallN(26, 1, m.Instance(), PascalStr(AValue))
 }
 
 func CustomEditClass() TClass {
-	ret := LCL().SysCallN(1616)
+	ret := customEditImportAPI().SysCallN(5)
 	return TClass(ret)
 }
 
 func (m *TCustomEdit) Clear() {
-	LCL().SysCallN(1617, m.Instance())
+	customEditImportAPI().SysCallN(6, m.Instance())
 }
 
 func (m *TCustomEdit) SelectAll() {
-	LCL().SysCallN(1634, m.Instance())
+	customEditImportAPI().SysCallN(23, m.Instance())
 }
 
 func (m *TCustomEdit) ClearSelection() {
-	LCL().SysCallN(1618, m.Instance())
+	customEditImportAPI().SysCallN(7, m.Instance())
 }
 
 func (m *TCustomEdit) CopyToClipboard() {
-	LCL().SysCallN(1619, m.Instance())
+	customEditImportAPI().SysCallN(8, m.Instance())
 }
 
 func (m *TCustomEdit) CutToClipboard() {
-	LCL().SysCallN(1621, m.Instance())
+	customEditImportAPI().SysCallN(10, m.Instance())
 }
 
 func (m *TCustomEdit) PasteFromClipboard() {
-	LCL().SysCallN(1629, m.Instance())
+	customEditImportAPI().SysCallN(18, m.Instance())
 }
 
 func (m *TCustomEdit) Undo() {
-	LCL().SysCallN(1638, m.Instance())
+	customEditImportAPI().SysCallN(27, m.Instance())
 }
 
 func (m *TCustomEdit) SetOnChange(fn TNotifyEvent) {
@@ -263,5 +264,48 @@ func (m *TCustomEdit) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1635, m.Instance(), m.changePtr)
+	customEditImportAPI().SysCallN(24, m.Instance(), m.changePtr)
+}
+
+var (
+	customEditImport       *imports.Imports = nil
+	customEditImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomEdit_Alignment", 0),
+		/*1*/ imports.NewTable("CustomEdit_BorderStyle", 0),
+		/*2*/ imports.NewTable("CustomEdit_CanUndo", 0),
+		/*3*/ imports.NewTable("CustomEdit_CaretPos", 0),
+		/*4*/ imports.NewTable("CustomEdit_CharCase", 0),
+		/*5*/ imports.NewTable("CustomEdit_Class", 0),
+		/*6*/ imports.NewTable("CustomEdit_Clear", 0),
+		/*7*/ imports.NewTable("CustomEdit_ClearSelection", 0),
+		/*8*/ imports.NewTable("CustomEdit_CopyToClipboard", 0),
+		/*9*/ imports.NewTable("CustomEdit_Create", 0),
+		/*10*/ imports.NewTable("CustomEdit_CutToClipboard", 0),
+		/*11*/ imports.NewTable("CustomEdit_EchoMode", 0),
+		/*12*/ imports.NewTable("CustomEdit_EmulatedTextHintStatus", 0),
+		/*13*/ imports.NewTable("CustomEdit_HideSelection", 0),
+		/*14*/ imports.NewTable("CustomEdit_MaxLength", 0),
+		/*15*/ imports.NewTable("CustomEdit_Modified", 0),
+		/*16*/ imports.NewTable("CustomEdit_NumbersOnly", 0),
+		/*17*/ imports.NewTable("CustomEdit_PasswordChar", 0),
+		/*18*/ imports.NewTable("CustomEdit_PasteFromClipboard", 0),
+		/*19*/ imports.NewTable("CustomEdit_ReadOnly", 0),
+		/*20*/ imports.NewTable("CustomEdit_SelLength", 0),
+		/*21*/ imports.NewTable("CustomEdit_SelStart", 0),
+		/*22*/ imports.NewTable("CustomEdit_SelText", 0),
+		/*23*/ imports.NewTable("CustomEdit_SelectAll", 0),
+		/*24*/ imports.NewTable("CustomEdit_SetOnChange", 0),
+		/*25*/ imports.NewTable("CustomEdit_Text", 0),
+		/*26*/ imports.NewTable("CustomEdit_TextHint", 0),
+		/*27*/ imports.NewTable("CustomEdit_Undo", 0),
+	}
+)
+
+func customEditImportAPI() *imports.Imports {
+	if customEditImport == nil {
+		customEditImport = NewDefaultImports()
+		customEditImport.SetImportTable(customEditImportTables)
+		customEditImportTables = nil
+	}
+	return customEditImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -42,67 +43,67 @@ type TCustomRadioGroup struct {
 }
 
 func NewCustomRadioGroup(TheOwner IComponent) ICustomRadioGroup {
-	r1 := LCL().SysCallN(2185, GetObjectUintptr(TheOwner))
+	r1 := customRadioGroupImportAPI().SysCallN(5, GetObjectUintptr(TheOwner))
 	return AsCustomRadioGroup(r1)
 }
 
 func (m *TCustomRadioGroup) AutoFill() bool {
-	r1 := LCL().SysCallN(2180, 0, m.Instance(), 0)
+	r1 := customRadioGroupImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomRadioGroup) SetAutoFill(AValue bool) {
-	LCL().SysCallN(2180, 1, m.Instance(), PascalBool(AValue))
+	customRadioGroupImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomRadioGroup) ItemIndex() int32 {
-	r1 := LCL().SysCallN(2186, 0, m.Instance(), 0)
+	r1 := customRadioGroupImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomRadioGroup) SetItemIndex(AValue int32) {
-	LCL().SysCallN(2186, 1, m.Instance(), uintptr(AValue))
+	customRadioGroupImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomRadioGroup) Items() IStrings {
-	r1 := LCL().SysCallN(2187, 0, m.Instance(), 0)
+	r1 := customRadioGroupImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return AsStrings(r1)
 }
 
 func (m *TCustomRadioGroup) SetItems(AValue IStrings) {
-	LCL().SysCallN(2187, 1, m.Instance(), GetObjectUintptr(AValue))
+	customRadioGroupImportAPI().SysCallN(7, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomRadioGroup) Columns() int32 {
-	r1 := LCL().SysCallN(2184, 0, m.Instance(), 0)
+	r1 := customRadioGroupImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomRadioGroup) SetColumns(AValue int32) {
-	LCL().SysCallN(2184, 1, m.Instance(), uintptr(AValue))
+	customRadioGroupImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomRadioGroup) ColumnLayout() TColumnLayout {
-	r1 := LCL().SysCallN(2183, 0, m.Instance(), 0)
+	r1 := customRadioGroupImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TColumnLayout(r1)
 }
 
 func (m *TCustomRadioGroup) SetColumnLayout(AValue TColumnLayout) {
-	LCL().SysCallN(2183, 1, m.Instance(), uintptr(AValue))
+	customRadioGroupImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomRadioGroup) CanModify() bool {
-	r1 := LCL().SysCallN(2181, m.Instance())
+	r1 := customRadioGroupImportAPI().SysCallN(1, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TCustomRadioGroup) Rows() int32 {
-	r1 := LCL().SysCallN(2188, m.Instance())
+	r1 := customRadioGroupImportAPI().SysCallN(8, m.Instance())
 	return int32(r1)
 }
 
 func CustomRadioGroupClass() TClass {
-	ret := LCL().SysCallN(2182)
+	ret := customRadioGroupImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
@@ -111,7 +112,7 @@ func (m *TCustomRadioGroup) SetOnItemEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.itemEnterPtr)
 	}
 	m.itemEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2189, m.Instance(), m.itemEnterPtr)
+	customRadioGroupImportAPI().SysCallN(9, m.Instance(), m.itemEnterPtr)
 }
 
 func (m *TCustomRadioGroup) SetOnItemExit(fn TNotifyEvent) {
@@ -119,7 +120,7 @@ func (m *TCustomRadioGroup) SetOnItemExit(fn TNotifyEvent) {
 		RemoveEventElement(m.itemExitPtr)
 	}
 	m.itemExitPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2190, m.Instance(), m.itemExitPtr)
+	customRadioGroupImportAPI().SysCallN(10, m.Instance(), m.itemExitPtr)
 }
 
 func (m *TCustomRadioGroup) SetOnSelectionChanged(fn TNotifyEvent) {
@@ -127,5 +128,32 @@ func (m *TCustomRadioGroup) SetOnSelectionChanged(fn TNotifyEvent) {
 		RemoveEventElement(m.selectionChangedPtr)
 	}
 	m.selectionChangedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2191, m.Instance(), m.selectionChangedPtr)
+	customRadioGroupImportAPI().SysCallN(11, m.Instance(), m.selectionChangedPtr)
+}
+
+var (
+	customRadioGroupImport       *imports.Imports = nil
+	customRadioGroupImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomRadioGroup_AutoFill", 0),
+		/*1*/ imports.NewTable("CustomRadioGroup_CanModify", 0),
+		/*2*/ imports.NewTable("CustomRadioGroup_Class", 0),
+		/*3*/ imports.NewTable("CustomRadioGroup_ColumnLayout", 0),
+		/*4*/ imports.NewTable("CustomRadioGroup_Columns", 0),
+		/*5*/ imports.NewTable("CustomRadioGroup_Create", 0),
+		/*6*/ imports.NewTable("CustomRadioGroup_ItemIndex", 0),
+		/*7*/ imports.NewTable("CustomRadioGroup_Items", 0),
+		/*8*/ imports.NewTable("CustomRadioGroup_Rows", 0),
+		/*9*/ imports.NewTable("CustomRadioGroup_SetOnItemEnter", 0),
+		/*10*/ imports.NewTable("CustomRadioGroup_SetOnItemExit", 0),
+		/*11*/ imports.NewTable("CustomRadioGroup_SetOnSelectionChanged", 0),
+	}
+)
+
+func customRadioGroupImportAPI() *imports.Imports {
+	if customRadioGroupImport == nil {
+		customRadioGroupImport = NewDefaultImports()
+		customRadioGroupImport.SetImportTable(customRadioGroupImportTables)
+		customRadioGroupImportTables = nil
+	}
+	return customRadioGroupImport
 }

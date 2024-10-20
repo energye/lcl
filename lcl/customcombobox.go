@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -70,216 +71,261 @@ type TCustomComboBox struct {
 }
 
 func NewCustomComboBox(TheOwner IComponent) ICustomComboBox {
-	r1 := LCL().SysCallN(1454, GetObjectUintptr(TheOwner))
+	r1 := customComboBoxImportAPI().SysCallN(14, GetObjectUintptr(TheOwner))
 	return AsCustomComboBox(r1)
 }
 
 func (m *TCustomComboBox) CharCase() TEditCharCase {
-	r1 := LCL().SysCallN(1450, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TEditCharCase(r1)
 }
 
 func (m *TCustomComboBox) SetCharCase(AValue TEditCharCase) {
-	LCL().SysCallN(1450, 1, m.Instance(), uintptr(AValue))
+	customComboBoxImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBox) DroppedDown() bool {
-	r1 := LCL().SysCallN(1456, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomComboBox) SetDroppedDown(AValue bool) {
-	LCL().SysCallN(1456, 1, m.Instance(), PascalBool(AValue))
+	customComboBoxImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomComboBox) AutoComplete() bool {
-	r1 := LCL().SysCallN(1444, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomComboBox) SetAutoComplete(AValue bool) {
-	LCL().SysCallN(1444, 1, m.Instance(), PascalBool(AValue))
+	customComboBoxImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomComboBox) AutoCompleteText() TComboBoxAutoCompleteText {
-	r1 := LCL().SysCallN(1445, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TComboBoxAutoCompleteText(r1)
 }
 
 func (m *TCustomComboBox) SetAutoCompleteText(AValue TComboBoxAutoCompleteText) {
-	LCL().SysCallN(1445, 1, m.Instance(), uintptr(AValue))
+	customComboBoxImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBox) AutoDropDown() bool {
-	r1 := LCL().SysCallN(1446, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomComboBox) SetAutoDropDown(AValue bool) {
-	LCL().SysCallN(1446, 1, m.Instance(), PascalBool(AValue))
+	customComboBoxImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomComboBox) AutoSelect() bool {
-	r1 := LCL().SysCallN(1447, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomComboBox) SetAutoSelect(AValue bool) {
-	LCL().SysCallN(1447, 1, m.Instance(), PascalBool(AValue))
+	customComboBoxImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomComboBox) AutoSelected() bool {
-	r1 := LCL().SysCallN(1448, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomComboBox) SetAutoSelected(AValue bool) {
-	LCL().SysCallN(1448, 1, m.Instance(), PascalBool(AValue))
+	customComboBoxImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomComboBox) ArrowKeysTraverseList() bool {
-	r1 := LCL().SysCallN(1443, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomComboBox) SetArrowKeysTraverseList(AValue bool) {
-	LCL().SysCallN(1443, 1, m.Instance(), PascalBool(AValue))
+	customComboBoxImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomComboBox) Canvas() ICanvas {
-	r1 := LCL().SysCallN(1449, m.Instance())
+	r1 := customComboBoxImportAPI().SysCallN(9, m.Instance())
 	return AsCanvas(r1)
 }
 
 func (m *TCustomComboBox) DropDownCount() int32 {
-	r1 := LCL().SysCallN(1455, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomComboBox) SetDropDownCount(AValue int32) {
-	LCL().SysCallN(1455, 1, m.Instance(), uintptr(AValue))
+	customComboBoxImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBox) EmulatedTextHintStatus() TEmulatedTextHintStatus {
-	r1 := LCL().SysCallN(1457, m.Instance())
+	r1 := customComboBoxImportAPI().SysCallN(17, m.Instance())
 	return TEmulatedTextHintStatus(r1)
 }
 
 func (m *TCustomComboBox) Items() IStrings {
-	r1 := LCL().SysCallN(1460, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return AsStrings(r1)
 }
 
 func (m *TCustomComboBox) SetItems(AValue IStrings) {
-	LCL().SysCallN(1460, 1, m.Instance(), GetObjectUintptr(AValue))
+	customComboBoxImportAPI().SysCallN(20, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomComboBox) ItemIndex() int32 {
-	r1 := LCL().SysCallN(1459, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomComboBox) SetItemIndex(AValue int32) {
-	LCL().SysCallN(1459, 1, m.Instance(), uintptr(AValue))
+	customComboBoxImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBox) ReadOnly() bool {
-	r1 := LCL().SysCallN(1462, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(22, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomComboBox) SetReadOnly(AValue bool) {
-	LCL().SysCallN(1462, 1, m.Instance(), PascalBool(AValue))
+	customComboBoxImportAPI().SysCallN(22, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomComboBox) SelLength() int32 {
-	r1 := LCL().SysCallN(1463, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomComboBox) SetSelLength(AValue int32) {
-	LCL().SysCallN(1463, 1, m.Instance(), uintptr(AValue))
+	customComboBoxImportAPI().SysCallN(23, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBox) SelStart() int32 {
-	r1 := LCL().SysCallN(1464, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(24, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomComboBox) SetSelStart(AValue int32) {
-	LCL().SysCallN(1464, 1, m.Instance(), uintptr(AValue))
+	customComboBoxImportAPI().SysCallN(24, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBox) SelText() string {
-	r1 := LCL().SysCallN(1465, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomComboBox) SetSelText(AValue string) {
-	LCL().SysCallN(1465, 1, m.Instance(), PascalStr(AValue))
+	customComboBoxImportAPI().SysCallN(25, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomComboBox) Style() TComboBoxStyle {
-	r1 := LCL().SysCallN(1467, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(27, 0, m.Instance(), 0)
 	return TComboBoxStyle(r1)
 }
 
 func (m *TCustomComboBox) SetStyle(AValue TComboBoxStyle) {
-	LCL().SysCallN(1467, 1, m.Instance(), uintptr(AValue))
+	customComboBoxImportAPI().SysCallN(27, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomComboBox) Text() string {
-	r1 := LCL().SysCallN(1468, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(28, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomComboBox) SetText(AValue string) {
-	LCL().SysCallN(1468, 1, m.Instance(), PascalStr(AValue))
+	customComboBoxImportAPI().SysCallN(28, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomComboBox) TextHint() string {
-	r1 := LCL().SysCallN(1469, 0, m.Instance(), 0)
+	r1 := customComboBoxImportAPI().SysCallN(29, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomComboBox) SetTextHint(AValue string) {
-	LCL().SysCallN(1469, 1, m.Instance(), PascalStr(AValue))
+	customComboBoxImportAPI().SysCallN(29, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomComboBox) MatchListItem(AValue string) int32 {
-	r1 := LCL().SysCallN(1461, m.Instance(), PascalStr(AValue))
+	r1 := customComboBoxImportAPI().SysCallN(21, m.Instance(), PascalStr(AValue))
 	return int32(r1)
 }
 
 func CustomComboBoxClass() TClass {
-	ret := LCL().SysCallN(1451)
+	ret := customComboBoxImportAPI().SysCallN(11)
 	return TClass(ret)
 }
 
 func (m *TCustomComboBox) IntfGetItems() {
-	LCL().SysCallN(1458, m.Instance())
+	customComboBoxImportAPI().SysCallN(18, m.Instance())
 }
 
 func (m *TCustomComboBox) AddItem(Item string, AnObject IObject) {
-	LCL().SysCallN(1442, m.Instance(), PascalStr(Item), GetObjectUintptr(AnObject))
+	customComboBoxImportAPI().SysCallN(2, m.Instance(), PascalStr(Item), GetObjectUintptr(AnObject))
 }
 
 func (m *TCustomComboBox) AddHistoryItem(Item string, MaxHistoryCount int32, SetAsText, CaseSensitive bool) {
-	LCL().SysCallN(1440, m.Instance(), PascalStr(Item), uintptr(MaxHistoryCount), PascalBool(SetAsText), PascalBool(CaseSensitive))
+	customComboBoxImportAPI().SysCallN(0, m.Instance(), PascalStr(Item), uintptr(MaxHistoryCount), PascalBool(SetAsText), PascalBool(CaseSensitive))
 }
 
 func (m *TCustomComboBox) AddHistoryItem1(Item string, AnObject IObject, MaxHistoryCount int32, SetAsText, CaseSensitive bool) {
-	LCL().SysCallN(1441, m.Instance(), PascalStr(Item), GetObjectUintptr(AnObject), uintptr(MaxHistoryCount), PascalBool(SetAsText), PascalBool(CaseSensitive))
+	customComboBoxImportAPI().SysCallN(1, m.Instance(), PascalStr(Item), GetObjectUintptr(AnObject), uintptr(MaxHistoryCount), PascalBool(SetAsText), PascalBool(CaseSensitive))
 }
 
 func (m *TCustomComboBox) Clear() {
-	LCL().SysCallN(1452, m.Instance())
+	customComboBoxImportAPI().SysCallN(12, m.Instance())
 }
 
 func (m *TCustomComboBox) ClearSelection() {
-	LCL().SysCallN(1453, m.Instance())
+	customComboBoxImportAPI().SysCallN(13, m.Instance())
 }
 
 func (m *TCustomComboBox) SelectAll() {
-	LCL().SysCallN(1466, m.Instance())
+	customComboBoxImportAPI().SysCallN(26, m.Instance())
+}
+
+var (
+	customComboBoxImport       *imports.Imports = nil
+	customComboBoxImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomComboBox_AddHistoryItem", 0),
+		/*1*/ imports.NewTable("CustomComboBox_AddHistoryItem1", 0),
+		/*2*/ imports.NewTable("CustomComboBox_AddItem", 0),
+		/*3*/ imports.NewTable("CustomComboBox_ArrowKeysTraverseList", 0),
+		/*4*/ imports.NewTable("CustomComboBox_AutoComplete", 0),
+		/*5*/ imports.NewTable("CustomComboBox_AutoCompleteText", 0),
+		/*6*/ imports.NewTable("CustomComboBox_AutoDropDown", 0),
+		/*7*/ imports.NewTable("CustomComboBox_AutoSelect", 0),
+		/*8*/ imports.NewTable("CustomComboBox_AutoSelected", 0),
+		/*9*/ imports.NewTable("CustomComboBox_Canvas", 0),
+		/*10*/ imports.NewTable("CustomComboBox_CharCase", 0),
+		/*11*/ imports.NewTable("CustomComboBox_Class", 0),
+		/*12*/ imports.NewTable("CustomComboBox_Clear", 0),
+		/*13*/ imports.NewTable("CustomComboBox_ClearSelection", 0),
+		/*14*/ imports.NewTable("CustomComboBox_Create", 0),
+		/*15*/ imports.NewTable("CustomComboBox_DropDownCount", 0),
+		/*16*/ imports.NewTable("CustomComboBox_DroppedDown", 0),
+		/*17*/ imports.NewTable("CustomComboBox_EmulatedTextHintStatus", 0),
+		/*18*/ imports.NewTable("CustomComboBox_IntfGetItems", 0),
+		/*19*/ imports.NewTable("CustomComboBox_ItemIndex", 0),
+		/*20*/ imports.NewTable("CustomComboBox_Items", 0),
+		/*21*/ imports.NewTable("CustomComboBox_MatchListItem", 0),
+		/*22*/ imports.NewTable("CustomComboBox_ReadOnly", 0),
+		/*23*/ imports.NewTable("CustomComboBox_SelLength", 0),
+		/*24*/ imports.NewTable("CustomComboBox_SelStart", 0),
+		/*25*/ imports.NewTable("CustomComboBox_SelText", 0),
+		/*26*/ imports.NewTable("CustomComboBox_SelectAll", 0),
+		/*27*/ imports.NewTable("CustomComboBox_Style", 0),
+		/*28*/ imports.NewTable("CustomComboBox_Text", 0),
+		/*29*/ imports.NewTable("CustomComboBox_TextHint", 0),
+	}
+)
+
+func customComboBoxImportAPI() *imports.Imports {
+	if customComboBoxImport == nil {
+		customComboBoxImport = NewDefaultImports()
+		customComboBoxImport.SetImportTable(customComboBoxImportTables)
+		customComboBoxImportTables = nil
+	}
+	return customComboBoxImport
 }

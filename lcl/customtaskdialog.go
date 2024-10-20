@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -63,180 +64,180 @@ type TCustomTaskDialog struct {
 }
 
 func NewCustomTaskDialog(AOwner IComponent) ICustomTaskDialog {
-	r1 := LCL().SysCallN(2361, GetObjectUintptr(AOwner))
+	r1 := customTaskDialogImportAPI().SysCallN(5, GetObjectUintptr(AOwner))
 	return AsCustomTaskDialog(r1)
 }
 
 func (m *TCustomTaskDialog) Button() ITaskDialogButtonItem {
-	r1 := LCL().SysCallN(2356, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return AsTaskDialogButtonItem(r1)
 }
 
 func (m *TCustomTaskDialog) SetButton(AValue ITaskDialogButtonItem) {
-	LCL().SysCallN(2356, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTaskDialogImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTaskDialog) Buttons() ITaskDialogButtons {
-	r1 := LCL().SysCallN(2357, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return AsTaskDialogButtons(r1)
 }
 
 func (m *TCustomTaskDialog) SetButtons(AValue ITaskDialogButtons) {
-	LCL().SysCallN(2357, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTaskDialogImportAPI().SysCallN(1, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTaskDialog) Caption() string {
-	r1 := LCL().SysCallN(2358, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomTaskDialog) SetCaption(AValue string) {
-	LCL().SysCallN(2358, 1, m.Instance(), PascalStr(AValue))
+	customTaskDialogImportAPI().SysCallN(2, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomTaskDialog) CommonButtons() TTaskDialogCommonButtons {
-	r1 := LCL().SysCallN(2360, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TTaskDialogCommonButtons(r1)
 }
 
 func (m *TCustomTaskDialog) SetCommonButtons(AValue TTaskDialogCommonButtons) {
-	LCL().SysCallN(2360, 1, m.Instance(), uintptr(AValue))
+	customTaskDialogImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTaskDialog) DefaultButton() TTaskDialogCommonButton {
-	r1 := LCL().SysCallN(2362, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return TTaskDialogCommonButton(r1)
 }
 
 func (m *TCustomTaskDialog) SetDefaultButton(AValue TTaskDialogCommonButton) {
-	LCL().SysCallN(2362, 1, m.Instance(), uintptr(AValue))
+	customTaskDialogImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTaskDialog) ExpandButtonCaption() string {
-	r1 := LCL().SysCallN(2365, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomTaskDialog) SetExpandButtonCaption(AValue string) {
-	LCL().SysCallN(2365, 1, m.Instance(), PascalStr(AValue))
+	customTaskDialogImportAPI().SysCallN(9, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomTaskDialog) ExpandedText() string {
-	r1 := LCL().SysCallN(2366, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomTaskDialog) SetExpandedText(AValue string) {
-	LCL().SysCallN(2366, 1, m.Instance(), PascalStr(AValue))
+	customTaskDialogImportAPI().SysCallN(10, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomTaskDialog) Flags() TTaskDialogFlags {
-	r1 := LCL().SysCallN(2367, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return TTaskDialogFlags(r1)
 }
 
 func (m *TCustomTaskDialog) SetFlags(AValue TTaskDialogFlags) {
-	LCL().SysCallN(2367, 1, m.Instance(), uintptr(AValue))
+	customTaskDialogImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTaskDialog) FooterIcon() TTaskDialogIcon {
-	r1 := LCL().SysCallN(2368, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return TTaskDialogIcon(r1)
 }
 
 func (m *TCustomTaskDialog) SetFooterIcon(AValue TTaskDialogIcon) {
-	LCL().SysCallN(2368, 1, m.Instance(), uintptr(AValue))
+	customTaskDialogImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTaskDialog) FooterText() string {
-	r1 := LCL().SysCallN(2369, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomTaskDialog) SetFooterText(AValue string) {
-	LCL().SysCallN(2369, 1, m.Instance(), PascalStr(AValue))
+	customTaskDialogImportAPI().SysCallN(13, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomTaskDialog) MainIcon() TTaskDialogIcon {
-	r1 := LCL().SysCallN(2370, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return TTaskDialogIcon(r1)
 }
 
 func (m *TCustomTaskDialog) SetMainIcon(AValue TTaskDialogIcon) {
-	LCL().SysCallN(2370, 1, m.Instance(), uintptr(AValue))
+	customTaskDialogImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTaskDialog) ModalResult() TModalResult {
-	r1 := LCL().SysCallN(2371, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return TModalResult(r1)
 }
 
 func (m *TCustomTaskDialog) SetModalResult(AValue TModalResult) {
-	LCL().SysCallN(2371, 1, m.Instance(), uintptr(AValue))
+	customTaskDialogImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTaskDialog) RadioButton() ITaskDialogRadioButtonItem {
-	r1 := LCL().SysCallN(2372, m.Instance())
+	r1 := customTaskDialogImportAPI().SysCallN(16, m.Instance())
 	return AsTaskDialogRadioButtonItem(r1)
 }
 
 func (m *TCustomTaskDialog) RadioButtons() ITaskDialogButtons {
-	r1 := LCL().SysCallN(2373, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return AsTaskDialogButtons(r1)
 }
 
 func (m *TCustomTaskDialog) SetRadioButtons(AValue ITaskDialogButtons) {
-	LCL().SysCallN(2373, 1, m.Instance(), GetObjectUintptr(AValue))
+	customTaskDialogImportAPI().SysCallN(17, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomTaskDialog) Text() string {
-	r1 := LCL().SysCallN(2375, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomTaskDialog) SetText(AValue string) {
-	LCL().SysCallN(2375, 1, m.Instance(), PascalStr(AValue))
+	customTaskDialogImportAPI().SysCallN(19, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomTaskDialog) Title() string {
-	r1 := LCL().SysCallN(2376, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomTaskDialog) SetTitle(AValue string) {
-	LCL().SysCallN(2376, 1, m.Instance(), PascalStr(AValue))
+	customTaskDialogImportAPI().SysCallN(20, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomTaskDialog) VerificationText() string {
-	r1 := LCL().SysCallN(2377, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomTaskDialog) SetVerificationText(AValue string) {
-	LCL().SysCallN(2377, 1, m.Instance(), PascalStr(AValue))
+	customTaskDialogImportAPI().SysCallN(21, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomTaskDialog) Width() int32 {
-	r1 := LCL().SysCallN(2378, 0, m.Instance(), 0)
+	r1 := customTaskDialogImportAPI().SysCallN(22, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomTaskDialog) SetWidth(AValue int32) {
-	LCL().SysCallN(2378, 1, m.Instance(), uintptr(AValue))
+	customTaskDialogImportAPI().SysCallN(22, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomTaskDialog) Execute() bool {
-	r1 := LCL().SysCallN(2363, m.Instance())
+	r1 := customTaskDialogImportAPI().SysCallN(7, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TCustomTaskDialog) Execute1(ParentWnd HWND) bool {
-	r1 := LCL().SysCallN(2364, m.Instance(), uintptr(ParentWnd))
+	r1 := customTaskDialogImportAPI().SysCallN(8, m.Instance(), uintptr(ParentWnd))
 	return GoBool(r1)
 }
 
 func CustomTaskDialogClass() TClass {
-	ret := LCL().SysCallN(2359)
+	ret := customTaskDialogImportAPI().SysCallN(3)
 	return TClass(ret)
 }
 
@@ -245,5 +246,43 @@ func (m *TCustomTaskDialog) SetOnButtonClicked(fn TTaskDlgClickEvent) {
 		RemoveEventElement(m.buttonClickedPtr)
 	}
 	m.buttonClickedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(2374, m.Instance(), m.buttonClickedPtr)
+	customTaskDialogImportAPI().SysCallN(18, m.Instance(), m.buttonClickedPtr)
+}
+
+var (
+	customTaskDialogImport       *imports.Imports = nil
+	customTaskDialogImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomTaskDialog_Button", 0),
+		/*1*/ imports.NewTable("CustomTaskDialog_Buttons", 0),
+		/*2*/ imports.NewTable("CustomTaskDialog_Caption", 0),
+		/*3*/ imports.NewTable("CustomTaskDialog_Class", 0),
+		/*4*/ imports.NewTable("CustomTaskDialog_CommonButtons", 0),
+		/*5*/ imports.NewTable("CustomTaskDialog_Create", 0),
+		/*6*/ imports.NewTable("CustomTaskDialog_DefaultButton", 0),
+		/*7*/ imports.NewTable("CustomTaskDialog_Execute", 0),
+		/*8*/ imports.NewTable("CustomTaskDialog_Execute1", 0),
+		/*9*/ imports.NewTable("CustomTaskDialog_ExpandButtonCaption", 0),
+		/*10*/ imports.NewTable("CustomTaskDialog_ExpandedText", 0),
+		/*11*/ imports.NewTable("CustomTaskDialog_Flags", 0),
+		/*12*/ imports.NewTable("CustomTaskDialog_FooterIcon", 0),
+		/*13*/ imports.NewTable("CustomTaskDialog_FooterText", 0),
+		/*14*/ imports.NewTable("CustomTaskDialog_MainIcon", 0),
+		/*15*/ imports.NewTable("CustomTaskDialog_ModalResult", 0),
+		/*16*/ imports.NewTable("CustomTaskDialog_RadioButton", 0),
+		/*17*/ imports.NewTable("CustomTaskDialog_RadioButtons", 0),
+		/*18*/ imports.NewTable("CustomTaskDialog_SetOnButtonClicked", 0),
+		/*19*/ imports.NewTable("CustomTaskDialog_Text", 0),
+		/*20*/ imports.NewTable("CustomTaskDialog_Title", 0),
+		/*21*/ imports.NewTable("CustomTaskDialog_VerificationText", 0),
+		/*22*/ imports.NewTable("CustomTaskDialog_Width", 0),
+	}
+)
+
+func customTaskDialogImportAPI() *imports.Imports {
+	if customTaskDialogImport == nil {
+		customTaskDialogImport = NewDefaultImports()
+		customTaskDialogImport.SetImportTable(customTaskDialogImportTables)
+		customTaskDialogImportTables = nil
+	}
+	return customTaskDialogImport
 }

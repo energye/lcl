@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -95,246 +96,246 @@ type TValueListEditor struct {
 }
 
 func NewValueListEditor(AOwner IComponent) IValueListEditor {
-	r1 := LCL().SysCallN(5940, GetObjectUintptr(AOwner))
+	r1 := valueListEditorImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
 	return AsValueListEditor(r1)
 }
 
 func (m *TValueListEditor) Modified() bool {
-	r1 := LCL().SysCallN(5955, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TValueListEditor) SetModified(AValue bool) {
-	LCL().SysCallN(5955, 1, m.Instance(), PascalBool(AValue))
+	valueListEditorImportAPI().SysCallN(18, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TValueListEditor) Keys(Index int32) string {
-	r1 := LCL().SysCallN(5954, 0, m.Instance(), uintptr(Index))
+	r1 := valueListEditorImportAPI().SysCallN(17, 0, m.Instance(), uintptr(Index))
 	return GoStr(r1)
 }
 
 func (m *TValueListEditor) SetKeys(Index int32, AValue string) {
-	LCL().SysCallN(5954, 1, m.Instance(), uintptr(Index), PascalStr(AValue))
+	valueListEditorImportAPI().SysCallN(17, 1, m.Instance(), uintptr(Index), PascalStr(AValue))
 }
 
 func (m *TValueListEditor) Values(Key string) string {
-	r1 := LCL().SysCallN(5977, 0, m.Instance(), PascalStr(Key))
+	r1 := valueListEditorImportAPI().SysCallN(40, 0, m.Instance(), PascalStr(Key))
 	return GoStr(r1)
 }
 
 func (m *TValueListEditor) SetValues(Key string, AValue string) {
-	LCL().SysCallN(5977, 1, m.Instance(), PascalStr(Key), PascalStr(AValue))
+	valueListEditorImportAPI().SysCallN(40, 1, m.Instance(), PascalStr(Key), PascalStr(AValue))
 }
 
 func (m *TValueListEditor) ItemProps(AKeyOrIndex uintptr) IItemProp {
-	r1 := LCL().SysCallN(5952, 0, m.Instance(), uintptr(AKeyOrIndex))
+	r1 := valueListEditorImportAPI().SysCallN(15, 0, m.Instance(), uintptr(AKeyOrIndex))
 	return AsItemProp(r1)
 }
 
 func (m *TValueListEditor) SetItemProps(AKeyOrIndex uintptr, AValue IItemProp) {
-	LCL().SysCallN(5952, 1, m.Instance(), uintptr(AKeyOrIndex), GetObjectUintptr(AValue))
+	valueListEditorImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AKeyOrIndex), GetObjectUintptr(AValue))
 }
 
 func (m *TValueListEditor) AlternateColor() TColor {
-	r1 := LCL().SysCallN(5937, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TValueListEditor) SetAlternateColor(AValue TColor) {
-	LCL().SysCallN(5937, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) AutoEdit() bool {
-	r1 := LCL().SysCallN(5938, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TValueListEditor) SetAutoEdit(AValue bool) {
-	LCL().SysCallN(5938, 1, m.Instance(), PascalBool(AValue))
+	valueListEditorImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TValueListEditor) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5942, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TValueListEditor) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5942, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) DragKind() TDragKind {
-	r1 := LCL().SysCallN(5943, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TValueListEditor) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(5943, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5944, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TValueListEditor) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5944, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) HeaderHotZones() TGridZoneSet {
-	r1 := LCL().SysCallN(5947, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TGridZoneSet(r1)
 }
 
 func (m *TValueListEditor) SetHeaderHotZones(AValue TGridZoneSet) {
-	LCL().SysCallN(5947, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) HeaderPushZones() TGridZoneSet {
-	r1 := LCL().SysCallN(5948, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return TGridZoneSet(r1)
 }
 
 func (m *TValueListEditor) SetHeaderPushZones(AValue TGridZoneSet) {
-	LCL().SysCallN(5948, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) MouseWheelOption() TMouseWheelOption {
-	r1 := LCL().SysCallN(5956, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return TMouseWheelOption(r1)
 }
 
 func (m *TValueListEditor) SetMouseWheelOption(AValue TMouseWheelOption) {
-	LCL().SysCallN(5956, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) ParentColor() bool {
-	r1 := LCL().SysCallN(5957, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TValueListEditor) SetParentColor(AValue bool) {
-	LCL().SysCallN(5957, 1, m.Instance(), PascalBool(AValue))
+	valueListEditorImportAPI().SysCallN(20, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TValueListEditor) ParentFont() bool {
-	r1 := LCL().SysCallN(5958, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TValueListEditor) SetParentFont(AValue bool) {
-	LCL().SysCallN(5958, 1, m.Instance(), PascalBool(AValue))
+	valueListEditorImportAPI().SysCallN(21, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TValueListEditor) TitleFont() IFont {
-	r1 := LCL().SysCallN(5974, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(37, 0, m.Instance(), 0)
 	return AsFont(r1)
 }
 
 func (m *TValueListEditor) SetTitleFont(AValue IFont) {
-	LCL().SysCallN(5974, 1, m.Instance(), GetObjectUintptr(AValue))
+	valueListEditorImportAPI().SysCallN(37, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TValueListEditor) TitleImageList() IImageList {
-	r1 := LCL().SysCallN(5975, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(38, 0, m.Instance(), 0)
 	return AsImageList(r1)
 }
 
 func (m *TValueListEditor) SetTitleImageList(AValue IImageList) {
-	LCL().SysCallN(5975, 1, m.Instance(), GetObjectUintptr(AValue))
+	valueListEditorImportAPI().SysCallN(38, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TValueListEditor) TitleStyle() TTitleStyle {
-	r1 := LCL().SysCallN(5976, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(39, 0, m.Instance(), 0)
 	return TTitleStyle(r1)
 }
 
 func (m *TValueListEditor) SetTitleStyle(AValue TTitleStyle) {
-	LCL().SysCallN(5976, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(39, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) DisplayOptions() TDisplayOptions {
-	r1 := LCL().SysCallN(5941, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDisplayOptions(r1)
 }
 
 func (m *TValueListEditor) SetDisplayOptions(AValue TDisplayOptions) {
-	LCL().SysCallN(5941, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) DropDownRows() int32 {
-	r1 := LCL().SysCallN(5945, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TValueListEditor) SetDropDownRows(AValue int32) {
-	LCL().SysCallN(5945, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) KeyOptions() TKeyOptions {
-	r1 := LCL().SysCallN(5953, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return TKeyOptions(r1)
 }
 
 func (m *TValueListEditor) SetKeyOptions(AValue TKeyOptions) {
-	LCL().SysCallN(5953, 1, m.Instance(), uintptr(AValue))
+	valueListEditorImportAPI().SysCallN(16, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TValueListEditor) Strings() IValueListStrings {
-	r1 := LCL().SysCallN(5972, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(35, 0, m.Instance(), 0)
 	return AsValueListStrings(r1)
 }
 
 func (m *TValueListEditor) SetStrings(AValue IValueListStrings) {
-	LCL().SysCallN(5972, 1, m.Instance(), GetObjectUintptr(AValue))
+	valueListEditorImportAPI().SysCallN(35, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TValueListEditor) TitleCaptions() IStrings {
-	r1 := LCL().SysCallN(5973, 0, m.Instance(), 0)
+	r1 := valueListEditorImportAPI().SysCallN(36, 0, m.Instance(), 0)
 	return AsStrings(r1)
 }
 
 func (m *TValueListEditor) SetTitleCaptions(AValue IStrings) {
-	LCL().SysCallN(5973, 1, m.Instance(), GetObjectUintptr(AValue))
+	valueListEditorImportAPI().SysCallN(36, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TValueListEditor) FindRow(KeyName string, OutRow *int32) bool {
 	var result1 uintptr
-	r1 := LCL().SysCallN(5946, m.Instance(), PascalStr(KeyName), uintptr(unsafePointer(&result1)))
+	r1 := valueListEditorImportAPI().SysCallN(9, m.Instance(), PascalStr(KeyName), uintptr(unsafePointer(&result1)))
 	*OutRow = int32(result1)
 	return GoBool(r1)
 }
 
 func (m *TValueListEditor) InsertRow(KeyName, Value string, Append bool) int32 {
-	r1 := LCL().SysCallN(5949, m.Instance(), PascalStr(KeyName), PascalStr(Value), PascalBool(Append))
+	r1 := valueListEditorImportAPI().SysCallN(12, m.Instance(), PascalStr(KeyName), PascalStr(Value), PascalBool(Append))
 	return int32(r1)
 }
 
 func (m *TValueListEditor) IsEmptyRow() bool {
-	r1 := LCL().SysCallN(5950, m.Instance())
+	r1 := valueListEditorImportAPI().SysCallN(13, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TValueListEditor) IsEmptyRow1(aRow int32) bool {
-	r1 := LCL().SysCallN(5951, m.Instance(), uintptr(aRow))
+	r1 := valueListEditorImportAPI().SysCallN(14, m.Instance(), uintptr(aRow))
 	return GoBool(r1)
 }
 
 func (m *TValueListEditor) RestoreCurrentRow() bool {
-	r1 := LCL().SysCallN(5959, m.Instance())
+	r1 := valueListEditorImportAPI().SysCallN(22, m.Instance())
 	return GoBool(r1)
 }
 
 func ValueListEditorClass() TClass {
-	ret := LCL().SysCallN(5939)
+	ret := valueListEditorImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
 func (m *TValueListEditor) Sort(Index, IndxFrom, IndxTo int32) {
-	LCL().SysCallN(5970, m.Instance(), uintptr(Index), uintptr(IndxFrom), uintptr(IndxTo))
+	valueListEditorImportAPI().SysCallN(33, m.Instance(), uintptr(Index), uintptr(IndxFrom), uintptr(IndxTo))
 }
 
 func (m *TValueListEditor) Sort1(ACol TVleSortCol) {
-	LCL().SysCallN(5971, m.Instance(), uintptr(ACol))
+	valueListEditorImportAPI().SysCallN(34, m.Instance(), uintptr(ACol))
 }
 
 func (m *TValueListEditor) SetOnCheckboxToggled(fn TToggledCheckboxEvent) {
@@ -342,7 +343,7 @@ func (m *TValueListEditor) SetOnCheckboxToggled(fn TToggledCheckboxEvent) {
 		RemoveEventElement(m.checkboxToggledPtr)
 	}
 	m.checkboxToggledPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5960, m.Instance(), m.checkboxToggledPtr)
+	valueListEditorImportAPI().SysCallN(23, m.Instance(), m.checkboxToggledPtr)
 }
 
 func (m *TValueListEditor) SetOnEditingDone(fn TNotifyEvent) {
@@ -350,7 +351,7 @@ func (m *TValueListEditor) SetOnEditingDone(fn TNotifyEvent) {
 		RemoveEventElement(m.editingDonePtr)
 	}
 	m.editingDonePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5961, m.Instance(), m.editingDonePtr)
+	valueListEditorImportAPI().SysCallN(24, m.Instance(), m.editingDonePtr)
 }
 
 func (m *TValueListEditor) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -358,7 +359,7 @@ func (m *TValueListEditor) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5963, m.Instance(), m.mouseWheelHorzPtr)
+	valueListEditorImportAPI().SysCallN(26, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TValueListEditor) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -366,7 +367,7 @@ func (m *TValueListEditor) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5964, m.Instance(), m.mouseWheelLeftPtr)
+	valueListEditorImportAPI().SysCallN(27, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TValueListEditor) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -374,7 +375,7 @@ func (m *TValueListEditor) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5965, m.Instance(), m.mouseWheelRightPtr)
+	valueListEditorImportAPI().SysCallN(28, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TValueListEditor) SetOnUserCheckboxBitmap(fn TUserCheckBoxBitmapEvent) {
@@ -382,7 +383,7 @@ func (m *TValueListEditor) SetOnUserCheckboxBitmap(fn TUserCheckBoxBitmapEvent) 
 		RemoveEventElement(m.userCheckboxBitmapPtr)
 	}
 	m.userCheckboxBitmapPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5968, m.Instance(), m.userCheckboxBitmapPtr)
+	valueListEditorImportAPI().SysCallN(31, m.Instance(), m.userCheckboxBitmapPtr)
 }
 
 func (m *TValueListEditor) SetOnGetPickList(fn TGetPickListEvent) {
@@ -390,7 +391,7 @@ func (m *TValueListEditor) SetOnGetPickList(fn TGetPickListEvent) {
 		RemoveEventElement(m.getPickListPtr)
 	}
 	m.getPickListPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5962, m.Instance(), m.getPickListPtr)
+	valueListEditorImportAPI().SysCallN(25, m.Instance(), m.getPickListPtr)
 }
 
 func (m *TValueListEditor) SetOnStringsChange(fn TNotifyEvent) {
@@ -398,7 +399,7 @@ func (m *TValueListEditor) SetOnStringsChange(fn TNotifyEvent) {
 		RemoveEventElement(m.stringsChangePtr)
 	}
 	m.stringsChangePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5966, m.Instance(), m.stringsChangePtr)
+	valueListEditorImportAPI().SysCallN(29, m.Instance(), m.stringsChangePtr)
 }
 
 func (m *TValueListEditor) SetOnStringsChanging(fn TNotifyEvent) {
@@ -406,7 +407,7 @@ func (m *TValueListEditor) SetOnStringsChanging(fn TNotifyEvent) {
 		RemoveEventElement(m.stringsChangingPtr)
 	}
 	m.stringsChangingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5967, m.Instance(), m.stringsChangingPtr)
+	valueListEditorImportAPI().SysCallN(30, m.Instance(), m.stringsChangingPtr)
 }
 
 func (m *TValueListEditor) SetOnValidate(fn TOnValidateEvent) {
@@ -414,5 +415,61 @@ func (m *TValueListEditor) SetOnValidate(fn TOnValidateEvent) {
 		RemoveEventElement(m.validatePtr)
 	}
 	m.validatePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5969, m.Instance(), m.validatePtr)
+	valueListEditorImportAPI().SysCallN(32, m.Instance(), m.validatePtr)
+}
+
+var (
+	valueListEditorImport       *imports.Imports = nil
+	valueListEditorImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ValueListEditor_AlternateColor", 0),
+		/*1*/ imports.NewTable("ValueListEditor_AutoEdit", 0),
+		/*2*/ imports.NewTable("ValueListEditor_Class", 0),
+		/*3*/ imports.NewTable("ValueListEditor_Create", 0),
+		/*4*/ imports.NewTable("ValueListEditor_DisplayOptions", 0),
+		/*5*/ imports.NewTable("ValueListEditor_DragCursor", 0),
+		/*6*/ imports.NewTable("ValueListEditor_DragKind", 0),
+		/*7*/ imports.NewTable("ValueListEditor_DragMode", 0),
+		/*8*/ imports.NewTable("ValueListEditor_DropDownRows", 0),
+		/*9*/ imports.NewTable("ValueListEditor_FindRow", 0),
+		/*10*/ imports.NewTable("ValueListEditor_HeaderHotZones", 0),
+		/*11*/ imports.NewTable("ValueListEditor_HeaderPushZones", 0),
+		/*12*/ imports.NewTable("ValueListEditor_InsertRow", 0),
+		/*13*/ imports.NewTable("ValueListEditor_IsEmptyRow", 0),
+		/*14*/ imports.NewTable("ValueListEditor_IsEmptyRow1", 0),
+		/*15*/ imports.NewTable("ValueListEditor_ItemProps", 0),
+		/*16*/ imports.NewTable("ValueListEditor_KeyOptions", 0),
+		/*17*/ imports.NewTable("ValueListEditor_Keys", 0),
+		/*18*/ imports.NewTable("ValueListEditor_Modified", 0),
+		/*19*/ imports.NewTable("ValueListEditor_MouseWheelOption", 0),
+		/*20*/ imports.NewTable("ValueListEditor_ParentColor", 0),
+		/*21*/ imports.NewTable("ValueListEditor_ParentFont", 0),
+		/*22*/ imports.NewTable("ValueListEditor_RestoreCurrentRow", 0),
+		/*23*/ imports.NewTable("ValueListEditor_SetOnCheckboxToggled", 0),
+		/*24*/ imports.NewTable("ValueListEditor_SetOnEditingDone", 0),
+		/*25*/ imports.NewTable("ValueListEditor_SetOnGetPickList", 0),
+		/*26*/ imports.NewTable("ValueListEditor_SetOnMouseWheelHorz", 0),
+		/*27*/ imports.NewTable("ValueListEditor_SetOnMouseWheelLeft", 0),
+		/*28*/ imports.NewTable("ValueListEditor_SetOnMouseWheelRight", 0),
+		/*29*/ imports.NewTable("ValueListEditor_SetOnStringsChange", 0),
+		/*30*/ imports.NewTable("ValueListEditor_SetOnStringsChanging", 0),
+		/*31*/ imports.NewTable("ValueListEditor_SetOnUserCheckboxBitmap", 0),
+		/*32*/ imports.NewTable("ValueListEditor_SetOnValidate", 0),
+		/*33*/ imports.NewTable("ValueListEditor_Sort", 0),
+		/*34*/ imports.NewTable("ValueListEditor_Sort1", 0),
+		/*35*/ imports.NewTable("ValueListEditor_Strings", 0),
+		/*36*/ imports.NewTable("ValueListEditor_TitleCaptions", 0),
+		/*37*/ imports.NewTable("ValueListEditor_TitleFont", 0),
+		/*38*/ imports.NewTable("ValueListEditor_TitleImageList", 0),
+		/*39*/ imports.NewTable("ValueListEditor_TitleStyle", 0),
+		/*40*/ imports.NewTable("ValueListEditor_Values", 0),
+	}
+)
+
+func valueListEditorImportAPI() *imports.Imports {
+	if valueListEditorImport == nil {
+		valueListEditorImport = NewDefaultImports()
+		valueListEditorImport.SetImportTable(valueListEditorImportTables)
+		valueListEditorImportTables = nil
+	}
+	return valueListEditorImport
 }

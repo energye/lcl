@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -26,21 +27,40 @@ type TListItemsEnumerator struct {
 }
 
 func NewListItemsEnumerator(AItems IListItems) IListItemsEnumerator {
-	r1 := LCL().SysCallN(4078, GetObjectUintptr(AItems))
+	r1 := listItemsEnumeratorImportAPI().SysCallN(1, GetObjectUintptr(AItems))
 	return AsListItemsEnumerator(r1)
 }
 
 func (m *TListItemsEnumerator) Current() IListItem {
-	r1 := LCL().SysCallN(4079, m.Instance())
+	r1 := listItemsEnumeratorImportAPI().SysCallN(2, m.Instance())
 	return AsListItem(r1)
 }
 
 func (m *TListItemsEnumerator) MoveNext() bool {
-	r1 := LCL().SysCallN(4080, m.Instance())
+	r1 := listItemsEnumeratorImportAPI().SysCallN(3, m.Instance())
 	return GoBool(r1)
 }
 
 func ListItemsEnumeratorClass() TClass {
-	ret := LCL().SysCallN(4077)
+	ret := listItemsEnumeratorImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	listItemsEnumeratorImport       *imports.Imports = nil
+	listItemsEnumeratorImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ListItemsEnumerator_Class", 0),
+		/*1*/ imports.NewTable("ListItemsEnumerator_Create", 0),
+		/*2*/ imports.NewTable("ListItemsEnumerator_Current", 0),
+		/*3*/ imports.NewTable("ListItemsEnumerator_MoveNext", 0),
+	}
+)
+
+func listItemsEnumeratorImportAPI() *imports.Imports {
+	if listItemsEnumeratorImport == nil {
+		listItemsEnumeratorImport = NewDefaultImports()
+		listItemsEnumeratorImport.SetImportTable(listItemsEnumeratorImportTables)
+		listItemsEnumeratorImportTables = nil
+	}
+	return listItemsEnumeratorImport
 }

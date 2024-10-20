@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -48,12 +49,12 @@ type TOpenGLControl struct {
 }
 
 func NewOpenGLControl(TheOwner IComponent) IOpenGLControl {
-	r1 := LCL().SysCallN(4407, GetObjectUintptr(TheOwner))
+	r1 := openGLControlImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsOpenGLControl(r1)
 }
 
 func OpenGLControlClass() TClass {
-	ret := LCL().SysCallN(4406)
+	ret := openGLControlImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -62,7 +63,7 @@ func (m *TOpenGLControl) SetOnConstrainedResize(fn TConstrainedResizeEvent) {
 		RemoveEventElement(m.constrainedResizePtr)
 	}
 	m.constrainedResizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4408, m.Instance(), m.constrainedResizePtr)
+	openGLControlImportAPI().SysCallN(2, m.Instance(), m.constrainedResizePtr)
 }
 
 func (m *TOpenGLControl) SetOnDblClick(fn TNotifyEvent) {
@@ -70,7 +71,7 @@ func (m *TOpenGLControl) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4409, m.Instance(), m.dblClickPtr)
+	openGLControlImportAPI().SysCallN(3, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TOpenGLControl) SetOnDragDrop(fn TDragDropEvent) {
@@ -78,7 +79,7 @@ func (m *TOpenGLControl) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4410, m.Instance(), m.dragDropPtr)
+	openGLControlImportAPI().SysCallN(4, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TOpenGLControl) SetOnDragOver(fn TDragOverEvent) {
@@ -86,7 +87,7 @@ func (m *TOpenGLControl) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4411, m.Instance(), m.dragOverPtr)
+	openGLControlImportAPI().SysCallN(5, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TOpenGLControl) SetOnMouseDown(fn TMouseEvent) {
@@ -94,7 +95,7 @@ func (m *TOpenGLControl) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4412, m.Instance(), m.mouseDownPtr)
+	openGLControlImportAPI().SysCallN(6, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TOpenGLControl) SetOnMouseEnter(fn TNotifyEvent) {
@@ -102,7 +103,7 @@ func (m *TOpenGLControl) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4413, m.Instance(), m.mouseEnterPtr)
+	openGLControlImportAPI().SysCallN(7, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TOpenGLControl) SetOnMouseLeave(fn TNotifyEvent) {
@@ -110,7 +111,7 @@ func (m *TOpenGLControl) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4414, m.Instance(), m.mouseLeavePtr)
+	openGLControlImportAPI().SysCallN(8, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TOpenGLControl) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -118,7 +119,7 @@ func (m *TOpenGLControl) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4415, m.Instance(), m.mouseMovePtr)
+	openGLControlImportAPI().SysCallN(9, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TOpenGLControl) SetOnMouseUp(fn TMouseEvent) {
@@ -126,7 +127,7 @@ func (m *TOpenGLControl) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4416, m.Instance(), m.mouseUpPtr)
+	openGLControlImportAPI().SysCallN(10, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TOpenGLControl) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -134,7 +135,7 @@ func (m *TOpenGLControl) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4417, m.Instance(), m.mouseWheelPtr)
+	openGLControlImportAPI().SysCallN(11, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TOpenGLControl) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -142,7 +143,7 @@ func (m *TOpenGLControl) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4418, m.Instance(), m.mouseWheelDownPtr)
+	openGLControlImportAPI().SysCallN(12, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TOpenGLControl) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -150,5 +151,34 @@ func (m *TOpenGLControl) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4419, m.Instance(), m.mouseWheelUpPtr)
+	openGLControlImportAPI().SysCallN(13, m.Instance(), m.mouseWheelUpPtr)
+}
+
+var (
+	openGLControlImport       *imports.Imports = nil
+	openGLControlImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("OpenGLControl_Class", 0),
+		/*1*/ imports.NewTable("OpenGLControl_Create", 0),
+		/*2*/ imports.NewTable("OpenGLControl_SetOnConstrainedResize", 0),
+		/*3*/ imports.NewTable("OpenGLControl_SetOnDblClick", 0),
+		/*4*/ imports.NewTable("OpenGLControl_SetOnDragDrop", 0),
+		/*5*/ imports.NewTable("OpenGLControl_SetOnDragOver", 0),
+		/*6*/ imports.NewTable("OpenGLControl_SetOnMouseDown", 0),
+		/*7*/ imports.NewTable("OpenGLControl_SetOnMouseEnter", 0),
+		/*8*/ imports.NewTable("OpenGLControl_SetOnMouseLeave", 0),
+		/*9*/ imports.NewTable("OpenGLControl_SetOnMouseMove", 0),
+		/*10*/ imports.NewTable("OpenGLControl_SetOnMouseUp", 0),
+		/*11*/ imports.NewTable("OpenGLControl_SetOnMouseWheel", 0),
+		/*12*/ imports.NewTable("OpenGLControl_SetOnMouseWheelDown", 0),
+		/*13*/ imports.NewTable("OpenGLControl_SetOnMouseWheelUp", 0),
+	}
+)
+
+func openGLControlImportAPI() *imports.Imports {
+	if openGLControlImport == nil {
+		openGLControlImport = NewDefaultImports()
+		openGLControlImport.SetImportTable(openGLControlImportTables)
+		openGLControlImportTables = nil
+	}
+	return openGLControlImport
 }

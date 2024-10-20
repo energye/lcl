@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -30,12 +31,12 @@ type TActionList struct {
 }
 
 func NewActionList(AOwner IComponent) IActionList {
-	r1 := LCL().SysCallN(81, GetObjectUintptr(AOwner))
+	r1 := actionListImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsActionList(r1)
 }
 
 func ActionListClass() TClass {
-	ret := LCL().SysCallN(80)
+	ret := actionListImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -44,7 +45,7 @@ func (m *TActionList) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(82, m.Instance(), m.changePtr)
+	actionListImportAPI().SysCallN(2, m.Instance(), m.changePtr)
 }
 
 func (m *TActionList) SetOnExecute(fn TActionEvent) {
@@ -52,7 +53,7 @@ func (m *TActionList) SetOnExecute(fn TActionEvent) {
 		RemoveEventElement(m.executePtr)
 	}
 	m.executePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(83, m.Instance(), m.executePtr)
+	actionListImportAPI().SysCallN(3, m.Instance(), m.executePtr)
 }
 
 func (m *TActionList) SetOnUpdate(fn TActionEvent) {
@@ -60,5 +61,25 @@ func (m *TActionList) SetOnUpdate(fn TActionEvent) {
 		RemoveEventElement(m.updatePtr)
 	}
 	m.updatePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(84, m.Instance(), m.updatePtr)
+	actionListImportAPI().SysCallN(4, m.Instance(), m.updatePtr)
+}
+
+var (
+	actionListImport       *imports.Imports = nil
+	actionListImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ActionList_Class", 0),
+		/*1*/ imports.NewTable("ActionList_Create", 0),
+		/*2*/ imports.NewTable("ActionList_SetOnChange", 0),
+		/*3*/ imports.NewTable("ActionList_SetOnExecute", 0),
+		/*4*/ imports.NewTable("ActionList_SetOnUpdate", 0),
+	}
+)
+
+func actionListImportAPI() *imports.Imports {
+	if actionListImport == nil {
+		actionListImport = NewDefaultImports()
+		actionListImport.SetImportTable(actionListImportTables)
+		actionListImportTables = nil
+	}
+	return actionListImport
 }

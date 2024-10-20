@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -37,67 +38,95 @@ type TIDesigner struct {
 }
 
 func (m *TIDesigner) LookupRoot() IComponent {
-	r1 := LCL().SysCallN(3363, m.Instance())
+	r1 := designerImportAPI().SysCallN(4, m.Instance())
 	return AsComponent(r1)
 }
 
 func (m *TIDesigner) DefaultFormBoundsValid() bool {
-	r1 := LCL().SysCallN(3360, 0, m.Instance(), 0)
+	r1 := designerImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TIDesigner) SetDefaultFormBoundsValid(AValue bool) {
-	LCL().SysCallN(3360, 1, m.Instance(), PascalBool(AValue))
+	designerImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TIDesigner) IsDesignMsg(Sender IControl, Message *TLMessage) bool {
 	var result1 uintptr
-	r1 := LCL().SysCallN(3362, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)))
+	r1 := designerImportAPI().SysCallN(3, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)))
 	*Message = *(*TLMessage)(getPointer(result1))
 	return GoBool(r1)
 }
 
 func (m *TIDesigner) GetShiftState() TShiftState {
-	r1 := LCL().SysCallN(3361, m.Instance())
+	r1 := designerImportAPI().SysCallN(2, m.Instance())
 	return TShiftState(r1)
 }
 
 func (m *TIDesigner) UniqueName(BaseName string) string {
-	r1 := LCL().SysCallN(3370, m.Instance(), PascalStr(BaseName))
+	r1 := designerImportAPI().SysCallN(11, m.Instance(), PascalStr(BaseName))
 	return GoStr(r1)
 }
 
 func IDesignerClass() TClass {
-	ret := LCL().SysCallN(3359)
+	ret := designerImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TIDesigner) UTF8KeyPress(UTF8Key *TUTF8Char) {
 	var result0 uintptr
-	LCL().SysCallN(3369, m.Instance(), uintptr(unsafePointer(&result0)))
+	designerImportAPI().SysCallN(10, m.Instance(), uintptr(unsafePointer(&result0)))
 	*UTF8Key = *(*TUTF8Char)(getPointer(result0))
 }
 
 func (m *TIDesigner) Modified() {
-	LCL().SysCallN(3364, m.Instance())
+	designerImportAPI().SysCallN(5, m.Instance())
 }
 
 func (m *TIDesigner) Notification(AComponent IComponent, Operation TOperation) {
-	LCL().SysCallN(3365, m.Instance(), GetObjectUintptr(AComponent), uintptr(Operation))
+	designerImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(AComponent), uintptr(Operation))
 }
 
 func (m *TIDesigner) PaintGrid() {
-	LCL().SysCallN(3366, m.Instance())
+	designerImportAPI().SysCallN(7, m.Instance())
 }
 
 func (m *TIDesigner) ValidateRename(AComponent IComponent, CurName, NewName string) {
-	LCL().SysCallN(3371, m.Instance(), GetObjectUintptr(AComponent), PascalStr(CurName), PascalStr(NewName))
+	designerImportAPI().SysCallN(12, m.Instance(), GetObjectUintptr(AComponent), PascalStr(CurName), PascalStr(NewName))
 }
 
 func (m *TIDesigner) SelectOnlyThisComponent(AComponent IComponent) {
-	LCL().SysCallN(3368, m.Instance(), GetObjectUintptr(AComponent))
+	designerImportAPI().SysCallN(9, m.Instance(), GetObjectUintptr(AComponent))
 }
 
 func (m *TIDesigner) PrepareFreeDesigner(AFreeComponent bool) {
-	LCL().SysCallN(3367, m.Instance(), PascalBool(AFreeComponent))
+	designerImportAPI().SysCallN(8, m.Instance(), PascalBool(AFreeComponent))
+}
+
+var (
+	designerImport       *imports.Imports = nil
+	designerImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("IDesigner_Class", 0),
+		/*1*/ imports.NewTable("IDesigner_DefaultFormBoundsValid", 0),
+		/*2*/ imports.NewTable("IDesigner_GetShiftState", 0),
+		/*3*/ imports.NewTable("IDesigner_IsDesignMsg", 0),
+		/*4*/ imports.NewTable("IDesigner_LookupRoot", 0),
+		/*5*/ imports.NewTable("IDesigner_Modified", 0),
+		/*6*/ imports.NewTable("IDesigner_Notification", 0),
+		/*7*/ imports.NewTable("IDesigner_PaintGrid", 0),
+		/*8*/ imports.NewTable("IDesigner_PrepareFreeDesigner", 0),
+		/*9*/ imports.NewTable("IDesigner_SelectOnlyThisComponent", 0),
+		/*10*/ imports.NewTable("IDesigner_UTF8KeyPress", 0),
+		/*11*/ imports.NewTable("IDesigner_UniqueName", 0),
+		/*12*/ imports.NewTable("IDesigner_ValidateRename", 0),
+	}
+)
+
+func designerImportAPI() *imports.Imports {
+	if designerImport == nil {
+		designerImport = NewDefaultImports()
+		designerImport.SetImportTable(designerImportTables)
+		designerImportTables = nil
+	}
+	return designerImport
 }

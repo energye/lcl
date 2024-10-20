@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TSelectDirectoryDialog struct {
 }
 
 func NewSelectDirectoryDialog(AOwner IComponent) ISelectDirectoryDialog {
-	r1 := LCL().SysCallN(5013, GetObjectUintptr(AOwner))
+	r1 := selectDirectoryDialogImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsSelectDirectoryDialog(r1)
 }
 
 func SelectDirectoryDialogClass() TClass {
-	ret := LCL().SysCallN(5012)
+	ret := selectDirectoryDialogImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	selectDirectoryDialogImport       *imports.Imports = nil
+	selectDirectoryDialogImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("SelectDirectoryDialog_Class", 0),
+		/*1*/ imports.NewTable("SelectDirectoryDialog_Create", 0),
+	}
+)
+
+func selectDirectoryDialogImportAPI() *imports.Imports {
+	if selectDirectoryDialogImport == nil {
+		selectDirectoryDialogImport = NewDefaultImports()
+		selectDirectoryDialogImport.SetImportTable(selectDirectoryDialogImportTables)
+		selectDirectoryDialogImportTables = nil
+	}
+	return selectDirectoryDialogImport
 }

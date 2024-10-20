@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -28,21 +29,21 @@ type TReplaceDialog struct {
 }
 
 func NewReplaceDialog(AOwner IComponent) IReplaceDialog {
-	r1 := LCL().SysCallN(4846, GetObjectUintptr(AOwner))
+	r1 := replaceDialogImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsReplaceDialog(r1)
 }
 
 func (m *TReplaceDialog) ReplaceText() string {
-	r1 := LCL().SysCallN(4847, 0, m.Instance(), 0)
+	r1 := replaceDialogImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TReplaceDialog) SetReplaceText(AValue string) {
-	LCL().SysCallN(4847, 1, m.Instance(), PascalStr(AValue))
+	replaceDialogImportAPI().SysCallN(2, 1, m.Instance(), PascalStr(AValue))
 }
 
 func ReplaceDialogClass() TClass {
-	ret := LCL().SysCallN(4845)
+	ret := replaceDialogImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -51,5 +52,24 @@ func (m *TReplaceDialog) SetOnReplace(fn TNotifyEvent) {
 		RemoveEventElement(m.replacePtr)
 	}
 	m.replacePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4848, m.Instance(), m.replacePtr)
+	replaceDialogImportAPI().SysCallN(3, m.Instance(), m.replacePtr)
+}
+
+var (
+	replaceDialogImport       *imports.Imports = nil
+	replaceDialogImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ReplaceDialog_Class", 0),
+		/*1*/ imports.NewTable("ReplaceDialog_Create", 0),
+		/*2*/ imports.NewTable("ReplaceDialog_ReplaceText", 0),
+		/*3*/ imports.NewTable("ReplaceDialog_SetOnReplace", 0),
+	}
+)
+
+func replaceDialogImportAPI() *imports.Imports {
+	if replaceDialogImport == nil {
+		replaceDialogImport = NewDefaultImports()
+		replaceDialogImport.SetImportTable(replaceDialogImportTables)
+		replaceDialogImportTables = nil
+	}
+	return replaceDialogImport
 }

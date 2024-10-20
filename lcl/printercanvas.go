@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -53,141 +54,177 @@ type TPrinterCanvas struct {
 }
 
 func NewPrinterCanvas(APrinter IPrinter) IPrinterCanvas {
-	r1 := LCL().SysCallN(4629, GetObjectUintptr(APrinter))
+	r1 := printerCanvasImportAPI().SysCallN(4, GetObjectUintptr(APrinter))
 	return AsPrinterCanvas(r1)
 }
 
 func (m *TPrinterCanvas) Printer() IPrinter {
-	r1 := LCL().SysCallN(4640, m.Instance())
+	r1 := printerCanvasImportAPI().SysCallN(15, m.Instance())
 	return AsPrinter(r1)
 }
 
 func (m *TPrinterCanvas) Title() string {
-	r1 := LCL().SysCallN(4642, 0, m.Instance(), 0)
+	r1 := printerCanvasImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TPrinterCanvas) SetTitle(AValue string) {
-	LCL().SysCallN(4642, 1, m.Instance(), PascalStr(AValue))
+	printerCanvasImportAPI().SysCallN(17, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TPrinterCanvas) PageHeight() int32 {
-	r1 := LCL().SysCallN(4635, m.Instance())
+	r1 := printerCanvasImportAPI().SysCallN(10, m.Instance())
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) PageWidth() int32 {
-	r1 := LCL().SysCallN(4637, m.Instance())
+	r1 := printerCanvasImportAPI().SysCallN(12, m.Instance())
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) PaperWidth() int32 {
-	r1 := LCL().SysCallN(4639, 0, m.Instance(), 0)
+	r1 := printerCanvasImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) SetPaperWidth(AValue int32) {
-	LCL().SysCallN(4639, 1, m.Instance(), uintptr(AValue))
+	printerCanvasImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPrinterCanvas) PaperHeight() int32 {
-	r1 := LCL().SysCallN(4638, 0, m.Instance(), 0)
+	r1 := printerCanvasImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) SetPaperHeight(AValue int32) {
-	LCL().SysCallN(4638, 1, m.Instance(), uintptr(AValue))
+	printerCanvasImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPrinterCanvas) PageNumber() int32 {
-	r1 := LCL().SysCallN(4636, m.Instance())
+	r1 := printerCanvasImportAPI().SysCallN(11, m.Instance())
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) TopMargin() int32 {
-	r1 := LCL().SysCallN(4643, 0, m.Instance(), 0)
+	r1 := printerCanvasImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) SetTopMargin(AValue int32) {
-	LCL().SysCallN(4643, 1, m.Instance(), uintptr(AValue))
+	printerCanvasImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPrinterCanvas) LeftMargin() int32 {
-	r1 := LCL().SysCallN(4632, 0, m.Instance(), 0)
+	r1 := printerCanvasImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) SetLeftMargin(AValue int32) {
-	LCL().SysCallN(4632, 1, m.Instance(), uintptr(AValue))
+	printerCanvasImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPrinterCanvas) BottomMargin() int32 {
-	r1 := LCL().SysCallN(4627, 0, m.Instance(), 0)
+	r1 := printerCanvasImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) SetBottomMargin(AValue int32) {
-	LCL().SysCallN(4627, 1, m.Instance(), uintptr(AValue))
+	printerCanvasImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPrinterCanvas) RightMargin() int32 {
-	r1 := LCL().SysCallN(4641, 0, m.Instance(), 0)
+	r1 := printerCanvasImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) SetRightMargin(AValue int32) {
-	LCL().SysCallN(4641, 1, m.Instance(), uintptr(AValue))
+	printerCanvasImportAPI().SysCallN(16, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPrinterCanvas) Orientation() TPrinterOrientation {
-	r1 := LCL().SysCallN(4634, 0, m.Instance(), 0)
+	r1 := printerCanvasImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TPrinterOrientation(r1)
 }
 
 func (m *TPrinterCanvas) SetOrientation(AValue TPrinterOrientation) {
-	LCL().SysCallN(4634, 1, m.Instance(), uintptr(AValue))
+	printerCanvasImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPrinterCanvas) XDPI() int32 {
-	r1 := LCL().SysCallN(4644, 0, m.Instance(), 0)
+	r1 := printerCanvasImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) SetXDPI(AValue int32) {
-	LCL().SysCallN(4644, 1, m.Instance(), uintptr(AValue))
+	printerCanvasImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TPrinterCanvas) YDPI() int32 {
-	r1 := LCL().SysCallN(4645, 0, m.Instance(), 0)
+	r1 := printerCanvasImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TPrinterCanvas) SetYDPI(AValue int32) {
-	LCL().SysCallN(4645, 1, m.Instance(), uintptr(AValue))
+	printerCanvasImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
 }
 
 func PrinterCanvasClass() TClass {
-	ret := LCL().SysCallN(4628)
+	ret := printerCanvasImportAPI().SysCallN(3)
 	return TClass(ret)
 }
 
 func (m *TPrinterCanvas) BeginDoc() {
-	LCL().SysCallN(4625, m.Instance())
+	printerCanvasImportAPI().SysCallN(0, m.Instance())
 }
 
 func (m *TPrinterCanvas) NewPage() {
-	LCL().SysCallN(4633, m.Instance())
+	printerCanvasImportAPI().SysCallN(8, m.Instance())
 }
 
 func (m *TPrinterCanvas) BeginPage() {
-	LCL().SysCallN(4626, m.Instance())
+	printerCanvasImportAPI().SysCallN(1, m.Instance())
 }
 
 func (m *TPrinterCanvas) EndPage() {
-	LCL().SysCallN(4631, m.Instance())
+	printerCanvasImportAPI().SysCallN(6, m.Instance())
 }
 
 func (m *TPrinterCanvas) EndDoc() {
-	LCL().SysCallN(4630, m.Instance())
+	printerCanvasImportAPI().SysCallN(5, m.Instance())
+}
+
+var (
+	printerCanvasImport       *imports.Imports = nil
+	printerCanvasImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("PrinterCanvas_BeginDoc", 0),
+		/*1*/ imports.NewTable("PrinterCanvas_BeginPage", 0),
+		/*2*/ imports.NewTable("PrinterCanvas_BottomMargin", 0),
+		/*3*/ imports.NewTable("PrinterCanvas_Class", 0),
+		/*4*/ imports.NewTable("PrinterCanvas_Create", 0),
+		/*5*/ imports.NewTable("PrinterCanvas_EndDoc", 0),
+		/*6*/ imports.NewTable("PrinterCanvas_EndPage", 0),
+		/*7*/ imports.NewTable("PrinterCanvas_LeftMargin", 0),
+		/*8*/ imports.NewTable("PrinterCanvas_NewPage", 0),
+		/*9*/ imports.NewTable("PrinterCanvas_Orientation", 0),
+		/*10*/ imports.NewTable("PrinterCanvas_PageHeight", 0),
+		/*11*/ imports.NewTable("PrinterCanvas_PageNumber", 0),
+		/*12*/ imports.NewTable("PrinterCanvas_PageWidth", 0),
+		/*13*/ imports.NewTable("PrinterCanvas_PaperHeight", 0),
+		/*14*/ imports.NewTable("PrinterCanvas_PaperWidth", 0),
+		/*15*/ imports.NewTable("PrinterCanvas_Printer", 0),
+		/*16*/ imports.NewTable("PrinterCanvas_RightMargin", 0),
+		/*17*/ imports.NewTable("PrinterCanvas_Title", 0),
+		/*18*/ imports.NewTable("PrinterCanvas_TopMargin", 0),
+		/*19*/ imports.NewTable("PrinterCanvas_XDPI", 0),
+		/*20*/ imports.NewTable("PrinterCanvas_YDPI", 0),
+	}
+)
+
+func printerCanvasImportAPI() *imports.Imports {
+	if printerCanvasImport == nil {
+		printerCanvasImport = NewDefaultImports()
+		printerCanvasImport.SetImportTable(printerCanvasImportTables)
+		printerCanvasImportTables = nil
+	}
+	return printerCanvasImport
 }

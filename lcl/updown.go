@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -82,138 +83,138 @@ type TUpDown struct {
 }
 
 func NewUpDown(AOwner IComponent) IUpDown {
-	r1 := LCL().SysCallN(5827, GetObjectUintptr(AOwner))
+	r1 := upDownImportAPI().SysCallN(4, GetObjectUintptr(AOwner))
 	return AsUpDown(r1)
 }
 
 func (m *TUpDown) AlignButton() TUDAlignButton {
-	r1 := LCL().SysCallN(5823, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TUDAlignButton(r1)
 }
 
 func (m *TUpDown) SetAlignButton(AValue TUDAlignButton) {
-	LCL().SysCallN(5823, 1, m.Instance(), uintptr(AValue))
+	upDownImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TUpDown) ArrowKeys() bool {
-	r1 := LCL().SysCallN(5824, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TUpDown) SetArrowKeys(AValue bool) {
-	LCL().SysCallN(5824, 1, m.Instance(), PascalBool(AValue))
+	upDownImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TUpDown) Associate() IWinControl {
-	r1 := LCL().SysCallN(5825, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return AsWinControl(r1)
 }
 
 func (m *TUpDown) SetAssociate(AValue IWinControl) {
-	LCL().SysCallN(5825, 1, m.Instance(), GetObjectUintptr(AValue))
+	upDownImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TUpDown) Increment() int32 {
-	r1 := LCL().SysCallN(5829, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TUpDown) SetIncrement(AValue int32) {
-	LCL().SysCallN(5829, 1, m.Instance(), uintptr(AValue))
+	upDownImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TUpDown) Max() SmallInt {
-	r1 := LCL().SysCallN(5830, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return SmallInt(r1)
 }
 
 func (m *TUpDown) SetMax(AValue SmallInt) {
-	LCL().SysCallN(5830, 1, m.Instance(), uintptr(AValue))
+	upDownImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TUpDown) Min() SmallInt {
-	r1 := LCL().SysCallN(5831, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return SmallInt(r1)
 }
 
 func (m *TUpDown) SetMin(AValue SmallInt) {
-	LCL().SysCallN(5831, 1, m.Instance(), uintptr(AValue))
+	upDownImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TUpDown) MinRepeatInterval() Byte {
-	r1 := LCL().SysCallN(5832, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return Byte(r1)
 }
 
 func (m *TUpDown) SetMinRepeatInterval(AValue Byte) {
-	LCL().SysCallN(5832, 1, m.Instance(), uintptr(AValue))
+	upDownImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TUpDown) Orientation() TUDOrientation {
-	r1 := LCL().SysCallN(5833, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TUDOrientation(r1)
 }
 
 func (m *TUpDown) SetOrientation(AValue TUDOrientation) {
-	LCL().SysCallN(5833, 1, m.Instance(), uintptr(AValue))
+	upDownImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TUpDown) ParentColor() bool {
-	r1 := LCL().SysCallN(5834, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TUpDown) SetParentColor(AValue bool) {
-	LCL().SysCallN(5834, 1, m.Instance(), PascalBool(AValue))
+	upDownImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TUpDown) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5835, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TUpDown) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5835, 1, m.Instance(), PascalBool(AValue))
+	upDownImportAPI().SysCallN(12, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TUpDown) Position() SmallInt {
-	r1 := LCL().SysCallN(5836, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return SmallInt(r1)
 }
 
 func (m *TUpDown) SetPosition(AValue SmallInt) {
-	LCL().SysCallN(5836, 1, m.Instance(), uintptr(AValue))
+	upDownImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TUpDown) Thousands() bool {
-	r1 := LCL().SysCallN(5852, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(29, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TUpDown) SetThousands(AValue bool) {
-	LCL().SysCallN(5852, 1, m.Instance(), PascalBool(AValue))
+	upDownImportAPI().SysCallN(29, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TUpDown) Flat() bool {
-	r1 := LCL().SysCallN(5828, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TUpDown) SetFlat(AValue bool) {
-	LCL().SysCallN(5828, 1, m.Instance(), PascalBool(AValue))
+	upDownImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TUpDown) Wrap() bool {
-	r1 := LCL().SysCallN(5853, 0, m.Instance(), 0)
+	r1 := upDownImportAPI().SysCallN(30, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TUpDown) SetWrap(AValue bool) {
-	LCL().SysCallN(5853, 1, m.Instance(), PascalBool(AValue))
+	upDownImportAPI().SysCallN(30, 1, m.Instance(), PascalBool(AValue))
 }
 
 func UpDownClass() TClass {
-	ret := LCL().SysCallN(5826)
+	ret := upDownImportAPI().SysCallN(3)
 	return TClass(ret)
 }
 
@@ -222,7 +223,7 @@ func (m *TUpDown) SetOnChanging(fn TUDChangingEvent) {
 		RemoveEventElement(m.changingPtr)
 	}
 	m.changingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5837, m.Instance(), m.changingPtr)
+	upDownImportAPI().SysCallN(14, m.Instance(), m.changingPtr)
 }
 
 func (m *TUpDown) SetOnChangingEx(fn TUDChangingEventEx) {
@@ -230,7 +231,7 @@ func (m *TUpDown) SetOnChangingEx(fn TUDChangingEventEx) {
 		RemoveEventElement(m.changingExPtr)
 	}
 	m.changingExPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5838, m.Instance(), m.changingExPtr)
+	upDownImportAPI().SysCallN(15, m.Instance(), m.changingExPtr)
 }
 
 func (m *TUpDown) SetOnClickForUDClickEvent(fn TUDClickEvent) {
@@ -238,7 +239,7 @@ func (m *TUpDown) SetOnClickForUDClickEvent(fn TUDClickEvent) {
 		RemoveEventElement(m.clickForUDClickEventPtr)
 	}
 	m.clickForUDClickEventPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5839, m.Instance(), m.clickForUDClickEventPtr)
+	upDownImportAPI().SysCallN(16, m.Instance(), m.clickForUDClickEventPtr)
 }
 
 func (m *TUpDown) SetOnContextPopup(fn TContextPopupEvent) {
@@ -246,7 +247,7 @@ func (m *TUpDown) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5840, m.Instance(), m.contextPopupPtr)
+	upDownImportAPI().SysCallN(17, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TUpDown) SetOnMouseDown(fn TMouseEvent) {
@@ -254,7 +255,7 @@ func (m *TUpDown) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5841, m.Instance(), m.mouseDownPtr)
+	upDownImportAPI().SysCallN(18, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TUpDown) SetOnMouseEnter(fn TNotifyEvent) {
@@ -262,7 +263,7 @@ func (m *TUpDown) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5842, m.Instance(), m.mouseEnterPtr)
+	upDownImportAPI().SysCallN(19, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TUpDown) SetOnMouseLeave(fn TNotifyEvent) {
@@ -270,7 +271,7 @@ func (m *TUpDown) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5843, m.Instance(), m.mouseLeavePtr)
+	upDownImportAPI().SysCallN(20, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TUpDown) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -278,7 +279,7 @@ func (m *TUpDown) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5844, m.Instance(), m.mouseMovePtr)
+	upDownImportAPI().SysCallN(21, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TUpDown) SetOnMouseUp(fn TMouseEvent) {
@@ -286,7 +287,7 @@ func (m *TUpDown) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5845, m.Instance(), m.mouseUpPtr)
+	upDownImportAPI().SysCallN(22, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TUpDown) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -294,7 +295,7 @@ func (m *TUpDown) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5846, m.Instance(), m.mouseWheelPtr)
+	upDownImportAPI().SysCallN(23, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TUpDown) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -302,7 +303,7 @@ func (m *TUpDown) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5847, m.Instance(), m.mouseWheelDownPtr)
+	upDownImportAPI().SysCallN(24, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TUpDown) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -310,7 +311,7 @@ func (m *TUpDown) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5851, m.Instance(), m.mouseWheelUpPtr)
+	upDownImportAPI().SysCallN(28, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TUpDown) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -318,7 +319,7 @@ func (m *TUpDown) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5848, m.Instance(), m.mouseWheelHorzPtr)
+	upDownImportAPI().SysCallN(25, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TUpDown) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -326,7 +327,7 @@ func (m *TUpDown) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5849, m.Instance(), m.mouseWheelLeftPtr)
+	upDownImportAPI().SysCallN(26, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TUpDown) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -334,5 +335,51 @@ func (m *TUpDown) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5850, m.Instance(), m.mouseWheelRightPtr)
+	upDownImportAPI().SysCallN(27, m.Instance(), m.mouseWheelRightPtr)
+}
+
+var (
+	upDownImport       *imports.Imports = nil
+	upDownImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("UpDown_AlignButton", 0),
+		/*1*/ imports.NewTable("UpDown_ArrowKeys", 0),
+		/*2*/ imports.NewTable("UpDown_Associate", 0),
+		/*3*/ imports.NewTable("UpDown_Class", 0),
+		/*4*/ imports.NewTable("UpDown_Create", 0),
+		/*5*/ imports.NewTable("UpDown_Flat", 0),
+		/*6*/ imports.NewTable("UpDown_Increment", 0),
+		/*7*/ imports.NewTable("UpDown_Max", 0),
+		/*8*/ imports.NewTable("UpDown_Min", 0),
+		/*9*/ imports.NewTable("UpDown_MinRepeatInterval", 0),
+		/*10*/ imports.NewTable("UpDown_Orientation", 0),
+		/*11*/ imports.NewTable("UpDown_ParentColor", 0),
+		/*12*/ imports.NewTable("UpDown_ParentShowHint", 0),
+		/*13*/ imports.NewTable("UpDown_Position", 0),
+		/*14*/ imports.NewTable("UpDown_SetOnChanging", 0),
+		/*15*/ imports.NewTable("UpDown_SetOnChangingEx", 0),
+		/*16*/ imports.NewTable("UpDown_SetOnClickForUDClickEvent", 0),
+		/*17*/ imports.NewTable("UpDown_SetOnContextPopup", 0),
+		/*18*/ imports.NewTable("UpDown_SetOnMouseDown", 0),
+		/*19*/ imports.NewTable("UpDown_SetOnMouseEnter", 0),
+		/*20*/ imports.NewTable("UpDown_SetOnMouseLeave", 0),
+		/*21*/ imports.NewTable("UpDown_SetOnMouseMove", 0),
+		/*22*/ imports.NewTable("UpDown_SetOnMouseUp", 0),
+		/*23*/ imports.NewTable("UpDown_SetOnMouseWheel", 0),
+		/*24*/ imports.NewTable("UpDown_SetOnMouseWheelDown", 0),
+		/*25*/ imports.NewTable("UpDown_SetOnMouseWheelHorz", 0),
+		/*26*/ imports.NewTable("UpDown_SetOnMouseWheelLeft", 0),
+		/*27*/ imports.NewTable("UpDown_SetOnMouseWheelRight", 0),
+		/*28*/ imports.NewTable("UpDown_SetOnMouseWheelUp", 0),
+		/*29*/ imports.NewTable("UpDown_Thousands", 0),
+		/*30*/ imports.NewTable("UpDown_Wrap", 0),
+	}
+)
+
+func upDownImportAPI() *imports.Imports {
+	if upDownImport == nil {
+		upDownImport = NewDefaultImports()
+		upDownImport.SetImportTable(upDownImportTables)
+		upDownImportTables = nil
+	}
+	return upDownImport
 }

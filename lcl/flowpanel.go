@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -64,57 +65,57 @@ type TFlowPanel struct {
 }
 
 func NewFlowPanel(AOwner IComponent) IFlowPanel {
-	r1 := LCL().SysCallN(3079, GetObjectUintptr(AOwner))
+	r1 := flowPanelImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsFlowPanel(r1)
 }
 
 func (m *TFlowPanel) DragCursor() TCursor {
-	r1 := LCL().SysCallN(3080, 0, m.Instance(), 0)
+	r1 := flowPanelImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TFlowPanel) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(3080, 1, m.Instance(), uintptr(AValue))
+	flowPanelImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFlowPanel) DragKind() TDragKind {
-	r1 := LCL().SysCallN(3081, 0, m.Instance(), 0)
+	r1 := flowPanelImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TFlowPanel) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(3081, 1, m.Instance(), uintptr(AValue))
+	flowPanelImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFlowPanel) DragMode() TDragMode {
-	r1 := LCL().SysCallN(3082, 0, m.Instance(), 0)
+	r1 := flowPanelImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TFlowPanel) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(3082, 1, m.Instance(), uintptr(AValue))
+	flowPanelImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFlowPanel) ParentFont() bool {
-	r1 := LCL().SysCallN(3083, 0, m.Instance(), 0)
+	r1 := flowPanelImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFlowPanel) SetParentFont(AValue bool) {
-	LCL().SysCallN(3083, 1, m.Instance(), PascalBool(AValue))
+	flowPanelImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFlowPanel) ParentShowHint() bool {
-	r1 := LCL().SysCallN(3084, 0, m.Instance(), 0)
+	r1 := flowPanelImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFlowPanel) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(3084, 1, m.Instance(), PascalBool(AValue))
+	flowPanelImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func FlowPanelClass() TClass {
-	ret := LCL().SysCallN(3078)
+	ret := flowPanelImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -123,7 +124,7 @@ func (m *TFlowPanel) SetOnConstrainedResize(fn TConstrainedResizeEvent) {
 		RemoveEventElement(m.constrainedResizePtr)
 	}
 	m.constrainedResizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3085, m.Instance(), m.constrainedResizePtr)
+	flowPanelImportAPI().SysCallN(7, m.Instance(), m.constrainedResizePtr)
 }
 
 func (m *TFlowPanel) SetOnContextPopup(fn TContextPopupEvent) {
@@ -131,7 +132,7 @@ func (m *TFlowPanel) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3086, m.Instance(), m.contextPopupPtr)
+	flowPanelImportAPI().SysCallN(8, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TFlowPanel) SetOnDblClick(fn TNotifyEvent) {
@@ -139,7 +140,7 @@ func (m *TFlowPanel) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3087, m.Instance(), m.dblClickPtr)
+	flowPanelImportAPI().SysCallN(9, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TFlowPanel) SetOnDragDrop(fn TDragDropEvent) {
@@ -147,7 +148,7 @@ func (m *TFlowPanel) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3088, m.Instance(), m.dragDropPtr)
+	flowPanelImportAPI().SysCallN(10, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TFlowPanel) SetOnDragOver(fn TDragOverEvent) {
@@ -155,7 +156,7 @@ func (m *TFlowPanel) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3089, m.Instance(), m.dragOverPtr)
+	flowPanelImportAPI().SysCallN(11, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TFlowPanel) SetOnEndDock(fn TEndDragEvent) {
@@ -163,7 +164,7 @@ func (m *TFlowPanel) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3090, m.Instance(), m.endDockPtr)
+	flowPanelImportAPI().SysCallN(12, m.Instance(), m.endDockPtr)
 }
 
 func (m *TFlowPanel) SetOnEndDrag(fn TEndDragEvent) {
@@ -171,7 +172,7 @@ func (m *TFlowPanel) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3091, m.Instance(), m.endDragPtr)
+	flowPanelImportAPI().SysCallN(13, m.Instance(), m.endDragPtr)
 }
 
 func (m *TFlowPanel) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
@@ -179,7 +180,7 @@ func (m *TFlowPanel) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
 		RemoveEventElement(m.getSiteInfoPtr)
 	}
 	m.getSiteInfoPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3092, m.Instance(), m.getSiteInfoPtr)
+	flowPanelImportAPI().SysCallN(14, m.Instance(), m.getSiteInfoPtr)
 }
 
 func (m *TFlowPanel) SetOnMouseDown(fn TMouseEvent) {
@@ -187,7 +188,7 @@ func (m *TFlowPanel) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3093, m.Instance(), m.mouseDownPtr)
+	flowPanelImportAPI().SysCallN(15, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TFlowPanel) SetOnMouseEnter(fn TNotifyEvent) {
@@ -195,7 +196,7 @@ func (m *TFlowPanel) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3094, m.Instance(), m.mouseEnterPtr)
+	flowPanelImportAPI().SysCallN(16, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TFlowPanel) SetOnMouseLeave(fn TNotifyEvent) {
@@ -203,7 +204,7 @@ func (m *TFlowPanel) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3095, m.Instance(), m.mouseLeavePtr)
+	flowPanelImportAPI().SysCallN(17, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TFlowPanel) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -211,7 +212,7 @@ func (m *TFlowPanel) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3096, m.Instance(), m.mouseMovePtr)
+	flowPanelImportAPI().SysCallN(18, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TFlowPanel) SetOnMouseUp(fn TMouseEvent) {
@@ -219,7 +220,7 @@ func (m *TFlowPanel) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3097, m.Instance(), m.mouseUpPtr)
+	flowPanelImportAPI().SysCallN(19, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TFlowPanel) SetOnStartDock(fn TStartDockEvent) {
@@ -227,7 +228,7 @@ func (m *TFlowPanel) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3098, m.Instance(), m.startDockPtr)
+	flowPanelImportAPI().SysCallN(20, m.Instance(), m.startDockPtr)
 }
 
 func (m *TFlowPanel) SetOnStartDrag(fn TStartDragEvent) {
@@ -235,5 +236,42 @@ func (m *TFlowPanel) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3099, m.Instance(), m.startDragPtr)
+	flowPanelImportAPI().SysCallN(21, m.Instance(), m.startDragPtr)
+}
+
+var (
+	flowPanelImport       *imports.Imports = nil
+	flowPanelImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FlowPanel_Class", 0),
+		/*1*/ imports.NewTable("FlowPanel_Create", 0),
+		/*2*/ imports.NewTable("FlowPanel_DragCursor", 0),
+		/*3*/ imports.NewTable("FlowPanel_DragKind", 0),
+		/*4*/ imports.NewTable("FlowPanel_DragMode", 0),
+		/*5*/ imports.NewTable("FlowPanel_ParentFont", 0),
+		/*6*/ imports.NewTable("FlowPanel_ParentShowHint", 0),
+		/*7*/ imports.NewTable("FlowPanel_SetOnConstrainedResize", 0),
+		/*8*/ imports.NewTable("FlowPanel_SetOnContextPopup", 0),
+		/*9*/ imports.NewTable("FlowPanel_SetOnDblClick", 0),
+		/*10*/ imports.NewTable("FlowPanel_SetOnDragDrop", 0),
+		/*11*/ imports.NewTable("FlowPanel_SetOnDragOver", 0),
+		/*12*/ imports.NewTable("FlowPanel_SetOnEndDock", 0),
+		/*13*/ imports.NewTable("FlowPanel_SetOnEndDrag", 0),
+		/*14*/ imports.NewTable("FlowPanel_SetOnGetSiteInfo", 0),
+		/*15*/ imports.NewTable("FlowPanel_SetOnMouseDown", 0),
+		/*16*/ imports.NewTable("FlowPanel_SetOnMouseEnter", 0),
+		/*17*/ imports.NewTable("FlowPanel_SetOnMouseLeave", 0),
+		/*18*/ imports.NewTable("FlowPanel_SetOnMouseMove", 0),
+		/*19*/ imports.NewTable("FlowPanel_SetOnMouseUp", 0),
+		/*20*/ imports.NewTable("FlowPanel_SetOnStartDock", 0),
+		/*21*/ imports.NewTable("FlowPanel_SetOnStartDrag", 0),
+	}
+)
+
+func flowPanelImportAPI() *imports.Imports {
+	if flowPanelImport == nil {
+		flowPanelImport = NewDefaultImports()
+		flowPanelImport.SetImportTable(flowPanelImportTables)
+		flowPanelImportTables = nil
+	}
+	return flowPanelImport
 }

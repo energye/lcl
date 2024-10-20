@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -58,57 +59,57 @@ type TFloatSpinEdit struct {
 }
 
 func NewFloatSpinEdit(TheOwner IComponent) IFloatSpinEdit {
-	r1 := LCL().SysCallN(3050, GetObjectUintptr(TheOwner))
+	r1 := floatSpinEditImportAPI().SysCallN(3, GetObjectUintptr(TheOwner))
 	return AsFloatSpinEdit(r1)
 }
 
 func (m *TFloatSpinEdit) AutoSelected() bool {
-	r1 := LCL().SysCallN(3048, 0, m.Instance(), 0)
+	r1 := floatSpinEditImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFloatSpinEdit) SetAutoSelected(AValue bool) {
-	LCL().SysCallN(3048, 1, m.Instance(), PascalBool(AValue))
+	floatSpinEditImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFloatSpinEdit) AutoSelect() bool {
-	r1 := LCL().SysCallN(3047, 0, m.Instance(), 0)
+	r1 := floatSpinEditImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFloatSpinEdit) SetAutoSelect(AValue bool) {
-	LCL().SysCallN(3047, 1, m.Instance(), PascalBool(AValue))
+	floatSpinEditImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFloatSpinEdit) ParentColor() bool {
-	r1 := LCL().SysCallN(3051, 0, m.Instance(), 0)
+	r1 := floatSpinEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFloatSpinEdit) SetParentColor(AValue bool) {
-	LCL().SysCallN(3051, 1, m.Instance(), PascalBool(AValue))
+	floatSpinEditImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFloatSpinEdit) ParentFont() bool {
-	r1 := LCL().SysCallN(3052, 0, m.Instance(), 0)
+	r1 := floatSpinEditImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFloatSpinEdit) SetParentFont(AValue bool) {
-	LCL().SysCallN(3052, 1, m.Instance(), PascalBool(AValue))
+	floatSpinEditImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFloatSpinEdit) ParentShowHint() bool {
-	r1 := LCL().SysCallN(3053, 0, m.Instance(), 0)
+	r1 := floatSpinEditImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFloatSpinEdit) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(3053, 1, m.Instance(), PascalBool(AValue))
+	floatSpinEditImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func FloatSpinEditClass() TClass {
-	ret := LCL().SysCallN(3049)
+	ret := floatSpinEditImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
@@ -117,7 +118,7 @@ func (m *TFloatSpinEdit) SetOnEditingDone(fn TNotifyEvent) {
 		RemoveEventElement(m.editingDonePtr)
 	}
 	m.editingDonePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3054, m.Instance(), m.editingDonePtr)
+	floatSpinEditImportAPI().SysCallN(7, m.Instance(), m.editingDonePtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseDown(fn TMouseEvent) {
@@ -125,7 +126,7 @@ func (m *TFloatSpinEdit) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3055, m.Instance(), m.mouseDownPtr)
+	floatSpinEditImportAPI().SysCallN(8, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseEnter(fn TNotifyEvent) {
@@ -133,7 +134,7 @@ func (m *TFloatSpinEdit) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3056, m.Instance(), m.mouseEnterPtr)
+	floatSpinEditImportAPI().SysCallN(9, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseLeave(fn TNotifyEvent) {
@@ -141,7 +142,7 @@ func (m *TFloatSpinEdit) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3057, m.Instance(), m.mouseLeavePtr)
+	floatSpinEditImportAPI().SysCallN(10, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -149,7 +150,7 @@ func (m *TFloatSpinEdit) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3058, m.Instance(), m.mouseMovePtr)
+	floatSpinEditImportAPI().SysCallN(11, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseUp(fn TMouseEvent) {
@@ -157,7 +158,7 @@ func (m *TFloatSpinEdit) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3059, m.Instance(), m.mouseUpPtr)
+	floatSpinEditImportAPI().SysCallN(12, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -165,7 +166,7 @@ func (m *TFloatSpinEdit) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3060, m.Instance(), m.mouseWheelPtr)
+	floatSpinEditImportAPI().SysCallN(13, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -173,7 +174,7 @@ func (m *TFloatSpinEdit) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3061, m.Instance(), m.mouseWheelDownPtr)
+	floatSpinEditImportAPI().SysCallN(14, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -181,7 +182,7 @@ func (m *TFloatSpinEdit) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3065, m.Instance(), m.mouseWheelUpPtr)
+	floatSpinEditImportAPI().SysCallN(18, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -189,7 +190,7 @@ func (m *TFloatSpinEdit) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3062, m.Instance(), m.mouseWheelHorzPtr)
+	floatSpinEditImportAPI().SysCallN(15, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -197,7 +198,7 @@ func (m *TFloatSpinEdit) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3063, m.Instance(), m.mouseWheelLeftPtr)
+	floatSpinEditImportAPI().SysCallN(16, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TFloatSpinEdit) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -205,5 +206,39 @@ func (m *TFloatSpinEdit) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3064, m.Instance(), m.mouseWheelRightPtr)
+	floatSpinEditImportAPI().SysCallN(17, m.Instance(), m.mouseWheelRightPtr)
+}
+
+var (
+	floatSpinEditImport       *imports.Imports = nil
+	floatSpinEditImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FloatSpinEdit_AutoSelect", 0),
+		/*1*/ imports.NewTable("FloatSpinEdit_AutoSelected", 0),
+		/*2*/ imports.NewTable("FloatSpinEdit_Class", 0),
+		/*3*/ imports.NewTable("FloatSpinEdit_Create", 0),
+		/*4*/ imports.NewTable("FloatSpinEdit_ParentColor", 0),
+		/*5*/ imports.NewTable("FloatSpinEdit_ParentFont", 0),
+		/*6*/ imports.NewTable("FloatSpinEdit_ParentShowHint", 0),
+		/*7*/ imports.NewTable("FloatSpinEdit_SetOnEditingDone", 0),
+		/*8*/ imports.NewTable("FloatSpinEdit_SetOnMouseDown", 0),
+		/*9*/ imports.NewTable("FloatSpinEdit_SetOnMouseEnter", 0),
+		/*10*/ imports.NewTable("FloatSpinEdit_SetOnMouseLeave", 0),
+		/*11*/ imports.NewTable("FloatSpinEdit_SetOnMouseMove", 0),
+		/*12*/ imports.NewTable("FloatSpinEdit_SetOnMouseUp", 0),
+		/*13*/ imports.NewTable("FloatSpinEdit_SetOnMouseWheel", 0),
+		/*14*/ imports.NewTable("FloatSpinEdit_SetOnMouseWheelDown", 0),
+		/*15*/ imports.NewTable("FloatSpinEdit_SetOnMouseWheelHorz", 0),
+		/*16*/ imports.NewTable("FloatSpinEdit_SetOnMouseWheelLeft", 0),
+		/*17*/ imports.NewTable("FloatSpinEdit_SetOnMouseWheelRight", 0),
+		/*18*/ imports.NewTable("FloatSpinEdit_SetOnMouseWheelUp", 0),
+	}
+)
+
+func floatSpinEditImportAPI() *imports.Imports {
+	if floatSpinEditImport == nil {
+		floatSpinEditImport = NewDefaultImports()
+		floatSpinEditImport.SetImportTable(floatSpinEditImportTables)
+		floatSpinEditImportTables = nil
+	}
+	return floatSpinEditImport
 }

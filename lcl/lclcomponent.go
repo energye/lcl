@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -28,28 +29,49 @@ type TLCLComponent struct {
 }
 
 func NewLCLComponent(TheOwner IComponent) ILCLComponent {
-	r1 := LCL().SysCallN(3451, GetObjectUintptr(TheOwner))
+	r1 := lCLComponentImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsLCLComponent(r1)
 }
 
 func (m *TLCLComponent) LCLRefCount() int32 {
-	r1 := LCL().SysCallN(3454, m.Instance())
+	r1 := lCLComponentImportAPI().SysCallN(4, m.Instance())
 	return int32(r1)
 }
 
 func LCLComponentClass() TClass {
-	ret := LCL().SysCallN(3450)
+	ret := lCLComponentImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TLCLComponent) RemoveAllHandlersOfObject(AnObject IObject) {
-	LCL().SysCallN(3455, m.Instance(), GetObjectUintptr(AnObject))
+	lCLComponentImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(AnObject))
 }
 
 func (m *TLCLComponent) IncLCLRefCount() {
-	LCL().SysCallN(3453, m.Instance())
+	lCLComponentImportAPI().SysCallN(3, m.Instance())
 }
 
 func (m *TLCLComponent) DecLCLRefCount() {
-	LCL().SysCallN(3452, m.Instance())
+	lCLComponentImportAPI().SysCallN(2, m.Instance())
+}
+
+var (
+	lCLComponentImport       *imports.Imports = nil
+	lCLComponentImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("LCLComponent_Class", 0),
+		/*1*/ imports.NewTable("LCLComponent_Create", 0),
+		/*2*/ imports.NewTable("LCLComponent_DecLCLRefCount", 0),
+		/*3*/ imports.NewTable("LCLComponent_IncLCLRefCount", 0),
+		/*4*/ imports.NewTable("LCLComponent_LCLRefCount", 0),
+		/*5*/ imports.NewTable("LCLComponent_RemoveAllHandlersOfObject", 0),
+	}
+)
+
+func lCLComponentImportAPI() *imports.Imports {
+	if lCLComponentImport == nil {
+		lCLComponentImport = NewDefaultImports()
+		lCLComponentImport.SetImportTable(lCLComponentImportTables)
+		lCLComponentImportTables = nil
+	}
+	return lCLComponentImport
 }

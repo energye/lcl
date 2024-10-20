@@ -9,7 +9,7 @@
 package lcl
 
 import (
-	"github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	"github.com/energye/lcl/types"
 	"math"
 	"unsafe"
@@ -45,12 +45,12 @@ func MulDiv(nNumber, nNumerator, nDenominator int32) int32 {
 //		 obj: 对象指针
 //		 buffer: 返回字符串缓冲区
 //		 bufSize: 返回字符串范围
-func sysCallGetTextBuf(index int, obj uintptr, buffer *string, bufSize int32) uintptr {
+func sysCallGetTextBuf(table *imports.Imports, index int, obj uintptr, buffer *string, bufSize int32) uintptr {
 	if buffer == nil || bufSize == 0 {
 		return 0
 	}
 	bufferPtr := make([]uint8, bufSize+1)
-	sLen := api.LCL().SysCallN(index, obj, uintptr(unsafe.Pointer(&bufferPtr[0])), uintptr(bufSize))
+	sLen := table.SysCallN(index, obj, uintptr(unsafe.Pointer(&bufferPtr[0])), uintptr(bufSize))
 	if sLen > 0 {
 		*buffer = string(bufferPtr[:sLen])
 	}
@@ -66,12 +66,12 @@ func sysCallGetTextBuf(index int, obj uintptr, buffer *string, bufSize int32) ui
 //		 index: 导入表索引
 //		 obj: 对象指针
 //		 count: 缓冲区内字节数
-func sysCallBufferRead(index int, obj uintptr, count int32) (uintptr, []byte) {
+func sysCallBufferRead(table *imports.Imports, index int, obj uintptr, count int32) (uintptr, []byte) {
 	if count <= 0 {
 		return 0, nil
 	}
 	buffer := make([]byte, count)
-	r := api.LCL().SysCallN(index, obj, uintptr(unsafe.Pointer(&buffer[0])), uintptr(count))
+	r := table.SysCallN(index, obj, uintptr(unsafe.Pointer(&buffer[0])), uintptr(count))
 	return r, buffer
 }
 
@@ -83,22 +83,22 @@ func sysCallBufferRead(index int, obj uintptr, count int32) (uintptr, []byte) {
 //		 index: 导入表索引
 //		 obj: 对象指针
 //		 buffer: 字节数据
-func sysCallBufferWrite(index int, obj uintptr, buffer []byte) uintptr {
-	return api.LCL().SysCallN(index, obj, uintptr(unsafe.Pointer(&buffer[0])), uintptr(len(buffer)))
+func sysCallBufferWrite(table *imports.Imports, index int, obj uintptr, buffer []byte) uintptr {
+	return table.SysCallN(index, obj, uintptr(unsafe.Pointer(&buffer[0])), uintptr(len(buffer)))
 }
 
 // sysCallPoint
-func sysCallPoint(index int, obj uintptr, points []types.TPoint, otherArgs ...uintptr) uintptr {
+func sysCallPoint(table *imports.Imports, index int, obj uintptr, points []types.TPoint, otherArgs ...uintptr) uintptr {
 	args := []uintptr{obj, uintptr(unsafe.Pointer(&points[0])), uintptr(len(points))}
 	args = append(args, otherArgs...)
-	return api.LCL().SysCallN(index, args...)
+	return table.SysCallN(index, args...)
 }
 
 // sysCallRect
-func sysCallRect(index int, obj uintptr, rects []types.TRect, otherArgs ...uintptr) uintptr {
+func sysCallRect(table *imports.Imports, index int, obj uintptr, rects []types.TRect, otherArgs ...uintptr) uintptr {
 	args := []uintptr{obj, uintptr(unsafe.Pointer(&rects[0])), uintptr(len(rects))}
 	args = append(args, otherArgs...)
-	return api.LCL().SysCallN(index, args...)
+	return table.SysCallN(index, args...)
 }
 
 // TStatStg

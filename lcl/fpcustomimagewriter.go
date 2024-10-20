@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -25,10 +26,27 @@ type TFPCustomImageWriter struct {
 }
 
 func FPCustomImageWriterClass() TClass {
-	ret := LCL().SysCallN(2945)
+	ret := fPCustomImageWriterImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TFPCustomImageWriter) ImageWrite(Str IStream, Img IFPCustomImage) {
-	LCL().SysCallN(2946, m.Instance(), GetObjectUintptr(Str), GetObjectUintptr(Img))
+	fPCustomImageWriterImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Str), GetObjectUintptr(Img))
+}
+
+var (
+	fPCustomImageWriterImport       *imports.Imports = nil
+	fPCustomImageWriterImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FPCustomImageWriter_Class", 0),
+		/*1*/ imports.NewTable("FPCustomImageWriter_ImageWrite", 0),
+	}
+)
+
+func fPCustomImageWriterImportAPI() *imports.Imports {
+	if fPCustomImageWriterImport == nil {
+		fPCustomImageWriterImport = NewDefaultImports()
+		fPCustomImageWriterImport.SetImportTable(fPCustomImageWriterImportTables)
+		fPCustomImageWriterImportTables = nil
+	}
+	return fPCustomImageWriterImport
 }

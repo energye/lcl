@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -66,147 +67,147 @@ type TXButton struct {
 }
 
 func NewXButton(AOwner IComponent) IXButton {
-	r1 := LCL().SysCallN(6152, GetObjectUintptr(AOwner))
+	r1 := xButtonImportAPI().SysCallN(5, GetObjectUintptr(AOwner))
 	return AsXButton(r1)
 }
 
 func (m *TXButton) Caption() string {
-	r1 := LCL().SysCallN(6150, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TXButton) SetCaption(AValue string) {
-	LCL().SysCallN(6150, 1, m.Instance(), PascalStr(AValue))
+	xButtonImportAPI().SysCallN(3, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TXButton) ShowCaption() bool {
-	r1 := LCL().SysCallN(6170, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TXButton) SetShowCaption(AValue bool) {
-	LCL().SysCallN(6170, 1, m.Instance(), PascalBool(AValue))
+	xButtonImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TXButton) BackColor() TColor {
-	r1 := LCL().SysCallN(6147, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TXButton) SetBackColor(AValue TColor) {
-	LCL().SysCallN(6147, 1, m.Instance(), uintptr(AValue))
+	xButtonImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TXButton) HoverColor() TColor {
-	r1 := LCL().SysCallN(6156, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TXButton) SetHoverColor(AValue TColor) {
-	LCL().SysCallN(6156, 1, m.Instance(), uintptr(AValue))
+	xButtonImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TXButton) DownColor() TColor {
-	r1 := LCL().SysCallN(6153, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TXButton) SetDownColor(AValue TColor) {
-	LCL().SysCallN(6153, 1, m.Instance(), uintptr(AValue))
+	xButtonImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TXButton) BorderWidth() int32 {
-	r1 := LCL().SysCallN(6149, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TXButton) SetBorderWidth(AValue int32) {
-	LCL().SysCallN(6149, 1, m.Instance(), uintptr(AValue))
+	xButtonImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TXButton) BorderColor() TColor {
-	r1 := LCL().SysCallN(6148, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TXButton) SetBorderColor(AValue TColor) {
-	LCL().SysCallN(6148, 1, m.Instance(), uintptr(AValue))
+	xButtonImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TXButton) Picture() IPicture {
-	r1 := LCL().SysCallN(6162, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return AsPicture(r1)
 }
 
 func (m *TXButton) SetPicture(AValue IPicture) {
-	LCL().SysCallN(6162, 1, m.Instance(), GetObjectUintptr(AValue))
+	xButtonImportAPI().SysCallN(15, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TXButton) DrawMode() TDrawImageMode {
-	r1 := LCL().SysCallN(6155, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return TDrawImageMode(r1)
 }
 
 func (m *TXButton) SetDrawMode(AValue TDrawImageMode) {
-	LCL().SysCallN(6155, 1, m.Instance(), uintptr(AValue))
+	xButtonImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TXButton) NormalFontColor() TColor {
-	r1 := LCL().SysCallN(6158, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TXButton) SetNormalFontColor(AValue TColor) {
-	LCL().SysCallN(6158, 1, m.Instance(), uintptr(AValue))
+	xButtonImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TXButton) DownFontColor() TColor {
-	r1 := LCL().SysCallN(6154, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TXButton) SetDownFontColor(AValue TColor) {
-	LCL().SysCallN(6154, 1, m.Instance(), uintptr(AValue))
+	xButtonImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TXButton) HoverFontColor() TColor {
-	r1 := LCL().SysCallN(6157, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TXButton) SetHoverFontColor(AValue TColor) {
-	LCL().SysCallN(6157, 1, m.Instance(), uintptr(AValue))
+	xButtonImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TXButton) ParentFont() bool {
-	r1 := LCL().SysCallN(6160, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TXButton) SetParentFont(AValue bool) {
-	LCL().SysCallN(6160, 1, m.Instance(), PascalBool(AValue))
+	xButtonImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TXButton) ParentShowHint() bool {
-	r1 := LCL().SysCallN(6161, 0, m.Instance(), 0)
+	r1 := xButtonImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TXButton) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(6161, 1, m.Instance(), PascalBool(AValue))
+	xButtonImportAPI().SysCallN(14, 1, m.Instance(), PascalBool(AValue))
 }
 
 func XButtonClass() TClass {
-	ret := LCL().SysCallN(6151)
+	ret := xButtonImportAPI().SysCallN(4)
 	return TClass(ret)
 }
 
 func (m *TXButton) Paint() {
-	LCL().SysCallN(6159, m.Instance())
+	xButtonImportAPI().SysCallN(12, m.Instance())
 }
 
 func (m *TXButton) Resize() {
-	LCL().SysCallN(6163, m.Instance())
+	xButtonImportAPI().SysCallN(16, m.Instance())
 }
 
 func (m *TXButton) SetOnDblClick(fn TNotifyEvent) {
@@ -214,7 +215,7 @@ func (m *TXButton) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(6164, m.Instance(), m.dblClickPtr)
+	xButtonImportAPI().SysCallN(17, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TXButton) SetOnMouseDown(fn TMouseEvent) {
@@ -222,7 +223,7 @@ func (m *TXButton) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(6165, m.Instance(), m.mouseDownPtr)
+	xButtonImportAPI().SysCallN(18, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TXButton) SetOnMouseEnter(fn TNotifyEvent) {
@@ -230,7 +231,7 @@ func (m *TXButton) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(6166, m.Instance(), m.mouseEnterPtr)
+	xButtonImportAPI().SysCallN(19, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TXButton) SetOnMouseLeave(fn TNotifyEvent) {
@@ -238,7 +239,7 @@ func (m *TXButton) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(6167, m.Instance(), m.mouseLeavePtr)
+	xButtonImportAPI().SysCallN(20, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TXButton) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -246,7 +247,7 @@ func (m *TXButton) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(6168, m.Instance(), m.mouseMovePtr)
+	xButtonImportAPI().SysCallN(21, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TXButton) SetOnMouseUp(fn TMouseEvent) {
@@ -254,5 +255,44 @@ func (m *TXButton) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(6169, m.Instance(), m.mouseUpPtr)
+	xButtonImportAPI().SysCallN(22, m.Instance(), m.mouseUpPtr)
+}
+
+var (
+	xButtonImport       *imports.Imports = nil
+	xButtonImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("XButton_BackColor", 0),
+		/*1*/ imports.NewTable("XButton_BorderColor", 0),
+		/*2*/ imports.NewTable("XButton_BorderWidth", 0),
+		/*3*/ imports.NewTable("XButton_Caption", 0),
+		/*4*/ imports.NewTable("XButton_Class", 0),
+		/*5*/ imports.NewTable("XButton_Create", 0),
+		/*6*/ imports.NewTable("XButton_DownColor", 0),
+		/*7*/ imports.NewTable("XButton_DownFontColor", 0),
+		/*8*/ imports.NewTable("XButton_DrawMode", 0),
+		/*9*/ imports.NewTable("XButton_HoverColor", 0),
+		/*10*/ imports.NewTable("XButton_HoverFontColor", 0),
+		/*11*/ imports.NewTable("XButton_NormalFontColor", 0),
+		/*12*/ imports.NewTable("XButton_Paint", 0),
+		/*13*/ imports.NewTable("XButton_ParentFont", 0),
+		/*14*/ imports.NewTable("XButton_ParentShowHint", 0),
+		/*15*/ imports.NewTable("XButton_Picture", 0),
+		/*16*/ imports.NewTable("XButton_Resize", 0),
+		/*17*/ imports.NewTable("XButton_SetOnDblClick", 0),
+		/*18*/ imports.NewTable("XButton_SetOnMouseDown", 0),
+		/*19*/ imports.NewTable("XButton_SetOnMouseEnter", 0),
+		/*20*/ imports.NewTable("XButton_SetOnMouseLeave", 0),
+		/*21*/ imports.NewTable("XButton_SetOnMouseMove", 0),
+		/*22*/ imports.NewTable("XButton_SetOnMouseUp", 0),
+		/*23*/ imports.NewTable("XButton_ShowCaption", 0),
+	}
+)
+
+func xButtonImportAPI() *imports.Imports {
+	if xButtonImport == nil {
+		xButtonImport = NewDefaultImports()
+		xButtonImport.SetImportTable(xButtonImportTables)
+		xButtonImportTables = nil
+	}
+	return xButtonImport
 }

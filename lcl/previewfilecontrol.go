@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -26,20 +27,38 @@ type TPreviewFileControl struct {
 }
 
 func NewPreviewFileControl(TheOwner IComponent) IPreviewFileControl {
-	r1 := LCL().SysCallN(4616, GetObjectUintptr(TheOwner))
+	r1 := previewFileControlImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsPreviewFileControl(r1)
 }
 
 func (m *TPreviewFileControl) PreviewFileDialog() IPreviewFileDialog {
-	r1 := LCL().SysCallN(4617, 0, m.Instance(), 0)
+	r1 := previewFileControlImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return AsPreviewFileDialog(r1)
 }
 
 func (m *TPreviewFileControl) SetPreviewFileDialog(AValue IPreviewFileDialog) {
-	LCL().SysCallN(4617, 1, m.Instance(), GetObjectUintptr(AValue))
+	previewFileControlImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func PreviewFileControlClass() TClass {
-	ret := LCL().SysCallN(4615)
+	ret := previewFileControlImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	previewFileControlImport       *imports.Imports = nil
+	previewFileControlImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("PreviewFileControl_Class", 0),
+		/*1*/ imports.NewTable("PreviewFileControl_Create", 0),
+		/*2*/ imports.NewTable("PreviewFileControl_PreviewFileDialog", 0),
+	}
+)
+
+func previewFileControlImportAPI() *imports.Imports {
+	if previewFileControlImport == nil {
+		previewFileControlImport = NewDefaultImports()
+		previewFileControlImport.SetImportTable(previewFileControlImportTables)
+		previewFileControlImportTables = nil
+	}
+	return previewFileControlImport
 }

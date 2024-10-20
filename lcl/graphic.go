@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -59,138 +60,138 @@ type TGraphic struct {
 }
 
 func (m *TGraphic) Empty() bool {
-	r1 := LCL().SysCallN(3206, m.Instance())
+	r1 := graphicImportAPI().SysCallN(2, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TGraphic) Height() int32 {
-	r1 := LCL().SysCallN(3209, 0, m.Instance(), 0)
+	r1 := graphicImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TGraphic) SetHeight(AValue int32) {
-	LCL().SysCallN(3209, 1, m.Instance(), uintptr(AValue))
+	graphicImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGraphic) Modified() bool {
-	r1 := LCL().SysCallN(3220, 0, m.Instance(), 0)
+	r1 := graphicImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TGraphic) SetModified(AValue bool) {
-	LCL().SysCallN(3220, 1, m.Instance(), PascalBool(AValue))
+	graphicImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TGraphic) MimeType() string {
-	r1 := LCL().SysCallN(3219, m.Instance())
+	r1 := graphicImportAPI().SysCallN(15, m.Instance())
 	return GoStr(r1)
 }
 
 func (m *TGraphic) Palette() HPALETTE {
-	r1 := LCL().SysCallN(3221, 0, m.Instance(), 0)
+	r1 := graphicImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return HPALETTE(r1)
 }
 
 func (m *TGraphic) SetPalette(AValue HPALETTE) {
-	LCL().SysCallN(3221, 1, m.Instance(), uintptr(AValue))
+	graphicImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGraphic) PaletteModified() bool {
-	r1 := LCL().SysCallN(3222, 0, m.Instance(), 0)
+	r1 := graphicImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TGraphic) SetPaletteModified(AValue bool) {
-	LCL().SysCallN(3222, 1, m.Instance(), PascalBool(AValue))
+	graphicImportAPI().SysCallN(18, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TGraphic) Transparent() bool {
-	r1 := LCL().SysCallN(3229, 0, m.Instance(), 0)
+	r1 := graphicImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TGraphic) SetTransparent(AValue bool) {
-	LCL().SysCallN(3229, 1, m.Instance(), PascalBool(AValue))
+	graphicImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TGraphic) Width() int32 {
-	r1 := LCL().SysCallN(3230, 0, m.Instance(), 0)
+	r1 := graphicImportAPI().SysCallN(26, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TGraphic) SetWidth(AValue int32) {
-	LCL().SysCallN(3230, 1, m.Instance(), uintptr(AValue))
+	graphicImportAPI().SysCallN(26, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TGraphic) LazarusResourceTypeValid(AResourceType string) bool {
-	r1 := LCL().SysCallN(3210, m.Instance(), PascalStr(AResourceType))
+	r1 := graphicImportAPI().SysCallN(6, m.Instance(), PascalStr(AResourceType))
 	return GoBool(r1)
 }
 
 func (m *TGraphic) GetResourceType() TResourceType {
-	r1 := LCL().SysCallN(3207, m.Instance())
+	r1 := graphicImportAPI().SysCallN(3, m.Instance())
 	return TResourceType(r1)
 }
 
 func GraphicClass() TClass {
-	ret := LCL().SysCallN(3204)
+	ret := graphicImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TGraphic) Clear() {
-	LCL().SysCallN(3205, m.Instance())
+	graphicImportAPI().SysCallN(1, m.Instance())
 }
 
 func (m *TGraphic) LoadFromFile(Filename string) {
-	LCL().SysCallN(3213, m.Instance(), PascalStr(Filename))
+	graphicImportAPI().SysCallN(9, m.Instance(), PascalStr(Filename))
 }
 
 func (m *TGraphic) LoadFromStream(Stream IStream) {
-	LCL().SysCallN(3218, m.Instance(), GetObjectUintptr(Stream))
+	graphicImportAPI().SysCallN(14, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TGraphic) LoadFromMimeStream(AStream IStream, AMimeType string) {
-	LCL().SysCallN(3215, m.Instance(), GetObjectUintptr(AStream), PascalStr(AMimeType))
+	graphicImportAPI().SysCallN(11, m.Instance(), GetObjectUintptr(AStream), PascalStr(AMimeType))
 }
 
 func (m *TGraphic) LoadFromLazarusResource(ResName string) {
-	LCL().SysCallN(3214, m.Instance(), PascalStr(ResName))
+	graphicImportAPI().SysCallN(10, m.Instance(), PascalStr(ResName))
 }
 
 func (m *TGraphic) LoadFromResourceName(Instance THandle, ResName string) {
-	LCL().SysCallN(3217, m.Instance(), uintptr(Instance), PascalStr(ResName))
+	graphicImportAPI().SysCallN(13, m.Instance(), uintptr(Instance), PascalStr(ResName))
 }
 
 func (m *TGraphic) LoadFromResourceID(Instance THandle, ResID uint32) {
-	LCL().SysCallN(3216, m.Instance(), uintptr(Instance), uintptr(ResID))
+	graphicImportAPI().SysCallN(12, m.Instance(), uintptr(Instance), uintptr(ResID))
 }
 
 func (m *TGraphic) LoadFromClipboardFormat(FormatID TClipboardFormat) {
-	LCL().SysCallN(3211, m.Instance(), uintptr(FormatID))
+	graphicImportAPI().SysCallN(7, m.Instance(), uintptr(FormatID))
 }
 
 func (m *TGraphic) LoadFromClipboardFormatID(ClipboardType TClipboardType, FormatID TClipboardFormat) {
-	LCL().SysCallN(3212, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
+	graphicImportAPI().SysCallN(8, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
 }
 
 func (m *TGraphic) SaveToFile(Filename string) {
-	LCL().SysCallN(3225, m.Instance(), PascalStr(Filename))
+	graphicImportAPI().SysCallN(21, m.Instance(), PascalStr(Filename))
 }
 
 func (m *TGraphic) SaveToStream(Stream IStream) {
-	LCL().SysCallN(3226, m.Instance(), GetObjectUintptr(Stream))
+	graphicImportAPI().SysCallN(22, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TGraphic) SaveToClipboardFormat(FormatID TClipboardFormat) {
-	LCL().SysCallN(3223, m.Instance(), uintptr(FormatID))
+	graphicImportAPI().SysCallN(19, m.Instance(), uintptr(FormatID))
 }
 
 func (m *TGraphic) SaveToClipboardFormatID(ClipboardType TClipboardType, FormatID TClipboardFormat) {
-	LCL().SysCallN(3224, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
+	graphicImportAPI().SysCallN(20, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
 }
 
 func (m *TGraphic) GetSupportedSourceMimeTypes(List IStrings) {
-	LCL().SysCallN(3208, m.Instance(), GetObjectUintptr(List))
+	graphicImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(List))
 }
 
 func (m *TGraphic) SetOnChange(fn TNotifyEvent) {
@@ -198,7 +199,7 @@ func (m *TGraphic) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3227, m.Instance(), m.changePtr)
+	graphicImportAPI().SysCallN(23, m.Instance(), m.changePtr)
 }
 
 func (m *TGraphic) SetOnProgress(fn TProgressEvent) {
@@ -206,5 +207,47 @@ func (m *TGraphic) SetOnProgress(fn TProgressEvent) {
 		RemoveEventElement(m.progressPtr)
 	}
 	m.progressPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3228, m.Instance(), m.progressPtr)
+	graphicImportAPI().SysCallN(24, m.Instance(), m.progressPtr)
+}
+
+var (
+	graphicImport       *imports.Imports = nil
+	graphicImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Graphic_Class", 0),
+		/*1*/ imports.NewTable("Graphic_Clear", 0),
+		/*2*/ imports.NewTable("Graphic_Empty", 0),
+		/*3*/ imports.NewTable("Graphic_GetResourceType", 0),
+		/*4*/ imports.NewTable("Graphic_GetSupportedSourceMimeTypes", 0),
+		/*5*/ imports.NewTable("Graphic_Height", 0),
+		/*6*/ imports.NewTable("Graphic_LazarusResourceTypeValid", 0),
+		/*7*/ imports.NewTable("Graphic_LoadFromClipboardFormat", 0),
+		/*8*/ imports.NewTable("Graphic_LoadFromClipboardFormatID", 0),
+		/*9*/ imports.NewTable("Graphic_LoadFromFile", 0),
+		/*10*/ imports.NewTable("Graphic_LoadFromLazarusResource", 0),
+		/*11*/ imports.NewTable("Graphic_LoadFromMimeStream", 0),
+		/*12*/ imports.NewTable("Graphic_LoadFromResourceID", 0),
+		/*13*/ imports.NewTable("Graphic_LoadFromResourceName", 0),
+		/*14*/ imports.NewTable("Graphic_LoadFromStream", 0),
+		/*15*/ imports.NewTable("Graphic_MimeType", 0),
+		/*16*/ imports.NewTable("Graphic_Modified", 0),
+		/*17*/ imports.NewTable("Graphic_Palette", 0),
+		/*18*/ imports.NewTable("Graphic_PaletteModified", 0),
+		/*19*/ imports.NewTable("Graphic_SaveToClipboardFormat", 0),
+		/*20*/ imports.NewTable("Graphic_SaveToClipboardFormatID", 0),
+		/*21*/ imports.NewTable("Graphic_SaveToFile", 0),
+		/*22*/ imports.NewTable("Graphic_SaveToStream", 0),
+		/*23*/ imports.NewTable("Graphic_SetOnChange", 0),
+		/*24*/ imports.NewTable("Graphic_SetOnProgress", 0),
+		/*25*/ imports.NewTable("Graphic_Transparent", 0),
+		/*26*/ imports.NewTable("Graphic_Width", 0),
+	}
+)
+
+func graphicImportAPI() *imports.Imports {
+	if graphicImport == nil {
+		graphicImport = NewDefaultImports()
+		graphicImport.SetImportTable(graphicImportTables)
+		graphicImportTables = nil
+	}
+	return graphicImport
 }

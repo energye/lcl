@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -39,79 +40,104 @@ type TStatusPanel struct {
 }
 
 func NewStatusPanel(ACollection ICollection) IStatusPanel {
-	r1 := LCL().SysCallN(5189, GetObjectUintptr(ACollection))
+	r1 := statusPanelImportAPI().SysCallN(4, GetObjectUintptr(ACollection))
 	return AsStatusPanel(r1)
 }
 
 func (m *TStatusPanel) Alignment() TAlignment {
-	r1 := LCL().SysCallN(5185, 0, m.Instance(), 0)
+	r1 := statusPanelImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TAlignment(r1)
 }
 
 func (m *TStatusPanel) SetAlignment(AValue TAlignment) {
-	LCL().SysCallN(5185, 1, m.Instance(), uintptr(AValue))
+	statusPanelImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStatusPanel) Bevel() TStatusPanelBevel {
-	r1 := LCL().SysCallN(5186, 0, m.Instance(), 0)
+	r1 := statusPanelImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return TStatusPanelBevel(r1)
 }
 
 func (m *TStatusPanel) SetBevel(AValue TStatusPanelBevel) {
-	LCL().SysCallN(5186, 1, m.Instance(), uintptr(AValue))
+	statusPanelImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStatusPanel) BidiMode() TBiDiMode {
-	r1 := LCL().SysCallN(5187, 0, m.Instance(), 0)
+	r1 := statusPanelImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TBiDiMode(r1)
 }
 
 func (m *TStatusPanel) SetBidiMode(AValue TBiDiMode) {
-	LCL().SysCallN(5187, 1, m.Instance(), uintptr(AValue))
+	statusPanelImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStatusPanel) ParentBiDiMode() bool {
-	r1 := LCL().SysCallN(5190, 0, m.Instance(), 0)
+	r1 := statusPanelImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TStatusPanel) SetParentBiDiMode(AValue bool) {
-	LCL().SysCallN(5190, 1, m.Instance(), PascalBool(AValue))
+	statusPanelImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TStatusPanel) Style() TStatusPanelStyle {
-	r1 := LCL().SysCallN(5192, 0, m.Instance(), 0)
+	r1 := statusPanelImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return TStatusPanelStyle(r1)
 }
 
 func (m *TStatusPanel) SetStyle(AValue TStatusPanelStyle) {
-	LCL().SysCallN(5192, 1, m.Instance(), uintptr(AValue))
+	statusPanelImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStatusPanel) Text() string {
-	r1 := LCL().SysCallN(5193, 0, m.Instance(), 0)
+	r1 := statusPanelImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TStatusPanel) SetText(AValue string) {
-	LCL().SysCallN(5193, 1, m.Instance(), PascalStr(AValue))
+	statusPanelImportAPI().SysCallN(8, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TStatusPanel) Width() int32 {
-	r1 := LCL().SysCallN(5194, 0, m.Instance(), 0)
+	r1 := statusPanelImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TStatusPanel) SetWidth(AValue int32) {
-	LCL().SysCallN(5194, 1, m.Instance(), uintptr(AValue))
+	statusPanelImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TStatusPanel) StatusBar() IStatusBar {
-	r1 := LCL().SysCallN(5191, m.Instance())
+	r1 := statusPanelImportAPI().SysCallN(6, m.Instance())
 	return AsStatusBar(r1)
 }
 
 func StatusPanelClass() TClass {
-	ret := LCL().SysCallN(5188)
+	ret := statusPanelImportAPI().SysCallN(3)
 	return TClass(ret)
+}
+
+var (
+	statusPanelImport       *imports.Imports = nil
+	statusPanelImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("StatusPanel_Alignment", 0),
+		/*1*/ imports.NewTable("StatusPanel_Bevel", 0),
+		/*2*/ imports.NewTable("StatusPanel_BidiMode", 0),
+		/*3*/ imports.NewTable("StatusPanel_Class", 0),
+		/*4*/ imports.NewTable("StatusPanel_Create", 0),
+		/*5*/ imports.NewTable("StatusPanel_ParentBiDiMode", 0),
+		/*6*/ imports.NewTable("StatusPanel_StatusBar", 0),
+		/*7*/ imports.NewTable("StatusPanel_Style", 0),
+		/*8*/ imports.NewTable("StatusPanel_Text", 0),
+		/*9*/ imports.NewTable("StatusPanel_Width", 0),
+	}
+)
+
+func statusPanelImportAPI() *imports.Imports {
+	if statusPanelImport == nil {
+		statusPanelImport = NewDefaultImports()
+		statusPanelImport.SetImportTable(statusPanelImportTables)
+		statusPanelImportTables = nil
+	}
+	return statusPanelImport
 }

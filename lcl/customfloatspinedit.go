@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -41,89 +42,116 @@ type TCustomFloatSpinEdit struct {
 }
 
 func NewCustomFloatSpinEdit(TheOwner IComponent) ICustomFloatSpinEdit {
-	r1 := LCL().SysCallN(1640, GetObjectUintptr(TheOwner))
+	r1 := customFloatSpinEditImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsCustomFloatSpinEdit(r1)
 }
 
 func (m *TCustomFloatSpinEdit) DecimalPlaces() int32 {
-	r1 := LCL().SysCallN(1641, 0, m.Instance(), 0)
+	r1 := customFloatSpinEditImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomFloatSpinEdit) SetDecimalPlaces(AValue int32) {
-	LCL().SysCallN(1641, 1, m.Instance(), uintptr(AValue))
+	customFloatSpinEditImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomFloatSpinEdit) EditorEnabled() bool {
-	r1 := LCL().SysCallN(1642, 0, m.Instance(), 0)
+	r1 := customFloatSpinEditImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomFloatSpinEdit) SetEditorEnabled(AValue bool) {
-	LCL().SysCallN(1642, 1, m.Instance(), PascalBool(AValue))
+	customFloatSpinEditImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomFloatSpinEdit) Increment() (resultDouble float64) {
-	LCL().SysCallN(1644, 0, m.Instance(), uintptr(unsafePointer(&resultDouble)), uintptr(unsafePointer(&resultDouble)))
+	customFloatSpinEditImportAPI().SysCallN(5, 0, m.Instance(), uintptr(unsafePointer(&resultDouble)), uintptr(unsafePointer(&resultDouble)))
 	return
 }
 
 func (m *TCustomFloatSpinEdit) SetIncrement(AValue float64) {
-	LCL().SysCallN(1644, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
+	customFloatSpinEditImportAPI().SysCallN(5, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
 }
 
 func (m *TCustomFloatSpinEdit) MinValue() (resultDouble float64) {
-	LCL().SysCallN(1646, 0, m.Instance(), uintptr(unsafePointer(&resultDouble)), uintptr(unsafePointer(&resultDouble)))
+	customFloatSpinEditImportAPI().SysCallN(7, 0, m.Instance(), uintptr(unsafePointer(&resultDouble)), uintptr(unsafePointer(&resultDouble)))
 	return
 }
 
 func (m *TCustomFloatSpinEdit) SetMinValue(AValue float64) {
-	LCL().SysCallN(1646, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
+	customFloatSpinEditImportAPI().SysCallN(7, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
 }
 
 func (m *TCustomFloatSpinEdit) MaxValue() (resultDouble float64) {
-	LCL().SysCallN(1645, 0, m.Instance(), uintptr(unsafePointer(&resultDouble)), uintptr(unsafePointer(&resultDouble)))
+	customFloatSpinEditImportAPI().SysCallN(6, 0, m.Instance(), uintptr(unsafePointer(&resultDouble)), uintptr(unsafePointer(&resultDouble)))
 	return
 }
 
 func (m *TCustomFloatSpinEdit) SetMaxValue(AValue float64) {
-	LCL().SysCallN(1645, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
+	customFloatSpinEditImportAPI().SysCallN(6, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
 }
 
 func (m *TCustomFloatSpinEdit) Value() (resultDouble float64) {
-	LCL().SysCallN(1648, 0, m.Instance(), uintptr(unsafePointer(&resultDouble)), uintptr(unsafePointer(&resultDouble)))
+	customFloatSpinEditImportAPI().SysCallN(9, 0, m.Instance(), uintptr(unsafePointer(&resultDouble)), uintptr(unsafePointer(&resultDouble)))
 	return
 }
 
 func (m *TCustomFloatSpinEdit) SetValue(AValue float64) {
-	LCL().SysCallN(1648, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
+	customFloatSpinEditImportAPI().SysCallN(9, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
 }
 
 func (m *TCustomFloatSpinEdit) ValueEmpty() bool {
-	r1 := LCL().SysCallN(1649, 0, m.Instance(), 0)
+	r1 := customFloatSpinEditImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomFloatSpinEdit) SetValueEmpty(AValue bool) {
-	LCL().SysCallN(1649, 1, m.Instance(), PascalBool(AValue))
+	customFloatSpinEditImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomFloatSpinEdit) GetLimitedValue(AValue float64) (resultDouble float64) {
-	LCL().SysCallN(1643, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&resultDouble)))
+	customFloatSpinEditImportAPI().SysCallN(4, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&resultDouble)))
 	return
 }
 
 func (m *TCustomFloatSpinEdit) ValueToStr(AValue float64) string {
-	r1 := LCL().SysCallN(1650, m.Instance(), uintptr(unsafePointer(&AValue)))
+	r1 := customFloatSpinEditImportAPI().SysCallN(11, m.Instance(), uintptr(unsafePointer(&AValue)))
 	return GoStr(r1)
 }
 
 func (m *TCustomFloatSpinEdit) StrToValue(S string) (resultDouble float64) {
-	LCL().SysCallN(1647, m.Instance(), PascalStr(S), uintptr(unsafePointer(&resultDouble)))
+	customFloatSpinEditImportAPI().SysCallN(8, m.Instance(), PascalStr(S), uintptr(unsafePointer(&resultDouble)))
 	return
 }
 
 func CustomFloatSpinEditClass() TClass {
-	ret := LCL().SysCallN(1639)
+	ret := customFloatSpinEditImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	customFloatSpinEditImport       *imports.Imports = nil
+	customFloatSpinEditImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomFloatSpinEdit_Class", 0),
+		/*1*/ imports.NewTable("CustomFloatSpinEdit_Create", 0),
+		/*2*/ imports.NewTable("CustomFloatSpinEdit_DecimalPlaces", 0),
+		/*3*/ imports.NewTable("CustomFloatSpinEdit_EditorEnabled", 0),
+		/*4*/ imports.NewTable("CustomFloatSpinEdit_GetLimitedValue", 0),
+		/*5*/ imports.NewTable("CustomFloatSpinEdit_Increment", 0),
+		/*6*/ imports.NewTable("CustomFloatSpinEdit_MaxValue", 0),
+		/*7*/ imports.NewTable("CustomFloatSpinEdit_MinValue", 0),
+		/*8*/ imports.NewTable("CustomFloatSpinEdit_StrToValue", 0),
+		/*9*/ imports.NewTable("CustomFloatSpinEdit_Value", 0),
+		/*10*/ imports.NewTable("CustomFloatSpinEdit_ValueEmpty", 0),
+		/*11*/ imports.NewTable("CustomFloatSpinEdit_ValueToStr", 0),
+	}
+)
+
+func customFloatSpinEditImportAPI() *imports.Imports {
+	if customFloatSpinEditImport == nil {
+		customFloatSpinEditImport = NewDefaultImports()
+		customFloatSpinEditImport.SetImportTable(customFloatSpinEditImportTables)
+		customFloatSpinEditImportTables = nil
+	}
+	return customFloatSpinEditImport
 }

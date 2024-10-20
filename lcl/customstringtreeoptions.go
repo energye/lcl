@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TCustomStringTreeOptions struct {
 }
 
 func NewCustomStringTreeOptions(AOwner IBaseVirtualTree) ICustomStringTreeOptions {
-	r1 := LCL().SysCallN(2321, GetObjectUintptr(AOwner))
+	r1 := customStringTreeOptionsImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsCustomStringTreeOptions(r1)
 }
 
 func CustomStringTreeOptionsClass() TClass {
-	ret := LCL().SysCallN(2320)
+	ret := customStringTreeOptionsImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	customStringTreeOptionsImport       *imports.Imports = nil
+	customStringTreeOptionsImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomStringTreeOptions_Class", 0),
+		/*1*/ imports.NewTable("CustomStringTreeOptions_Create", 0),
+	}
+)
+
+func customStringTreeOptionsImportAPI() *imports.Imports {
+	if customStringTreeOptionsImport == nil {
+		customStringTreeOptionsImport = NewDefaultImports()
+		customStringTreeOptionsImport.SetImportTable(customStringTreeOptionsImportTables)
+		customStringTreeOptionsImportTables = nil
+	}
+	return customStringTreeOptionsImport
 }

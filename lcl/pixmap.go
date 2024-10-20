@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TPixmap struct {
 }
 
 func NewPixmap() IPixmap {
-	r1 := LCL().SysCallN(4597)
+	r1 := pixmapImportAPI().SysCallN(1)
 	return AsPixmap(r1)
 }
 
 func PixmapClass() TClass {
-	ret := LCL().SysCallN(4596)
+	ret := pixmapImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	pixmapImport       *imports.Imports = nil
+	pixmapImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Pixmap_Class", 0),
+		/*1*/ imports.NewTable("Pixmap_Create", 0),
+	}
+)
+
+func pixmapImportAPI() *imports.Imports {
+	if pixmapImport == nil {
+		pixmapImport = NewDefaultImports()
+		pixmapImport.SetImportTable(pixmapImportTables)
+		pixmapImportTables = nil
+	}
+	return pixmapImport
 }

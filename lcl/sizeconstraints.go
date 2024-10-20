@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -50,125 +51,125 @@ type TSizeConstraints struct {
 }
 
 func NewSizeConstraints(AControl IControl) ISizeConstraints {
-	r1 := LCL().SysCallN(5050, GetObjectUintptr(AControl))
+	r1 := sizeConstraintsImportAPI().SysCallN(3, GetObjectUintptr(AControl))
 	return AsSizeConstraints(r1)
 }
 
 func (m *TSizeConstraints) MaxInterfaceHeight() int32 {
-	r1 := LCL().SysCallN(5056, m.Instance())
+	r1 := sizeConstraintsImportAPI().SysCallN(9, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) MaxInterfaceWidth() int32 {
-	r1 := LCL().SysCallN(5057, m.Instance())
+	r1 := sizeConstraintsImportAPI().SysCallN(10, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) MinInterfaceHeight() int32 {
-	r1 := LCL().SysCallN(5060, m.Instance())
+	r1 := sizeConstraintsImportAPI().SysCallN(13, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) MinInterfaceWidth() int32 {
-	r1 := LCL().SysCallN(5061, m.Instance())
+	r1 := sizeConstraintsImportAPI().SysCallN(14, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) Control() IControl {
-	r1 := LCL().SysCallN(5049, m.Instance())
+	r1 := sizeConstraintsImportAPI().SysCallN(2, m.Instance())
 	return AsControl(r1)
 }
 
 func (m *TSizeConstraints) Options() TSizeConstraintsOptions {
-	r1 := LCL().SysCallN(5065, 0, m.Instance(), 0)
+	r1 := sizeConstraintsImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return TSizeConstraintsOptions(r1)
 }
 
 func (m *TSizeConstraints) SetOptions(AValue TSizeConstraintsOptions) {
-	LCL().SysCallN(5065, 1, m.Instance(), uintptr(AValue))
+	sizeConstraintsImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSizeConstraints) MaxHeight() TConstraintSize {
-	r1 := LCL().SysCallN(5055, 0, m.Instance(), 0)
+	r1 := sizeConstraintsImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return TConstraintSize(r1)
 }
 
 func (m *TSizeConstraints) SetMaxHeight(AValue TConstraintSize) {
-	LCL().SysCallN(5055, 1, m.Instance(), uintptr(AValue))
+	sizeConstraintsImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSizeConstraints) MaxWidth() TConstraintSize {
-	r1 := LCL().SysCallN(5058, 0, m.Instance(), 0)
+	r1 := sizeConstraintsImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return TConstraintSize(r1)
 }
 
 func (m *TSizeConstraints) SetMaxWidth(AValue TConstraintSize) {
-	LCL().SysCallN(5058, 1, m.Instance(), uintptr(AValue))
+	sizeConstraintsImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSizeConstraints) MinHeight() TConstraintSize {
-	r1 := LCL().SysCallN(5059, 0, m.Instance(), 0)
+	r1 := sizeConstraintsImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return TConstraintSize(r1)
 }
 
 func (m *TSizeConstraints) SetMinHeight(AValue TConstraintSize) {
-	LCL().SysCallN(5059, 1, m.Instance(), uintptr(AValue))
+	sizeConstraintsImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSizeConstraints) MinWidth() TConstraintSize {
-	r1 := LCL().SysCallN(5064, 0, m.Instance(), 0)
+	r1 := sizeConstraintsImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return TConstraintSize(r1)
 }
 
 func (m *TSizeConstraints) SetMinWidth(AValue TConstraintSize) {
-	LCL().SysCallN(5064, 1, m.Instance(), uintptr(AValue))
+	sizeConstraintsImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TSizeConstraints) EffectiveMinWidth() int32 {
-	r1 := LCL().SysCallN(5054, m.Instance())
+	r1 := sizeConstraintsImportAPI().SysCallN(7, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) EffectiveMinHeight() int32 {
-	r1 := LCL().SysCallN(5053, m.Instance())
+	r1 := sizeConstraintsImportAPI().SysCallN(6, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) EffectiveMaxWidth() int32 {
-	r1 := LCL().SysCallN(5052, m.Instance())
+	r1 := sizeConstraintsImportAPI().SysCallN(5, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) EffectiveMaxHeight() int32 {
-	r1 := LCL().SysCallN(5051, m.Instance())
+	r1 := sizeConstraintsImportAPI().SysCallN(4, m.Instance())
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) MinMaxWidth(Width int32) int32 {
-	r1 := LCL().SysCallN(5063, m.Instance(), uintptr(Width))
+	r1 := sizeConstraintsImportAPI().SysCallN(16, m.Instance(), uintptr(Width))
 	return int32(r1)
 }
 
 func (m *TSizeConstraints) MinMaxHeight(Height int32) int32 {
-	r1 := LCL().SysCallN(5062, m.Instance(), uintptr(Height))
+	r1 := sizeConstraintsImportAPI().SysCallN(15, m.Instance(), uintptr(Height))
 	return int32(r1)
 }
 
 func SizeConstraintsClass() TClass {
-	ret := LCL().SysCallN(5048)
+	ret := sizeConstraintsImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TSizeConstraints) UpdateInterfaceConstraints() {
-	LCL().SysCallN(5068, m.Instance())
+	sizeConstraintsImportAPI().SysCallN(21, m.Instance())
 }
 
 func (m *TSizeConstraints) SetInterfaceConstraints(MinW, MinH, MaxW, MaxH int32) {
-	LCL().SysCallN(5066, m.Instance(), uintptr(MinW), uintptr(MinH), uintptr(MaxW), uintptr(MaxH))
+	sizeConstraintsImportAPI().SysCallN(19, m.Instance(), uintptr(MinW), uintptr(MinH), uintptr(MaxW), uintptr(MaxH))
 }
 
 func (m *TSizeConstraints) AutoAdjustLayout(AXProportion, AYProportion float64) {
-	LCL().SysCallN(5047, m.Instance(), uintptr(unsafePointer(&AXProportion)), uintptr(unsafePointer(&AYProportion)))
+	sizeConstraintsImportAPI().SysCallN(0, m.Instance(), uintptr(unsafePointer(&AXProportion)), uintptr(unsafePointer(&AYProportion)))
 }
 
 func (m *TSizeConstraints) SetOnChange(fn TNotifyEvent) {
@@ -176,5 +177,42 @@ func (m *TSizeConstraints) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5067, m.Instance(), m.changePtr)
+	sizeConstraintsImportAPI().SysCallN(20, m.Instance(), m.changePtr)
+}
+
+var (
+	sizeConstraintsImport       *imports.Imports = nil
+	sizeConstraintsImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("SizeConstraints_AutoAdjustLayout", 0),
+		/*1*/ imports.NewTable("SizeConstraints_Class", 0),
+		/*2*/ imports.NewTable("SizeConstraints_Control", 0),
+		/*3*/ imports.NewTable("SizeConstraints_Create", 0),
+		/*4*/ imports.NewTable("SizeConstraints_EffectiveMaxHeight", 0),
+		/*5*/ imports.NewTable("SizeConstraints_EffectiveMaxWidth", 0),
+		/*6*/ imports.NewTable("SizeConstraints_EffectiveMinHeight", 0),
+		/*7*/ imports.NewTable("SizeConstraints_EffectiveMinWidth", 0),
+		/*8*/ imports.NewTable("SizeConstraints_MaxHeight", 0),
+		/*9*/ imports.NewTable("SizeConstraints_MaxInterfaceHeight", 0),
+		/*10*/ imports.NewTable("SizeConstraints_MaxInterfaceWidth", 0),
+		/*11*/ imports.NewTable("SizeConstraints_MaxWidth", 0),
+		/*12*/ imports.NewTable("SizeConstraints_MinHeight", 0),
+		/*13*/ imports.NewTable("SizeConstraints_MinInterfaceHeight", 0),
+		/*14*/ imports.NewTable("SizeConstraints_MinInterfaceWidth", 0),
+		/*15*/ imports.NewTable("SizeConstraints_MinMaxHeight", 0),
+		/*16*/ imports.NewTable("SizeConstraints_MinMaxWidth", 0),
+		/*17*/ imports.NewTable("SizeConstraints_MinWidth", 0),
+		/*18*/ imports.NewTable("SizeConstraints_Options", 0),
+		/*19*/ imports.NewTable("SizeConstraints_SetInterfaceConstraints", 0),
+		/*20*/ imports.NewTable("SizeConstraints_SetOnChange", 0),
+		/*21*/ imports.NewTable("SizeConstraints_UpdateInterfaceConstraints", 0),
+	}
+)
+
+func sizeConstraintsImportAPI() *imports.Imports {
+	if sizeConstraintsImport == nil {
+		sizeConstraintsImport = NewDefaultImports()
+		sizeConstraintsImport.SetImportTable(sizeConstraintsImportTables)
+		sizeConstraintsImportTables = nil
+	}
+	return sizeConstraintsImport
 }

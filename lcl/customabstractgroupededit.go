@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -99,198 +100,198 @@ type TCustomAbstractGroupedEdit struct {
 }
 
 func (m *TCustomAbstractGroupedEdit) AutoSizeHeightIsEditHeight() bool {
-	r1 := LCL().SysCallN(1201, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetAutoSizeHeightIsEditHeight(AValue bool) {
-	LCL().SysCallN(1201, 1, m.Instance(), PascalBool(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) Alignment() TAlignment {
-	r1 := LCL().SysCallN(1200, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TAlignment(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetAlignment(AValue TAlignment) {
-	LCL().SysCallN(1200, 1, m.Instance(), uintptr(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) CanUndo() bool {
-	r1 := LCL().SysCallN(1202, m.Instance())
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(2, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) CaretPos() (resultPoint TPoint) {
-	LCL().SysCallN(1203, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	customAbstractGroupedEditImportAPI().SysCallN(3, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TCustomAbstractGroupedEdit) SetCaretPos(AValue *TPoint) {
-	LCL().SysCallN(1203, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	customAbstractGroupedEditImportAPI().SysCallN(3, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TCustomAbstractGroupedEdit) CharCase() TEditCharCase {
-	r1 := LCL().SysCallN(1204, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TEditCharCase(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetCharCase(AValue TEditCharCase) {
-	LCL().SysCallN(1204, 1, m.Instance(), uintptr(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) ParentColor() bool {
-	r1 := LCL().SysCallN(1215, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetParentColor(AValue bool) {
-	LCL().SysCallN(1215, 1, m.Instance(), PascalBool(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(15, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) EchoMode() TEchoMode {
-	r1 := LCL().SysCallN(1210, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TEchoMode(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetEchoMode(AValue TEchoMode) {
-	LCL().SysCallN(1210, 1, m.Instance(), uintptr(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) HideSelection() bool {
-	r1 := LCL().SysCallN(1211, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetHideSelection(AValue bool) {
-	LCL().SysCallN(1211, 1, m.Instance(), PascalBool(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) MaxLength() int32 {
-	r1 := LCL().SysCallN(1212, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetMaxLength(AValue int32) {
-	LCL().SysCallN(1212, 1, m.Instance(), uintptr(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) Modified() bool {
-	r1 := LCL().SysCallN(1213, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetModified(AValue bool) {
-	LCL().SysCallN(1213, 1, m.Instance(), PascalBool(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) NumbersOnly() bool {
-	r1 := LCL().SysCallN(1214, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetNumbersOnly(AValue bool) {
-	LCL().SysCallN(1214, 1, m.Instance(), PascalBool(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(14, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) PasswordChar() Char {
-	r1 := LCL().SysCallN(1216, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return Char(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetPasswordChar(AValue Char) {
-	LCL().SysCallN(1216, 1, m.Instance(), uintptr(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(16, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) ReadOnly() bool {
-	r1 := LCL().SysCallN(1218, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetReadOnly(AValue bool) {
-	LCL().SysCallN(1218, 1, m.Instance(), PascalBool(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(18, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) SelLength() int32 {
-	r1 := LCL().SysCallN(1219, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetSelLength(AValue int32) {
-	LCL().SysCallN(1219, 1, m.Instance(), uintptr(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) SelStart() int32 {
-	r1 := LCL().SysCallN(1220, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetSelStart(AValue int32) {
-	LCL().SysCallN(1220, 1, m.Instance(), uintptr(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) SelText() string {
-	r1 := LCL().SysCallN(1221, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetSelText(AValue string) {
-	LCL().SysCallN(1221, 1, m.Instance(), PascalStr(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(21, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) Text() string {
-	r1 := LCL().SysCallN(1239, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(39, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetText(AValue string) {
-	LCL().SysCallN(1239, 1, m.Instance(), PascalStr(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(39, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCustomAbstractGroupedEdit) TextHint() string {
-	r1 := LCL().SysCallN(1240, 0, m.Instance(), 0)
+	r1 := customAbstractGroupedEditImportAPI().SysCallN(40, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetTextHint(AValue string) {
-	LCL().SysCallN(1240, 1, m.Instance(), PascalStr(AValue))
+	customAbstractGroupedEditImportAPI().SysCallN(40, 1, m.Instance(), PascalStr(AValue))
 }
 
 func CustomAbstractGroupedEditClass() TClass {
-	ret := LCL().SysCallN(1205)
+	ret := customAbstractGroupedEditImportAPI().SysCallN(5)
 	return TClass(ret)
 }
 
 func (m *TCustomAbstractGroupedEdit) Clear() {
-	LCL().SysCallN(1206, m.Instance())
+	customAbstractGroupedEditImportAPI().SysCallN(6, m.Instance())
 }
 
 func (m *TCustomAbstractGroupedEdit) ClearSelection() {
-	LCL().SysCallN(1207, m.Instance())
+	customAbstractGroupedEditImportAPI().SysCallN(7, m.Instance())
 }
 
 func (m *TCustomAbstractGroupedEdit) CopyToClipboard() {
-	LCL().SysCallN(1208, m.Instance())
+	customAbstractGroupedEditImportAPI().SysCallN(8, m.Instance())
 }
 
 func (m *TCustomAbstractGroupedEdit) CutToClipboard() {
-	LCL().SysCallN(1209, m.Instance())
+	customAbstractGroupedEditImportAPI().SysCallN(9, m.Instance())
 }
 
 func (m *TCustomAbstractGroupedEdit) PasteFromClipboard() {
-	LCL().SysCallN(1217, m.Instance())
+	customAbstractGroupedEditImportAPI().SysCallN(17, m.Instance())
 }
 
 func (m *TCustomAbstractGroupedEdit) SelectAll() {
-	LCL().SysCallN(1222, m.Instance())
+	customAbstractGroupedEditImportAPI().SysCallN(22, m.Instance())
 }
 
 func (m *TCustomAbstractGroupedEdit) Undo() {
-	LCL().SysCallN(1241, m.Instance())
+	customAbstractGroupedEditImportAPI().SysCallN(41, m.Instance())
 }
 
 func (m *TCustomAbstractGroupedEdit) ValidateEdit() {
-	LCL().SysCallN(1242, m.Instance())
+	customAbstractGroupedEditImportAPI().SysCallN(42, m.Instance())
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnChange(fn TNotifyEvent) {
@@ -298,7 +299,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1223, m.Instance(), m.changePtr)
+	customAbstractGroupedEditImportAPI().SysCallN(23, m.Instance(), m.changePtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnContextPopup(fn TContextPopupEvent) {
@@ -306,7 +307,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1224, m.Instance(), m.contextPopupPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(24, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnDblClick(fn TNotifyEvent) {
@@ -314,7 +315,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1225, m.Instance(), m.dblClickPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(25, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnDragDrop(fn TDragDropEvent) {
@@ -322,7 +323,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1226, m.Instance(), m.dragDropPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(26, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnDragOver(fn TDragOverEvent) {
@@ -330,7 +331,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1227, m.Instance(), m.dragOverPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(27, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnEditingDone(fn TNotifyEvent) {
@@ -338,7 +339,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnEditingDone(fn TNotifyEvent) {
 		RemoveEventElement(m.editingDonePtr)
 	}
 	m.editingDonePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1228, m.Instance(), m.editingDonePtr)
+	customAbstractGroupedEditImportAPI().SysCallN(28, m.Instance(), m.editingDonePtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnEndDrag(fn TEndDragEvent) {
@@ -346,7 +347,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1229, m.Instance(), m.endDragPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(29, m.Instance(), m.endDragPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnMouseDown(fn TMouseEvent) {
@@ -354,7 +355,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1230, m.Instance(), m.mouseDownPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(30, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnMouseEnter(fn TNotifyEvent) {
@@ -362,7 +363,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1231, m.Instance(), m.mouseEnterPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(31, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnMouseLeave(fn TNotifyEvent) {
@@ -370,7 +371,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1232, m.Instance(), m.mouseLeavePtr)
+	customAbstractGroupedEditImportAPI().SysCallN(32, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -378,7 +379,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1233, m.Instance(), m.mouseMovePtr)
+	customAbstractGroupedEditImportAPI().SysCallN(33, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -386,7 +387,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1235, m.Instance(), m.mouseWheelPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(35, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -394,7 +395,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1237, m.Instance(), m.mouseWheelUpPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(37, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -402,7 +403,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnMouseWheelDown(fn TMouseWheelUpDownEve
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1236, m.Instance(), m.mouseWheelDownPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(36, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnMouseUp(fn TMouseEvent) {
@@ -410,7 +411,7 @@ func (m *TCustomAbstractGroupedEdit) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1234, m.Instance(), m.mouseUpPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(34, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TCustomAbstractGroupedEdit) SetOnStartDrag(fn TStartDragEvent) {
@@ -418,5 +419,63 @@ func (m *TCustomAbstractGroupedEdit) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1238, m.Instance(), m.startDragPtr)
+	customAbstractGroupedEditImportAPI().SysCallN(38, m.Instance(), m.startDragPtr)
+}
+
+var (
+	customAbstractGroupedEditImport       *imports.Imports = nil
+	customAbstractGroupedEditImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomAbstractGroupedEdit_Alignment", 0),
+		/*1*/ imports.NewTable("CustomAbstractGroupedEdit_AutoSizeHeightIsEditHeight", 0),
+		/*2*/ imports.NewTable("CustomAbstractGroupedEdit_CanUndo", 0),
+		/*3*/ imports.NewTable("CustomAbstractGroupedEdit_CaretPos", 0),
+		/*4*/ imports.NewTable("CustomAbstractGroupedEdit_CharCase", 0),
+		/*5*/ imports.NewTable("CustomAbstractGroupedEdit_Class", 0),
+		/*6*/ imports.NewTable("CustomAbstractGroupedEdit_Clear", 0),
+		/*7*/ imports.NewTable("CustomAbstractGroupedEdit_ClearSelection", 0),
+		/*8*/ imports.NewTable("CustomAbstractGroupedEdit_CopyToClipboard", 0),
+		/*9*/ imports.NewTable("CustomAbstractGroupedEdit_CutToClipboard", 0),
+		/*10*/ imports.NewTable("CustomAbstractGroupedEdit_EchoMode", 0),
+		/*11*/ imports.NewTable("CustomAbstractGroupedEdit_HideSelection", 0),
+		/*12*/ imports.NewTable("CustomAbstractGroupedEdit_MaxLength", 0),
+		/*13*/ imports.NewTable("CustomAbstractGroupedEdit_Modified", 0),
+		/*14*/ imports.NewTable("CustomAbstractGroupedEdit_NumbersOnly", 0),
+		/*15*/ imports.NewTable("CustomAbstractGroupedEdit_ParentColor", 0),
+		/*16*/ imports.NewTable("CustomAbstractGroupedEdit_PasswordChar", 0),
+		/*17*/ imports.NewTable("CustomAbstractGroupedEdit_PasteFromClipboard", 0),
+		/*18*/ imports.NewTable("CustomAbstractGroupedEdit_ReadOnly", 0),
+		/*19*/ imports.NewTable("CustomAbstractGroupedEdit_SelLength", 0),
+		/*20*/ imports.NewTable("CustomAbstractGroupedEdit_SelStart", 0),
+		/*21*/ imports.NewTable("CustomAbstractGroupedEdit_SelText", 0),
+		/*22*/ imports.NewTable("CustomAbstractGroupedEdit_SelectAll", 0),
+		/*23*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnChange", 0),
+		/*24*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnContextPopup", 0),
+		/*25*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnDblClick", 0),
+		/*26*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnDragDrop", 0),
+		/*27*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnDragOver", 0),
+		/*28*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnEditingDone", 0),
+		/*29*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnEndDrag", 0),
+		/*30*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnMouseDown", 0),
+		/*31*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnMouseEnter", 0),
+		/*32*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnMouseLeave", 0),
+		/*33*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnMouseMove", 0),
+		/*34*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnMouseUp", 0),
+		/*35*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnMouseWheel", 0),
+		/*36*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnMouseWheelDown", 0),
+		/*37*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnMouseWheelUp", 0),
+		/*38*/ imports.NewTable("CustomAbstractGroupedEdit_SetOnStartDrag", 0),
+		/*39*/ imports.NewTable("CustomAbstractGroupedEdit_Text", 0),
+		/*40*/ imports.NewTable("CustomAbstractGroupedEdit_TextHint", 0),
+		/*41*/ imports.NewTable("CustomAbstractGroupedEdit_Undo", 0),
+		/*42*/ imports.NewTable("CustomAbstractGroupedEdit_ValidateEdit", 0),
+	}
+)
+
+func customAbstractGroupedEditImportAPI() *imports.Imports {
+	if customAbstractGroupedEditImport == nil {
+		customAbstractGroupedEditImport = NewDefaultImports()
+		customAbstractGroupedEditImport.SetImportTable(customAbstractGroupedEditImportTables)
+		customAbstractGroupedEditImportTables = nil
+	}
+	return customAbstractGroupedEditImport
 }

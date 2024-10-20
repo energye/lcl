@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -44,30 +45,30 @@ type TCheckListBox struct {
 }
 
 func NewCheckListBox(AOwner IComponent) ICheckListBox {
-	r1 := LCL().SysCallN(643, GetObjectUintptr(AOwner))
+	r1 := checkListBoxImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsCheckListBox(r1)
 }
 
 func (m *TCheckListBox) DragCursor() TCursor {
-	r1 := LCL().SysCallN(644, 0, m.Instance(), 0)
+	r1 := checkListBoxImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TCheckListBox) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(644, 1, m.Instance(), uintptr(AValue))
+	checkListBoxImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCheckListBox) DragMode() TDragMode {
-	r1 := LCL().SysCallN(645, 0, m.Instance(), 0)
+	r1 := checkListBoxImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TCheckListBox) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(645, 1, m.Instance(), uintptr(AValue))
+	checkListBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func CheckListBoxClass() TClass {
-	ret := LCL().SysCallN(642)
+	ret := checkListBoxImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -76,7 +77,7 @@ func (m *TCheckListBox) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(646, m.Instance(), m.contextPopupPtr)
+	checkListBoxImportAPI().SysCallN(4, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TCheckListBox) SetOnDragDrop(fn TDragDropEvent) {
@@ -84,7 +85,7 @@ func (m *TCheckListBox) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(647, m.Instance(), m.dragDropPtr)
+	checkListBoxImportAPI().SysCallN(5, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TCheckListBox) SetOnDragOver(fn TDragOverEvent) {
@@ -92,7 +93,7 @@ func (m *TCheckListBox) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(648, m.Instance(), m.dragOverPtr)
+	checkListBoxImportAPI().SysCallN(6, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TCheckListBox) SetOnEndDrag(fn TEndDragEvent) {
@@ -100,7 +101,7 @@ func (m *TCheckListBox) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(649, m.Instance(), m.endDragPtr)
+	checkListBoxImportAPI().SysCallN(7, m.Instance(), m.endDragPtr)
 }
 
 func (m *TCheckListBox) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -108,7 +109,7 @@ func (m *TCheckListBox) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(650, m.Instance(), m.mouseWheelHorzPtr)
+	checkListBoxImportAPI().SysCallN(8, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TCheckListBox) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -116,7 +117,7 @@ func (m *TCheckListBox) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(651, m.Instance(), m.mouseWheelLeftPtr)
+	checkListBoxImportAPI().SysCallN(9, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TCheckListBox) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -124,7 +125,7 @@ func (m *TCheckListBox) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(652, m.Instance(), m.mouseWheelRightPtr)
+	checkListBoxImportAPI().SysCallN(10, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TCheckListBox) SetOnStartDrag(fn TStartDragEvent) {
@@ -132,5 +133,32 @@ func (m *TCheckListBox) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(653, m.Instance(), m.startDragPtr)
+	checkListBoxImportAPI().SysCallN(11, m.Instance(), m.startDragPtr)
+}
+
+var (
+	checkListBoxImport       *imports.Imports = nil
+	checkListBoxImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CheckListBox_Class", 0),
+		/*1*/ imports.NewTable("CheckListBox_Create", 0),
+		/*2*/ imports.NewTable("CheckListBox_DragCursor", 0),
+		/*3*/ imports.NewTable("CheckListBox_DragMode", 0),
+		/*4*/ imports.NewTable("CheckListBox_SetOnContextPopup", 0),
+		/*5*/ imports.NewTable("CheckListBox_SetOnDragDrop", 0),
+		/*6*/ imports.NewTable("CheckListBox_SetOnDragOver", 0),
+		/*7*/ imports.NewTable("CheckListBox_SetOnEndDrag", 0),
+		/*8*/ imports.NewTable("CheckListBox_SetOnMouseWheelHorz", 0),
+		/*9*/ imports.NewTable("CheckListBox_SetOnMouseWheelLeft", 0),
+		/*10*/ imports.NewTable("CheckListBox_SetOnMouseWheelRight", 0),
+		/*11*/ imports.NewTable("CheckListBox_SetOnStartDrag", 0),
+	}
+)
+
+func checkListBoxImportAPI() *imports.Imports {
+	if checkListBoxImport == nil {
+		checkListBoxImport = NewDefaultImports()
+		checkListBoxImport.SetImportTable(checkListBoxImportTables)
+		checkListBoxImportTables = nil
+	}
+	return checkListBoxImport
 }

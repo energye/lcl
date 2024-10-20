@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -42,83 +43,83 @@ type TCustomCheckCombo struct {
 }
 
 func NewCustomCheckCombo(AOwner IComponent) ICustomCheckCombo {
-	r1 := LCL().SysCallN(1371, GetObjectUintptr(AOwner))
+	r1 := customCheckComboImportAPI().SysCallN(7, GetObjectUintptr(AOwner))
 	return AsCustomCheckCombo(r1)
 }
 
 func (m *TCustomCheckCombo) AllowGrayed() bool {
-	r1 := LCL().SysCallN(1365, 0, m.Instance(), 0)
+	r1 := customCheckComboImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomCheckCombo) SetAllowGrayed(AValue bool) {
-	LCL().SysCallN(1365, 1, m.Instance(), PascalBool(AValue))
+	customCheckComboImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomCheckCombo) Count() int32 {
-	r1 := LCL().SysCallN(1370, m.Instance())
+	r1 := customCheckComboImportAPI().SysCallN(6, m.Instance())
 	return int32(r1)
 }
 
 func (m *TCustomCheckCombo) Checked(AIndex int32) bool {
-	r1 := LCL().SysCallN(1368, 0, m.Instance(), uintptr(AIndex))
+	r1 := customCheckComboImportAPI().SysCallN(4, 0, m.Instance(), uintptr(AIndex))
 	return GoBool(r1)
 }
 
 func (m *TCustomCheckCombo) SetChecked(AIndex int32, AValue bool) {
-	LCL().SysCallN(1368, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
+	customCheckComboImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
 }
 
 func (m *TCustomCheckCombo) ItemEnabled(AIndex int32) bool {
-	r1 := LCL().SysCallN(1373, 0, m.Instance(), uintptr(AIndex))
+	r1 := customCheckComboImportAPI().SysCallN(9, 0, m.Instance(), uintptr(AIndex))
 	return GoBool(r1)
 }
 
 func (m *TCustomCheckCombo) SetItemEnabled(AIndex int32, AValue bool) {
-	LCL().SysCallN(1373, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
+	customCheckComboImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
 }
 
 func (m *TCustomCheckCombo) Objects(AIndex int32) IObject {
-	r1 := LCL().SysCallN(1374, 0, m.Instance(), uintptr(AIndex))
+	r1 := customCheckComboImportAPI().SysCallN(10, 0, m.Instance(), uintptr(AIndex))
 	return AsObject(r1)
 }
 
 func (m *TCustomCheckCombo) SetObjects(AIndex int32, AValue IObject) {
-	LCL().SysCallN(1374, 1, m.Instance(), uintptr(AIndex), GetObjectUintptr(AValue))
+	customCheckComboImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AIndex), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomCheckCombo) State(AIndex int32) TCheckBoxState {
-	r1 := LCL().SysCallN(1376, 0, m.Instance(), uintptr(AIndex))
+	r1 := customCheckComboImportAPI().SysCallN(12, 0, m.Instance(), uintptr(AIndex))
 	return TCheckBoxState(r1)
 }
 
 func (m *TCustomCheckCombo) SetState(AIndex int32, AValue TCheckBoxState) {
-	LCL().SysCallN(1376, 1, m.Instance(), uintptr(AIndex), uintptr(AValue))
+	customCheckComboImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AIndex), uintptr(AValue))
 }
 
 func CustomCheckComboClass() TClass {
-	ret := LCL().SysCallN(1369)
+	ret := customCheckComboImportAPI().SysCallN(5)
 	return TClass(ret)
 }
 
 func (m *TCustomCheckCombo) AddItemForPChar(AItem string, AState TCheckBoxState, AEnabled bool) {
-	LCL().SysCallN(1364, m.Instance(), PascalStr(AItem), uintptr(AState), PascalBool(AEnabled))
+	customCheckComboImportAPI().SysCallN(0, m.Instance(), PascalStr(AItem), uintptr(AState), PascalBool(AEnabled))
 }
 
 func (m *TCustomCheckCombo) AssignItems(AItems IStrings) {
-	LCL().SysCallN(1366, m.Instance(), GetObjectUintptr(AItems))
+	customCheckComboImportAPI().SysCallN(2, m.Instance(), GetObjectUintptr(AItems))
 }
 
 func (m *TCustomCheckCombo) DeleteItem(AIndex int32) {
-	LCL().SysCallN(1372, m.Instance(), uintptr(AIndex))
+	customCheckComboImportAPI().SysCallN(8, m.Instance(), uintptr(AIndex))
 }
 
 func (m *TCustomCheckCombo) CheckAll(AState TCheckBoxState, AAllowGrayed bool, AAllowDisabled bool) {
-	LCL().SysCallN(1367, m.Instance(), uintptr(AState), PascalBool(AAllowGrayed), PascalBool(AAllowDisabled))
+	customCheckComboImportAPI().SysCallN(3, m.Instance(), uintptr(AState), PascalBool(AAllowGrayed), PascalBool(AAllowDisabled))
 }
 
 func (m *TCustomCheckCombo) Toggle(AIndex int32) {
-	LCL().SysCallN(1377, m.Instance(), uintptr(AIndex))
+	customCheckComboImportAPI().SysCallN(13, m.Instance(), uintptr(AIndex))
 }
 
 func (m *TCustomCheckCombo) SetOnItemChange(fn TCheckItemChange) {
@@ -126,5 +127,34 @@ func (m *TCustomCheckCombo) SetOnItemChange(fn TCheckItemChange) {
 		RemoveEventElement(m.itemChangePtr)
 	}
 	m.itemChangePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1375, m.Instance(), m.itemChangePtr)
+	customCheckComboImportAPI().SysCallN(11, m.Instance(), m.itemChangePtr)
+}
+
+var (
+	customCheckComboImport       *imports.Imports = nil
+	customCheckComboImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomCheckCombo_AddItemForPChar", 0),
+		/*1*/ imports.NewTable("CustomCheckCombo_AllowGrayed", 0),
+		/*2*/ imports.NewTable("CustomCheckCombo_AssignItems", 0),
+		/*3*/ imports.NewTable("CustomCheckCombo_CheckAll", 0),
+		/*4*/ imports.NewTable("CustomCheckCombo_Checked", 0),
+		/*5*/ imports.NewTable("CustomCheckCombo_Class", 0),
+		/*6*/ imports.NewTable("CustomCheckCombo_Count", 0),
+		/*7*/ imports.NewTable("CustomCheckCombo_Create", 0),
+		/*8*/ imports.NewTable("CustomCheckCombo_DeleteItem", 0),
+		/*9*/ imports.NewTable("CustomCheckCombo_ItemEnabled", 0),
+		/*10*/ imports.NewTable("CustomCheckCombo_Objects", 0),
+		/*11*/ imports.NewTable("CustomCheckCombo_SetOnItemChange", 0),
+		/*12*/ imports.NewTable("CustomCheckCombo_State", 0),
+		/*13*/ imports.NewTable("CustomCheckCombo_Toggle", 0),
+	}
+)
+
+func customCheckComboImportAPI() *imports.Imports {
+	if customCheckComboImport == nil {
+		customCheckComboImport = NewDefaultImports()
+		customCheckComboImport.SetImportTable(customCheckComboImportTables)
+		customCheckComboImportTables = nil
+	}
+	return customCheckComboImport
 }

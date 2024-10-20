@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -82,84 +83,84 @@ type TFrame struct {
 }
 
 func NewFrame(TheOwner IComponent) IFrame {
-	r1 := LCL().SysCallN(3160, GetObjectUintptr(TheOwner))
+	r1 := frameImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
 	return AsFrame(r1)
 }
 
 func (m *TFrame) AutoScroll() bool {
-	r1 := LCL().SysCallN(3158, 0, m.Instance(), 0)
+	r1 := frameImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFrame) SetAutoScroll(AValue bool) {
-	LCL().SysCallN(3158, 1, m.Instance(), PascalBool(AValue))
+	frameImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFrame) DragCursor() TCursor {
-	r1 := LCL().SysCallN(3161, 0, m.Instance(), 0)
+	r1 := frameImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TFrame) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(3161, 1, m.Instance(), uintptr(AValue))
+	frameImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFrame) DragKind() TDragKind {
-	r1 := LCL().SysCallN(3162, 0, m.Instance(), 0)
+	r1 := frameImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TFrame) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(3162, 1, m.Instance(), uintptr(AValue))
+	frameImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFrame) DragMode() TDragMode {
-	r1 := LCL().SysCallN(3163, 0, m.Instance(), 0)
+	r1 := frameImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TFrame) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(3163, 1, m.Instance(), uintptr(AValue))
+	frameImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TFrame) LCLVersion() string {
-	r1 := LCL().SysCallN(3164, 0, m.Instance(), 0)
+	r1 := frameImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TFrame) SetLCLVersion(AValue string) {
-	LCL().SysCallN(3164, 1, m.Instance(), PascalStr(AValue))
+	frameImportAPI().SysCallN(6, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TFrame) ParentColor() bool {
-	r1 := LCL().SysCallN(3165, 0, m.Instance(), 0)
+	r1 := frameImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFrame) SetParentColor(AValue bool) {
-	LCL().SysCallN(3165, 1, m.Instance(), PascalBool(AValue))
+	frameImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFrame) ParentFont() bool {
-	r1 := LCL().SysCallN(3166, 0, m.Instance(), 0)
+	r1 := frameImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFrame) SetParentFont(AValue bool) {
-	LCL().SysCallN(3166, 1, m.Instance(), PascalBool(AValue))
+	frameImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TFrame) ParentShowHint() bool {
-	r1 := LCL().SysCallN(3167, 0, m.Instance(), 0)
+	r1 := frameImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TFrame) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(3167, 1, m.Instance(), PascalBool(AValue))
+	frameImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
 }
 
 func FrameClass() TClass {
-	ret := LCL().SysCallN(3159)
+	ret := frameImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
@@ -168,7 +169,7 @@ func (m *TFrame) SetOnConstrainedResize(fn TConstrainedResizeEvent) {
 		RemoveEventElement(m.constrainedResizePtr)
 	}
 	m.constrainedResizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3168, m.Instance(), m.constrainedResizePtr)
+	frameImportAPI().SysCallN(10, m.Instance(), m.constrainedResizePtr)
 }
 
 func (m *TFrame) SetOnContextPopup(fn TContextPopupEvent) {
@@ -176,7 +177,7 @@ func (m *TFrame) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3169, m.Instance(), m.contextPopupPtr)
+	frameImportAPI().SysCallN(11, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TFrame) SetOnDblClick(fn TNotifyEvent) {
@@ -184,7 +185,7 @@ func (m *TFrame) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3170, m.Instance(), m.dblClickPtr)
+	frameImportAPI().SysCallN(12, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TFrame) SetOnDragDrop(fn TDragDropEvent) {
@@ -192,7 +193,7 @@ func (m *TFrame) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3171, m.Instance(), m.dragDropPtr)
+	frameImportAPI().SysCallN(13, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TFrame) SetOnDragOver(fn TDragOverEvent) {
@@ -200,7 +201,7 @@ func (m *TFrame) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3172, m.Instance(), m.dragOverPtr)
+	frameImportAPI().SysCallN(14, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TFrame) SetOnEndDock(fn TEndDragEvent) {
@@ -208,7 +209,7 @@ func (m *TFrame) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3173, m.Instance(), m.endDockPtr)
+	frameImportAPI().SysCallN(15, m.Instance(), m.endDockPtr)
 }
 
 func (m *TFrame) SetOnEndDrag(fn TEndDragEvent) {
@@ -216,7 +217,7 @@ func (m *TFrame) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3174, m.Instance(), m.endDragPtr)
+	frameImportAPI().SysCallN(16, m.Instance(), m.endDragPtr)
 }
 
 func (m *TFrame) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
@@ -224,7 +225,7 @@ func (m *TFrame) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
 		RemoveEventElement(m.getSiteInfoPtr)
 	}
 	m.getSiteInfoPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3175, m.Instance(), m.getSiteInfoPtr)
+	frameImportAPI().SysCallN(17, m.Instance(), m.getSiteInfoPtr)
 }
 
 func (m *TFrame) SetOnMouseDown(fn TMouseEvent) {
@@ -232,7 +233,7 @@ func (m *TFrame) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3176, m.Instance(), m.mouseDownPtr)
+	frameImportAPI().SysCallN(18, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TFrame) SetOnMouseEnter(fn TNotifyEvent) {
@@ -240,7 +241,7 @@ func (m *TFrame) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3177, m.Instance(), m.mouseEnterPtr)
+	frameImportAPI().SysCallN(19, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TFrame) SetOnMouseLeave(fn TNotifyEvent) {
@@ -248,7 +249,7 @@ func (m *TFrame) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3178, m.Instance(), m.mouseLeavePtr)
+	frameImportAPI().SysCallN(20, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TFrame) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -256,7 +257,7 @@ func (m *TFrame) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3179, m.Instance(), m.mouseMovePtr)
+	frameImportAPI().SysCallN(21, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TFrame) SetOnMouseUp(fn TMouseEvent) {
@@ -264,7 +265,7 @@ func (m *TFrame) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3180, m.Instance(), m.mouseUpPtr)
+	frameImportAPI().SysCallN(22, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TFrame) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -272,7 +273,7 @@ func (m *TFrame) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3181, m.Instance(), m.mouseWheelPtr)
+	frameImportAPI().SysCallN(23, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TFrame) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -280,7 +281,7 @@ func (m *TFrame) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3182, m.Instance(), m.mouseWheelDownPtr)
+	frameImportAPI().SysCallN(24, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TFrame) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -288,7 +289,7 @@ func (m *TFrame) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3186, m.Instance(), m.mouseWheelUpPtr)
+	frameImportAPI().SysCallN(28, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TFrame) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -296,7 +297,7 @@ func (m *TFrame) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3183, m.Instance(), m.mouseWheelHorzPtr)
+	frameImportAPI().SysCallN(25, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TFrame) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -304,7 +305,7 @@ func (m *TFrame) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3184, m.Instance(), m.mouseWheelLeftPtr)
+	frameImportAPI().SysCallN(26, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TFrame) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -312,7 +313,7 @@ func (m *TFrame) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3185, m.Instance(), m.mouseWheelRightPtr)
+	frameImportAPI().SysCallN(27, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TFrame) SetOnStartDock(fn TStartDockEvent) {
@@ -320,7 +321,7 @@ func (m *TFrame) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3187, m.Instance(), m.startDockPtr)
+	frameImportAPI().SysCallN(29, m.Instance(), m.startDockPtr)
 }
 
 func (m *TFrame) SetOnStartDrag(fn TStartDragEvent) {
@@ -328,5 +329,51 @@ func (m *TFrame) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3188, m.Instance(), m.startDragPtr)
+	frameImportAPI().SysCallN(30, m.Instance(), m.startDragPtr)
+}
+
+var (
+	frameImport       *imports.Imports = nil
+	frameImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Frame_AutoScroll", 0),
+		/*1*/ imports.NewTable("Frame_Class", 0),
+		/*2*/ imports.NewTable("Frame_Create", 0),
+		/*3*/ imports.NewTable("Frame_DragCursor", 0),
+		/*4*/ imports.NewTable("Frame_DragKind", 0),
+		/*5*/ imports.NewTable("Frame_DragMode", 0),
+		/*6*/ imports.NewTable("Frame_LCLVersion", 0),
+		/*7*/ imports.NewTable("Frame_ParentColor", 0),
+		/*8*/ imports.NewTable("Frame_ParentFont", 0),
+		/*9*/ imports.NewTable("Frame_ParentShowHint", 0),
+		/*10*/ imports.NewTable("Frame_SetOnConstrainedResize", 0),
+		/*11*/ imports.NewTable("Frame_SetOnContextPopup", 0),
+		/*12*/ imports.NewTable("Frame_SetOnDblClick", 0),
+		/*13*/ imports.NewTable("Frame_SetOnDragDrop", 0),
+		/*14*/ imports.NewTable("Frame_SetOnDragOver", 0),
+		/*15*/ imports.NewTable("Frame_SetOnEndDock", 0),
+		/*16*/ imports.NewTable("Frame_SetOnEndDrag", 0),
+		/*17*/ imports.NewTable("Frame_SetOnGetSiteInfo", 0),
+		/*18*/ imports.NewTable("Frame_SetOnMouseDown", 0),
+		/*19*/ imports.NewTable("Frame_SetOnMouseEnter", 0),
+		/*20*/ imports.NewTable("Frame_SetOnMouseLeave", 0),
+		/*21*/ imports.NewTable("Frame_SetOnMouseMove", 0),
+		/*22*/ imports.NewTable("Frame_SetOnMouseUp", 0),
+		/*23*/ imports.NewTable("Frame_SetOnMouseWheel", 0),
+		/*24*/ imports.NewTable("Frame_SetOnMouseWheelDown", 0),
+		/*25*/ imports.NewTable("Frame_SetOnMouseWheelHorz", 0),
+		/*26*/ imports.NewTable("Frame_SetOnMouseWheelLeft", 0),
+		/*27*/ imports.NewTable("Frame_SetOnMouseWheelRight", 0),
+		/*28*/ imports.NewTable("Frame_SetOnMouseWheelUp", 0),
+		/*29*/ imports.NewTable("Frame_SetOnStartDock", 0),
+		/*30*/ imports.NewTable("Frame_SetOnStartDrag", 0),
+	}
+)
+
+func frameImportAPI() *imports.Imports {
+	if frameImport == nil {
+		frameImport = NewDefaultImports()
+		frameImport.SetImportTable(frameImportTables)
+		frameImportTables = nil
+	}
+	return frameImport
 }

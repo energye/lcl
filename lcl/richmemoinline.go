@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -28,28 +29,49 @@ type TRichMemoInline struct {
 }
 
 func NewRichMemoInline() IRichMemoInline {
-	r1 := LCL().SysCallN(4859)
+	r1 := richMemoInlineImportAPI().SysCallN(1)
 	return AsRichMemoInline(r1)
 }
 
 func (m *TRichMemoInline) Owner() ICustomRichMemo {
-	r1 := LCL().SysCallN(4862, m.Instance())
+	r1 := richMemoInlineImportAPI().SysCallN(4, m.Instance())
 	return AsCustomRichMemo(r1)
 }
 
 func RichMemoInlineClass() TClass {
-	ret := LCL().SysCallN(4858)
+	ret := richMemoInlineImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TRichMemoInline) Draw(Canvas ICanvas, ASize *TSize) {
-	LCL().SysCallN(4860, m.Instance(), GetObjectUintptr(Canvas), uintptr(unsafePointer(ASize)))
+	richMemoInlineImportAPI().SysCallN(2, m.Instance(), GetObjectUintptr(Canvas), uintptr(unsafePointer(ASize)))
 }
 
 func (m *TRichMemoInline) SetVisible(AVisible bool) {
-	LCL().SysCallN(4863, m.Instance(), PascalBool(AVisible))
+	richMemoInlineImportAPI().SysCallN(5, m.Instance(), PascalBool(AVisible))
 }
 
 func (m *TRichMemoInline) Invalidate() {
-	LCL().SysCallN(4861, m.Instance())
+	richMemoInlineImportAPI().SysCallN(3, m.Instance())
+}
+
+var (
+	richMemoInlineImport       *imports.Imports = nil
+	richMemoInlineImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("RichMemoInline_Class", 0),
+		/*1*/ imports.NewTable("RichMemoInline_Create", 0),
+		/*2*/ imports.NewTable("RichMemoInline_Draw", 0),
+		/*3*/ imports.NewTable("RichMemoInline_Invalidate", 0),
+		/*4*/ imports.NewTable("RichMemoInline_Owner", 0),
+		/*5*/ imports.NewTable("RichMemoInline_SetVisible", 0),
+	}
+)
+
+func richMemoInlineImportAPI() *imports.Imports {
+	if richMemoInlineImport == nil {
+		richMemoInlineImport = NewDefaultImports()
+		richMemoInlineImport.SetImportTable(richMemoInlineImportTables)
+		richMemoInlineImportTables = nil
+	}
+	return richMemoInlineImport
 }

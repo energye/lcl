@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -111,388 +112,388 @@ type TCustomImageList struct {
 }
 
 func NewCustomImageList(AOwner IComponent) ICustomImageList {
-	r1 := LCL().SysCallN(1859, GetObjectUintptr(AOwner))
+	r1 := customImageListImportAPI().SysCallN(18, GetObjectUintptr(AOwner))
 	return AsCustomImageList(r1)
 }
 
 func NewCustomImageListSize(AWidth, AHeight int32) ICustomImageList {
-	r1 := LCL().SysCallN(1860, uintptr(AWidth), uintptr(AHeight))
+	r1 := customImageListImportAPI().SysCallN(19, uintptr(AWidth), uintptr(AHeight))
 	return AsCustomImageList(r1)
 }
 
 func (m *TCustomImageList) HasOverlays() bool {
-	r1 := LCL().SysCallN(1883, m.Instance())
+	r1 := customImageListImportAPI().SysCallN(42, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TCustomImageList) AllocBy() int32 {
-	r1 := LCL().SysCallN(1850, 0, m.Instance(), 0)
+	r1 := customImageListImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomImageList) SetAllocBy(AValue int32) {
-	LCL().SysCallN(1850, 1, m.Instance(), uintptr(AValue))
+	customImageListImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomImageList) BlendColor() TColor {
-	r1 := LCL().SysCallN(1854, 0, m.Instance(), 0)
+	r1 := customImageListImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomImageList) SetBlendColor(AValue TColor) {
-	LCL().SysCallN(1854, 1, m.Instance(), uintptr(AValue))
+	customImageListImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomImageList) BkColor() TColor {
-	r1 := LCL().SysCallN(1853, 0, m.Instance(), 0)
+	r1 := customImageListImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TCustomImageList) SetBkColor(AValue TColor) {
-	LCL().SysCallN(1853, 1, m.Instance(), uintptr(AValue))
+	customImageListImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomImageList) Count() int32 {
-	r1 := LCL().SysCallN(1858, m.Instance())
+	r1 := customImageListImportAPI().SysCallN(17, m.Instance())
 	return int32(r1)
 }
 
 func (m *TCustomImageList) DrawingStyle() TDrawingStyle {
-	r1 := LCL().SysCallN(1872, 0, m.Instance(), 0)
+	r1 := customImageListImportAPI().SysCallN(31, 0, m.Instance(), 0)
 	return TDrawingStyle(r1)
 }
 
 func (m *TCustomImageList) SetDrawingStyle(AValue TDrawingStyle) {
-	LCL().SysCallN(1872, 1, m.Instance(), uintptr(AValue))
+	customImageListImportAPI().SysCallN(31, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomImageList) Height() int32 {
-	r1 := LCL().SysCallN(1884, 0, m.Instance(), 0)
+	r1 := customImageListImportAPI().SysCallN(43, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomImageList) SetHeight(AValue int32) {
-	LCL().SysCallN(1884, 1, m.Instance(), uintptr(AValue))
+	customImageListImportAPI().SysCallN(43, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomImageList) HeightForPPI(AImageWidth, APPI int32) int32 {
-	r1 := LCL().SysCallN(1885, m.Instance(), uintptr(AImageWidth), uintptr(APPI))
+	r1 := customImageListImportAPI().SysCallN(44, m.Instance(), uintptr(AImageWidth), uintptr(APPI))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) HeightForWidth(AWidth int32) int32 {
-	r1 := LCL().SysCallN(1886, m.Instance(), uintptr(AWidth))
+	r1 := customImageListImportAPI().SysCallN(45, m.Instance(), uintptr(AWidth))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) Width() int32 {
-	r1 := LCL().SysCallN(1915, 0, m.Instance(), 0)
+	r1 := customImageListImportAPI().SysCallN(74, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomImageList) SetWidth(AValue int32) {
-	LCL().SysCallN(1915, 1, m.Instance(), uintptr(AValue))
+	customImageListImportAPI().SysCallN(74, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomImageList) WidthForPPI(AImageWidth, APPI int32) int32 {
-	r1 := LCL().SysCallN(1916, m.Instance(), uintptr(AImageWidth), uintptr(APPI))
+	r1 := customImageListImportAPI().SysCallN(75, m.Instance(), uintptr(AImageWidth), uintptr(APPI))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) SizeForPPI(AImageWidth, APPI int32) (resultSize TSize) {
-	LCL().SysCallN(1912, m.Instance(), uintptr(AImageWidth), uintptr(APPI), uintptr(unsafePointer(&resultSize)))
+	customImageListImportAPI().SysCallN(71, m.Instance(), uintptr(AImageWidth), uintptr(APPI), uintptr(unsafePointer(&resultSize)))
 	return
 }
 
 func (m *TCustomImageList) Masked() bool {
-	r1 := LCL().SysCallN(1891, 0, m.Instance(), 0)
+	r1 := customImageListImportAPI().SysCallN(50, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImageList) SetMasked(AValue bool) {
-	LCL().SysCallN(1891, 1, m.Instance(), PascalBool(AValue))
+	customImageListImportAPI().SysCallN(50, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImageList) Resolution(AImageWidth int32) ICustomImageListResolution {
-	r1 := LCL().SysCallN(1902, m.Instance(), uintptr(AImageWidth))
+	r1 := customImageListImportAPI().SysCallN(61, m.Instance(), uintptr(AImageWidth))
 	return AsCustomImageListResolution(r1)
 }
 
 func (m *TCustomImageList) ResolutionByIndex(AIndex int32) ICustomImageListResolution {
-	r1 := LCL().SysCallN(1903, m.Instance(), uintptr(AIndex))
+	r1 := customImageListImportAPI().SysCallN(62, m.Instance(), uintptr(AIndex))
 	return AsCustomImageListResolution(r1)
 }
 
 func (m *TCustomImageList) ResolutionForPPI(AImageWidth, APPI int32, ACanvasScaleFactor float64) (resultScaledImageListResolution TScaledImageListResolution) {
-	r1 := LCL().SysCallN(1905, m.Instance(), uintptr(AImageWidth), uintptr(APPI), uintptr(unsafePointer(&ACanvasScaleFactor)))
+	r1 := customImageListImportAPI().SysCallN(64, m.Instance(), uintptr(AImageWidth), uintptr(APPI), uintptr(unsafePointer(&ACanvasScaleFactor)))
 	return *(*TScaledImageListResolution)(getPointer(r1))
 }
 
 func (m *TCustomImageList) ResolutionCount() int32 {
-	r1 := LCL().SysCallN(1904, m.Instance())
+	r1 := customImageListImportAPI().SysCallN(63, m.Instance())
 	return int32(r1)
 }
 
 func (m *TCustomImageList) Scaled() bool {
-	r1 := LCL().SysCallN(1908, 0, m.Instance(), 0)
+	r1 := customImageListImportAPI().SysCallN(67, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImageList) SetScaled(AValue bool) {
-	LCL().SysCallN(1908, 1, m.Instance(), PascalBool(AValue))
+	customImageListImportAPI().SysCallN(67, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImageList) ShareImages() bool {
-	r1 := LCL().SysCallN(1911, 0, m.Instance(), 0)
+	r1 := customImageListImportAPI().SysCallN(70, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomImageList) SetShareImages(AValue bool) {
-	LCL().SysCallN(1911, 1, m.Instance(), PascalBool(AValue))
+	customImageListImportAPI().SysCallN(70, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomImageList) ImageType() TImageType {
-	r1 := LCL().SysCallN(1887, 0, m.Instance(), 0)
+	r1 := customImageListImportAPI().SysCallN(46, 0, m.Instance(), 0)
 	return TImageType(r1)
 }
 
 func (m *TCustomImageList) SetImageType(AValue TImageType) {
-	LCL().SysCallN(1887, 1, m.Instance(), uintptr(AValue))
+	customImageListImportAPI().SysCallN(46, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomImageList) Add(Image, Mask ICustomBitmap) int32 {
-	r1 := LCL().SysCallN(1841, m.Instance(), GetObjectUintptr(Image), GetObjectUintptr(Mask))
+	r1 := customImageListImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(Image), GetObjectUintptr(Mask))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) AddSliced(Image ICustomBitmap, AHorizontalCount, AVerticalCount int32) int32 {
-	r1 := LCL().SysCallN(1849, m.Instance(), GetObjectUintptr(Image), uintptr(AHorizontalCount), uintptr(AVerticalCount))
+	r1 := customImageListImportAPI().SysCallN(8, m.Instance(), GetObjectUintptr(Image), uintptr(AHorizontalCount), uintptr(AVerticalCount))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) AddSlice(Image ICustomBitmap, AImageRect *TRect) int32 {
-	r1 := LCL().SysCallN(1847, m.Instance(), GetObjectUintptr(Image), uintptr(unsafePointer(AImageRect)))
+	r1 := customImageListImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(Image), uintptr(unsafePointer(AImageRect)))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) AddSliceCentered(Image ICustomBitmap) int32 {
-	r1 := LCL().SysCallN(1848, m.Instance(), GetObjectUintptr(Image))
+	r1 := customImageListImportAPI().SysCallN(7, m.Instance(), GetObjectUintptr(Image))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) AddIcon(Image ICustomIcon) int32 {
-	r1 := LCL().SysCallN(1842, m.Instance(), GetObjectUintptr(Image))
+	r1 := customImageListImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Image))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) AddMasked(Image IBitmap, MaskColor TColor) int32 {
-	r1 := LCL().SysCallN(1845, m.Instance(), GetObjectUintptr(Image), uintptr(MaskColor))
+	r1 := customImageListImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(Image), uintptr(MaskColor))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) AddLazarusResource(ResourceName string, MaskColor TColor) int32 {
-	r1 := LCL().SysCallN(1844, m.Instance(), PascalStr(ResourceName), uintptr(MaskColor))
+	r1 := customImageListImportAPI().SysCallN(3, m.Instance(), PascalStr(ResourceName), uintptr(MaskColor))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) AddResourceName(Instance THandle, ResourceName string, MaskColor TColor) int32 {
-	r1 := LCL().SysCallN(1846, m.Instance(), uintptr(Instance), PascalStr(ResourceName), uintptr(MaskColor))
+	r1 := customImageListImportAPI().SysCallN(5, m.Instance(), uintptr(Instance), PascalStr(ResourceName), uintptr(MaskColor))
 	return int32(r1)
 }
 
 func (m *TCustomImageList) GetHotSpot() (resultPoint TPoint) {
-	LCL().SysCallN(1879, m.Instance(), uintptr(unsafePointer(&resultPoint)))
+	customImageListImportAPI().SysCallN(38, m.Instance(), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TCustomImageList) FindResolution(AImageWidth int32, OutResolution *ICustomImageListResolution) bool {
 	var result1 uintptr
-	r1 := LCL().SysCallN(1874, m.Instance(), uintptr(AImageWidth), uintptr(unsafePointer(&result1)))
+	r1 := customImageListImportAPI().SysCallN(33, m.Instance(), uintptr(AImageWidth), uintptr(unsafePointer(&result1)))
 	*OutResolution = AsCustomImageListResolution(result1)
 	return GoBool(r1)
 }
 
 func (m *TCustomImageList) Resolutions() ICustomImageListResolutionEnumerator {
-	r1 := LCL().SysCallN(1906, m.Instance())
+	r1 := customImageListImportAPI().SysCallN(65, m.Instance())
 	return AsCustomImageListResolutionEnumerator(r1)
 }
 
 func (m *TCustomImageList) ResolutionsDesc() ICustomImageListResolutionEnumerator {
-	r1 := LCL().SysCallN(1907, m.Instance())
+	r1 := customImageListImportAPI().SysCallN(66, m.Instance())
 	return AsCustomImageListResolutionEnumerator(r1)
 }
 
 func CustomImageListClass() TClass {
-	ret := LCL().SysCallN(1856)
+	ret := customImageListImportAPI().SysCallN(15)
 	return TClass(ret)
 }
 
 func (m *TCustomImageList) AssignTo(Dest IPersistent) {
-	LCL().SysCallN(1851, m.Instance(), GetObjectUintptr(Dest))
+	customImageListImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(Dest))
 }
 
 func (m *TCustomImageList) WriteData(AStream IStream) {
-	LCL().SysCallN(1918, m.Instance(), GetObjectUintptr(AStream))
+	customImageListImportAPI().SysCallN(77, m.Instance(), GetObjectUintptr(AStream))
 }
 
 func (m *TCustomImageList) ReadData(AStream IStream) {
-	LCL().SysCallN(1895, m.Instance(), GetObjectUintptr(AStream))
+	customImageListImportAPI().SysCallN(54, m.Instance(), GetObjectUintptr(AStream))
 }
 
 func (m *TCustomImageList) WriteAdvData(AStream IStream) {
-	LCL().SysCallN(1917, m.Instance(), GetObjectUintptr(AStream))
+	customImageListImportAPI().SysCallN(76, m.Instance(), GetObjectUintptr(AStream))
 }
 
 func (m *TCustomImageList) ReadAdvData(AStream IStream) {
-	LCL().SysCallN(1894, m.Instance(), GetObjectUintptr(AStream))
+	customImageListImportAPI().SysCallN(53, m.Instance(), GetObjectUintptr(AStream))
 }
 
 func (m *TCustomImageList) BeginUpdate() {
-	LCL().SysCallN(1852, m.Instance())
+	customImageListImportAPI().SysCallN(11, m.Instance())
 }
 
 func (m *TCustomImageList) EndUpdate() {
-	LCL().SysCallN(1873, m.Instance())
+	customImageListImportAPI().SysCallN(32, m.Instance())
 }
 
 func (m *TCustomImageList) AddImages(AValue ICustomImageList) {
-	LCL().SysCallN(1843, m.Instance(), GetObjectUintptr(AValue))
+	customImageListImportAPI().SysCallN(2, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomImageList) Change() {
-	LCL().SysCallN(1855, m.Instance())
+	customImageListImportAPI().SysCallN(14, m.Instance())
 }
 
 func (m *TCustomImageList) Clear() {
-	LCL().SysCallN(1857, m.Instance())
+	customImageListImportAPI().SysCallN(16, m.Instance())
 }
 
 func (m *TCustomImageList) Delete(AIndex int32) {
-	LCL().SysCallN(1861, m.Instance(), uintptr(AIndex))
+	customImageListImportAPI().SysCallN(20, m.Instance(), uintptr(AIndex))
 }
 
 func (m *TCustomImageList) Draw(ACanvas ICanvas, AX, AY, AIndex int32, AEnabled bool) {
-	LCL().SysCallN(1863, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), PascalBool(AEnabled))
+	customImageListImportAPI().SysCallN(22, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), PascalBool(AEnabled))
 }
 
 func (m *TCustomImageList) Draw1(ACanvas ICanvas, AX, AY, AIndex int32, ADrawEffect TGraphicsDrawEffect) {
-	LCL().SysCallN(1864, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(ADrawEffect))
+	customImageListImportAPI().SysCallN(23, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(ADrawEffect))
 }
 
 func (m *TCustomImageList) Draw2(ACanvas ICanvas, AX, AY, AIndex int32, ADrawingStyle TDrawingStyle, AImageType TImageType, AEnabled bool) {
-	LCL().SysCallN(1865, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(ADrawingStyle), uintptr(AImageType), PascalBool(AEnabled))
+	customImageListImportAPI().SysCallN(24, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(ADrawingStyle), uintptr(AImageType), PascalBool(AEnabled))
 }
 
 func (m *TCustomImageList) Draw3(ACanvas ICanvas, AX, AY, AIndex int32, ADrawingStyle TDrawingStyle, AImageType TImageType, ADrawEffect TGraphicsDrawEffect) {
-	LCL().SysCallN(1866, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(ADrawingStyle), uintptr(AImageType), uintptr(ADrawEffect))
+	customImageListImportAPI().SysCallN(25, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(ADrawingStyle), uintptr(AImageType), uintptr(ADrawEffect))
 }
 
 func (m *TCustomImageList) DrawForPPI(ACanvas ICanvas, AX, AY, AIndex int32, AImageWidthAt96PPI, ATargetPPI int32, ACanvasFactor float64, AEnabled bool) {
-	LCL().SysCallN(1867, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AImageWidthAt96PPI), uintptr(ATargetPPI), uintptr(unsafePointer(&ACanvasFactor)), PascalBool(AEnabled))
+	customImageListImportAPI().SysCallN(26, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AImageWidthAt96PPI), uintptr(ATargetPPI), uintptr(unsafePointer(&ACanvasFactor)), PascalBool(AEnabled))
 }
 
 func (m *TCustomImageList) DrawForPPI1(ACanvas ICanvas, AX, AY, AIndex int32, AImageWidthAt96PPI, ATargetPPI int32, ACanvasFactor float64, ADrawEffect TGraphicsDrawEffect) {
-	LCL().SysCallN(1868, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AImageWidthAt96PPI), uintptr(ATargetPPI), uintptr(unsafePointer(&ACanvasFactor)), uintptr(ADrawEffect))
+	customImageListImportAPI().SysCallN(27, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AImageWidthAt96PPI), uintptr(ATargetPPI), uintptr(unsafePointer(&ACanvasFactor)), uintptr(ADrawEffect))
 }
 
 func (m *TCustomImageList) DrawOverlay(ACanvas ICanvas, AX, AY, AIndex int32, AOverlay TOverlay, AEnabled bool) {
-	LCL().SysCallN(1869, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AOverlay), PascalBool(AEnabled))
+	customImageListImportAPI().SysCallN(28, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AOverlay), PascalBool(AEnabled))
 }
 
 func (m *TCustomImageList) DrawOverlay1(ACanvas ICanvas, AX, AY, AIndex int32, AOverlay TOverlay, ADrawEffect TGraphicsDrawEffect) {
-	LCL().SysCallN(1870, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AOverlay), uintptr(ADrawEffect))
+	customImageListImportAPI().SysCallN(29, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AOverlay), uintptr(ADrawEffect))
 }
 
 func (m *TCustomImageList) DrawOverlay2(ACanvas ICanvas, AX, AY, AIndex int32, AOverlay TOverlay, ADrawingStyle TDrawingStyle, AImageType TImageType, ADrawEffect TGraphicsDrawEffect) {
-	LCL().SysCallN(1871, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AOverlay), uintptr(ADrawingStyle), uintptr(AImageType), uintptr(ADrawEffect))
+	customImageListImportAPI().SysCallN(30, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AOverlay), uintptr(ADrawingStyle), uintptr(AImageType), uintptr(ADrawEffect))
 }
 
 func (m *TCustomImageList) GetBitmap(Index int32, Image ICustomBitmap) {
-	LCL().SysCallN(1875, m.Instance(), uintptr(Index), GetObjectUintptr(Image))
+	customImageListImportAPI().SysCallN(34, m.Instance(), uintptr(Index), GetObjectUintptr(Image))
 }
 
 func (m *TCustomImageList) GetBitmap1(Index int32, Image ICustomBitmap, AEffect TGraphicsDrawEffect) {
-	LCL().SysCallN(1876, m.Instance(), uintptr(Index), GetObjectUintptr(Image), uintptr(AEffect))
+	customImageListImportAPI().SysCallN(35, m.Instance(), uintptr(Index), GetObjectUintptr(Image), uintptr(AEffect))
 }
 
 func (m *TCustomImageList) GetFullBitmap(Image ICustomBitmap, AEffect TGraphicsDrawEffect) {
-	LCL().SysCallN(1877, m.Instance(), GetObjectUintptr(Image), uintptr(AEffect))
+	customImageListImportAPI().SysCallN(36, m.Instance(), GetObjectUintptr(Image), uintptr(AEffect))
 }
 
 func (m *TCustomImageList) GetFullRawImage(OutImage *TRawImage) {
 	var result0 uintptr
-	LCL().SysCallN(1878, m.Instance(), uintptr(unsafePointer(&result0)))
+	customImageListImportAPI().SysCallN(37, m.Instance(), uintptr(unsafePointer(&result0)))
 	*OutImage = *(*TRawImage)(getPointer(result0))
 }
 
 func (m *TCustomImageList) GetIcon(Index int32, Image IIcon, AEffect TGraphicsDrawEffect) {
-	LCL().SysCallN(1880, m.Instance(), uintptr(Index), GetObjectUintptr(Image), uintptr(AEffect))
+	customImageListImportAPI().SysCallN(39, m.Instance(), uintptr(Index), GetObjectUintptr(Image), uintptr(AEffect))
 }
 
 func (m *TCustomImageList) GetIcon1(Index int32, Image IIcon) {
-	LCL().SysCallN(1881, m.Instance(), uintptr(Index), GetObjectUintptr(Image))
+	customImageListImportAPI().SysCallN(40, m.Instance(), uintptr(Index), GetObjectUintptr(Image))
 }
 
 func (m *TCustomImageList) GetRawImage(Index int32, OutImage *TRawImage) {
 	var result1 uintptr
-	LCL().SysCallN(1882, m.Instance(), uintptr(Index), uintptr(unsafePointer(&result1)))
+	customImageListImportAPI().SysCallN(41, m.Instance(), uintptr(Index), uintptr(unsafePointer(&result1)))
 	*OutImage = *(*TRawImage)(getPointer(result1))
 }
 
 func (m *TCustomImageList) Insert(AIndex int32, AImage, AMask ICustomBitmap) {
-	LCL().SysCallN(1888, m.Instance(), uintptr(AIndex), GetObjectUintptr(AImage), GetObjectUintptr(AMask))
+	customImageListImportAPI().SysCallN(47, m.Instance(), uintptr(AIndex), GetObjectUintptr(AImage), GetObjectUintptr(AMask))
 }
 
 func (m *TCustomImageList) InsertIcon(AIndex int32, AIcon ICustomIcon) {
-	LCL().SysCallN(1889, m.Instance(), uintptr(AIndex), GetObjectUintptr(AIcon))
+	customImageListImportAPI().SysCallN(48, m.Instance(), uintptr(AIndex), GetObjectUintptr(AIcon))
 }
 
 func (m *TCustomImageList) InsertMasked(Index int32, AImage ICustomBitmap, MaskColor TColor) {
-	LCL().SysCallN(1890, m.Instance(), uintptr(Index), GetObjectUintptr(AImage), uintptr(MaskColor))
+	customImageListImportAPI().SysCallN(49, m.Instance(), uintptr(Index), GetObjectUintptr(AImage), uintptr(MaskColor))
 }
 
 func (m *TCustomImageList) Move(ACurIndex, ANewIndex int32) {
-	LCL().SysCallN(1892, m.Instance(), uintptr(ACurIndex), uintptr(ANewIndex))
+	customImageListImportAPI().SysCallN(51, m.Instance(), uintptr(ACurIndex), uintptr(ANewIndex))
 }
 
 func (m *TCustomImageList) Overlay(AIndex int32, Overlay TOverlay) {
-	LCL().SysCallN(1893, m.Instance(), uintptr(AIndex), uintptr(Overlay))
+	customImageListImportAPI().SysCallN(52, m.Instance(), uintptr(AIndex), uintptr(Overlay))
 }
 
 func (m *TCustomImageList) Replace(AIndex int32, AImage, AMask ICustomBitmap, AllResolutions bool) {
-	LCL().SysCallN(1897, m.Instance(), uintptr(AIndex), GetObjectUintptr(AImage), GetObjectUintptr(AMask), PascalBool(AllResolutions))
+	customImageListImportAPI().SysCallN(56, m.Instance(), uintptr(AIndex), GetObjectUintptr(AImage), GetObjectUintptr(AMask), PascalBool(AllResolutions))
 }
 
 func (m *TCustomImageList) ReplaceSlice(AIndex int32, Image ICustomBitmap, AImageRect *TRect, AllResolutions bool) {
-	LCL().SysCallN(1900, m.Instance(), uintptr(AIndex), GetObjectUintptr(Image), uintptr(unsafePointer(AImageRect)), PascalBool(AllResolutions))
+	customImageListImportAPI().SysCallN(59, m.Instance(), uintptr(AIndex), GetObjectUintptr(Image), uintptr(unsafePointer(AImageRect)), PascalBool(AllResolutions))
 }
 
 func (m *TCustomImageList) ReplaceSliceCentered(AIndex, AImageWidth int32, Image ICustomBitmap, AllResolutions bool) {
-	LCL().SysCallN(1901, m.Instance(), uintptr(AIndex), uintptr(AImageWidth), GetObjectUintptr(Image), PascalBool(AllResolutions))
+	customImageListImportAPI().SysCallN(60, m.Instance(), uintptr(AIndex), uintptr(AImageWidth), GetObjectUintptr(Image), PascalBool(AllResolutions))
 }
 
 func (m *TCustomImageList) ReplaceIcon(AIndex int32, AIcon ICustomIcon) {
-	LCL().SysCallN(1898, m.Instance(), uintptr(AIndex), GetObjectUintptr(AIcon))
+	customImageListImportAPI().SysCallN(57, m.Instance(), uintptr(AIndex), GetObjectUintptr(AIcon))
 }
 
 func (m *TCustomImageList) ReplaceMasked(Index int32, NewImage ICustomBitmap, MaskColor TColor, AllResolutions bool) {
-	LCL().SysCallN(1899, m.Instance(), uintptr(Index), GetObjectUintptr(NewImage), uintptr(MaskColor), PascalBool(AllResolutions))
+	customImageListImportAPI().SysCallN(58, m.Instance(), uintptr(Index), GetObjectUintptr(NewImage), uintptr(MaskColor), PascalBool(AllResolutions))
 }
 
 func (m *TCustomImageList) RegisterChanges(Value IChangeLink) {
-	LCL().SysCallN(1896, m.Instance(), GetObjectUintptr(Value))
+	customImageListImportAPI().SysCallN(55, m.Instance(), GetObjectUintptr(Value))
 }
 
 func (m *TCustomImageList) StretchDraw(Canvas ICanvas, Index int32, ARect *TRect, Enabled bool) {
-	LCL().SysCallN(1913, m.Instance(), GetObjectUintptr(Canvas), uintptr(Index), uintptr(unsafePointer(ARect)), PascalBool(Enabled))
+	customImageListImportAPI().SysCallN(72, m.Instance(), GetObjectUintptr(Canvas), uintptr(Index), uintptr(unsafePointer(ARect)), PascalBool(Enabled))
 }
 
 func (m *TCustomImageList) UnRegisterChanges(Value IChangeLink) {
-	LCL().SysCallN(1914, m.Instance(), GetObjectUintptr(Value))
+	customImageListImportAPI().SysCallN(73, m.Instance(), GetObjectUintptr(Value))
 }
 
 func (m *TCustomImageList) DeleteResolution(AWidth int32) {
-	LCL().SysCallN(1862, m.Instance(), uintptr(AWidth))
+	customImageListImportAPI().SysCallN(21, m.Instance(), uintptr(AWidth))
 }
 
 func (m *TCustomImageList) SetOnChange(fn TNotifyEvent) {
@@ -500,7 +501,7 @@ func (m *TCustomImageList) SetOnChange(fn TNotifyEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1909, m.Instance(), m.changePtr)
+	customImageListImportAPI().SysCallN(68, m.Instance(), m.changePtr)
 }
 
 func (m *TCustomImageList) SetOnGetWidthForPPI(fn TCustomImageListGetWidthForPPI) {
@@ -508,5 +509,98 @@ func (m *TCustomImageList) SetOnGetWidthForPPI(fn TCustomImageListGetWidthForPPI
 		RemoveEventElement(m.getWidthForPPIPtr)
 	}
 	m.getWidthForPPIPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(1910, m.Instance(), m.getWidthForPPIPtr)
+	customImageListImportAPI().SysCallN(69, m.Instance(), m.getWidthForPPIPtr)
+}
+
+var (
+	customImageListImport       *imports.Imports = nil
+	customImageListImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomImageList_Add", 0),
+		/*1*/ imports.NewTable("CustomImageList_AddIcon", 0),
+		/*2*/ imports.NewTable("CustomImageList_AddImages", 0),
+		/*3*/ imports.NewTable("CustomImageList_AddLazarusResource", 0),
+		/*4*/ imports.NewTable("CustomImageList_AddMasked", 0),
+		/*5*/ imports.NewTable("CustomImageList_AddResourceName", 0),
+		/*6*/ imports.NewTable("CustomImageList_AddSlice", 0),
+		/*7*/ imports.NewTable("CustomImageList_AddSliceCentered", 0),
+		/*8*/ imports.NewTable("CustomImageList_AddSliced", 0),
+		/*9*/ imports.NewTable("CustomImageList_AllocBy", 0),
+		/*10*/ imports.NewTable("CustomImageList_AssignTo", 0),
+		/*11*/ imports.NewTable("CustomImageList_BeginUpdate", 0),
+		/*12*/ imports.NewTable("CustomImageList_BkColor", 0),
+		/*13*/ imports.NewTable("CustomImageList_BlendColor", 0),
+		/*14*/ imports.NewTable("CustomImageList_Change", 0),
+		/*15*/ imports.NewTable("CustomImageList_Class", 0),
+		/*16*/ imports.NewTable("CustomImageList_Clear", 0),
+		/*17*/ imports.NewTable("CustomImageList_Count", 0),
+		/*18*/ imports.NewTable("CustomImageList_Create", 0),
+		/*19*/ imports.NewTable("CustomImageList_CreateSize", 0),
+		/*20*/ imports.NewTable("CustomImageList_Delete", 0),
+		/*21*/ imports.NewTable("CustomImageList_DeleteResolution", 0),
+		/*22*/ imports.NewTable("CustomImageList_Draw", 0),
+		/*23*/ imports.NewTable("CustomImageList_Draw1", 0),
+		/*24*/ imports.NewTable("CustomImageList_Draw2", 0),
+		/*25*/ imports.NewTable("CustomImageList_Draw3", 0),
+		/*26*/ imports.NewTable("CustomImageList_DrawForPPI", 0),
+		/*27*/ imports.NewTable("CustomImageList_DrawForPPI1", 0),
+		/*28*/ imports.NewTable("CustomImageList_DrawOverlay", 0),
+		/*29*/ imports.NewTable("CustomImageList_DrawOverlay1", 0),
+		/*30*/ imports.NewTable("CustomImageList_DrawOverlay2", 0),
+		/*31*/ imports.NewTable("CustomImageList_DrawingStyle", 0),
+		/*32*/ imports.NewTable("CustomImageList_EndUpdate", 0),
+		/*33*/ imports.NewTable("CustomImageList_FindResolution", 0),
+		/*34*/ imports.NewTable("CustomImageList_GetBitmap", 0),
+		/*35*/ imports.NewTable("CustomImageList_GetBitmap1", 0),
+		/*36*/ imports.NewTable("CustomImageList_GetFullBitmap", 0),
+		/*37*/ imports.NewTable("CustomImageList_GetFullRawImage", 0),
+		/*38*/ imports.NewTable("CustomImageList_GetHotSpot", 0),
+		/*39*/ imports.NewTable("CustomImageList_GetIcon", 0),
+		/*40*/ imports.NewTable("CustomImageList_GetIcon1", 0),
+		/*41*/ imports.NewTable("CustomImageList_GetRawImage", 0),
+		/*42*/ imports.NewTable("CustomImageList_HasOverlays", 0),
+		/*43*/ imports.NewTable("CustomImageList_Height", 0),
+		/*44*/ imports.NewTable("CustomImageList_HeightForPPI", 0),
+		/*45*/ imports.NewTable("CustomImageList_HeightForWidth", 0),
+		/*46*/ imports.NewTable("CustomImageList_ImageType", 0),
+		/*47*/ imports.NewTable("CustomImageList_Insert", 0),
+		/*48*/ imports.NewTable("CustomImageList_InsertIcon", 0),
+		/*49*/ imports.NewTable("CustomImageList_InsertMasked", 0),
+		/*50*/ imports.NewTable("CustomImageList_Masked", 0),
+		/*51*/ imports.NewTable("CustomImageList_Move", 0),
+		/*52*/ imports.NewTable("CustomImageList_Overlay", 0),
+		/*53*/ imports.NewTable("CustomImageList_ReadAdvData", 0),
+		/*54*/ imports.NewTable("CustomImageList_ReadData", 0),
+		/*55*/ imports.NewTable("CustomImageList_RegisterChanges", 0),
+		/*56*/ imports.NewTable("CustomImageList_Replace", 0),
+		/*57*/ imports.NewTable("CustomImageList_ReplaceIcon", 0),
+		/*58*/ imports.NewTable("CustomImageList_ReplaceMasked", 0),
+		/*59*/ imports.NewTable("CustomImageList_ReplaceSlice", 0),
+		/*60*/ imports.NewTable("CustomImageList_ReplaceSliceCentered", 0),
+		/*61*/ imports.NewTable("CustomImageList_Resolution", 0),
+		/*62*/ imports.NewTable("CustomImageList_ResolutionByIndex", 0),
+		/*63*/ imports.NewTable("CustomImageList_ResolutionCount", 0),
+		/*64*/ imports.NewTable("CustomImageList_ResolutionForPPI", 0),
+		/*65*/ imports.NewTable("CustomImageList_Resolutions", 0),
+		/*66*/ imports.NewTable("CustomImageList_ResolutionsDesc", 0),
+		/*67*/ imports.NewTable("CustomImageList_Scaled", 0),
+		/*68*/ imports.NewTable("CustomImageList_SetOnChange", 0),
+		/*69*/ imports.NewTable("CustomImageList_SetOnGetWidthForPPI", 0),
+		/*70*/ imports.NewTable("CustomImageList_ShareImages", 0),
+		/*71*/ imports.NewTable("CustomImageList_SizeForPPI", 0),
+		/*72*/ imports.NewTable("CustomImageList_StretchDraw", 0),
+		/*73*/ imports.NewTable("CustomImageList_UnRegisterChanges", 0),
+		/*74*/ imports.NewTable("CustomImageList_Width", 0),
+		/*75*/ imports.NewTable("CustomImageList_WidthForPPI", 0),
+		/*76*/ imports.NewTable("CustomImageList_WriteAdvData", 0),
+		/*77*/ imports.NewTable("CustomImageList_WriteData", 0),
+	}
+)
+
+func customImageListImportAPI() *imports.Imports {
+	if customImageListImport == nil {
+		customImageListImport = NewDefaultImports()
+		customImageListImport.SetImportTable(customImageListImportTables)
+		customImageListImportTables = nil
+	}
+	return customImageListImport
 }

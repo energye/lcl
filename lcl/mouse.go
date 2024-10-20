@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -34,57 +35,80 @@ type TMouse struct {
 }
 
 func NewMouse() IMouse {
-	r1 := LCL().SysCallN(4381)
+	r1 := mouseImportAPI().SysCallN(2)
 	return AsMouse(r1)
 }
 
 func (m *TMouse) Capture() HWND {
-	r1 := LCL().SysCallN(4379, 0, m.Instance(), 0)
+	r1 := mouseImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return HWND(r1)
 }
 
 func (m *TMouse) SetCapture(AValue HWND) {
-	LCL().SysCallN(4379, 1, m.Instance(), uintptr(AValue))
+	mouseImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TMouse) CursorPos() (resultPoint TPoint) {
-	LCL().SysCallN(4382, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	mouseImportAPI().SysCallN(3, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TMouse) SetCursorPos(AValue *TPoint) {
-	LCL().SysCallN(4382, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	mouseImportAPI().SysCallN(3, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TMouse) IsDragging() bool {
-	r1 := LCL().SysCallN(4385, m.Instance())
+	r1 := mouseImportAPI().SysCallN(6, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TMouse) WheelScrollLines() int32 {
-	r1 := LCL().SysCallN(4386, m.Instance())
+	r1 := mouseImportAPI().SysCallN(7, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMouse) DragImmediate() bool {
-	r1 := LCL().SysCallN(4383, 0, m.Instance(), 0)
+	r1 := mouseImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMouse) SetDragImmediate(AValue bool) {
-	LCL().SysCallN(4383, 1, m.Instance(), PascalBool(AValue))
+	mouseImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TMouse) DragThreshold() int32 {
-	r1 := LCL().SysCallN(4384, 0, m.Instance(), 0)
+	r1 := mouseImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TMouse) SetDragThreshold(AValue int32) {
-	LCL().SysCallN(4384, 1, m.Instance(), uintptr(AValue))
+	mouseImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func MouseClass() TClass {
-	ret := LCL().SysCallN(4380)
+	ret := mouseImportAPI().SysCallN(1)
 	return TClass(ret)
+}
+
+var (
+	mouseImport       *imports.Imports = nil
+	mouseImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Mouse_Capture", 0),
+		/*1*/ imports.NewTable("Mouse_Class", 0),
+		/*2*/ imports.NewTable("Mouse_Create", 0),
+		/*3*/ imports.NewTable("Mouse_CursorPos", 0),
+		/*4*/ imports.NewTable("Mouse_DragImmediate", 0),
+		/*5*/ imports.NewTable("Mouse_DragThreshold", 0),
+		/*6*/ imports.NewTable("Mouse_IsDragging", 0),
+		/*7*/ imports.NewTable("Mouse_WheelScrollLines", 0),
+	}
+)
+
+func mouseImportAPI() *imports.Imports {
+	if mouseImport == nil {
+		mouseImport = NewDefaultImports()
+		mouseImport.SetImportTable(mouseImportTables)
+		mouseImportTables = nil
+	}
+	return mouseImport
 }

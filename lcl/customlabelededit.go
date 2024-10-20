@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -29,34 +30,54 @@ type TCustomLabeledEdit struct {
 }
 
 func NewCustomLabeledEdit(TheOwner IComponent) ICustomLabeledEdit {
-	r1 := LCL().SysCallN(1985, GetObjectUintptr(TheOwner))
+	r1 := customLabeledEditImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsCustomLabeledEdit(r1)
 }
 
 func (m *TCustomLabeledEdit) EditLabel() IBoundLabel {
-	r1 := LCL().SysCallN(1986, m.Instance())
+	r1 := customLabeledEditImportAPI().SysCallN(2, m.Instance())
 	return AsBoundLabel(r1)
 }
 
 func (m *TCustomLabeledEdit) LabelPosition() TLabelPosition {
-	r1 := LCL().SysCallN(1987, 0, m.Instance(), 0)
+	r1 := customLabeledEditImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TLabelPosition(r1)
 }
 
 func (m *TCustomLabeledEdit) SetLabelPosition(AValue TLabelPosition) {
-	LCL().SysCallN(1987, 1, m.Instance(), uintptr(AValue))
+	customLabeledEditImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomLabeledEdit) LabelSpacing() int32 {
-	r1 := LCL().SysCallN(1988, 0, m.Instance(), 0)
+	r1 := customLabeledEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomLabeledEdit) SetLabelSpacing(AValue int32) {
-	LCL().SysCallN(1988, 1, m.Instance(), uintptr(AValue))
+	customLabeledEditImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func CustomLabeledEditClass() TClass {
-	ret := LCL().SysCallN(1984)
+	ret := customLabeledEditImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	customLabeledEditImport       *imports.Imports = nil
+	customLabeledEditImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomLabeledEdit_Class", 0),
+		/*1*/ imports.NewTable("CustomLabeledEdit_Create", 0),
+		/*2*/ imports.NewTable("CustomLabeledEdit_EditLabel", 0),
+		/*3*/ imports.NewTable("CustomLabeledEdit_LabelPosition", 0),
+		/*4*/ imports.NewTable("CustomLabeledEdit_LabelSpacing", 0),
+	}
+)
+
+func customLabeledEditImportAPI() *imports.Imports {
+	if customLabeledEditImport == nil {
+		customLabeledEditImport = NewDefaultImports()
+		customLabeledEditImport.SetImportTable(customLabeledEditImportTables)
+		customLabeledEditImportTables = nil
+	}
+	return customLabeledEditImport
 }

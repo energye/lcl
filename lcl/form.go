@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -87,74 +88,74 @@ type TForm struct {
 }
 
 func NewForm(TheOwner IComponent) IForm {
-	r1 := LCL().SysCallN(3131, GetObjectUintptr(TheOwner))
+	r1 := formImportAPI().SysCallN(4, GetObjectUintptr(TheOwner))
 	return AsForm(r1)
 }
 
 func (m *TForm) ClientHandle() HWND {
-	r1 := LCL().SysCallN(3130, m.Instance())
+	r1 := formImportAPI().SysCallN(3, m.Instance())
 	return HWND(r1)
 }
 
 func (m *TForm) DragKind() TDragKind {
-	r1 := LCL().SysCallN(3132, 0, m.Instance(), 0)
+	r1 := formImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TForm) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(3132, 1, m.Instance(), uintptr(AValue))
+	formImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TForm) DragMode() TDragMode {
-	r1 := LCL().SysCallN(3133, 0, m.Instance(), 0)
+	r1 := formImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TForm) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(3133, 1, m.Instance(), uintptr(AValue))
+	formImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TForm) SessionProperties() string {
-	r1 := LCL().SysCallN(3137, 0, m.Instance(), 0)
+	r1 := formImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TForm) SetSessionProperties(AValue string) {
-	LCL().SysCallN(3137, 1, m.Instance(), PascalStr(AValue))
+	formImportAPI().SysCallN(10, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TForm) LCLVersion() string {
-	r1 := LCL().SysCallN(3134, 0, m.Instance(), 0)
+	r1 := formImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TForm) SetLCLVersion(AValue string) {
-	LCL().SysCallN(3134, 1, m.Instance(), PascalStr(AValue))
+	formImportAPI().SysCallN(7, 1, m.Instance(), PascalStr(AValue))
 }
 
 func FormClass() TClass {
-	ret := LCL().SysCallN(3129)
+	ret := formImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
 func (m *TForm) Cascade() {
-	LCL().SysCallN(3128, m.Instance())
+	formImportAPI().SysCallN(1, m.Instance())
 }
 
 func (m *TForm) Next() {
-	LCL().SysCallN(3135, m.Instance())
+	formImportAPI().SysCallN(8, m.Instance())
 }
 
 func (m *TForm) Previous() {
-	LCL().SysCallN(3136, m.Instance())
+	formImportAPI().SysCallN(9, m.Instance())
 }
 
 func (m *TForm) Tile() {
-	LCL().SysCallN(3157, m.Instance())
+	formImportAPI().SysCallN(30, m.Instance())
 }
 
 func (m *TForm) ArrangeIcons() {
-	LCL().SysCallN(3127, m.Instance())
+	formImportAPI().SysCallN(0, m.Instance())
 }
 
 func (m *TForm) SetOnConstrainedResize(fn TConstrainedResizeEvent) {
@@ -162,7 +163,7 @@ func (m *TForm) SetOnConstrainedResize(fn TConstrainedResizeEvent) {
 		RemoveEventElement(m.constrainedResizePtr)
 	}
 	m.constrainedResizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3138, m.Instance(), m.constrainedResizePtr)
+	formImportAPI().SysCallN(11, m.Instance(), m.constrainedResizePtr)
 }
 
 func (m *TForm) SetOnContextPopup(fn TContextPopupEvent) {
@@ -170,7 +171,7 @@ func (m *TForm) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3139, m.Instance(), m.contextPopupPtr)
+	formImportAPI().SysCallN(12, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TForm) SetOnDblClick(fn TNotifyEvent) {
@@ -178,7 +179,7 @@ func (m *TForm) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3140, m.Instance(), m.dblClickPtr)
+	formImportAPI().SysCallN(13, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TForm) SetOnDragDrop(fn TDragDropEvent) {
@@ -186,7 +187,7 @@ func (m *TForm) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3141, m.Instance(), m.dragDropPtr)
+	formImportAPI().SysCallN(14, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TForm) SetOnDragOver(fn TDragOverEvent) {
@@ -194,7 +195,7 @@ func (m *TForm) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3142, m.Instance(), m.dragOverPtr)
+	formImportAPI().SysCallN(15, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TForm) SetOnEndDock(fn TEndDragEvent) {
@@ -202,7 +203,7 @@ func (m *TForm) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3143, m.Instance(), m.endDockPtr)
+	formImportAPI().SysCallN(16, m.Instance(), m.endDockPtr)
 }
 
 func (m *TForm) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
@@ -210,7 +211,7 @@ func (m *TForm) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
 		RemoveEventElement(m.getSiteInfoPtr)
 	}
 	m.getSiteInfoPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3144, m.Instance(), m.getSiteInfoPtr)
+	formImportAPI().SysCallN(17, m.Instance(), m.getSiteInfoPtr)
 }
 
 func (m *TForm) SetOnMouseDown(fn TMouseEvent) {
@@ -218,7 +219,7 @@ func (m *TForm) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3145, m.Instance(), m.mouseDownPtr)
+	formImportAPI().SysCallN(18, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TForm) SetOnMouseEnter(fn TNotifyEvent) {
@@ -226,7 +227,7 @@ func (m *TForm) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3146, m.Instance(), m.mouseEnterPtr)
+	formImportAPI().SysCallN(19, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TForm) SetOnMouseLeave(fn TNotifyEvent) {
@@ -234,7 +235,7 @@ func (m *TForm) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3147, m.Instance(), m.mouseLeavePtr)
+	formImportAPI().SysCallN(20, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TForm) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -242,7 +243,7 @@ func (m *TForm) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3148, m.Instance(), m.mouseMovePtr)
+	formImportAPI().SysCallN(21, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TForm) SetOnMouseUp(fn TMouseEvent) {
@@ -250,7 +251,7 @@ func (m *TForm) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3149, m.Instance(), m.mouseUpPtr)
+	formImportAPI().SysCallN(22, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TForm) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -258,7 +259,7 @@ func (m *TForm) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3150, m.Instance(), m.mouseWheelPtr)
+	formImportAPI().SysCallN(23, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TForm) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -266,7 +267,7 @@ func (m *TForm) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3151, m.Instance(), m.mouseWheelDownPtr)
+	formImportAPI().SysCallN(24, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TForm) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -274,7 +275,7 @@ func (m *TForm) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3155, m.Instance(), m.mouseWheelUpPtr)
+	formImportAPI().SysCallN(28, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TForm) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -282,7 +283,7 @@ func (m *TForm) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3152, m.Instance(), m.mouseWheelHorzPtr)
+	formImportAPI().SysCallN(25, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TForm) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -290,7 +291,7 @@ func (m *TForm) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3153, m.Instance(), m.mouseWheelLeftPtr)
+	formImportAPI().SysCallN(26, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TForm) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -298,7 +299,7 @@ func (m *TForm) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3154, m.Instance(), m.mouseWheelRightPtr)
+	formImportAPI().SysCallN(27, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TForm) SetOnStartDock(fn TStartDockEvent) {
@@ -306,5 +307,51 @@ func (m *TForm) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3156, m.Instance(), m.startDockPtr)
+	formImportAPI().SysCallN(29, m.Instance(), m.startDockPtr)
+}
+
+var (
+	formImport       *imports.Imports = nil
+	formImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Form_ArrangeIcons", 0),
+		/*1*/ imports.NewTable("Form_Cascade", 0),
+		/*2*/ imports.NewTable("Form_Class", 0),
+		/*3*/ imports.NewTable("Form_ClientHandle", 0),
+		/*4*/ imports.NewTable("Form_Create", 0),
+		/*5*/ imports.NewTable("Form_DragKind", 0),
+		/*6*/ imports.NewTable("Form_DragMode", 0),
+		/*7*/ imports.NewTable("Form_LCLVersion", 0),
+		/*8*/ imports.NewTable("Form_Next", 0),
+		/*9*/ imports.NewTable("Form_Previous", 0),
+		/*10*/ imports.NewTable("Form_SessionProperties", 0),
+		/*11*/ imports.NewTable("Form_SetOnConstrainedResize", 0),
+		/*12*/ imports.NewTable("Form_SetOnContextPopup", 0),
+		/*13*/ imports.NewTable("Form_SetOnDblClick", 0),
+		/*14*/ imports.NewTable("Form_SetOnDragDrop", 0),
+		/*15*/ imports.NewTable("Form_SetOnDragOver", 0),
+		/*16*/ imports.NewTable("Form_SetOnEndDock", 0),
+		/*17*/ imports.NewTable("Form_SetOnGetSiteInfo", 0),
+		/*18*/ imports.NewTable("Form_SetOnMouseDown", 0),
+		/*19*/ imports.NewTable("Form_SetOnMouseEnter", 0),
+		/*20*/ imports.NewTable("Form_SetOnMouseLeave", 0),
+		/*21*/ imports.NewTable("Form_SetOnMouseMove", 0),
+		/*22*/ imports.NewTable("Form_SetOnMouseUp", 0),
+		/*23*/ imports.NewTable("Form_SetOnMouseWheel", 0),
+		/*24*/ imports.NewTable("Form_SetOnMouseWheelDown", 0),
+		/*25*/ imports.NewTable("Form_SetOnMouseWheelHorz", 0),
+		/*26*/ imports.NewTable("Form_SetOnMouseWheelLeft", 0),
+		/*27*/ imports.NewTable("Form_SetOnMouseWheelRight", 0),
+		/*28*/ imports.NewTable("Form_SetOnMouseWheelUp", 0),
+		/*29*/ imports.NewTable("Form_SetOnStartDock", 0),
+		/*30*/ imports.NewTable("Form_Tile", 0),
+	}
+)
+
+func formImportAPI() *imports.Imports {
+	if formImport == nil {
+		formImport = NewDefaultImports()
+		formImport.SetImportTable(formImportTables)
+		formImportTables = nil
+	}
+	return formImport
 }

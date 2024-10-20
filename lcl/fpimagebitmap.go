@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TFPImageBitmap struct {
 }
 
 func NewFPImageBitmap() IFPImageBitmap {
-	r1 := LCL().SysCallN(2981)
+	r1 := fPImageBitmapImportAPI().SysCallN(1)
 	return AsFPImageBitmap(r1)
 }
 
 func FPImageBitmapClass() TClass {
-	ret := LCL().SysCallN(2980)
+	ret := fPImageBitmapImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	fPImageBitmapImport       *imports.Imports = nil
+	fPImageBitmapImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("FPImageBitmap_Class", 0),
+		/*1*/ imports.NewTable("FPImageBitmap_Create", 0),
+	}
+)
+
+func fPImageBitmapImportAPI() *imports.Imports {
+	if fPImageBitmapImport == nil {
+		fPImageBitmapImport = NewDefaultImports()
+		fPImageBitmapImport.SetImportTable(fPImageBitmapImportTables)
+		fPImageBitmapImportTables = nil
+	}
+	return fPImageBitmapImport
 }

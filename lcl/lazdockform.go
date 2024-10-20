@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -33,56 +34,81 @@ type TLazDockForm struct {
 }
 
 func NewLazDockForm(AOwner IComponent) ILazDockForm {
-	r1 := LCL().SysCallN(3546, GetObjectUintptr(AOwner))
+	r1 := lazDockFormImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsLazDockForm(r1)
 }
 
 func (m *TLazDockForm) MainControl() IControl {
-	r1 := LCL().SysCallN(3552, 0, m.Instance(), 0)
+	r1 := lazDockFormImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return AsControl(r1)
 }
 
 func (m *TLazDockForm) SetMainControl(AValue IControl) {
-	LCL().SysCallN(3552, 1, m.Instance(), GetObjectUintptr(AValue))
+	lazDockFormImportAPI().SysCallN(8, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TLazDockForm) FindMainControlCandidate() IControl {
-	r1 := LCL().SysCallN(3548, m.Instance())
+	r1 := lazDockFormImportAPI().SysCallN(4, m.Instance())
 	return AsControl(r1)
 }
 
 func (m *TLazDockForm) FindHeader(x, y int32, OutPart *TLazDockHeaderPart) IControl {
 	var result1 uintptr
-	r1 := LCL().SysCallN(3547, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(&result1)))
+	r1 := lazDockFormImportAPI().SysCallN(3, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(&result1)))
 	*OutPart = TLazDockHeaderPart(result1)
 	return AsControl(r1)
 }
 
 func (m *TLazDockForm) IsDockedControl(Control IControl) bool {
-	r1 := LCL().SysCallN(3551, m.Instance(), GetObjectUintptr(Control))
+	r1 := lazDockFormImportAPI().SysCallN(7, m.Instance(), GetObjectUintptr(Control))
 	return GoBool(r1)
 }
 
 func (m *TLazDockForm) ControlHasTitle(Control IControl) bool {
-	r1 := LCL().SysCallN(3545, m.Instance(), GetObjectUintptr(Control))
+	r1 := lazDockFormImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Control))
 	return GoBool(r1)
 }
 
 func (m *TLazDockForm) GetTitleRect(Control IControl) (resultRect TRect) {
-	LCL().SysCallN(3550, m.Instance(), GetObjectUintptr(Control), uintptr(unsafePointer(&resultRect)))
+	lazDockFormImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(Control), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TLazDockForm) GetTitleOrientation(Control IControl) TDockOrientation {
-	r1 := LCL().SysCallN(3549, m.Instance(), GetObjectUintptr(Control))
+	r1 := lazDockFormImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(Control))
 	return TDockOrientation(r1)
 }
 
 func LazDockFormClass() TClass {
-	ret := LCL().SysCallN(3544)
+	ret := lazDockFormImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TLazDockForm) UpdateCaption() {
-	LCL().SysCallN(3553, m.Instance())
+	lazDockFormImportAPI().SysCallN(9, m.Instance())
+}
+
+var (
+	lazDockFormImport       *imports.Imports = nil
+	lazDockFormImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("LazDockForm_Class", 0),
+		/*1*/ imports.NewTable("LazDockForm_ControlHasTitle", 0),
+		/*2*/ imports.NewTable("LazDockForm_Create", 0),
+		/*3*/ imports.NewTable("LazDockForm_FindHeader", 0),
+		/*4*/ imports.NewTable("LazDockForm_FindMainControlCandidate", 0),
+		/*5*/ imports.NewTable("LazDockForm_GetTitleOrientation", 0),
+		/*6*/ imports.NewTable("LazDockForm_GetTitleRect", 0),
+		/*7*/ imports.NewTable("LazDockForm_IsDockedControl", 0),
+		/*8*/ imports.NewTable("LazDockForm_MainControl", 0),
+		/*9*/ imports.NewTable("LazDockForm_UpdateCaption", 0),
+	}
+)
+
+func lazDockFormImportAPI() *imports.Imports {
+	if lazDockFormImport == nil {
+		lazDockFormImport = NewDefaultImports()
+		lazDockFormImport.SetImportTable(lazDockFormImportTables)
+		lazDockFormImportTables = nil
+	}
+	return lazDockFormImport
 }

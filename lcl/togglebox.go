@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -62,66 +63,66 @@ type TToggleBox struct {
 }
 
 func NewToggleBox(TheOwner IComponent) IToggleBox {
-	r1 := LCL().SysCallN(5478, GetObjectUintptr(TheOwner))
+	r1 := oggleBoxImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
 	return AsToggleBox(r1)
 }
 
 func (m *TToggleBox) Checked() bool {
-	r1 := LCL().SysCallN(5476, 0, m.Instance(), 0)
+	r1 := oggleBoxImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToggleBox) SetChecked(AValue bool) {
-	LCL().SysCallN(5476, 1, m.Instance(), PascalBool(AValue))
+	oggleBoxImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TToggleBox) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5479, 0, m.Instance(), 0)
+	r1 := oggleBoxImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TToggleBox) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5479, 1, m.Instance(), uintptr(AValue))
+	oggleBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToggleBox) DragKind() TDragKind {
-	r1 := LCL().SysCallN(5480, 0, m.Instance(), 0)
+	r1 := oggleBoxImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TToggleBox) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(5480, 1, m.Instance(), uintptr(AValue))
+	oggleBoxImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToggleBox) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5481, 0, m.Instance(), 0)
+	r1 := oggleBoxImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TToggleBox) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5481, 1, m.Instance(), uintptr(AValue))
+	oggleBoxImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TToggleBox) ParentFont() bool {
-	r1 := LCL().SysCallN(5482, 0, m.Instance(), 0)
+	r1 := oggleBoxImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToggleBox) SetParentFont(AValue bool) {
-	LCL().SysCallN(5482, 1, m.Instance(), PascalBool(AValue))
+	oggleBoxImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TToggleBox) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5483, 0, m.Instance(), 0)
+	r1 := oggleBoxImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TToggleBox) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5483, 1, m.Instance(), PascalBool(AValue))
+	oggleBoxImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func ToggleBoxClass() TClass {
-	ret := LCL().SysCallN(5477)
+	ret := oggleBoxImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
@@ -130,7 +131,7 @@ func (m *TToggleBox) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5484, m.Instance(), m.contextPopupPtr)
+	oggleBoxImportAPI().SysCallN(8, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TToggleBox) SetOnDragDrop(fn TDragDropEvent) {
@@ -138,7 +139,7 @@ func (m *TToggleBox) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5485, m.Instance(), m.dragDropPtr)
+	oggleBoxImportAPI().SysCallN(9, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TToggleBox) SetOnDragOver(fn TDragOverEvent) {
@@ -146,7 +147,7 @@ func (m *TToggleBox) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5486, m.Instance(), m.dragOverPtr)
+	oggleBoxImportAPI().SysCallN(10, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TToggleBox) SetOnEndDrag(fn TEndDragEvent) {
@@ -154,7 +155,7 @@ func (m *TToggleBox) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5487, m.Instance(), m.endDragPtr)
+	oggleBoxImportAPI().SysCallN(11, m.Instance(), m.endDragPtr)
 }
 
 func (m *TToggleBox) SetOnMouseDown(fn TMouseEvent) {
@@ -162,7 +163,7 @@ func (m *TToggleBox) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5488, m.Instance(), m.mouseDownPtr)
+	oggleBoxImportAPI().SysCallN(12, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TToggleBox) SetOnMouseEnter(fn TNotifyEvent) {
@@ -170,7 +171,7 @@ func (m *TToggleBox) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5489, m.Instance(), m.mouseEnterPtr)
+	oggleBoxImportAPI().SysCallN(13, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TToggleBox) SetOnMouseLeave(fn TNotifyEvent) {
@@ -178,7 +179,7 @@ func (m *TToggleBox) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5490, m.Instance(), m.mouseLeavePtr)
+	oggleBoxImportAPI().SysCallN(14, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TToggleBox) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -186,7 +187,7 @@ func (m *TToggleBox) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5491, m.Instance(), m.mouseMovePtr)
+	oggleBoxImportAPI().SysCallN(15, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TToggleBox) SetOnMouseUp(fn TMouseEvent) {
@@ -194,7 +195,7 @@ func (m *TToggleBox) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5492, m.Instance(), m.mouseUpPtr)
+	oggleBoxImportAPI().SysCallN(16, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TToggleBox) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -202,7 +203,7 @@ func (m *TToggleBox) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5493, m.Instance(), m.mouseWheelPtr)
+	oggleBoxImportAPI().SysCallN(17, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TToggleBox) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -210,7 +211,7 @@ func (m *TToggleBox) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5494, m.Instance(), m.mouseWheelDownPtr)
+	oggleBoxImportAPI().SysCallN(18, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TToggleBox) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -218,7 +219,7 @@ func (m *TToggleBox) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5495, m.Instance(), m.mouseWheelUpPtr)
+	oggleBoxImportAPI().SysCallN(19, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TToggleBox) SetOnStartDrag(fn TStartDragEvent) {
@@ -226,5 +227,41 @@ func (m *TToggleBox) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5496, m.Instance(), m.startDragPtr)
+	oggleBoxImportAPI().SysCallN(20, m.Instance(), m.startDragPtr)
+}
+
+var (
+	oggleBoxImport       *imports.Imports = nil
+	oggleBoxImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ToggleBox_Checked", 0),
+		/*1*/ imports.NewTable("ToggleBox_Class", 0),
+		/*2*/ imports.NewTable("ToggleBox_Create", 0),
+		/*3*/ imports.NewTable("ToggleBox_DragCursor", 0),
+		/*4*/ imports.NewTable("ToggleBox_DragKind", 0),
+		/*5*/ imports.NewTable("ToggleBox_DragMode", 0),
+		/*6*/ imports.NewTable("ToggleBox_ParentFont", 0),
+		/*7*/ imports.NewTable("ToggleBox_ParentShowHint", 0),
+		/*8*/ imports.NewTable("ToggleBox_SetOnContextPopup", 0),
+		/*9*/ imports.NewTable("ToggleBox_SetOnDragDrop", 0),
+		/*10*/ imports.NewTable("ToggleBox_SetOnDragOver", 0),
+		/*11*/ imports.NewTable("ToggleBox_SetOnEndDrag", 0),
+		/*12*/ imports.NewTable("ToggleBox_SetOnMouseDown", 0),
+		/*13*/ imports.NewTable("ToggleBox_SetOnMouseEnter", 0),
+		/*14*/ imports.NewTable("ToggleBox_SetOnMouseLeave", 0),
+		/*15*/ imports.NewTable("ToggleBox_SetOnMouseMove", 0),
+		/*16*/ imports.NewTable("ToggleBox_SetOnMouseUp", 0),
+		/*17*/ imports.NewTable("ToggleBox_SetOnMouseWheel", 0),
+		/*18*/ imports.NewTable("ToggleBox_SetOnMouseWheelDown", 0),
+		/*19*/ imports.NewTable("ToggleBox_SetOnMouseWheelUp", 0),
+		/*20*/ imports.NewTable("ToggleBox_SetOnStartDrag", 0),
+	}
+)
+
+func oggleBoxImportAPI() *imports.Imports {
+	if oggleBoxImport == nil {
+		oggleBoxImport = NewDefaultImports()
+		oggleBoxImport.SetImportTable(oggleBoxImportTables)
+		oggleBoxImportTables = nil
+	}
+	return oggleBoxImport
 }

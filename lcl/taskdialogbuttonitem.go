@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TTaskDialogButtonItem struct {
 }
 
 func NewTaskDialogButtonItem(ACollection ICollection) ITaskDialogButtonItem {
-	r1 := LCL().SysCallN(5393, GetObjectUintptr(ACollection))
+	r1 := askDialogButtonItemImportAPI().SysCallN(1, GetObjectUintptr(ACollection))
 	return AsTaskDialogButtonItem(r1)
 }
 
 func TaskDialogButtonItemClass() TClass {
-	ret := LCL().SysCallN(5392)
+	ret := askDialogButtonItemImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	askDialogButtonItemImport       *imports.Imports = nil
+	askDialogButtonItemImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("TaskDialogButtonItem_Class", 0),
+		/*1*/ imports.NewTable("TaskDialogButtonItem_Create", 0),
+	}
+)
+
+func askDialogButtonItemImportAPI() *imports.Imports {
+	if askDialogButtonItemImport == nil {
+		askDialogButtonItemImport = NewDefaultImports()
+		askDialogButtonItemImport.SetImportTable(askDialogButtonItemImportTables)
+		askDialogButtonItemImportTables = nil
+	}
+	return askDialogButtonItemImport
 }

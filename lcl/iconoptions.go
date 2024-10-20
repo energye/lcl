@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -30,38 +31,58 @@ type TIconOptions struct {
 }
 
 func NewIconOptions(AOwner ICustomListView) IIconOptions {
-	r1 := LCL().SysCallN(3375, GetObjectUintptr(AOwner))
+	r1 := conOptionsImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
 	return AsIconOptions(r1)
 }
 
 func (m *TIconOptions) Arrangement() TIconArrangement {
-	r1 := LCL().SysCallN(3372, 0, m.Instance(), 0)
+	r1 := conOptionsImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TIconArrangement(r1)
 }
 
 func (m *TIconOptions) SetArrangement(AValue TIconArrangement) {
-	LCL().SysCallN(3372, 1, m.Instance(), uintptr(AValue))
+	conOptionsImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TIconOptions) AutoArrange() bool {
-	r1 := LCL().SysCallN(3373, 0, m.Instance(), 0)
+	r1 := conOptionsImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TIconOptions) SetAutoArrange(AValue bool) {
-	LCL().SysCallN(3373, 1, m.Instance(), PascalBool(AValue))
+	conOptionsImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TIconOptions) WrapText() bool {
-	r1 := LCL().SysCallN(3376, 0, m.Instance(), 0)
+	r1 := conOptionsImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TIconOptions) SetWrapText(AValue bool) {
-	LCL().SysCallN(3376, 1, m.Instance(), PascalBool(AValue))
+	conOptionsImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
 }
 
 func IconOptionsClass() TClass {
-	ret := LCL().SysCallN(3374)
+	ret := conOptionsImportAPI().SysCallN(2)
 	return TClass(ret)
+}
+
+var (
+	conOptionsImport       *imports.Imports = nil
+	conOptionsImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("IconOptions_Arrangement", 0),
+		/*1*/ imports.NewTable("IconOptions_AutoArrange", 0),
+		/*2*/ imports.NewTable("IconOptions_Class", 0),
+		/*3*/ imports.NewTable("IconOptions_Create", 0),
+		/*4*/ imports.NewTable("IconOptions_WrapText", 0),
+	}
+)
+
+func conOptionsImportAPI() *imports.Imports {
+	if conOptionsImport == nil {
+		conOptionsImport = NewDefaultImports()
+		conOptionsImport.SetImportTable(conOptionsImportTables)
+		conOptionsImportTables = nil
+	}
+	return conOptionsImport
 }

@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -66,57 +67,57 @@ type TTrackBar struct {
 }
 
 func NewTrackBar(AOwner IComponent) ITrackBar {
-	r1 := LCL().SysCallN(5591, GetObjectUintptr(AOwner))
+	r1 := rackBarImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsTrackBar(r1)
 }
 
 func (m *TTrackBar) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5592, 0, m.Instance(), 0)
+	r1 := rackBarImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TTrackBar) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5592, 1, m.Instance(), uintptr(AValue))
+	rackBarImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTrackBar) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5593, 0, m.Instance(), 0)
+	r1 := rackBarImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TTrackBar) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5593, 1, m.Instance(), uintptr(AValue))
+	rackBarImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTrackBar) ParentColor() bool {
-	r1 := LCL().SysCallN(5594, 0, m.Instance(), 0)
+	r1 := rackBarImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTrackBar) SetParentColor(AValue bool) {
-	LCL().SysCallN(5594, 1, m.Instance(), PascalBool(AValue))
+	rackBarImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTrackBar) ParentFont() bool {
-	r1 := LCL().SysCallN(5595, 0, m.Instance(), 0)
+	r1 := rackBarImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTrackBar) SetParentFont(AValue bool) {
-	LCL().SysCallN(5595, 1, m.Instance(), PascalBool(AValue))
+	rackBarImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTrackBar) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5596, 0, m.Instance(), 0)
+	r1 := rackBarImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTrackBar) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5596, 1, m.Instance(), PascalBool(AValue))
+	rackBarImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func TrackBarClass() TClass {
-	ret := LCL().SysCallN(5590)
+	ret := rackBarImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -125,7 +126,7 @@ func (m *TTrackBar) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5597, m.Instance(), m.contextPopupPtr)
+	rackBarImportAPI().SysCallN(7, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TTrackBar) SetOnDragDrop(fn TDragDropEvent) {
@@ -133,7 +134,7 @@ func (m *TTrackBar) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5598, m.Instance(), m.dragDropPtr)
+	rackBarImportAPI().SysCallN(8, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TTrackBar) SetOnDragOver(fn TDragOverEvent) {
@@ -141,7 +142,7 @@ func (m *TTrackBar) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5599, m.Instance(), m.dragOverPtr)
+	rackBarImportAPI().SysCallN(9, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TTrackBar) SetOnEndDrag(fn TEndDragEvent) {
@@ -149,7 +150,7 @@ func (m *TTrackBar) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5600, m.Instance(), m.endDragPtr)
+	rackBarImportAPI().SysCallN(10, m.Instance(), m.endDragPtr)
 }
 
 func (m *TTrackBar) SetOnMouseDown(fn TMouseEvent) {
@@ -157,7 +158,7 @@ func (m *TTrackBar) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5601, m.Instance(), m.mouseDownPtr)
+	rackBarImportAPI().SysCallN(11, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TTrackBar) SetOnMouseEnter(fn TNotifyEvent) {
@@ -165,7 +166,7 @@ func (m *TTrackBar) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5602, m.Instance(), m.mouseEnterPtr)
+	rackBarImportAPI().SysCallN(12, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TTrackBar) SetOnMouseLeave(fn TNotifyEvent) {
@@ -173,7 +174,7 @@ func (m *TTrackBar) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5603, m.Instance(), m.mouseLeavePtr)
+	rackBarImportAPI().SysCallN(13, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TTrackBar) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -181,7 +182,7 @@ func (m *TTrackBar) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5604, m.Instance(), m.mouseMovePtr)
+	rackBarImportAPI().SysCallN(14, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TTrackBar) SetOnMouseUp(fn TMouseEvent) {
@@ -189,7 +190,7 @@ func (m *TTrackBar) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5605, m.Instance(), m.mouseUpPtr)
+	rackBarImportAPI().SysCallN(15, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -197,7 +198,7 @@ func (m *TTrackBar) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5606, m.Instance(), m.mouseWheelPtr)
+	rackBarImportAPI().SysCallN(16, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -205,7 +206,7 @@ func (m *TTrackBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5607, m.Instance(), m.mouseWheelDownPtr)
+	rackBarImportAPI().SysCallN(17, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -213,7 +214,7 @@ func (m *TTrackBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5611, m.Instance(), m.mouseWheelUpPtr)
+	rackBarImportAPI().SysCallN(21, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -221,7 +222,7 @@ func (m *TTrackBar) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5608, m.Instance(), m.mouseWheelHorzPtr)
+	rackBarImportAPI().SysCallN(18, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -229,7 +230,7 @@ func (m *TTrackBar) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5609, m.Instance(), m.mouseWheelLeftPtr)
+	rackBarImportAPI().SysCallN(19, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TTrackBar) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -237,7 +238,7 @@ func (m *TTrackBar) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5610, m.Instance(), m.mouseWheelRightPtr)
+	rackBarImportAPI().SysCallN(20, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TTrackBar) SetOnStartDrag(fn TStartDragEvent) {
@@ -245,5 +246,43 @@ func (m *TTrackBar) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5612, m.Instance(), m.startDragPtr)
+	rackBarImportAPI().SysCallN(22, m.Instance(), m.startDragPtr)
+}
+
+var (
+	rackBarImport       *imports.Imports = nil
+	rackBarImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("TrackBar_Class", 0),
+		/*1*/ imports.NewTable("TrackBar_Create", 0),
+		/*2*/ imports.NewTable("TrackBar_DragCursor", 0),
+		/*3*/ imports.NewTable("TrackBar_DragMode", 0),
+		/*4*/ imports.NewTable("TrackBar_ParentColor", 0),
+		/*5*/ imports.NewTable("TrackBar_ParentFont", 0),
+		/*6*/ imports.NewTable("TrackBar_ParentShowHint", 0),
+		/*7*/ imports.NewTable("TrackBar_SetOnContextPopup", 0),
+		/*8*/ imports.NewTable("TrackBar_SetOnDragDrop", 0),
+		/*9*/ imports.NewTable("TrackBar_SetOnDragOver", 0),
+		/*10*/ imports.NewTable("TrackBar_SetOnEndDrag", 0),
+		/*11*/ imports.NewTable("TrackBar_SetOnMouseDown", 0),
+		/*12*/ imports.NewTable("TrackBar_SetOnMouseEnter", 0),
+		/*13*/ imports.NewTable("TrackBar_SetOnMouseLeave", 0),
+		/*14*/ imports.NewTable("TrackBar_SetOnMouseMove", 0),
+		/*15*/ imports.NewTable("TrackBar_SetOnMouseUp", 0),
+		/*16*/ imports.NewTable("TrackBar_SetOnMouseWheel", 0),
+		/*17*/ imports.NewTable("TrackBar_SetOnMouseWheelDown", 0),
+		/*18*/ imports.NewTable("TrackBar_SetOnMouseWheelHorz", 0),
+		/*19*/ imports.NewTable("TrackBar_SetOnMouseWheelLeft", 0),
+		/*20*/ imports.NewTable("TrackBar_SetOnMouseWheelRight", 0),
+		/*21*/ imports.NewTable("TrackBar_SetOnMouseWheelUp", 0),
+		/*22*/ imports.NewTable("TrackBar_SetOnStartDrag", 0),
+	}
+)
+
+func rackBarImportAPI() *imports.Imports {
+	if rackBarImport == nil {
+		rackBarImport = NewDefaultImports()
+		rackBarImport.SetImportTable(rackBarImportTables)
+		rackBarImportTables = nil
+	}
+	return rackBarImport
 }

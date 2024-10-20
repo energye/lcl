@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -28,34 +29,54 @@ type Exception struct {
 }
 
 func NewException(msg string) IException {
-	r1 := LCL().SysCallN(2845, PascalStr(msg))
+	r1 := exceptionImportAPI().SysCallN(1, PascalStr(msg))
 	return AsException(r1)
 }
 
 func NewExceptionHelp(Msg string, AHelpContext int32) IException {
-	r1 := LCL().SysCallN(2846, PascalStr(Msg), uintptr(AHelpContext))
+	r1 := exceptionImportAPI().SysCallN(2, PascalStr(Msg), uintptr(AHelpContext))
 	return AsException(r1)
 }
 
 func (m *Exception) HelpContext() int32 {
-	r1 := LCL().SysCallN(2847, 0, m.Instance(), 0)
+	r1 := exceptionImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *Exception) SetHelpContext(AValue int32) {
-	LCL().SysCallN(2847, 1, m.Instance(), uintptr(AValue))
+	exceptionImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *Exception) Message() string {
-	r1 := LCL().SysCallN(2848, 0, m.Instance(), 0)
+	r1 := exceptionImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *Exception) SetMessage(AValue string) {
-	LCL().SysCallN(2848, 1, m.Instance(), PascalStr(AValue))
+	exceptionImportAPI().SysCallN(4, 1, m.Instance(), PascalStr(AValue))
 }
 
 func ExceptionClass() TClass {
-	ret := LCL().SysCallN(2844)
+	ret := exceptionImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	exceptionImport       *imports.Imports = nil
+	exceptionImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Exception_Class", 0),
+		/*1*/ imports.NewTable("Exception_Create", 0),
+		/*2*/ imports.NewTable("Exception_CreateHelp", 0),
+		/*3*/ imports.NewTable("Exception_HelpContext", 0),
+		/*4*/ imports.NewTable("Exception_Message", 0),
+	}
+)
+
+func exceptionImportAPI() *imports.Imports {
+	if exceptionImport == nil {
+		exceptionImport = NewDefaultImports()
+		exceptionImport.SetImportTable(exceptionImportTables)
+		exceptionImportTables = nil
+	}
+	return exceptionImport
 }

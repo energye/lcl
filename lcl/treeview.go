@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -152,210 +153,210 @@ type TTreeView struct {
 }
 
 func NewTreeView(AnOwner IComponent) ITreeView {
-	r1 := LCL().SysCallN(5760, GetObjectUintptr(AnOwner))
+	r1 := reeViewImportAPI().SysCallN(2, GetObjectUintptr(AnOwner))
 	return AsTreeView(r1)
 }
 
 func (m *TTreeView) AutoExpand() bool {
-	r1 := LCL().SysCallN(5758, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetAutoExpand(AValue bool) {
-	LCL().SysCallN(5758, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) DisabledFontColor() TColor {
-	r1 := LCL().SysCallN(5761, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TTreeView) SetDisabledFontColor(AValue TColor) {
-	LCL().SysCallN(5761, 1, m.Instance(), uintptr(AValue))
+	reeViewImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTreeView) DragKind() TDragKind {
-	r1 := LCL().SysCallN(5763, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TTreeView) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(5763, 1, m.Instance(), uintptr(AValue))
+	reeViewImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTreeView) DragCursor() TCursor {
-	r1 := LCL().SysCallN(5762, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TTreeView) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(5762, 1, m.Instance(), uintptr(AValue))
+	reeViewImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTreeView) DragMode() TDragMode {
-	r1 := LCL().SysCallN(5764, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TTreeView) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(5764, 1, m.Instance(), uintptr(AValue))
+	reeViewImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTreeView) HideSelection() bool {
-	r1 := LCL().SysCallN(5765, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetHideSelection(AValue bool) {
-	LCL().SysCallN(5765, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) HotTrack() bool {
-	r1 := LCL().SysCallN(5766, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetHotTrack(AValue bool) {
-	LCL().SysCallN(5766, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) HotTrackColor() TColor {
-	r1 := LCL().SysCallN(5767, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TColor(r1)
 }
 
 func (m *TTreeView) SetHotTrackColor(AValue TColor) {
-	LCL().SysCallN(5767, 1, m.Instance(), uintptr(AValue))
+	reeViewImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTreeView) Indent() int32 {
-	r1 := LCL().SysCallN(5768, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TTreeView) SetIndent(AValue int32) {
-	LCL().SysCallN(5768, 1, m.Instance(), uintptr(AValue))
+	reeViewImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTreeView) MultiSelect() bool {
-	r1 := LCL().SysCallN(5769, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetMultiSelect(AValue bool) {
-	LCL().SysCallN(5769, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) ParentColor() bool {
-	r1 := LCL().SysCallN(5770, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetParentColor(AValue bool) {
-	LCL().SysCallN(5770, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(12, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) ParentFont() bool {
-	r1 := LCL().SysCallN(5771, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(13, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetParentFont(AValue bool) {
-	LCL().SysCallN(5771, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) ParentShowHint() bool {
-	r1 := LCL().SysCallN(5772, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(5772, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(14, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) ReadOnly() bool {
-	r1 := LCL().SysCallN(5773, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetReadOnly(AValue bool) {
-	LCL().SysCallN(5773, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(15, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) RightClickSelect() bool {
-	r1 := LCL().SysCallN(5774, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetRightClickSelect(AValue bool) {
-	LCL().SysCallN(5774, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) RowSelect() bool {
-	r1 := LCL().SysCallN(5775, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetRowSelect(AValue bool) {
-	LCL().SysCallN(5775, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(17, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) ShowButtons() bool {
-	r1 := LCL().SysCallN(5817, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(59, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetShowButtons(AValue bool) {
-	LCL().SysCallN(5817, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(59, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) ShowLines() bool {
-	r1 := LCL().SysCallN(5818, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(60, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetShowLines(AValue bool) {
-	LCL().SysCallN(5818, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(60, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) ShowRoot() bool {
-	r1 := LCL().SysCallN(5819, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(61, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetShowRoot(AValue bool) {
-	LCL().SysCallN(5819, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(61, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) ShowSeparators() bool {
-	r1 := LCL().SysCallN(5820, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(62, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetShowSeparators(AValue bool) {
-	LCL().SysCallN(5820, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(62, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TTreeView) SortType() TSortType {
-	r1 := LCL().SysCallN(5821, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(63, 0, m.Instance(), 0)
 	return TSortType(r1)
 }
 
 func (m *TTreeView) SetSortType(AValue TSortType) {
-	LCL().SysCallN(5821, 1, m.Instance(), uintptr(AValue))
+	reeViewImportAPI().SysCallN(63, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TTreeView) ToolTips() bool {
-	r1 := LCL().SysCallN(5822, 0, m.Instance(), 0)
+	r1 := reeViewImportAPI().SysCallN(64, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TTreeView) SetToolTips(AValue bool) {
-	LCL().SysCallN(5822, 1, m.Instance(), PascalBool(AValue))
+	reeViewImportAPI().SysCallN(64, 1, m.Instance(), PascalBool(AValue))
 }
 
 func TreeViewClass() TClass {
-	ret := LCL().SysCallN(5759)
+	ret := reeViewImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
@@ -364,7 +365,7 @@ func (m *TTreeView) SetOnAddition(fn TTVExpandedEvent) {
 		RemoveEventElement(m.additionPtr)
 	}
 	m.additionPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5776, m.Instance(), m.additionPtr)
+	reeViewImportAPI().SysCallN(18, m.Instance(), m.additionPtr)
 }
 
 func (m *TTreeView) SetOnAdvancedCustomDraw(fn TTVAdvancedCustomDrawEvent) {
@@ -372,7 +373,7 @@ func (m *TTreeView) SetOnAdvancedCustomDraw(fn TTVAdvancedCustomDrawEvent) {
 		RemoveEventElement(m.advancedCustomDrawPtr)
 	}
 	m.advancedCustomDrawPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5777, m.Instance(), m.advancedCustomDrawPtr)
+	reeViewImportAPI().SysCallN(19, m.Instance(), m.advancedCustomDrawPtr)
 }
 
 func (m *TTreeView) SetOnAdvancedCustomDrawItem(fn TTVAdvancedCustomDrawItemEvent) {
@@ -380,7 +381,7 @@ func (m *TTreeView) SetOnAdvancedCustomDrawItem(fn TTVAdvancedCustomDrawItemEven
 		RemoveEventElement(m.advancedCustomDrawItemPtr)
 	}
 	m.advancedCustomDrawItemPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5778, m.Instance(), m.advancedCustomDrawItemPtr)
+	reeViewImportAPI().SysCallN(20, m.Instance(), m.advancedCustomDrawItemPtr)
 }
 
 func (m *TTreeView) SetOnChange(fn TTVChangedEvent) {
@@ -388,7 +389,7 @@ func (m *TTreeView) SetOnChange(fn TTVChangedEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5779, m.Instance(), m.changePtr)
+	reeViewImportAPI().SysCallN(21, m.Instance(), m.changePtr)
 }
 
 func (m *TTreeView) SetOnChanging(fn TTVChangingEvent) {
@@ -396,7 +397,7 @@ func (m *TTreeView) SetOnChanging(fn TTVChangingEvent) {
 		RemoveEventElement(m.changingPtr)
 	}
 	m.changingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5780, m.Instance(), m.changingPtr)
+	reeViewImportAPI().SysCallN(22, m.Instance(), m.changingPtr)
 }
 
 func (m *TTreeView) SetOnCollapsed(fn TTVExpandedEvent) {
@@ -404,7 +405,7 @@ func (m *TTreeView) SetOnCollapsed(fn TTVExpandedEvent) {
 		RemoveEventElement(m.collapsedPtr)
 	}
 	m.collapsedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5781, m.Instance(), m.collapsedPtr)
+	reeViewImportAPI().SysCallN(23, m.Instance(), m.collapsedPtr)
 }
 
 func (m *TTreeView) SetOnCollapsing(fn TTVCollapsingEvent) {
@@ -412,7 +413,7 @@ func (m *TTreeView) SetOnCollapsing(fn TTVCollapsingEvent) {
 		RemoveEventElement(m.collapsingPtr)
 	}
 	m.collapsingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5782, m.Instance(), m.collapsingPtr)
+	reeViewImportAPI().SysCallN(24, m.Instance(), m.collapsingPtr)
 }
 
 func (m *TTreeView) SetOnCompare(fn TTVCompareEvent) {
@@ -420,7 +421,7 @@ func (m *TTreeView) SetOnCompare(fn TTVCompareEvent) {
 		RemoveEventElement(m.comparePtr)
 	}
 	m.comparePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5783, m.Instance(), m.comparePtr)
+	reeViewImportAPI().SysCallN(25, m.Instance(), m.comparePtr)
 }
 
 func (m *TTreeView) SetOnContextPopup(fn TContextPopupEvent) {
@@ -428,7 +429,7 @@ func (m *TTreeView) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5784, m.Instance(), m.contextPopupPtr)
+	reeViewImportAPI().SysCallN(26, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TTreeView) SetOnCreateNodeClass(fn TTVCreateNodeClassEvent) {
@@ -436,7 +437,7 @@ func (m *TTreeView) SetOnCreateNodeClass(fn TTVCreateNodeClassEvent) {
 		RemoveEventElement(m.createNodeClassPtr)
 	}
 	m.createNodeClassPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5785, m.Instance(), m.createNodeClassPtr)
+	reeViewImportAPI().SysCallN(27, m.Instance(), m.createNodeClassPtr)
 }
 
 func (m *TTreeView) SetOnCustomCreateItem(fn TTVCustomCreateNodeEvent) {
@@ -444,7 +445,7 @@ func (m *TTreeView) SetOnCustomCreateItem(fn TTVCustomCreateNodeEvent) {
 		RemoveEventElement(m.customCreateItemPtr)
 	}
 	m.customCreateItemPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5786, m.Instance(), m.customCreateItemPtr)
+	reeViewImportAPI().SysCallN(28, m.Instance(), m.customCreateItemPtr)
 }
 
 func (m *TTreeView) SetOnCustomDraw(fn TTVCustomDrawEvent) {
@@ -452,7 +453,7 @@ func (m *TTreeView) SetOnCustomDraw(fn TTVCustomDrawEvent) {
 		RemoveEventElement(m.customDrawPtr)
 	}
 	m.customDrawPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5787, m.Instance(), m.customDrawPtr)
+	reeViewImportAPI().SysCallN(29, m.Instance(), m.customDrawPtr)
 }
 
 func (m *TTreeView) SetOnCustomDrawItem(fn TTVCustomDrawItemEvent) {
@@ -460,7 +461,7 @@ func (m *TTreeView) SetOnCustomDrawItem(fn TTVCustomDrawItemEvent) {
 		RemoveEventElement(m.customDrawItemPtr)
 	}
 	m.customDrawItemPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5789, m.Instance(), m.customDrawItemPtr)
+	reeViewImportAPI().SysCallN(31, m.Instance(), m.customDrawItemPtr)
 }
 
 func (m *TTreeView) SetOnCustomDrawArrow(fn TTVCustomDrawArrowEvent) {
@@ -468,7 +469,7 @@ func (m *TTreeView) SetOnCustomDrawArrow(fn TTVCustomDrawArrowEvent) {
 		RemoveEventElement(m.customDrawArrowPtr)
 	}
 	m.customDrawArrowPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5788, m.Instance(), m.customDrawArrowPtr)
+	reeViewImportAPI().SysCallN(30, m.Instance(), m.customDrawArrowPtr)
 }
 
 func (m *TTreeView) SetOnDblClick(fn TNotifyEvent) {
@@ -476,7 +477,7 @@ func (m *TTreeView) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5790, m.Instance(), m.dblClickPtr)
+	reeViewImportAPI().SysCallN(32, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TTreeView) SetOnDeletion(fn TTVExpandedEvent) {
@@ -484,7 +485,7 @@ func (m *TTreeView) SetOnDeletion(fn TTVExpandedEvent) {
 		RemoveEventElement(m.deletionPtr)
 	}
 	m.deletionPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5791, m.Instance(), m.deletionPtr)
+	reeViewImportAPI().SysCallN(33, m.Instance(), m.deletionPtr)
 }
 
 func (m *TTreeView) SetOnDragDrop(fn TDragDropEvent) {
@@ -492,7 +493,7 @@ func (m *TTreeView) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5792, m.Instance(), m.dragDropPtr)
+	reeViewImportAPI().SysCallN(34, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TTreeView) SetOnDragOver(fn TDragOverEvent) {
@@ -500,7 +501,7 @@ func (m *TTreeView) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5793, m.Instance(), m.dragOverPtr)
+	reeViewImportAPI().SysCallN(35, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TTreeView) SetOnEdited(fn TTVEditedEvent) {
@@ -508,7 +509,7 @@ func (m *TTreeView) SetOnEdited(fn TTVEditedEvent) {
 		RemoveEventElement(m.editedPtr)
 	}
 	m.editedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5794, m.Instance(), m.editedPtr)
+	reeViewImportAPI().SysCallN(36, m.Instance(), m.editedPtr)
 }
 
 func (m *TTreeView) SetOnEditing(fn TTVEditingEvent) {
@@ -516,7 +517,7 @@ func (m *TTreeView) SetOnEditing(fn TTVEditingEvent) {
 		RemoveEventElement(m.editingPtr)
 	}
 	m.editingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5795, m.Instance(), m.editingPtr)
+	reeViewImportAPI().SysCallN(37, m.Instance(), m.editingPtr)
 }
 
 func (m *TTreeView) SetOnEditingEnd(fn TTVEditingEndEvent) {
@@ -524,7 +525,7 @@ func (m *TTreeView) SetOnEditingEnd(fn TTVEditingEndEvent) {
 		RemoveEventElement(m.editingEndPtr)
 	}
 	m.editingEndPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5796, m.Instance(), m.editingEndPtr)
+	reeViewImportAPI().SysCallN(38, m.Instance(), m.editingEndPtr)
 }
 
 func (m *TTreeView) SetOnEndDrag(fn TEndDragEvent) {
@@ -532,7 +533,7 @@ func (m *TTreeView) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5797, m.Instance(), m.endDragPtr)
+	reeViewImportAPI().SysCallN(39, m.Instance(), m.endDragPtr)
 }
 
 func (m *TTreeView) SetOnExpanded(fn TTVExpandedEvent) {
@@ -540,7 +541,7 @@ func (m *TTreeView) SetOnExpanded(fn TTVExpandedEvent) {
 		RemoveEventElement(m.expandedPtr)
 	}
 	m.expandedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5798, m.Instance(), m.expandedPtr)
+	reeViewImportAPI().SysCallN(40, m.Instance(), m.expandedPtr)
 }
 
 func (m *TTreeView) SetOnExpanding(fn TTVExpandingEvent) {
@@ -548,7 +549,7 @@ func (m *TTreeView) SetOnExpanding(fn TTVExpandingEvent) {
 		RemoveEventElement(m.expandingPtr)
 	}
 	m.expandingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5799, m.Instance(), m.expandingPtr)
+	reeViewImportAPI().SysCallN(41, m.Instance(), m.expandingPtr)
 }
 
 func (m *TTreeView) SetOnGetImageIndex(fn TTVExpandedEvent) {
@@ -556,7 +557,7 @@ func (m *TTreeView) SetOnGetImageIndex(fn TTVExpandedEvent) {
 		RemoveEventElement(m.getImageIndexPtr)
 	}
 	m.getImageIndexPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5800, m.Instance(), m.getImageIndexPtr)
+	reeViewImportAPI().SysCallN(42, m.Instance(), m.getImageIndexPtr)
 }
 
 func (m *TTreeView) SetOnGetSelectedIndex(fn TTVExpandedEvent) {
@@ -564,7 +565,7 @@ func (m *TTreeView) SetOnGetSelectedIndex(fn TTVExpandedEvent) {
 		RemoveEventElement(m.getSelectedIndexPtr)
 	}
 	m.getSelectedIndexPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5801, m.Instance(), m.getSelectedIndexPtr)
+	reeViewImportAPI().SysCallN(43, m.Instance(), m.getSelectedIndexPtr)
 }
 
 func (m *TTreeView) SetOnHasChildren(fn TTVHasChildrenEvent) {
@@ -572,7 +573,7 @@ func (m *TTreeView) SetOnHasChildren(fn TTVHasChildrenEvent) {
 		RemoveEventElement(m.hasChildrenPtr)
 	}
 	m.hasChildrenPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5802, m.Instance(), m.hasChildrenPtr)
+	reeViewImportAPI().SysCallN(44, m.Instance(), m.hasChildrenPtr)
 }
 
 func (m *TTreeView) SetOnMouseDown(fn TMouseEvent) {
@@ -580,7 +581,7 @@ func (m *TTreeView) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5803, m.Instance(), m.mouseDownPtr)
+	reeViewImportAPI().SysCallN(45, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TTreeView) SetOnMouseEnter(fn TNotifyEvent) {
@@ -588,7 +589,7 @@ func (m *TTreeView) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5804, m.Instance(), m.mouseEnterPtr)
+	reeViewImportAPI().SysCallN(46, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TTreeView) SetOnMouseLeave(fn TNotifyEvent) {
@@ -596,7 +597,7 @@ func (m *TTreeView) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5805, m.Instance(), m.mouseLeavePtr)
+	reeViewImportAPI().SysCallN(47, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TTreeView) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -604,7 +605,7 @@ func (m *TTreeView) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5806, m.Instance(), m.mouseMovePtr)
+	reeViewImportAPI().SysCallN(48, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TTreeView) SetOnMouseUp(fn TMouseEvent) {
@@ -612,7 +613,7 @@ func (m *TTreeView) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5807, m.Instance(), m.mouseUpPtr)
+	reeViewImportAPI().SysCallN(49, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TTreeView) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -620,7 +621,7 @@ func (m *TTreeView) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5808, m.Instance(), m.mouseWheelPtr)
+	reeViewImportAPI().SysCallN(50, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TTreeView) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -628,7 +629,7 @@ func (m *TTreeView) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5809, m.Instance(), m.mouseWheelDownPtr)
+	reeViewImportAPI().SysCallN(51, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TTreeView) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -636,7 +637,7 @@ func (m *TTreeView) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5813, m.Instance(), m.mouseWheelUpPtr)
+	reeViewImportAPI().SysCallN(55, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TTreeView) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -644,7 +645,7 @@ func (m *TTreeView) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5810, m.Instance(), m.mouseWheelHorzPtr)
+	reeViewImportAPI().SysCallN(52, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TTreeView) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -652,7 +653,7 @@ func (m *TTreeView) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5811, m.Instance(), m.mouseWheelLeftPtr)
+	reeViewImportAPI().SysCallN(53, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TTreeView) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -660,7 +661,7 @@ func (m *TTreeView) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5812, m.Instance(), m.mouseWheelRightPtr)
+	reeViewImportAPI().SysCallN(54, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TTreeView) SetOnNodeChanged(fn TTVNodeChangedEvent) {
@@ -668,7 +669,7 @@ func (m *TTreeView) SetOnNodeChanged(fn TTVNodeChangedEvent) {
 		RemoveEventElement(m.nodeChangedPtr)
 	}
 	m.nodeChangedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5814, m.Instance(), m.nodeChangedPtr)
+	reeViewImportAPI().SysCallN(56, m.Instance(), m.nodeChangedPtr)
 }
 
 func (m *TTreeView) SetOnSelectionChanged(fn TNotifyEvent) {
@@ -676,7 +677,7 @@ func (m *TTreeView) SetOnSelectionChanged(fn TNotifyEvent) {
 		RemoveEventElement(m.selectionChangedPtr)
 	}
 	m.selectionChangedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5815, m.Instance(), m.selectionChangedPtr)
+	reeViewImportAPI().SysCallN(57, m.Instance(), m.selectionChangedPtr)
 }
 
 func (m *TTreeView) SetOnStartDrag(fn TStartDragEvent) {
@@ -684,5 +685,85 @@ func (m *TTreeView) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5816, m.Instance(), m.startDragPtr)
+	reeViewImportAPI().SysCallN(58, m.Instance(), m.startDragPtr)
+}
+
+var (
+	reeViewImport       *imports.Imports = nil
+	reeViewImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("TreeView_AutoExpand", 0),
+		/*1*/ imports.NewTable("TreeView_Class", 0),
+		/*2*/ imports.NewTable("TreeView_Create", 0),
+		/*3*/ imports.NewTable("TreeView_DisabledFontColor", 0),
+		/*4*/ imports.NewTable("TreeView_DragCursor", 0),
+		/*5*/ imports.NewTable("TreeView_DragKind", 0),
+		/*6*/ imports.NewTable("TreeView_DragMode", 0),
+		/*7*/ imports.NewTable("TreeView_HideSelection", 0),
+		/*8*/ imports.NewTable("TreeView_HotTrack", 0),
+		/*9*/ imports.NewTable("TreeView_HotTrackColor", 0),
+		/*10*/ imports.NewTable("TreeView_Indent", 0),
+		/*11*/ imports.NewTable("TreeView_MultiSelect", 0),
+		/*12*/ imports.NewTable("TreeView_ParentColor", 0),
+		/*13*/ imports.NewTable("TreeView_ParentFont", 0),
+		/*14*/ imports.NewTable("TreeView_ParentShowHint", 0),
+		/*15*/ imports.NewTable("TreeView_ReadOnly", 0),
+		/*16*/ imports.NewTable("TreeView_RightClickSelect", 0),
+		/*17*/ imports.NewTable("TreeView_RowSelect", 0),
+		/*18*/ imports.NewTable("TreeView_SetOnAddition", 0),
+		/*19*/ imports.NewTable("TreeView_SetOnAdvancedCustomDraw", 0),
+		/*20*/ imports.NewTable("TreeView_SetOnAdvancedCustomDrawItem", 0),
+		/*21*/ imports.NewTable("TreeView_SetOnChange", 0),
+		/*22*/ imports.NewTable("TreeView_SetOnChanging", 0),
+		/*23*/ imports.NewTable("TreeView_SetOnCollapsed", 0),
+		/*24*/ imports.NewTable("TreeView_SetOnCollapsing", 0),
+		/*25*/ imports.NewTable("TreeView_SetOnCompare", 0),
+		/*26*/ imports.NewTable("TreeView_SetOnContextPopup", 0),
+		/*27*/ imports.NewTable("TreeView_SetOnCreateNodeClass", 0),
+		/*28*/ imports.NewTable("TreeView_SetOnCustomCreateItem", 0),
+		/*29*/ imports.NewTable("TreeView_SetOnCustomDraw", 0),
+		/*30*/ imports.NewTable("TreeView_SetOnCustomDrawArrow", 0),
+		/*31*/ imports.NewTable("TreeView_SetOnCustomDrawItem", 0),
+		/*32*/ imports.NewTable("TreeView_SetOnDblClick", 0),
+		/*33*/ imports.NewTable("TreeView_SetOnDeletion", 0),
+		/*34*/ imports.NewTable("TreeView_SetOnDragDrop", 0),
+		/*35*/ imports.NewTable("TreeView_SetOnDragOver", 0),
+		/*36*/ imports.NewTable("TreeView_SetOnEdited", 0),
+		/*37*/ imports.NewTable("TreeView_SetOnEditing", 0),
+		/*38*/ imports.NewTable("TreeView_SetOnEditingEnd", 0),
+		/*39*/ imports.NewTable("TreeView_SetOnEndDrag", 0),
+		/*40*/ imports.NewTable("TreeView_SetOnExpanded", 0),
+		/*41*/ imports.NewTable("TreeView_SetOnExpanding", 0),
+		/*42*/ imports.NewTable("TreeView_SetOnGetImageIndex", 0),
+		/*43*/ imports.NewTable("TreeView_SetOnGetSelectedIndex", 0),
+		/*44*/ imports.NewTable("TreeView_SetOnHasChildren", 0),
+		/*45*/ imports.NewTable("TreeView_SetOnMouseDown", 0),
+		/*46*/ imports.NewTable("TreeView_SetOnMouseEnter", 0),
+		/*47*/ imports.NewTable("TreeView_SetOnMouseLeave", 0),
+		/*48*/ imports.NewTable("TreeView_SetOnMouseMove", 0),
+		/*49*/ imports.NewTable("TreeView_SetOnMouseUp", 0),
+		/*50*/ imports.NewTable("TreeView_SetOnMouseWheel", 0),
+		/*51*/ imports.NewTable("TreeView_SetOnMouseWheelDown", 0),
+		/*52*/ imports.NewTable("TreeView_SetOnMouseWheelHorz", 0),
+		/*53*/ imports.NewTable("TreeView_SetOnMouseWheelLeft", 0),
+		/*54*/ imports.NewTable("TreeView_SetOnMouseWheelRight", 0),
+		/*55*/ imports.NewTable("TreeView_SetOnMouseWheelUp", 0),
+		/*56*/ imports.NewTable("TreeView_SetOnNodeChanged", 0),
+		/*57*/ imports.NewTable("TreeView_SetOnSelectionChanged", 0),
+		/*58*/ imports.NewTable("TreeView_SetOnStartDrag", 0),
+		/*59*/ imports.NewTable("TreeView_ShowButtons", 0),
+		/*60*/ imports.NewTable("TreeView_ShowLines", 0),
+		/*61*/ imports.NewTable("TreeView_ShowRoot", 0),
+		/*62*/ imports.NewTable("TreeView_ShowSeparators", 0),
+		/*63*/ imports.NewTable("TreeView_SortType", 0),
+		/*64*/ imports.NewTable("TreeView_ToolTips", 0),
+	}
+)
+
+func reeViewImportAPI() *imports.Imports {
+	if reeViewImport == nil {
+		reeViewImport = NewDefaultImports()
+		reeViewImport.SetImportTable(reeViewImportTables)
+		reeViewImportTables = nil
+	}
+	return reeViewImport
 }

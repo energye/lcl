@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -47,119 +48,152 @@ type TControlScrollBar struct {
 }
 
 func NewControlScrollBar(AControl IWinControl, AKind TScrollBarKind) IControlScrollBar {
-	r1 := LCL().SysCallN(961, GetObjectUintptr(AControl), uintptr(AKind))
+	r1 := controlScrollBarImportAPI().SysCallN(5, GetObjectUintptr(AControl), uintptr(AKind))
 	return AsControlScrollBar(r1)
 }
 
 func (m *TControlScrollBar) Kind() TScrollBarKind {
-	r1 := LCL().SysCallN(965, m.Instance())
+	r1 := controlScrollBarImportAPI().SysCallN(9, m.Instance())
 	return TScrollBarKind(r1)
 }
 
 func (m *TControlScrollBar) Size() int32 {
-	r1 := LCL().SysCallN(970, m.Instance())
+	r1 := controlScrollBarImportAPI().SysCallN(14, m.Instance())
 	return int32(r1)
 }
 
 func (m *TControlScrollBar) Increment() TScrollBarInc {
-	r1 := LCL().SysCallN(963, 0, m.Instance(), 0)
+	r1 := controlScrollBarImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return TScrollBarInc(r1)
 }
 
 func (m *TControlScrollBar) SetIncrement(AValue TScrollBarInc) {
-	LCL().SysCallN(963, 1, m.Instance(), uintptr(AValue))
+	controlScrollBarImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControlScrollBar) Page() TScrollBarInc {
-	r1 := LCL().SysCallN(966, 0, m.Instance(), 0)
+	r1 := controlScrollBarImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TScrollBarInc(r1)
 }
 
 func (m *TControlScrollBar) SetPage(AValue TScrollBarInc) {
-	LCL().SysCallN(966, 1, m.Instance(), uintptr(AValue))
+	controlScrollBarImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControlScrollBar) Smooth() bool {
-	r1 := LCL().SysCallN(971, 0, m.Instance(), 0)
+	r1 := controlScrollBarImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TControlScrollBar) SetSmooth(AValue bool) {
-	LCL().SysCallN(971, 1, m.Instance(), PascalBool(AValue))
+	controlScrollBarImportAPI().SysCallN(15, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TControlScrollBar) Position() int32 {
-	r1 := LCL().SysCallN(967, 0, m.Instance(), 0)
+	r1 := controlScrollBarImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControlScrollBar) SetPosition(AValue int32) {
-	LCL().SysCallN(967, 1, m.Instance(), uintptr(AValue))
+	controlScrollBarImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControlScrollBar) Range() int32 {
-	r1 := LCL().SysCallN(968, 0, m.Instance(), 0)
+	r1 := controlScrollBarImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TControlScrollBar) SetRange(AValue int32) {
-	LCL().SysCallN(968, 1, m.Instance(), uintptr(AValue))
+	controlScrollBarImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TControlScrollBar) Tracking() bool {
-	r1 := LCL().SysCallN(972, 0, m.Instance(), 0)
+	r1 := controlScrollBarImportAPI().SysCallN(16, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TControlScrollBar) SetTracking(AValue bool) {
-	LCL().SysCallN(972, 1, m.Instance(), PascalBool(AValue))
+	controlScrollBarImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TControlScrollBar) Visible() bool {
-	r1 := LCL().SysCallN(973, 0, m.Instance(), 0)
+	r1 := controlScrollBarImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TControlScrollBar) SetVisible(AValue bool) {
-	LCL().SysCallN(973, 1, m.Instance(), PascalBool(AValue))
+	controlScrollBarImportAPI().SysCallN(17, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TControlScrollBar) IsScrollBarVisible() bool {
-	r1 := LCL().SysCallN(964, m.Instance())
+	r1 := controlScrollBarImportAPI().SysCallN(8, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TControlScrollBar) ScrollPos() int32 {
-	r1 := LCL().SysCallN(969, m.Instance())
+	r1 := controlScrollBarImportAPI().SysCallN(13, m.Instance())
 	return int32(r1)
 }
 
 func (m *TControlScrollBar) GetOtherScrollBar() IControlScrollBar {
-	r1 := LCL().SysCallN(962, m.Instance())
+	r1 := controlScrollBarImportAPI().SysCallN(6, m.Instance())
 	return AsControlScrollBar(r1)
 }
 
 func (m *TControlScrollBar) ControlSize() int32 {
-	r1 := LCL().SysCallN(960, m.Instance())
+	r1 := controlScrollBarImportAPI().SysCallN(4, m.Instance())
 	return int32(r1)
 }
 
 func (m *TControlScrollBar) ClientSize() int32 {
-	r1 := LCL().SysCallN(957, m.Instance())
+	r1 := controlScrollBarImportAPI().SysCallN(1, m.Instance())
 	return int32(r1)
 }
 
 func (m *TControlScrollBar) ClientSizeWithBar() int32 {
-	r1 := LCL().SysCallN(958, m.Instance())
+	r1 := controlScrollBarImportAPI().SysCallN(2, m.Instance())
 	return int32(r1)
 }
 
 func (m *TControlScrollBar) ClientSizeWithoutBar() int32 {
-	r1 := LCL().SysCallN(959, m.Instance())
+	r1 := controlScrollBarImportAPI().SysCallN(3, m.Instance())
 	return int32(r1)
 }
 
 func ControlScrollBarClass() TClass {
-	ret := LCL().SysCallN(956)
+	ret := controlScrollBarImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	controlScrollBarImport       *imports.Imports = nil
+	controlScrollBarImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ControlScrollBar_Class", 0),
+		/*1*/ imports.NewTable("ControlScrollBar_ClientSize", 0),
+		/*2*/ imports.NewTable("ControlScrollBar_ClientSizeWithBar", 0),
+		/*3*/ imports.NewTable("ControlScrollBar_ClientSizeWithoutBar", 0),
+		/*4*/ imports.NewTable("ControlScrollBar_ControlSize", 0),
+		/*5*/ imports.NewTable("ControlScrollBar_Create", 0),
+		/*6*/ imports.NewTable("ControlScrollBar_GetOtherScrollBar", 0),
+		/*7*/ imports.NewTable("ControlScrollBar_Increment", 0),
+		/*8*/ imports.NewTable("ControlScrollBar_IsScrollBarVisible", 0),
+		/*9*/ imports.NewTable("ControlScrollBar_Kind", 0),
+		/*10*/ imports.NewTable("ControlScrollBar_Page", 0),
+		/*11*/ imports.NewTable("ControlScrollBar_Position", 0),
+		/*12*/ imports.NewTable("ControlScrollBar_Range", 0),
+		/*13*/ imports.NewTable("ControlScrollBar_ScrollPos", 0),
+		/*14*/ imports.NewTable("ControlScrollBar_Size", 0),
+		/*15*/ imports.NewTable("ControlScrollBar_Smooth", 0),
+		/*16*/ imports.NewTable("ControlScrollBar_Tracking", 0),
+		/*17*/ imports.NewTable("ControlScrollBar_Visible", 0),
+	}
+)
+
+func controlScrollBarImportAPI() *imports.Imports {
+	if controlScrollBarImport == nil {
+		controlScrollBarImport = NewDefaultImports()
+		controlScrollBarImport.SetImportTable(controlScrollBarImportTables)
+		controlScrollBarImportTables = nil
+	}
+	return controlScrollBarImport
 }

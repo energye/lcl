@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TOwnedCollection struct {
 }
 
 func NewOwnedCollection(AOwner IPersistent, AItemClass TCollectionItemClass) IOwnedCollection {
-	r1 := LCL().SysCallN(4425, GetObjectUintptr(AOwner), uintptr(AItemClass))
+	r1 := ownedCollectionImportAPI().SysCallN(1, GetObjectUintptr(AOwner), uintptr(AItemClass))
 	return AsOwnedCollection(r1)
 }
 
 func OwnedCollectionClass() TClass {
-	ret := LCL().SysCallN(4424)
+	ret := ownedCollectionImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	ownedCollectionImport       *imports.Imports = nil
+	ownedCollectionImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("OwnedCollection_Class", 0),
+		/*1*/ imports.NewTable("OwnedCollection_Create", 0),
+	}
+)
+
+func ownedCollectionImportAPI() *imports.Imports {
+	if ownedCollectionImport == nil {
+		ownedCollectionImport = NewDefaultImports()
+		ownedCollectionImport.SetImportTable(ownedCollectionImportTables)
+		ownedCollectionImportTables = nil
+	}
+	return ownedCollectionImport
 }

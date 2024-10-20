@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -53,143 +54,184 @@ type TComponent struct {
 }
 
 func NewComponent(AOwner IComponent) IComponent {
-	r1 := LCL().SysCallN(885, GetObjectUintptr(AOwner))
+	r1 := componentImportAPI().SysCallN(6, GetObjectUintptr(AOwner))
 	return AsComponent(r1)
 }
 
 func (m *TComponent) Components(Index int32) IComponent {
-	r1 := LCL().SysCallN(884, m.Instance(), uintptr(Index))
+	r1 := componentImportAPI().SysCallN(5, m.Instance(), uintptr(Index))
 	return AsComponent(r1)
 }
 
 func (m *TComponent) ComponentCount() int32 {
-	r1 := LCL().SysCallN(880, m.Instance())
+	r1 := componentImportAPI().SysCallN(1, m.Instance())
 	return int32(r1)
 }
 
 func (m *TComponent) ComponentIndex() int32 {
-	r1 := LCL().SysCallN(881, 0, m.Instance(), 0)
+	r1 := componentImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TComponent) SetComponentIndex(AValue int32) {
-	LCL().SysCallN(881, 1, m.Instance(), uintptr(AValue))
+	componentImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TComponent) ComponentState() TComponentStates {
-	r1 := LCL().SysCallN(882, m.Instance())
+	r1 := componentImportAPI().SysCallN(3, m.Instance())
 	return TComponentStates(r1)
 }
 
 func (m *TComponent) ComponentStyle() TComponentStyles {
-	r1 := LCL().SysCallN(883, m.Instance())
+	r1 := componentImportAPI().SysCallN(4, m.Instance())
 	return TComponentStyles(r1)
 }
 
 func (m *TComponent) DesignInfo() int32 {
-	r1 := LCL().SysCallN(886, 0, m.Instance(), 0)
+	r1 := componentImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TComponent) SetDesignInfo(AValue int32) {
-	LCL().SysCallN(886, 1, m.Instance(), uintptr(AValue))
+	componentImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TComponent) Owner() IComponent {
-	r1 := LCL().SysCallN(898, m.Instance())
+	r1 := componentImportAPI().SysCallN(19, m.Instance())
 	return AsComponent(r1)
 }
 
 func (m *TComponent) VCLComObject() uintptr {
-	r1 := LCL().SysCallN(904, 0, m.Instance(), 0)
+	r1 := componentImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return uintptr(r1)
 }
 
 func (m *TComponent) SetVCLComObject(AValue uintptr) {
-	LCL().SysCallN(904, 1, m.Instance(), uintptr(AValue))
+	componentImportAPI().SysCallN(25, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TComponent) Name() string {
-	r1 := LCL().SysCallN(897, 0, m.Instance(), 0)
+	r1 := componentImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TComponent) SetName(AValue string) {
-	LCL().SysCallN(897, 1, m.Instance(), PascalStr(AValue))
+	componentImportAPI().SysCallN(18, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TComponent) Tag() uint32 {
-	r1 := LCL().SysCallN(902, 0, m.Instance(), 0)
+	r1 := componentImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TComponent) SetTag(AValue uint32) {
-	LCL().SysCallN(902, 1, m.Instance(), uintptr(AValue))
+	componentImportAPI().SysCallN(23, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TComponent) ExecuteAction(Action IBasicAction) bool {
-	r1 := LCL().SysCallN(889, m.Instance(), GetObjectUintptr(Action))
+	r1 := componentImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(Action))
 	return GoBool(r1)
 }
 
 func (m *TComponent) FindComponent(AName string) IComponent {
-	r1 := LCL().SysCallN(890, m.Instance(), PascalStr(AName))
+	r1 := componentImportAPI().SysCallN(11, m.Instance(), PascalStr(AName))
 	return AsComponent(r1)
 }
 
 func (m *TComponent) GetEnumerator() IComponentEnumerator {
-	r1 := LCL().SysCallN(893, m.Instance())
+	r1 := componentImportAPI().SysCallN(14, m.Instance())
 	return AsComponentEnumerator(r1)
 }
 
 func (m *TComponent) GetParentComponent() IComponent {
-	r1 := LCL().SysCallN(894, m.Instance())
+	r1 := componentImportAPI().SysCallN(15, m.Instance())
 	return AsComponent(r1)
 }
 
 func (m *TComponent) HasParent() bool {
-	r1 := LCL().SysCallN(895, m.Instance())
+	r1 := componentImportAPI().SysCallN(16, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TComponent) UpdateAction(Action IBasicAction) bool {
-	r1 := LCL().SysCallN(903, m.Instance(), GetObjectUintptr(Action))
+	r1 := componentImportAPI().SysCallN(24, m.Instance(), GetObjectUintptr(Action))
 	return GoBool(r1)
 }
 
 func ComponentClass() TClass {
-	ret := LCL().SysCallN(879)
+	ret := componentImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TComponent) DestroyComponents() {
-	LCL().SysCallN(887, m.Instance())
+	componentImportAPI().SysCallN(8, m.Instance())
 }
 
 func (m *TComponent) Destroying() {
-	LCL().SysCallN(888, m.Instance())
+	componentImportAPI().SysCallN(9, m.Instance())
 }
 
 func (m *TComponent) FreeNotification(AComponent IComponent) {
-	LCL().SysCallN(891, m.Instance(), GetObjectUintptr(AComponent))
+	componentImportAPI().SysCallN(12, m.Instance(), GetObjectUintptr(AComponent))
 }
 
 func (m *TComponent) RemoveFreeNotification(AComponent IComponent) {
-	LCL().SysCallN(900, m.Instance(), GetObjectUintptr(AComponent))
+	componentImportAPI().SysCallN(21, m.Instance(), GetObjectUintptr(AComponent))
 }
 
 func (m *TComponent) FreeOnRelease() {
-	LCL().SysCallN(892, m.Instance())
+	componentImportAPI().SysCallN(13, m.Instance())
 }
 
 func (m *TComponent) InsertComponent(AComponent IComponent) {
-	LCL().SysCallN(896, m.Instance(), GetObjectUintptr(AComponent))
+	componentImportAPI().SysCallN(17, m.Instance(), GetObjectUintptr(AComponent))
 }
 
 func (m *TComponent) RemoveComponent(AComponent IComponent) {
-	LCL().SysCallN(899, m.Instance(), GetObjectUintptr(AComponent))
+	componentImportAPI().SysCallN(20, m.Instance(), GetObjectUintptr(AComponent))
 }
 
 func (m *TComponent) SetSubComponent(ASubComponent bool) {
-	LCL().SysCallN(901, m.Instance(), PascalBool(ASubComponent))
+	componentImportAPI().SysCallN(22, m.Instance(), PascalBool(ASubComponent))
+}
+
+var (
+	componentImport       *imports.Imports = nil
+	componentImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Component_Class", 0),
+		/*1*/ imports.NewTable("Component_ComponentCount", 0),
+		/*2*/ imports.NewTable("Component_ComponentIndex", 0),
+		/*3*/ imports.NewTable("Component_ComponentState", 0),
+		/*4*/ imports.NewTable("Component_ComponentStyle", 0),
+		/*5*/ imports.NewTable("Component_Components", 0),
+		/*6*/ imports.NewTable("Component_Create", 0),
+		/*7*/ imports.NewTable("Component_DesignInfo", 0),
+		/*8*/ imports.NewTable("Component_DestroyComponents", 0),
+		/*9*/ imports.NewTable("Component_Destroying", 0),
+		/*10*/ imports.NewTable("Component_ExecuteAction", 0),
+		/*11*/ imports.NewTable("Component_FindComponent", 0),
+		/*12*/ imports.NewTable("Component_FreeNotification", 0),
+		/*13*/ imports.NewTable("Component_FreeOnRelease", 0),
+		/*14*/ imports.NewTable("Component_GetEnumerator", 0),
+		/*15*/ imports.NewTable("Component_GetParentComponent", 0),
+		/*16*/ imports.NewTable("Component_HasParent", 0),
+		/*17*/ imports.NewTable("Component_InsertComponent", 0),
+		/*18*/ imports.NewTable("Component_Name", 0),
+		/*19*/ imports.NewTable("Component_Owner", 0),
+		/*20*/ imports.NewTable("Component_RemoveComponent", 0),
+		/*21*/ imports.NewTable("Component_RemoveFreeNotification", 0),
+		/*22*/ imports.NewTable("Component_SetSubComponent", 0),
+		/*23*/ imports.NewTable("Component_Tag", 0),
+		/*24*/ imports.NewTable("Component_UpdateAction", 0),
+		/*25*/ imports.NewTable("Component_VCLComObject", 0),
+	}
+)
+
+func componentImportAPI() *imports.Imports {
+	if componentImport == nil {
+		componentImport = NewDefaultImports()
+		componentImport.SetImportTable(componentImportTables)
+		componentImportTables = nil
+	}
+	return componentImport
 }

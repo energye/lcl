@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -60,57 +61,57 @@ type TBitBtn struct {
 }
 
 func NewBitBtn(TheOwner IComponent) IBitBtn {
-	r1 := LCL().SysCallN(424, GetObjectUintptr(TheOwner))
+	r1 := bitBtnImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsBitBtn(r1)
 }
 
 func (m *TBitBtn) DragCursor() TCursor {
-	r1 := LCL().SysCallN(425, 0, m.Instance(), 0)
+	r1 := bitBtnImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TBitBtn) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(425, 1, m.Instance(), uintptr(AValue))
+	bitBtnImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TBitBtn) DragKind() TDragKind {
-	r1 := LCL().SysCallN(426, 0, m.Instance(), 0)
+	r1 := bitBtnImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TBitBtn) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(426, 1, m.Instance(), uintptr(AValue))
+	bitBtnImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TBitBtn) DragMode() TDragMode {
-	r1 := LCL().SysCallN(427, 0, m.Instance(), 0)
+	r1 := bitBtnImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TBitBtn) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(427, 1, m.Instance(), uintptr(AValue))
+	bitBtnImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TBitBtn) ParentFont() bool {
-	r1 := LCL().SysCallN(428, 0, m.Instance(), 0)
+	r1 := bitBtnImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TBitBtn) SetParentFont(AValue bool) {
-	LCL().SysCallN(428, 1, m.Instance(), PascalBool(AValue))
+	bitBtnImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TBitBtn) ParentShowHint() bool {
-	r1 := LCL().SysCallN(429, 0, m.Instance(), 0)
+	r1 := bitBtnImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TBitBtn) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(429, 1, m.Instance(), PascalBool(AValue))
+	bitBtnImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func BitBtnClass() TClass {
-	ret := LCL().SysCallN(423)
+	ret := bitBtnImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -119,7 +120,7 @@ func (m *TBitBtn) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(430, m.Instance(), m.contextPopupPtr)
+	bitBtnImportAPI().SysCallN(7, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TBitBtn) SetOnDragDrop(fn TDragDropEvent) {
@@ -127,7 +128,7 @@ func (m *TBitBtn) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(431, m.Instance(), m.dragDropPtr)
+	bitBtnImportAPI().SysCallN(8, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TBitBtn) SetOnDragOver(fn TDragOverEvent) {
@@ -135,7 +136,7 @@ func (m *TBitBtn) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(432, m.Instance(), m.dragOverPtr)
+	bitBtnImportAPI().SysCallN(9, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TBitBtn) SetOnEndDrag(fn TEndDragEvent) {
@@ -143,7 +144,7 @@ func (m *TBitBtn) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(433, m.Instance(), m.endDragPtr)
+	bitBtnImportAPI().SysCallN(10, m.Instance(), m.endDragPtr)
 }
 
 func (m *TBitBtn) SetOnMouseDown(fn TMouseEvent) {
@@ -151,7 +152,7 @@ func (m *TBitBtn) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(434, m.Instance(), m.mouseDownPtr)
+	bitBtnImportAPI().SysCallN(11, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TBitBtn) SetOnMouseEnter(fn TNotifyEvent) {
@@ -159,7 +160,7 @@ func (m *TBitBtn) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(435, m.Instance(), m.mouseEnterPtr)
+	bitBtnImportAPI().SysCallN(12, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TBitBtn) SetOnMouseLeave(fn TNotifyEvent) {
@@ -167,7 +168,7 @@ func (m *TBitBtn) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(436, m.Instance(), m.mouseLeavePtr)
+	bitBtnImportAPI().SysCallN(13, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TBitBtn) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -175,7 +176,7 @@ func (m *TBitBtn) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(437, m.Instance(), m.mouseMovePtr)
+	bitBtnImportAPI().SysCallN(14, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TBitBtn) SetOnMouseUp(fn TMouseEvent) {
@@ -183,7 +184,7 @@ func (m *TBitBtn) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(438, m.Instance(), m.mouseUpPtr)
+	bitBtnImportAPI().SysCallN(15, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TBitBtn) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -191,7 +192,7 @@ func (m *TBitBtn) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(439, m.Instance(), m.mouseWheelPtr)
+	bitBtnImportAPI().SysCallN(16, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TBitBtn) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -199,7 +200,7 @@ func (m *TBitBtn) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(440, m.Instance(), m.mouseWheelDownPtr)
+	bitBtnImportAPI().SysCallN(17, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TBitBtn) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -207,7 +208,7 @@ func (m *TBitBtn) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(441, m.Instance(), m.mouseWheelUpPtr)
+	bitBtnImportAPI().SysCallN(18, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TBitBtn) SetOnStartDrag(fn TStartDragEvent) {
@@ -215,5 +216,40 @@ func (m *TBitBtn) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(442, m.Instance(), m.startDragPtr)
+	bitBtnImportAPI().SysCallN(19, m.Instance(), m.startDragPtr)
+}
+
+var (
+	bitBtnImport       *imports.Imports = nil
+	bitBtnImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("BitBtn_Class", 0),
+		/*1*/ imports.NewTable("BitBtn_Create", 0),
+		/*2*/ imports.NewTable("BitBtn_DragCursor", 0),
+		/*3*/ imports.NewTable("BitBtn_DragKind", 0),
+		/*4*/ imports.NewTable("BitBtn_DragMode", 0),
+		/*5*/ imports.NewTable("BitBtn_ParentFont", 0),
+		/*6*/ imports.NewTable("BitBtn_ParentShowHint", 0),
+		/*7*/ imports.NewTable("BitBtn_SetOnContextPopup", 0),
+		/*8*/ imports.NewTable("BitBtn_SetOnDragDrop", 0),
+		/*9*/ imports.NewTable("BitBtn_SetOnDragOver", 0),
+		/*10*/ imports.NewTable("BitBtn_SetOnEndDrag", 0),
+		/*11*/ imports.NewTable("BitBtn_SetOnMouseDown", 0),
+		/*12*/ imports.NewTable("BitBtn_SetOnMouseEnter", 0),
+		/*13*/ imports.NewTable("BitBtn_SetOnMouseLeave", 0),
+		/*14*/ imports.NewTable("BitBtn_SetOnMouseMove", 0),
+		/*15*/ imports.NewTable("BitBtn_SetOnMouseUp", 0),
+		/*16*/ imports.NewTable("BitBtn_SetOnMouseWheel", 0),
+		/*17*/ imports.NewTable("BitBtn_SetOnMouseWheelDown", 0),
+		/*18*/ imports.NewTable("BitBtn_SetOnMouseWheelUp", 0),
+		/*19*/ imports.NewTable("BitBtn_SetOnStartDrag", 0),
+	}
+)
+
+func bitBtnImportAPI() *imports.Imports {
+	if bitBtnImport == nil {
+		bitBtnImport = NewDefaultImports()
+		bitBtnImport.SetImportTable(bitBtnImportTables)
+		bitBtnImportTables = nil
+	}
+	return bitBtnImport
 }

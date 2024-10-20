@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -26,20 +27,38 @@ type TCustomFrame struct {
 }
 
 func NewCustomFrame(AOwner IComponent) ICustomFrame {
-	r1 := LCL().SysCallN(1735, GetObjectUintptr(AOwner))
+	r1 := customFrameImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsCustomFrame(r1)
 }
 
 func (m *TCustomFrame) ParentBackground() bool {
-	r1 := LCL().SysCallN(1736, 0, m.Instance(), 0)
+	r1 := customFrameImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomFrame) SetParentBackground(AValue bool) {
-	LCL().SysCallN(1736, 1, m.Instance(), PascalBool(AValue))
+	customFrameImportAPI().SysCallN(2, 1, m.Instance(), PascalBool(AValue))
 }
 
 func CustomFrameClass() TClass {
-	ret := LCL().SysCallN(1734)
+	ret := customFrameImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	customFrameImport       *imports.Imports = nil
+	customFrameImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomFrame_Class", 0),
+		/*1*/ imports.NewTable("CustomFrame_Create", 0),
+		/*2*/ imports.NewTable("CustomFrame_ParentBackground", 0),
+	}
+)
+
+func customFrameImportAPI() *imports.Imports {
+	if customFrameImport == nil {
+		customFrameImport = NewDefaultImports()
+		customFrameImport.SetImportTable(customFrameImportTables)
+		customFrameImportTables = nil
+	}
+	return customFrameImport
 }

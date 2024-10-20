@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -32,47 +33,68 @@ type TCustomFlowPanel struct {
 }
 
 func NewCustomFlowPanel(AOwner IComponent) ICustomFlowPanel {
-	r1 := LCL().SysCallN(1654, GetObjectUintptr(AOwner))
+	r1 := customFlowPanelImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
 	return AsCustomFlowPanel(r1)
 }
 
 func (m *TCustomFlowPanel) AutoWrap() bool {
-	r1 := LCL().SysCallN(1651, 0, m.Instance(), 0)
+	r1 := customFlowPanelImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomFlowPanel) SetAutoWrap(AValue bool) {
-	LCL().SysCallN(1651, 1, m.Instance(), PascalBool(AValue))
+	customFlowPanelImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomFlowPanel) ControlList() IFlowPanelControlList {
-	r1 := LCL().SysCallN(1653, 0, m.Instance(), 0)
+	r1 := customFlowPanelImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return AsFlowPanelControlList(r1)
 }
 
 func (m *TCustomFlowPanel) SetControlList(AValue IFlowPanelControlList) {
-	LCL().SysCallN(1653, 1, m.Instance(), GetObjectUintptr(AValue))
+	customFlowPanelImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCustomFlowPanel) FlowStyle() TFlowStyle {
-	r1 := LCL().SysCallN(1656, 0, m.Instance(), 0)
+	r1 := customFlowPanelImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TFlowStyle(r1)
 }
 
 func (m *TCustomFlowPanel) SetFlowStyle(AValue TFlowStyle) {
-	LCL().SysCallN(1656, 1, m.Instance(), uintptr(AValue))
+	customFlowPanelImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomFlowPanel) FlowLayout() TTextLayout {
-	r1 := LCL().SysCallN(1655, 0, m.Instance(), 0)
+	r1 := customFlowPanelImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TTextLayout(r1)
 }
 
 func (m *TCustomFlowPanel) SetFlowLayout(AValue TTextLayout) {
-	LCL().SysCallN(1655, 1, m.Instance(), uintptr(AValue))
+	customFlowPanelImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func CustomFlowPanelClass() TClass {
-	ret := LCL().SysCallN(1652)
+	ret := customFlowPanelImportAPI().SysCallN(1)
 	return TClass(ret)
+}
+
+var (
+	customFlowPanelImport       *imports.Imports = nil
+	customFlowPanelImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomFlowPanel_AutoWrap", 0),
+		/*1*/ imports.NewTable("CustomFlowPanel_Class", 0),
+		/*2*/ imports.NewTable("CustomFlowPanel_ControlList", 0),
+		/*3*/ imports.NewTable("CustomFlowPanel_Create", 0),
+		/*4*/ imports.NewTable("CustomFlowPanel_FlowLayout", 0),
+		/*5*/ imports.NewTable("CustomFlowPanel_FlowStyle", 0),
+	}
+)
+
+func customFlowPanelImportAPI() *imports.Imports {
+	if customFlowPanelImport == nil {
+		customFlowPanelImport = NewDefaultImports()
+		customFlowPanelImport.SetImportTable(customFlowPanelImportTables)
+		customFlowPanelImportTables = nil
+	}
+	return customFlowPanelImport
 }

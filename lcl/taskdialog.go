@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TTaskDialog struct {
 }
 
 func NewTaskDialog(AOwner IComponent) ITaskDialog {
-	r1 := LCL().SysCallN(5409, GetObjectUintptr(AOwner))
+	r1 := askDialogImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsTaskDialog(r1)
 }
 
 func TaskDialogClass() TClass {
-	ret := LCL().SysCallN(5408)
+	ret := askDialogImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	askDialogImport       *imports.Imports = nil
+	askDialogImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("TaskDialog_Class", 0),
+		/*1*/ imports.NewTable("TaskDialog_Create", 0),
+	}
+)
+
+func askDialogImportAPI() *imports.Imports {
+	if askDialogImport == nil {
+		askDialogImport = NewDefaultImports()
+		askDialogImport.SetImportTable(askDialogImportTables)
+		askDialogImportTables = nil
+	}
+	return askDialogImport
 }

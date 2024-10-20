@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -34,43 +35,43 @@ type TAnchorSide struct {
 }
 
 func NewAnchorSide(TheOwner IControl, TheKind TAnchorKind) IAnchorSide {
-	r1 := LCL().SysCallN(90, GetObjectUintptr(TheOwner), uintptr(TheKind))
+	r1 := anchorSideImportAPI().SysCallN(3, GetObjectUintptr(TheOwner), uintptr(TheKind))
 	return AsAnchorSide(r1)
 }
 
 func (m *TAnchorSide) Owner() IControl {
-	r1 := LCL().SysCallN(95, m.Instance())
+	r1 := anchorSideImportAPI().SysCallN(8, m.Instance())
 	return AsControl(r1)
 }
 
 func (m *TAnchorSide) Kind() TAnchorKind {
-	r1 := LCL().SysCallN(94, m.Instance())
+	r1 := anchorSideImportAPI().SysCallN(7, m.Instance())
 	return TAnchorKind(r1)
 }
 
 func (m *TAnchorSide) Control() IControl {
-	r1 := LCL().SysCallN(89, 0, m.Instance(), 0)
+	r1 := anchorSideImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return AsControl(r1)
 }
 
 func (m *TAnchorSide) SetControl(AValue IControl) {
-	LCL().SysCallN(89, 1, m.Instance(), GetObjectUintptr(AValue))
+	anchorSideImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TAnchorSide) Side() TAnchorSideReference {
-	r1 := LCL().SysCallN(96, 0, m.Instance(), 0)
+	r1 := anchorSideImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TAnchorSideReference(r1)
 }
 
 func (m *TAnchorSide) SetSide(AValue TAnchorSideReference) {
-	LCL().SysCallN(96, 1, m.Instance(), uintptr(AValue))
+	anchorSideImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TAnchorSide) CheckSidePosition(NewControl IControl, NewSide TAnchorSideReference, OutReferenceControl *IControl, OutReferenceSide *TAnchorSideReference, OutPosition *int32) bool {
 	var result2 uintptr
 	var result3 uintptr
 	var result4 uintptr
-	r1 := LCL().SysCallN(87, m.Instance(), GetObjectUintptr(NewControl), uintptr(NewSide), uintptr(unsafePointer(&result2)), uintptr(unsafePointer(&result3)), uintptr(unsafePointer(&result4)))
+	r1 := anchorSideImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(NewControl), uintptr(NewSide), uintptr(unsafePointer(&result2)), uintptr(unsafePointer(&result3)), uintptr(unsafePointer(&result4)))
 	*OutReferenceControl = AsControl(result2)
 	*OutReferenceSide = TAnchorSideReference(result3)
 	*OutPosition = int32(result4)
@@ -78,12 +79,12 @@ func (m *TAnchorSide) CheckSidePosition(NewControl IControl, NewSide TAnchorSide
 }
 
 func (m *TAnchorSide) IsAnchoredToParent(ParentSide TAnchorKind) bool {
-	r1 := LCL().SysCallN(93, m.Instance(), uintptr(ParentSide))
+	r1 := anchorSideImportAPI().SysCallN(6, m.Instance(), uintptr(ParentSide))
 	return GoBool(r1)
 }
 
 func AnchorSideClass() TClass {
-	ret := LCL().SysCallN(88)
+	ret := anchorSideImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
@@ -91,12 +92,37 @@ func (m *TAnchorSide) GetSidePosition(OutReferenceControl *IControl, OutReferenc
 	var result0 uintptr
 	var result1 uintptr
 	var result2 uintptr
-	LCL().SysCallN(92, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
+	anchorSideImportAPI().SysCallN(5, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
 	*OutReferenceControl = AsControl(result0)
 	*OutReferenceSide = TAnchorSideReference(result1)
 	*OutPosition = int32(result2)
 }
 
 func (m *TAnchorSide) FixCenterAnchoring() {
-	LCL().SysCallN(91, m.Instance())
+	anchorSideImportAPI().SysCallN(4, m.Instance())
+}
+
+var (
+	anchorSideImport       *imports.Imports = nil
+	anchorSideImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("AnchorSide_CheckSidePosition", 0),
+		/*1*/ imports.NewTable("AnchorSide_Class", 0),
+		/*2*/ imports.NewTable("AnchorSide_Control", 0),
+		/*3*/ imports.NewTable("AnchorSide_Create", 0),
+		/*4*/ imports.NewTable("AnchorSide_FixCenterAnchoring", 0),
+		/*5*/ imports.NewTable("AnchorSide_GetSidePosition", 0),
+		/*6*/ imports.NewTable("AnchorSide_IsAnchoredToParent", 0),
+		/*7*/ imports.NewTable("AnchorSide_Kind", 0),
+		/*8*/ imports.NewTable("AnchorSide_Owner", 0),
+		/*9*/ imports.NewTable("AnchorSide_Side", 0),
+	}
+)
+
+func anchorSideImportAPI() *imports.Imports {
+	if anchorSideImport == nil {
+		anchorSideImport = NewDefaultImports()
+		anchorSideImport.SetImportTable(anchorSideImportTables)
+		anchorSideImportTables = nil
+	}
+	return anchorSideImport
 }

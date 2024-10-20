@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -26,21 +27,40 @@ type TActionListEnumerator struct {
 }
 
 func NewActionListEnumerator(AList ICustomActionList) IActionListEnumerator {
-	r1 := LCL().SysCallN(77, GetObjectUintptr(AList))
+	r1 := actionListEnumeratorImportAPI().SysCallN(1, GetObjectUintptr(AList))
 	return AsActionListEnumerator(r1)
 }
 
 func (m *TActionListEnumerator) Current() IContainedAction {
-	r1 := LCL().SysCallN(78, m.Instance())
+	r1 := actionListEnumeratorImportAPI().SysCallN(2, m.Instance())
 	return AsContainedAction(r1)
 }
 
 func (m *TActionListEnumerator) MoveNext() bool {
-	r1 := LCL().SysCallN(79, m.Instance())
+	r1 := actionListEnumeratorImportAPI().SysCallN(3, m.Instance())
 	return GoBool(r1)
 }
 
 func ActionListEnumeratorClass() TClass {
-	ret := LCL().SysCallN(76)
+	ret := actionListEnumeratorImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	actionListEnumeratorImport       *imports.Imports = nil
+	actionListEnumeratorImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ActionListEnumerator_Class", 0),
+		/*1*/ imports.NewTable("ActionListEnumerator_Create", 0),
+		/*2*/ imports.NewTable("ActionListEnumerator_Current", 0),
+		/*3*/ imports.NewTable("ActionListEnumerator_MoveNext", 0),
+	}
+)
+
+func actionListEnumeratorImportAPI() *imports.Imports {
+	if actionListEnumeratorImport == nil {
+		actionListEnumeratorImport = NewDefaultImports()
+		actionListEnumeratorImport.SetImportTable(actionListEnumeratorImportTables)
+		actionListEnumeratorImportTables = nil
+	}
+	return actionListEnumeratorImport
 }

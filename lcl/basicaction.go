@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -37,53 +38,53 @@ type TBasicAction struct {
 }
 
 func NewBasicAction(AOwner IComponent) IBasicAction {
-	r1 := LCL().SysCallN(399, GetObjectUintptr(AOwner))
+	r1 := basicActionImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsBasicAction(r1)
 }
 
 func (m *TBasicAction) ActionComponent() IComponent {
-	r1 := LCL().SysCallN(397, 0, m.Instance(), 0)
+	r1 := basicActionImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return AsComponent(r1)
 }
 
 func (m *TBasicAction) SetActionComponent(AValue IComponent) {
-	LCL().SysCallN(397, 1, m.Instance(), GetObjectUintptr(AValue))
+	basicActionImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TBasicAction) HandlesTarget(Target IObject) bool {
-	r1 := LCL().SysCallN(402, m.Instance(), GetObjectUintptr(Target))
+	r1 := basicActionImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(Target))
 	return GoBool(r1)
 }
 
 func (m *TBasicAction) Execute() bool {
-	r1 := LCL().SysCallN(400, m.Instance())
+	r1 := basicActionImportAPI().SysCallN(3, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TBasicAction) Update() bool {
-	r1 := LCL().SysCallN(407, m.Instance())
+	r1 := basicActionImportAPI().SysCallN(10, m.Instance())
 	return GoBool(r1)
 }
 
 func BasicActionClass() TClass {
-	ret := LCL().SysCallN(398)
+	ret := basicActionImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TBasicAction) UpdateTarget(Target IObject) {
-	LCL().SysCallN(408, m.Instance(), GetObjectUintptr(Target))
+	basicActionImportAPI().SysCallN(11, m.Instance(), GetObjectUintptr(Target))
 }
 
 func (m *TBasicAction) ExecuteTarget(Target IObject) {
-	LCL().SysCallN(401, m.Instance(), GetObjectUintptr(Target))
+	basicActionImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(Target))
 }
 
 func (m *TBasicAction) RegisterChanges(Value IBasicActionLink) {
-	LCL().SysCallN(403, m.Instance(), GetObjectUintptr(Value))
+	basicActionImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(Value))
 }
 
 func (m *TBasicAction) UnRegisterChanges(Value IBasicActionLink) {
-	LCL().SysCallN(406, m.Instance(), GetObjectUintptr(Value))
+	basicActionImportAPI().SysCallN(9, m.Instance(), GetObjectUintptr(Value))
 }
 
 func (m *TBasicAction) SetOnExecute(fn TNotifyEvent) {
@@ -91,7 +92,7 @@ func (m *TBasicAction) SetOnExecute(fn TNotifyEvent) {
 		RemoveEventElement(m.executePtr)
 	}
 	m.executePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(404, m.Instance(), m.executePtr)
+	basicActionImportAPI().SysCallN(7, m.Instance(), m.executePtr)
 }
 
 func (m *TBasicAction) SetOnUpdate(fn TNotifyEvent) {
@@ -99,5 +100,32 @@ func (m *TBasicAction) SetOnUpdate(fn TNotifyEvent) {
 		RemoveEventElement(m.updatePtr)
 	}
 	m.updatePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(405, m.Instance(), m.updatePtr)
+	basicActionImportAPI().SysCallN(8, m.Instance(), m.updatePtr)
+}
+
+var (
+	basicActionImport       *imports.Imports = nil
+	basicActionImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("BasicAction_ActionComponent", 0),
+		/*1*/ imports.NewTable("BasicAction_Class", 0),
+		/*2*/ imports.NewTable("BasicAction_Create", 0),
+		/*3*/ imports.NewTable("BasicAction_Execute", 0),
+		/*4*/ imports.NewTable("BasicAction_ExecuteTarget", 0),
+		/*5*/ imports.NewTable("BasicAction_HandlesTarget", 0),
+		/*6*/ imports.NewTable("BasicAction_RegisterChanges", 0),
+		/*7*/ imports.NewTable("BasicAction_SetOnExecute", 0),
+		/*8*/ imports.NewTable("BasicAction_SetOnUpdate", 0),
+		/*9*/ imports.NewTable("BasicAction_UnRegisterChanges", 0),
+		/*10*/ imports.NewTable("BasicAction_Update", 0),
+		/*11*/ imports.NewTable("BasicAction_UpdateTarget", 0),
+	}
+)
+
+func basicActionImportAPI() *imports.Imports {
+	if basicActionImport == nil {
+		basicActionImport = NewDefaultImports()
+		basicActionImport.SetImportTable(basicActionImportTables)
+		basicActionImportTables = nil
+	}
+	return basicActionImport
 }

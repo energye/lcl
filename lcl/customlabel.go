@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -27,7 +28,7 @@ type TCustomLabel struct {
 }
 
 func NewCustomLabel(TheOwner IComponent) ICustomLabel {
-	r1 := LCL().SysCallN(1982, GetObjectUintptr(TheOwner))
+	r1 := customLabelImportAPI().SysCallN(3, GetObjectUintptr(TheOwner))
 	return AsCustomLabel(r1)
 }
 
@@ -35,7 +36,7 @@ func (m *TCustomLabel) CalcFittingFontHeight(TheText string, MaxWidth, MaxHeight
 	var result2 uintptr
 	var result3 uintptr
 	var result4 uintptr
-	r1 := LCL().SysCallN(1980, m.Instance(), PascalStr(TheText), uintptr(MaxWidth), uintptr(MaxHeight), uintptr(unsafePointer(&result2)), uintptr(unsafePointer(&result3)), uintptr(unsafePointer(&result4)))
+	r1 := customLabelImportAPI().SysCallN(1, m.Instance(), PascalStr(TheText), uintptr(MaxWidth), uintptr(MaxHeight), uintptr(unsafePointer(&result2)), uintptr(unsafePointer(&result3)), uintptr(unsafePointer(&result4)))
 	*OutFontHeight = int32(result2)
 	*OutNeededWidth = int32(result3)
 	*OutNeededHeight = int32(result4)
@@ -43,15 +44,35 @@ func (m *TCustomLabel) CalcFittingFontHeight(TheText string, MaxWidth, MaxHeight
 }
 
 func (m *TCustomLabel) AdjustFontForOptimalFill() bool {
-	r1 := LCL().SysCallN(1979, m.Instance())
+	r1 := customLabelImportAPI().SysCallN(0, m.Instance())
 	return GoBool(r1)
 }
 
 func CustomLabelClass() TClass {
-	ret := LCL().SysCallN(1981)
+	ret := customLabelImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
 func (m *TCustomLabel) Paint() {
-	LCL().SysCallN(1983, m.Instance())
+	customLabelImportAPI().SysCallN(4, m.Instance())
+}
+
+var (
+	customLabelImport       *imports.Imports = nil
+	customLabelImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomLabel_AdjustFontForOptimalFill", 0),
+		/*1*/ imports.NewTable("CustomLabel_CalcFittingFontHeight", 0),
+		/*2*/ imports.NewTable("CustomLabel_Class", 0),
+		/*3*/ imports.NewTable("CustomLabel_Create", 0),
+		/*4*/ imports.NewTable("CustomLabel_Paint", 0),
+	}
+)
+
+func customLabelImportAPI() *imports.Imports {
+	if customLabelImport == nil {
+		customLabelImport = NewDefaultImports()
+		customLabelImport.SetImportTable(customLabelImportTables)
+		customLabelImportTables = nil
+	}
+	return customLabelImport
 }

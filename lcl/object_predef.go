@@ -46,7 +46,7 @@ func (m *TObject) SetInstance(instance unsafe.Pointer) {
 
 func (m *TObject) free(index int) {
 	if m.instance != nil {
-		api.LCL().SysCallN(index, m.Instance())
+		objectImportAPI().SysCallN(index, m.Instance())
 		m.instance = nil
 	}
 }

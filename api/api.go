@@ -19,7 +19,6 @@ var (
 	releaseCallback    func()
 	canWidgetSetInit   bool
 	customWidgetImport *imports.Imports // 自定义组件初始化导入
-	liblclImport       *imports.Imports // LCL 导入
 	liblclPreDefImport *imports.Imports // LCL 预定义导入
 	wkImport           *imports.Imports // WK 导入
 	wkPreDefImport     *imports.Imports // WK 预定义导入
@@ -27,7 +26,6 @@ var (
 
 func init() {
 	customWidgetImport = new(imports.Imports) // 自定义组件初始化导入
-	liblclImport = new(imports.Imports)       // LCL 导入
 	liblclPreDefImport = new(imports.Imports) // LCL 预定义导入
 	wkImport = new(imports.Imports)           // WK 导入
 	wkPreDefImport = new(imports.Imports)     // WK 预定义导入
@@ -54,9 +52,6 @@ func APIInit() {
 	customWidgetImport.SetDll(uiLib)
 	internal.InitCustomWidgetImport(customWidgetImport)
 
-	// LCL 导入
-	liblclImport.SetDll(uiLib)
-	internal.InitLCLAutoGenImport(liblclImport)
 	// LCL 预定义导入
 	liblclPreDefImport.SetDll(uiLib)
 	lcl.InitPreDefsImport(liblclPreDefImport)
@@ -86,11 +81,6 @@ func SetReleaseCallback(fn func()) {
 	if releaseCallback == nil {
 		releaseCallback = fn
 	}
-}
-
-// LCL 导入表
-func LCL() imports.CallImport {
-	return liblclImport
 }
 
 // LCLPreDef 预定义LcL导入表

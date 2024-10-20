@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -403,540 +404,540 @@ type TLazVirtualStringTree struct {
 }
 
 func NewLazVirtualStringTree(AOwner IComponent) ILazVirtualStringTree {
-	r1 := LCL().SysCallN(3801, GetObjectUintptr(AOwner))
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(16, GetObjectUintptr(AOwner))
 	return AsLazVirtualStringTree(r1)
 }
 
 func (m *TLazVirtualStringTree) RangeX() uint32 {
-	r1 := LCL().SysCallN(3837, m.Instance())
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(52, m.Instance())
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) LastDragEffect() uint32 {
-	r1 := LCL().SysCallN(3827, m.Instance())
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(42, m.Instance())
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) Alignment() TAlignment {
-	r1 := LCL().SysCallN(3785, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return TAlignment(r1)
 }
 
 func (m *TLazVirtualStringTree) SetAlignment(AValue TAlignment) {
-	LCL().SysCallN(3785, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) AnimationDuration() uint32 {
-	r1 := LCL().SysCallN(3786, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetAnimationDuration(AValue uint32) {
-	LCL().SysCallN(3786, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) AutoExpandDelay() uint32 {
-	r1 := LCL().SysCallN(3787, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetAutoExpandDelay(AValue uint32) {
-	LCL().SysCallN(3787, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) AutoScrollDelay() uint32 {
-	r1 := LCL().SysCallN(3788, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetAutoScrollDelay(AValue uint32) {
-	LCL().SysCallN(3788, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) AutoScrollInterval() TAutoScrollInterval {
-	r1 := LCL().SysCallN(3789, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TAutoScrollInterval(r1)
 }
 
 func (m *TLazVirtualStringTree) SetAutoScrollInterval(AValue TAutoScrollInterval) {
-	LCL().SysCallN(3789, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) Background() IPicture {
-	r1 := LCL().SysCallN(3790, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return AsPicture(r1)
 }
 
 func (m *TLazVirtualStringTree) SetBackground(AValue IPicture) {
-	LCL().SysCallN(3790, 1, m.Instance(), GetObjectUintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(5, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) BackgroundOffsetX() int32 {
-	r1 := LCL().SysCallN(3791, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetBackgroundOffsetX(AValue int32) {
-	LCL().SysCallN(3791, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) BackgroundOffsetY() int32 {
-	r1 := LCL().SysCallN(3792, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetBackgroundOffsetY(AValue int32) {
-	LCL().SysCallN(3792, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) BottomSpace() uint32 {
-	r1 := LCL().SysCallN(3793, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetBottomSpace(AValue uint32) {
-	LCL().SysCallN(3793, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) ButtonFillMode() TVTButtonFillMode {
-	r1 := LCL().SysCallN(3794, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return TVTButtonFillMode(r1)
 }
 
 func (m *TLazVirtualStringTree) SetButtonFillMode(AValue TVTButtonFillMode) {
-	LCL().SysCallN(3794, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) ButtonStyle() TVTButtonStyle {
-	r1 := LCL().SysCallN(3795, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(10, 0, m.Instance(), 0)
 	return TVTButtonStyle(r1)
 }
 
 func (m *TLazVirtualStringTree) SetButtonStyle(AValue TVTButtonStyle) {
-	LCL().SysCallN(3795, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) ChangeDelay() uint32 {
-	r1 := LCL().SysCallN(3796, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetChangeDelay(AValue uint32) {
-	LCL().SysCallN(3796, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) CheckImageKind() TCheckImageKind {
-	r1 := LCL().SysCallN(3797, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(12, 0, m.Instance(), 0)
 	return TCheckImageKind(r1)
 }
 
 func (m *TLazVirtualStringTree) SetCheckImageKind(AValue TCheckImageKind) {
-	LCL().SysCallN(3797, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) ClipboardFormats() IClipboardFormats {
-	r1 := LCL().SysCallN(3799, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(14, 0, m.Instance(), 0)
 	return AsClipboardFormats(r1)
 }
 
 func (m *TLazVirtualStringTree) SetClipboardFormats(AValue IClipboardFormats) {
-	LCL().SysCallN(3799, 1, m.Instance(), GetObjectUintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(14, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) Colors() IVTColors {
-	r1 := LCL().SysCallN(3800, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(15, 0, m.Instance(), 0)
 	return AsVTColors(r1)
 }
 
 func (m *TLazVirtualStringTree) SetColors(AValue IVTColors) {
-	LCL().SysCallN(3800, 1, m.Instance(), GetObjectUintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(15, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) CustomCheckImages() ICustomImageList {
-	r1 := LCL().SysCallN(3802, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(17, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TLazVirtualStringTree) SetCustomCheckImages(AValue ICustomImageList) {
-	LCL().SysCallN(3802, 1, m.Instance(), GetObjectUintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(17, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DefaultNodeHeight() uint32 {
-	r1 := LCL().SysCallN(3804, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(19, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDefaultNodeHeight(AValue uint32) {
-	LCL().SysCallN(3804, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DefaultPasteMode() TVTNodeAttachMode {
-	r1 := LCL().SysCallN(3805, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(20, 0, m.Instance(), 0)
 	return TVTNodeAttachMode(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDefaultPasteMode(AValue TVTNodeAttachMode) {
-	LCL().SysCallN(3805, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DefaultText() string {
-	r1 := LCL().SysCallN(3806, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(21, 0, m.Instance(), 0)
 	return GoStr(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDefaultText(AValue string) {
-	LCL().SysCallN(3806, 1, m.Instance(), PascalStr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(21, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DragCursor() TCursor {
-	r1 := LCL().SysCallN(3807, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(22, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(3807, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(22, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DragHeight() int32 {
-	r1 := LCL().SysCallN(3808, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDragHeight(AValue int32) {
-	LCL().SysCallN(3808, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(23, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DragKind() TDragKind {
-	r1 := LCL().SysCallN(3810, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(25, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(3810, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(25, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DragImageKind() TVTDragImageKind {
-	r1 := LCL().SysCallN(3809, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(24, 0, m.Instance(), 0)
 	return TVTDragImageKind(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDragImageKind(AValue TVTDragImageKind) {
-	LCL().SysCallN(3809, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(24, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DragMode() TDragMode {
-	r1 := LCL().SysCallN(3811, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(26, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(3811, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(26, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DragOperations() TDragOperations {
-	r1 := LCL().SysCallN(3812, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(27, 0, m.Instance(), 0)
 	return TDragOperations(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDragOperations(AValue TDragOperations) {
-	LCL().SysCallN(3812, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(27, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DragType() TVTDragType {
-	r1 := LCL().SysCallN(3813, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(28, 0, m.Instance(), 0)
 	return TVTDragType(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDragType(AValue TVTDragType) {
-	LCL().SysCallN(3813, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(28, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DragWidth() int32 {
-	r1 := LCL().SysCallN(3814, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(29, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDragWidth(AValue int32) {
-	LCL().SysCallN(3814, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(29, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) DrawSelectionMode() TVTDrawSelectionMode {
-	r1 := LCL().SysCallN(3815, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(30, 0, m.Instance(), 0)
 	return TVTDrawSelectionMode(r1)
 }
 
 func (m *TLazVirtualStringTree) SetDrawSelectionMode(AValue TVTDrawSelectionMode) {
-	LCL().SysCallN(3815, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(30, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) EditDelay() uint32 {
-	r1 := LCL().SysCallN(3816, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(31, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetEditDelay(AValue uint32) {
-	LCL().SysCallN(3816, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(31, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) Header() IVTHeader {
-	r1 := LCL().SysCallN(3817, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(32, 0, m.Instance(), 0)
 	return AsVTHeader(r1)
 }
 
 func (m *TLazVirtualStringTree) SetHeader(AValue IVTHeader) {
-	LCL().SysCallN(3817, 1, m.Instance(), GetObjectUintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(32, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) HintMode() TVTHintMode {
-	r1 := LCL().SysCallN(3818, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(33, 0, m.Instance(), 0)
 	return TVTHintMode(r1)
 }
 
 func (m *TLazVirtualStringTree) SetHintMode(AValue TVTHintMode) {
-	LCL().SysCallN(3818, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(33, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) HotCursor() TCursor {
-	r1 := LCL().SysCallN(3819, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(34, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TLazVirtualStringTree) SetHotCursor(AValue TCursor) {
-	LCL().SysCallN(3819, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(34, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) Images() ICustomImageList {
-	r1 := LCL().SysCallN(3820, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(35, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TLazVirtualStringTree) SetImages(AValue ICustomImageList) {
-	LCL().SysCallN(3820, 1, m.Instance(), GetObjectUintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(35, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) IncrementalSearch() TVTIncrementalSearch {
-	r1 := LCL().SysCallN(3822, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(37, 0, m.Instance(), 0)
 	return TVTIncrementalSearch(r1)
 }
 
 func (m *TLazVirtualStringTree) SetIncrementalSearch(AValue TVTIncrementalSearch) {
-	LCL().SysCallN(3822, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(37, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) IncrementalSearchDirection() TVTSearchDirection {
-	r1 := LCL().SysCallN(3823, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(38, 0, m.Instance(), 0)
 	return TVTSearchDirection(r1)
 }
 
 func (m *TLazVirtualStringTree) SetIncrementalSearchDirection(AValue TVTSearchDirection) {
-	LCL().SysCallN(3823, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(38, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) IncrementalSearchStart() TVTSearchStart {
-	r1 := LCL().SysCallN(3824, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(39, 0, m.Instance(), 0)
 	return TVTSearchStart(r1)
 }
 
 func (m *TLazVirtualStringTree) SetIncrementalSearchStart(AValue TVTSearchStart) {
-	LCL().SysCallN(3824, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(39, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) IncrementalSearchTimeout() uint32 {
-	r1 := LCL().SysCallN(3825, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(40, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetIncrementalSearchTimeout(AValue uint32) {
-	LCL().SysCallN(3825, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(40, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) Indent() uint32 {
-	r1 := LCL().SysCallN(3826, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(41, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetIndent(AValue uint32) {
-	LCL().SysCallN(3826, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(41, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) LineMode() TVTLineMode {
-	r1 := LCL().SysCallN(3828, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(43, 0, m.Instance(), 0)
 	return TVTLineMode(r1)
 }
 
 func (m *TLazVirtualStringTree) SetLineMode(AValue TVTLineMode) {
-	LCL().SysCallN(3828, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(43, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) LineStyle() TVTLineStyle {
-	r1 := LCL().SysCallN(3829, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(44, 0, m.Instance(), 0)
 	return TVTLineStyle(r1)
 }
 
 func (m *TLazVirtualStringTree) SetLineStyle(AValue TVTLineStyle) {
-	LCL().SysCallN(3829, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(44, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) Margin() int32 {
-	r1 := LCL().SysCallN(3830, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(45, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetMargin(AValue int32) {
-	LCL().SysCallN(3830, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(45, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) NodeAlignment() TVTNodeAlignment {
-	r1 := LCL().SysCallN(3831, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(46, 0, m.Instance(), 0)
 	return TVTNodeAlignment(r1)
 }
 
 func (m *TLazVirtualStringTree) SetNodeAlignment(AValue TVTNodeAlignment) {
-	LCL().SysCallN(3831, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(46, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) NodeDataSize() int32 {
-	r1 := LCL().SysCallN(3832, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(47, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetNodeDataSize(AValue int32) {
-	LCL().SysCallN(3832, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(47, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) OperationCanceled() bool {
-	r1 := LCL().SysCallN(3833, m.Instance())
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(48, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TLazVirtualStringTree) ParentColor() bool {
-	r1 := LCL().SysCallN(3834, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(49, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TLazVirtualStringTree) SetParentColor(AValue bool) {
-	LCL().SysCallN(3834, 1, m.Instance(), PascalBool(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(49, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TLazVirtualStringTree) ParentFont() bool {
-	r1 := LCL().SysCallN(3835, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(50, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TLazVirtualStringTree) SetParentFont(AValue bool) {
-	LCL().SysCallN(3835, 1, m.Instance(), PascalBool(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(50, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TLazVirtualStringTree) ParentShowHint() bool {
-	r1 := LCL().SysCallN(3836, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(51, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TLazVirtualStringTree) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(3836, 1, m.Instance(), PascalBool(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(51, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TLazVirtualStringTree) RootNodeCount() uint32 {
-	r1 := LCL().SysCallN(3838, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(53, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetRootNodeCount(AValue uint32) {
-	LCL().SysCallN(3838, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(53, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) ScrollBarOptions() IScrollBarOptions {
-	r1 := LCL().SysCallN(3839, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(54, 0, m.Instance(), 0)
 	return AsScrollBarOptions(r1)
 }
 
 func (m *TLazVirtualStringTree) SetScrollBarOptions(AValue IScrollBarOptions) {
-	LCL().SysCallN(3839, 1, m.Instance(), GetObjectUintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(54, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) SelectionBlendFactor() Byte {
-	r1 := LCL().SysCallN(3840, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(55, 0, m.Instance(), 0)
 	return Byte(r1)
 }
 
 func (m *TLazVirtualStringTree) SetSelectionBlendFactor(AValue Byte) {
-	LCL().SysCallN(3840, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(55, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) SelectionCurveRadius() uint32 {
-	r1 := LCL().SysCallN(3841, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(56, 0, m.Instance(), 0)
 	return uint32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetSelectionCurveRadius(AValue uint32) {
-	LCL().SysCallN(3841, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(56, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) StateImages() ICustomImageList {
-	r1 := LCL().SysCallN(3973, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(188, 0, m.Instance(), 0)
 	return AsCustomImageList(r1)
 }
 
 func (m *TLazVirtualStringTree) SetStateImages(AValue ICustomImageList) {
-	LCL().SysCallN(3973, 1, m.Instance(), GetObjectUintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(188, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) TextMargin() int32 {
-	r1 := LCL().SysCallN(3975, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(190, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetTextMargin(AValue int32) {
-	LCL().SysCallN(3975, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(190, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) TreeOptions() IStringTreeOptions {
-	r1 := LCL().SysCallN(3976, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(191, 0, m.Instance(), 0)
 	return AsStringTreeOptions(r1)
 }
 
 func (m *TLazVirtualStringTree) SetTreeOptions(AValue IStringTreeOptions) {
-	LCL().SysCallN(3976, 1, m.Instance(), GetObjectUintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(191, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) WantTabs() bool {
-	r1 := LCL().SysCallN(3977, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(192, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TLazVirtualStringTree) SetWantTabs(AValue bool) {
-	LCL().SysCallN(3977, 1, m.Instance(), PascalBool(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(192, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TLazVirtualStringTree) ImagesWidth() int32 {
-	r1 := LCL().SysCallN(3821, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(36, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetImagesWidth(AValue int32) {
-	LCL().SysCallN(3821, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(36, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) StateImagesWidth() int32 {
-	r1 := LCL().SysCallN(3974, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(189, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetStateImagesWidth(AValue int32) {
-	LCL().SysCallN(3974, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(189, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TLazVirtualStringTree) CustomCheckImagesWidth() int32 {
-	r1 := LCL().SysCallN(3803, 0, m.Instance(), 0)
+	r1 := lazVirtualStringTreeImportAPI().SysCallN(18, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TLazVirtualStringTree) SetCustomCheckImagesWidth(AValue int32) {
-	LCL().SysCallN(3803, 1, m.Instance(), uintptr(AValue))
+	lazVirtualStringTreeImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
 }
 
 func LazVirtualStringTreeClass() TClass {
-	ret := LCL().SysCallN(3798)
+	ret := lazVirtualStringTreeImportAPI().SysCallN(13)
 	return TClass(ret)
 }
 
@@ -945,7 +946,7 @@ func (m *TLazVirtualStringTree) SetOnAddToSelection(fn TVTAddToSelectionEvent) {
 		RemoveEventElement(m.addToSelectionPtr)
 	}
 	m.addToSelectionPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3842, m.Instance(), m.addToSelectionPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(57, m.Instance(), m.addToSelectionPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAdvancedHeaderDraw(fn TVTAdvancedHeaderPaintEvent) {
@@ -953,7 +954,7 @@ func (m *TLazVirtualStringTree) SetOnAdvancedHeaderDraw(fn TVTAdvancedHeaderPain
 		RemoveEventElement(m.advancedHeaderDrawPtr)
 	}
 	m.advancedHeaderDrawPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3843, m.Instance(), m.advancedHeaderDrawPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(58, m.Instance(), m.advancedHeaderDrawPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterAutoFitColumn(fn TVTAfterAutoFitColumnEvent) {
@@ -961,7 +962,7 @@ func (m *TLazVirtualStringTree) SetOnAfterAutoFitColumn(fn TVTAfterAutoFitColumn
 		RemoveEventElement(m.afterAutoFitColumnPtr)
 	}
 	m.afterAutoFitColumnPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3844, m.Instance(), m.afterAutoFitColumnPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(59, m.Instance(), m.afterAutoFitColumnPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterAutoFitColumns(fn TVTAfterAutoFitColumnsEvent) {
@@ -969,7 +970,7 @@ func (m *TLazVirtualStringTree) SetOnAfterAutoFitColumns(fn TVTAfterAutoFitColum
 		RemoveEventElement(m.afterAutoFitColumnsPtr)
 	}
 	m.afterAutoFitColumnsPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3845, m.Instance(), m.afterAutoFitColumnsPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(60, m.Instance(), m.afterAutoFitColumnsPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterCellPaint(fn TVTAfterCellPaintEvent) {
@@ -977,7 +978,7 @@ func (m *TLazVirtualStringTree) SetOnAfterCellPaint(fn TVTAfterCellPaintEvent) {
 		RemoveEventElement(m.afterCellPaintPtr)
 	}
 	m.afterCellPaintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3846, m.Instance(), m.afterCellPaintPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(61, m.Instance(), m.afterCellPaintPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterColumnExport(fn TVTColumnExportEvent) {
@@ -985,7 +986,7 @@ func (m *TLazVirtualStringTree) SetOnAfterColumnExport(fn TVTColumnExportEvent) 
 		RemoveEventElement(m.afterColumnExportPtr)
 	}
 	m.afterColumnExportPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3847, m.Instance(), m.afterColumnExportPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(62, m.Instance(), m.afterColumnExportPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterColumnWidthTracking(fn TVTAfterColumnWidthTrackingEvent) {
@@ -993,7 +994,7 @@ func (m *TLazVirtualStringTree) SetOnAfterColumnWidthTracking(fn TVTAfterColumnW
 		RemoveEventElement(m.afterColumnWidthTrackingPtr)
 	}
 	m.afterColumnWidthTrackingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3848, m.Instance(), m.afterColumnWidthTrackingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(63, m.Instance(), m.afterColumnWidthTrackingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterGetMaxColumnWidth(fn TVTAfterGetMaxColumnWidthEvent) {
@@ -1001,7 +1002,7 @@ func (m *TLazVirtualStringTree) SetOnAfterGetMaxColumnWidth(fn TVTAfterGetMaxCol
 		RemoveEventElement(m.afterGetMaxColumnWidthPtr)
 	}
 	m.afterGetMaxColumnWidthPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3849, m.Instance(), m.afterGetMaxColumnWidthPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(64, m.Instance(), m.afterGetMaxColumnWidthPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterHeaderExport(fn TVTTreeExportEvent) {
@@ -1009,7 +1010,7 @@ func (m *TLazVirtualStringTree) SetOnAfterHeaderExport(fn TVTTreeExportEvent) {
 		RemoveEventElement(m.afterHeaderExportPtr)
 	}
 	m.afterHeaderExportPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3850, m.Instance(), m.afterHeaderExportPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(65, m.Instance(), m.afterHeaderExportPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterHeaderHeightTracking(fn TVTAfterHeaderHeightTrackingEvent) {
@@ -1017,7 +1018,7 @@ func (m *TLazVirtualStringTree) SetOnAfterHeaderHeightTracking(fn TVTAfterHeader
 		RemoveEventElement(m.afterHeaderHeightTrackingPtr)
 	}
 	m.afterHeaderHeightTrackingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3851, m.Instance(), m.afterHeaderHeightTrackingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(66, m.Instance(), m.afterHeaderHeightTrackingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterItemErase(fn TVTAfterItemEraseEvent) {
@@ -1025,7 +1026,7 @@ func (m *TLazVirtualStringTree) SetOnAfterItemErase(fn TVTAfterItemEraseEvent) {
 		RemoveEventElement(m.afterItemErasePtr)
 	}
 	m.afterItemErasePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3852, m.Instance(), m.afterItemErasePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(67, m.Instance(), m.afterItemErasePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterItemPaint(fn TVTAfterItemPaintEvent) {
@@ -1033,7 +1034,7 @@ func (m *TLazVirtualStringTree) SetOnAfterItemPaint(fn TVTAfterItemPaintEvent) {
 		RemoveEventElement(m.afterItemPaintPtr)
 	}
 	m.afterItemPaintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3853, m.Instance(), m.afterItemPaintPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(68, m.Instance(), m.afterItemPaintPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterNodeExport(fn TVTNodeExportEvent) {
@@ -1041,7 +1042,7 @@ func (m *TLazVirtualStringTree) SetOnAfterNodeExport(fn TVTNodeExportEvent) {
 		RemoveEventElement(m.afterNodeExportPtr)
 	}
 	m.afterNodeExportPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3854, m.Instance(), m.afterNodeExportPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(69, m.Instance(), m.afterNodeExportPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterPaint(fn TVTPaintEvent) {
@@ -1049,7 +1050,7 @@ func (m *TLazVirtualStringTree) SetOnAfterPaint(fn TVTPaintEvent) {
 		RemoveEventElement(m.afterPaintPtr)
 	}
 	m.afterPaintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3855, m.Instance(), m.afterPaintPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(70, m.Instance(), m.afterPaintPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnAfterTreeExport(fn TVTTreeExportEvent) {
@@ -1057,7 +1058,7 @@ func (m *TLazVirtualStringTree) SetOnAfterTreeExport(fn TVTTreeExportEvent) {
 		RemoveEventElement(m.afterTreeExportPtr)
 	}
 	m.afterTreeExportPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3856, m.Instance(), m.afterTreeExportPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(71, m.Instance(), m.afterTreeExportPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeAutoFitColumn(fn TVTBeforeAutoFitColumnEvent) {
@@ -1065,7 +1066,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeAutoFitColumn(fn TVTBeforeAutoFitColu
 		RemoveEventElement(m.beforeAutoFitColumnPtr)
 	}
 	m.beforeAutoFitColumnPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3857, m.Instance(), m.beforeAutoFitColumnPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(72, m.Instance(), m.beforeAutoFitColumnPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeAutoFitColumns(fn TVTBeforeAutoFitColumnsEvent) {
@@ -1073,7 +1074,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeAutoFitColumns(fn TVTBeforeAutoFitCol
 		RemoveEventElement(m.beforeAutoFitColumnsPtr)
 	}
 	m.beforeAutoFitColumnsPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3858, m.Instance(), m.beforeAutoFitColumnsPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(73, m.Instance(), m.beforeAutoFitColumnsPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeCellPaint(fn TVTBeforeCellPaintEvent) {
@@ -1081,7 +1082,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeCellPaint(fn TVTBeforeCellPaintEvent)
 		RemoveEventElement(m.beforeCellPaintPtr)
 	}
 	m.beforeCellPaintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3859, m.Instance(), m.beforeCellPaintPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(74, m.Instance(), m.beforeCellPaintPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeColumnExport(fn TVTColumnExportEvent) {
@@ -1089,7 +1090,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeColumnExport(fn TVTColumnExportEvent)
 		RemoveEventElement(m.beforeColumnExportPtr)
 	}
 	m.beforeColumnExportPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3860, m.Instance(), m.beforeColumnExportPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(75, m.Instance(), m.beforeColumnExportPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeColumnWidthTracking(fn TVTBeforeColumnWidthTrackingEvent) {
@@ -1097,7 +1098,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeColumnWidthTracking(fn TVTBeforeColum
 		RemoveEventElement(m.beforeColumnWidthTrackingPtr)
 	}
 	m.beforeColumnWidthTrackingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3861, m.Instance(), m.beforeColumnWidthTrackingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(76, m.Instance(), m.beforeColumnWidthTrackingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeDrawTreeLine(fn TVTBeforeDrawLineImageEvent) {
@@ -1105,7 +1106,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeDrawTreeLine(fn TVTBeforeDrawLineImag
 		RemoveEventElement(m.beforeDrawTreeLinePtr)
 	}
 	m.beforeDrawTreeLinePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3862, m.Instance(), m.beforeDrawTreeLinePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(77, m.Instance(), m.beforeDrawTreeLinePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeGetMaxColumnWidth(fn TVTBeforeGetMaxColumnWidthEvent) {
@@ -1113,7 +1114,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeGetMaxColumnWidth(fn TVTBeforeGetMaxC
 		RemoveEventElement(m.beforeGetMaxColumnWidthPtr)
 	}
 	m.beforeGetMaxColumnWidthPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3863, m.Instance(), m.beforeGetMaxColumnWidthPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(78, m.Instance(), m.beforeGetMaxColumnWidthPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeHeaderExport(fn TVTTreeExportEvent) {
@@ -1121,7 +1122,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeHeaderExport(fn TVTTreeExportEvent) {
 		RemoveEventElement(m.beforeHeaderExportPtr)
 	}
 	m.beforeHeaderExportPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3864, m.Instance(), m.beforeHeaderExportPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(79, m.Instance(), m.beforeHeaderExportPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeHeaderHeightTracking(fn TVTBeforeHeaderHeightTrackingEvent) {
@@ -1129,7 +1130,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeHeaderHeightTracking(fn TVTBeforeHead
 		RemoveEventElement(m.beforeHeaderHeightTrackingPtr)
 	}
 	m.beforeHeaderHeightTrackingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3865, m.Instance(), m.beforeHeaderHeightTrackingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(80, m.Instance(), m.beforeHeaderHeightTrackingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeItemErase(fn TVTBeforeItemEraseEvent) {
@@ -1137,7 +1138,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeItemErase(fn TVTBeforeItemEraseEvent)
 		RemoveEventElement(m.beforeItemErasePtr)
 	}
 	m.beforeItemErasePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3866, m.Instance(), m.beforeItemErasePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(81, m.Instance(), m.beforeItemErasePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeItemPaint(fn TVTBeforeItemPaintEvent) {
@@ -1145,7 +1146,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeItemPaint(fn TVTBeforeItemPaintEvent)
 		RemoveEventElement(m.beforeItemPaintPtr)
 	}
 	m.beforeItemPaintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3867, m.Instance(), m.beforeItemPaintPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(82, m.Instance(), m.beforeItemPaintPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeNodeExport(fn TVTNodeExportEvent) {
@@ -1153,7 +1154,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeNodeExport(fn TVTNodeExportEvent) {
 		RemoveEventElement(m.beforeNodeExportPtr)
 	}
 	m.beforeNodeExportPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3868, m.Instance(), m.beforeNodeExportPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(83, m.Instance(), m.beforeNodeExportPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforePaint(fn TVTPaintEvent) {
@@ -1161,7 +1162,7 @@ func (m *TLazVirtualStringTree) SetOnBeforePaint(fn TVTPaintEvent) {
 		RemoveEventElement(m.beforePaintPtr)
 	}
 	m.beforePaintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3869, m.Instance(), m.beforePaintPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(84, m.Instance(), m.beforePaintPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnBeforeTreeExport(fn TVTTreeExportEvent) {
@@ -1169,7 +1170,7 @@ func (m *TLazVirtualStringTree) SetOnBeforeTreeExport(fn TVTTreeExportEvent) {
 		RemoveEventElement(m.beforeTreeExportPtr)
 	}
 	m.beforeTreeExportPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3870, m.Instance(), m.beforeTreeExportPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(85, m.Instance(), m.beforeTreeExportPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnCanSplitterResizeColumn(fn TVTCanSplitterResizeColumnEvent) {
@@ -1177,7 +1178,7 @@ func (m *TLazVirtualStringTree) SetOnCanSplitterResizeColumn(fn TVTCanSplitterRe
 		RemoveEventElement(m.canSplitterResizeColumnPtr)
 	}
 	m.canSplitterResizeColumnPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3871, m.Instance(), m.canSplitterResizeColumnPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(86, m.Instance(), m.canSplitterResizeColumnPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnCanSplitterResizeHeader(fn TVTCanSplitterResizeHeaderEvent) {
@@ -1185,7 +1186,7 @@ func (m *TLazVirtualStringTree) SetOnCanSplitterResizeHeader(fn TVTCanSplitterRe
 		RemoveEventElement(m.canSplitterResizeHeaderPtr)
 	}
 	m.canSplitterResizeHeaderPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3872, m.Instance(), m.canSplitterResizeHeaderPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(87, m.Instance(), m.canSplitterResizeHeaderPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnCanSplitterResizeNode(fn TVTCanSplitterResizeNodeEvent) {
@@ -1193,7 +1194,7 @@ func (m *TLazVirtualStringTree) SetOnCanSplitterResizeNode(fn TVTCanSplitterResi
 		RemoveEventElement(m.canSplitterResizeNodePtr)
 	}
 	m.canSplitterResizeNodePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3873, m.Instance(), m.canSplitterResizeNodePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(88, m.Instance(), m.canSplitterResizeNodePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnChange(fn TVTChangeEvent) {
@@ -1201,7 +1202,7 @@ func (m *TLazVirtualStringTree) SetOnChange(fn TVTChangeEvent) {
 		RemoveEventElement(m.changePtr)
 	}
 	m.changePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3874, m.Instance(), m.changePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(89, m.Instance(), m.changePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnChecked(fn TVTChangeEvent) {
@@ -1209,7 +1210,7 @@ func (m *TLazVirtualStringTree) SetOnChecked(fn TVTChangeEvent) {
 		RemoveEventElement(m.checkedPtr)
 	}
 	m.checkedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3875, m.Instance(), m.checkedPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(90, m.Instance(), m.checkedPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnChecking(fn TVTCheckChangingEvent) {
@@ -1217,7 +1218,7 @@ func (m *TLazVirtualStringTree) SetOnChecking(fn TVTCheckChangingEvent) {
 		RemoveEventElement(m.checkingPtr)
 	}
 	m.checkingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3876, m.Instance(), m.checkingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(91, m.Instance(), m.checkingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnCollapsed(fn TVTChangeEvent) {
@@ -1225,7 +1226,7 @@ func (m *TLazVirtualStringTree) SetOnCollapsed(fn TVTChangeEvent) {
 		RemoveEventElement(m.collapsedPtr)
 	}
 	m.collapsedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3877, m.Instance(), m.collapsedPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(92, m.Instance(), m.collapsedPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnCollapsing(fn TVTChangingEvent) {
@@ -1233,7 +1234,7 @@ func (m *TLazVirtualStringTree) SetOnCollapsing(fn TVTChangingEvent) {
 		RemoveEventElement(m.collapsingPtr)
 	}
 	m.collapsingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3878, m.Instance(), m.collapsingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(93, m.Instance(), m.collapsingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnColumnClick(fn TVTColumnClickEvent) {
@@ -1241,7 +1242,7 @@ func (m *TLazVirtualStringTree) SetOnColumnClick(fn TVTColumnClickEvent) {
 		RemoveEventElement(m.columnClickPtr)
 	}
 	m.columnClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3879, m.Instance(), m.columnClickPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(94, m.Instance(), m.columnClickPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnColumnDblClick(fn TVTColumnDblClickEvent) {
@@ -1249,7 +1250,7 @@ func (m *TLazVirtualStringTree) SetOnColumnDblClick(fn TVTColumnDblClickEvent) {
 		RemoveEventElement(m.columnDblClickPtr)
 	}
 	m.columnDblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3880, m.Instance(), m.columnDblClickPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(95, m.Instance(), m.columnDblClickPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnColumnExport(fn TVTColumnExportEvent) {
@@ -1257,7 +1258,7 @@ func (m *TLazVirtualStringTree) SetOnColumnExport(fn TVTColumnExportEvent) {
 		RemoveEventElement(m.columnExportPtr)
 	}
 	m.columnExportPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3881, m.Instance(), m.columnExportPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(96, m.Instance(), m.columnExportPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnColumnResize(fn TVTHeaderNotifyEvent) {
@@ -1265,7 +1266,7 @@ func (m *TLazVirtualStringTree) SetOnColumnResize(fn TVTHeaderNotifyEvent) {
 		RemoveEventElement(m.columnResizePtr)
 	}
 	m.columnResizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3882, m.Instance(), m.columnResizePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(97, m.Instance(), m.columnResizePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnColumnWidthDblClickResize(fn TVTColumnWidthDblClickResizeEvent) {
@@ -1273,7 +1274,7 @@ func (m *TLazVirtualStringTree) SetOnColumnWidthDblClickResize(fn TVTColumnWidth
 		RemoveEventElement(m.columnWidthDblClickResizePtr)
 	}
 	m.columnWidthDblClickResizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3883, m.Instance(), m.columnWidthDblClickResizePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(98, m.Instance(), m.columnWidthDblClickResizePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnColumnWidthTracking(fn TVTColumnWidthTrackingEvent) {
@@ -1281,7 +1282,7 @@ func (m *TLazVirtualStringTree) SetOnColumnWidthTracking(fn TVTColumnWidthTracki
 		RemoveEventElement(m.columnWidthTrackingPtr)
 	}
 	m.columnWidthTrackingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3884, m.Instance(), m.columnWidthTrackingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(99, m.Instance(), m.columnWidthTrackingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnCompareNodes(fn TVTCompareEvent) {
@@ -1289,7 +1290,7 @@ func (m *TLazVirtualStringTree) SetOnCompareNodes(fn TVTCompareEvent) {
 		RemoveEventElement(m.compareNodesPtr)
 	}
 	m.compareNodesPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3885, m.Instance(), m.compareNodesPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(100, m.Instance(), m.compareNodesPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnContextPopup(fn TContextPopupEvent) {
@@ -1297,7 +1298,7 @@ func (m *TLazVirtualStringTree) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3886, m.Instance(), m.contextPopupPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(101, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnCreateDataObject(fn TVTCreateDataObjectEvent) {
@@ -1305,7 +1306,7 @@ func (m *TLazVirtualStringTree) SetOnCreateDataObject(fn TVTCreateDataObjectEven
 		RemoveEventElement(m.createDataObjectPtr)
 	}
 	m.createDataObjectPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3887, m.Instance(), m.createDataObjectPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(102, m.Instance(), m.createDataObjectPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnCreateDragManager(fn TVTCreateDragManagerEvent) {
@@ -1313,7 +1314,7 @@ func (m *TLazVirtualStringTree) SetOnCreateDragManager(fn TVTCreateDragManagerEv
 		RemoveEventElement(m.createDragManagerPtr)
 	}
 	m.createDragManagerPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3888, m.Instance(), m.createDragManagerPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(103, m.Instance(), m.createDragManagerPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnCreateEditor(fn TVTCreateEditorEvent) {
@@ -1321,7 +1322,7 @@ func (m *TLazVirtualStringTree) SetOnCreateEditor(fn TVTCreateEditorEvent) {
 		RemoveEventElement(m.createEditorPtr)
 	}
 	m.createEditorPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3889, m.Instance(), m.createEditorPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(104, m.Instance(), m.createEditorPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnDblClick(fn TNotifyEvent) {
@@ -1329,7 +1330,7 @@ func (m *TLazVirtualStringTree) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3890, m.Instance(), m.dblClickPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(105, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnDragAllowed(fn TVTDragAllowedEvent) {
@@ -1337,7 +1338,7 @@ func (m *TLazVirtualStringTree) SetOnDragAllowed(fn TVTDragAllowedEvent) {
 		RemoveEventElement(m.dragAllowedPtr)
 	}
 	m.dragAllowedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3891, m.Instance(), m.dragAllowedPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(106, m.Instance(), m.dragAllowedPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnDragOver(fn TVTDragOverEvent) {
@@ -1345,7 +1346,7 @@ func (m *TLazVirtualStringTree) SetOnDragOver(fn TVTDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3893, m.Instance(), m.dragOverPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(108, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnDragDrop(fn TVTDragDropEvent) {
@@ -1353,7 +1354,7 @@ func (m *TLazVirtualStringTree) SetOnDragDrop(fn TVTDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3892, m.Instance(), m.dragDropPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(107, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnDrawHint(fn TVTDrawHintEvent) {
@@ -1361,7 +1362,7 @@ func (m *TLazVirtualStringTree) SetOnDrawHint(fn TVTDrawHintEvent) {
 		RemoveEventElement(m.drawHintPtr)
 	}
 	m.drawHintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3894, m.Instance(), m.drawHintPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(109, m.Instance(), m.drawHintPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnDrawText(fn TVTDrawTextEvent) {
@@ -1369,7 +1370,7 @@ func (m *TLazVirtualStringTree) SetOnDrawText(fn TVTDrawTextEvent) {
 		RemoveEventElement(m.drawTextPtr)
 	}
 	m.drawTextPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3895, m.Instance(), m.drawTextPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(110, m.Instance(), m.drawTextPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnEditCancelled(fn TVTEditCancelEvent) {
@@ -1377,7 +1378,7 @@ func (m *TLazVirtualStringTree) SetOnEditCancelled(fn TVTEditCancelEvent) {
 		RemoveEventElement(m.editCancelledPtr)
 	}
 	m.editCancelledPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3896, m.Instance(), m.editCancelledPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(111, m.Instance(), m.editCancelledPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnEdited(fn TVTEditChangeEvent) {
@@ -1385,7 +1386,7 @@ func (m *TLazVirtualStringTree) SetOnEdited(fn TVTEditChangeEvent) {
 		RemoveEventElement(m.editedPtr)
 	}
 	m.editedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3897, m.Instance(), m.editedPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(112, m.Instance(), m.editedPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnEditing(fn TVTEditChangingEvent) {
@@ -1393,7 +1394,7 @@ func (m *TLazVirtualStringTree) SetOnEditing(fn TVTEditChangingEvent) {
 		RemoveEventElement(m.editingPtr)
 	}
 	m.editingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3898, m.Instance(), m.editingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(113, m.Instance(), m.editingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnEndDock(fn TEndDragEvent) {
@@ -1401,7 +1402,7 @@ func (m *TLazVirtualStringTree) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3899, m.Instance(), m.endDockPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(114, m.Instance(), m.endDockPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnEndDrag(fn TEndDragEvent) {
@@ -1409,7 +1410,7 @@ func (m *TLazVirtualStringTree) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3900, m.Instance(), m.endDragPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(115, m.Instance(), m.endDragPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnEndOperation(fn TVTOperationEvent) {
@@ -1417,7 +1418,7 @@ func (m *TLazVirtualStringTree) SetOnEndOperation(fn TVTOperationEvent) {
 		RemoveEventElement(m.endOperationPtr)
 	}
 	m.endOperationPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3901, m.Instance(), m.endOperationPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(116, m.Instance(), m.endOperationPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnExpanded(fn TVTChangeEvent) {
@@ -1425,7 +1426,7 @@ func (m *TLazVirtualStringTree) SetOnExpanded(fn TVTChangeEvent) {
 		RemoveEventElement(m.expandedPtr)
 	}
 	m.expandedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3902, m.Instance(), m.expandedPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(117, m.Instance(), m.expandedPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnExpanding(fn TVTChangingEvent) {
@@ -1433,7 +1434,7 @@ func (m *TLazVirtualStringTree) SetOnExpanding(fn TVTChangingEvent) {
 		RemoveEventElement(m.expandingPtr)
 	}
 	m.expandingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3903, m.Instance(), m.expandingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(118, m.Instance(), m.expandingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnFocusChanged(fn TVTFocusChangeEvent) {
@@ -1441,7 +1442,7 @@ func (m *TLazVirtualStringTree) SetOnFocusChanged(fn TVTFocusChangeEvent) {
 		RemoveEventElement(m.focusChangedPtr)
 	}
 	m.focusChangedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3904, m.Instance(), m.focusChangedPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(119, m.Instance(), m.focusChangedPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnFocusChanging(fn TVTFocusChangingEvent) {
@@ -1449,7 +1450,7 @@ func (m *TLazVirtualStringTree) SetOnFocusChanging(fn TVTFocusChangingEvent) {
 		RemoveEventElement(m.focusChangingPtr)
 	}
 	m.focusChangingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3905, m.Instance(), m.focusChangingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(120, m.Instance(), m.focusChangingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnFreeNode(fn TVTFreeNodeEvent) {
@@ -1457,7 +1458,7 @@ func (m *TLazVirtualStringTree) SetOnFreeNode(fn TVTFreeNodeEvent) {
 		RemoveEventElement(m.freeNodePtr)
 	}
 	m.freeNodePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3906, m.Instance(), m.freeNodePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(121, m.Instance(), m.freeNodePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetCellIsEmpty(fn TVTGetCellIsEmptyEvent) {
@@ -1465,7 +1466,7 @@ func (m *TLazVirtualStringTree) SetOnGetCellIsEmpty(fn TVTGetCellIsEmptyEvent) {
 		RemoveEventElement(m.getCellIsEmptyPtr)
 	}
 	m.getCellIsEmptyPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3907, m.Instance(), m.getCellIsEmptyPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(122, m.Instance(), m.getCellIsEmptyPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetCursor(fn TVTGetCursorEvent) {
@@ -1473,7 +1474,7 @@ func (m *TLazVirtualStringTree) SetOnGetCursor(fn TVTGetCursorEvent) {
 		RemoveEventElement(m.getCursorPtr)
 	}
 	m.getCursorPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3908, m.Instance(), m.getCursorPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(123, m.Instance(), m.getCursorPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetHeaderCursor(fn TVTGetHeaderCursorEvent) {
@@ -1481,7 +1482,7 @@ func (m *TLazVirtualStringTree) SetOnGetHeaderCursor(fn TVTGetHeaderCursorEvent)
 		RemoveEventElement(m.getHeaderCursorPtr)
 	}
 	m.getHeaderCursorPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3909, m.Instance(), m.getHeaderCursorPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(124, m.Instance(), m.getHeaderCursorPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetText(fn TVSTGetTextEvent) {
@@ -1489,7 +1490,7 @@ func (m *TLazVirtualStringTree) SetOnGetText(fn TVSTGetTextEvent) {
 		RemoveEventElement(m.getTextPtr)
 	}
 	m.getTextPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3920, m.Instance(), m.getTextPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(135, m.Instance(), m.getTextPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnPaintText(fn TVTPaintText) {
@@ -1497,7 +1498,7 @@ func (m *TLazVirtualStringTree) SetOnPaintText(fn TVTPaintText) {
 		RemoveEventElement(m.paintTextPtr)
 	}
 	m.paintTextPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3960, m.Instance(), m.paintTextPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(175, m.Instance(), m.paintTextPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetHelpContext(fn TVTHelpContextEvent) {
@@ -1505,7 +1506,7 @@ func (m *TLazVirtualStringTree) SetOnGetHelpContext(fn TVTHelpContextEvent) {
 		RemoveEventElement(m.getHelpContextPtr)
 	}
 	m.getHelpContextPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3910, m.Instance(), m.getHelpContextPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(125, m.Instance(), m.getHelpContextPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetHintKind(fn TVTHintKindEvent) {
@@ -1513,7 +1514,7 @@ func (m *TLazVirtualStringTree) SetOnGetHintKind(fn TVTHintKindEvent) {
 		RemoveEventElement(m.getHintKindPtr)
 	}
 	m.getHintKindPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3912, m.Instance(), m.getHintKindPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(127, m.Instance(), m.getHintKindPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetHintSize(fn TVTGetHintSizeEvent) {
@@ -1521,7 +1522,7 @@ func (m *TLazVirtualStringTree) SetOnGetHintSize(fn TVTGetHintSizeEvent) {
 		RemoveEventElement(m.getHintSizePtr)
 	}
 	m.getHintSizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3913, m.Instance(), m.getHintSizePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(128, m.Instance(), m.getHintSizePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetImageIndex(fn TVTGetImageEvent) {
@@ -1529,7 +1530,7 @@ func (m *TLazVirtualStringTree) SetOnGetImageIndex(fn TVTGetImageEvent) {
 		RemoveEventElement(m.getImageIndexPtr)
 	}
 	m.getImageIndexPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3914, m.Instance(), m.getImageIndexPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(129, m.Instance(), m.getImageIndexPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetImageIndexEx(fn TVTGetImageExEvent) {
@@ -1537,7 +1538,7 @@ func (m *TLazVirtualStringTree) SetOnGetImageIndexEx(fn TVTGetImageExEvent) {
 		RemoveEventElement(m.getImageIndexExPtr)
 	}
 	m.getImageIndexExPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3915, m.Instance(), m.getImageIndexExPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(130, m.Instance(), m.getImageIndexExPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetImageText(fn TVTGetImageTextEvent) {
@@ -1545,7 +1546,7 @@ func (m *TLazVirtualStringTree) SetOnGetImageText(fn TVTGetImageTextEvent) {
 		RemoveEventElement(m.getImageTextPtr)
 	}
 	m.getImageTextPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3916, m.Instance(), m.getImageTextPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(131, m.Instance(), m.getImageTextPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetHint(fn TVSTGetHintEvent) {
@@ -1553,7 +1554,7 @@ func (m *TLazVirtualStringTree) SetOnGetHint(fn TVSTGetHintEvent) {
 		RemoveEventElement(m.getHintPtr)
 	}
 	m.getHintPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3911, m.Instance(), m.getHintPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(126, m.Instance(), m.getHintPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetLineStyle(fn TVTGetLineStyleEvent) {
@@ -1561,7 +1562,7 @@ func (m *TLazVirtualStringTree) SetOnGetLineStyle(fn TVTGetLineStyleEvent) {
 		RemoveEventElement(m.getLineStylePtr)
 	}
 	m.getLineStylePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3917, m.Instance(), m.getLineStylePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(132, m.Instance(), m.getLineStylePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetNodeDataSize(fn TVTGetNodeDataSizeEvent) {
@@ -1569,7 +1570,7 @@ func (m *TLazVirtualStringTree) SetOnGetNodeDataSize(fn TVTGetNodeDataSizeEvent)
 		RemoveEventElement(m.getNodeDataSizePtr)
 	}
 	m.getNodeDataSizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3918, m.Instance(), m.getNodeDataSizePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(133, m.Instance(), m.getNodeDataSizePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnGetPopupMenu(fn TVTPopupEvent) {
@@ -1577,7 +1578,7 @@ func (m *TLazVirtualStringTree) SetOnGetPopupMenu(fn TVTPopupEvent) {
 		RemoveEventElement(m.getPopupMenuPtr)
 	}
 	m.getPopupMenuPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3919, m.Instance(), m.getPopupMenuPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(134, m.Instance(), m.getPopupMenuPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderClick(fn TVTHeaderClickEvent) {
@@ -1585,7 +1586,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderClick(fn TVTHeaderClickEvent) {
 		RemoveEventElement(m.headerClickPtr)
 	}
 	m.headerClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3921, m.Instance(), m.headerClickPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(136, m.Instance(), m.headerClickPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderDblClick(fn TVTHeaderClickEvent) {
@@ -1593,7 +1594,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderDblClick(fn TVTHeaderClickEvent) {
 		RemoveEventElement(m.headerDblClickPtr)
 	}
 	m.headerDblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3922, m.Instance(), m.headerDblClickPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(137, m.Instance(), m.headerDblClickPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderDragged(fn TVTHeaderDraggedEvent) {
@@ -1601,7 +1602,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderDragged(fn TVTHeaderDraggedEvent) {
 		RemoveEventElement(m.headerDraggedPtr)
 	}
 	m.headerDraggedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3923, m.Instance(), m.headerDraggedPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(138, m.Instance(), m.headerDraggedPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderDraggedOut(fn TVTHeaderDraggedOutEvent) {
@@ -1609,7 +1610,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderDraggedOut(fn TVTHeaderDraggedOutEven
 		RemoveEventElement(m.headerDraggedOutPtr)
 	}
 	m.headerDraggedOutPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3924, m.Instance(), m.headerDraggedOutPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(139, m.Instance(), m.headerDraggedOutPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderDragging(fn TVTHeaderDraggingEvent) {
@@ -1617,7 +1618,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderDragging(fn TVTHeaderDraggingEvent) {
 		RemoveEventElement(m.headerDraggingPtr)
 	}
 	m.headerDraggingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3925, m.Instance(), m.headerDraggingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(140, m.Instance(), m.headerDraggingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderDraw(fn TVTHeaderPaintEvent) {
@@ -1625,7 +1626,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderDraw(fn TVTHeaderPaintEvent) {
 		RemoveEventElement(m.headerDrawPtr)
 	}
 	m.headerDrawPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3926, m.Instance(), m.headerDrawPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(141, m.Instance(), m.headerDrawPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderDrawQueryElements(fn TVTHeaderPaintQueryElementsEvent) {
@@ -1633,7 +1634,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderDrawQueryElements(fn TVTHeaderPaintQu
 		RemoveEventElement(m.headerDrawQueryElementsPtr)
 	}
 	m.headerDrawQueryElementsPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3927, m.Instance(), m.headerDrawQueryElementsPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(142, m.Instance(), m.headerDrawQueryElementsPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderHeightDblClickResize(fn TVTHeaderHeightDblClickResizeEvent) {
@@ -1641,7 +1642,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderHeightDblClickResize(fn TVTHeaderHeig
 		RemoveEventElement(m.headerHeightDblClickResizePtr)
 	}
 	m.headerHeightDblClickResizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3928, m.Instance(), m.headerHeightDblClickResizePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(143, m.Instance(), m.headerHeightDblClickResizePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderHeightTracking(fn TVTHeaderHeightTrackingEvent) {
@@ -1649,7 +1650,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderHeightTracking(fn TVTHeaderHeightTrac
 		RemoveEventElement(m.headerHeightTrackingPtr)
 	}
 	m.headerHeightTrackingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3929, m.Instance(), m.headerHeightTrackingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(144, m.Instance(), m.headerHeightTrackingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderMouseDown(fn TVTHeaderMouseEvent) {
@@ -1657,7 +1658,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderMouseDown(fn TVTHeaderMouseEvent) {
 		RemoveEventElement(m.headerMouseDownPtr)
 	}
 	m.headerMouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3930, m.Instance(), m.headerMouseDownPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(145, m.Instance(), m.headerMouseDownPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderMouseMove(fn TVTHeaderMouseMoveEvent) {
@@ -1665,7 +1666,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderMouseMove(fn TVTHeaderMouseMoveEvent)
 		RemoveEventElement(m.headerMouseMovePtr)
 	}
 	m.headerMouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3931, m.Instance(), m.headerMouseMovePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(146, m.Instance(), m.headerMouseMovePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHeaderMouseUp(fn TVTHeaderMouseEvent) {
@@ -1673,7 +1674,7 @@ func (m *TLazVirtualStringTree) SetOnHeaderMouseUp(fn TVTHeaderMouseEvent) {
 		RemoveEventElement(m.headerMouseUpPtr)
 	}
 	m.headerMouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3932, m.Instance(), m.headerMouseUpPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(147, m.Instance(), m.headerMouseUpPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnHotChange(fn TVTHotNodeChangeEvent) {
@@ -1681,7 +1682,7 @@ func (m *TLazVirtualStringTree) SetOnHotChange(fn TVTHotNodeChangeEvent) {
 		RemoveEventElement(m.hotChangePtr)
 	}
 	m.hotChangePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3933, m.Instance(), m.hotChangePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(148, m.Instance(), m.hotChangePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnIncrementalSearch(fn TVTIncrementalSearchEvent) {
@@ -1689,7 +1690,7 @@ func (m *TLazVirtualStringTree) SetOnIncrementalSearch(fn TVTIncrementalSearchEv
 		RemoveEventElement(m.incrementalSearchPtr)
 	}
 	m.incrementalSearchPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3934, m.Instance(), m.incrementalSearchPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(149, m.Instance(), m.incrementalSearchPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnInitChildren(fn TVTInitChildrenEvent) {
@@ -1697,7 +1698,7 @@ func (m *TLazVirtualStringTree) SetOnInitChildren(fn TVTInitChildrenEvent) {
 		RemoveEventElement(m.initChildrenPtr)
 	}
 	m.initChildrenPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3935, m.Instance(), m.initChildrenPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(150, m.Instance(), m.initChildrenPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnInitNode(fn TVTInitNodeEvent) {
@@ -1705,7 +1706,7 @@ func (m *TLazVirtualStringTree) SetOnInitNode(fn TVTInitNodeEvent) {
 		RemoveEventElement(m.initNodePtr)
 	}
 	m.initNodePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3936, m.Instance(), m.initNodePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(151, m.Instance(), m.initNodePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnKeyAction(fn TVTKeyActionEvent) {
@@ -1713,7 +1714,7 @@ func (m *TLazVirtualStringTree) SetOnKeyAction(fn TVTKeyActionEvent) {
 		RemoveEventElement(m.keyActionPtr)
 	}
 	m.keyActionPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3937, m.Instance(), m.keyActionPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(152, m.Instance(), m.keyActionPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnLoadNode(fn TVTSaveNodeEvent) {
@@ -1721,7 +1722,7 @@ func (m *TLazVirtualStringTree) SetOnLoadNode(fn TVTSaveNodeEvent) {
 		RemoveEventElement(m.loadNodePtr)
 	}
 	m.loadNodePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3938, m.Instance(), m.loadNodePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(153, m.Instance(), m.loadNodePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnLoadTree(fn TVTSaveTreeEvent) {
@@ -1729,7 +1730,7 @@ func (m *TLazVirtualStringTree) SetOnLoadTree(fn TVTSaveTreeEvent) {
 		RemoveEventElement(m.loadTreePtr)
 	}
 	m.loadTreePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3939, m.Instance(), m.loadTreePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(154, m.Instance(), m.loadTreePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnMeasureItem(fn TVTMeasureItemEvent) {
@@ -1737,7 +1738,7 @@ func (m *TLazVirtualStringTree) SetOnMeasureItem(fn TVTMeasureItemEvent) {
 		RemoveEventElement(m.measureItemPtr)
 	}
 	m.measureItemPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3940, m.Instance(), m.measureItemPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(155, m.Instance(), m.measureItemPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnMeasureTextWidth(fn TVTMeasureTextEvent) {
@@ -1745,7 +1746,7 @@ func (m *TLazVirtualStringTree) SetOnMeasureTextWidth(fn TVTMeasureTextEvent) {
 		RemoveEventElement(m.measureTextWidthPtr)
 	}
 	m.measureTextWidthPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3942, m.Instance(), m.measureTextWidthPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(157, m.Instance(), m.measureTextWidthPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnMeasureTextHeight(fn TVTMeasureTextEvent) {
@@ -1753,7 +1754,7 @@ func (m *TLazVirtualStringTree) SetOnMeasureTextHeight(fn TVTMeasureTextEvent) {
 		RemoveEventElement(m.measureTextHeightPtr)
 	}
 	m.measureTextHeightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3941, m.Instance(), m.measureTextHeightPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(156, m.Instance(), m.measureTextHeightPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnMouseDown(fn TMouseEvent) {
@@ -1761,7 +1762,7 @@ func (m *TLazVirtualStringTree) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3943, m.Instance(), m.mouseDownPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(158, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -1769,7 +1770,7 @@ func (m *TLazVirtualStringTree) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3946, m.Instance(), m.mouseMovePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(161, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnMouseUp(fn TMouseEvent) {
@@ -1777,7 +1778,7 @@ func (m *TLazVirtualStringTree) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3947, m.Instance(), m.mouseUpPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(162, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -1785,7 +1786,7 @@ func (m *TLazVirtualStringTree) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3948, m.Instance(), m.mouseWheelPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(163, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnMouseEnter(fn TNotifyEvent) {
@@ -1793,7 +1794,7 @@ func (m *TLazVirtualStringTree) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3944, m.Instance(), m.mouseEnterPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(159, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnMouseLeave(fn TNotifyEvent) {
@@ -1801,7 +1802,7 @@ func (m *TLazVirtualStringTree) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3945, m.Instance(), m.mouseLeavePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(160, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnNewText(fn TVSTNewTextEvent) {
@@ -1809,7 +1810,7 @@ func (m *TLazVirtualStringTree) SetOnNewText(fn TVSTNewTextEvent) {
 		RemoveEventElement(m.newTextPtr)
 	}
 	m.newTextPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3949, m.Instance(), m.newTextPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(164, m.Instance(), m.newTextPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnNodeClick(fn TVTNodeClickEvent) {
@@ -1817,7 +1818,7 @@ func (m *TLazVirtualStringTree) SetOnNodeClick(fn TVTNodeClickEvent) {
 		RemoveEventElement(m.nodeClickPtr)
 	}
 	m.nodeClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3950, m.Instance(), m.nodeClickPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(165, m.Instance(), m.nodeClickPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnNodeCopied(fn TVTNodeCopiedEvent) {
@@ -1825,7 +1826,7 @@ func (m *TLazVirtualStringTree) SetOnNodeCopied(fn TVTNodeCopiedEvent) {
 		RemoveEventElement(m.nodeCopiedPtr)
 	}
 	m.nodeCopiedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3951, m.Instance(), m.nodeCopiedPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(166, m.Instance(), m.nodeCopiedPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnNodeCopying(fn TVTNodeCopyingEvent) {
@@ -1833,7 +1834,7 @@ func (m *TLazVirtualStringTree) SetOnNodeCopying(fn TVTNodeCopyingEvent) {
 		RemoveEventElement(m.nodeCopyingPtr)
 	}
 	m.nodeCopyingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3952, m.Instance(), m.nodeCopyingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(167, m.Instance(), m.nodeCopyingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnNodeDblClick(fn TVTNodeClickEvent) {
@@ -1841,7 +1842,7 @@ func (m *TLazVirtualStringTree) SetOnNodeDblClick(fn TVTNodeClickEvent) {
 		RemoveEventElement(m.nodeDblClickPtr)
 	}
 	m.nodeDblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3953, m.Instance(), m.nodeDblClickPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(168, m.Instance(), m.nodeDblClickPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnNodeExport(fn TVTNodeExportEvent) {
@@ -1849,7 +1850,7 @@ func (m *TLazVirtualStringTree) SetOnNodeExport(fn TVTNodeExportEvent) {
 		RemoveEventElement(m.nodeExportPtr)
 	}
 	m.nodeExportPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3954, m.Instance(), m.nodeExportPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(169, m.Instance(), m.nodeExportPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnNodeHeightDblClickResize(fn TVTNodeHeightDblClickResizeEvent) {
@@ -1857,7 +1858,7 @@ func (m *TLazVirtualStringTree) SetOnNodeHeightDblClickResize(fn TVTNodeHeightDb
 		RemoveEventElement(m.nodeHeightDblClickResizePtr)
 	}
 	m.nodeHeightDblClickResizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3955, m.Instance(), m.nodeHeightDblClickResizePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(170, m.Instance(), m.nodeHeightDblClickResizePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnNodeHeightTracking(fn TVTNodeHeightTrackingEvent) {
@@ -1865,7 +1866,7 @@ func (m *TLazVirtualStringTree) SetOnNodeHeightTracking(fn TVTNodeHeightTracking
 		RemoveEventElement(m.nodeHeightTrackingPtr)
 	}
 	m.nodeHeightTrackingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3956, m.Instance(), m.nodeHeightTrackingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(171, m.Instance(), m.nodeHeightTrackingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnNodeMoved(fn TVTNodeMovedEvent) {
@@ -1873,7 +1874,7 @@ func (m *TLazVirtualStringTree) SetOnNodeMoved(fn TVTNodeMovedEvent) {
 		RemoveEventElement(m.nodeMovedPtr)
 	}
 	m.nodeMovedPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3957, m.Instance(), m.nodeMovedPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(172, m.Instance(), m.nodeMovedPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnNodeMoving(fn TVTNodeMovingEvent) {
@@ -1881,7 +1882,7 @@ func (m *TLazVirtualStringTree) SetOnNodeMoving(fn TVTNodeMovingEvent) {
 		RemoveEventElement(m.nodeMovingPtr)
 	}
 	m.nodeMovingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3958, m.Instance(), m.nodeMovingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(173, m.Instance(), m.nodeMovingPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnPaintBackground(fn TVTBackgroundPaintEvent) {
@@ -1889,7 +1890,7 @@ func (m *TLazVirtualStringTree) SetOnPaintBackground(fn TVTBackgroundPaintEvent)
 		RemoveEventElement(m.paintBackgroundPtr)
 	}
 	m.paintBackgroundPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3959, m.Instance(), m.paintBackgroundPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(174, m.Instance(), m.paintBackgroundPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnRemoveFromSelection(fn TVTRemoveFromSelectionEvent) {
@@ -1897,7 +1898,7 @@ func (m *TLazVirtualStringTree) SetOnRemoveFromSelection(fn TVTRemoveFromSelecti
 		RemoveEventElement(m.removeFromSelectionPtr)
 	}
 	m.removeFromSelectionPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3961, m.Instance(), m.removeFromSelectionPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(176, m.Instance(), m.removeFromSelectionPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnResetNode(fn TVTChangeEvent) {
@@ -1905,7 +1906,7 @@ func (m *TLazVirtualStringTree) SetOnResetNode(fn TVTChangeEvent) {
 		RemoveEventElement(m.resetNodePtr)
 	}
 	m.resetNodePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3962, m.Instance(), m.resetNodePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(177, m.Instance(), m.resetNodePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnSaveNode(fn TVTSaveNodeEvent) {
@@ -1913,7 +1914,7 @@ func (m *TLazVirtualStringTree) SetOnSaveNode(fn TVTSaveNodeEvent) {
 		RemoveEventElement(m.saveNodePtr)
 	}
 	m.saveNodePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3963, m.Instance(), m.saveNodePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(178, m.Instance(), m.saveNodePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnSaveTree(fn TVTSaveTreeEvent) {
@@ -1921,7 +1922,7 @@ func (m *TLazVirtualStringTree) SetOnSaveTree(fn TVTSaveTreeEvent) {
 		RemoveEventElement(m.saveTreePtr)
 	}
 	m.saveTreePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3964, m.Instance(), m.saveTreePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(179, m.Instance(), m.saveTreePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnScroll(fn TVTScrollEvent) {
@@ -1929,7 +1930,7 @@ func (m *TLazVirtualStringTree) SetOnScroll(fn TVTScrollEvent) {
 		RemoveEventElement(m.scrollPtr)
 	}
 	m.scrollPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3965, m.Instance(), m.scrollPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(180, m.Instance(), m.scrollPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnShowScrollBar(fn TVTScrollBarShowEvent) {
@@ -1937,7 +1938,7 @@ func (m *TLazVirtualStringTree) SetOnShowScrollBar(fn TVTScrollBarShowEvent) {
 		RemoveEventElement(m.showScrollBarPtr)
 	}
 	m.showScrollBarPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3966, m.Instance(), m.showScrollBarPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(181, m.Instance(), m.showScrollBarPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnStartDock(fn TStartDockEvent) {
@@ -1945,7 +1946,7 @@ func (m *TLazVirtualStringTree) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3967, m.Instance(), m.startDockPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(182, m.Instance(), m.startDockPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnStartDrag(fn TStartDragEvent) {
@@ -1953,7 +1954,7 @@ func (m *TLazVirtualStringTree) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3968, m.Instance(), m.startDragPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(183, m.Instance(), m.startDragPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnStartOperation(fn TVTOperationEvent) {
@@ -1961,7 +1962,7 @@ func (m *TLazVirtualStringTree) SetOnStartOperation(fn TVTOperationEvent) {
 		RemoveEventElement(m.startOperationPtr)
 	}
 	m.startOperationPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3969, m.Instance(), m.startOperationPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(184, m.Instance(), m.startOperationPtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnStateChange(fn TVTStateChangeEvent) {
@@ -1969,7 +1970,7 @@ func (m *TLazVirtualStringTree) SetOnStateChange(fn TVTStateChangeEvent) {
 		RemoveEventElement(m.stateChangePtr)
 	}
 	m.stateChangePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3970, m.Instance(), m.stateChangePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(185, m.Instance(), m.stateChangePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnStructureChange(fn TVTStructureChangeEvent) {
@@ -1977,7 +1978,7 @@ func (m *TLazVirtualStringTree) SetOnStructureChange(fn TVTStructureChangeEvent)
 		RemoveEventElement(m.structureChangePtr)
 	}
 	m.structureChangePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3971, m.Instance(), m.structureChangePtr)
+	lazVirtualStringTreeImportAPI().SysCallN(186, m.Instance(), m.structureChangePtr)
 }
 
 func (m *TLazVirtualStringTree) SetOnUpdating(fn TVTUpdatingEvent) {
@@ -1985,5 +1986,213 @@ func (m *TLazVirtualStringTree) SetOnUpdating(fn TVTUpdatingEvent) {
 		RemoveEventElement(m.updatingPtr)
 	}
 	m.updatingPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(3972, m.Instance(), m.updatingPtr)
+	lazVirtualStringTreeImportAPI().SysCallN(187, m.Instance(), m.updatingPtr)
+}
+
+var (
+	lazVirtualStringTreeImport       *imports.Imports = nil
+	lazVirtualStringTreeImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("LazVirtualStringTree_Alignment", 0),
+		/*1*/ imports.NewTable("LazVirtualStringTree_AnimationDuration", 0),
+		/*2*/ imports.NewTable("LazVirtualStringTree_AutoExpandDelay", 0),
+		/*3*/ imports.NewTable("LazVirtualStringTree_AutoScrollDelay", 0),
+		/*4*/ imports.NewTable("LazVirtualStringTree_AutoScrollInterval", 0),
+		/*5*/ imports.NewTable("LazVirtualStringTree_Background", 0),
+		/*6*/ imports.NewTable("LazVirtualStringTree_BackgroundOffsetX", 0),
+		/*7*/ imports.NewTable("LazVirtualStringTree_BackgroundOffsetY", 0),
+		/*8*/ imports.NewTable("LazVirtualStringTree_BottomSpace", 0),
+		/*9*/ imports.NewTable("LazVirtualStringTree_ButtonFillMode", 0),
+		/*10*/ imports.NewTable("LazVirtualStringTree_ButtonStyle", 0),
+		/*11*/ imports.NewTable("LazVirtualStringTree_ChangeDelay", 0),
+		/*12*/ imports.NewTable("LazVirtualStringTree_CheckImageKind", 0),
+		/*13*/ imports.NewTable("LazVirtualStringTree_Class", 0),
+		/*14*/ imports.NewTable("LazVirtualStringTree_ClipboardFormats", 0),
+		/*15*/ imports.NewTable("LazVirtualStringTree_Colors", 0),
+		/*16*/ imports.NewTable("LazVirtualStringTree_Create", 0),
+		/*17*/ imports.NewTable("LazVirtualStringTree_CustomCheckImages", 0),
+		/*18*/ imports.NewTable("LazVirtualStringTree_CustomCheckImagesWidth", 0),
+		/*19*/ imports.NewTable("LazVirtualStringTree_DefaultNodeHeight", 0),
+		/*20*/ imports.NewTable("LazVirtualStringTree_DefaultPasteMode", 0),
+		/*21*/ imports.NewTable("LazVirtualStringTree_DefaultText", 0),
+		/*22*/ imports.NewTable("LazVirtualStringTree_DragCursor", 0),
+		/*23*/ imports.NewTable("LazVirtualStringTree_DragHeight", 0),
+		/*24*/ imports.NewTable("LazVirtualStringTree_DragImageKind", 0),
+		/*25*/ imports.NewTable("LazVirtualStringTree_DragKind", 0),
+		/*26*/ imports.NewTable("LazVirtualStringTree_DragMode", 0),
+		/*27*/ imports.NewTable("LazVirtualStringTree_DragOperations", 0),
+		/*28*/ imports.NewTable("LazVirtualStringTree_DragType", 0),
+		/*29*/ imports.NewTable("LazVirtualStringTree_DragWidth", 0),
+		/*30*/ imports.NewTable("LazVirtualStringTree_DrawSelectionMode", 0),
+		/*31*/ imports.NewTable("LazVirtualStringTree_EditDelay", 0),
+		/*32*/ imports.NewTable("LazVirtualStringTree_Header", 0),
+		/*33*/ imports.NewTable("LazVirtualStringTree_HintMode", 0),
+		/*34*/ imports.NewTable("LazVirtualStringTree_HotCursor", 0),
+		/*35*/ imports.NewTable("LazVirtualStringTree_Images", 0),
+		/*36*/ imports.NewTable("LazVirtualStringTree_ImagesWidth", 0),
+		/*37*/ imports.NewTable("LazVirtualStringTree_IncrementalSearch", 0),
+		/*38*/ imports.NewTable("LazVirtualStringTree_IncrementalSearchDirection", 0),
+		/*39*/ imports.NewTable("LazVirtualStringTree_IncrementalSearchStart", 0),
+		/*40*/ imports.NewTable("LazVirtualStringTree_IncrementalSearchTimeout", 0),
+		/*41*/ imports.NewTable("LazVirtualStringTree_Indent", 0),
+		/*42*/ imports.NewTable("LazVirtualStringTree_LastDragEffect", 0),
+		/*43*/ imports.NewTable("LazVirtualStringTree_LineMode", 0),
+		/*44*/ imports.NewTable("LazVirtualStringTree_LineStyle", 0),
+		/*45*/ imports.NewTable("LazVirtualStringTree_Margin", 0),
+		/*46*/ imports.NewTable("LazVirtualStringTree_NodeAlignment", 0),
+		/*47*/ imports.NewTable("LazVirtualStringTree_NodeDataSize", 0),
+		/*48*/ imports.NewTable("LazVirtualStringTree_OperationCanceled", 0),
+		/*49*/ imports.NewTable("LazVirtualStringTree_ParentColor", 0),
+		/*50*/ imports.NewTable("LazVirtualStringTree_ParentFont", 0),
+		/*51*/ imports.NewTable("LazVirtualStringTree_ParentShowHint", 0),
+		/*52*/ imports.NewTable("LazVirtualStringTree_RangeX", 0),
+		/*53*/ imports.NewTable("LazVirtualStringTree_RootNodeCount", 0),
+		/*54*/ imports.NewTable("LazVirtualStringTree_ScrollBarOptions", 0),
+		/*55*/ imports.NewTable("LazVirtualStringTree_SelectionBlendFactor", 0),
+		/*56*/ imports.NewTable("LazVirtualStringTree_SelectionCurveRadius", 0),
+		/*57*/ imports.NewTable("LazVirtualStringTree_SetOnAddToSelection", 0),
+		/*58*/ imports.NewTable("LazVirtualStringTree_SetOnAdvancedHeaderDraw", 0),
+		/*59*/ imports.NewTable("LazVirtualStringTree_SetOnAfterAutoFitColumn", 0),
+		/*60*/ imports.NewTable("LazVirtualStringTree_SetOnAfterAutoFitColumns", 0),
+		/*61*/ imports.NewTable("LazVirtualStringTree_SetOnAfterCellPaint", 0),
+		/*62*/ imports.NewTable("LazVirtualStringTree_SetOnAfterColumnExport", 0),
+		/*63*/ imports.NewTable("LazVirtualStringTree_SetOnAfterColumnWidthTracking", 0),
+		/*64*/ imports.NewTable("LazVirtualStringTree_SetOnAfterGetMaxColumnWidth", 0),
+		/*65*/ imports.NewTable("LazVirtualStringTree_SetOnAfterHeaderExport", 0),
+		/*66*/ imports.NewTable("LazVirtualStringTree_SetOnAfterHeaderHeightTracking", 0),
+		/*67*/ imports.NewTable("LazVirtualStringTree_SetOnAfterItemErase", 0),
+		/*68*/ imports.NewTable("LazVirtualStringTree_SetOnAfterItemPaint", 0),
+		/*69*/ imports.NewTable("LazVirtualStringTree_SetOnAfterNodeExport", 0),
+		/*70*/ imports.NewTable("LazVirtualStringTree_SetOnAfterPaint", 0),
+		/*71*/ imports.NewTable("LazVirtualStringTree_SetOnAfterTreeExport", 0),
+		/*72*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeAutoFitColumn", 0),
+		/*73*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeAutoFitColumns", 0),
+		/*74*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeCellPaint", 0),
+		/*75*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeColumnExport", 0),
+		/*76*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeColumnWidthTracking", 0),
+		/*77*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeDrawTreeLine", 0),
+		/*78*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeGetMaxColumnWidth", 0),
+		/*79*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeHeaderExport", 0),
+		/*80*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeHeaderHeightTracking", 0),
+		/*81*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeItemErase", 0),
+		/*82*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeItemPaint", 0),
+		/*83*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeNodeExport", 0),
+		/*84*/ imports.NewTable("LazVirtualStringTree_SetOnBeforePaint", 0),
+		/*85*/ imports.NewTable("LazVirtualStringTree_SetOnBeforeTreeExport", 0),
+		/*86*/ imports.NewTable("LazVirtualStringTree_SetOnCanSplitterResizeColumn", 0),
+		/*87*/ imports.NewTable("LazVirtualStringTree_SetOnCanSplitterResizeHeader", 0),
+		/*88*/ imports.NewTable("LazVirtualStringTree_SetOnCanSplitterResizeNode", 0),
+		/*89*/ imports.NewTable("LazVirtualStringTree_SetOnChange", 0),
+		/*90*/ imports.NewTable("LazVirtualStringTree_SetOnChecked", 0),
+		/*91*/ imports.NewTable("LazVirtualStringTree_SetOnChecking", 0),
+		/*92*/ imports.NewTable("LazVirtualStringTree_SetOnCollapsed", 0),
+		/*93*/ imports.NewTable("LazVirtualStringTree_SetOnCollapsing", 0),
+		/*94*/ imports.NewTable("LazVirtualStringTree_SetOnColumnClick", 0),
+		/*95*/ imports.NewTable("LazVirtualStringTree_SetOnColumnDblClick", 0),
+		/*96*/ imports.NewTable("LazVirtualStringTree_SetOnColumnExport", 0),
+		/*97*/ imports.NewTable("LazVirtualStringTree_SetOnColumnResize", 0),
+		/*98*/ imports.NewTable("LazVirtualStringTree_SetOnColumnWidthDblClickResize", 0),
+		/*99*/ imports.NewTable("LazVirtualStringTree_SetOnColumnWidthTracking", 0),
+		/*100*/ imports.NewTable("LazVirtualStringTree_SetOnCompareNodes", 0),
+		/*101*/ imports.NewTable("LazVirtualStringTree_SetOnContextPopup", 0),
+		/*102*/ imports.NewTable("LazVirtualStringTree_SetOnCreateDataObject", 0),
+		/*103*/ imports.NewTable("LazVirtualStringTree_SetOnCreateDragManager", 0),
+		/*104*/ imports.NewTable("LazVirtualStringTree_SetOnCreateEditor", 0),
+		/*105*/ imports.NewTable("LazVirtualStringTree_SetOnDblClick", 0),
+		/*106*/ imports.NewTable("LazVirtualStringTree_SetOnDragAllowed", 0),
+		/*107*/ imports.NewTable("LazVirtualStringTree_SetOnDragDrop", 0),
+		/*108*/ imports.NewTable("LazVirtualStringTree_SetOnDragOver", 0),
+		/*109*/ imports.NewTable("LazVirtualStringTree_SetOnDrawHint", 0),
+		/*110*/ imports.NewTable("LazVirtualStringTree_SetOnDrawText", 0),
+		/*111*/ imports.NewTable("LazVirtualStringTree_SetOnEditCancelled", 0),
+		/*112*/ imports.NewTable("LazVirtualStringTree_SetOnEdited", 0),
+		/*113*/ imports.NewTable("LazVirtualStringTree_SetOnEditing", 0),
+		/*114*/ imports.NewTable("LazVirtualStringTree_SetOnEndDock", 0),
+		/*115*/ imports.NewTable("LazVirtualStringTree_SetOnEndDrag", 0),
+		/*116*/ imports.NewTable("LazVirtualStringTree_SetOnEndOperation", 0),
+		/*117*/ imports.NewTable("LazVirtualStringTree_SetOnExpanded", 0),
+		/*118*/ imports.NewTable("LazVirtualStringTree_SetOnExpanding", 0),
+		/*119*/ imports.NewTable("LazVirtualStringTree_SetOnFocusChanged", 0),
+		/*120*/ imports.NewTable("LazVirtualStringTree_SetOnFocusChanging", 0),
+		/*121*/ imports.NewTable("LazVirtualStringTree_SetOnFreeNode", 0),
+		/*122*/ imports.NewTable("LazVirtualStringTree_SetOnGetCellIsEmpty", 0),
+		/*123*/ imports.NewTable("LazVirtualStringTree_SetOnGetCursor", 0),
+		/*124*/ imports.NewTable("LazVirtualStringTree_SetOnGetHeaderCursor", 0),
+		/*125*/ imports.NewTable("LazVirtualStringTree_SetOnGetHelpContext", 0),
+		/*126*/ imports.NewTable("LazVirtualStringTree_SetOnGetHint", 0),
+		/*127*/ imports.NewTable("LazVirtualStringTree_SetOnGetHintKind", 0),
+		/*128*/ imports.NewTable("LazVirtualStringTree_SetOnGetHintSize", 0),
+		/*129*/ imports.NewTable("LazVirtualStringTree_SetOnGetImageIndex", 0),
+		/*130*/ imports.NewTable("LazVirtualStringTree_SetOnGetImageIndexEx", 0),
+		/*131*/ imports.NewTable("LazVirtualStringTree_SetOnGetImageText", 0),
+		/*132*/ imports.NewTable("LazVirtualStringTree_SetOnGetLineStyle", 0),
+		/*133*/ imports.NewTable("LazVirtualStringTree_SetOnGetNodeDataSize", 0),
+		/*134*/ imports.NewTable("LazVirtualStringTree_SetOnGetPopupMenu", 0),
+		/*135*/ imports.NewTable("LazVirtualStringTree_SetOnGetText", 0),
+		/*136*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderClick", 0),
+		/*137*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderDblClick", 0),
+		/*138*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderDragged", 0),
+		/*139*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderDraggedOut", 0),
+		/*140*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderDragging", 0),
+		/*141*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderDraw", 0),
+		/*142*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderDrawQueryElements", 0),
+		/*143*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderHeightDblClickResize", 0),
+		/*144*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderHeightTracking", 0),
+		/*145*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderMouseDown", 0),
+		/*146*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderMouseMove", 0),
+		/*147*/ imports.NewTable("LazVirtualStringTree_SetOnHeaderMouseUp", 0),
+		/*148*/ imports.NewTable("LazVirtualStringTree_SetOnHotChange", 0),
+		/*149*/ imports.NewTable("LazVirtualStringTree_SetOnIncrementalSearch", 0),
+		/*150*/ imports.NewTable("LazVirtualStringTree_SetOnInitChildren", 0),
+		/*151*/ imports.NewTable("LazVirtualStringTree_SetOnInitNode", 0),
+		/*152*/ imports.NewTable("LazVirtualStringTree_SetOnKeyAction", 0),
+		/*153*/ imports.NewTable("LazVirtualStringTree_SetOnLoadNode", 0),
+		/*154*/ imports.NewTable("LazVirtualStringTree_SetOnLoadTree", 0),
+		/*155*/ imports.NewTable("LazVirtualStringTree_SetOnMeasureItem", 0),
+		/*156*/ imports.NewTable("LazVirtualStringTree_SetOnMeasureTextHeight", 0),
+		/*157*/ imports.NewTable("LazVirtualStringTree_SetOnMeasureTextWidth", 0),
+		/*158*/ imports.NewTable("LazVirtualStringTree_SetOnMouseDown", 0),
+		/*159*/ imports.NewTable("LazVirtualStringTree_SetOnMouseEnter", 0),
+		/*160*/ imports.NewTable("LazVirtualStringTree_SetOnMouseLeave", 0),
+		/*161*/ imports.NewTable("LazVirtualStringTree_SetOnMouseMove", 0),
+		/*162*/ imports.NewTable("LazVirtualStringTree_SetOnMouseUp", 0),
+		/*163*/ imports.NewTable("LazVirtualStringTree_SetOnMouseWheel", 0),
+		/*164*/ imports.NewTable("LazVirtualStringTree_SetOnNewText", 0),
+		/*165*/ imports.NewTable("LazVirtualStringTree_SetOnNodeClick", 0),
+		/*166*/ imports.NewTable("LazVirtualStringTree_SetOnNodeCopied", 0),
+		/*167*/ imports.NewTable("LazVirtualStringTree_SetOnNodeCopying", 0),
+		/*168*/ imports.NewTable("LazVirtualStringTree_SetOnNodeDblClick", 0),
+		/*169*/ imports.NewTable("LazVirtualStringTree_SetOnNodeExport", 0),
+		/*170*/ imports.NewTable("LazVirtualStringTree_SetOnNodeHeightDblClickResize", 0),
+		/*171*/ imports.NewTable("LazVirtualStringTree_SetOnNodeHeightTracking", 0),
+		/*172*/ imports.NewTable("LazVirtualStringTree_SetOnNodeMoved", 0),
+		/*173*/ imports.NewTable("LazVirtualStringTree_SetOnNodeMoving", 0),
+		/*174*/ imports.NewTable("LazVirtualStringTree_SetOnPaintBackground", 0),
+		/*175*/ imports.NewTable("LazVirtualStringTree_SetOnPaintText", 0),
+		/*176*/ imports.NewTable("LazVirtualStringTree_SetOnRemoveFromSelection", 0),
+		/*177*/ imports.NewTable("LazVirtualStringTree_SetOnResetNode", 0),
+		/*178*/ imports.NewTable("LazVirtualStringTree_SetOnSaveNode", 0),
+		/*179*/ imports.NewTable("LazVirtualStringTree_SetOnSaveTree", 0),
+		/*180*/ imports.NewTable("LazVirtualStringTree_SetOnScroll", 0),
+		/*181*/ imports.NewTable("LazVirtualStringTree_SetOnShowScrollBar", 0),
+		/*182*/ imports.NewTable("LazVirtualStringTree_SetOnStartDock", 0),
+		/*183*/ imports.NewTable("LazVirtualStringTree_SetOnStartDrag", 0),
+		/*184*/ imports.NewTable("LazVirtualStringTree_SetOnStartOperation", 0),
+		/*185*/ imports.NewTable("LazVirtualStringTree_SetOnStateChange", 0),
+		/*186*/ imports.NewTable("LazVirtualStringTree_SetOnStructureChange", 0),
+		/*187*/ imports.NewTable("LazVirtualStringTree_SetOnUpdating", 0),
+		/*188*/ imports.NewTable("LazVirtualStringTree_StateImages", 0),
+		/*189*/ imports.NewTable("LazVirtualStringTree_StateImagesWidth", 0),
+		/*190*/ imports.NewTable("LazVirtualStringTree_TextMargin", 0),
+		/*191*/ imports.NewTable("LazVirtualStringTree_TreeOptions", 0),
+		/*192*/ imports.NewTable("LazVirtualStringTree_WantTabs", 0),
+	}
+)
+
+func lazVirtualStringTreeImportAPI() *imports.Imports {
+	if lazVirtualStringTreeImport == nil {
+		lazVirtualStringTreeImport = NewDefaultImports()
+		lazVirtualStringTreeImport.SetImportTable(lazVirtualStringTreeImportTables)
+		lazVirtualStringTreeImportTables = nil
+	}
+	return lazVirtualStringTreeImport
 }

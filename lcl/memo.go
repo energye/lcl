@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -72,66 +73,66 @@ type TMemo struct {
 }
 
 func NewMemo(AOwner IComponent) IMemo {
-	r1 := LCL().SysCallN(4235, GetObjectUintptr(AOwner))
+	r1 := memoImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsMemo(r1)
 }
 
 func (m *TMemo) DragCursor() TCursor {
-	r1 := LCL().SysCallN(4236, 0, m.Instance(), 0)
+	r1 := memoImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TMemo) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(4236, 1, m.Instance(), uintptr(AValue))
+	memoImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TMemo) DragKind() TDragKind {
-	r1 := LCL().SysCallN(4237, 0, m.Instance(), 0)
+	r1 := memoImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TMemo) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(4237, 1, m.Instance(), uintptr(AValue))
+	memoImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TMemo) DragMode() TDragMode {
-	r1 := LCL().SysCallN(4238, 0, m.Instance(), 0)
+	r1 := memoImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TMemo) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(4238, 1, m.Instance(), uintptr(AValue))
+	memoImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TMemo) ParentColor() bool {
-	r1 := LCL().SysCallN(4239, 0, m.Instance(), 0)
+	r1 := memoImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMemo) SetParentColor(AValue bool) {
-	LCL().SysCallN(4239, 1, m.Instance(), PascalBool(AValue))
+	memoImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TMemo) ParentFont() bool {
-	r1 := LCL().SysCallN(4240, 0, m.Instance(), 0)
+	r1 := memoImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMemo) SetParentFont(AValue bool) {
-	LCL().SysCallN(4240, 1, m.Instance(), PascalBool(AValue))
+	memoImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TMemo) ParentShowHint() bool {
-	r1 := LCL().SysCallN(4241, 0, m.Instance(), 0)
+	r1 := memoImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TMemo) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(4241, 1, m.Instance(), PascalBool(AValue))
+	memoImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func MemoClass() TClass {
-	ret := LCL().SysCallN(4234)
+	ret := memoImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -140,7 +141,7 @@ func (m *TMemo) SetOnContextPopup(fn TContextPopupEvent) {
 		RemoveEventElement(m.contextPopupPtr)
 	}
 	m.contextPopupPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4242, m.Instance(), m.contextPopupPtr)
+	memoImportAPI().SysCallN(8, m.Instance(), m.contextPopupPtr)
 }
 
 func (m *TMemo) SetOnDblClick(fn TNotifyEvent) {
@@ -148,7 +149,7 @@ func (m *TMemo) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4243, m.Instance(), m.dblClickPtr)
+	memoImportAPI().SysCallN(9, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TMemo) SetOnDragDrop(fn TDragDropEvent) {
@@ -156,7 +157,7 @@ func (m *TMemo) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4244, m.Instance(), m.dragDropPtr)
+	memoImportAPI().SysCallN(10, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TMemo) SetOnDragOver(fn TDragOverEvent) {
@@ -164,7 +165,7 @@ func (m *TMemo) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4245, m.Instance(), m.dragOverPtr)
+	memoImportAPI().SysCallN(11, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TMemo) SetOnEditingDone(fn TNotifyEvent) {
@@ -172,7 +173,7 @@ func (m *TMemo) SetOnEditingDone(fn TNotifyEvent) {
 		RemoveEventElement(m.editingDonePtr)
 	}
 	m.editingDonePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4246, m.Instance(), m.editingDonePtr)
+	memoImportAPI().SysCallN(12, m.Instance(), m.editingDonePtr)
 }
 
 func (m *TMemo) SetOnEndDrag(fn TEndDragEvent) {
@@ -180,7 +181,7 @@ func (m *TMemo) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4247, m.Instance(), m.endDragPtr)
+	memoImportAPI().SysCallN(13, m.Instance(), m.endDragPtr)
 }
 
 func (m *TMemo) SetOnMouseDown(fn TMouseEvent) {
@@ -188,7 +189,7 @@ func (m *TMemo) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4248, m.Instance(), m.mouseDownPtr)
+	memoImportAPI().SysCallN(14, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TMemo) SetOnMouseEnter(fn TNotifyEvent) {
@@ -196,7 +197,7 @@ func (m *TMemo) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4249, m.Instance(), m.mouseEnterPtr)
+	memoImportAPI().SysCallN(15, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TMemo) SetOnMouseLeave(fn TNotifyEvent) {
@@ -204,7 +205,7 @@ func (m *TMemo) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4250, m.Instance(), m.mouseLeavePtr)
+	memoImportAPI().SysCallN(16, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TMemo) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -212,7 +213,7 @@ func (m *TMemo) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4251, m.Instance(), m.mouseMovePtr)
+	memoImportAPI().SysCallN(17, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TMemo) SetOnMouseUp(fn TMouseEvent) {
@@ -220,7 +221,7 @@ func (m *TMemo) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4252, m.Instance(), m.mouseUpPtr)
+	memoImportAPI().SysCallN(18, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TMemo) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -228,7 +229,7 @@ func (m *TMemo) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4253, m.Instance(), m.mouseWheelPtr)
+	memoImportAPI().SysCallN(19, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TMemo) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -236,7 +237,7 @@ func (m *TMemo) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4254, m.Instance(), m.mouseWheelDownPtr)
+	memoImportAPI().SysCallN(20, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TMemo) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -244,7 +245,7 @@ func (m *TMemo) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4258, m.Instance(), m.mouseWheelUpPtr)
+	memoImportAPI().SysCallN(24, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TMemo) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -252,7 +253,7 @@ func (m *TMemo) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4255, m.Instance(), m.mouseWheelHorzPtr)
+	memoImportAPI().SysCallN(21, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TMemo) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -260,7 +261,7 @@ func (m *TMemo) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4256, m.Instance(), m.mouseWheelLeftPtr)
+	memoImportAPI().SysCallN(22, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TMemo) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -268,7 +269,7 @@ func (m *TMemo) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4257, m.Instance(), m.mouseWheelRightPtr)
+	memoImportAPI().SysCallN(23, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TMemo) SetOnStartDrag(fn TStartDragEvent) {
@@ -276,5 +277,46 @@ func (m *TMemo) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4259, m.Instance(), m.startDragPtr)
+	memoImportAPI().SysCallN(25, m.Instance(), m.startDragPtr)
+}
+
+var (
+	memoImport       *imports.Imports = nil
+	memoImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Memo_Class", 0),
+		/*1*/ imports.NewTable("Memo_Create", 0),
+		/*2*/ imports.NewTable("Memo_DragCursor", 0),
+		/*3*/ imports.NewTable("Memo_DragKind", 0),
+		/*4*/ imports.NewTable("Memo_DragMode", 0),
+		/*5*/ imports.NewTable("Memo_ParentColor", 0),
+		/*6*/ imports.NewTable("Memo_ParentFont", 0),
+		/*7*/ imports.NewTable("Memo_ParentShowHint", 0),
+		/*8*/ imports.NewTable("Memo_SetOnContextPopup", 0),
+		/*9*/ imports.NewTable("Memo_SetOnDblClick", 0),
+		/*10*/ imports.NewTable("Memo_SetOnDragDrop", 0),
+		/*11*/ imports.NewTable("Memo_SetOnDragOver", 0),
+		/*12*/ imports.NewTable("Memo_SetOnEditingDone", 0),
+		/*13*/ imports.NewTable("Memo_SetOnEndDrag", 0),
+		/*14*/ imports.NewTable("Memo_SetOnMouseDown", 0),
+		/*15*/ imports.NewTable("Memo_SetOnMouseEnter", 0),
+		/*16*/ imports.NewTable("Memo_SetOnMouseLeave", 0),
+		/*17*/ imports.NewTable("Memo_SetOnMouseMove", 0),
+		/*18*/ imports.NewTable("Memo_SetOnMouseUp", 0),
+		/*19*/ imports.NewTable("Memo_SetOnMouseWheel", 0),
+		/*20*/ imports.NewTable("Memo_SetOnMouseWheelDown", 0),
+		/*21*/ imports.NewTable("Memo_SetOnMouseWheelHorz", 0),
+		/*22*/ imports.NewTable("Memo_SetOnMouseWheelLeft", 0),
+		/*23*/ imports.NewTable("Memo_SetOnMouseWheelRight", 0),
+		/*24*/ imports.NewTable("Memo_SetOnMouseWheelUp", 0),
+		/*25*/ imports.NewTable("Memo_SetOnStartDrag", 0),
+	}
+)
+
+func memoImportAPI() *imports.Imports {
+	if memoImport == nil {
+		memoImport = NewDefaultImports()
+		memoImport.SetImportTable(memoImportTables)
+		memoImportTables = nil
+	}
+	return memoImport
 }

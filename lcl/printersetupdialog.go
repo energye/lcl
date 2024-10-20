@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -28,21 +29,21 @@ type TPrinterSetupDialog struct {
 }
 
 func NewPrinterSetupDialog(TheOwner IComponent) IPrinterSetupDialog {
-	r1 := LCL().SysCallN(4648, GetObjectUintptr(TheOwner))
+	r1 := printerSetupDialogImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
 	return AsPrinterSetupDialog(r1)
 }
 
 func (m *TPrinterSetupDialog) AttachTo() ICustomForm {
-	r1 := LCL().SysCallN(4646, 0, m.Instance(), 0)
+	r1 := printerSetupDialogImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return AsCustomForm(r1)
 }
 
 func (m *TPrinterSetupDialog) SetAttachTo(AValue ICustomForm) {
-	LCL().SysCallN(4646, 1, m.Instance(), GetObjectUintptr(AValue))
+	printerSetupDialogImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func PrinterSetupDialogClass() TClass {
-	ret := LCL().SysCallN(4647)
+	ret := printerSetupDialogImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
@@ -51,5 +52,24 @@ func (m *TPrinterSetupDialog) SetOnDialogResult(fn TDialogResultEvent) {
 		RemoveEventElement(m.dialogResultPtr)
 	}
 	m.dialogResultPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4649, m.Instance(), m.dialogResultPtr)
+	printerSetupDialogImportAPI().SysCallN(3, m.Instance(), m.dialogResultPtr)
+}
+
+var (
+	printerSetupDialogImport       *imports.Imports = nil
+	printerSetupDialogImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("PrinterSetupDialog_AttachTo", 0),
+		/*1*/ imports.NewTable("PrinterSetupDialog_Class", 0),
+		/*2*/ imports.NewTable("PrinterSetupDialog_Create", 0),
+		/*3*/ imports.NewTable("PrinterSetupDialog_SetOnDialogResult", 0),
+	}
+)
+
+func printerSetupDialogImportAPI() *imports.Imports {
+	if printerSetupDialogImport == nil {
+		printerSetupDialogImport = NewDefaultImports()
+		printerSetupDialogImport.SetImportTable(printerSetupDialogImportTables)
+		printerSetupDialogImportTables = nil
+	}
+	return printerSetupDialogImport
 }

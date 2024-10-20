@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -35,40 +36,40 @@ type TListControlItems struct {
 }
 
 func NewListControlItems(AOwner IPersistent, AItemClass TCollectionItemClass) IListControlItems {
-	r1 := LCL().SysCallN(4041, GetObjectUintptr(AOwner), uintptr(AItemClass))
+	r1 := listControlItemsImportAPI().SysCallN(3, GetObjectUintptr(AOwner), uintptr(AItemClass))
 	return AsListControlItems(r1)
 }
 
 func (m *TListControlItems) ItemsForListControlItem(AIndex int32) IListControlItem {
-	r1 := LCL().SysCallN(4043, m.Instance(), uintptr(AIndex))
+	r1 := listControlItemsImportAPI().SysCallN(5, m.Instance(), uintptr(AIndex))
 	return AsListControlItem(r1)
 }
 
 func (m *TListControlItems) CaseSensitive() bool {
-	r1 := LCL().SysCallN(4039, 0, m.Instance(), 0)
+	r1 := listControlItemsImportAPI().SysCallN(1, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TListControlItems) SetCaseSensitive(AValue bool) {
-	LCL().SysCallN(4039, 1, m.Instance(), PascalBool(AValue))
+	listControlItemsImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TListControlItems) SortType() TListItemsSortType {
-	r1 := LCL().SysCallN(4046, 0, m.Instance(), 0)
+	r1 := listControlItemsImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return TListItemsSortType(r1)
 }
 
 func (m *TListControlItems) SetSortType(AValue TListItemsSortType) {
-	LCL().SysCallN(4046, 1, m.Instance(), uintptr(AValue))
+	listControlItemsImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TListControlItems) AddForListControlItem() IListControlItem {
-	r1 := LCL().SysCallN(4038, m.Instance())
+	r1 := listControlItemsImportAPI().SysCallN(0, m.Instance())
 	return AsListControlItem(r1)
 }
 
 func ListControlItemsClass() TClass {
-	ret := LCL().SysCallN(4040)
+	ret := listControlItemsImportAPI().SysCallN(2)
 	return TClass(ret)
 }
 
@@ -77,11 +78,11 @@ func (m *TListControlItems) CustomSort(fn TListItemsCompare) {
 		RemoveEventElement(m.customSortPtr)
 	}
 	m.customSortPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4042, m.Instance(), m.customSortPtr)
+	listControlItemsImportAPI().SysCallN(4, m.Instance(), m.customSortPtr)
 }
 
 func (m *TListControlItems) SortForOverload() {
-	LCL().SysCallN(4045, m.Instance())
+	listControlItemsImportAPI().SysCallN(7, m.Instance())
 }
 
 func (m *TListControlItems) SetOnCompare(fn TListCompareEvent) {
@@ -89,5 +90,29 @@ func (m *TListControlItems) SetOnCompare(fn TListCompareEvent) {
 		RemoveEventElement(m.comparePtr)
 	}
 	m.comparePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4044, m.Instance(), m.comparePtr)
+	listControlItemsImportAPI().SysCallN(6, m.Instance(), m.comparePtr)
+}
+
+var (
+	listControlItemsImport       *imports.Imports = nil
+	listControlItemsImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ListControlItems_AddForListControlItem", 0),
+		/*1*/ imports.NewTable("ListControlItems_CaseSensitive", 0),
+		/*2*/ imports.NewTable("ListControlItems_Class", 0),
+		/*3*/ imports.NewTable("ListControlItems_Create", 0),
+		/*4*/ imports.NewTable("ListControlItems_CustomSort", 0),
+		/*5*/ imports.NewTable("ListControlItems_ItemsForListControlItem", 0),
+		/*6*/ imports.NewTable("ListControlItems_SetOnCompare", 0),
+		/*7*/ imports.NewTable("ListControlItems_SortForOverload", 0),
+		/*8*/ imports.NewTable("ListControlItems_SortType", 0),
+	}
+)
+
+func listControlItemsImportAPI() *imports.Imports {
+	if listControlItemsImport == nil {
+		listControlItemsImport = NewDefaultImports()
+		listControlItemsImport.SetImportTable(listControlItemsImportTables)
+		listControlItemsImportTables = nil
+	}
+	return listControlItemsImport
 }

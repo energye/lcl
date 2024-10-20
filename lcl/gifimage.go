@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -28,21 +29,40 @@ type TGIFImage struct {
 }
 
 func NewGIFImage() IGIFImage {
-	r1 := LCL().SysCallN(3193)
+	r1 := gIFImageImportAPI().SysCallN(2)
 	return AsGIFImage(r1)
 }
 
 func (m *TGIFImage) Interlaced() bool {
-	r1 := LCL().SysCallN(3194, m.Instance())
+	r1 := gIFImageImportAPI().SysCallN(3, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TGIFImage) BitsPerPixel() byte {
-	r1 := LCL().SysCallN(3191, m.Instance())
+	r1 := gIFImageImportAPI().SysCallN(0, m.Instance())
 	return byte(r1)
 }
 
 func GIFImageClass() TClass {
-	ret := LCL().SysCallN(3192)
+	ret := gIFImageImportAPI().SysCallN(1)
 	return TClass(ret)
+}
+
+var (
+	gIFImageImport       *imports.Imports = nil
+	gIFImageImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("GIFImage_BitsPerPixel", 0),
+		/*1*/ imports.NewTable("GIFImage_Class", 0),
+		/*2*/ imports.NewTable("GIFImage_Create", 0),
+		/*3*/ imports.NewTable("GIFImage_Interlaced", 0),
+	}
+)
+
+func gIFImageImportAPI() *imports.Imports {
+	if gIFImageImport == nil {
+		gIFImageImport = NewDefaultImports()
+		gIFImageImport.SetImportTable(gIFImageImportTables)
+		gIFImageImportTables = nil
+	}
+	return gIFImageImport
 }

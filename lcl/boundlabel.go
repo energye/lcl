@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -68,93 +69,93 @@ type TBoundLabel struct {
 }
 
 func NewBoundLabel(TheOwner IComponent) IBoundLabel {
-	r1 := LCL().SysCallN(446, GetObjectUintptr(TheOwner))
+	r1 := boundLabelImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
 	return AsBoundLabel(r1)
 }
 
 func (m *TBoundLabel) FocusControl() IWinControl {
-	r1 := LCL().SysCallN(449, 0, m.Instance(), 0)
+	r1 := boundLabelImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return AsWinControl(r1)
 }
 
 func (m *TBoundLabel) SetFocusControl(AValue IWinControl) {
-	LCL().SysCallN(449, 1, m.Instance(), GetObjectUintptr(AValue))
+	boundLabelImportAPI().SysCallN(4, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TBoundLabel) DragCursor() TCursor {
-	r1 := LCL().SysCallN(447, 0, m.Instance(), 0)
+	r1 := boundLabelImportAPI().SysCallN(2, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TBoundLabel) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(447, 1, m.Instance(), uintptr(AValue))
+	boundLabelImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TBoundLabel) DragMode() TDragMode {
-	r1 := LCL().SysCallN(448, 0, m.Instance(), 0)
+	r1 := boundLabelImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TBoundLabel) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(448, 1, m.Instance(), uintptr(AValue))
+	boundLabelImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TBoundLabel) ParentColor() bool {
-	r1 := LCL().SysCallN(451, 0, m.Instance(), 0)
+	r1 := boundLabelImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TBoundLabel) SetParentColor(AValue bool) {
-	LCL().SysCallN(451, 1, m.Instance(), PascalBool(AValue))
+	boundLabelImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TBoundLabel) ParentFont() bool {
-	r1 := LCL().SysCallN(452, 0, m.Instance(), 0)
+	r1 := boundLabelImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TBoundLabel) SetParentFont(AValue bool) {
-	LCL().SysCallN(452, 1, m.Instance(), PascalBool(AValue))
+	boundLabelImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TBoundLabel) ParentShowHint() bool {
-	r1 := LCL().SysCallN(453, 0, m.Instance(), 0)
+	r1 := boundLabelImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TBoundLabel) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(453, 1, m.Instance(), PascalBool(AValue))
+	boundLabelImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TBoundLabel) ShowAccelChar() bool {
-	r1 := LCL().SysCallN(467, 0, m.Instance(), 0)
+	r1 := boundLabelImportAPI().SysCallN(22, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TBoundLabel) SetShowAccelChar(AValue bool) {
-	LCL().SysCallN(467, 1, m.Instance(), PascalBool(AValue))
+	boundLabelImportAPI().SysCallN(22, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TBoundLabel) Layout() TTextLayout {
-	r1 := LCL().SysCallN(450, 0, m.Instance(), 0)
+	r1 := boundLabelImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TTextLayout(r1)
 }
 
 func (m *TBoundLabel) SetLayout(AValue TTextLayout) {
-	LCL().SysCallN(450, 1, m.Instance(), uintptr(AValue))
+	boundLabelImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TBoundLabel) WordWrap() bool {
-	r1 := LCL().SysCallN(468, 0, m.Instance(), 0)
+	r1 := boundLabelImportAPI().SysCallN(23, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TBoundLabel) SetWordWrap(AValue bool) {
-	LCL().SysCallN(468, 1, m.Instance(), PascalBool(AValue))
+	boundLabelImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
 }
 
 func BoundLabelClass() TClass {
-	ret := LCL().SysCallN(445)
+	ret := boundLabelImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
@@ -163,7 +164,7 @@ func (m *TBoundLabel) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(454, m.Instance(), m.dblClickPtr)
+	boundLabelImportAPI().SysCallN(9, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TBoundLabel) SetOnDragDrop(fn TDragDropEvent) {
@@ -171,7 +172,7 @@ func (m *TBoundLabel) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(455, m.Instance(), m.dragDropPtr)
+	boundLabelImportAPI().SysCallN(10, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TBoundLabel) SetOnDragOver(fn TDragOverEvent) {
@@ -179,7 +180,7 @@ func (m *TBoundLabel) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(456, m.Instance(), m.dragOverPtr)
+	boundLabelImportAPI().SysCallN(11, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TBoundLabel) SetOnEndDrag(fn TEndDragEvent) {
@@ -187,7 +188,7 @@ func (m *TBoundLabel) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(457, m.Instance(), m.endDragPtr)
+	boundLabelImportAPI().SysCallN(12, m.Instance(), m.endDragPtr)
 }
 
 func (m *TBoundLabel) SetOnMouseDown(fn TMouseEvent) {
@@ -195,7 +196,7 @@ func (m *TBoundLabel) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(458, m.Instance(), m.mouseDownPtr)
+	boundLabelImportAPI().SysCallN(13, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TBoundLabel) SetOnMouseEnter(fn TNotifyEvent) {
@@ -203,7 +204,7 @@ func (m *TBoundLabel) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(459, m.Instance(), m.mouseEnterPtr)
+	boundLabelImportAPI().SysCallN(14, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TBoundLabel) SetOnMouseLeave(fn TNotifyEvent) {
@@ -211,7 +212,7 @@ func (m *TBoundLabel) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(460, m.Instance(), m.mouseLeavePtr)
+	boundLabelImportAPI().SysCallN(15, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TBoundLabel) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -219,7 +220,7 @@ func (m *TBoundLabel) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(461, m.Instance(), m.mouseMovePtr)
+	boundLabelImportAPI().SysCallN(16, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TBoundLabel) SetOnMouseUp(fn TMouseEvent) {
@@ -227,7 +228,7 @@ func (m *TBoundLabel) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(462, m.Instance(), m.mouseUpPtr)
+	boundLabelImportAPI().SysCallN(17, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TBoundLabel) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -235,7 +236,7 @@ func (m *TBoundLabel) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(463, m.Instance(), m.mouseWheelPtr)
+	boundLabelImportAPI().SysCallN(18, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TBoundLabel) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -243,7 +244,7 @@ func (m *TBoundLabel) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(464, m.Instance(), m.mouseWheelDownPtr)
+	boundLabelImportAPI().SysCallN(19, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TBoundLabel) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -251,7 +252,7 @@ func (m *TBoundLabel) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(465, m.Instance(), m.mouseWheelUpPtr)
+	boundLabelImportAPI().SysCallN(20, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TBoundLabel) SetOnStartDrag(fn TStartDragEvent) {
@@ -259,5 +260,44 @@ func (m *TBoundLabel) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(466, m.Instance(), m.startDragPtr)
+	boundLabelImportAPI().SysCallN(21, m.Instance(), m.startDragPtr)
+}
+
+var (
+	boundLabelImport       *imports.Imports = nil
+	boundLabelImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("BoundLabel_Class", 0),
+		/*1*/ imports.NewTable("BoundLabel_Create", 0),
+		/*2*/ imports.NewTable("BoundLabel_DragCursor", 0),
+		/*3*/ imports.NewTable("BoundLabel_DragMode", 0),
+		/*4*/ imports.NewTable("BoundLabel_FocusControl", 0),
+		/*5*/ imports.NewTable("BoundLabel_Layout", 0),
+		/*6*/ imports.NewTable("BoundLabel_ParentColor", 0),
+		/*7*/ imports.NewTable("BoundLabel_ParentFont", 0),
+		/*8*/ imports.NewTable("BoundLabel_ParentShowHint", 0),
+		/*9*/ imports.NewTable("BoundLabel_SetOnDblClick", 0),
+		/*10*/ imports.NewTable("BoundLabel_SetOnDragDrop", 0),
+		/*11*/ imports.NewTable("BoundLabel_SetOnDragOver", 0),
+		/*12*/ imports.NewTable("BoundLabel_SetOnEndDrag", 0),
+		/*13*/ imports.NewTable("BoundLabel_SetOnMouseDown", 0),
+		/*14*/ imports.NewTable("BoundLabel_SetOnMouseEnter", 0),
+		/*15*/ imports.NewTable("BoundLabel_SetOnMouseLeave", 0),
+		/*16*/ imports.NewTable("BoundLabel_SetOnMouseMove", 0),
+		/*17*/ imports.NewTable("BoundLabel_SetOnMouseUp", 0),
+		/*18*/ imports.NewTable("BoundLabel_SetOnMouseWheel", 0),
+		/*19*/ imports.NewTable("BoundLabel_SetOnMouseWheelDown", 0),
+		/*20*/ imports.NewTable("BoundLabel_SetOnMouseWheelUp", 0),
+		/*21*/ imports.NewTable("BoundLabel_SetOnStartDrag", 0),
+		/*22*/ imports.NewTable("BoundLabel_ShowAccelChar", 0),
+		/*23*/ imports.NewTable("BoundLabel_WordWrap", 0),
+	}
+)
+
+func boundLabelImportAPI() *imports.Imports {
+	if boundLabelImport == nil {
+		boundLabelImport = NewDefaultImports()
+		boundLabelImport.SetImportTable(boundLabelImportTables)
+		boundLabelImportTables = nil
+	}
+	return boundLabelImport
 }

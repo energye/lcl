@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -42,91 +43,118 @@ type TCustomProgressBar struct {
 }
 
 func NewCustomProgressBar(AOwner IComponent) ICustomProgressBar {
-	r1 := LCL().SysCallN(2170, GetObjectUintptr(AOwner))
+	r1 := customProgressBarImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsCustomProgressBar(r1)
 }
 
 func (m *TCustomProgressBar) Max() int32 {
-	r1 := LCL().SysCallN(2171, 0, m.Instance(), 0)
+	r1 := customProgressBarImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomProgressBar) SetMax(AValue int32) {
-	LCL().SysCallN(2171, 1, m.Instance(), uintptr(AValue))
+	customProgressBarImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomProgressBar) Min() int32 {
-	r1 := LCL().SysCallN(2172, 0, m.Instance(), 0)
+	r1 := customProgressBarImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomProgressBar) SetMin(AValue int32) {
-	LCL().SysCallN(2172, 1, m.Instance(), uintptr(AValue))
+	customProgressBarImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomProgressBar) Orientation() TProgressBarOrientation {
-	r1 := LCL().SysCallN(2173, 0, m.Instance(), 0)
+	r1 := customProgressBarImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TProgressBarOrientation(r1)
 }
 
 func (m *TCustomProgressBar) SetOrientation(AValue TProgressBarOrientation) {
-	LCL().SysCallN(2173, 1, m.Instance(), uintptr(AValue))
+	customProgressBarImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomProgressBar) Position() int32 {
-	r1 := LCL().SysCallN(2174, 0, m.Instance(), 0)
+	r1 := customProgressBarImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomProgressBar) SetPosition(AValue int32) {
-	LCL().SysCallN(2174, 1, m.Instance(), uintptr(AValue))
+	customProgressBarImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomProgressBar) Smooth() bool {
-	r1 := LCL().SysCallN(2175, 0, m.Instance(), 0)
+	r1 := customProgressBarImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomProgressBar) SetSmooth(AValue bool) {
-	LCL().SysCallN(2175, 1, m.Instance(), PascalBool(AValue))
+	customProgressBarImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomProgressBar) Step() int32 {
-	r1 := LCL().SysCallN(2176, 0, m.Instance(), 0)
+	r1 := customProgressBarImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return int32(r1)
 }
 
 func (m *TCustomProgressBar) SetStep(AValue int32) {
-	LCL().SysCallN(2176, 1, m.Instance(), uintptr(AValue))
+	customProgressBarImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomProgressBar) Style() TProgressBarStyle {
-	r1 := LCL().SysCallN(2179, 0, m.Instance(), 0)
+	r1 := customProgressBarImportAPI().SysCallN(11, 0, m.Instance(), 0)
 	return TProgressBarStyle(r1)
 }
 
 func (m *TCustomProgressBar) SetStyle(AValue TProgressBarStyle) {
-	LCL().SysCallN(2179, 1, m.Instance(), uintptr(AValue))
+	customProgressBarImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomProgressBar) BarShowText() bool {
-	r1 := LCL().SysCallN(2168, 0, m.Instance(), 0)
+	r1 := customProgressBarImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TCustomProgressBar) SetBarShowText(AValue bool) {
-	LCL().SysCallN(2168, 1, m.Instance(), PascalBool(AValue))
+	customProgressBarImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func CustomProgressBarClass() TClass {
-	ret := LCL().SysCallN(2169)
+	ret := customProgressBarImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TCustomProgressBar) StepIt() {
-	LCL().SysCallN(2178, m.Instance())
+	customProgressBarImportAPI().SysCallN(10, m.Instance())
 }
 
 func (m *TCustomProgressBar) StepBy(Delta int32) {
-	LCL().SysCallN(2177, m.Instance(), uintptr(Delta))
+	customProgressBarImportAPI().SysCallN(9, m.Instance(), uintptr(Delta))
+}
+
+var (
+	customProgressBarImport       *imports.Imports = nil
+	customProgressBarImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("CustomProgressBar_BarShowText", 0),
+		/*1*/ imports.NewTable("CustomProgressBar_Class", 0),
+		/*2*/ imports.NewTable("CustomProgressBar_Create", 0),
+		/*3*/ imports.NewTable("CustomProgressBar_Max", 0),
+		/*4*/ imports.NewTable("CustomProgressBar_Min", 0),
+		/*5*/ imports.NewTable("CustomProgressBar_Orientation", 0),
+		/*6*/ imports.NewTable("CustomProgressBar_Position", 0),
+		/*7*/ imports.NewTable("CustomProgressBar_Smooth", 0),
+		/*8*/ imports.NewTable("CustomProgressBar_Step", 0),
+		/*9*/ imports.NewTable("CustomProgressBar_StepBy", 0),
+		/*10*/ imports.NewTable("CustomProgressBar_StepIt", 0),
+		/*11*/ imports.NewTable("CustomProgressBar_Style", 0),
+	}
+)
+
+func customProgressBarImportAPI() *imports.Imports {
+	if customProgressBarImport == nil {
+		customProgressBarImport = NewDefaultImports()
+		customProgressBarImport.SetImportTable(customProgressBarImportTables)
+		customProgressBarImportTables = nil
+	}
+	return customProgressBarImport
 }

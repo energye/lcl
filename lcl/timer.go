@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TTimer struct {
 }
 
 func NewTimer(AOwner IComponent) ITimer {
-	r1 := LCL().SysCallN(5475, GetObjectUintptr(AOwner))
+	r1 := imerImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
 	return AsTimer(r1)
 }
 
 func TimerClass() TClass {
-	ret := LCL().SysCallN(5474)
+	ret := imerImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	imerImport       *imports.Imports = nil
+	imerImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Timer_Class", 0),
+		/*1*/ imports.NewTable("Timer_Create", 0),
+	}
+)
+
+func imerImportAPI() *imports.Imports {
+	if imerImport == nil {
+		imerImport = NewDefaultImports()
+		imerImport.SetImportTable(imerImportTables)
+		imerImportTables = nil
+	}
+	return imerImport
 }

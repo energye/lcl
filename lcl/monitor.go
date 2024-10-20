@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -34,61 +35,88 @@ type TMonitor struct {
 }
 
 func NewMonitor() IMonitor {
-	r1 := LCL().SysCallN(4369)
+	r1 := monitorImportAPI().SysCallN(2)
 	return AsMonitor(r1)
 }
 
 func (m *TMonitor) Handle() HMONITOR {
-	r1 := LCL().SysCallN(4370, m.Instance())
+	r1 := monitorImportAPI().SysCallN(3, m.Instance())
 	return HMONITOR(r1)
 }
 
 func (m *TMonitor) MonitorNum() int32 {
-	r1 := LCL().SysCallN(4373, m.Instance())
+	r1 := monitorImportAPI().SysCallN(6, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMonitor) Left() int32 {
-	r1 := LCL().SysCallN(4372, m.Instance())
+	r1 := monitorImportAPI().SysCallN(5, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMonitor) Height() int32 {
-	r1 := LCL().SysCallN(4371, m.Instance())
+	r1 := monitorImportAPI().SysCallN(4, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMonitor) Top() int32 {
-	r1 := LCL().SysCallN(4376, m.Instance())
+	r1 := monitorImportAPI().SysCallN(9, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMonitor) Width() int32 {
-	r1 := LCL().SysCallN(4377, m.Instance())
+	r1 := monitorImportAPI().SysCallN(10, m.Instance())
 	return int32(r1)
 }
 
 func (m *TMonitor) BoundsRect() (resultRect TRect) {
-	LCL().SysCallN(4367, m.Instance(), uintptr(unsafePointer(&resultRect)))
+	monitorImportAPI().SysCallN(0, m.Instance(), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TMonitor) WorkareaRect() (resultRect TRect) {
-	LCL().SysCallN(4378, m.Instance(), uintptr(unsafePointer(&resultRect)))
+	monitorImportAPI().SysCallN(11, m.Instance(), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TMonitor) Primary() bool {
-	r1 := LCL().SysCallN(4375, m.Instance())
+	r1 := monitorImportAPI().SysCallN(8, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TMonitor) PixelsPerInch() int32 {
-	r1 := LCL().SysCallN(4374, m.Instance())
+	r1 := monitorImportAPI().SysCallN(7, m.Instance())
 	return int32(r1)
 }
 
 func MonitorClass() TClass {
-	ret := LCL().SysCallN(4368)
+	ret := monitorImportAPI().SysCallN(1)
 	return TClass(ret)
+}
+
+var (
+	monitorImport       *imports.Imports = nil
+	monitorImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("Monitor_BoundsRect", 0),
+		/*1*/ imports.NewTable("Monitor_Class", 0),
+		/*2*/ imports.NewTable("Monitor_Create", 0),
+		/*3*/ imports.NewTable("Monitor_Handle", 0),
+		/*4*/ imports.NewTable("Monitor_Height", 0),
+		/*5*/ imports.NewTable("Monitor_Left", 0),
+		/*6*/ imports.NewTable("Monitor_MonitorNum", 0),
+		/*7*/ imports.NewTable("Monitor_PixelsPerInch", 0),
+		/*8*/ imports.NewTable("Monitor_Primary", 0),
+		/*9*/ imports.NewTable("Monitor_Top", 0),
+		/*10*/ imports.NewTable("Monitor_Width", 0),
+		/*11*/ imports.NewTable("Monitor_WorkareaRect", 0),
+	}
+)
+
+func monitorImportAPI() *imports.Imports {
+	if monitorImport == nil {
+		monitorImport = NewDefaultImports()
+		monitorImport.SetImportTable(monitorImportTables)
+		monitorImportTables = nil
+	}
+	return monitorImport
 }

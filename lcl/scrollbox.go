@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -80,84 +81,84 @@ type TScrollBox struct {
 }
 
 func NewScrollBox(AOwner IComponent) IScrollBox {
-	r1 := LCL().SysCallN(4978, GetObjectUintptr(AOwner))
+	r1 := scrollBoxImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsScrollBox(r1)
 }
 
 func (m *TScrollBox) AutoScroll() bool {
-	r1 := LCL().SysCallN(4976, 0, m.Instance(), 0)
+	r1 := scrollBoxImportAPI().SysCallN(0, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TScrollBox) SetAutoScroll(AValue bool) {
-	LCL().SysCallN(4976, 1, m.Instance(), PascalBool(AValue))
+	scrollBoxImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TScrollBox) DragCursor() TCursor {
-	r1 := LCL().SysCallN(4979, 0, m.Instance(), 0)
+	r1 := scrollBoxImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TScrollBox) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(4979, 1, m.Instance(), uintptr(AValue))
+	scrollBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TScrollBox) DragKind() TDragKind {
-	r1 := LCL().SysCallN(4980, 0, m.Instance(), 0)
+	r1 := scrollBoxImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TDragKind(r1)
 }
 
 func (m *TScrollBox) SetDragKind(AValue TDragKind) {
-	LCL().SysCallN(4980, 1, m.Instance(), uintptr(AValue))
+	scrollBoxImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TScrollBox) DragMode() TDragMode {
-	r1 := LCL().SysCallN(4981, 0, m.Instance(), 0)
+	r1 := scrollBoxImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return TDragMode(r1)
 }
 
 func (m *TScrollBox) SetDragMode(AValue TDragMode) {
-	LCL().SysCallN(4981, 1, m.Instance(), uintptr(AValue))
+	scrollBoxImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TScrollBox) ParentBackground() bool {
-	r1 := LCL().SysCallN(4982, 0, m.Instance(), 0)
+	r1 := scrollBoxImportAPI().SysCallN(6, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TScrollBox) SetParentBackground(AValue bool) {
-	LCL().SysCallN(4982, 1, m.Instance(), PascalBool(AValue))
+	scrollBoxImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TScrollBox) ParentColor() bool {
-	r1 := LCL().SysCallN(4983, 0, m.Instance(), 0)
+	r1 := scrollBoxImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TScrollBox) SetParentColor(AValue bool) {
-	LCL().SysCallN(4983, 1, m.Instance(), PascalBool(AValue))
+	scrollBoxImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TScrollBox) ParentFont() bool {
-	r1 := LCL().SysCallN(4984, 0, m.Instance(), 0)
+	r1 := scrollBoxImportAPI().SysCallN(8, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TScrollBox) SetParentFont(AValue bool) {
-	LCL().SysCallN(4984, 1, m.Instance(), PascalBool(AValue))
+	scrollBoxImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TScrollBox) ParentShowHint() bool {
-	r1 := LCL().SysCallN(4985, 0, m.Instance(), 0)
+	r1 := scrollBoxImportAPI().SysCallN(9, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TScrollBox) SetParentShowHint(AValue bool) {
-	LCL().SysCallN(4985, 1, m.Instance(), PascalBool(AValue))
+	scrollBoxImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
 }
 
 func ScrollBoxClass() TClass {
-	ret := LCL().SysCallN(4977)
+	ret := scrollBoxImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
@@ -166,7 +167,7 @@ func (m *TScrollBox) SetOnConstrainedResize(fn TConstrainedResizeEvent) {
 		RemoveEventElement(m.constrainedResizePtr)
 	}
 	m.constrainedResizePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4986, m.Instance(), m.constrainedResizePtr)
+	scrollBoxImportAPI().SysCallN(10, m.Instance(), m.constrainedResizePtr)
 }
 
 func (m *TScrollBox) SetOnDblClick(fn TNotifyEvent) {
@@ -174,7 +175,7 @@ func (m *TScrollBox) SetOnDblClick(fn TNotifyEvent) {
 		RemoveEventElement(m.dblClickPtr)
 	}
 	m.dblClickPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4987, m.Instance(), m.dblClickPtr)
+	scrollBoxImportAPI().SysCallN(11, m.Instance(), m.dblClickPtr)
 }
 
 func (m *TScrollBox) SetOnDragDrop(fn TDragDropEvent) {
@@ -182,7 +183,7 @@ func (m *TScrollBox) SetOnDragDrop(fn TDragDropEvent) {
 		RemoveEventElement(m.dragDropPtr)
 	}
 	m.dragDropPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4988, m.Instance(), m.dragDropPtr)
+	scrollBoxImportAPI().SysCallN(12, m.Instance(), m.dragDropPtr)
 }
 
 func (m *TScrollBox) SetOnDragOver(fn TDragOverEvent) {
@@ -190,7 +191,7 @@ func (m *TScrollBox) SetOnDragOver(fn TDragOverEvent) {
 		RemoveEventElement(m.dragOverPtr)
 	}
 	m.dragOverPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4989, m.Instance(), m.dragOverPtr)
+	scrollBoxImportAPI().SysCallN(13, m.Instance(), m.dragOverPtr)
 }
 
 func (m *TScrollBox) SetOnEndDock(fn TEndDragEvent) {
@@ -198,7 +199,7 @@ func (m *TScrollBox) SetOnEndDock(fn TEndDragEvent) {
 		RemoveEventElement(m.endDockPtr)
 	}
 	m.endDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4990, m.Instance(), m.endDockPtr)
+	scrollBoxImportAPI().SysCallN(14, m.Instance(), m.endDockPtr)
 }
 
 func (m *TScrollBox) SetOnEndDrag(fn TEndDragEvent) {
@@ -206,7 +207,7 @@ func (m *TScrollBox) SetOnEndDrag(fn TEndDragEvent) {
 		RemoveEventElement(m.endDragPtr)
 	}
 	m.endDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4991, m.Instance(), m.endDragPtr)
+	scrollBoxImportAPI().SysCallN(15, m.Instance(), m.endDragPtr)
 }
 
 func (m *TScrollBox) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
@@ -214,7 +215,7 @@ func (m *TScrollBox) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
 		RemoveEventElement(m.getSiteInfoPtr)
 	}
 	m.getSiteInfoPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4992, m.Instance(), m.getSiteInfoPtr)
+	scrollBoxImportAPI().SysCallN(16, m.Instance(), m.getSiteInfoPtr)
 }
 
 func (m *TScrollBox) SetOnMouseDown(fn TMouseEvent) {
@@ -222,7 +223,7 @@ func (m *TScrollBox) SetOnMouseDown(fn TMouseEvent) {
 		RemoveEventElement(m.mouseDownPtr)
 	}
 	m.mouseDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4993, m.Instance(), m.mouseDownPtr)
+	scrollBoxImportAPI().SysCallN(17, m.Instance(), m.mouseDownPtr)
 }
 
 func (m *TScrollBox) SetOnMouseEnter(fn TNotifyEvent) {
@@ -230,7 +231,7 @@ func (m *TScrollBox) SetOnMouseEnter(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseEnterPtr)
 	}
 	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4994, m.Instance(), m.mouseEnterPtr)
+	scrollBoxImportAPI().SysCallN(18, m.Instance(), m.mouseEnterPtr)
 }
 
 func (m *TScrollBox) SetOnMouseLeave(fn TNotifyEvent) {
@@ -238,7 +239,7 @@ func (m *TScrollBox) SetOnMouseLeave(fn TNotifyEvent) {
 		RemoveEventElement(m.mouseLeavePtr)
 	}
 	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4995, m.Instance(), m.mouseLeavePtr)
+	scrollBoxImportAPI().SysCallN(19, m.Instance(), m.mouseLeavePtr)
 }
 
 func (m *TScrollBox) SetOnMouseMove(fn TMouseMoveEvent) {
@@ -246,7 +247,7 @@ func (m *TScrollBox) SetOnMouseMove(fn TMouseMoveEvent) {
 		RemoveEventElement(m.mouseMovePtr)
 	}
 	m.mouseMovePtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4996, m.Instance(), m.mouseMovePtr)
+	scrollBoxImportAPI().SysCallN(20, m.Instance(), m.mouseMovePtr)
 }
 
 func (m *TScrollBox) SetOnMouseUp(fn TMouseEvent) {
@@ -254,7 +255,7 @@ func (m *TScrollBox) SetOnMouseUp(fn TMouseEvent) {
 		RemoveEventElement(m.mouseUpPtr)
 	}
 	m.mouseUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4997, m.Instance(), m.mouseUpPtr)
+	scrollBoxImportAPI().SysCallN(21, m.Instance(), m.mouseUpPtr)
 }
 
 func (m *TScrollBox) SetOnMouseWheel(fn TMouseWheelEvent) {
@@ -262,7 +263,7 @@ func (m *TScrollBox) SetOnMouseWheel(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelPtr)
 	}
 	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4998, m.Instance(), m.mouseWheelPtr)
+	scrollBoxImportAPI().SysCallN(22, m.Instance(), m.mouseWheelPtr)
 }
 
 func (m *TScrollBox) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
@@ -270,7 +271,7 @@ func (m *TScrollBox) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelDownPtr)
 	}
 	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(4999, m.Instance(), m.mouseWheelDownPtr)
+	scrollBoxImportAPI().SysCallN(23, m.Instance(), m.mouseWheelDownPtr)
 }
 
 func (m *TScrollBox) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
@@ -278,7 +279,7 @@ func (m *TScrollBox) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelUpPtr)
 	}
 	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5003, m.Instance(), m.mouseWheelUpPtr)
+	scrollBoxImportAPI().SysCallN(27, m.Instance(), m.mouseWheelUpPtr)
 }
 
 func (m *TScrollBox) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
@@ -286,7 +287,7 @@ func (m *TScrollBox) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
 		RemoveEventElement(m.mouseWheelHorzPtr)
 	}
 	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5000, m.Instance(), m.mouseWheelHorzPtr)
+	scrollBoxImportAPI().SysCallN(24, m.Instance(), m.mouseWheelHorzPtr)
 }
 
 func (m *TScrollBox) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
@@ -294,7 +295,7 @@ func (m *TScrollBox) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelLeftPtr)
 	}
 	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5001, m.Instance(), m.mouseWheelLeftPtr)
+	scrollBoxImportAPI().SysCallN(25, m.Instance(), m.mouseWheelLeftPtr)
 }
 
 func (m *TScrollBox) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
@@ -302,7 +303,7 @@ func (m *TScrollBox) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
 		RemoveEventElement(m.mouseWheelRightPtr)
 	}
 	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5002, m.Instance(), m.mouseWheelRightPtr)
+	scrollBoxImportAPI().SysCallN(26, m.Instance(), m.mouseWheelRightPtr)
 }
 
 func (m *TScrollBox) SetOnStartDock(fn TStartDockEvent) {
@@ -310,7 +311,7 @@ func (m *TScrollBox) SetOnStartDock(fn TStartDockEvent) {
 		RemoveEventElement(m.startDockPtr)
 	}
 	m.startDockPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5004, m.Instance(), m.startDockPtr)
+	scrollBoxImportAPI().SysCallN(28, m.Instance(), m.startDockPtr)
 }
 
 func (m *TScrollBox) SetOnStartDrag(fn TStartDragEvent) {
@@ -318,5 +319,50 @@ func (m *TScrollBox) SetOnStartDrag(fn TStartDragEvent) {
 		RemoveEventElement(m.startDragPtr)
 	}
 	m.startDragPtr = MakeEventDataPtr(fn)
-	LCL().SysCallN(5005, m.Instance(), m.startDragPtr)
+	scrollBoxImportAPI().SysCallN(29, m.Instance(), m.startDragPtr)
+}
+
+var (
+	scrollBoxImport       *imports.Imports = nil
+	scrollBoxImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("ScrollBox_AutoScroll", 0),
+		/*1*/ imports.NewTable("ScrollBox_Class", 0),
+		/*2*/ imports.NewTable("ScrollBox_Create", 0),
+		/*3*/ imports.NewTable("ScrollBox_DragCursor", 0),
+		/*4*/ imports.NewTable("ScrollBox_DragKind", 0),
+		/*5*/ imports.NewTable("ScrollBox_DragMode", 0),
+		/*6*/ imports.NewTable("ScrollBox_ParentBackground", 0),
+		/*7*/ imports.NewTable("ScrollBox_ParentColor", 0),
+		/*8*/ imports.NewTable("ScrollBox_ParentFont", 0),
+		/*9*/ imports.NewTable("ScrollBox_ParentShowHint", 0),
+		/*10*/ imports.NewTable("ScrollBox_SetOnConstrainedResize", 0),
+		/*11*/ imports.NewTable("ScrollBox_SetOnDblClick", 0),
+		/*12*/ imports.NewTable("ScrollBox_SetOnDragDrop", 0),
+		/*13*/ imports.NewTable("ScrollBox_SetOnDragOver", 0),
+		/*14*/ imports.NewTable("ScrollBox_SetOnEndDock", 0),
+		/*15*/ imports.NewTable("ScrollBox_SetOnEndDrag", 0),
+		/*16*/ imports.NewTable("ScrollBox_SetOnGetSiteInfo", 0),
+		/*17*/ imports.NewTable("ScrollBox_SetOnMouseDown", 0),
+		/*18*/ imports.NewTable("ScrollBox_SetOnMouseEnter", 0),
+		/*19*/ imports.NewTable("ScrollBox_SetOnMouseLeave", 0),
+		/*20*/ imports.NewTable("ScrollBox_SetOnMouseMove", 0),
+		/*21*/ imports.NewTable("ScrollBox_SetOnMouseUp", 0),
+		/*22*/ imports.NewTable("ScrollBox_SetOnMouseWheel", 0),
+		/*23*/ imports.NewTable("ScrollBox_SetOnMouseWheelDown", 0),
+		/*24*/ imports.NewTable("ScrollBox_SetOnMouseWheelHorz", 0),
+		/*25*/ imports.NewTable("ScrollBox_SetOnMouseWheelLeft", 0),
+		/*26*/ imports.NewTable("ScrollBox_SetOnMouseWheelRight", 0),
+		/*27*/ imports.NewTable("ScrollBox_SetOnMouseWheelUp", 0),
+		/*28*/ imports.NewTable("ScrollBox_SetOnStartDock", 0),
+		/*29*/ imports.NewTable("ScrollBox_SetOnStartDrag", 0),
+	}
+)
+
+func scrollBoxImportAPI() *imports.Imports {
+	if scrollBoxImport == nil {
+		scrollBoxImport = NewDefaultImports()
+		scrollBoxImport.SetImportTable(scrollBoxImportTables)
+		scrollBoxImportTables = nil
+	}
+	return scrollBoxImport
 }

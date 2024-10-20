@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -39,81 +40,111 @@ type TDragImageList struct {
 }
 
 func NewDragImageList(AOwner IComponent) IDragImageList {
-	r1 := LCL().SysCallN(2731, GetObjectUintptr(AOwner))
+	r1 := dragImageListImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
 	return AsDragImageList(r1)
 }
 
 func (m *TDragImageList) DragCursor() TCursor {
-	r1 := LCL().SysCallN(2732, 0, m.Instance(), 0)
+	r1 := dragImageListImportAPI().SysCallN(3, 0, m.Instance(), 0)
 	return TCursor(r1)
 }
 
 func (m *TDragImageList) SetDragCursor(AValue TCursor) {
-	LCL().SysCallN(2732, 1, m.Instance(), uintptr(AValue))
+	dragImageListImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDragImageList) DragHotspot() (resultPoint TPoint) {
-	LCL().SysCallN(2733, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	dragImageListImportAPI().SysCallN(4, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TDragImageList) SetDragHotspot(AValue *TPoint) {
-	LCL().SysCallN(2733, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	dragImageListImportAPI().SysCallN(4, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TDragImageList) Dragging() bool {
-	r1 := LCL().SysCallN(2737, m.Instance())
+	r1 := dragImageListImportAPI().SysCallN(8, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TDragImageList) DraggingResolution() IDragImageListResolution {
-	r1 := LCL().SysCallN(2738, m.Instance())
+	r1 := dragImageListImportAPI().SysCallN(9, m.Instance())
 	return AsDragImageListResolution(r1)
 }
 
 func (m *TDragImageList) ResolutionForDragImageListResolution(AImageWidth int32) IDragImageListResolution {
-	r1 := LCL().SysCallN(2741, m.Instance(), uintptr(AImageWidth))
+	r1 := dragImageListImportAPI().SysCallN(12, m.Instance(), uintptr(AImageWidth))
 	return AsDragImageListResolution(r1)
 }
 
 func (m *TDragImageList) BeginDrag(Window HWND, X, Y int32) bool {
-	r1 := LCL().SysCallN(2729, m.Instance(), uintptr(Window), uintptr(X), uintptr(Y))
+	r1 := dragImageListImportAPI().SysCallN(0, m.Instance(), uintptr(Window), uintptr(X), uintptr(Y))
 	return GoBool(r1)
 }
 
 func (m *TDragImageList) DragLock(Window HWND, XPos, YPos int32) bool {
-	r1 := LCL().SysCallN(2734, m.Instance(), uintptr(Window), uintptr(XPos), uintptr(YPos))
+	r1 := dragImageListImportAPI().SysCallN(5, m.Instance(), uintptr(Window), uintptr(XPos), uintptr(YPos))
 	return GoBool(r1)
 }
 
 func (m *TDragImageList) DragMove(X, Y int32) bool {
-	r1 := LCL().SysCallN(2735, m.Instance(), uintptr(X), uintptr(Y))
+	r1 := dragImageListImportAPI().SysCallN(6, m.Instance(), uintptr(X), uintptr(Y))
 	return GoBool(r1)
 }
 
 func (m *TDragImageList) EndDrag() bool {
-	r1 := LCL().SysCallN(2739, m.Instance())
+	r1 := dragImageListImportAPI().SysCallN(10, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TDragImageList) SetDragImage(Index, HotSpotX, HotSpotY int32) bool {
-	r1 := LCL().SysCallN(2742, m.Instance(), uintptr(Index), uintptr(HotSpotX), uintptr(HotSpotY))
+	r1 := dragImageListImportAPI().SysCallN(13, m.Instance(), uintptr(Index), uintptr(HotSpotX), uintptr(HotSpotY))
 	return GoBool(r1)
 }
 
 func DragImageListClass() TClass {
-	ret := LCL().SysCallN(2730)
+	ret := dragImageListImportAPI().SysCallN(1)
 	return TClass(ret)
 }
 
 func (m *TDragImageList) DragUnlock() {
-	LCL().SysCallN(2736, m.Instance())
+	dragImageListImportAPI().SysCallN(7, m.Instance())
 }
 
 func (m *TDragImageList) HideDragImage() {
-	LCL().SysCallN(2740, m.Instance())
+	dragImageListImportAPI().SysCallN(11, m.Instance())
 }
 
 func (m *TDragImageList) ShowDragImage() {
-	LCL().SysCallN(2743, m.Instance())
+	dragImageListImportAPI().SysCallN(14, m.Instance())
+}
+
+var (
+	dragImageListImport       *imports.Imports = nil
+	dragImageListImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("DragImageList_BeginDrag", 0),
+		/*1*/ imports.NewTable("DragImageList_Class", 0),
+		/*2*/ imports.NewTable("DragImageList_Create", 0),
+		/*3*/ imports.NewTable("DragImageList_DragCursor", 0),
+		/*4*/ imports.NewTable("DragImageList_DragHotspot", 0),
+		/*5*/ imports.NewTable("DragImageList_DragLock", 0),
+		/*6*/ imports.NewTable("DragImageList_DragMove", 0),
+		/*7*/ imports.NewTable("DragImageList_DragUnlock", 0),
+		/*8*/ imports.NewTable("DragImageList_Dragging", 0),
+		/*9*/ imports.NewTable("DragImageList_DraggingResolution", 0),
+		/*10*/ imports.NewTable("DragImageList_EndDrag", 0),
+		/*11*/ imports.NewTable("DragImageList_HideDragImage", 0),
+		/*12*/ imports.NewTable("DragImageList_ResolutionForDragImageListResolution", 0),
+		/*13*/ imports.NewTable("DragImageList_SetDragImage", 0),
+		/*14*/ imports.NewTable("DragImageList_ShowDragImage", 0),
+	}
+)
+
+func dragImageListImportAPI() *imports.Imports {
+	if dragImageListImport == nil {
+		dragImageListImport = NewDefaultImports()
+		dragImageListImport.SetImportTable(dragImageListImportTables)
+		dragImageListImportTables = nil
+	}
+	return dragImageListImport
 }

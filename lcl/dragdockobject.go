@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -37,70 +38,94 @@ type TDragDockObject struct {
 }
 
 func NewDragDockObject(AControl IControl) IDragDockObject {
-	r1 := LCL().SysCallN(2710, GetObjectUintptr(AControl))
+	r1 := dragDockObjectImportAPI().SysCallN(1, GetObjectUintptr(AControl))
 	return AsDragDockObject(r1)
 }
 
 func (m *TDragDockObject) DockOffset() (resultPoint TPoint) {
-	LCL().SysCallN(2711, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+	dragDockObjectImportAPI().SysCallN(2, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
 	return
 }
 
 func (m *TDragDockObject) SetDockOffset(AValue *TPoint) {
-	LCL().SysCallN(2711, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	dragDockObjectImportAPI().SysCallN(2, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TDragDockObject) DockRect() (resultRect TRect) {
-	LCL().SysCallN(2712, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
+	dragDockObjectImportAPI().SysCallN(3, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TDragDockObject) SetDockRect(AValue *TRect) {
-	LCL().SysCallN(2712, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	dragDockObjectImportAPI().SysCallN(3, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func (m *TDragDockObject) DropAlign() TAlign {
-	r1 := LCL().SysCallN(2713, 0, m.Instance(), 0)
+	r1 := dragDockObjectImportAPI().SysCallN(4, 0, m.Instance(), 0)
 	return TAlign(r1)
 }
 
 func (m *TDragDockObject) SetDropAlign(AValue TAlign) {
-	LCL().SysCallN(2713, 1, m.Instance(), uintptr(AValue))
+	dragDockObjectImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TDragDockObject) DropOnControl() IControl {
-	r1 := LCL().SysCallN(2714, 0, m.Instance(), 0)
+	r1 := dragDockObjectImportAPI().SysCallN(5, 0, m.Instance(), 0)
 	return AsControl(r1)
 }
 
 func (m *TDragDockObject) SetDropOnControl(AValue IControl) {
-	LCL().SysCallN(2714, 1, m.Instance(), GetObjectUintptr(AValue))
+	dragDockObjectImportAPI().SysCallN(5, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TDragDockObject) Floating() bool {
-	r1 := LCL().SysCallN(2716, 0, m.Instance(), 0)
+	r1 := dragDockObjectImportAPI().SysCallN(7, 0, m.Instance(), 0)
 	return GoBool(r1)
 }
 
 func (m *TDragDockObject) SetFloating(AValue bool) {
-	LCL().SysCallN(2716, 1, m.Instance(), PascalBool(AValue))
+	dragDockObjectImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TDragDockObject) IncreaseDockArea() bool {
-	r1 := LCL().SysCallN(2717, m.Instance())
+	r1 := dragDockObjectImportAPI().SysCallN(8, m.Instance())
 	return GoBool(r1)
 }
 
 func (m *TDragDockObject) EraseDockRect() (resultRect TRect) {
-	LCL().SysCallN(2715, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
+	dragDockObjectImportAPI().SysCallN(6, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
 	return
 }
 
 func (m *TDragDockObject) SetEraseDockRect(AValue *TRect) {
-	LCL().SysCallN(2715, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+	dragDockObjectImportAPI().SysCallN(6, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
 }
 
 func DragDockObjectClass() TClass {
-	ret := LCL().SysCallN(2709)
+	ret := dragDockObjectImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	dragDockObjectImport       *imports.Imports = nil
+	dragDockObjectImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("DragDockObject_Class", 0),
+		/*1*/ imports.NewTable("DragDockObject_Create", 0),
+		/*2*/ imports.NewTable("DragDockObject_DockOffset", 0),
+		/*3*/ imports.NewTable("DragDockObject_DockRect", 0),
+		/*4*/ imports.NewTable("DragDockObject_DropAlign", 0),
+		/*5*/ imports.NewTable("DragDockObject_DropOnControl", 0),
+		/*6*/ imports.NewTable("DragDockObject_EraseDockRect", 0),
+		/*7*/ imports.NewTable("DragDockObject_Floating", 0),
+		/*8*/ imports.NewTable("DragDockObject_IncreaseDockArea", 0),
+	}
+)
+
+func dragDockObjectImportAPI() *imports.Imports {
+	if dragDockObjectImport == nil {
+		dragDockObjectImport = NewDefaultImports()
+		dragDockObjectImport.SetImportTable(dragDockObjectImportTables)
+		dragDockObjectImportTables = nil
+	}
+	return dragDockObjectImport
 }

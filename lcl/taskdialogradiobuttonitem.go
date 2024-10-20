@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -24,11 +25,28 @@ type TTaskDialogRadioButtonItem struct {
 }
 
 func NewTaskDialogRadioButtonItem(ACollection ICollection) ITaskDialogRadioButtonItem {
-	r1 := LCL().SysCallN(5407, GetObjectUintptr(ACollection))
+	r1 := askDialogRadioButtonItemImportAPI().SysCallN(1, GetObjectUintptr(ACollection))
 	return AsTaskDialogRadioButtonItem(r1)
 }
 
 func TaskDialogRadioButtonItemClass() TClass {
-	ret := LCL().SysCallN(5406)
+	ret := askDialogRadioButtonItemImportAPI().SysCallN(0)
 	return TClass(ret)
+}
+
+var (
+	askDialogRadioButtonItemImport       *imports.Imports = nil
+	askDialogRadioButtonItemImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("TaskDialogRadioButtonItem_Class", 0),
+		/*1*/ imports.NewTable("TaskDialogRadioButtonItem_Create", 0),
+	}
+)
+
+func askDialogRadioButtonItemImportAPI() *imports.Imports {
+	if askDialogRadioButtonItemImport == nil {
+		askDialogRadioButtonItemImport = NewDefaultImports()
+		askDialogRadioButtonItemImport.SetImportTable(askDialogRadioButtonItemImportTables)
+		askDialogRadioButtonItemImportTables = nil
+	}
+	return askDialogRadioButtonItemImport
 }

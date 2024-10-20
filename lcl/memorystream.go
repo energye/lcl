@@ -10,6 +10,7 @@ package lcl
 
 import (
 	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	. "github.com/energye/lcl/types"
 )
 
@@ -29,23 +30,43 @@ type TMemoryStream struct {
 }
 
 func NewMemoryStream() IMemoryStream {
-	r1 := LCL().SysCallN(4262)
+	r1 := memoryStreamImportAPI().SysCallN(2)
 	return AsMemoryStream(r1)
 }
 
 func MemoryStreamClass() TClass {
-	ret := LCL().SysCallN(4260)
+	ret := memoryStreamImportAPI().SysCallN(0)
 	return TClass(ret)
 }
 
 func (m *TMemoryStream) Clear() {
-	LCL().SysCallN(4261, m.Instance())
+	memoryStreamImportAPI().SysCallN(1, m.Instance())
 }
 
 func (m *TMemoryStream) LoadFromStream(Stream IStream) {
-	LCL().SysCallN(4264, m.Instance(), GetObjectUintptr(Stream))
+	memoryStreamImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(Stream))
 }
 
 func (m *TMemoryStream) LoadFromFile(FileName string) {
-	LCL().SysCallN(4263, m.Instance(), PascalStr(FileName))
+	memoryStreamImportAPI().SysCallN(3, m.Instance(), PascalStr(FileName))
+}
+
+var (
+	memoryStreamImport       *imports.Imports = nil
+	memoryStreamImportTables                  = []*imports.Table{
+		/*0*/ imports.NewTable("MemoryStream_Class", 0),
+		/*1*/ imports.NewTable("MemoryStream_Clear", 0),
+		/*2*/ imports.NewTable("MemoryStream_Create", 0),
+		/*3*/ imports.NewTable("MemoryStream_LoadFromFile", 0),
+		/*4*/ imports.NewTable("MemoryStream_LoadFromStream", 0),
+	}
+)
+
+func memoryStreamImportAPI() *imports.Imports {
+	if memoryStreamImport == nil {
+		memoryStreamImport = NewDefaultImports()
+		memoryStreamImport.SetImportTable(memoryStreamImportTables)
+		memoryStreamImportTables = nil
+	}
+	return memoryStreamImport
 }
