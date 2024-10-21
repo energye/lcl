@@ -8,8 +8,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/energye/lcl/api/libname"
+	"github.com/energye/lcl/rtl"
 	"github.com/energye/lcl/tools/command"
-	"github.com/energye/lcl/types"
 	"io"
 	"io/ioutil"
 	"os"
@@ -162,7 +162,7 @@ func (m *macApp) cefHelper() {
 				panic("子进程执行文件不存在: " + m.browseSubprocessPath)
 			}
 		}
-		b := fileExists(m.macAppFrameworksDir + types.Separator + cef)
+		b := fileExists(m.macAppFrameworksDir + rtl.Separator + cef)
 		if !b {
 			copyDir(m.cefFrameworksDir, m.macAppFrameworksDir)
 		}
@@ -194,17 +194,8 @@ func (m *macApp) cefHelper() {
 }
 
 func (m *macApp) runMacOSApp() {
-	//MacOS环境, ide开发环境需命令行参数[env=dev]以保证应用正常运行
-	var env string
-	for _, v := range os.Args {
-		a := strings.Split(v, "=")
-		if len(a) == 2 && a[0] == "env" && a[1] == "dev" {
-			env = "dev"
-		}
-	}
-
-	var isRunDev = env == envDev
-	if isRunDev {
+	var isRun = m.energyEnv == ENERGY_ENV_DEV
+	if isRun {
 		cmd := exec.Command(m.execFile, os.Args...)
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
@@ -215,7 +206,7 @@ func (m *macApp) runMacOSApp() {
 			os.Exit(0)
 		}
 	} else {
-		println("hint: ide development environment requires the configuration of command line parameters [env=dev]")
+		println("hint: ide development environment requires the configuration of command line parameters, [env=dev]")
 	}
 }
 
