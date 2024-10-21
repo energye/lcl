@@ -126,6 +126,22 @@ func (m *macApp) Init() {
 	if strings.Contains(os.Args[0], ".app/Contents/MacOS") {
 		return
 	}
+	if m.energyEnv == "" {
+		var env = func() string {
+			for _, v := range os.Args {
+				a := strings.Split(v, "=")
+				if len(a) == 2 {
+					key := strings.Replace(a[0], "--", "", 1)
+					val := a[1]
+					if key == "env" {
+						return val
+					}
+				}
+			}
+			return ""
+		}
+		m.SetEnergyEnv(env())
+	}
 	m.isMain = true
 	if m.createMacOSApp(m) {
 		m.copyDylib()
