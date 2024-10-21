@@ -10,7 +10,7 @@ var MacApp = &macApp{}
 type ENERGY_ENV = string
 
 const (
-	ENERGY_ENV_DEV ENERGY_ENV = "dev" //MacOSX ENERGY的开发环境常量配置
+	ENERGY_ENV_DEV ENERGY_ENV = "dev" //MacOS ENERGY的开发环境常量配置
 )
 
 type macApp struct {
@@ -31,9 +31,9 @@ type macApp struct {
 	energyEnv            string
 }
 
-// SetEnergyEnv 启动应用时，用于在MacOSX开发环境使用
+// SetEnergyEnv 启动应用时，用于在MacOS开发环境使用
 //
-// 命令行参数 energy_env=dev
+// 命令行参数 env=dev
 func (m *macApp) SetEnergyEnv(energyEnv string) {
 	m.energyEnv = energyEnv
 }
