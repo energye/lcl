@@ -31,8 +31,11 @@ func SetLoadLibCallback(fn func() (imports.DLL, error)) {
 
 func loadUILib() imports.DLL {
 	if loadLibCallback != nil {
-		dll, _ := loadLibCallback()
-		return dll
+		lib, err := loadLibCallback()
+		if lib == 0 && err != nil {
+			panic(err)
+		}
+		return lib
 	} else {
 		lib, err := imports.NewDLL(libname.LibName)
 		if lib == 0 && err != nil {

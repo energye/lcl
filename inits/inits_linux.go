@@ -1,5 +1,5 @@
-//go:build !windows
-// +build !windows
+//go:build linux
+// +build linux
 
 //----------------------------------------
 //
@@ -11,5 +11,11 @@
 
 package inits
 
+import "github.com/energye/lcl/api/libname"
+
 func winInit() {
+}
+
+func libPath() string {
+	return libname.LibPath(libname.GetDLLName())
 }

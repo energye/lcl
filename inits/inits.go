@@ -14,6 +14,7 @@ import (
 	"github.com/energye/lcl/emfs"
 	"github.com/energye/lcl/lcl"
 	"github.com/energye/lcl/locales/zh_CN"
+	"github.com/energye/lcl/logger"
 	"github.com/energye/lcl/pkgs/i18n"
 	"github.com/energye/lcl/pkgs/macapp"
 	"github.com/energye/lcl/rtl"
@@ -28,21 +29,15 @@ const (
 	emfsLibsPath = "libs"
 )
 
-// Init 全局初始化
+// Init LCL Global initialization
 func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 	emfs.SetEMFS(libs, resources)
 	if libname.LibName == "" {
-		if tools.IsDarwin() {
-			//MacOSX从Frameworks加载
-			libname.LibName = "@executable_path/../Frameworks/" + libname.GetDLLName()
-		} else {
-			libname.LibName = libname.LibPath(libname.GetDLLName())
-		}
-		// TODO Test
-		//libname.LibName = libname.LibPath(libname.GetDLLName())
+		libname.LibName = libPath()
+		logger.Debug("LCL Init Lib Path:", libname.LibName)
 		if libname.LibName == "" {
 			libname.LibName = path.Join(exec.HomeGoLCLDir, libname.GetDLLName())
-			//liblcl都没有的情况, 最后尝试在内置libs中获取-并释放到用户目录
+			//lib If none of them exist, try to retrieve them from the built-in libs and release them to the user directory
 			releaseLib(path.Join(emfsLibsPath, libname.GetDLLName()), libname.LibName)
 			if !tools.IsExist(libname.LibName) {
 				println(`Hint:
@@ -62,12 +57,10 @@ func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 	InitAll()
 }
 
-// 释放文件
-//
-//	如果liblcl动态库内置到EXE中, 在EXE中把liblcl释放到out目录
+// If the lib dynamic library is built into EXE, release lib to the out directory in EXE
 func releaseLib(fsPath, out string) {
 	if emfs.GetLibsFS() != nil {
-		// 尝试创建目录, 如果目录已存在则不会创建
+		// Attempt to create a directory, if the directory already exists, it will not be created
 		tools.MkdirAll(exec.HomeGoLCLDir)
 		var liblcl, err = emfs.GetLibsFS().ReadFile(fsPath)
 		if err == nil {

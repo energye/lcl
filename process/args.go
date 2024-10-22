@@ -8,7 +8,7 @@
 //
 //----------------------------------------
 
-// 当前进程的命令行参数获取
+// Retrieve command-line parameters for the current process
 
 package process
 
@@ -20,7 +20,7 @@ import (
 )
 
 // Args
-// 当前进程命令行参数解析实例
+// Current process command line parameter parsing instance
 var Args = parse()
 
 type _args struct {
@@ -52,7 +52,7 @@ func (m *_args) Size() int {
 
 // ProcessType
 //
-//	返回进程类型
+// For CEF return process type
 func (m *_args) ProcessType() PRCESS_TYPE {
 	if v, ok := m.value["type"]; ok {
 		return v
@@ -87,7 +87,7 @@ func (m *_args) IsUtility() bool {
 
 // Args
 //
-//	根据name返回指定的命令行参数值
+//	Return the specified command-line parameter value based on name
 func (m *_args) Args(name string) string {
 	if v, ok := m.value[name]; ok {
 		return string(v)
@@ -95,9 +95,7 @@ func (m *_args) Args(name string) string {
 	return ""
 }
 
-// Print
-//
-//	打印到控制台
+// Print to console
 func (m *_args) Print() {
 	logger.Debug("command line:", m.size)
 	for key, value := range m.value {

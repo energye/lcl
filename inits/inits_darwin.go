@@ -1,5 +1,5 @@
-//go:build windows
-// +build windows
+//go:build darwin
+// +build darwin
 
 //----------------------------------------
 //
@@ -13,14 +13,11 @@ package inits
 
 import (
 	"github.com/energye/lcl/api/libname"
-	"github.com/energye/lcl/pkgs/win"
 )
 
 func winInit() {
-	//win
-	win.Init()
 }
 
 func libPath() string {
-	return libname.LibPath(libname.GetDLLName())
+	return "@executable_path/../Frameworks/" + libname.GetDLLName()
 }

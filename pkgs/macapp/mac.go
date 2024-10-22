@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/energye/lcl/api/libname"
+	"github.com/energye/lcl/process"
 	"github.com/energye/lcl/rtl"
 	"github.com/energye/lcl/tools/command"
 	"io"
@@ -126,22 +127,7 @@ func (m *macApp) Init() {
 	if strings.Contains(os.Args[0], ".app/Contents/MacOS") {
 		return
 	}
-	if m.energyEnv == "" {
-		var env = func() string {
-			for _, v := range os.Args {
-				a := strings.Split(v, "=")
-				if len(a) == 2 {
-					key := strings.Replace(a[0], "--", "", 1)
-					val := a[1]
-					if key == "env" {
-						return val
-					}
-				}
-			}
-			return ""
-		}
-		m.SetEnergyEnv(env())
-	}
+	m.SetEnergyEnv(process.Args.Args("env"))
 	m.isMain = true
 	if m.createMacOSApp(m) {
 		m.copyDylib()
@@ -204,14 +190,15 @@ func (m *macApp) cefHelper() {
 			m.createMacOSApp(helper)
 			cmd := command.NewCMD()
 			cmd.Dir = helper.macAppFrameworksDir
+			cmd.IsPrint = false
 			cmd.Command("ln", "-shf", "../../../liblcl.dylib", "liblcl.dylib")
 		}
 	}
 }
 
 func (m *macApp) runMacOSApp() {
-	var isRun = m.energyEnv == ENERGY_ENV_DEV
-	if isRun {
+	var isCMDRun = m.energyEnv == ENERGY_ENV_DEV
+	if isCMDRun {
 		cmd := exec.Command(m.execFile, os.Args...)
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
