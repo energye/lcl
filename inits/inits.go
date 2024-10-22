@@ -34,7 +34,6 @@ func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 	emfs.SetEMFS(libs, resources)
 	if libname.LibName == "" {
 		libname.LibName = libPath()
-		logger.Debug("LCL Init Lib Path:", libname.LibName)
 		if libname.LibName == "" {
 			libname.LibName = path.Join(exec.HomeGoLCLDir, libname.GetDLLName())
 			//lib If none of them exist, try to retrieve them from the built-in libs and release them to the user directory
@@ -54,6 +53,7 @@ func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 			}
 		}
 	}
+	logger.Debug("LCL Init Lib Path:", libname.LibName)
 	InitAll()
 }
 
