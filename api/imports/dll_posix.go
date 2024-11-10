@@ -28,7 +28,6 @@ import (
 )
 
 func NewDLL(name string) (DLL, error) {
-
 	cPath := (*C.char)(C.malloc(C.PATH_MAX + 1))
 	defer C.free(unsafe.Pointer(cPath))
 

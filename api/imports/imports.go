@@ -45,8 +45,7 @@ func LoadLib(libName string) (*Imports, error) {
 
 // Proc 返回api实例
 //
-//	 参数
-//		index: 导入表索引
+//	index: 导入表索引
 func (m *Imports) Proc(index int) ProcAddr {
 	if m.IsOk() {
 		return internalGetImportFunc(m.dll, m.table, index)
@@ -71,7 +70,7 @@ func (m *Imports) SysCallN(index int, args ...uintptr) (result uintptr) {
 			var err error
 			result, _, err = proc.Call(args...)
 			if err != nil {
-
+				println("error:", err.Error())
 			}
 		}
 	}

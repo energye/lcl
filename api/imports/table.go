@@ -11,7 +11,6 @@
 package imports
 
 import (
-	"fmt"
 	"sync/atomic"
 	"unsafe"
 )
@@ -42,7 +41,7 @@ func internalGetImportFunc(uiLib DLL, table []*Table, index int) ProcAddr {
 		var err error
 		item.addr, err = uiLib.GetProcAddr(item.name)
 		if err != nil {
-			fmt.Println(err, item.name)
+			println(err.Error(), item.name)
 			return 0
 		}
 		atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&table[index].addr)), unsafe.Pointer(item.addr))
