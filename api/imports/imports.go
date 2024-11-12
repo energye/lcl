@@ -64,14 +64,14 @@ func (m *Imports) SysCallN(index int, args ...uintptr) (result uintptr) {
 		if proc > 0 {
 			defer func() {
 				if err := recover(); err != nil {
-					exception.CallException(m.table[index].Name(), err.(error).Error())
+					exception.GlobalException(m.table[index].Name(), err.(error).Error())
 				}
 			}()
-			var err error
-			result, _, err = proc.Call(args...)
-			if err != nil {
-				println("error:", err.Error())
-			}
+			//var err syscall.Errno
+			result, _, _ = proc.Call(args...)
+			//if err != 0 && err != 1400 {
+			//	exception.CallException(m.table[index].Name(), err.Error())
+			//}
 		}
 	}
 	return

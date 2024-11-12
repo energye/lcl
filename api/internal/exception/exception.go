@@ -14,8 +14,8 @@ type Callback func(funcName, message string)
 
 var HandlerCallback Callback
 
-// CallException 外部主动调用异常回调
-func CallException(funcName, message string) {
+// GlobalException 外部主动调用异常回调
+func GlobalException(funcName, message string) {
 	if HandlerCallback != nil {
 		HandlerCallback(funcName, message)
 	}
