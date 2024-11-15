@@ -57,16 +57,34 @@ This project is the underlying support library for [energy3.0](https://github.co
 
 #### 开发环境
 
-1. 安装 [Golang](https://golang.google.cn/dl/), Windows版本, 仅支持intel架构 [https://golang.google.cn/dl](https://golang.google.cn/dl)
-2. 下载  `LCL` 控件库动态链接库, [下载地址](https://github.com/energye/lcl/tree/main/bins/webview2/windows)
+1. 安装 [Golang](https://golang.google.cn/dl/)
+2. 下载  `LCL` 
 3. 将动态链接库配置到环境变量 `ENERGY_HOME` 目录下, 或放置到和执行文件 `exe` 同一目录
 4. 创建Go项目开始使用 `LCL` 构建桌面应用, 参考 `Go` 示例 [LCL examples](https://github.com/energye/examples/tree/main/lcl)
 
+##### LCL
+
+支持 CEF 版本: 
+- [Windows32](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_windows32.zip/download)
+- [Windows64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_windows64.zip/download)
+- [MacOSx64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_macosx64.zip/download)
+- [MacOSARM64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_macosarm64.zip/download)
+- [Linux64 GTK3](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_linux64.zip/download)
+- [LinuxARM64 GTK3](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_linuxarm64.zip/download)
+
+支持 Webview2, Webkit2 版本:
+- [Windows32](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wv2_binary_windows32.zip/download)
+- [Windows64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wv2_binary_windows64.zip/download)
+- [MacOSx64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk2_binary_macosx64.zip/download)
+- [MacOSARM64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk2_binary_macosarm64.zip/download)
+- [Linux64 GTK3](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk2_binary_linux64.zip/download)
+- [LinuxARM64 GTK3](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk2_binary_linuxarm64.zip/download)
+
+
 ### 相关项目
 * [Go LCL](https://github.com/energye/lcl)
-* [Go Webview2](https://github.com/energye/wv)
+* [Go Webview](https://github.com/energye/wv)
 * [Go CEF](https://github.com/energye/cef)
-* [Go Webkit](https://github.com/energye/wk)
 * [WebView4Delphi](https://github.com/salvadordf/WebView4Delphi)
 * [CEF](https://github.com/chromiumembedded/cef)
 * [CEF4Delphi](https://github.com/salvadordf/CEF4Delphi)
