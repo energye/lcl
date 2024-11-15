@@ -17,5 +17,5 @@ func winInit() {
 }
 
 func libPath() string {
-	return libname.LibPath(libname.GetDLLName())
+	return libname.GetLibPath(libname.GetDLLName())
 }

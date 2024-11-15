@@ -18,12 +18,11 @@ var (
 	loadLibCallback func() (imports.DLL, error) // 自定义加载liblcl动态库回调函数
 )
 
-// SetLoadLibCallback
+// SetOnLoadLibCallback
 //
-//	设置加载liblcl动态库回调函数
-//	如果设置该回调函数我们可以自定义加载动态链接库
-//	在调用 inits.Init 之前设置
-func SetLoadLibCallback(fn func() (imports.DLL, error)) {
+//	加载liblcl动态库回调函数
+//	调用 inits.Init 之前设置
+func SetOnLoadLibCallback(fn func() (imports.DLL, error)) {
 	if loadLibCallback == nil {
 		loadLibCallback = fn
 	}
@@ -53,7 +52,6 @@ func closeLib() {
 }
 
 // 调用预定义导入API
-// 由 predefImport 提供
 func defSyscallN(trap int, args ...uintptr) uintptr {
 	r1, _, _ := LCLPreDef().Proc(trap).Call(args...)
 	return r1

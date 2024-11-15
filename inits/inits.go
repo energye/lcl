@@ -9,7 +9,9 @@
 package inits
 
 import (
+	"errors"
 	"github.com/energye/lcl/api"
+	"github.com/energye/lcl/api/imports"
 	"github.com/energye/lcl/api/libname"
 	"github.com/energye/lcl/emfs"
 	"github.com/energye/lcl/lcl"
@@ -19,60 +21,57 @@ import (
 	"github.com/energye/lcl/pkgs/macapp"
 	"github.com/energye/lcl/rtl"
 	"github.com/energye/lcl/rtl/version"
-	"github.com/energye/lcl/tools"
 	"github.com/energye/lcl/tools/exec"
 	"os"
 	"path"
 )
 
-const (
-	emfsLibsPath = "libs"
-)
-
 // Init LCL Global initialization
 func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 	emfs.SetEMFS(libs, resources)
-	if libname.LibName == "" {
-		libname.LibName = libPath()
-		if libname.LibName == "" {
-			libname.LibName = path.Join(exec.HomeGoLCLDir, libname.GetDLLName())
-			//lib If none of them exist, try to retrieve them from the built-in libs and release them to the user directory
-			releaseLib(path.Join(emfsLibsPath, libname.GetDLLName()), libname.LibName)
-			if !tools.IsExist(libname.LibName) {
-				println(`Hint:
-	Dependency library liblcl was not found
-	If local liblcl exist, please put it in the specified location, If it does not exist, please download it from the Energy official website.
-	Configuration Location:
-		1. Current program execution directory
-		2. USER_HOME/golcl/
-		3. Environment variables LCL_HOME or ENERGY_HOME
-			environment variable LCL_HOME is configured preferentially in the non-energy framework
-			environment variable ENERGY_HOME takes precedence in the Energy framework
-			ENERGY_HOME environment variable is recommended
-`)
-			}
+	api.SetOnLoadLibCallback(func() (dll imports.DLL, err error) {
+		// current user home dir load
+		if dllPath, ok := releaseLib(path.Join("libs", libname.GetDLLName()), path.Join(exec.HomeDir, libname.GetDLLName())); ok {
+			dll, err = imports.NewDLL(dllPath)
+			logger.Debug("LCL Init Lib Path:", dllPath)
+			libname.LibName = ""
+			return
+		} else if dllPath = libPath(); dllPath != "" {
+			// default load
+			dll, err = imports.NewDLL(dllPath)
+			logger.Debug("LCL Init Lib Path:", dllPath)
+			libname.LibName = ""
+			return
 		}
-	}
-	logger.Debug("LCL Init Lib Path:", libname.LibName)
+		return 0, errors.New(`Hint:
+	Failed to load liblcl, liblcl not found.
+	Please configure the liblcl environment correctly.
+	Load Priority: 
+		level 1: Embedded into exe
+		level 2: libname.LibName = "dll full path"
+		level 3: Current_Directory > Environment_Variable(LCL_HOME | LCLCEF_HOME | LCLWV2_HOME | LCLWK2_HOME | ENERGY_HOME) > $USER_HOME/.energy Read from file
+`)
+	})
 	InitAll()
 }
 
 // If the lib dynamic library is built into EXE, release lib to the out directory in EXE
-func releaseLib(fsPath, out string) {
+func releaseLib(fsPath, outDllPath string) (string, bool) {
 	if emfs.GetLibsFS() != nil {
 		// Attempt to create a directory, if the directory already exists, it will not be created
-		tools.MkdirAll(exec.HomeGoLCLDir)
-		var liblcl, err = emfs.GetLibsFS().ReadFile(fsPath)
+		var dllData, err = emfs.GetLibsFS().ReadFile(fsPath)
 		if err == nil {
 			var file *os.File
-			file, err = os.OpenFile(out, os.O_RDWR|os.O_CREATE, 0644)
+			file, err = os.OpenFile(outDllPath, os.O_RDWR|os.O_CREATE, 0644)
 			if err != nil {
 				panic(err)
 			}
 			defer file.Close()
-			file.Write(liblcl)
+			file.Write(dllData)
+			return outDllPath, true
 		}
 	}
+	return "", false
 }
 
 func InitAll() {
