@@ -227,11 +227,11 @@ func ModifyLibResource(aPtr uintptr, aValue string) {
 	api.DModifyLibResource(aPtr, aValue)
 }
 
-// LibVersion
+// LCLVersion
 //
-// 获取库的版本，共8位，2位2位的，如：$01020100 表示 1.2.1.0
-func LibVersion() uint32 {
-	return api.DLibVersion()
+// 获取LCL版本号
+func LCLVersion() (major, minor, release, patch uint16, fullVersion uint32, version string) {
+	return api.LCLVersion()
 }
 
 func ShiftStateToWord(shift types.TShiftState) uint32 {

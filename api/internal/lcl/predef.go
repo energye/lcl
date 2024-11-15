@@ -73,7 +73,7 @@ var preImportDefs = []*imports.Table{
 	imports.NewTable("DModifyLibResource", 0),
 	imports.NewTable("DLibAbout", 0),
 	imports.NewTable("DLibStringEncoding", 0),
-	imports.NewTable("DLibVersion", 0),
+	imports.NewTable("GetLCLVersion", 0),
 	imports.NewTable("DMainThreadId", 0),
 	imports.NewTable("DCurrentThreadId", 0),
 	imports.NewTable("DInitGoDll", 0),
@@ -230,7 +230,7 @@ const (
 	DMODIFYLIBRESOURCE
 	DLIBABOUT
 	DLIBSTRINGENCODING
-	DLIBVERSION
+	GetLCLVersion
 	DMAINTHREADID
 	DCURRENTTHREADID
 	DINITGODLL
