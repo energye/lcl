@@ -84,6 +84,12 @@ This project is the underlying support library for [energy3.0](https://github.co
 
   `GTK >= 3.24.24 and Glib2.0 >= 2.66`
 
+Linux GTK2, 只有LCL, 且不支持 CEF 和 Webkit
+
+- [Linux64 GTK2](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk_binary_linux64_gtk2.zip/download)
+- [LinuxARM64 GTK2](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk_binary_linuxarm64_gtk2.zip/download)
+- [Linux32 GTK2 - No Downlaod]()
+
 
 ### 相关项目
 * [Go LCL](https://github.com/energye/lcl)
