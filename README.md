@@ -105,9 +105,6 @@ Linux GTK2, 只有LCL, 且不支持 CEF 和 Webkit
 
 ---
 
-### 欢迎加入
-energy底层由多个项目模块组成, 因过于复杂扔处于建设的过程中，有很多的事情无法独自完成，如果有感兴趣的同学想参与energy的实现或学习，可通过微信或QQ联系我。
-
 如果你觉得此项目对你有帮助，请点亮 Star
 
 ---
@@ -115,8 +112,8 @@ energy底层由多个项目模块组成, 因过于复杂扔处于建设的过程
 ### ENERGY QQ交流群 & 微信
 
 <p align="center">
-    <img src="https://assets.yanghy.cn/qq-group.jpg" width="250" title="QQ交流群: 541258627" alt="QQ交流群: 541258627">
-    <img src="https://assets.yanghy.cn/we-chat.jpg" width="250" title="微信: sniawmdf" alt="微信: sniawmdf" style="margin-left: 30px;">
+    <img src="https://energye.github.io/imgs/assets/qq-group.jpg" width="250" title="QQ交流群: 541258627" alt="QQ交流群: 541258627">
+    <img src="https://energye.github.io/imgs/assets/we-chat.jpg" width="250" title="微信: sniawmdf" alt="微信: sniawmdf" style="margin-left: 30px;">
 </p>
 
 ---
@@ -130,13 +127,6 @@ energy底层由多个项目模块组成, 因过于复杂扔处于建设的过程
 </p>
 
 ---
-
-### 项目截图
-##### Windows-10
-<img src="https://assets.yanghy.cn/lcl-simple1.png">
-<img src="https://assets.yanghy.cn/lcl-simple2.png">
-
-----
 
 ### 开源协议
 
