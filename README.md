@@ -51,7 +51,7 @@ This project is the underlying support library for [energy3.0](https://github.co
 #### 基本需求
 
 > - Golang >= 1.20
-> - 动态链接库 `liblcl.dll` 当前仅提供了Windows测试版本
+> - 动态链接库 `liblcl`
 
 #### [示例](https://github.com/energye/examples/tree/main/lcl)
 
