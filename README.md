@@ -70,7 +70,6 @@ This project is the underlying support library for [energy3.0](https://github.co
 - [MacOSx64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_macosx64.zip/download)
 - [MacOSARM64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_macosarm64.zip/download)
 
-  `GTK >= 3.24.24 and Glib2.0 >= 2.66`
 
 支持 Webview2, Webkit2 版本
 - [Windows32](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wv2_binary_windows32.zip/download)
@@ -78,9 +77,7 @@ This project is the underlying support library for [energy3.0](https://github.co
 - [MacOSx64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk2_binary_macosx64.zip/download)
 - [MacOSARM64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk2_binary_macosarm64.zip/download)
 
-  `GTK >= 3.24.24 and Glib2.0 >= 2.66`
-
-仅 LCL Linux GTK2 Build Ubuntu 18.04
+仅支持 LCL Linux GTK2 Build Ubuntu 18.04
 
 - [Linux32](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_binary_linux32.zip/download)
 - [Linux64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_binary_linux64.zip/download)
