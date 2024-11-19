@@ -64,31 +64,28 @@ This project is the underlying support library for [energy3.0](https://github.co
 
 ##### LCL
 
-支持 CEF 版本: 
+支持 CEF 版本:
 - [Windows32](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_windows32.zip/download)
 - [Windows64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_windows64.zip/download)
 - [MacOSx64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_macosx64.zip/download)
 - [MacOSARM64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_macosarm64.zip/download)
-- [Linux64 GTK3](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_linux64.zip/download)
-- [LinuxARM64 GTK3](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_cef_binary_linuxarm64.zip/download)
 
   `GTK >= 3.24.24 and Glib2.0 >= 2.66`
 
-支持 Webview2, Webkit2 版本:
+支持 Webview2, Webkit2 版本
 - [Windows32](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wv2_binary_windows32.zip/download)
 - [Windows64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wv2_binary_windows64.zip/download)
 - [MacOSx64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk2_binary_macosx64.zip/download)
 - [MacOSARM64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk2_binary_macosarm64.zip/download)
-- [Linux64 GTK3](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk2_binary_linux64.zip/download)
-- [LinuxARM64 GTK3](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk2_binary_linuxarm64.zip/download)
 
   `GTK >= 3.24.24 and Glib2.0 >= 2.66`
 
-Linux GTK2, 只有LCL, 且不支持 CEF 和 Webkit
+仅 LCL Linux GTK2 Build Ubuntu 18.04
 
-- [Linux64 GTK2](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk_binary_linux64_gtk2.zip/download)
-- [LinuxARM64 GTK2](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_wk_binary_linuxarm64_gtk2.zip/download)
-- [Linux32 GTK2 - No Downlaod]()
+- [Linux32](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_binary_linux32.zip/download)
+- [Linux64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_binary_linux64.zip/download)
+- [LinuxARM32](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_binary_linuxarm32.zip/download)
+- [LinuxARM64](https://sourceforge.net/projects/liblcl/files/v3.0.0/lcl_binary_linuxarm64.zip/download)
 
 
 ### 相关项目
