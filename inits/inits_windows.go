@@ -12,15 +12,10 @@
 package inits
 
 import (
-	"github.com/energye/lcl/api/libname"
 	"github.com/energye/lcl/pkgs/win"
 )
 
-func winInit() {
+func APIInit() {
 	//win
 	win.Init()
-}
-
-func libPath() string {
-	return libname.GetLibPath(libname.GetDLLName())
 }

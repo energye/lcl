@@ -16,7 +16,7 @@ var (
 
 func init() {
 	CurrentDir, _ = os.Getwd()
-	Path = os.Args[0]
+	Path, _ = os.Executable()
 	Dir, Name = filepath.Split(Path)
 	HomeDir, _ = homedir.Dir()
 }

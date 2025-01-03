@@ -11,13 +11,5 @@
 
 package inits
 
-import (
-	"github.com/energye/lcl/api/libname"
-)
-
-func winInit() {
-}
-
-func libPath() string {
-	return "@executable_path/../Frameworks/" + libname.GetDLLName()
+func APIInit() {
 }

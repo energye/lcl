@@ -9,7 +9,6 @@
 package lcl
 
 import (
-	"fmt"
 	. "github.com/energye/lcl/api"
 	"os"
 	"runtime"
@@ -32,13 +31,6 @@ var (
 	Clipboard   IClipboard // 剪切板
 	Printer     IPrinter   // 打印机
 )
-
-func toVersionString(ver uint32) string {
-	if byte(ver) == 0 {
-		return fmt.Sprintf("%d.%d.%d", byte(ver>>24), byte(ver>>16), byte(ver>>8))
-	}
-	return fmt.Sprintf("%d.%d.%d.%d", byte(ver>>24), byte(ver>>16), byte(ver>>8), byte(ver))
-}
 
 func LCLInit() {
 	defer func() {

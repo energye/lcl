@@ -9,87 +9,88 @@
 package inits
 
 import (
-	"errors"
 	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
 	"github.com/energye/lcl/api/libname"
 	"github.com/energye/lcl/emfs"
+	"github.com/energye/lcl/inits/config"
 	"github.com/energye/lcl/lcl"
 	"github.com/energye/lcl/locales/zh_CN"
-	"github.com/energye/lcl/logger"
 	"github.com/energye/lcl/pkgs/i18n"
 	"github.com/energye/lcl/pkgs/macapp"
 	"github.com/energye/lcl/rtl"
 	"github.com/energye/lcl/rtl/version"
+	"github.com/energye/lcl/tools"
 	"github.com/energye/lcl/tools/exec"
-	"os"
 	"path"
+	"path/filepath"
 )
 
 // Init LCL Global initialization
 func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
-	emfs.SetEMFS(libs, resources)
+	// MacOS 开发模式 自动生成 xxx.app
+	macapp.Init()
 	api.SetOnLoadLibCallback(func() (dll imports.DLL, err error) {
-		// current user home dir load
-		if dllPath, ok := releaseLib(path.Join("libs", libname.GetDLLName()), path.Join(exec.HomeDir, libname.GetDLLName())); ok {
-			dll, err = imports.NewDLL(dllPath)
-			logger.Debug("LCL Init Lib Path:", dllPath)
-			libname.LibName = ""
-			return
-		} else if dllPath = libPath(); dllPath != "" {
-			// default load
-			dll, err = imports.NewDLL(dllPath)
-			logger.Debug("LCL Init Lib Path:", dllPath)
-			libname.LibName = ""
-			return
+		libdllPath := libname.LibName
+		if libdllPath != "" {
+			// 自定义加载目录
+			dll, err = imports.NewDLL(libdllPath)
+		} else if tools.IsDarwin() {
+			// MacOS 固定加载目录
+			libdllPath = "@executable_path/../Frameworks/" + libname.GetDLLName()
+		} else {
+			// Windows, Linux
+			// 优先当前执行目录
+			currentPathLibPath := path.Join(exec.Dir, libname.GetDLLName())
+			if tools.IsExist(currentPathLibPath) {
+				libdllPath = currentPathLibPath
+			} else {
+				// 开发环境配置目录
+				if config.Get() != nil {
+					libdllPath = filepath.Join(config.Get().FrameworkPath(), libname.GetDLLName())
+				} else {
+					// 最后尝试相对目录
+					libdllPath = libname.GetDLLName()
+				}
+			}
 		}
-		return 0, errors.New(`Hint:
-	Failed to load liblcl, liblcl not found.
-	Please configure the liblcl environment correctly.
-	Load Priority: 
-		level 1: Embedded into exe
-		level 2: libname.LibName = "dll full path"
-		level 3: Current_Directory > Environment_Variable(LCL_HOME | LCLCEF_HOME | LCLWV2_HOME | LCLWK2_HOME | ENERGY_HOME) > $USER_HOME/.energy Read from file
+		// 加载 LibLCL
+		if libdllPath != "" {
+			libname.LibName = libdllPath
+			dll, err = imports.NewDLL(libdllPath)
+		}
+		if dll == 0 {
+			if err != nil {
+				println("Load LibLCL Error:", err.Error())
+			}
+			println("LibLCL Path:", libname.LibName)
+			panic(`Hint:
+  Failed initialize LibLCL, check the development environment
+  Use CLI: 
+    [energy env] : Check the configuration of the development environment
+    [energy install] : Installation development environment
 `)
+		}
+		return
 	})
+	emfs.SetEMFS(libs, resources)
 	InitAll()
 }
 
-// If the lib dynamic library is built into EXE, release lib to the out directory in EXE
-func releaseLib(fsPath, outDllPath string) (string, bool) {
-	if emfs.GetLibsFS() != nil {
-		// Attempt to create a directory, if the directory already exists, it will not be created
-		var dllData, err = emfs.GetLibsFS().ReadFile(fsPath)
-		if err == nil {
-			var file *os.File
-			file, err = os.OpenFile(outDllPath, os.O_RDWR|os.O_CREATE, 0644)
-			if err != nil {
-				panic(err)
-			}
-			defer file.Close()
-			file.Write(dllData)
-			return outDllPath, true
-		}
-	}
-	return "", false
-}
-
 func InitAll() {
-	//macapp
-	macapp.MacApp.Init()
-	//api
+	// api
 	api.APIInit()
-	//rtl
+	// rtl
 	rtl.RtlInit()
-	//version
+	// version
 	version.VersionInit()
-	//zh_cn
+	// zh_cn
 	zh_CN.ZH_CNInit()
-	//win
-	winInit()
-	//lcl
+	// win
+	APIInit()
+	// lcl
 	lcl.LCLInit()
-	//i18n
+	// i18n
 	i18n.I18NInit()
 
 }
