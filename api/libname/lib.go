@@ -12,7 +12,7 @@ import (
 	"runtime"
 )
 
-const libName = "liblcl"
+const libName = "libenergy"
 
 var LibName string // 加载完成后该变量可被置空
 
@@ -31,7 +31,7 @@ func GetDLLName() string {
 
 // LibPath
 //
-//	获取 liblcl 动态库目录
+//	获取 libenergy 动态库目录
 //	加载优先级: LibName > 当前目录 > 环境变量(LCL_HOME) > 用户目录 (.energy) 内读取
 //func LibPath(dllName string) string {
 //	if LibName != "" && tool.IsExist(LibName) {
