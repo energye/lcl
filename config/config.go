@@ -18,9 +18,9 @@ import (
 var config *Config
 
 type Config struct {
-	Root      string `json:"root"`
-	Framework string `json:"framework"`
-	ENERGY    string `json:"-"` // 自定义 energy 框架目录, 规则: 空时使用 energy, "-"时忽略该参数, 非空使用该选项
+	Framework string `json:"framework"` // 框架目录
+	Registry  string `json:"registry"`  // 远程服务配置地址
+	Proxy     string `json:"proxy"`     // 代理地址
 	IsCEF     bool   `json:"-"`
 }
 

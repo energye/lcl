@@ -41,29 +41,30 @@ func loadLibENERGY(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 	api.SetOnLoadLibCallback(func() (lib imports.DLL, err error) {
 		libPath := libname.LibName
 		if libPath != "" {
-			// 自定义加载目录
+			// 默认 自定义加载目录
 			lib, err = imports.NewDLL(libPath)
 		} else if tool.IsDarwin() {
 			// MacOS 固定加载目录
 			libPath = "@executable_path/../Frameworks/" + libname.GetDLLName()
-		} else {
-			// Windows, Linux
-			// 优先当前执行目录
-			currentPathLibPath := path.Join(exec.Dir, libname.GetDLLName())
-			if tool.IsExist(currentPathLibPath) {
+		} else { // Windows, Linux
+			if currentPathLibPath := path.Join(exec.Dir, libname.GetDLLName()); tool.IsExist(currentPathLibPath) {
+				// 优先当前执行目录
 				libPath = currentPathLibPath
 			} else {
 				// 开发环境配置目录
 				if config.Get() != nil {
-					libPath = filepath.Join(config.Get().FrameworkPath(), libname.GetDLLName())
-				} else {
-					// 最后尝试相对目录
-					libPath = libname.GetDLLName()
+					// frameworks/runtime/libenergy.dll
+					libPath = filepath.Join(config.Get().FrameworkPath(), "runtime", libname.GetDLLName())
 				}
-			}
-			if libPath == "" {
-				// 最后 尝试从临时目录获取
-				libPath = filepath.Join(os.TempDir(), libname.GetDLLName())
+				if !tool.IsExist(libPath) {
+					if tempPath := filepath.Join(os.TempDir(), libname.GetDLLName()); tool.IsExist(tempPath) {
+						// 尝试从临时目录获取
+						libPath = tempPath
+					} else {
+						// 最后尝试相对目录
+						libPath = libname.GetDLLName()
+					}
+				}
 			}
 		}
 		// 加载 LibENERGY

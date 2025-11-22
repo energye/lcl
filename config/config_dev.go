@@ -25,14 +25,14 @@ func init() {
 	if homeDIR == "" {
 		println("[Warning] failed to obtain the current user directory.")
 	} else {
-		filePath := filepath.Join(homeDIR, ".energy")
-		energyConfig, err := os.ReadFile(filePath)
+		filePath := filepath.Join(homeDIR, ".energy", "config.json")
+		data, err := os.ReadFile(filePath)
 		if err != nil {
 			println("[ERROR] Read .energy Error:", err.Error())
 			return
 		}
 		tempConfig := &Config{}
-		err = json.Unmarshal(energyConfig, tempConfig)
+		err = json.Unmarshal(data, tempConfig)
 		if err != nil {
 			println("[ERROR] Parsing .energy file Error:", err.Error())
 			return
@@ -42,10 +42,5 @@ func init() {
 }
 
 func (m *Config) FrameworkPath() string {
-	if m.ENERGY == "" {
-		return filepath.Join(m.Root, "energy", m.Framework)
-	} else if m.ENERGY == "-" {
-		return filepath.Join(m.Root, m.Framework)
-	}
-	return filepath.Join(m.Root, m.ENERGY, m.Framework)
+	return m.Framework
 }
