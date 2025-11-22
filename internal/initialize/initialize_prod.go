@@ -24,10 +24,10 @@ import (
 	"github.com/energye/lcl/tool/exec"
 )
 
-// 发布环境加载 libLCL，不再依赖 .energy 配置文件
+// 发布环境加载 libENERGY，不再依赖 .energy 配置文件
 // 优先级: 1. 自定义, 2. 当前执行目录, 3. 相对目录
 // 不同操作系统加载方式也不同
-func loadLibLCL(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
+func loadLibENERGY(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 	// LCL 初始化时回调， 返回 lib 地址
 	api.SetOnLoadLibCallback(func() (lib imports.DLL, err error) {
 		libPath := libname.LibName
@@ -48,17 +48,17 @@ func loadLibLCL(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 				libPath = libname.GetDLLName()
 			}
 		}
-		// 加载 LibLCL
+		// 加载 LibENERGY
 		if libPath != "" {
 			libname.LibName = libPath
 			lib, err = imports.NewDLL(libPath)
 		}
 		if lib == 0 {
 			if err != nil {
-				println("Load LibLCL Error:", err.Error())
+				println("Load LibENERGY Error:", err.Error())
 			}
-			println("LibLCL Path:", libname.LibName)
-			panic(`Failed initialize LibLCL`)
+			println("LibENERGY Path:", libname.LibName)
+			panic(`Failed initialize LibENERGY`)
 		}
 		return
 	})

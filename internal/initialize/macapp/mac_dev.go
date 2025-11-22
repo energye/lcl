@@ -55,7 +55,7 @@ func initMapAPP() {
 	MacApp.plistFileName = MacApp.macContentsDir + "/Info.plist"
 	MacApp.pkgInfoFileName = MacApp.macContentsDir + "/PkgInfo"
 	MacApp.macAppFrameworksDir = MacApp.macContentsDir + "/Frameworks"
-	MacApp.lclLibFileName = MacApp.macContentsDir + "/Frameworks/liblcl.dylib" //liblcl to frameworks
+	MacApp.lclLibFileName = MacApp.macContentsDir + "/Frameworks/libenergy.dylib" //libenergy to frameworks
 	MacApp.lsUIElement = "false"
 }
 
@@ -224,7 +224,7 @@ func (m *macApp) createCEFHelper() {
 		helper.macAppFrameworksDir = helper.macContentsDir + "/Frameworks"
 		helper.lsUIElement = "true"
 		helper.isLinked = m.isLinked
-		helper.lclLibFileName = helper.macAppFrameworksDir + "/liblcl.dylib"
+		helper.lclLibFileName = helper.macAppFrameworksDir + "/libenergy.dylib"
 		// 创建 helper 进程
 		m.createMacOSApp(helper)
 
@@ -233,7 +233,7 @@ func (m *macApp) createCEFHelper() {
 			cmd := command.NewCMD()
 			cmd.Dir = helper.macAppFrameworksDir
 			cmd.IsPrint = false
-			cmd.Command("ln", "-shf", "../../../liblcl.dylib", "liblcl.dylib")
+			cmd.Command("ln", "-shf", "../../../libenergy.dylib", "libenergy.dylib")
 		} else {
 			helper.copyDylib()
 		}

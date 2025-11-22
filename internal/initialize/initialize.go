@@ -19,10 +19,10 @@ import (
 )
 
 // Initialize
-// 初始化，运行时加载 LibLCL
+// 初始化，运行时加载 LibENERGY
 func Initialize(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 	// 加载 lib dll
-	loadLibLCL(libs, resources)
+	loadLibENERGY(libs, resources)
 	// 内嵌资源
 	emfs.SetEMFS(libs, resources)
 	// rtl

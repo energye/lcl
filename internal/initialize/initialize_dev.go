@@ -32,7 +32,7 @@ import (
 // 不同操作系统加载方式也不同
 // 优先级: 1. 自定义, 2. 当前执行目录, 3. .energy 配置文件 4. 相对目录
 // 完整目录: [root]+energy+[framework]
-func loadLibLCL(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
+func loadLibENERGY(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 	if tool.IsDarwin() {
 		// 开发模式 自动生成 xxx.app
 		macapp.Init()
@@ -66,18 +66,18 @@ func loadLibLCL(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 				libPath = filepath.Join(os.TempDir(), libname.GetDLLName())
 			}
 		}
-		// 加载 LibLCL
+		// 加载 LibENERGY
 		if libPath != "" {
 			libname.LibName = libPath
 			lib, err = imports.NewDLL(libPath)
 		}
 		if lib == 0 {
 			if err != nil {
-				println("[ERROR] Load LibLCL", err.Error())
+				println("[ERROR] Load LibENERGY", err.Error())
 			}
-			println("[Hint] LibLCL Path:", libname.LibName)
+			println("[Hint] LibENERGY Path:", libname.LibName)
 			panic(`[Hint]:
-  Failed initialize LibLCL, check the development environment
+  Failed initialize LibENERGY, check the development environment
   Use CLI: 
     [energy env] : Check the configuration of the development environment
     [energy install] : Installation development environment

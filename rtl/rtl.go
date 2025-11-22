@@ -284,7 +284,7 @@ func CurrentThreadId() uintptr {
 
 // InitGoDll
 //
-// 一般无用，主要用来在go生成的dll中使用liblcl。
+// 一般无用，主要用来在go生成的dll中使用libenergy。
 func InitGoDll(aMainThreadId uintptr) {
 	api.InitGoDll(aMainThreadId)
 }
