@@ -9,22 +9,23 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IScrollBar Parent: ICustomScrollBar
 type IScrollBar interface {
 	ICustomScrollBar
-	DragCursor() TCursor                     // property
-	SetDragCursor(AValue TCursor)            // property
-	DragKind() TDragKind                     // property
-	SetDragKind(AValue TDragKind)            // property
-	DragMode() TDragMode                     // property
-	SetDragMode(AValue TDragMode)            // property
-	ParentShowHint() bool                    // property
-	SetParentShowHint(AValue bool)           // property
+	DragCursor() types.TCursor               // property DragCursor Getter
+	SetDragCursor(value types.TCursor)       // property DragCursor Setter
+	DragKind() types.TDragKind               // property DragKind Getter
+	SetDragKind(value types.TDragKind)       // property DragKind Setter
+	DragMode() types.TDragMode               // property DragMode Getter
+	SetDragMode(value types.TDragMode)       // property DragMode Setter
+	ParentShowHint() bool                    // property ParentShowHint Getter
+	SetParentShowHint(value bool)            // property ParentShowHint Setter
 	SetOnContextPopup(fn TContextPopupEvent) // property event
 	SetOnDragDrop(fn TDragDropEvent)         // property event
 	SetOnDragOver(fn TDragOverEvent)         // property event
@@ -32,124 +33,142 @@ type IScrollBar interface {
 	SetOnStartDrag(fn TStartDragEvent)       // property event
 }
 
-// TScrollBar Parent: TCustomScrollBar
 type TScrollBar struct {
 	TCustomScrollBar
-	contextPopupPtr uintptr
-	dragDropPtr     uintptr
-	dragOverPtr     uintptr
-	endDragPtr      uintptr
-	startDragPtr    uintptr
 }
 
-func NewScrollBar(AOwner IComponent) IScrollBar {
-	r1 := scrollBarImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsScrollBar(r1)
+func (m *TScrollBar) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := scrollBarAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TScrollBar) DragCursor() TCursor {
-	r1 := scrollBarImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TScrollBar) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	scrollBarAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TScrollBar) SetDragCursor(AValue TCursor) {
-	scrollBarImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TScrollBar) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := scrollBarAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TScrollBar) DragKind() TDragKind {
-	r1 := scrollBarImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TScrollBar) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	scrollBarAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TScrollBar) SetDragKind(AValue TDragKind) {
-	scrollBarImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TScrollBar) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := scrollBarAPI().SysCallN(3, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TScrollBar) DragMode() TDragMode {
-	r1 := scrollBarImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TScrollBar) SetDragMode(AValue TDragMode) {
-	scrollBarImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TScrollBar) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	scrollBarAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TScrollBar) ParentShowHint() bool {
-	r1 := scrollBarImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := scrollBarAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TScrollBar) SetParentShowHint(AValue bool) {
-	scrollBarImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
-}
-
-func ScrollBarClass() TClass {
-	ret := scrollBarImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TScrollBar) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	scrollBarAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TScrollBar) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	scrollBarImportAPI().SysCallN(6, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 5, scrollBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TScrollBar) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	scrollBarImportAPI().SysCallN(7, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 6, scrollBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TScrollBar) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	scrollBarImportAPI().SysCallN(8, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 7, scrollBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TScrollBar) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	scrollBarImportAPI().SysCallN(9, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 8, scrollBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TScrollBar) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	scrollBarImportAPI().SysCallN(10, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 9, scrollBarAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewScrollBar class constructor
+func NewScrollBar(owner IComponent) IScrollBar {
+	r := scrollBarAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsScrollBar(r)
+}
+
+func TScrollBarClass() types.TClass {
+	r := scrollBarAPI().SysCallN(10)
+	return types.TClass(r)
 }
 
 var (
-	scrollBarImport       *imports.Imports = nil
-	scrollBarImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ScrollBar_Class", 0),
-		/*1*/ imports.NewTable("ScrollBar_Create", 0),
-		/*2*/ imports.NewTable("ScrollBar_DragCursor", 0),
-		/*3*/ imports.NewTable("ScrollBar_DragKind", 0),
-		/*4*/ imports.NewTable("ScrollBar_DragMode", 0),
-		/*5*/ imports.NewTable("ScrollBar_ParentShowHint", 0),
-		/*6*/ imports.NewTable("ScrollBar_SetOnContextPopup", 0),
-		/*7*/ imports.NewTable("ScrollBar_SetOnDragDrop", 0),
-		/*8*/ imports.NewTable("ScrollBar_SetOnDragOver", 0),
-		/*9*/ imports.NewTable("ScrollBar_SetOnEndDrag", 0),
-		/*10*/ imports.NewTable("ScrollBar_SetOnStartDrag", 0),
-	}
+	scrollBarOnce   base.Once
+	scrollBarImport *imports.Imports = nil
 )
 
-func scrollBarImportAPI() *imports.Imports {
-	if scrollBarImport == nil {
-		scrollBarImport = NewDefaultImports()
-		scrollBarImport.SetImportTable(scrollBarImportTables)
-		scrollBarImportTables = nil
-	}
+func scrollBarAPI() *imports.Imports {
+	scrollBarOnce.Do(func() {
+		scrollBarImport = api.NewDefaultImports()
+		scrollBarImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TScrollBar_Create", 0), // constructor NewScrollBar
+			/* 1 */ imports.NewTable("TScrollBar_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TScrollBar_DragKind", 0), // property DragKind
+			/* 3 */ imports.NewTable("TScrollBar_DragMode", 0), // property DragMode
+			/* 4 */ imports.NewTable("TScrollBar_ParentShowHint", 0), // property ParentShowHint
+			/* 5 */ imports.NewTable("TScrollBar_OnContextPopup", 0), // event OnContextPopup
+			/* 6 */ imports.NewTable("TScrollBar_OnDragDrop", 0), // event OnDragDrop
+			/* 7 */ imports.NewTable("TScrollBar_OnDragOver", 0), // event OnDragOver
+			/* 8 */ imports.NewTable("TScrollBar_OnEndDrag", 0), // event OnEndDrag
+			/* 9 */ imports.NewTable("TScrollBar_OnStartDrag", 0), // event OnStartDrag
+			/* 10 */ imports.NewTable("TScrollBar_TClass", 0), // function TScrollBarClass
+		}
+	})
 	return scrollBarImport
 }

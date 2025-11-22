@@ -9,152 +9,206 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomPrintDialog Parent: ICommonDialog
 type ICustomPrintDialog interface {
 	ICommonDialog
-	Collate() bool                         // property
-	SetCollate(AValue bool)                // property
-	Copies() int32                         // property
-	SetCopies(AValue int32)                // property
-	FromPage() int32                       // property
-	SetFromPage(AValue int32)              // property
-	MinPage() int32                        // property
-	SetMinPage(AValue int32)               // property
-	MaxPage() int32                        // property
-	SetMaxPage(AValue int32)               // property
-	Options() TPrintDialogOptions          // property
-	SetOptions(AValue TPrintDialogOptions) // property
-	PrintToFile() bool                     // property
-	SetPrintToFile(AValue bool)            // property
-	PrintRange() TPrintRange               // property
-	SetPrintRange(AValue TPrintRange)      // property
-	ToPage() int32                         // property
-	SetToPage(AValue int32)                // property
+	Collate() bool                              // property Collate Getter
+	SetCollate(value bool)                      // property Collate Setter
+	Copies() int32                              // property Copies Getter
+	SetCopies(value int32)                      // property Copies Setter
+	FromPage() int32                            // property FromPage Getter
+	SetFromPage(value int32)                    // property FromPage Setter
+	MinPage() int32                             // property MinPage Getter
+	SetMinPage(value int32)                     // property MinPage Setter
+	MaxPage() int32                             // property MaxPage Getter
+	SetMaxPage(value int32)                     // property MaxPage Setter
+	Options() types.TPrintDialogOptions         // property Options Getter
+	SetOptions(value types.TPrintDialogOptions) // property Options Setter
+	PrintToFile() bool                          // property PrintToFile Getter
+	SetPrintToFile(value bool)                  // property PrintToFile Setter
+	PrintRange() types.TPrintRange              // property PrintRange Getter
+	SetPrintRange(value types.TPrintRange)      // property PrintRange Setter
+	ToPage() int32                              // property ToPage Getter
+	SetToPage(value int32)                      // property ToPage Setter
 }
 
-// TCustomPrintDialog Parent: TCommonDialog
 type TCustomPrintDialog struct {
 	TCommonDialog
 }
 
-func NewCustomPrintDialog(TheOwner IComponent) ICustomPrintDialog {
-	r1 := customPrintDialogImportAPI().SysCallN(3, GetObjectUintptr(TheOwner))
-	return AsCustomPrintDialog(r1)
-}
-
 func (m *TCustomPrintDialog) Collate() bool {
-	r1 := customPrintDialogImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customPrintDialogAPI().SysCallN(1, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomPrintDialog) SetCollate(AValue bool) {
-	customPrintDialogImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomPrintDialog) SetCollate(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customPrintDialogAPI().SysCallN(1, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomPrintDialog) Copies() int32 {
-	r1 := customPrintDialogImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPrintDialogAPI().SysCallN(2, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomPrintDialog) SetCopies(AValue int32) {
-	customPrintDialogImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPrintDialog) SetCopies(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customPrintDialogAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomPrintDialog) FromPage() int32 {
-	r1 := customPrintDialogImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPrintDialogAPI().SysCallN(3, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomPrintDialog) SetFromPage(AValue int32) {
-	customPrintDialogImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPrintDialog) SetFromPage(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customPrintDialogAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomPrintDialog) MinPage() int32 {
-	r1 := customPrintDialogImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPrintDialogAPI().SysCallN(4, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomPrintDialog) SetMinPage(AValue int32) {
-	customPrintDialogImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPrintDialog) SetMinPage(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customPrintDialogAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomPrintDialog) MaxPage() int32 {
-	r1 := customPrintDialogImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPrintDialogAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomPrintDialog) SetMaxPage(AValue int32) {
-	customPrintDialogImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPrintDialog) SetMaxPage(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customPrintDialogAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomPrintDialog) Options() TPrintDialogOptions {
-	r1 := customPrintDialogImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return TPrintDialogOptions(r1)
+func (m *TCustomPrintDialog) Options() types.TPrintDialogOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPrintDialogAPI().SysCallN(6, 0, m.Instance())
+	return types.TPrintDialogOptions(r)
 }
 
-func (m *TCustomPrintDialog) SetOptions(AValue TPrintDialogOptions) {
-	customPrintDialogImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPrintDialog) SetOptions(value types.TPrintDialogOptions) {
+	if !m.IsValid() {
+		return
+	}
+	customPrintDialogAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomPrintDialog) PrintToFile() bool {
-	r1 := customPrintDialogImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customPrintDialogAPI().SysCallN(7, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomPrintDialog) SetPrintToFile(AValue bool) {
-	customPrintDialogImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomPrintDialog) SetPrintToFile(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customPrintDialogAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomPrintDialog) PrintRange() TPrintRange {
-	r1 := customPrintDialogImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TPrintRange(r1)
+func (m *TCustomPrintDialog) PrintRange() types.TPrintRange {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPrintDialogAPI().SysCallN(8, 0, m.Instance())
+	return types.TPrintRange(r)
 }
 
-func (m *TCustomPrintDialog) SetPrintRange(AValue TPrintRange) {
-	customPrintDialogImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPrintDialog) SetPrintRange(value types.TPrintRange) {
+	if !m.IsValid() {
+		return
+	}
+	customPrintDialogAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomPrintDialog) ToPage() int32 {
-	r1 := customPrintDialogImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPrintDialogAPI().SysCallN(9, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomPrintDialog) SetToPage(AValue int32) {
-	customPrintDialogImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPrintDialog) SetToPage(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customPrintDialogAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
-func CustomPrintDialogClass() TClass {
-	ret := customPrintDialogImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewCustomPrintDialog class constructor
+func NewCustomPrintDialog(theOwner IComponent) ICustomPrintDialog {
+	r := customPrintDialogAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsCustomPrintDialog(r)
+}
+
+func TCustomPrintDialogClass() types.TClass {
+	r := customPrintDialogAPI().SysCallN(10)
+	return types.TClass(r)
 }
 
 var (
-	customPrintDialogImport       *imports.Imports = nil
-	customPrintDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomPrintDialog_Class", 0),
-		/*1*/ imports.NewTable("CustomPrintDialog_Collate", 0),
-		/*2*/ imports.NewTable("CustomPrintDialog_Copies", 0),
-		/*3*/ imports.NewTable("CustomPrintDialog_Create", 0),
-		/*4*/ imports.NewTable("CustomPrintDialog_FromPage", 0),
-		/*5*/ imports.NewTable("CustomPrintDialog_MaxPage", 0),
-		/*6*/ imports.NewTable("CustomPrintDialog_MinPage", 0),
-		/*7*/ imports.NewTable("CustomPrintDialog_Options", 0),
-		/*8*/ imports.NewTable("CustomPrintDialog_PrintRange", 0),
-		/*9*/ imports.NewTable("CustomPrintDialog_PrintToFile", 0),
-		/*10*/ imports.NewTable("CustomPrintDialog_ToPage", 0),
-	}
+	customPrintDialogOnce   base.Once
+	customPrintDialogImport *imports.Imports = nil
 )
 
-func customPrintDialogImportAPI() *imports.Imports {
-	if customPrintDialogImport == nil {
-		customPrintDialogImport = NewDefaultImports()
-		customPrintDialogImport.SetImportTable(customPrintDialogImportTables)
-		customPrintDialogImportTables = nil
-	}
+func customPrintDialogAPI() *imports.Imports {
+	customPrintDialogOnce.Do(func() {
+		customPrintDialogImport = api.NewDefaultImports()
+		customPrintDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomPrintDialog_Create", 0), // constructor NewCustomPrintDialog
+			/* 1 */ imports.NewTable("TCustomPrintDialog_Collate", 0), // property Collate
+			/* 2 */ imports.NewTable("TCustomPrintDialog_Copies", 0), // property Copies
+			/* 3 */ imports.NewTable("TCustomPrintDialog_FromPage", 0), // property FromPage
+			/* 4 */ imports.NewTable("TCustomPrintDialog_MinPage", 0), // property MinPage
+			/* 5 */ imports.NewTable("TCustomPrintDialog_MaxPage", 0), // property MaxPage
+			/* 6 */ imports.NewTable("TCustomPrintDialog_Options", 0), // property Options
+			/* 7 */ imports.NewTable("TCustomPrintDialog_PrintToFile", 0), // property PrintToFile
+			/* 8 */ imports.NewTable("TCustomPrintDialog_PrintRange", 0), // property PrintRange
+			/* 9 */ imports.NewTable("TCustomPrintDialog_ToPage", 0), // property ToPage
+			/* 10 */ imports.NewTable("TCustomPrintDialog_TClass", 0), // function TCustomPrintDialogClass
+		}
+	})
 	return customPrintDialogImport
 }

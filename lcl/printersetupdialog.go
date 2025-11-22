@@ -9,67 +9,72 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IPrinterSetupDialog Parent: ICustomPrinterSetupDialog
 type IPrinterSetupDialog interface {
 	ICustomPrinterSetupDialog
-	AttachTo() ICustomForm                   // property
-	SetAttachTo(AValue ICustomForm)          // property
+	AttachTo() ICustomForm                   // property AttachTo Getter
+	SetAttachTo(value ICustomForm)           // property AttachTo Setter
 	SetOnDialogResult(fn TDialogResultEvent) // property event
 }
 
-// TPrinterSetupDialog Parent: TCustomPrinterSetupDialog
 type TPrinterSetupDialog struct {
 	TCustomPrinterSetupDialog
-	dialogResultPtr uintptr
-}
-
-func NewPrinterSetupDialog(TheOwner IComponent) IPrinterSetupDialog {
-	r1 := printerSetupDialogImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsPrinterSetupDialog(r1)
 }
 
 func (m *TPrinterSetupDialog) AttachTo() ICustomForm {
-	r1 := printerSetupDialogImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return AsCustomForm(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := printerSetupDialogAPI().SysCallN(1, 0, m.Instance())
+	return AsCustomForm(r)
 }
 
-func (m *TPrinterSetupDialog) SetAttachTo(AValue ICustomForm) {
-	printerSetupDialogImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func PrinterSetupDialogClass() TClass {
-	ret := printerSetupDialogImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TPrinterSetupDialog) SetAttachTo(value ICustomForm) {
+	if !m.IsValid() {
+		return
+	}
+	printerSetupDialogAPI().SysCallN(1, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TPrinterSetupDialog) SetOnDialogResult(fn TDialogResultEvent) {
-	if m.dialogResultPtr != 0 {
-		RemoveEventElement(m.dialogResultPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dialogResultPtr = MakeEventDataPtr(fn)
-	printerSetupDialogImportAPI().SysCallN(3, m.Instance(), m.dialogResultPtr)
+	cb := makeTDialogResultEvent(fn)
+	base.SetEvent(m, 2, printerSetupDialogAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewPrinterSetupDialog class constructor
+func NewPrinterSetupDialog(theOwner IComponent) IPrinterSetupDialog {
+	r := printerSetupDialogAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsPrinterSetupDialog(r)
+}
+
+func TPrinterSetupDialogClass() types.TClass {
+	r := printerSetupDialogAPI().SysCallN(3)
+	return types.TClass(r)
 }
 
 var (
-	printerSetupDialogImport       *imports.Imports = nil
-	printerSetupDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("PrinterSetupDialog_AttachTo", 0),
-		/*1*/ imports.NewTable("PrinterSetupDialog_Class", 0),
-		/*2*/ imports.NewTable("PrinterSetupDialog_Create", 0),
-		/*3*/ imports.NewTable("PrinterSetupDialog_SetOnDialogResult", 0),
-	}
+	printerSetupDialogOnce   base.Once
+	printerSetupDialogImport *imports.Imports = nil
 )
 
-func printerSetupDialogImportAPI() *imports.Imports {
-	if printerSetupDialogImport == nil {
-		printerSetupDialogImport = NewDefaultImports()
-		printerSetupDialogImport.SetImportTable(printerSetupDialogImportTables)
-		printerSetupDialogImportTables = nil
-	}
+func printerSetupDialogAPI() *imports.Imports {
+	printerSetupDialogOnce.Do(func() {
+		printerSetupDialogImport = api.NewDefaultImports()
+		printerSetupDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPrinterSetupDialog_Create", 0), // constructor NewPrinterSetupDialog
+			/* 1 */ imports.NewTable("TPrinterSetupDialog_AttachTo", 0), // property AttachTo
+			/* 2 */ imports.NewTable("TPrinterSetupDialog_OnDialogResult", 0), // event OnDialogResult
+			/* 3 */ imports.NewTable("TPrinterSetupDialog_TClass", 0), // function TPrinterSetupDialogClass
+		}
+	})
 	return printerSetupDialogImport
 }

@@ -8,3456 +8,3975 @@
 
 package lcl
 
-// AsException Convert a pointer object to an existing class object
-func AsException(obj interface{}) IException {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	exception := new(Exception)
-	SetObjectInstance(exception, instance)
-	return exception
-}
-
-// AsATGauge Convert a pointer object to an existing class object
-func AsATGauge(obj interface{}) IATGauge {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	aTGauge := new(TATGauge)
-	SetObjectInstance(aTGauge, instance)
-	return aTGauge
-}
-
-// AsAVLTree Convert a pointer object to an existing class object
-func AsAVLTree(obj interface{}) IAVLTree {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	aVLTree := new(TAVLTree)
-	SetObjectInstance(aVLTree, instance)
-	return aVLTree
-}
-
-// AsAVLTreeNode Convert a pointer object to an existing class object
-func AsAVLTreeNode(obj interface{}) IAVLTreeNode {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	aVLTreeNode := new(TAVLTreeNode)
-	SetObjectInstance(aVLTreeNode, instance)
-	return aVLTreeNode
-}
-
-// AsAVLTreeNodeEnumerator Convert a pointer object to an existing class object
-func AsAVLTreeNodeEnumerator(obj interface{}) IAVLTreeNodeEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	aVLTreeNodeEnumerator := new(TAVLTreeNodeEnumerator)
-	SetObjectInstance(aVLTreeNodeEnumerator, instance)
-	return aVLTreeNodeEnumerator
-}
-
-// AsAction Convert a pointer object to an existing class object
-func AsAction(obj interface{}) IAction {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	action := new(TAction)
-	SetObjectInstance(action, instance)
-	return action
-}
-
-// AsActionList Convert a pointer object to an existing class object
-func AsActionList(obj interface{}) IActionList {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	actionList := new(TActionList)
-	SetObjectInstance(actionList, instance)
-	return actionList
-}
-
-// AsActionListEnumerator Convert a pointer object to an existing class object
-func AsActionListEnumerator(obj interface{}) IActionListEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	actionListEnumerator := new(TActionListEnumerator)
-	SetObjectInstance(actionListEnumerator, instance)
-	return actionListEnumerator
-}
-
-// AsAnchorSide Convert a pointer object to an existing class object
-func AsAnchorSide(obj interface{}) IAnchorSide {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	anchorSide := new(TAnchorSide)
-	SetObjectInstance(anchorSide, instance)
-	return anchorSide
-}
-
-// AsApplication Convert a pointer object to an existing class object
-func AsApplication(obj interface{}) IApplication {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	application := new(TApplication)
-	SetObjectInstance(application, instance)
-	return application
-}
-
-// AsBaseVirtualTree Convert a pointer object to an existing class object
-func AsBaseVirtualTree(obj interface{}) IBaseVirtualTree {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	baseVirtualTree := new(TBaseVirtualTree)
-	SetObjectInstance(baseVirtualTree, instance)
-	return baseVirtualTree
-}
-
-// AsBasicAction Convert a pointer object to an existing class object
-func AsBasicAction(obj interface{}) IBasicAction {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	basicAction := new(TBasicAction)
-	SetObjectInstance(basicAction, instance)
-	return basicAction
-}
-
-// AsBasicActionLink Convert a pointer object to an existing class object
-func AsBasicActionLink(obj interface{}) IBasicActionLink {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	basicActionLink := new(TBasicActionLink)
-	SetObjectInstance(basicActionLink, instance)
-	return basicActionLink
-}
-
-// AsBevel Convert a pointer object to an existing class object
-func AsBevel(obj interface{}) IBevel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	bevel := new(TBevel)
-	SetObjectInstance(bevel, instance)
-	return bevel
-}
-
-// AsBitBtn Convert a pointer object to an existing class object
-func AsBitBtn(obj interface{}) IBitBtn {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	bitBtn := new(TBitBtn)
-	SetObjectInstance(bitBtn, instance)
-	return bitBtn
-}
-
-// AsBitmap Convert a pointer object to an existing class object
-func AsBitmap(obj interface{}) IBitmap {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	bitmap := new(TBitmap)
-	SetObjectInstance(bitmap, instance)
-	return bitmap
-}
-
-// AsBoundLabel Convert a pointer object to an existing class object
-func AsBoundLabel(obj interface{}) IBoundLabel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	boundLabel := new(TBoundLabel)
-	SetObjectInstance(boundLabel, instance)
-	return boundLabel
-}
-
-// AsBrush Convert a pointer object to an existing class object
-func AsBrush(obj interface{}) IBrush {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	brush := new(TBrush)
-	SetObjectInstance(brush, instance)
-	return brush
-}
-
-// AsButton Convert a pointer object to an existing class object
-func AsButton(obj interface{}) IButton {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	button := new(TButton)
-	SetObjectInstance(button, instance)
-	return button
-}
-
-// AsButtonControl Convert a pointer object to an existing class object
-func AsButtonControl(obj interface{}) IButtonControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	buttonControl := new(TButtonControl)
-	SetObjectInstance(buttonControl, instance)
-	return buttonControl
-}
-
-// AsCalendar Convert a pointer object to an existing class object
-func AsCalendar(obj interface{}) ICalendar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	calendar := new(TCalendar)
-	SetObjectInstance(calendar, instance)
-	return calendar
-}
-
-// AsCanvas Convert a pointer object to an existing class object
-func AsCanvas(obj interface{}) ICanvas {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	canvas := new(TCanvas)
-	SetObjectInstance(canvas, instance)
-	return canvas
-}
-
-// AsChangeLink Convert a pointer object to an existing class object
-func AsChangeLink(obj interface{}) IChangeLink {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	changeLink := new(TChangeLink)
-	SetObjectInstance(changeLink, instance)
-	return changeLink
-}
-
-// AsCheckBox Convert a pointer object to an existing class object
-func AsCheckBox(obj interface{}) ICheckBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	checkBox := new(TCheckBox)
-	SetObjectInstance(checkBox, instance)
-	return checkBox
-}
-
-// AsCheckComboBox Convert a pointer object to an existing class object
-func AsCheckComboBox(obj interface{}) ICheckComboBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	checkComboBox := new(TCheckComboBox)
-	SetObjectInstance(checkComboBox, instance)
-	return checkComboBox
-}
-
-// AsCheckGroup Convert a pointer object to an existing class object
-func AsCheckGroup(obj interface{}) ICheckGroup {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	checkGroup := new(TCheckGroup)
-	SetObjectInstance(checkGroup, instance)
-	return checkGroup
-}
-
-// AsCheckListBox Convert a pointer object to an existing class object
-func AsCheckListBox(obj interface{}) ICheckListBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	checkListBox := new(TCheckListBox)
-	SetObjectInstance(checkListBox, instance)
-	return checkListBox
-}
-
-// AsClipboard Convert a pointer object to an existing class object
-func AsClipboard(obj interface{}) IClipboard {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	clipboard := new(TClipboard)
-	SetObjectInstance(clipboard, instance)
-	return clipboard
-}
-
-// AsClipboardFormats Convert a pointer object to an existing class object
-func AsClipboardFormats(obj interface{}) IClipboardFormats {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	clipboardFormats := new(TClipboardFormats)
-	SetObjectInstance(clipboardFormats, instance)
-	return clipboardFormats
-}
-
-// AsCollection Convert a pointer object to an existing class object
-func AsCollection(obj interface{}) ICollection {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	collection := new(TCollection)
-	SetObjectInstance(collection, instance)
-	return collection
-}
-
-// AsCollectionEnumerator Convert a pointer object to an existing class object
-func AsCollectionEnumerator(obj interface{}) ICollectionEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	collectionEnumerator := new(TCollectionEnumerator)
-	SetObjectInstance(collectionEnumerator, instance)
-	return collectionEnumerator
-}
-
-// AsCollectionItem Convert a pointer object to an existing class object
-func AsCollectionItem(obj interface{}) ICollectionItem {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	collectionItem := new(TCollectionItem)
-	SetObjectInstance(collectionItem, instance)
-	return collectionItem
-}
-
-// AsColorBox Convert a pointer object to an existing class object
-func AsColorBox(obj interface{}) IColorBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	colorBox := new(TColorBox)
-	SetObjectInstance(colorBox, instance)
-	return colorBox
-}
-
-// AsColorButton Convert a pointer object to an existing class object
-func AsColorButton(obj interface{}) IColorButton {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	colorButton := new(TColorButton)
-	SetObjectInstance(colorButton, instance)
-	return colorButton
-}
-
-// AsColorDialog Convert a pointer object to an existing class object
-func AsColorDialog(obj interface{}) IColorDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	colorDialog := new(TColorDialog)
-	SetObjectInstance(colorDialog, instance)
-	return colorDialog
-}
-
-// AsColorListBox Convert a pointer object to an existing class object
-func AsColorListBox(obj interface{}) IColorListBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	colorListBox := new(TColorListBox)
-	SetObjectInstance(colorListBox, instance)
-	return colorListBox
-}
-
-// AsComboBox Convert a pointer object to an existing class object
-func AsComboBox(obj interface{}) IComboBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	comboBox := new(TComboBox)
-	SetObjectInstance(comboBox, instance)
-	return comboBox
-}
-
-// AsComboBoxEx Convert a pointer object to an existing class object
-func AsComboBoxEx(obj interface{}) IComboBoxEx {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	comboBoxEx := new(TComboBoxEx)
-	SetObjectInstance(comboBoxEx, instance)
-	return comboBoxEx
-}
-
-// AsComboExItem Convert a pointer object to an existing class object
-func AsComboExItem(obj interface{}) IComboExItem {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	comboExItem := new(TComboExItem)
-	SetObjectInstance(comboExItem, instance)
-	return comboExItem
-}
-
-// AsComboExItems Convert a pointer object to an existing class object
-func AsComboExItems(obj interface{}) IComboExItems {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	comboExItems := new(TComboExItems)
-	SetObjectInstance(comboExItems, instance)
-	return comboExItems
-}
-
-// AsCommonDialog Convert a pointer object to an existing class object
-func AsCommonDialog(obj interface{}) ICommonDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	commonDialog := new(TCommonDialog)
-	SetObjectInstance(commonDialog, instance)
-	return commonDialog
-}
-
-// AsComponent Convert a pointer object to an existing class object
-func AsComponent(obj interface{}) IComponent {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	component := new(TComponent)
-	SetObjectInstance(component, instance)
-	return component
-}
-
-// AsComponentEnumerator Convert a pointer object to an existing class object
-func AsComponentEnumerator(obj interface{}) IComponentEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	componentEnumerator := new(TComponentEnumerator)
-	SetObjectInstance(componentEnumerator, instance)
-	return componentEnumerator
-}
-
-// AsContainedAction Convert a pointer object to an existing class object
-func AsContainedAction(obj interface{}) IContainedAction {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	containedAction := new(TContainedAction)
-	SetObjectInstance(containedAction, instance)
-	return containedAction
-}
-
-// AsControl Convert a pointer object to an existing class object
-func AsControl(obj interface{}) IControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	control := new(TControl)
-	SetObjectInstance(control, instance)
-	return control
-}
-
-// AsControlBorderSpacing Convert a pointer object to an existing class object
-func AsControlBorderSpacing(obj interface{}) IControlBorderSpacing {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	controlBorderSpacing := new(TControlBorderSpacing)
-	SetObjectInstance(controlBorderSpacing, instance)
-	return controlBorderSpacing
-}
-
-// AsControlChildSizing Convert a pointer object to an existing class object
-func AsControlChildSizing(obj interface{}) IControlChildSizing {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	controlChildSizing := new(TControlChildSizing)
-	SetObjectInstance(controlChildSizing, instance)
-	return controlChildSizing
-}
-
-// AsControlScrollBar Convert a pointer object to an existing class object
-func AsControlScrollBar(obj interface{}) IControlScrollBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	controlScrollBar := new(TControlScrollBar)
-	SetObjectInstance(controlScrollBar, instance)
-	return controlScrollBar
-}
-
-// AsCoolBand Convert a pointer object to an existing class object
-func AsCoolBand(obj interface{}) ICoolBand {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	coolBand := new(TCoolBand)
-	SetObjectInstance(coolBand, instance)
-	return coolBand
-}
-
-// AsCoolBands Convert a pointer object to an existing class object
-func AsCoolBands(obj interface{}) ICoolBands {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	coolBands := new(TCoolBands)
-	SetObjectInstance(coolBands, instance)
-	return coolBands
-}
-
-// AsCoolBar Convert a pointer object to an existing class object
-func AsCoolBar(obj interface{}) ICoolBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	coolBar := new(TCoolBar)
-	SetObjectInstance(coolBar, instance)
-	return coolBar
-}
-
-// AsCustomAbstractGroupedEdit Convert a pointer object to an existing class object
-func AsCustomAbstractGroupedEdit(obj interface{}) ICustomAbstractGroupedEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customAbstractGroupedEdit := new(TCustomAbstractGroupedEdit)
-	SetObjectInstance(customAbstractGroupedEdit, instance)
-	return customAbstractGroupedEdit
-}
-
-// AsCustomAction Convert a pointer object to an existing class object
-func AsCustomAction(obj interface{}) ICustomAction {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customAction := new(TCustomAction)
-	SetObjectInstance(customAction, instance)
-	return customAction
-}
-
-// AsCustomActionList Convert a pointer object to an existing class object
-func AsCustomActionList(obj interface{}) ICustomActionList {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customActionList := new(TCustomActionList)
-	SetObjectInstance(customActionList, instance)
-	return customActionList
-}
-
-// AsCustomApplication Convert a pointer object to an existing class object
-func AsCustomApplication(obj interface{}) ICustomApplication {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customApplication := new(TCustomApplication)
-	SetObjectInstance(customApplication, instance)
-	return customApplication
-}
-
-// AsCustomBitBtn Convert a pointer object to an existing class object
-func AsCustomBitBtn(obj interface{}) ICustomBitBtn {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customBitBtn := new(TCustomBitBtn)
-	SetObjectInstance(customBitBtn, instance)
-	return customBitBtn
-}
-
-// AsCustomBitmap Convert a pointer object to an existing class object
-func AsCustomBitmap(obj interface{}) ICustomBitmap {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customBitmap := new(TCustomBitmap)
-	SetObjectInstance(customBitmap, instance)
-	return customBitmap
-}
-
-// AsCustomButton Convert a pointer object to an existing class object
-func AsCustomButton(obj interface{}) ICustomButton {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customButton := new(TCustomButton)
-	SetObjectInstance(customButton, instance)
-	return customButton
-}
-
-// AsCustomCalendar Convert a pointer object to an existing class object
-func AsCustomCalendar(obj interface{}) ICustomCalendar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customCalendar := new(TCustomCalendar)
-	SetObjectInstance(customCalendar, instance)
-	return customCalendar
-}
-
-// AsCustomCheckBox Convert a pointer object to an existing class object
-func AsCustomCheckBox(obj interface{}) ICustomCheckBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customCheckBox := new(TCustomCheckBox)
-	SetObjectInstance(customCheckBox, instance)
-	return customCheckBox
-}
-
-// AsCustomCheckCombo Convert a pointer object to an existing class object
-func AsCustomCheckCombo(obj interface{}) ICustomCheckCombo {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customCheckCombo := new(TCustomCheckCombo)
-	SetObjectInstance(customCheckCombo, instance)
-	return customCheckCombo
-}
-
-// AsCustomCheckGroup Convert a pointer object to an existing class object
-func AsCustomCheckGroup(obj interface{}) ICustomCheckGroup {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customCheckGroup := new(TCustomCheckGroup)
-	SetObjectInstance(customCheckGroup, instance)
-	return customCheckGroup
-}
-
-// AsCustomCheckListBox Convert a pointer object to an existing class object
-func AsCustomCheckListBox(obj interface{}) ICustomCheckListBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customCheckListBox := new(TCustomCheckListBox)
-	SetObjectInstance(customCheckListBox, instance)
-	return customCheckListBox
-}
-
-// AsCustomColorBox Convert a pointer object to an existing class object
-func AsCustomColorBox(obj interface{}) ICustomColorBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customColorBox := new(TCustomColorBox)
-	SetObjectInstance(customColorBox, instance)
-	return customColorBox
-}
-
-// AsCustomColorListBox Convert a pointer object to an existing class object
-func AsCustomColorListBox(obj interface{}) ICustomColorListBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customColorListBox := new(TCustomColorListBox)
-	SetObjectInstance(customColorListBox, instance)
-	return customColorListBox
-}
-
-// AsCustomComboBox Convert a pointer object to an existing class object
-func AsCustomComboBox(obj interface{}) ICustomComboBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customComboBox := new(TCustomComboBox)
-	SetObjectInstance(customComboBox, instance)
-	return customComboBox
-}
-
-// AsCustomComboBoxEx Convert a pointer object to an existing class object
-func AsCustomComboBoxEx(obj interface{}) ICustomComboBoxEx {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customComboBoxEx := new(TCustomComboBoxEx)
-	SetObjectInstance(customComboBoxEx, instance)
-	return customComboBoxEx
-}
-
-// AsCustomControl Convert a pointer object to an existing class object
-func AsCustomControl(obj interface{}) ICustomControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customControl := new(TCustomControl)
-	SetObjectInstance(customControl, instance)
-	return customControl
-}
-
-// AsCustomCoolBar Convert a pointer object to an existing class object
-func AsCustomCoolBar(obj interface{}) ICustomCoolBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customCoolBar := new(TCustomCoolBar)
-	SetObjectInstance(customCoolBar, instance)
-	return customCoolBar
-}
-
-// AsCustomDateTimePicker Convert a pointer object to an existing class object
-func AsCustomDateTimePicker(obj interface{}) ICustomDateTimePicker {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customDateTimePicker := new(TCustomDateTimePicker)
-	SetObjectInstance(customDateTimePicker, instance)
-	return customDateTimePicker
-}
-
-// AsCustomDesignControl Convert a pointer object to an existing class object
-func AsCustomDesignControl(obj interface{}) ICustomDesignControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customDesignControl := new(TCustomDesignControl)
-	SetObjectInstance(customDesignControl, instance)
-	return customDesignControl
-}
-
-// AsCustomDrawGrid Convert a pointer object to an existing class object
-func AsCustomDrawGrid(obj interface{}) ICustomDrawGrid {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customDrawGrid := new(TCustomDrawGrid)
-	SetObjectInstance(customDrawGrid, instance)
-	return customDrawGrid
-}
-
-// AsCustomEdit Convert a pointer object to an existing class object
-func AsCustomEdit(obj interface{}) ICustomEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customEdit := new(TCustomEdit)
-	SetObjectInstance(customEdit, instance)
-	return customEdit
-}
-
-// AsCustomEditButton Convert a pointer object to an existing class object
-func AsCustomEditButton(obj interface{}) ICustomEditButton {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customEditButton := new(TCustomEditButton)
-	SetObjectInstance(customEditButton, instance)
-	return customEditButton
-}
-
-// AsCustomFloatSpinEdit Convert a pointer object to an existing class object
-func AsCustomFloatSpinEdit(obj interface{}) ICustomFloatSpinEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customFloatSpinEdit := new(TCustomFloatSpinEdit)
-	SetObjectInstance(customFloatSpinEdit, instance)
-	return customFloatSpinEdit
-}
-
-// AsCustomFlowPanel Convert a pointer object to an existing class object
-func AsCustomFlowPanel(obj interface{}) ICustomFlowPanel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customFlowPanel := new(TCustomFlowPanel)
-	SetObjectInstance(customFlowPanel, instance)
-	return customFlowPanel
-}
-
-// AsCustomForm Convert a pointer object to an existing class object
-func AsCustomForm(obj interface{}) ICustomForm {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customForm := new(TCustomForm)
-	SetObjectInstance(customForm, instance)
-	return customForm
-}
-
-// AsCustomFrame Convert a pointer object to an existing class object
-func AsCustomFrame(obj interface{}) ICustomFrame {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customFrame := new(TCustomFrame)
-	SetObjectInstance(customFrame, instance)
-	return customFrame
-}
-
-// AsCustomGrid Convert a pointer object to an existing class object
-func AsCustomGrid(obj interface{}) ICustomGrid {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customGrid := new(TCustomGrid)
-	SetObjectInstance(customGrid, instance)
-	return customGrid
-}
-
-// AsCustomGroupBox Convert a pointer object to an existing class object
-func AsCustomGroupBox(obj interface{}) ICustomGroupBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customGroupBox := new(TCustomGroupBox)
-	SetObjectInstance(customGroupBox, instance)
-	return customGroupBox
-}
-
-// AsCustomHeaderControl Convert a pointer object to an existing class object
-func AsCustomHeaderControl(obj interface{}) ICustomHeaderControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customHeaderControl := new(TCustomHeaderControl)
-	SetObjectInstance(customHeaderControl, instance)
-	return customHeaderControl
-}
-
-// AsCustomIcon Convert a pointer object to an existing class object
-func AsCustomIcon(obj interface{}) ICustomIcon {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customIcon := new(TCustomIcon)
-	SetObjectInstance(customIcon, instance)
-	return customIcon
-}
-
-// AsCustomImage Convert a pointer object to an existing class object
-func AsCustomImage(obj interface{}) ICustomImage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customImage := new(TCustomImage)
-	SetObjectInstance(customImage, instance)
-	return customImage
-}
-
-// AsCustomImageList Convert a pointer object to an existing class object
-func AsCustomImageList(obj interface{}) ICustomImageList {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customImageList := new(TCustomImageList)
-	SetObjectInstance(customImageList, instance)
-	return customImageList
-}
-
-// AsCustomImageListResolution Convert a pointer object to an existing class object
-func AsCustomImageListResolution(obj interface{}) ICustomImageListResolution {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customImageListResolution := new(TCustomImageListResolution)
-	SetObjectInstance(customImageListResolution, instance)
-	return customImageListResolution
-}
-
-// AsCustomImageListResolutionEnumerator Convert a pointer object to an existing class object
-func AsCustomImageListResolutionEnumerator(obj interface{}) ICustomImageListResolutionEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customImageListResolutionEnumerator := new(TCustomImageListResolutionEnumerator)
-	SetObjectInstance(customImageListResolutionEnumerator, instance)
-	return customImageListResolutionEnumerator
-}
-
-// AsCustomIniFile Convert a pointer object to an existing class object
-func AsCustomIniFile(obj interface{}) ICustomIniFile {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customIniFile := new(TCustomIniFile)
-	SetObjectInstance(customIniFile, instance)
-	return customIniFile
-}
-
-// AsCustomLabel Convert a pointer object to an existing class object
-func AsCustomLabel(obj interface{}) ICustomLabel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customLabel := new(TCustomLabel)
-	SetObjectInstance(customLabel, instance)
-	return customLabel
-}
-
-// AsCustomLabeledEdit Convert a pointer object to an existing class object
-func AsCustomLabeledEdit(obj interface{}) ICustomLabeledEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customLabeledEdit := new(TCustomLabeledEdit)
-	SetObjectInstance(customLabeledEdit, instance)
-	return customLabeledEdit
-}
-
-// AsCustomListBox Convert a pointer object to an existing class object
-func AsCustomListBox(obj interface{}) ICustomListBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customListBox := new(TCustomListBox)
-	SetObjectInstance(customListBox, instance)
-	return customListBox
-}
-
-// AsCustomListView Convert a pointer object to an existing class object
-func AsCustomListView(obj interface{}) ICustomListView {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customListView := new(TCustomListView)
-	SetObjectInstance(customListView, instance)
-	return customListView
-}
-
-// AsCustomMaskEdit Convert a pointer object to an existing class object
-func AsCustomMaskEdit(obj interface{}) ICustomMaskEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customMaskEdit := new(TCustomMaskEdit)
-	SetObjectInstance(customMaskEdit, instance)
-	return customMaskEdit
-}
-
-// AsCustomMemo Convert a pointer object to an existing class object
-func AsCustomMemo(obj interface{}) ICustomMemo {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customMemo := new(TCustomMemo)
-	SetObjectInstance(customMemo, instance)
-	return customMemo
-}
-
-// AsCustomMemoryStream Convert a pointer object to an existing class object
-func AsCustomMemoryStream(obj interface{}) ICustomMemoryStream {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customMemoryStream := new(TCustomMemoryStream)
-	SetObjectInstance(customMemoryStream, instance)
-	return customMemoryStream
-}
-
-// AsCustomOpenGLControl Convert a pointer object to an existing class object
-func AsCustomOpenGLControl(obj interface{}) ICustomOpenGLControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customOpenGLControl := new(TCustomOpenGLControl)
-	SetObjectInstance(customOpenGLControl, instance)
-	return customOpenGLControl
-}
-
-// AsCustomPage Convert a pointer object to an existing class object
-func AsCustomPage(obj interface{}) ICustomPage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customPage := new(TCustomPage)
-	SetObjectInstance(customPage, instance)
-	return customPage
-}
-
-// AsCustomPanel Convert a pointer object to an existing class object
-func AsCustomPanel(obj interface{}) ICustomPanel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customPanel := new(TCustomPanel)
-	SetObjectInstance(customPanel, instance)
-	return customPanel
-}
-
-// AsCustomPrintDialog Convert a pointer object to an existing class object
-func AsCustomPrintDialog(obj interface{}) ICustomPrintDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customPrintDialog := new(TCustomPrintDialog)
-	SetObjectInstance(customPrintDialog, instance)
-	return customPrintDialog
-}
-
-// AsCustomPrinterSetupDialog Convert a pointer object to an existing class object
-func AsCustomPrinterSetupDialog(obj interface{}) ICustomPrinterSetupDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customPrinterSetupDialog := new(TCustomPrinterSetupDialog)
-	SetObjectInstance(customPrinterSetupDialog, instance)
-	return customPrinterSetupDialog
-}
-
-// AsCustomProgressBar Convert a pointer object to an existing class object
-func AsCustomProgressBar(obj interface{}) ICustomProgressBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customProgressBar := new(TCustomProgressBar)
-	SetObjectInstance(customProgressBar, instance)
-	return customProgressBar
-}
-
-// AsCustomRadioGroup Convert a pointer object to an existing class object
-func AsCustomRadioGroup(obj interface{}) ICustomRadioGroup {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customRadioGroup := new(TCustomRadioGroup)
-	SetObjectInstance(customRadioGroup, instance)
-	return customRadioGroup
-}
-
-// AsCustomRichMemo Convert a pointer object to an existing class object
-func AsCustomRichMemo(obj interface{}) ICustomRichMemo {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customRichMemo := new(TCustomRichMemo)
-	SetObjectInstance(customRichMemo, instance)
-	return customRichMemo
-}
-
-// AsCustomScrollBar Convert a pointer object to an existing class object
-func AsCustomScrollBar(obj interface{}) ICustomScrollBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customScrollBar := new(TCustomScrollBar)
-	SetObjectInstance(customScrollBar, instance)
-	return customScrollBar
-}
-
-// AsCustomSpeedButton Convert a pointer object to an existing class object
-func AsCustomSpeedButton(obj interface{}) ICustomSpeedButton {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customSpeedButton := new(TCustomSpeedButton)
-	SetObjectInstance(customSpeedButton, instance)
-	return customSpeedButton
-}
-
-// AsCustomSpinEdit Convert a pointer object to an existing class object
-func AsCustomSpinEdit(obj interface{}) ICustomSpinEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customSpinEdit := new(TCustomSpinEdit)
-	SetObjectInstance(customSpinEdit, instance)
-	return customSpinEdit
-}
-
-// AsCustomSplitter Convert a pointer object to an existing class object
-func AsCustomSplitter(obj interface{}) ICustomSplitter {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customSplitter := new(TCustomSplitter)
-	SetObjectInstance(customSplitter, instance)
-	return customSplitter
-}
-
-// AsCustomStaticText Convert a pointer object to an existing class object
-func AsCustomStaticText(obj interface{}) ICustomStaticText {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customStaticText := new(TCustomStaticText)
-	SetObjectInstance(customStaticText, instance)
-	return customStaticText
-}
-
-// AsCustomStringGrid Convert a pointer object to an existing class object
-func AsCustomStringGrid(obj interface{}) ICustomStringGrid {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customStringGrid := new(TCustomStringGrid)
-	SetObjectInstance(customStringGrid, instance)
-	return customStringGrid
-}
-
-// AsCustomStringTreeOptions Convert a pointer object to an existing class object
-func AsCustomStringTreeOptions(obj interface{}) ICustomStringTreeOptions {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customStringTreeOptions := new(TCustomStringTreeOptions)
-	SetObjectInstance(customStringTreeOptions, instance)
-	return customStringTreeOptions
-}
-
-// AsCustomTabControl Convert a pointer object to an existing class object
-func AsCustomTabControl(obj interface{}) ICustomTabControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customTabControl := new(TCustomTabControl)
-	SetObjectInstance(customTabControl, instance)
-	return customTabControl
-}
-
-// AsCustomTaskDialog Convert a pointer object to an existing class object
-func AsCustomTaskDialog(obj interface{}) ICustomTaskDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customTaskDialog := new(TCustomTaskDialog)
-	SetObjectInstance(customTaskDialog, instance)
-	return customTaskDialog
-}
-
-// AsCustomTimer Convert a pointer object to an existing class object
-func AsCustomTimer(obj interface{}) ICustomTimer {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customTimer := new(TCustomTimer)
-	SetObjectInstance(customTimer, instance)
-	return customTimer
-}
-
-// AsCustomTrackBar Convert a pointer object to an existing class object
-func AsCustomTrackBar(obj interface{}) ICustomTrackBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customTrackBar := new(TCustomTrackBar)
-	SetObjectInstance(customTrackBar, instance)
-	return customTrackBar
-}
-
-// AsCustomTrayIcon Convert a pointer object to an existing class object
-func AsCustomTrayIcon(obj interface{}) ICustomTrayIcon {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customTrayIcon := new(TCustomTrayIcon)
-	SetObjectInstance(customTrayIcon, instance)
-	return customTrayIcon
-}
-
-// AsCustomTreeView Convert a pointer object to an existing class object
-func AsCustomTreeView(obj interface{}) ICustomTreeView {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customTreeView := new(TCustomTreeView)
-	SetObjectInstance(customTreeView, instance)
-	return customTreeView
-}
-
-// AsCustomUpDown Convert a pointer object to an existing class object
-func AsCustomUpDown(obj interface{}) ICustomUpDown {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customUpDown := new(TCustomUpDown)
-	SetObjectInstance(customUpDown, instance)
-	return customUpDown
-}
-
-// AsCustomVirtualDrawTree Convert a pointer object to an existing class object
-func AsCustomVirtualDrawTree(obj interface{}) ICustomVirtualDrawTree {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customVirtualDrawTree := new(TCustomVirtualDrawTree)
-	SetObjectInstance(customVirtualDrawTree, instance)
-	return customVirtualDrawTree
-}
-
-// AsCustomVirtualStringTree Convert a pointer object to an existing class object
-func AsCustomVirtualStringTree(obj interface{}) ICustomVirtualStringTree {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customVirtualStringTree := new(TCustomVirtualStringTree)
-	SetObjectInstance(customVirtualStringTree, instance)
-	return customVirtualStringTree
-}
-
-// AsCustomVirtualTreeOptions Convert a pointer object to an existing class object
-func AsCustomVirtualTreeOptions(obj interface{}) ICustomVirtualTreeOptions {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	customVirtualTreeOptions := new(TCustomVirtualTreeOptions)
-	SetObjectInstance(customVirtualTreeOptions, instance)
-	return customVirtualTreeOptions
-}
-
-// AsDataModule Convert a pointer object to an existing class object
-func AsDataModule(obj interface{}) IDataModule {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	dataModule := new(TDataModule)
-	SetObjectInstance(dataModule, instance)
-	return dataModule
-}
-
-// AsDateTimePicker Convert a pointer object to an existing class object
-func AsDateTimePicker(obj interface{}) IDateTimePicker {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	dateTimePicker := new(TDateTimePicker)
-	SetObjectInstance(dateTimePicker, instance)
-	return dateTimePicker
-}
-
-// AsDirectoryEdit Convert a pointer object to an existing class object
-func AsDirectoryEdit(obj interface{}) IDirectoryEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	directoryEdit := new(TDirectoryEdit)
-	SetObjectInstance(directoryEdit, instance)
-	return directoryEdit
-}
-
-// AsDividerBevel Convert a pointer object to an existing class object
-func AsDividerBevel(obj interface{}) IDividerBevel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	dividerBevel := new(TDividerBevel)
-	SetObjectInstance(dividerBevel, instance)
-	return dividerBevel
-}
-
-// AsDockManager Convert a pointer object to an existing class object
-func AsDockManager(obj interface{}) IDockManager {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	dockManager := new(TDockManager)
-	SetObjectInstance(dockManager, instance)
-	return dockManager
-}
-
-// AsDockTree Convert a pointer object to an existing class object
-func AsDockTree(obj interface{}) IDockTree {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	dockTree := new(TDockTree)
-	SetObjectInstance(dockTree, instance)
-	return dockTree
-}
-
-// AsDockZone Convert a pointer object to an existing class object
-func AsDockZone(obj interface{}) IDockZone {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	dockZone := new(TDockZone)
-	SetObjectInstance(dockZone, instance)
-	return dockZone
-}
-
-// AsDragDockObject Convert a pointer object to an existing class object
-func AsDragDockObject(obj interface{}) IDragDockObject {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	dragDockObject := new(TDragDockObject)
-	SetObjectInstance(dragDockObject, instance)
-	return dragDockObject
-}
-
-// AsDragImageList Convert a pointer object to an existing class object
-func AsDragImageList(obj interface{}) IDragImageList {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	dragImageList := new(TDragImageList)
-	SetObjectInstance(dragImageList, instance)
-	return dragImageList
-}
-
-// AsDragImageListResolution Convert a pointer object to an existing class object
-func AsDragImageListResolution(obj interface{}) IDragImageListResolution {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	dragImageListResolution := new(TDragImageListResolution)
-	SetObjectInstance(dragImageListResolution, instance)
-	return dragImageListResolution
-}
-
-// AsDragObject Convert a pointer object to an existing class object
-func AsDragObject(obj interface{}) IDragObject {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	dragObject := new(TDragObject)
-	SetObjectInstance(dragObject, instance)
-	return dragObject
-}
-
-// AsDrawGrid Convert a pointer object to an existing class object
-func AsDrawGrid(obj interface{}) IDrawGrid {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	drawGrid := new(TDrawGrid)
-	SetObjectInstance(drawGrid, instance)
-	return drawGrid
-}
-
-// AsEbEdit Convert a pointer object to an existing class object
-func AsEbEdit(obj interface{}) IEbEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	ebEdit := new(TEbEdit)
-	SetObjectInstance(ebEdit, instance)
-	return ebEdit
-}
-
-// AsEdit Convert a pointer object to an existing class object
-func AsEdit(obj interface{}) IEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	edit := new(TEdit)
-	SetObjectInstance(edit, instance)
-	return edit
-}
-
-// AsEditButton Convert a pointer object to an existing class object
-func AsEditButton(obj interface{}) IEditButton {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	editButton := new(TEditButton)
-	SetObjectInstance(editButton, instance)
-	return editButton
-}
-
-// AsFPCanvasHelper Convert a pointer object to an existing class object
-func AsFPCanvasHelper(obj interface{}) IFPCanvasHelper {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPCanvasHelper := new(TFPCanvasHelper)
-	SetObjectInstance(fPCanvasHelper, instance)
-	return fPCanvasHelper
-}
-
-// AsFPCustomBrush Convert a pointer object to an existing class object
-func AsFPCustomBrush(obj interface{}) IFPCustomBrush {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPCustomBrush := new(TFPCustomBrush)
-	SetObjectInstance(fPCustomBrush, instance)
-	return fPCustomBrush
-}
-
-// AsFPCustomCanvas Convert a pointer object to an existing class object
-func AsFPCustomCanvas(obj interface{}) IFPCustomCanvas {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPCustomCanvas := new(TFPCustomCanvas)
-	SetObjectInstance(fPCustomCanvas, instance)
-	return fPCustomCanvas
-}
-
-// AsFPCustomFont Convert a pointer object to an existing class object
-func AsFPCustomFont(obj interface{}) IFPCustomFont {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPCustomFont := new(TFPCustomFont)
-	SetObjectInstance(fPCustomFont, instance)
-	return fPCustomFont
-}
-
-// AsFPCustomImage Convert a pointer object to an existing class object
-func AsFPCustomImage(obj interface{}) IFPCustomImage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPCustomImage := new(TFPCustomImage)
-	SetObjectInstance(fPCustomImage, instance)
-	return fPCustomImage
-}
-
-// AsFPCustomImageHandler Convert a pointer object to an existing class object
-func AsFPCustomImageHandler(obj interface{}) IFPCustomImageHandler {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPCustomImageHandler := new(TFPCustomImageHandler)
-	SetObjectInstance(fPCustomImageHandler, instance)
-	return fPCustomImageHandler
-}
-
-// AsFPCustomImageReader Convert a pointer object to an existing class object
-func AsFPCustomImageReader(obj interface{}) IFPCustomImageReader {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPCustomImageReader := new(TFPCustomImageReader)
-	SetObjectInstance(fPCustomImageReader, instance)
-	return fPCustomImageReader
-}
-
-// AsFPCustomImageWriter Convert a pointer object to an existing class object
-func AsFPCustomImageWriter(obj interface{}) IFPCustomImageWriter {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPCustomImageWriter := new(TFPCustomImageWriter)
-	SetObjectInstance(fPCustomImageWriter, instance)
-	return fPCustomImageWriter
-}
-
-// AsFPCustomPen Convert a pointer object to an existing class object
-func AsFPCustomPen(obj interface{}) IFPCustomPen {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPCustomPen := new(TFPCustomPen)
-	SetObjectInstance(fPCustomPen, instance)
-	return fPCustomPen
-}
-
-// AsFPCustomRegion Convert a pointer object to an existing class object
-func AsFPCustomRegion(obj interface{}) IFPCustomRegion {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPCustomRegion := new(TFPCustomRegion)
-	SetObjectInstance(fPCustomRegion, instance)
-	return fPCustomRegion
-}
-
-// AsFPImageBitmap Convert a pointer object to an existing class object
-func AsFPImageBitmap(obj interface{}) IFPImageBitmap {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPImageBitmap := new(TFPImageBitmap)
-	SetObjectInstance(fPImageBitmap, instance)
-	return fPImageBitmap
-}
-
-// AsFPList Convert a pointer object to an existing class object
-func AsFPList(obj interface{}) IFPList {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPList := new(TFPList)
-	SetObjectInstance(fPList, instance)
-	return fPList
-}
-
-// AsFPListEnumerator Convert a pointer object to an existing class object
-func AsFPListEnumerator(obj interface{}) IFPListEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPListEnumerator := new(TFPListEnumerator)
-	SetObjectInstance(fPListEnumerator, instance)
-	return fPListEnumerator
-}
-
-// AsFPMemoryImage Convert a pointer object to an existing class object
-func AsFPMemoryImage(obj interface{}) IFPMemoryImage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPMemoryImage := new(TFPMemoryImage)
-	SetObjectInstance(fPMemoryImage, instance)
-	return fPMemoryImage
-}
-
-// AsFPPalette Convert a pointer object to an existing class object
-func AsFPPalette(obj interface{}) IFPPalette {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPPalette := new(TFPPalette)
-	SetObjectInstance(fPPalette, instance)
-	return fPPalette
-}
-
-// AsFPRectRegion Convert a pointer object to an existing class object
-func AsFPRectRegion(obj interface{}) IFPRectRegion {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fPRectRegion := new(TFPRectRegion)
-	SetObjectInstance(fPRectRegion, instance)
-	return fPRectRegion
-}
-
-// AsFileDialog Convert a pointer object to an existing class object
-func AsFileDialog(obj interface{}) IFileDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fileDialog := new(TFileDialog)
-	SetObjectInstance(fileDialog, instance)
-	return fileDialog
-}
-
-// AsFindDialog Convert a pointer object to an existing class object
-func AsFindDialog(obj interface{}) IFindDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	findDialog := new(TFindDialog)
-	SetObjectInstance(findDialog, instance)
-	return findDialog
-}
-
-// AsFloatSpinEdit Convert a pointer object to an existing class object
-func AsFloatSpinEdit(obj interface{}) IFloatSpinEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	floatSpinEdit := new(TFloatSpinEdit)
-	SetObjectInstance(floatSpinEdit, instance)
-	return floatSpinEdit
-}
-
-// AsFlowPanel Convert a pointer object to an existing class object
-func AsFlowPanel(obj interface{}) IFlowPanel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	flowPanel := new(TFlowPanel)
-	SetObjectInstance(flowPanel, instance)
-	return flowPanel
-}
-
-// AsFlowPanelControl Convert a pointer object to an existing class object
-func AsFlowPanelControl(obj interface{}) IFlowPanelControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	flowPanelControl := new(TFlowPanelControl)
-	SetObjectInstance(flowPanelControl, instance)
-	return flowPanelControl
-}
-
-// AsFlowPanelControlList Convert a pointer object to an existing class object
-func AsFlowPanelControlList(obj interface{}) IFlowPanelControlList {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	flowPanelControlList := new(TFlowPanelControlList)
-	SetObjectInstance(flowPanelControlList, instance)
-	return flowPanelControlList
-}
-
-// AsFont Convert a pointer object to an existing class object
-func AsFont(obj interface{}) IFont {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	font := new(TFont)
-	SetObjectInstance(font, instance)
-	return font
-}
-
-// AsFontDialog Convert a pointer object to an existing class object
-func AsFontDialog(obj interface{}) IFontDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	fontDialog := new(TFontDialog)
-	SetObjectInstance(fontDialog, instance)
-	return fontDialog
-}
-
-// AsForm Convert a pointer object to an existing class object
-func AsForm(obj interface{}) IForm {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	form := new(TForm)
-	SetObjectInstance(form, instance)
-	return form
-}
-
-// AsFrame Convert a pointer object to an existing class object
-func AsFrame(obj interface{}) IFrame {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	frame := new(TFrame)
-	SetObjectInstance(frame, instance)
-	return frame
-}
-
-// AsGEEdit Convert a pointer object to an existing class object
-func AsGEEdit(obj interface{}) IGEEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	gEEdit := new(TGEEdit)
-	SetObjectInstance(gEEdit, instance)
-	return gEEdit
-}
-
-// AsGIFImage Convert a pointer object to an existing class object
-func AsGIFImage(obj interface{}) IGIFImage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	gIFImage := new(TGIFImage)
-	SetObjectInstance(gIFImage, instance)
-	return gIFImage
-}
-
-// AsGauge Convert a pointer object to an existing class object
-func AsGauge(obj interface{}) IGauge {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	gauge := new(TGauge)
-	SetObjectInstance(gauge, instance)
-	return gauge
-}
-
-// AsGraphic Convert a pointer object to an existing class object
-func AsGraphic(obj interface{}) IGraphic {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	graphic := new(TGraphic)
-	SetObjectInstance(graphic, instance)
-	return graphic
-}
-
-// AsGraphicControl Convert a pointer object to an existing class object
-func AsGraphicControl(obj interface{}) IGraphicControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	graphicControl := new(TGraphicControl)
-	SetObjectInstance(graphicControl, instance)
-	return graphicControl
-}
-
-// AsGraphicsObject Convert a pointer object to an existing class object
-func AsGraphicsObject(obj interface{}) IGraphicsObject {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	graphicsObject := new(TGraphicsObject)
-	SetObjectInstance(graphicsObject, instance)
-	return graphicsObject
-}
-
-// AsGridColumn Convert a pointer object to an existing class object
-func AsGridColumn(obj interface{}) IGridColumn {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	gridColumn := new(TGridColumn)
-	SetObjectInstance(gridColumn, instance)
-	return gridColumn
-}
-
-// AsGridColumnTitle Convert a pointer object to an existing class object
-func AsGridColumnTitle(obj interface{}) IGridColumnTitle {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	gridColumnTitle := new(TGridColumnTitle)
-	SetObjectInstance(gridColumnTitle, instance)
-	return gridColumnTitle
-}
-
-// AsGridColumns Convert a pointer object to an existing class object
-func AsGridColumns(obj interface{}) IGridColumns {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	gridColumns := new(TGridColumns)
-	SetObjectInstance(gridColumns, instance)
-	return gridColumns
-}
-
-// AsGroupBox Convert a pointer object to an existing class object
-func AsGroupBox(obj interface{}) IGroupBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	groupBox := new(TGroupBox)
-	SetObjectInstance(groupBox, instance)
-	return groupBox
-}
-
-// AsHeaderControl Convert a pointer object to an existing class object
-func AsHeaderControl(obj interface{}) IHeaderControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	headerControl := new(THeaderControl)
-	SetObjectInstance(headerControl, instance)
-	return headerControl
-}
-
-// AsHeaderSection Convert a pointer object to an existing class object
-func AsHeaderSection(obj interface{}) IHeaderSection {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	headerSection := new(THeaderSection)
-	SetObjectInstance(headerSection, instance)
-	return headerSection
-}
-
-// AsHeaderSections Convert a pointer object to an existing class object
-func AsHeaderSections(obj interface{}) IHeaderSections {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	headerSections := new(THeaderSections)
-	SetObjectInstance(headerSections, instance)
-	return headerSections
-}
-
-// AsIDesigner Convert a pointer object to an existing class object
-func AsIDesigner(obj interface{}) IIDesigner {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	iDesigner := new(TIDesigner)
-	SetObjectInstance(iDesigner, instance)
-	return iDesigner
-}
-
-// AsIcon Convert a pointer object to an existing class object
-func AsIcon(obj interface{}) IIcon {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	icon := new(TIcon)
-	SetObjectInstance(icon, instance)
-	return icon
-}
-
-// AsIconOptions Convert a pointer object to an existing class object
-func AsIconOptions(obj interface{}) IIconOptions {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	iconOptions := new(TIconOptions)
-	SetObjectInstance(iconOptions, instance)
-	return iconOptions
-}
-
-// AsImage Convert a pointer object to an existing class object
-func AsImage(obj interface{}) IImage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	image := new(TImage)
-	SetObjectInstance(image, instance)
-	return image
-}
-
-// AsImageButton Convert a pointer object to an existing class object
-func AsImageButton(obj interface{}) IImageButton {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	imageButton := new(TImageButton)
-	SetObjectInstance(imageButton, instance)
-	return imageButton
-}
-
-// AsImageList Convert a pointer object to an existing class object
-func AsImageList(obj interface{}) IImageList {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	imageList := new(TImageList)
-	SetObjectInstance(imageList, instance)
-	return imageList
-}
-
-// AsIniFile Convert a pointer object to an existing class object
-func AsIniFile(obj interface{}) IIniFile {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	iniFile := new(TIniFile)
-	SetObjectInstance(iniFile, instance)
-	return iniFile
-}
-
-// AsItemProp Convert a pointer object to an existing class object
-func AsItemProp(obj interface{}) IItemProp {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	itemProp := new(TItemProp)
-	SetObjectInstance(itemProp, instance)
-	return itemProp
-}
-
-// AsJPEGImage Convert a pointer object to an existing class object
-func AsJPEGImage(obj interface{}) IJPEGImage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	jPEGImage := new(TJPEGImage)
-	SetObjectInstance(jPEGImage, instance)
-	return jPEGImage
-}
-
-// AsLCLComponent Convert a pointer object to an existing class object
-func AsLCLComponent(obj interface{}) ILCLComponent {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lCLComponent := new(TLCLComponent)
-	SetObjectInstance(lCLComponent, instance)
-	return lCLComponent
-}
-
-// AsLCLReferenceComponent Convert a pointer object to an existing class object
-func AsLCLReferenceComponent(obj interface{}) ILCLReferenceComponent {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lCLReferenceComponent := new(TLCLReferenceComponent)
-	SetObjectInstance(lCLReferenceComponent, instance)
-	return lCLReferenceComponent
-}
-
-// AsLabel Convert a pointer object to an existing class object
-func AsLabel(obj interface{}) ILabel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	label := new(TLabel)
-	SetObjectInstance(label, instance)
-	return label
-}
-
-// AsLabeledEdit Convert a pointer object to an existing class object
-func AsLabeledEdit(obj interface{}) ILabeledEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	labeledEdit := new(TLabeledEdit)
-	SetObjectInstance(labeledEdit, instance)
-	return labeledEdit
-}
-
-// AsLazAccessibleObject Convert a pointer object to an existing class object
-func AsLazAccessibleObject(obj interface{}) ILazAccessibleObject {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazAccessibleObject := new(TLazAccessibleObject)
-	SetObjectInstance(lazAccessibleObject, instance)
-	return lazAccessibleObject
-}
-
-// AsLazAccessibleObjectEnumerator Convert a pointer object to an existing class object
-func AsLazAccessibleObjectEnumerator(obj interface{}) ILazAccessibleObjectEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazAccessibleObjectEnumerator := new(TLazAccessibleObjectEnumerator)
-	SetObjectInstance(lazAccessibleObjectEnumerator, instance)
-	return lazAccessibleObjectEnumerator
-}
-
-// AsLazDockForm Convert a pointer object to an existing class object
-func AsLazDockForm(obj interface{}) ILazDockForm {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazDockForm := new(TLazDockForm)
-	SetObjectInstance(lazDockForm, instance)
-	return lazDockForm
-}
-
-// AsLazDockPage Convert a pointer object to an existing class object
-func AsLazDockPage(obj interface{}) ILazDockPage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazDockPage := new(TLazDockPage)
-	SetObjectInstance(lazDockPage, instance)
-	return lazDockPage
-}
-
-// AsLazDockPages Convert a pointer object to an existing class object
-func AsLazDockPages(obj interface{}) ILazDockPages {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazDockPages := new(TLazDockPages)
-	SetObjectInstance(lazDockPages, instance)
-	return lazDockPages
-}
-
-// AsLazDockSplitter Convert a pointer object to an existing class object
-func AsLazDockSplitter(obj interface{}) ILazDockSplitter {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazDockSplitter := new(TLazDockSplitter)
-	SetObjectInstance(lazDockSplitter, instance)
-	return lazDockSplitter
-}
-
-// AsLazDockTree Convert a pointer object to an existing class object
-func AsLazDockTree(obj interface{}) ILazDockTree {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazDockTree := new(TLazDockTree)
-	SetObjectInstance(lazDockTree, instance)
-	return lazDockTree
-}
-
-// AsLazDockZone Convert a pointer object to an existing class object
-func AsLazDockZone(obj interface{}) ILazDockZone {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazDockZone := new(TLazDockZone)
-	SetObjectInstance(lazDockZone, instance)
-	return lazDockZone
-}
-
-// AsLazIntfImage Convert a pointer object to an existing class object
-func AsLazIntfImage(obj interface{}) ILazIntfImage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazIntfImage := new(TLazIntfImage)
-	SetObjectInstance(lazIntfImage, instance)
-	return lazIntfImage
-}
-
-// AsLazVirtualDrawTree Convert a pointer object to an existing class object
-func AsLazVirtualDrawTree(obj interface{}) ILazVirtualDrawTree {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazVirtualDrawTree := new(TLazVirtualDrawTree)
-	SetObjectInstance(lazVirtualDrawTree, instance)
-	return lazVirtualDrawTree
-}
-
-// AsLazVirtualStringTree Convert a pointer object to an existing class object
-func AsLazVirtualStringTree(obj interface{}) ILazVirtualStringTree {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	lazVirtualStringTree := new(TLazVirtualStringTree)
-	SetObjectInstance(lazVirtualStringTree, instance)
-	return lazVirtualStringTree
-}
-
-// AsLinkLabel Convert a pointer object to an existing class object
-func AsLinkLabel(obj interface{}) ILinkLabel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	linkLabel := new(TLinkLabel)
-	SetObjectInstance(linkLabel, instance)
-	return linkLabel
-}
-
-// AsList Convert a pointer object to an existing class object
-func AsList(obj interface{}) IList {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	list := new(TList)
-	SetObjectInstance(list, instance)
-	return list
-}
-
-// AsListBox Convert a pointer object to an existing class object
-func AsListBox(obj interface{}) IListBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	listBox := new(TListBox)
-	SetObjectInstance(listBox, instance)
-	return listBox
-}
-
-// AsListColumn Convert a pointer object to an existing class object
-func AsListColumn(obj interface{}) IListColumn {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	listColumn := new(TListColumn)
-	SetObjectInstance(listColumn, instance)
-	return listColumn
-}
-
-// AsListColumns Convert a pointer object to an existing class object
-func AsListColumns(obj interface{}) IListColumns {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	listColumns := new(TListColumns)
-	SetObjectInstance(listColumns, instance)
-	return listColumns
-}
-
-// AsListControlItem Convert a pointer object to an existing class object
-func AsListControlItem(obj interface{}) IListControlItem {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	listControlItem := new(TListControlItem)
-	SetObjectInstance(listControlItem, instance)
-	return listControlItem
-}
-
-// AsListControlItems Convert a pointer object to an existing class object
-func AsListControlItems(obj interface{}) IListControlItems {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	listControlItems := new(TListControlItems)
-	SetObjectInstance(listControlItems, instance)
-	return listControlItems
-}
-
-// AsListEnumerator Convert a pointer object to an existing class object
-func AsListEnumerator(obj interface{}) IListEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	listEnumerator := new(TListEnumerator)
-	SetObjectInstance(listEnumerator, instance)
-	return listEnumerator
-}
-
-// AsListItem Convert a pointer object to an existing class object
-func AsListItem(obj interface{}) IListItem {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	listItem := new(TListItem)
-	SetObjectInstance(listItem, instance)
-	return listItem
-}
-
-// AsListItems Convert a pointer object to an existing class object
-func AsListItems(obj interface{}) IListItems {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	listItems := new(TListItems)
-	SetObjectInstance(listItems, instance)
-	return listItems
-}
-
-// AsListItemsEnumerator Convert a pointer object to an existing class object
-func AsListItemsEnumerator(obj interface{}) IListItemsEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	listItemsEnumerator := new(TListItemsEnumerator)
-	SetObjectInstance(listItemsEnumerator, instance)
-	return listItemsEnumerator
-}
-
-// AsListView Convert a pointer object to an existing class object
-func AsListView(obj interface{}) IListView {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	listView := new(TListView)
-	SetObjectInstance(listView, instance)
-	return listView
-}
-
-// AsMainMenu Convert a pointer object to an existing class object
-func AsMainMenu(obj interface{}) IMainMenu {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	mainMenu := new(TMainMenu)
-	SetObjectInstance(mainMenu, instance)
-	return mainMenu
-}
-
-// AsMaskEdit Convert a pointer object to an existing class object
-func AsMaskEdit(obj interface{}) IMaskEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	maskEdit := new(TMaskEdit)
-	SetObjectInstance(maskEdit, instance)
-	return maskEdit
-}
-
-// AsMemo Convert a pointer object to an existing class object
-func AsMemo(obj interface{}) IMemo {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	memo := new(TMemo)
-	SetObjectInstance(memo, instance)
-	return memo
-}
-
-// AsMemoScrollBar Convert a pointer object to an existing class object
-func AsMemoScrollBar(obj interface{}) IMemoScrollBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	memoScrollBar := new(TMemoScrollBar)
-	SetObjectInstance(memoScrollBar, instance)
-	return memoScrollBar
-}
-
-// AsMemoryStream Convert a pointer object to an existing class object
-func AsMemoryStream(obj interface{}) IMemoryStream {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	memoryStream := new(TMemoryStream)
-	SetObjectInstance(memoryStream, instance)
-	return memoryStream
-}
-
-// AsMenu Convert a pointer object to an existing class object
-func AsMenu(obj interface{}) IMenu {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	menu := new(TMenu)
-	SetObjectInstance(menu, instance)
-	return menu
-}
-
-// AsMenuItem Convert a pointer object to an existing class object
-func AsMenuItem(obj interface{}) IMenuItem {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	menuItem := new(TMenuItem)
-	SetObjectInstance(menuItem, instance)
-	return menuItem
-}
-
-// AsMenuItemEnumerator Convert a pointer object to an existing class object
-func AsMenuItemEnumerator(obj interface{}) IMenuItemEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	menuItemEnumerator := new(TMenuItemEnumerator)
-	SetObjectInstance(menuItemEnumerator, instance)
-	return menuItemEnumerator
-}
-
-// AsMergedMenuItems Convert a pointer object to an existing class object
-func AsMergedMenuItems(obj interface{}) IMergedMenuItems {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	mergedMenuItems := new(TMergedMenuItems)
-	SetObjectInstance(mergedMenuItems, instance)
-	return mergedMenuItems
-}
-
-// AsMonitor Convert a pointer object to an existing class object
-func AsMonitor(obj interface{}) IMonitor {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	monitor := new(TMonitor)
-	SetObjectInstance(monitor, instance)
-	return monitor
-}
-
-// AsMouse Convert a pointer object to an existing class object
-func AsMouse(obj interface{}) IMouse {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	mouse := new(TMouse)
-	SetObjectInstance(mouse, instance)
-	return mouse
-}
+import "github.com/energye/lcl/base"
 
 // AsObject Convert a pointer object to an existing class object
-func AsObject(obj interface{}) IObject {
-	instance := GetInstance(obj)
+func AsObject(obj any) IObject {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	object := new(TObject)
-	SetObjectInstance(object, instance)
-	return object
-}
-
-// AsOpenDialog Convert a pointer object to an existing class object
-func AsOpenDialog(obj interface{}) IOpenDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	openDialog := new(TOpenDialog)
-	SetObjectInstance(openDialog, instance)
-	return openDialog
-}
-
-// AsOpenGLControl Convert a pointer object to an existing class object
-func AsOpenGLControl(obj interface{}) IOpenGLControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	openGLControl := new(TOpenGLControl)
-	SetObjectInstance(openGLControl, instance)
-	return openGLControl
-}
-
-// AsOpenPictureDialog Convert a pointer object to an existing class object
-func AsOpenPictureDialog(obj interface{}) IOpenPictureDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	openPictureDialog := new(TOpenPictureDialog)
-	SetObjectInstance(openPictureDialog, instance)
-	return openPictureDialog
-}
-
-// AsOwnedCollection Convert a pointer object to an existing class object
-func AsOwnedCollection(obj interface{}) IOwnedCollection {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	ownedCollection := new(TOwnedCollection)
-	SetObjectInstance(ownedCollection, instance)
-	return ownedCollection
-}
-
-// AsPageControl Convert a pointer object to an existing class object
-func AsPageControl(obj interface{}) IPageControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	pageControl := new(TPageControl)
-	SetObjectInstance(pageControl, instance)
-	return pageControl
-}
-
-// AsPageSetupDialog Convert a pointer object to an existing class object
-func AsPageSetupDialog(obj interface{}) IPageSetupDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	pageSetupDialog := new(TPageSetupDialog)
-	SetObjectInstance(pageSetupDialog, instance)
-	return pageSetupDialog
-}
-
-// AsPaintBox Convert a pointer object to an existing class object
-func AsPaintBox(obj interface{}) IPaintBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	paintBox := new(TPaintBox)
-	SetObjectInstance(paintBox, instance)
-	return paintBox
-}
-
-// AsPanel Convert a pointer object to an existing class object
-func AsPanel(obj interface{}) IPanel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	panel := new(TPanel)
-	SetObjectInstance(panel, instance)
-	return panel
-}
-
-// AsPaperSize Convert a pointer object to an existing class object
-func AsPaperSize(obj interface{}) IPaperSize {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	paperSize := new(TPaperSize)
-	SetObjectInstance(paperSize, instance)
-	return paperSize
-}
-
-// AsParaAttributes Convert a pointer object to an existing class object
-func AsParaAttributes(obj interface{}) IParaAttributes {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	paraAttributes := new(TParaAttributes)
-	SetObjectInstance(paraAttributes, instance)
-	return paraAttributes
-}
-
-// AsPen Convert a pointer object to an existing class object
-func AsPen(obj interface{}) IPen {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	pen := new(TPen)
-	SetObjectInstance(pen, instance)
-	return pen
+	result := new(TObject)
+	base.SetObjectInstance(result, instance)
+	return result
 }
 
 // AsPersistent Convert a pointer object to an existing class object
-func AsPersistent(obj interface{}) IPersistent {
-	instance := GetInstance(obj)
+func AsPersistent(obj any) IPersistent {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	persistent := new(TPersistent)
-	SetObjectInstance(persistent, instance)
-	return persistent
+	result := new(TPersistent)
+	base.SetObjectInstance(result, instance)
+	return result
 }
 
-// AsPicture Convert a pointer object to an existing class object
-func AsPicture(obj interface{}) IPicture {
-	instance := GetInstance(obj)
+// AsComponent Convert a pointer object to an existing class object
+func AsComponent(obj any) IComponent {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	picture := new(TPicture)
-	SetObjectInstance(picture, instance)
-	return picture
+	result := new(TComponent)
+	base.SetObjectInstance(result, instance)
+	return result
 }
 
-// AsPixmap Convert a pointer object to an existing class object
-func AsPixmap(obj interface{}) IPixmap {
-	instance := GetInstance(obj)
+// AsCustomApplication Convert a pointer object to an existing class object
+func AsCustomApplication(obj any) ICustomApplication {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	pixmap := new(TPixmap)
-	SetObjectInstance(pixmap, instance)
-	return pixmap
+	result := new(TCustomApplication)
+	base.SetObjectInstance(result, instance)
+	return result
 }
 
-// AsPopupMenu Convert a pointer object to an existing class object
-func AsPopupMenu(obj interface{}) IPopupMenu {
-	instance := GetInstance(obj)
+// AsApplication Convert a pointer object to an existing class object
+func AsApplication(obj any) IApplication {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	popupMenu := new(TPopupMenu)
-	SetObjectInstance(popupMenu, instance)
-	return popupMenu
+	result := new(TApplication)
+	base.SetObjectInstance(result, instance)
+	return result
 }
 
-// AsPortableAnyMapGraphic Convert a pointer object to an existing class object
-func AsPortableAnyMapGraphic(obj interface{}) IPortableAnyMapGraphic {
-	instance := GetInstance(obj)
+// AsLCLComponent Convert a pointer object to an existing class object
+func AsLCLComponent(obj any) ILCLComponent {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	portableAnyMapGraphic := new(TPortableAnyMapGraphic)
-	SetObjectInstance(portableAnyMapGraphic, instance)
-	return portableAnyMapGraphic
+	result := new(TLCLComponent)
+	base.SetObjectInstance(result, instance)
+	return result
 }
 
-// AsPortableNetworkGraphic Convert a pointer object to an existing class object
-func AsPortableNetworkGraphic(obj interface{}) IPortableNetworkGraphic {
-	instance := GetInstance(obj)
+// AsControl Convert a pointer object to an existing class object
+func AsControl(obj any) IControl {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	portableNetworkGraphic := new(TPortableNetworkGraphic)
-	SetObjectInstance(portableNetworkGraphic, instance)
-	return portableNetworkGraphic
-}
-
-// AsPreviewFileControl Convert a pointer object to an existing class object
-func AsPreviewFileControl(obj interface{}) IPreviewFileControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	previewFileControl := new(TPreviewFileControl)
-	SetObjectInstance(previewFileControl, instance)
-	return previewFileControl
-}
-
-// AsPreviewFileDialog Convert a pointer object to an existing class object
-func AsPreviewFileDialog(obj interface{}) IPreviewFileDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	previewFileDialog := new(TPreviewFileDialog)
-	SetObjectInstance(previewFileDialog, instance)
-	return previewFileDialog
-}
-
-// AsPrintDialog Convert a pointer object to an existing class object
-func AsPrintDialog(obj interface{}) IPrintDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	printDialog := new(TPrintDialog)
-	SetObjectInstance(printDialog, instance)
-	return printDialog
-}
-
-// AsPrinter Convert a pointer object to an existing class object
-func AsPrinter(obj interface{}) IPrinter {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	printer := new(TPrinter)
-	SetObjectInstance(printer, instance)
-	return printer
-}
-
-// AsPrinterCanvas Convert a pointer object to an existing class object
-func AsPrinterCanvas(obj interface{}) IPrinterCanvas {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	printerCanvas := new(TPrinterCanvas)
-	SetObjectInstance(printerCanvas, instance)
-	return printerCanvas
-}
-
-// AsPrinterSetupDialog Convert a pointer object to an existing class object
-func AsPrinterSetupDialog(obj interface{}) IPrinterSetupDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	printerSetupDialog := new(TPrinterSetupDialog)
-	SetObjectInstance(printerSetupDialog, instance)
-	return printerSetupDialog
-}
-
-// AsProgressBar Convert a pointer object to an existing class object
-func AsProgressBar(obj interface{}) IProgressBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	progressBar := new(TProgressBar)
-	SetObjectInstance(progressBar, instance)
-	return progressBar
-}
-
-// AsRadioButton Convert a pointer object to an existing class object
-func AsRadioButton(obj interface{}) IRadioButton {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	radioButton := new(TRadioButton)
-	SetObjectInstance(radioButton, instance)
-	return radioButton
-}
-
-// AsRadioGroup Convert a pointer object to an existing class object
-func AsRadioGroup(obj interface{}) IRadioGroup {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	radioGroup := new(TRadioGroup)
-	SetObjectInstance(radioGroup, instance)
-	return radioGroup
-}
-
-// AsRasterImage Convert a pointer object to an existing class object
-func AsRasterImage(obj interface{}) IRasterImage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	rasterImage := new(TRasterImage)
-	SetObjectInstance(rasterImage, instance)
-	return rasterImage
-}
-
-// AsRegion Convert a pointer object to an existing class object
-func AsRegion(obj interface{}) IRegion {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	region := new(TRegion)
-	SetObjectInstance(region, instance)
-	return region
-}
-
-// AsRegistry Convert a pointer object to an existing class object
-func AsRegistry(obj interface{}) IRegistry {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	registry := new(TRegistry)
-	SetObjectInstance(registry, instance)
-	return registry
-}
-
-// AsReplaceDialog Convert a pointer object to an existing class object
-func AsReplaceDialog(obj interface{}) IReplaceDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	replaceDialog := new(TReplaceDialog)
-	SetObjectInstance(replaceDialog, instance)
-	return replaceDialog
-}
-
-// AsRichEdit Convert a pointer object to an existing class object
-func AsRichEdit(obj interface{}) IRichEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	richEdit := new(TRichEdit)
-	SetObjectInstance(richEdit, instance)
-	return richEdit
-}
-
-// AsRichMemo Convert a pointer object to an existing class object
-func AsRichMemo(obj interface{}) IRichMemo {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	richMemo := new(TRichMemo)
-	SetObjectInstance(richMemo, instance)
-	return richMemo
-}
-
-// AsRichMemoInline Convert a pointer object to an existing class object
-func AsRichMemoInline(obj interface{}) IRichMemoInline {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	richMemoInline := new(TRichMemoInline)
-	SetObjectInstance(richMemoInline, instance)
-	return richMemoInline
-}
-
-// AsSaveDialog Convert a pointer object to an existing class object
-func AsSaveDialog(obj interface{}) ISaveDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	saveDialog := new(TSaveDialog)
-	SetObjectInstance(saveDialog, instance)
-	return saveDialog
-}
-
-// AsSavePictureDialog Convert a pointer object to an existing class object
-func AsSavePictureDialog(obj interface{}) ISavePictureDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	savePictureDialog := new(TSavePictureDialog)
-	SetObjectInstance(savePictureDialog, instance)
-	return savePictureDialog
-}
-
-// AsScreen Convert a pointer object to an existing class object
-func AsScreen(obj interface{}) IScreen {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	screen := new(TScreen)
-	SetObjectInstance(screen, instance)
-	return screen
-}
-
-// AsScrollBar Convert a pointer object to an existing class object
-func AsScrollBar(obj interface{}) IScrollBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	scrollBar := new(TScrollBar)
-	SetObjectInstance(scrollBar, instance)
-	return scrollBar
-}
-
-// AsScrollBarOptions Convert a pointer object to an existing class object
-func AsScrollBarOptions(obj interface{}) IScrollBarOptions {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	scrollBarOptions := new(TScrollBarOptions)
-	SetObjectInstance(scrollBarOptions, instance)
-	return scrollBarOptions
-}
-
-// AsScrollBox Convert a pointer object to an existing class object
-func AsScrollBox(obj interface{}) IScrollBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	scrollBox := new(TScrollBox)
-	SetObjectInstance(scrollBox, instance)
-	return scrollBox
-}
-
-// AsScrollingWinControl Convert a pointer object to an existing class object
-func AsScrollingWinControl(obj interface{}) IScrollingWinControl {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	scrollingWinControl := new(TScrollingWinControl)
-	SetObjectInstance(scrollingWinControl, instance)
-	return scrollingWinControl
-}
-
-// AsSelectDirectoryDialog Convert a pointer object to an existing class object
-func AsSelectDirectoryDialog(obj interface{}) ISelectDirectoryDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	selectDirectoryDialog := new(TSelectDirectoryDialog)
-	SetObjectInstance(selectDirectoryDialog, instance)
-	return selectDirectoryDialog
-}
-
-// AsShape Convert a pointer object to an existing class object
-func AsShape(obj interface{}) IShape {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	shape := new(TShape)
-	SetObjectInstance(shape, instance)
-	return shape
-}
-
-// AsShortCutList Convert a pointer object to an existing class object
-func AsShortCutList(obj interface{}) IShortCutList {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	shortCutList := new(TShortCutList)
-	SetObjectInstance(shortCutList, instance)
-	return shortCutList
-}
-
-// AsSizeConstraints Convert a pointer object to an existing class object
-func AsSizeConstraints(obj interface{}) ISizeConstraints {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	sizeConstraints := new(TSizeConstraints)
-	SetObjectInstance(sizeConstraints, instance)
-	return sizeConstraints
-}
-
-// AsSpeedButton Convert a pointer object to an existing class object
-func AsSpeedButton(obj interface{}) ISpeedButton {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	speedButton := new(TSpeedButton)
-	SetObjectInstance(speedButton, instance)
-	return speedButton
-}
-
-// AsSpinEdit Convert a pointer object to an existing class object
-func AsSpinEdit(obj interface{}) ISpinEdit {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	spinEdit := new(TSpinEdit)
-	SetObjectInstance(spinEdit, instance)
-	return spinEdit
-}
-
-// AsSplitter Convert a pointer object to an existing class object
-func AsSplitter(obj interface{}) ISplitter {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	splitter := new(TSplitter)
-	SetObjectInstance(splitter, instance)
-	return splitter
-}
-
-// AsStaticText Convert a pointer object to an existing class object
-func AsStaticText(obj interface{}) IStaticText {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	staticText := new(TStaticText)
-	SetObjectInstance(staticText, instance)
-	return staticText
-}
-
-// AsStatusBar Convert a pointer object to an existing class object
-func AsStatusBar(obj interface{}) IStatusBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	statusBar := new(TStatusBar)
-	SetObjectInstance(statusBar, instance)
-	return statusBar
-}
-
-// AsStatusPanel Convert a pointer object to an existing class object
-func AsStatusPanel(obj interface{}) IStatusPanel {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	statusPanel := new(TStatusPanel)
-	SetObjectInstance(statusPanel, instance)
-	return statusPanel
-}
-
-// AsStatusPanels Convert a pointer object to an existing class object
-func AsStatusPanels(obj interface{}) IStatusPanels {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	statusPanels := new(TStatusPanels)
-	SetObjectInstance(statusPanels, instance)
-	return statusPanels
-}
-
-// AsStream Convert a pointer object to an existing class object
-func AsStream(obj interface{}) IStream {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	stream := new(TStream)
-	SetObjectInstance(stream, instance)
-	return stream
-}
-
-// AsStringGrid Convert a pointer object to an existing class object
-func AsStringGrid(obj interface{}) IStringGrid {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	stringGrid := new(TStringGrid)
-	SetObjectInstance(stringGrid, instance)
-	return stringGrid
-}
-
-// AsStringList Convert a pointer object to an existing class object
-func AsStringList(obj interface{}) IStringList {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	stringList := new(TStringList)
-	SetObjectInstance(stringList, instance)
-	return stringList
-}
-
-// AsStringTreeOptions Convert a pointer object to an existing class object
-func AsStringTreeOptions(obj interface{}) IStringTreeOptions {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	stringTreeOptions := new(TStringTreeOptions)
-	SetObjectInstance(stringTreeOptions, instance)
-	return stringTreeOptions
-}
-
-// AsStrings Convert a pointer object to an existing class object
-func AsStrings(obj interface{}) IStrings {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	strings := new(TStrings)
-	SetObjectInstance(strings, instance)
-	return strings
-}
-
-// AsStringsEnumerator Convert a pointer object to an existing class object
-func AsStringsEnumerator(obj interface{}) IStringsEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	stringsEnumerator := new(TStringsEnumerator)
-	SetObjectInstance(stringsEnumerator, instance)
-	return stringsEnumerator
-}
-
-// AsTabSheet Convert a pointer object to an existing class object
-func AsTabSheet(obj interface{}) ITabSheet {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	tabSheet := new(TTabSheet)
-	SetObjectInstance(tabSheet, instance)
-	return tabSheet
-}
-
-// AsTaskDialog Convert a pointer object to an existing class object
-func AsTaskDialog(obj interface{}) ITaskDialog {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	taskDialog := new(TTaskDialog)
-	SetObjectInstance(taskDialog, instance)
-	return taskDialog
-}
-
-// AsTaskDialogBaseButtonItem Convert a pointer object to an existing class object
-func AsTaskDialogBaseButtonItem(obj interface{}) ITaskDialogBaseButtonItem {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	taskDialogBaseButtonItem := new(TTaskDialogBaseButtonItem)
-	SetObjectInstance(taskDialogBaseButtonItem, instance)
-	return taskDialogBaseButtonItem
-}
-
-// AsTaskDialogButtonItem Convert a pointer object to an existing class object
-func AsTaskDialogButtonItem(obj interface{}) ITaskDialogButtonItem {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	taskDialogButtonItem := new(TTaskDialogButtonItem)
-	SetObjectInstance(taskDialogButtonItem, instance)
-	return taskDialogButtonItem
-}
-
-// AsTaskDialogButtons Convert a pointer object to an existing class object
-func AsTaskDialogButtons(obj interface{}) ITaskDialogButtons {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	taskDialogButtons := new(TTaskDialogButtons)
-	SetObjectInstance(taskDialogButtons, instance)
-	return taskDialogButtons
-}
-
-// AsTaskDialogButtonsEnumerator Convert a pointer object to an existing class object
-func AsTaskDialogButtonsEnumerator(obj interface{}) ITaskDialogButtonsEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	taskDialogButtonsEnumerator := new(TTaskDialogButtonsEnumerator)
-	SetObjectInstance(taskDialogButtonsEnumerator, instance)
-	return taskDialogButtonsEnumerator
-}
-
-// AsTaskDialogRadioButtonItem Convert a pointer object to an existing class object
-func AsTaskDialogRadioButtonItem(obj interface{}) ITaskDialogRadioButtonItem {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	taskDialogRadioButtonItem := new(TTaskDialogRadioButtonItem)
-	SetObjectInstance(taskDialogRadioButtonItem, instance)
-	return taskDialogRadioButtonItem
-}
-
-// AsTextAttributes Convert a pointer object to an existing class object
-func AsTextAttributes(obj interface{}) ITextAttributes {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	textAttributes := new(TTextAttributes)
-	SetObjectInstance(textAttributes, instance)
-	return textAttributes
-}
-
-// AsThemeServices Convert a pointer object to an existing class object
-func AsThemeServices(obj interface{}) IThemeServices {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	themeServices := new(TThemeServices)
-	SetObjectInstance(themeServices, instance)
-	return themeServices
-}
-
-// AsTimer Convert a pointer object to an existing class object
-func AsTimer(obj interface{}) ITimer {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	timer := new(TTimer)
-	SetObjectInstance(timer, instance)
-	return timer
-}
-
-// AsToggleBox Convert a pointer object to an existing class object
-func AsToggleBox(obj interface{}) IToggleBox {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	toggleBox := new(TToggleBox)
-	SetObjectInstance(toggleBox, instance)
-	return toggleBox
-}
-
-// AsToolBar Convert a pointer object to an existing class object
-func AsToolBar(obj interface{}) IToolBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	toolBar := new(TToolBar)
-	SetObjectInstance(toolBar, instance)
-	return toolBar
-}
-
-// AsToolBarEnumerator Convert a pointer object to an existing class object
-func AsToolBarEnumerator(obj interface{}) IToolBarEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	toolBarEnumerator := new(TToolBarEnumerator)
-	SetObjectInstance(toolBarEnumerator, instance)
-	return toolBarEnumerator
-}
-
-// AsToolButton Convert a pointer object to an existing class object
-func AsToolButton(obj interface{}) IToolButton {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	toolButton := new(TToolButton)
-	SetObjectInstance(toolButton, instance)
-	return toolButton
-}
-
-// AsToolWindow Convert a pointer object to an existing class object
-func AsToolWindow(obj interface{}) IToolWindow {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	toolWindow := new(TToolWindow)
-	SetObjectInstance(toolWindow, instance)
-	return toolWindow
-}
-
-// AsTrackBar Convert a pointer object to an existing class object
-func AsTrackBar(obj interface{}) ITrackBar {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	trackBar := new(TTrackBar)
-	SetObjectInstance(trackBar, instance)
-	return trackBar
-}
-
-// AsTrayIcon Convert a pointer object to an existing class object
-func AsTrayIcon(obj interface{}) ITrayIcon {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	trayIcon := new(TTrayIcon)
-	SetObjectInstance(trayIcon, instance)
-	return trayIcon
-}
-
-// AsTreeNode Convert a pointer object to an existing class object
-func AsTreeNode(obj interface{}) ITreeNode {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	treeNode := new(TTreeNode)
-	SetObjectInstance(treeNode, instance)
-	return treeNode
-}
-
-// AsTreeNodes Convert a pointer object to an existing class object
-func AsTreeNodes(obj interface{}) ITreeNodes {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	treeNodes := new(TTreeNodes)
-	SetObjectInstance(treeNodes, instance)
-	return treeNodes
-}
-
-// AsTreeNodesEnumerator Convert a pointer object to an existing class object
-func AsTreeNodesEnumerator(obj interface{}) ITreeNodesEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	treeNodesEnumerator := new(TTreeNodesEnumerator)
-	SetObjectInstance(treeNodesEnumerator, instance)
-	return treeNodesEnumerator
-}
-
-// AsTreeView Convert a pointer object to an existing class object
-func AsTreeView(obj interface{}) ITreeView {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	treeView := new(TTreeView)
-	SetObjectInstance(treeView, instance)
-	return treeView
-}
-
-// AsUpDown Convert a pointer object to an existing class object
-func AsUpDown(obj interface{}) IUpDown {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	upDown := new(TUpDown)
-	SetObjectInstance(upDown, instance)
-	return upDown
-}
-
-// AsVTColors Convert a pointer object to an existing class object
-func AsVTColors(obj interface{}) IVTColors {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	vTColors := new(TVTColors)
-	SetObjectInstance(vTColors, instance)
-	return vTColors
-}
-
-// AsVTDragImage Convert a pointer object to an existing class object
-func AsVTDragImage(obj interface{}) IVTDragImage {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	vTDragImage := new(TVTDragImage)
-	SetObjectInstance(vTDragImage, instance)
-	return vTDragImage
-}
-
-// AsVTFixedAreaConstraints Convert a pointer object to an existing class object
-func AsVTFixedAreaConstraints(obj interface{}) IVTFixedAreaConstraints {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	vTFixedAreaConstraints := new(TVTFixedAreaConstraints)
-	SetObjectInstance(vTFixedAreaConstraints, instance)
-	return vTFixedAreaConstraints
-}
-
-// AsVTHeader Convert a pointer object to an existing class object
-func AsVTHeader(obj interface{}) IVTHeader {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	vTHeader := new(TVTHeader)
-	SetObjectInstance(vTHeader, instance)
-	return vTHeader
-}
-
-// AsVTVirtualNodeEnumerator Convert a pointer object to an existing class object
-func AsVTVirtualNodeEnumerator(obj interface{}) IVTVirtualNodeEnumerator {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	vTVirtualNodeEnumerator := new(TVTVirtualNodeEnumerator)
-	SetObjectInstance(vTVirtualNodeEnumerator, instance)
-	return vTVirtualNodeEnumerator
-}
-
-// AsValueListEditor Convert a pointer object to an existing class object
-func AsValueListEditor(obj interface{}) IValueListEditor {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	valueListEditor := new(TValueListEditor)
-	SetObjectInstance(valueListEditor, instance)
-	return valueListEditor
-}
-
-// AsValueListStrings Convert a pointer object to an existing class object
-func AsValueListStrings(obj interface{}) IValueListStrings {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	valueListStrings := new(TValueListStrings)
-	SetObjectInstance(valueListStrings, instance)
-	return valueListStrings
-}
-
-// AsVirtualTreeColumn Convert a pointer object to an existing class object
-func AsVirtualTreeColumn(obj interface{}) IVirtualTreeColumn {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	virtualTreeColumn := new(TVirtualTreeColumn)
-	SetObjectInstance(virtualTreeColumn, instance)
-	return virtualTreeColumn
-}
-
-// AsVirtualTreeColumns Convert a pointer object to an existing class object
-func AsVirtualTreeColumns(obj interface{}) IVirtualTreeColumns {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	virtualTreeColumns := new(TVirtualTreeColumns)
-	SetObjectInstance(virtualTreeColumns, instance)
-	return virtualTreeColumns
-}
-
-// AsVirtualTreeOptions Convert a pointer object to an existing class object
-func AsVirtualTreeOptions(obj interface{}) IVirtualTreeOptions {
-	instance := GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	virtualTreeOptions := new(TVirtualTreeOptions)
-	SetObjectInstance(virtualTreeOptions, instance)
-	return virtualTreeOptions
+	result := new(TControl)
+	base.SetObjectInstance(result, instance)
+	return result
 }
 
 // AsWinControl Convert a pointer object to an existing class object
-func AsWinControl(obj interface{}) IWinControl {
-	instance := GetInstance(obj)
+func AsWinControl(obj any) IWinControl {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	winControl := new(TWinControl)
-	SetObjectInstance(winControl, instance)
-	return winControl
+	result := new(TWinControl)
+	base.SetObjectInstance(result, instance)
+	return result
 }
 
-// AsWinControlEnumerator Convert a pointer object to an existing class object
-func AsWinControlEnumerator(obj interface{}) IWinControlEnumerator {
-	instance := GetInstance(obj)
+// AsCustomControl Convert a pointer object to an existing class object
+func AsCustomControl(obj any) ICustomControl {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	winControlEnumerator := new(TWinControlEnumerator)
-	SetObjectInstance(winControlEnumerator, instance)
-	return winControlEnumerator
+	result := new(TCustomControl)
+	base.SetObjectInstance(result, instance)
+	return result
 }
 
-// AsWindowMagnetOptions Convert a pointer object to an existing class object
-func AsWindowMagnetOptions(obj interface{}) IWindowMagnetOptions {
-	instance := GetInstance(obj)
+// AsScrollingWinControl Convert a pointer object to an existing class object
+func AsScrollingWinControl(obj any) IScrollingWinControl {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	windowMagnetOptions := new(TWindowMagnetOptions)
-	SetObjectInstance(windowMagnetOptions, instance)
-	return windowMagnetOptions
+	result := new(TScrollingWinControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomDesignControl Convert a pointer object to an existing class object
+func AsCustomDesignControl(obj any) ICustomDesignControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomDesignControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomForm Convert a pointer object to an existing class object
+func AsCustomForm(obj any) ICustomForm {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomForm)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsForm Convert a pointer object to an existing class object
+func AsForm(obj any) IForm {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TForm)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEngForm Convert a pointer object to an existing class object
+func AsEngForm(obj any) IEngForm {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEngForm)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsButtonControl Convert a pointer object to an existing class object
+func AsButtonControl(obj any) IButtonControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TButtonControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomButton Convert a pointer object to an existing class object
+func AsCustomButton(obj any) ICustomButton {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsButton Convert a pointer object to an existing class object
+func AsButton(obj any) IButton {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsBasicAction Convert a pointer object to an existing class object
+func AsBasicAction(obj any) IBasicAction {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TBasicAction)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomEdit Convert a pointer object to an existing class object
+func AsCustomEdit(obj any) ICustomEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEdit Convert a pointer object to an existing class object
+func AsEdit(obj any) IEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomAbstractGroupedEdit Convert a pointer object to an existing class object
+func AsCustomAbstractGroupedEdit(obj any) ICustomAbstractGroupedEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomAbstractGroupedEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomEditButton Convert a pointer object to an existing class object
+func AsCustomEditButton(obj any) ICustomEditButton {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomEditButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEditButton Convert a pointer object to an existing class object
+func AsEditButton(obj any) IEditButton {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEditButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomMaskEdit Convert a pointer object to an existing class object
+func AsCustomMaskEdit(obj any) ICustomMaskEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomMaskEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsGEEdit Convert a pointer object to an existing class object
+func AsGEEdit(obj any) IGEEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TGEEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEbEdit Convert a pointer object to an existing class object
+func AsEbEdit(obj any) IEbEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEbEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMenu Convert a pointer object to an existing class object
+func AsMenu(obj any) IMenu {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMenu)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMainMenu Convert a pointer object to an existing class object
+func AsMainMenu(obj any) IMainMenu {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMainMenu)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPopupMenu Convert a pointer object to an existing class object
+func AsPopupMenu(obj any) IPopupMenu {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPopupMenu)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomMemo Convert a pointer object to an existing class object
+func AsCustomMemo(obj any) ICustomMemo {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomMemo)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMemo Convert a pointer object to an existing class object
+func AsMemo(obj any) IMemo {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMemo)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomCheckBox Convert a pointer object to an existing class object
+func AsCustomCheckBox(obj any) ICustomCheckBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomCheckBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCheckBox Convert a pointer object to an existing class object
+func AsCheckBox(obj any) ICheckBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCheckBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsRadioButton Convert a pointer object to an existing class object
+func AsRadioButton(obj any) IRadioButton {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TRadioButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomGroupBox Convert a pointer object to an existing class object
+func AsCustomGroupBox(obj any) ICustomGroupBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomGroupBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsGroupBox Convert a pointer object to an existing class object
+func AsGroupBox(obj any) IGroupBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TGroupBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsGraphicControl Convert a pointer object to an existing class object
+func AsGraphicControl(obj any) IGraphicControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TGraphicControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomLabel Convert a pointer object to an existing class object
+func AsCustomLabel(obj any) ICustomLabel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomLabel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLabel Convert a pointer object to an existing class object
+func AsLabel(obj any) ILabel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLabel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomListBox Convert a pointer object to an existing class object
+func AsCustomListBox(obj any) ICustomListBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomListBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListBox Convert a pointer object to an existing class object
+func AsListBox(obj any) IListBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomComboBox Convert a pointer object to an existing class object
+func AsCustomComboBox(obj any) ICustomComboBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomComboBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsComboBox Convert a pointer object to an existing class object
+func AsComboBox(obj any) IComboBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TComboBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomPanel Convert a pointer object to an existing class object
+func AsCustomPanel(obj any) ICustomPanel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomPanel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPanel Convert a pointer object to an existing class object
+func AsPanel(obj any) IPanel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPanel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomImage Convert a pointer object to an existing class object
+func AsCustomImage(obj any) ICustomImage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomImage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsImage Convert a pointer object to an existing class object
+func AsImage(obj any) IImage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TImage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCanvasHelper Convert a pointer object to an existing class object
+func AsFPCanvasHelper(obj any) IFPCanvasHelper {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCanvasHelper)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCustomFont Convert a pointer object to an existing class object
+func AsFPCustomFont(obj any) IFPCustomFont {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCustomFont)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFont Convert a pointer object to an existing class object
+func AsFont(obj any) IFont {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFont)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsGraphicsObject Convert a pointer object to an existing class object
+func AsGraphicsObject(obj any) IGraphicsObject {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TGraphicsObject)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsRegion Convert a pointer object to an existing class object
+func AsRegion(obj any) IRegion {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TRegion)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLinkLabel Convert a pointer object to an existing class object
+func AsLinkLabel(obj any) ILinkLabel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLinkLabel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomSpeedButton Convert a pointer object to an existing class object
+func AsCustomSpeedButton(obj any) ICustomSpeedButton {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomSpeedButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSpeedButton Convert a pointer object to an existing class object
+func AsSpeedButton(obj any) ISpeedButton {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSpeedButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomSplitter Convert a pointer object to an existing class object
+func AsCustomSplitter(obj any) ICustomSplitter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomSplitter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSplitter Convert a pointer object to an existing class object
+func AsSplitter(obj any) ISplitter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSplitter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomRadioGroup Convert a pointer object to an existing class object
+func AsCustomRadioGroup(obj any) ICustomRadioGroup {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomRadioGroup)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsRadioGroup Convert a pointer object to an existing class object
+func AsRadioGroup(obj any) IRadioGroup {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TRadioGroup)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomStaticText Convert a pointer object to an existing class object
+func AsCustomStaticText(obj any) ICustomStaticText {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomStaticText)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStaticText Convert a pointer object to an existing class object
+func AsStaticText(obj any) IStaticText {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStaticText)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomColorBox Convert a pointer object to an existing class object
+func AsCustomColorBox(obj any) ICustomColorBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomColorBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsColorBox Convert a pointer object to an existing class object
+func AsColorBox(obj any) IColorBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TColorBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomColorListBox Convert a pointer object to an existing class object
+func AsCustomColorListBox(obj any) ICustomColorListBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomColorListBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsColorListBox Convert a pointer object to an existing class object
+func AsColorListBox(obj any) IColorListBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TColorListBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCommonDialog Convert a pointer object to an existing class object
+func AsCommonDialog(obj any) ICommonDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCommonDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFileDialog Convert a pointer object to an existing class object
+func AsFileDialog(obj any) IFileDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFileDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsOpenDialog Convert a pointer object to an existing class object
+func AsOpenDialog(obj any) IOpenDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TOpenDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSaveDialog Convert a pointer object to an existing class object
+func AsSaveDialog(obj any) ISaveDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSaveDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsColorDialog Convert a pointer object to an existing class object
+func AsColorDialog(obj any) IColorDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TColorDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFontDialog Convert a pointer object to an existing class object
+func AsFontDialog(obj any) IFontDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFontDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomPrintDialog Convert a pointer object to an existing class object
+func AsCustomPrintDialog(obj any) ICustomPrintDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomPrintDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPrintDialog Convert a pointer object to an existing class object
+func AsPrintDialog(obj any) IPrintDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPrintDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPreviewFileDialog Convert a pointer object to an existing class object
+func AsPreviewFileDialog(obj any) IPreviewFileDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPreviewFileDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsOpenPictureDialog Convert a pointer object to an existing class object
+func AsOpenPictureDialog(obj any) IOpenPictureDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TOpenPictureDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSavePictureDialog Convert a pointer object to an existing class object
+func AsSavePictureDialog(obj any) ISavePictureDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSavePictureDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSelectDirectoryDialog Convert a pointer object to an existing class object
+func AsSelectDirectoryDialog(obj any) ISelectDirectoryDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSelectDirectoryDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsExtCommonDialog Convert a pointer object to an existing class object
+func AsExtCommonDialog(obj any) IExtCommonDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TExtCommonDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCalendarDialog Convert a pointer object to an existing class object
+func AsCalendarDialog(obj any) ICalendarDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCalendarDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomRichMemo Convert a pointer object to an existing class object
+func AsCustomRichMemo(obj any) ICustomRichMemo {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomRichMemo)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsRichMemo Convert a pointer object to an existing class object
+func AsRichMemo(obj any) IRichMemo {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TRichMemo)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsRichEdit Convert a pointer object to an existing class object
+func AsRichEdit(obj any) IRichEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TRichEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomTrackBar Convert a pointer object to an existing class object
+func AsCustomTrackBar(obj any) ICustomTrackBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomTrackBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTrackBar Convert a pointer object to an existing class object
+func AsTrackBar(obj any) ITrackBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTrackBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomImageList Convert a pointer object to an existing class object
+func AsCustomImageList(obj any) ICustomImageList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomImageList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDragImageList Convert a pointer object to an existing class object
+func AsDragImageList(obj any) IDragImageList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDragImageList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsImageList Convert a pointer object to an existing class object
+func AsImageList(obj any) IImageList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TImageList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomUpDown Convert a pointer object to an existing class object
+func AsCustomUpDown(obj any) ICustomUpDown {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomUpDown)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsUpDown Convert a pointer object to an existing class object
+func AsUpDown(obj any) IUpDown {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TUpDown)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomProgressBar Convert a pointer object to an existing class object
+func AsCustomProgressBar(obj any) ICustomProgressBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomProgressBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsProgressBar Convert a pointer object to an existing class object
+func AsProgressBar(obj any) IProgressBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TProgressBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomDateTimePicker Convert a pointer object to an existing class object
+func AsCustomDateTimePicker(obj any) ICustomDateTimePicker {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomDateTimePicker)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDateTimePicker Convert a pointer object to an existing class object
+func AsDateTimePicker(obj any) IDateTimePicker {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDateTimePicker)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTimeEdit Convert a pointer object to an existing class object
+func AsTimeEdit(obj any) ITimeEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTimeEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFileNameEdit Convert a pointer object to an existing class object
+func AsFileNameEdit(obj any) IFileNameEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFileNameEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomCalendar Convert a pointer object to an existing class object
+func AsCustomCalendar(obj any) ICustomCalendar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomCalendar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCalendar Convert a pointer object to an existing class object
+func AsCalendar(obj any) ICalendar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCalendar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomListView Convert a pointer object to an existing class object
+func AsCustomListView(obj any) ICustomListView {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomListView)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListView Convert a pointer object to an existing class object
+func AsListView(obj any) IListView {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListView)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomTreeView Convert a pointer object to an existing class object
+func AsCustomTreeView(obj any) ICustomTreeView {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomTreeView)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTreeView Convert a pointer object to an existing class object
+func AsTreeView(obj any) ITreeView {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTreeView)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStatusBar Convert a pointer object to an existing class object
+func AsStatusBar(obj any) IStatusBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStatusBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsToolWindow Convert a pointer object to an existing class object
+func AsToolWindow(obj any) IToolWindow {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TToolWindow)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsToolBar Convert a pointer object to an existing class object
+func AsToolBar(obj any) IToolBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TToolBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomBitBtn Convert a pointer object to an existing class object
+func AsCustomBitBtn(obj any) ICustomBitBtn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomBitBtn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsBitBtn Convert a pointer object to an existing class object
+func AsBitBtn(obj any) IBitBtn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TBitBtn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsGraphic Convert a pointer object to an existing class object
+func AsGraphic(obj any) IGraphic {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TGraphic)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsRasterImage Convert a pointer object to an existing class object
+func AsRasterImage(obj any) IRasterImage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TRasterImage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomIcon Convert a pointer object to an existing class object
+func AsCustomIcon(obj any) ICustomIcon {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomIcon)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsIcon Convert a pointer object to an existing class object
+func AsIcon(obj any) IIcon {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TIcon)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomBitmap Convert a pointer object to an existing class object
+func AsCustomBitmap(obj any) ICustomBitmap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomBitmap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPImageBitmap Convert a pointer object to an existing class object
+func AsFPImageBitmap(obj any) IFPImageBitmap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPImageBitmap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsBitmap Convert a pointer object to an existing class object
+func AsBitmap(obj any) IBitmap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TBitmap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStream Convert a pointer object to an existing class object
+func AsStream(obj any) IStream {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStream)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomMemoryStream Convert a pointer object to an existing class object
+func AsCustomMemoryStream(obj any) ICustomMemoryStream {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomMemoryStream)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMemoryStream Convert a pointer object to an existing class object
+func AsMemoryStream(obj any) IMemoryStream {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMemoryStream)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStringWrap Convert a pointer object to an existing class object
+func AsStringWrap(obj any) IStringWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStringWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStrings Convert a pointer object to an existing class object
+func AsStrings(obj any) IStrings {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStrings)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStringList Convert a pointer object to an existing class object
+func AsStringList(obj any) IStringList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStringList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCustomBrush Convert a pointer object to an existing class object
+func AsFPCustomBrush(obj any) IFPCustomBrush {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCustomBrush)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsBrush Convert a pointer object to an existing class object
+func AsBrush(obj any) IBrush {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TBrush)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCustomPen Convert a pointer object to an existing class object
+func AsFPCustomPen(obj any) IFPCustomPen {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCustomPen)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPen Convert a pointer object to an existing class object
+func AsPen(obj any) IPen {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPen)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMenuItem Convert a pointer object to an existing class object
+func AsMenuItem(obj any) IMenuItem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMenuItem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPicture Convert a pointer object to an existing class object
+func AsPicture(obj any) IPicture {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPicture)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCollection Convert a pointer object to an existing class object
+func AsCollection(obj any) ICollection {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCollection)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListColumns Convert a pointer object to an existing class object
+func AsListColumns(obj any) IListColumns {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListColumns)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListItems Convert a pointer object to an existing class object
+func AsListItems(obj any) IListItems {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListItems)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTreeNodes Convert a pointer object to an existing class object
+func AsTreeNodes(obj any) ITreeNodes {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTreeNodes)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListItem Convert a pointer object to an existing class object
+func AsListItem(obj any) IListItem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListItem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTreeNode Convert a pointer object to an existing class object
+func AsTreeNode(obj any) ITreeNode {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTreeNode)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomTabControl Convert a pointer object to an existing class object
+func AsCustomTabControl(obj any) ICustomTabControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomTabControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPageControl Convert a pointer object to an existing class object
+func AsPageControl(obj any) IPageControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPageControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomPage Convert a pointer object to an existing class object
+func AsCustomPage(obj any) ICustomPage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomPage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTabSheet Convert a pointer object to an existing class object
+func AsTabSheet(obj any) ITabSheet {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTabSheet)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsScreen Convert a pointer object to an existing class object
+func AsScreen(obj any) IScreen {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TScreen)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMouse Convert a pointer object to an existing class object
+func AsMouse(obj any) IMouse {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMouse)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCollectionItem Convert a pointer object to an existing class object
+func AsCollectionItem(obj any) ICollectionItem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCollectionItem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListColumn Convert a pointer object to an existing class object
+func AsListColumn(obj any) IListColumn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListColumn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStatusPanels Convert a pointer object to an existing class object
+func AsStatusPanels(obj any) IStatusPanels {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStatusPanels)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStatusPanel Convert a pointer object to an existing class object
+func AsStatusPanel(obj any) IStatusPanel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStatusPanel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomFloatSpinEdit Convert a pointer object to an existing class object
+func AsCustomFloatSpinEdit(obj any) ICustomFloatSpinEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomFloatSpinEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFloatSpinEdit Convert a pointer object to an existing class object
+func AsFloatSpinEdit(obj any) IFloatSpinEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFloatSpinEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDirectoryEdit Convert a pointer object to an existing class object
+func AsDirectoryEdit(obj any) IDirectoryEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDirectoryEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFlowPanelControl Convert a pointer object to an existing class object
+func AsFlowPanelControl(obj any) IFlowPanelControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFlowPanelControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsOwnedCollection Convert a pointer object to an existing class object
+func AsOwnedCollection(obj any) IOwnedCollection {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TOwnedCollection)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFlowPanelControlList Convert a pointer object to an existing class object
+func AsFlowPanelControlList(obj any) IFlowPanelControlList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFlowPanelControlList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsColorButton Convert a pointer object to an existing class object
+func AsColorButton(obj any) IColorButton {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TColorButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomSpinEdit Convert a pointer object to an existing class object
+func AsCustomSpinEdit(obj any) ICustomSpinEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomSpinEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSpinEdit Convert a pointer object to an existing class object
+func AsSpinEdit(obj any) ISpinEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSpinEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCustomCanvas Convert a pointer object to an existing class object
+func AsFPCustomCanvas(obj any) IFPCustomCanvas {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCustomCanvas)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCanvas Convert a pointer object to an existing class object
+func AsCanvas(obj any) ICanvas {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCanvas)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPortableNetworkGraphic Convert a pointer object to an existing class object
+func AsPortableNetworkGraphic(obj any) IPortableNetworkGraphic {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPortableNetworkGraphic)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsJPEGImage Convert a pointer object to an existing class object
+func AsJPEGImage(obj any) IJPEGImage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TJPEGImage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsGIFImage Convert a pointer object to an existing class object
+func AsGIFImage(obj any) IGIFImage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TGIFImage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomActionList Convert a pointer object to an existing class object
+func AsCustomActionList(obj any) ICustomActionList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomActionList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsActionList Convert a pointer object to an existing class object
+func AsActionList(obj any) IActionList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TActionList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsContainedAction Convert a pointer object to an existing class object
+func AsContainedAction(obj any) IContainedAction {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TContainedAction)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomAction Convert a pointer object to an existing class object
+func AsCustomAction(obj any) ICustomAction {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomAction)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsAction Convert a pointer object to an existing class object
+func AsAction(obj any) IAction {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TAction)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsToolButton Convert a pointer object to an existing class object
+func AsToolButton(obj any) IToolButton {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TToolButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomIniFile Convert a pointer object to an existing class object
+func AsCustomIniFile(obj any) ICustomIniFile {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomIniFile)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsIniFile Convert a pointer object to an existing class object
+func AsIniFile(obj any) IIniFile {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TIniFile)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsRegistry Convert a pointer object to an existing class object
+func AsRegistry(obj any) IRegistry {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TRegistry)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsClipboard Convert a pointer object to an existing class object
+func AsClipboard(obj any) IClipboard {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TClipboard)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMonitor Convert a pointer object to an existing class object
+func AsMonitor(obj any) IMonitor {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMonitor)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPaintBox Convert a pointer object to an existing class object
+func AsPaintBox(obj any) IPaintBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPaintBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomTimer Convert a pointer object to an existing class object
+func AsCustomTimer(obj any) ICustomTimer {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomTimer)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTimer Convert a pointer object to an existing class object
+func AsTimer(obj any) ITimer {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTimer)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsList Convert a pointer object to an existing class object
+func AsList(obj any) IList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsParaAttributes Convert a pointer object to an existing class object
+func AsParaAttributes(obj any) IParaAttributes {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TParaAttributes)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTextAttributes Convert a pointer object to an existing class object
+func AsTextAttributes(obj any) ITextAttributes {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTextAttributes)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsIconOptions Convert a pointer object to an existing class object
+func AsIconOptions(obj any) IIconOptions {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TIconOptions)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomScrollBar Convert a pointer object to an existing class object
+func AsCustomScrollBar(obj any) ICustomScrollBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomScrollBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsScrollBar Convert a pointer object to an existing class object
+func AsScrollBar(obj any) IScrollBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TScrollBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMaskEdit Convert a pointer object to an existing class object
+func AsMaskEdit(obj any) IMaskEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMaskEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomShape Convert a pointer object to an existing class object
+func AsCustomShape(obj any) ICustomShape {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomShape)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsShape Convert a pointer object to an existing class object
+func AsShape(obj any) IShape {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TShape)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsBevel Convert a pointer object to an existing class object
+func AsBevel(obj any) IBevel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TBevel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsScrollBox Convert a pointer object to an existing class object
+func AsScrollBox(obj any) IScrollBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TScrollBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomCheckListBox Convert a pointer object to an existing class object
+func AsCustomCheckListBox(obj any) ICustomCheckListBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomCheckListBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCheckListBox Convert a pointer object to an existing class object
+func AsCheckListBox(obj any) ICheckListBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCheckListBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsATGauge Convert a pointer object to an existing class object
+func AsATGauge(obj any) IATGauge {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TATGauge)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsGauge Convert a pointer object to an existing class object
+func AsGauge(obj any) IGauge {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TGauge)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsImageButton Convert a pointer object to an existing class object
+func AsImageButton(obj any) IImageButton {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TImageButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFindDialog Convert a pointer object to an existing class object
+func AsFindDialog(obj any) IFindDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFindDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsReplaceDialog Convert a pointer object to an existing class object
+func AsReplaceDialog(obj any) IReplaceDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TReplaceDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomPrinterSetupDialog Convert a pointer object to an existing class object
+func AsCustomPrinterSetupDialog(obj any) ICustomPrinterSetupDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomPrinterSetupDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPrinterSetupDialog Convert a pointer object to an existing class object
+func AsPrinterSetupDialog(obj any) IPrinterSetupDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPrinterSetupDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPageSetupDialog Convert a pointer object to an existing class object
+func AsPageSetupDialog(obj any) IPageSetupDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPageSetupDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDragObject Convert a pointer object to an existing class object
+func AsDragObject(obj any) IDragObject {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDragObject)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDragDockObject Convert a pointer object to an existing class object
+func AsDragDockObject(obj any) IDragDockObject {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDragDockObject)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomGrid Convert a pointer object to an existing class object
+func AsCustomGrid(obj any) ICustomGrid {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomGrid)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomDrawGrid Convert a pointer object to an existing class object
+func AsCustomDrawGrid(obj any) ICustomDrawGrid {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomDrawGrid)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomStringGrid Convert a pointer object to an existing class object
+func AsCustomStringGrid(obj any) ICustomStringGrid {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomStringGrid)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStringGrid Convert a pointer object to an existing class object
+func AsStringGrid(obj any) IStringGrid {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStringGrid)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDrawGrid Convert a pointer object to an existing class object
+func AsDrawGrid(obj any) IDrawGrid {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDrawGrid)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsValueListEditor Convert a pointer object to an existing class object
+func AsValueListEditor(obj any) IValueListEditor {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TValueListEditor)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomHeaderControl Convert a pointer object to an existing class object
+func AsCustomHeaderControl(obj any) ICustomHeaderControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomHeaderControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsHeaderControl Convert a pointer object to an existing class object
+func AsHeaderControl(obj any) IHeaderControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(THeaderControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsHeaderSection Convert a pointer object to an existing class object
+func AsHeaderSection(obj any) IHeaderSection {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(THeaderSection)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsHeaderSections Convert a pointer object to an existing class object
+func AsHeaderSections(obj any) IHeaderSections {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(THeaderSections)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomLabeledEdit Convert a pointer object to an existing class object
+func AsCustomLabeledEdit(obj any) ICustomLabeledEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomLabeledEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLabeledEdit Convert a pointer object to an existing class object
+func AsLabeledEdit(obj any) ILabeledEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLabeledEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsBoundLabel Convert a pointer object to an existing class object
+func AsBoundLabel(obj any) IBoundLabel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TBoundLabel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomFlowPanel Convert a pointer object to an existing class object
+func AsCustomFlowPanel(obj any) ICustomFlowPanel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomFlowPanel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFlowPanel Convert a pointer object to an existing class object
+func AsFlowPanel(obj any) IFlowPanel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFlowPanel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomCoolBar Convert a pointer object to an existing class object
+func AsCustomCoolBar(obj any) ICustomCoolBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomCoolBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCoolBar Convert a pointer object to an existing class object
+func AsCoolBar(obj any) ICoolBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCoolBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCoolBands Convert a pointer object to an existing class object
+func AsCoolBands(obj any) ICoolBands {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCoolBands)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCoolBand Convert a pointer object to an existing class object
+func AsCoolBand(obj any) ICoolBand {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCoolBand)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPrinter Convert a pointer object to an existing class object
+func AsPrinter(obj any) IPrinter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPrinter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomTaskDialog Convert a pointer object to an existing class object
+func AsCustomTaskDialog(obj any) ICustomTaskDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomTaskDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTaskDialog Convert a pointer object to an existing class object
+func AsTaskDialog(obj any) ITaskDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTaskDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTaskDialogButtons Convert a pointer object to an existing class object
+func AsTaskDialogButtons(obj any) ITaskDialogButtons {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTaskDialogButtons)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTaskDialogBaseButtonItem Convert a pointer object to an existing class object
+func AsTaskDialogBaseButtonItem(obj any) ITaskDialogBaseButtonItem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTaskDialogBaseButtonItem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTaskDialogButtonItem Convert a pointer object to an existing class object
+func AsTaskDialogButtonItem(obj any) ITaskDialogButtonItem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTaskDialogButtonItem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTaskDialogRadioButtonItem Convert a pointer object to an existing class object
+func AsTaskDialogRadioButtonItem(obj any) ITaskDialogRadioButtonItem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTaskDialogRadioButtonItem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomComboBoxEx Convert a pointer object to an existing class object
+func AsCustomComboBoxEx(obj any) ICustomComboBoxEx {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomComboBoxEx)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsComboBoxEx Convert a pointer object to an existing class object
+func AsComboBoxEx(obj any) IComboBoxEx {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TComboBoxEx)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListControlItems Convert a pointer object to an existing class object
+func AsListControlItems(obj any) IListControlItems {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListControlItems)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsComboExItems Convert a pointer object to an existing class object
+func AsComboExItems(obj any) IComboExItems {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TComboExItems)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListControlItem Convert a pointer object to an existing class object
+func AsListControlItem(obj any) IListControlItem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListControlItem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsComboExItem Convert a pointer object to an existing class object
+func AsComboExItem(obj any) IComboExItem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TComboExItem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomFrame Convert a pointer object to an existing class object
+func AsCustomFrame(obj any) ICustomFrame {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomFrame)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFrame Convert a pointer object to an existing class object
+func AsFrame(obj any) IFrame {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFrame)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsControlScrollBar Convert a pointer object to an existing class object
+func AsControlScrollBar(obj any) IControlScrollBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TControlScrollBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSizeConstraints Convert a pointer object to an existing class object
+func AsSizeConstraints(obj any) ISizeConstraints {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSizeConstraints)
+	base.SetObjectInstance(result, instance)
+	return result
 }
 
 // AsXButton Convert a pointer object to an existing class object
-func AsXButton(obj interface{}) IXButton {
-	instance := GetInstance(obj)
+func AsXButton(obj any) IXButton {
+	instance := base.GetInstance(obj)
 	if instance == nil {
 		return nil
 	}
-	xButton := new(TXButton)
-	SetObjectInstance(xButton, instance)
-	return xButton
+	result := new(TXButton)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsAnchorSide Convert a pointer object to an existing class object
+func AsAnchorSide(obj any) IAnchorSide {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TAnchorSide)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsControlBorderSpacing Convert a pointer object to an existing class object
+func AsControlBorderSpacing(obj any) IControlBorderSpacing {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TControlBorderSpacing)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsControlChildSizing Convert a pointer object to an existing class object
+func AsControlChildSizing(obj any) IControlChildSizing {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TControlChildSizing)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomCheckGroup Convert a pointer object to an existing class object
+func AsCustomCheckGroup(obj any) ICustomCheckGroup {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomCheckGroup)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCheckGroup Convert a pointer object to an existing class object
+func AsCheckGroup(obj any) ICheckGroup {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCheckGroup)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsToggleBox Convert a pointer object to an existing class object
+func AsToggleBox(obj any) IToggleBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TToggleBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomCheckCombo Convert a pointer object to an existing class object
+func AsCustomCheckCombo(obj any) ICustomCheckCombo {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomCheckCombo)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCheckComboBox Convert a pointer object to an existing class object
+func AsCheckComboBox(obj any) ICheckComboBox {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCheckComboBox)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsGridColumnTitle Convert a pointer object to an existing class object
+func AsGridColumnTitle(obj any) IGridColumnTitle {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TGridColumnTitle)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsGridColumn Convert a pointer object to an existing class object
+func AsGridColumn(obj any) IGridColumn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TGridColumn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsGridColumns Convert a pointer object to an existing class object
+func AsGridColumns(obj any) IGridColumns {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TGridColumns)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDockManager Convert a pointer object to an existing class object
+func AsDockManager(obj any) IDockManager {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDockManager)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDockZone Convert a pointer object to an existing class object
+func AsDockZone(obj any) IDockZone {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDockZone)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDockTree Convert a pointer object to an existing class object
+func AsDockTree(obj any) IDockTree {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDockTree)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazDockZone Convert a pointer object to an existing class object
+func AsLazDockZone(obj any) ILazDockZone {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazDockZone)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazDockTree Convert a pointer object to an existing class object
+func AsLazDockTree(obj any) ILazDockTree {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazDockTree)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazDockForm Convert a pointer object to an existing class object
+func AsLazDockForm(obj any) ILazDockForm {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazDockForm)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazDockPage Convert a pointer object to an existing class object
+func AsLazDockPage(obj any) ILazDockPage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazDockPage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazDockPages Convert a pointer object to an existing class object
+func AsLazDockPages(obj any) ILazDockPages {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazDockPages)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazDockSplitter Convert a pointer object to an existing class object
+func AsLazDockSplitter(obj any) ILazDockSplitter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazDockSplitter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomTrayIcon Convert a pointer object to an existing class object
+func AsCustomTrayIcon(obj any) ICustomTrayIcon {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomTrayIcon)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTrayIcon Convert a pointer object to an existing class object
+func AsTrayIcon(obj any) ITrayIcon {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTrayIcon)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCustomRegion Convert a pointer object to an existing class object
+func AsFPCustomRegion(obj any) IFPCustomRegion {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCustomRegion)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsIDesigner Convert a pointer object to an existing class object
+func AsIDesigner(obj any) IIDesigner {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TIDesigner)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsWindowMagnetOptions Convert a pointer object to an existing class object
+func AsWindowMagnetOptions(obj any) IWindowMagnetOptions {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TWindowMagnetOptions)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLCLReferenceComponent Convert a pointer object to an existing class object
+func AsLCLReferenceComponent(obj any) ILCLReferenceComponent {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLCLReferenceComponent)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomImageListResolution Convert a pointer object to an existing class object
+func AsCustomImageListResolution(obj any) ICustomImageListResolution {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomImageListResolution)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMemoScrollbar Convert a pointer object to an existing class object
+func AsMemoScrollbar(obj any) IMemoScrollbar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMemoScrollbar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDragImageListResolution Convert a pointer object to an existing class object
+func AsDragImageListResolution(obj any) IDragImageListResolution {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDragImageListResolution)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCustomImage Convert a pointer object to an existing class object
+func AsFPCustomImage(obj any) IFPCustomImage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCustomImage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPMemoryImage Convert a pointer object to an existing class object
+func AsFPMemoryImage(obj any) IFPMemoryImage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPMemoryImage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazIntfImage Convert a pointer object to an existing class object
+func AsLazIntfImage(obj any) ILazIntfImage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazIntfImage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPPalette Convert a pointer object to an existing class object
+func AsFPPalette(obj any) IFPPalette {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPPalette)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMergedMenuItems Convert a pointer object to an existing class object
+func AsMergedMenuItems(obj any) IMergedMenuItems {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMergedMenuItems)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPixmap Convert a pointer object to an existing class object
+func AsPixmap(obj any) IPixmap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPixmap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPortableAnyMapGraphic Convert a pointer object to an existing class object
+func AsPortableAnyMapGraphic(obj any) IPortableAnyMapGraphic {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPortableAnyMapGraphic)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPreviewFileControl Convert a pointer object to an existing class object
+func AsPreviewFileControl(obj any) IPreviewFileControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPreviewFileControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPaperSize Convert a pointer object to an existing class object
+func AsPaperSize(obj any) IPaperSize {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPaperSize)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPrinterCanvas Convert a pointer object to an existing class object
+func AsPrinterCanvas(obj any) IPrinterCanvas {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPrinterCanvas)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDataModule Convert a pointer object to an existing class object
+func AsDataModule(obj any) IDataModule {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDataModule)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsItemProp Convert a pointer object to an existing class object
+func AsItemProp(obj any) IItemProp {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TItemProp)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsValueListStrings Convert a pointer object to an existing class object
+func AsValueListStrings(obj any) IValueListStrings {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TValueListStrings)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsShortCutList Convert a pointer object to an existing class object
+func AsShortCutList(obj any) IShortCutList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TShortCutList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsComponentEnumerator Convert a pointer object to an existing class object
+func AsComponentEnumerator(obj any) IComponentEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TComponentEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomImageListResolutionEnumerator Convert a pointer object to an existing class object
+func AsCustomImageListResolutionEnumerator(obj any) ICustomImageListResolutionEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomImageListResolutionEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsActionListEnumerator Convert a pointer object to an existing class object
+func AsActionListEnumerator(obj any) IActionListEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TActionListEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStringsEnumerator Convert a pointer object to an existing class object
+func AsStringsEnumerator(obj any) IStringsEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStringsEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTaskDialogButtonsEnumerator Convert a pointer object to an existing class object
+func AsTaskDialogButtonsEnumerator(obj any) ITaskDialogButtonsEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTaskDialogButtonsEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCollectionEnumerator Convert a pointer object to an existing class object
+func AsCollectionEnumerator(obj any) ICollectionEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCollectionEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsToolBarEnumerator Convert a pointer object to an existing class object
+func AsToolBarEnumerator(obj any) IToolBarEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TToolBarEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTreeNodesEnumerator Convert a pointer object to an existing class object
+func AsTreeNodesEnumerator(obj any) ITreeNodesEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTreeNodesEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsWinControlEnumerator Convert a pointer object to an existing class object
+func AsWinControlEnumerator(obj any) IWinControlEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TWinControlEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListItemsEnumerator Convert a pointer object to an existing class object
+func AsListItemsEnumerator(obj any) IListItemsEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListItemsEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsBasicActionLink Convert a pointer object to an existing class object
+func AsBasicActionLink(obj any) IBasicActionLink {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TBasicActionLink)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCustomImageHandler Convert a pointer object to an existing class object
+func AsFPCustomImageHandler(obj any) IFPCustomImageHandler {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCustomImageHandler)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCustomImageReader Convert a pointer object to an existing class object
+func AsFPCustomImageReader(obj any) IFPCustomImageReader {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCustomImageReader)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCustomImageWriter Convert a pointer object to an existing class object
+func AsFPCustomImageWriter(obj any) IFPCustomImageWriter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCustomImageWriter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsMenuItemEnumerator Convert a pointer object to an existing class object
+func AsMenuItemEnumerator(obj any) IMenuItemEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TMenuItemEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazAccessibleObjectEnumerator Convert a pointer object to an existing class object
+func AsLazAccessibleObjectEnumerator(obj any) ILazAccessibleObjectEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazAccessibleObjectEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsChangeLink Convert a pointer object to an existing class object
+func AsChangeLink(obj any) IChangeLink {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TChangeLink)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazAccessibleObject Convert a pointer object to an existing class object
+func AsLazAccessibleObject(obj any) ILazAccessibleObject {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazAccessibleObject)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsThemeServices Convert a pointer object to an existing class object
+func AsThemeServices(obj any) IThemeServices {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TThemeServices)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsRichMemoInline Convert a pointer object to an existing class object
+func AsRichMemoInline(obj any) IRichMemoInline {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TRichMemoInline)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListEnumerator Convert a pointer object to an existing class object
+func AsListEnumerator(obj any) IListEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPListEnumerator Convert a pointer object to an existing class object
+func AsFPListEnumerator(obj any) IFPListEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPListEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPList Convert a pointer object to an existing class object
+func AsFPList(obj any) IFPList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsBaseVirtualTree Convert a pointer object to an existing class object
+func AsBaseVirtualTree(obj any) IBaseVirtualTree {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TBaseVirtualTree)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomVirtualDrawTree Convert a pointer object to an existing class object
+func AsCustomVirtualDrawTree(obj any) ICustomVirtualDrawTree {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomVirtualDrawTree)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazVirtualDrawTree Convert a pointer object to an existing class object
+func AsLazVirtualDrawTree(obj any) ILazVirtualDrawTree {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazVirtualDrawTree)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomVirtualStringTree Convert a pointer object to an existing class object
+func AsCustomVirtualStringTree(obj any) ICustomVirtualStringTree {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomVirtualStringTree)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazVirtualStringTree Convert a pointer object to an existing class object
+func AsLazVirtualStringTree(obj any) ILazVirtualStringTree {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazVirtualStringTree)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDividerBevel Convert a pointer object to an existing class object
+func AsDividerBevel(obj any) IDividerBevel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDividerBevel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsClipboardFormats Convert a pointer object to an existing class object
+func AsClipboardFormats(obj any) IClipboardFormats {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TClipboardFormats)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVTColors Convert a pointer object to an existing class object
+func AsVTColors(obj any) IVTColors {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVTColors)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVTHeader Convert a pointer object to an existing class object
+func AsVTHeader(obj any) IVTHeader {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVTHeader)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsScrollBarOptions Convert a pointer object to an existing class object
+func AsScrollBarOptions(obj any) IScrollBarOptions {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TScrollBarOptions)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomVirtualTreeOptions Convert a pointer object to an existing class object
+func AsCustomVirtualTreeOptions(obj any) ICustomVirtualTreeOptions {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomVirtualTreeOptions)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVirtualTreeOptions Convert a pointer object to an existing class object
+func AsVirtualTreeOptions(obj any) IVirtualTreeOptions {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVirtualTreeOptions)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVTDragImage Convert a pointer object to an existing class object
+func AsVTDragImage(obj any) IVTDragImage {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVTDragImage)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVTVirtualNodeEnumerator Convert a pointer object to an existing class object
+func AsVTVirtualNodeEnumerator(obj any) IVTVirtualNodeEnumerator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVTVirtualNodeEnumerator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomStringTreeOptions Convert a pointer object to an existing class object
+func AsCustomStringTreeOptions(obj any) ICustomStringTreeOptions {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomStringTreeOptions)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStringTreeOptions Convert a pointer object to an existing class object
+func AsStringTreeOptions(obj any) IStringTreeOptions {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStringTreeOptions)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVirtualTreeColumns Convert a pointer object to an existing class object
+func AsVirtualTreeColumns(obj any) IVirtualTreeColumns {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVirtualTreeColumns)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVTFixedAreaConstraints Convert a pointer object to an existing class object
+func AsVTFixedAreaConstraints(obj any) IVTFixedAreaConstraints {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVTFixedAreaConstraints)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVirtualTreeColumn Convert a pointer object to an existing class object
+func AsVirtualTreeColumn(obj any) IVirtualTreeColumn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVirtualTreeColumn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomOpenGLControl Convert a pointer object to an existing class object
+func AsCustomOpenGLControl(obj any) ICustomOpenGLControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomOpenGLControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsOpenGLControl Convert a pointer object to an existing class object
+func AsOpenGLControl(obj any) IOpenGLControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TOpenGLControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsRawImageDescriptionWrap Convert a pointer object to an existing class object
+func AsRawImageDescriptionWrap(obj any) IRawImageDescriptionWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TRawImageDescriptionWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsRawImageWrap Convert a pointer object to an existing class object
+func AsRawImageWrap(obj any) IRawImageWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TRawImageWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVirtualNodeWrap Convert a pointer object to an existing class object
+func AsVirtualNodeWrap(obj any) IVirtualNodeWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVirtualNodeWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVTVirtualNodeEnumerationWrap Convert a pointer object to an existing class object
+func AsVTVirtualNodeEnumerationWrap(obj any) IVTVirtualNodeEnumerationWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVTVirtualNodeEnumerationWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPCustomInterpolation Convert a pointer object to an existing class object
+func AsFPCustomInterpolation(obj any) IFPCustomInterpolation {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPCustomInterpolation)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFPBoxInterpolation Convert a pointer object to an existing class object
+func AsFPBoxInterpolation(obj any) IFPBoxInterpolation {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFPBoxInterpolation)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsScaledImageListResolutionWrap Convert a pointer object to an existing class object
+func AsScaledImageListResolutionWrap(obj any) IScaledImageListResolutionWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TScaledImageListResolutionWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsInterfacedObject Convert a pointer object to an existing class object
+func AsInterfacedObject(obj any) IInterfacedObject {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TInterfacedObject)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVTDragManager Convert a pointer object to an existing class object
+func AsVTDragManager(obj any) IVTDragManager {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVTDragManager)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStreamAdapter Convert a pointer object to an existing class object
+func AsStreamAdapter(obj any) IStreamAdapter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStreamAdapter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsUint32ArrayWrap Convert a pointer object to an existing class object
+func AsUint32ArrayWrap(obj any) IUint32ArrayWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TUint32ArrayWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsUint64ArrayWrap Convert a pointer object to an existing class object
+func AsUint64ArrayWrap(obj any) IUint64ArrayWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TUint64ArrayWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsInt64ArrayWrap Convert a pointer object to an existing class object
+func AsInt64ArrayWrap(obj any) IInt64ArrayWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TInt64ArrayWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsStringArrayWrap Convert a pointer object to an existing class object
+func AsStringArrayWrap(obj any) IStringArrayWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TStringArrayWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsBrushPatternWrap Convert a pointer object to an existing class object
+func AsBrushPatternWrap(obj any) IBrushPatternWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TBrushPatternWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPointArrayWrap Convert a pointer object to an existing class object
+func AsPointArrayWrap(obj any) IPointArrayWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPointArrayWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsFormatEtcArrayWrap Convert a pointer object to an existing class object
+func AsFormatEtcArrayWrap(obj any) IFormatEtcArrayWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TFormatEtcArrayWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTaskDialogProgressBar Convert a pointer object to an existing class object
+func AsTaskDialogProgressBar(obj any) ITaskDialogProgressBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTaskDialogProgressBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomGraphicControl Convert a pointer object to an existing class object
+func AsCustomGraphicControl(obj any) ICustomGraphicControl {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomGraphicControl)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsActionLink Convert a pointer object to an existing class object
+func AsActionLink(obj any) IActionLink {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TActionLink)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsControlActionLink Convert a pointer object to an existing class object
+func AsControlActionLink(obj any) IControlActionLink {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TControlActionLink)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsApplicationProperties Convert a pointer object to an existing class object
+func AsApplicationProperties(obj any) IApplicationProperties {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TApplicationProperties)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPanelBitBtn Convert a pointer object to an existing class object
+func AsPanelBitBtn(obj any) IPanelBitBtn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPanelBitBtn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomButtonPanel Convert a pointer object to an existing class object
+func AsCustomButtonPanel(obj any) ICustomButtonPanel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomButtonPanel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsButtonPanel Convert a pointer object to an existing class object
+func AsButtonPanel(obj any) IButtonPanel {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TButtonPanel)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomControlBar Convert a pointer object to an existing class object
+func AsCustomControlBar(obj any) ICustomControlBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomControlBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsControlBar Convert a pointer object to an existing class object
+func AsControlBar(obj any) IControlBar {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TControlBar)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCtrlBand Convert a pointer object to an existing class object
+func AsCtrlBand(obj any) ICtrlBand {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCtrlBand)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomPairSplitter Convert a pointer object to an existing class object
+func AsCustomPairSplitter(obj any) ICustomPairSplitter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomPairSplitter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPairSplitter Convert a pointer object to an existing class object
+func AsPairSplitter(obj any) IPairSplitter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPairSplitter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPairSplitterSide Convert a pointer object to an existing class object
+func AsPairSplitterSide(obj any) IPairSplitterSide {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPairSplitterSide)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsPopupNotifier Convert a pointer object to an existing class object
+func AsPopupNotifier(obj any) IPopupNotifier {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TPopupNotifier)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCalculatorDialog Convert a pointer object to an existing class object
+func AsCalculatorDialog(obj any) ICalculatorDialog {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCalculatorDialog)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDateEdit Convert a pointer object to an existing class object
+func AsDateEdit(obj any) IDateEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDateEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomCheckBoxThemed Convert a pointer object to an existing class object
+func AsCustomCheckBoxThemed(obj any) ICustomCheckBoxThemed {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomCheckBoxThemed)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCheckBoxThemed Convert a pointer object to an existing class object
+func AsCheckBoxThemed(obj any) ICheckBoxThemed {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCheckBoxThemed)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsExtendedNotebook Convert a pointer object to an existing class object
+func AsExtendedNotebook(obj any) IExtendedNotebook {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TExtendedNotebook)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomControlFilterEdit Convert a pointer object to an existing class object
+func AsCustomControlFilterEdit(obj any) ICustomControlFilterEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomControlFilterEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsListFilterEdit Convert a pointer object to an existing class object
+func AsListFilterEdit(obj any) IListFilterEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TListFilterEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTreeFilterEdit Convert a pointer object to an existing class object
+func AsTreeFilterEdit(obj any) ITreeFilterEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTreeFilterEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsTreeFilterBranch Convert a pointer object to an existing class object
+func AsTreeFilterBranch(obj any) ITreeFilterBranch {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TTreeFilterBranch)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsVTHeaderPopupMenu Convert a pointer object to an existing class object
+func AsVTHeaderPopupMenu(obj any) IVTHeaderPopupMenu {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TVTHeaderPopupMenu)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomVTEditLink Convert a pointer object to an existing class object
+func AsCustomVTEditLink(obj any) ICustomVTEditLink {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomVTEditLink)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsHintWindow Convert a pointer object to an existing class object
+func AsHintWindow(obj any) IHintWindow {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(THintWindow)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsDesigner Convert a pointer object to an existing class object
+func AsDesigner(obj any) IDesigner {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TDesigner)
+	base.SetObjectInstance(result, instance)
+	return result
 }

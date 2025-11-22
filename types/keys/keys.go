@@ -10,9 +10,9 @@
 
 package keys
 
-//------------
+// ------------
 // KeyFlags (High word part !!!)
-//------------
+// ------------
 const (
 	KF_EXTENDED = 0x100
 	KF_DLGMODE  = 0x800

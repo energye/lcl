@@ -9,648 +9,852 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IDateTimePicker Parent: ICustomDateTimePicker
 type IDateTimePicker interface {
 	ICustomDateTimePicker
-	DateTime() TDateTime                           // property
-	SetDateTime(AValue TDateTime)                  // property
-	DroppedDown() bool                             // property
-	ArrowShape() TArrowShape                       // property
-	SetArrowShape(AValue TArrowShape)              // property
-	ShowCheckBox() bool                            // property
-	SetShowCheckBox(AValue bool)                   // property
-	Checked() bool                                 // property
-	SetChecked(AValue bool)                        // property
-	CenturyFrom() Word                             // property
-	SetCenturyFrom(AValue Word)                    // property
-	DateDisplayOrder() TDateDisplayOrder           // property
-	SetDateDisplayOrder(AValue TDateDisplayOrder)  // property
-	MaxDate() TDate                                // property
-	SetMaxDate(AValue TDate)                       // property
-	MinDate() TDate                                // property
-	SetMinDate(AValue TDate)                       // property
-	ReadOnly() bool                                // property
-	SetReadOnly(AValue bool)                       // property
-	ParentFont() bool                              // property
-	SetParentFont(AValue bool)                     // property
-	ParentColor() bool                             // property
-	SetParentColor(AValue bool)                    // property
-	DateSeparator() string                         // property
-	SetDateSeparator(AValue string)                // property
-	TrailingSeparator() bool                       // property
-	SetTrailingSeparator(AValue bool)              // property
-	TextForNullDate() string                       // property
-	SetTextForNullDate(AValue string)              // property
-	LeadingZeros() bool                            // property
-	SetLeadingZeros(AValue bool)                   // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
-	NullInputAllowed() bool                        // property
-	SetNullInputAllowed(AValue bool)               // property
-	Kind() TDateTimeKind                           // property
-	SetKind(AValue TDateTimeKind)                  // property
-	TimeSeparator() string                         // property
-	SetTimeSeparator(AValue string)                // property
-	DecimalSeparator() string                      // property
-	SetDecimalSeparator(AValue string)             // property
-	TimeFormat() TTimeFormat                       // property
-	SetTimeFormat(AValue TTimeFormat)              // property
-	TimeDisplay() TTimeDisplay                     // property
-	SetTimeDisplay(AValue TTimeDisplay)            // property
-	DateMode() TDTDateMode                         // property
-	SetDateMode(AValue TDTDateMode)                // property
-	Date() TDate                                   // property
-	SetDate(AValue TDate)                          // property
-	Time() TTime                                   // property
-	SetTime(AValue TTime)                          // property
-	UseDefaultSeparators() bool                    // property
-	SetUseDefaultSeparators(AValue bool)           // property
-	Cascade() bool                                 // property
-	SetCascade(AValue bool)                        // property
-	AutoButtonSize() bool                          // property
-	SetAutoButtonSize(AValue bool)                 // property
-	AutoAdvance() bool                             // property
-	SetAutoAdvance(AValue bool)                    // property
-	HideDateTimeParts() TDateTimeParts             // property
-	SetHideDateTimeParts(AValue TDateTimeParts)    // property
-	MonthDisplay() TMonthDisplay                   // property
-	SetMonthDisplay(AValue TMonthDisplay)          // property
-	CustomMonthNames() IStrings                    // property
-	SetCustomMonthNames(AValue IStrings)           // property
-	ShowMonthNames() bool                          // property
-	SetShowMonthNames(AValue bool)                 // property
-	CalAlignment() TDTCalAlignment                 // property
-	SetCalAlignment(AValue TDTCalAlignment)        // property
-	Alignment() TAlignment                         // property
-	SetAlignment(AValue TAlignment)                // property
-	Options() TDateTimePickerOptions               // property
-	SetOptions(AValue TDateTimePickerOptions)      // property
-	SetOnChange(fn TNotifyEvent)                   // property event
-	SetOnCheckBoxChange(fn TNotifyEvent)           // property event
-	SetOnDropDown(fn TNotifyEvent)                 // property event
-	SetOnCloseUp(fn TNotifyEvent)                  // property event
-	SetOnContextPopup(fn TContextPopupEvent)       // property event
-	SetOnDblClick(fn TNotifyEvent)                 // property event
-	SetOnEditingDone(fn TNotifyEvent)              // property event
-	SetOnMouseDown(fn TMouseEvent)                 // property event
-	SetOnMouseEnter(fn TNotifyEvent)               // property event
-	SetOnMouseLeave(fn TNotifyEvent)               // property event
-	SetOnMouseMove(fn TMouseMoveEvent)             // property event
-	SetOnMouseUp(fn TMouseEvent)                   // property event
-	SetOnMouseWheel(fn TMouseWheelEvent)           // property event
-	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) // property event
-	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)   // property event
+	DateTime() types.TDateTime                         // property DateTime Getter
+	SetDateTime(value types.TDateTime)                 // property DateTime Setter
+	DroppedDown() bool                                 // property DroppedDown Getter
+	ArrowShape() types.TArrowShape                     // property ArrowShape Getter
+	SetArrowShape(value types.TArrowShape)             // property ArrowShape Setter
+	ShowCheckBox() bool                                // property ShowCheckBox Getter
+	SetShowCheckBox(value bool)                        // property ShowCheckBox Setter
+	Checked() bool                                     // property Checked Getter
+	SetChecked(value bool)                             // property Checked Setter
+	CenturyFrom() uint16                               // property CenturyFrom Getter
+	SetCenturyFrom(value uint16)                       // property CenturyFrom Setter
+	DateDisplayOrder() types.TDateDisplayOrder         // property DateDisplayOrder Getter
+	SetDateDisplayOrder(value types.TDateDisplayOrder) // property DateDisplayOrder Setter
+	MaxDate() types.TDateTime                          // property MaxDate Getter
+	SetMaxDate(value types.TDateTime)                  // property MaxDate Setter
+	MinDate() types.TDateTime                          // property MinDate Getter
+	SetMinDate(value types.TDateTime)                  // property MinDate Setter
+	ReadOnly() bool                                    // property ReadOnly Getter
+	SetReadOnly(value bool)                            // property ReadOnly Setter
+	ParentFont() bool                                  // property ParentFont Getter
+	SetParentFont(value bool)                          // property ParentFont Setter
+	ParentColor() bool                                 // property ParentColor Getter
+	SetParentColor(value bool)                         // property ParentColor Setter
+	DateSeparator() string                             // property DateSeparator Getter
+	SetDateSeparator(value string)                     // property DateSeparator Setter
+	TrailingSeparator() bool                           // property TrailingSeparator Getter
+	SetTrailingSeparator(value bool)                   // property TrailingSeparator Setter
+	TextForNullDate() string                           // property TextForNullDate Getter
+	SetTextForNullDate(value string)                   // property TextForNullDate Setter
+	LeadingZeros() bool                                // property LeadingZeros Getter
+	SetLeadingZeros(value bool)                        // property LeadingZeros Setter
+	ParentShowHint() bool                              // property ParentShowHint Getter
+	SetParentShowHint(value bool)                      // property ParentShowHint Setter
+	NullInputAllowed() bool                            // property NullInputAllowed Getter
+	SetNullInputAllowed(value bool)                    // property NullInputAllowed Setter
+	Kind() types.TDateTimeKind                         // property Kind Getter
+	SetKind(value types.TDateTimeKind)                 // property Kind Setter
+	TimeSeparator() string                             // property TimeSeparator Getter
+	SetTimeSeparator(value string)                     // property TimeSeparator Setter
+	DecimalSeparator() string                          // property DecimalSeparator Getter
+	SetDecimalSeparator(value string)                  // property DecimalSeparator Setter
+	TimeFormat() types.TTimeFormat                     // property TimeFormat Getter
+	SetTimeFormat(value types.TTimeFormat)             // property TimeFormat Setter
+	TimeDisplay() types.TTimeDisplay                   // property TimeDisplay Getter
+	SetTimeDisplay(value types.TTimeDisplay)           // property TimeDisplay Setter
+	DateMode() types.TDTDateMode                       // property DateMode Getter
+	SetDateMode(value types.TDTDateMode)               // property DateMode Setter
+	Date() types.TDateTime                             // property Date Getter
+	SetDate(value types.TDateTime)                     // property Date Setter
+	Time() types.TDateTime                             // property Time Getter
+	SetTime(value types.TDateTime)                     // property Time Setter
+	UseDefaultSeparators() bool                        // property UseDefaultSeparators Getter
+	SetUseDefaultSeparators(value bool)                // property UseDefaultSeparators Setter
+	Cascade() bool                                     // property Cascade Getter
+	SetCascade(value bool)                             // property Cascade Setter
+	AutoButtonSize() bool                              // property AutoButtonSize Getter
+	SetAutoButtonSize(value bool)                      // property AutoButtonSize Setter
+	AutoAdvance() bool                                 // property AutoAdvance Getter
+	SetAutoAdvance(value bool)                         // property AutoAdvance Setter
+	HideDateTimeParts() types.TDateTimeParts           // property HideDateTimeParts Getter
+	SetHideDateTimeParts(value types.TDateTimeParts)   // property HideDateTimeParts Setter
+	MonthDisplay() types.TMonthDisplay                 // property MonthDisplay Getter
+	SetMonthDisplay(value types.TMonthDisplay)         // property MonthDisplay Setter
+	CustomMonthNames() IStrings                        // property CustomMonthNames Getter
+	SetCustomMonthNames(value IStrings)                // property CustomMonthNames Setter
+	ShowMonthNames() bool                              // property ShowMonthNames Getter
+	SetShowMonthNames(value bool)                      // property ShowMonthNames Setter
+	CalAlignment() types.TDTCalAlignment               // property CalAlignment Getter
+	SetCalAlignment(value types.TDTCalAlignment)       // property CalAlignment Setter
+	Alignment() types.TAlignment                       // property Alignment Getter
+	SetAlignment(value types.TAlignment)               // property Alignment Setter
+	Options() types.TDateTimePickerOptions             // property Options Getter
+	SetOptions(value types.TDateTimePickerOptions)     // property Options Setter
+	SetOnChange(fn TNotifyEvent)                       // property event
+	SetOnCheckBoxChange(fn TNotifyEvent)               // property event
+	SetOnDropDown(fn TNotifyEvent)                     // property event
+	SetOnCloseUp(fn TNotifyEvent)                      // property event
+	SetOnContextPopup(fn TContextPopupEvent)           // property event
+	SetOnDblClick(fn TNotifyEvent)                     // property event
+	SetOnEditingDone(fn TNotifyEvent)                  // property event
+	SetOnMouseDown(fn TMouseEvent)                     // property event
+	SetOnMouseEnter(fn TNotifyEvent)                   // property event
+	SetOnMouseLeave(fn TNotifyEvent)                   // property event
+	SetOnMouseMove(fn TMouseMoveEvent)                 // property event
+	SetOnMouseUp(fn TMouseEvent)                       // property event
+	SetOnMouseWheel(fn TMouseWheelEvent)               // property event
+	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent)     // property event
+	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)       // property event
 }
 
-// TDateTimePicker Parent: TCustomDateTimePicker
 type TDateTimePicker struct {
 	TCustomDateTimePicker
-	changePtr         uintptr
-	checkBoxChangePtr uintptr
-	dropDownPtr       uintptr
-	closeUpPtr        uintptr
-	contextPopupPtr   uintptr
-	dblClickPtr       uintptr
-	editingDonePtr    uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
 }
 
-func NewDateTimePicker(AOwner IComponent) IDateTimePicker {
-	r1 := dateTimePickerImportAPI().SysCallN(9, GetObjectUintptr(AOwner))
-	return AsDateTimePicker(r1)
+func (m *TDateTimePicker) DateTime() (result types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(1, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TDateTimePicker) DateTime() TDateTime {
-	r1 := dateTimePickerImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return TDateTime(r1)
-}
-
-func (m *TDateTimePicker) SetDateTime(AValue TDateTime) {
-	dateTimePickerImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetDateTime(value types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(1, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
 func (m *TDateTimePicker) DroppedDown() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(17, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) ArrowShape() TArrowShape {
-	r1 := dateTimePickerImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TArrowShape(r1)
+func (m *TDateTimePicker) ArrowShape() types.TArrowShape {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(3, 0, m.Instance())
+	return types.TArrowShape(r)
 }
 
-func (m *TDateTimePicker) SetArrowShape(AValue TArrowShape) {
-	dateTimePickerImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetArrowShape(value types.TArrowShape) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDateTimePicker) ShowCheckBox() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(45, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetShowCheckBox(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(45, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetShowCheckBox(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDateTimePicker) Checked() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetChecked(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetChecked(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDateTimePicker) CenturyFrom() Word {
-	r1 := dateTimePickerImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return Word(r1)
+func (m *TDateTimePicker) CenturyFrom() uint16 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(6, 0, m.Instance())
+	return uint16(r)
 }
 
-func (m *TDateTimePicker) SetCenturyFrom(AValue Word) {
-	dateTimePickerImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetCenturyFrom(value uint16) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateTimePicker) DateDisplayOrder() TDateDisplayOrder {
-	r1 := dateTimePickerImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return TDateDisplayOrder(r1)
+func (m *TDateTimePicker) DateDisplayOrder() types.TDateDisplayOrder {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(7, 0, m.Instance())
+	return types.TDateDisplayOrder(r)
 }
 
-func (m *TDateTimePicker) SetDateDisplayOrder(AValue TDateDisplayOrder) {
-	dateTimePickerImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetDateDisplayOrder(value types.TDateDisplayOrder) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateTimePicker) MaxDate() TDate {
-	r1 := dateTimePickerImportAPI().SysCallN(21, 0, m.Instance(), 0)
-	return TDate(r1)
+func (m *TDateTimePicker) MaxDate() (result types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(8, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TDateTimePicker) SetMaxDate(AValue TDate) {
-	dateTimePickerImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetMaxDate(value types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(8, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
-func (m *TDateTimePicker) MinDate() TDate {
-	r1 := dateTimePickerImportAPI().SysCallN(22, 0, m.Instance(), 0)
-	return TDate(r1)
+func (m *TDateTimePicker) MinDate() (result types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(9, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TDateTimePicker) SetMinDate(AValue TDate) {
-	dateTimePickerImportAPI().SysCallN(22, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetMinDate(value types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(9, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
 func (m *TDateTimePicker) ReadOnly() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(29, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(10, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetReadOnly(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(29, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetReadOnly(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(10, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDateTimePicker) ParentFont() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(27, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(11, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetParentFont(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(27, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(11, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDateTimePicker) ParentColor() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(26, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(12, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetParentColor(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(26, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(12, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDateTimePicker) DateSeparator() string {
-	r1 := dateTimePickerImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := dateTimePickerAPI().SysCallN(13, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TDateTimePicker) SetDateSeparator(AValue string) {
-	dateTimePickerImportAPI().SysCallN(14, 1, m.Instance(), PascalStr(AValue))
+func (m *TDateTimePicker) SetDateSeparator(value string) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(13, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TDateTimePicker) TrailingSeparator() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(52, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(14, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetTrailingSeparator(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(52, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetTrailingSeparator(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(14, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDateTimePicker) TextForNullDate() string {
-	r1 := dateTimePickerImportAPI().SysCallN(47, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := dateTimePickerAPI().SysCallN(15, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TDateTimePicker) SetTextForNullDate(AValue string) {
-	dateTimePickerImportAPI().SysCallN(47, 1, m.Instance(), PascalStr(AValue))
+func (m *TDateTimePicker) SetTextForNullDate(value string) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(15, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TDateTimePicker) LeadingZeros() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(16, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetLeadingZeros(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(20, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetLeadingZeros(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(16, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDateTimePicker) ParentShowHint() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(28, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(17, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetParentShowHint(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(28, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(17, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDateTimePicker) NullInputAllowed() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(24, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(18, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetNullInputAllowed(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(24, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetNullInputAllowed(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(18, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDateTimePicker) Kind() TDateTimeKind {
-	r1 := dateTimePickerImportAPI().SysCallN(19, 0, m.Instance(), 0)
-	return TDateTimeKind(r1)
+func (m *TDateTimePicker) Kind() types.TDateTimeKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(19, 0, m.Instance())
+	return types.TDateTimeKind(r)
 }
 
-func (m *TDateTimePicker) SetKind(AValue TDateTimeKind) {
-	dateTimePickerImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetKind(value types.TDateTimeKind) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(19, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDateTimePicker) TimeSeparator() string {
-	r1 := dateTimePickerImportAPI().SysCallN(51, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := dateTimePickerAPI().SysCallN(20, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TDateTimePicker) SetTimeSeparator(AValue string) {
-	dateTimePickerImportAPI().SysCallN(51, 1, m.Instance(), PascalStr(AValue))
+func (m *TDateTimePicker) SetTimeSeparator(value string) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(20, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TDateTimePicker) DecimalSeparator() string {
-	r1 := dateTimePickerImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := dateTimePickerAPI().SysCallN(21, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TDateTimePicker) SetDecimalSeparator(AValue string) {
-	dateTimePickerImportAPI().SysCallN(16, 1, m.Instance(), PascalStr(AValue))
+func (m *TDateTimePicker) SetDecimalSeparator(value string) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(21, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TDateTimePicker) TimeFormat() TTimeFormat {
-	r1 := dateTimePickerImportAPI().SysCallN(50, 0, m.Instance(), 0)
-	return TTimeFormat(r1)
+func (m *TDateTimePicker) TimeFormat() types.TTimeFormat {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(22, 0, m.Instance())
+	return types.TTimeFormat(r)
 }
 
-func (m *TDateTimePicker) SetTimeFormat(AValue TTimeFormat) {
-	dateTimePickerImportAPI().SysCallN(50, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetTimeFormat(value types.TTimeFormat) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateTimePicker) TimeDisplay() TTimeDisplay {
-	r1 := dateTimePickerImportAPI().SysCallN(49, 0, m.Instance(), 0)
-	return TTimeDisplay(r1)
+func (m *TDateTimePicker) TimeDisplay() types.TTimeDisplay {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(23, 0, m.Instance())
+	return types.TTimeDisplay(r)
 }
 
-func (m *TDateTimePicker) SetTimeDisplay(AValue TTimeDisplay) {
-	dateTimePickerImportAPI().SysCallN(49, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetTimeDisplay(value types.TTimeDisplay) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateTimePicker) DateMode() TDTDateMode {
-	r1 := dateTimePickerImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return TDTDateMode(r1)
+func (m *TDateTimePicker) DateMode() types.TDTDateMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(24, 0, m.Instance())
+	return types.TDTDateMode(r)
 }
 
-func (m *TDateTimePicker) SetDateMode(AValue TDTDateMode) {
-	dateTimePickerImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetDateMode(value types.TDTDateMode) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(24, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateTimePicker) Date() TDate {
-	r1 := dateTimePickerImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return TDate(r1)
+func (m *TDateTimePicker) Date() (result types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(25, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TDateTimePicker) SetDate(AValue TDate) {
-	dateTimePickerImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetDate(value types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(25, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
-func (m *TDateTimePicker) Time() TTime {
-	r1 := dateTimePickerImportAPI().SysCallN(48, 0, m.Instance(), 0)
-	return TTime(r1)
+func (m *TDateTimePicker) Time() (result types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(26, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TDateTimePicker) SetTime(AValue TTime) {
-	dateTimePickerImportAPI().SysCallN(48, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetTime(value types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(26, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
 func (m *TDateTimePicker) UseDefaultSeparators() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(53, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(27, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetUseDefaultSeparators(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(53, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetUseDefaultSeparators(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(27, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDateTimePicker) Cascade() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(28, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetCascade(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetCascade(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(28, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDateTimePicker) AutoButtonSize() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(29, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetAutoButtonSize(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetAutoButtonSize(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(29, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDateTimePicker) AutoAdvance() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(30, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetAutoAdvance(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(2, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetAutoAdvance(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(30, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDateTimePicker) HideDateTimeParts() TDateTimeParts {
-	r1 := dateTimePickerImportAPI().SysCallN(18, 0, m.Instance(), 0)
-	return TDateTimeParts(r1)
+func (m *TDateTimePicker) HideDateTimeParts() types.TDateTimeParts {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(31, 0, m.Instance())
+	return types.TDateTimeParts(r)
 }
 
-func (m *TDateTimePicker) SetHideDateTimeParts(AValue TDateTimeParts) {
-	dateTimePickerImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetHideDateTimeParts(value types.TDateTimeParts) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(31, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateTimePicker) MonthDisplay() TMonthDisplay {
-	r1 := dateTimePickerImportAPI().SysCallN(23, 0, m.Instance(), 0)
-	return TMonthDisplay(r1)
+func (m *TDateTimePicker) MonthDisplay() types.TMonthDisplay {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(32, 0, m.Instance())
+	return types.TMonthDisplay(r)
 }
 
-func (m *TDateTimePicker) SetMonthDisplay(AValue TMonthDisplay) {
-	dateTimePickerImportAPI().SysCallN(23, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetMonthDisplay(value types.TMonthDisplay) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(32, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDateTimePicker) CustomMonthNames() IStrings {
-	r1 := dateTimePickerImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return AsStrings(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := dateTimePickerAPI().SysCallN(33, 0, m.Instance())
+	return AsStrings(r)
 }
 
-func (m *TDateTimePicker) SetCustomMonthNames(AValue IStrings) {
-	dateTimePickerImportAPI().SysCallN(10, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TDateTimePicker) SetCustomMonthNames(value IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(33, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TDateTimePicker) ShowMonthNames() bool {
-	r1 := dateTimePickerImportAPI().SysCallN(46, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dateTimePickerAPI().SysCallN(34, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDateTimePicker) SetShowMonthNames(AValue bool) {
-	dateTimePickerImportAPI().SysCallN(46, 1, m.Instance(), PascalBool(AValue))
+func (m *TDateTimePicker) SetShowMonthNames(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(34, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDateTimePicker) CalAlignment() TDTCalAlignment {
-	r1 := dateTimePickerImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDTCalAlignment(r1)
+func (m *TDateTimePicker) CalAlignment() types.TDTCalAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(35, 0, m.Instance())
+	return types.TDTCalAlignment(r)
 }
 
-func (m *TDateTimePicker) SetCalAlignment(AValue TDTCalAlignment) {
-	dateTimePickerImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetCalAlignment(value types.TDTCalAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(35, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateTimePicker) Alignment() TAlignment {
-	r1 := dateTimePickerImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TAlignment(r1)
+func (m *TDateTimePicker) Alignment() types.TAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(36, 0, m.Instance())
+	return types.TAlignment(r)
 }
 
-func (m *TDateTimePicker) SetAlignment(AValue TAlignment) {
-	dateTimePickerImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TDateTimePicker) SetAlignment(value types.TAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(36, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateTimePicker) Options() TDateTimePickerOptions {
-	r1 := dateTimePickerImportAPI().SysCallN(25, 0, m.Instance(), 0)
-	return TDateTimePickerOptions(r1)
+func (m *TDateTimePicker) Options() types.TDateTimePickerOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dateTimePickerAPI().SysCallN(37, 0, m.Instance())
+	return types.TDateTimePickerOptions(r)
 }
 
-func (m *TDateTimePicker) SetOptions(AValue TDateTimePickerOptions) {
-	dateTimePickerImportAPI().SysCallN(25, 1, m.Instance(), uintptr(AValue))
-}
-
-func DateTimePickerClass() TClass {
-	ret := dateTimePickerImportAPI().SysCallN(8)
-	return TClass(ret)
+func (m *TDateTimePicker) SetOptions(value types.TDateTimePickerOptions) {
+	if !m.IsValid() {
+		return
+	}
+	dateTimePickerAPI().SysCallN(37, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDateTimePicker) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(30, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 38, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnCheckBoxChange(fn TNotifyEvent) {
-	if m.checkBoxChangePtr != 0 {
-		RemoveEventElement(m.checkBoxChangePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.checkBoxChangePtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(31, m.Instance(), m.checkBoxChangePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 39, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnDropDown(fn TNotifyEvent) {
-	if m.dropDownPtr != 0 {
-		RemoveEventElement(m.dropDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dropDownPtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(35, m.Instance(), m.dropDownPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 40, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnCloseUp(fn TNotifyEvent) {
-	if m.closeUpPtr != 0 {
-		RemoveEventElement(m.closeUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.closeUpPtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(32, m.Instance(), m.closeUpPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 41, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(33, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 42, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(34, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 43, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnEditingDone(fn TNotifyEvent) {
-	if m.editingDonePtr != 0 {
-		RemoveEventElement(m.editingDonePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.editingDonePtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(36, m.Instance(), m.editingDonePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 44, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(37, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 45, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(38, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 46, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(39, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 47, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(40, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 48, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(41, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 49, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(42, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 50, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(43, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 51, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDateTimePicker) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	dateTimePickerImportAPI().SysCallN(44, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 52, dateTimePickerAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewDateTimePicker class constructor
+func NewDateTimePicker(owner IComponent) IDateTimePicker {
+	r := dateTimePickerAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsDateTimePicker(r)
+}
+
+func TDateTimePickerClass() types.TClass {
+	r := dateTimePickerAPI().SysCallN(53)
+	return types.TClass(r)
 }
 
 var (
-	dateTimePickerImport       *imports.Imports = nil
-	dateTimePickerImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("DateTimePicker_Alignment", 0),
-		/*1*/ imports.NewTable("DateTimePicker_ArrowShape", 0),
-		/*2*/ imports.NewTable("DateTimePicker_AutoAdvance", 0),
-		/*3*/ imports.NewTable("DateTimePicker_AutoButtonSize", 0),
-		/*4*/ imports.NewTable("DateTimePicker_CalAlignment", 0),
-		/*5*/ imports.NewTable("DateTimePicker_Cascade", 0),
-		/*6*/ imports.NewTable("DateTimePicker_CenturyFrom", 0),
-		/*7*/ imports.NewTable("DateTimePicker_Checked", 0),
-		/*8*/ imports.NewTable("DateTimePicker_Class", 0),
-		/*9*/ imports.NewTable("DateTimePicker_Create", 0),
-		/*10*/ imports.NewTable("DateTimePicker_CustomMonthNames", 0),
-		/*11*/ imports.NewTable("DateTimePicker_Date", 0),
-		/*12*/ imports.NewTable("DateTimePicker_DateDisplayOrder", 0),
-		/*13*/ imports.NewTable("DateTimePicker_DateMode", 0),
-		/*14*/ imports.NewTable("DateTimePicker_DateSeparator", 0),
-		/*15*/ imports.NewTable("DateTimePicker_DateTime", 0),
-		/*16*/ imports.NewTable("DateTimePicker_DecimalSeparator", 0),
-		/*17*/ imports.NewTable("DateTimePicker_DroppedDown", 0),
-		/*18*/ imports.NewTable("DateTimePicker_HideDateTimeParts", 0),
-		/*19*/ imports.NewTable("DateTimePicker_Kind", 0),
-		/*20*/ imports.NewTable("DateTimePicker_LeadingZeros", 0),
-		/*21*/ imports.NewTable("DateTimePicker_MaxDate", 0),
-		/*22*/ imports.NewTable("DateTimePicker_MinDate", 0),
-		/*23*/ imports.NewTable("DateTimePicker_MonthDisplay", 0),
-		/*24*/ imports.NewTable("DateTimePicker_NullInputAllowed", 0),
-		/*25*/ imports.NewTable("DateTimePicker_Options", 0),
-		/*26*/ imports.NewTable("DateTimePicker_ParentColor", 0),
-		/*27*/ imports.NewTable("DateTimePicker_ParentFont", 0),
-		/*28*/ imports.NewTable("DateTimePicker_ParentShowHint", 0),
-		/*29*/ imports.NewTable("DateTimePicker_ReadOnly", 0),
-		/*30*/ imports.NewTable("DateTimePicker_SetOnChange", 0),
-		/*31*/ imports.NewTable("DateTimePicker_SetOnCheckBoxChange", 0),
-		/*32*/ imports.NewTable("DateTimePicker_SetOnCloseUp", 0),
-		/*33*/ imports.NewTable("DateTimePicker_SetOnContextPopup", 0),
-		/*34*/ imports.NewTable("DateTimePicker_SetOnDblClick", 0),
-		/*35*/ imports.NewTable("DateTimePicker_SetOnDropDown", 0),
-		/*36*/ imports.NewTable("DateTimePicker_SetOnEditingDone", 0),
-		/*37*/ imports.NewTable("DateTimePicker_SetOnMouseDown", 0),
-		/*38*/ imports.NewTable("DateTimePicker_SetOnMouseEnter", 0),
-		/*39*/ imports.NewTable("DateTimePicker_SetOnMouseLeave", 0),
-		/*40*/ imports.NewTable("DateTimePicker_SetOnMouseMove", 0),
-		/*41*/ imports.NewTable("DateTimePicker_SetOnMouseUp", 0),
-		/*42*/ imports.NewTable("DateTimePicker_SetOnMouseWheel", 0),
-		/*43*/ imports.NewTable("DateTimePicker_SetOnMouseWheelDown", 0),
-		/*44*/ imports.NewTable("DateTimePicker_SetOnMouseWheelUp", 0),
-		/*45*/ imports.NewTable("DateTimePicker_ShowCheckBox", 0),
-		/*46*/ imports.NewTable("DateTimePicker_ShowMonthNames", 0),
-		/*47*/ imports.NewTable("DateTimePicker_TextForNullDate", 0),
-		/*48*/ imports.NewTable("DateTimePicker_Time", 0),
-		/*49*/ imports.NewTable("DateTimePicker_TimeDisplay", 0),
-		/*50*/ imports.NewTable("DateTimePicker_TimeFormat", 0),
-		/*51*/ imports.NewTable("DateTimePicker_TimeSeparator", 0),
-		/*52*/ imports.NewTable("DateTimePicker_TrailingSeparator", 0),
-		/*53*/ imports.NewTable("DateTimePicker_UseDefaultSeparators", 0),
-	}
+	dateTimePickerOnce   base.Once
+	dateTimePickerImport *imports.Imports = nil
 )
 
-func dateTimePickerImportAPI() *imports.Imports {
-	if dateTimePickerImport == nil {
-		dateTimePickerImport = NewDefaultImports()
-		dateTimePickerImport.SetImportTable(dateTimePickerImportTables)
-		dateTimePickerImportTables = nil
-	}
+func dateTimePickerAPI() *imports.Imports {
+	dateTimePickerOnce.Do(func() {
+		dateTimePickerImport = api.NewDefaultImports()
+		dateTimePickerImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TDateTimePicker_Create", 0), // constructor NewDateTimePicker
+			/* 1 */ imports.NewTable("TDateTimePicker_DateTime", 0), // property DateTime
+			/* 2 */ imports.NewTable("TDateTimePicker_DroppedDown", 0), // property DroppedDown
+			/* 3 */ imports.NewTable("TDateTimePicker_ArrowShape", 0), // property ArrowShape
+			/* 4 */ imports.NewTable("TDateTimePicker_ShowCheckBox", 0), // property ShowCheckBox
+			/* 5 */ imports.NewTable("TDateTimePicker_Checked", 0), // property Checked
+			/* 6 */ imports.NewTable("TDateTimePicker_CenturyFrom", 0), // property CenturyFrom
+			/* 7 */ imports.NewTable("TDateTimePicker_DateDisplayOrder", 0), // property DateDisplayOrder
+			/* 8 */ imports.NewTable("TDateTimePicker_MaxDate", 0), // property MaxDate
+			/* 9 */ imports.NewTable("TDateTimePicker_MinDate", 0), // property MinDate
+			/* 10 */ imports.NewTable("TDateTimePicker_ReadOnly", 0), // property ReadOnly
+			/* 11 */ imports.NewTable("TDateTimePicker_ParentFont", 0), // property ParentFont
+			/* 12 */ imports.NewTable("TDateTimePicker_ParentColor", 0), // property ParentColor
+			/* 13 */ imports.NewTable("TDateTimePicker_DateSeparator", 0), // property DateSeparator
+			/* 14 */ imports.NewTable("TDateTimePicker_TrailingSeparator", 0), // property TrailingSeparator
+			/* 15 */ imports.NewTable("TDateTimePicker_TextForNullDate", 0), // property TextForNullDate
+			/* 16 */ imports.NewTable("TDateTimePicker_LeadingZeros", 0), // property LeadingZeros
+			/* 17 */ imports.NewTable("TDateTimePicker_ParentShowHint", 0), // property ParentShowHint
+			/* 18 */ imports.NewTable("TDateTimePicker_NullInputAllowed", 0), // property NullInputAllowed
+			/* 19 */ imports.NewTable("TDateTimePicker_Kind", 0), // property Kind
+			/* 20 */ imports.NewTable("TDateTimePicker_TimeSeparator", 0), // property TimeSeparator
+			/* 21 */ imports.NewTable("TDateTimePicker_DecimalSeparator", 0), // property DecimalSeparator
+			/* 22 */ imports.NewTable("TDateTimePicker_TimeFormat", 0), // property TimeFormat
+			/* 23 */ imports.NewTable("TDateTimePicker_TimeDisplay", 0), // property TimeDisplay
+			/* 24 */ imports.NewTable("TDateTimePicker_DateMode", 0), // property DateMode
+			/* 25 */ imports.NewTable("TDateTimePicker_Date", 0), // property Date
+			/* 26 */ imports.NewTable("TDateTimePicker_Time", 0), // property Time
+			/* 27 */ imports.NewTable("TDateTimePicker_UseDefaultSeparators", 0), // property UseDefaultSeparators
+			/* 28 */ imports.NewTable("TDateTimePicker_Cascade", 0), // property Cascade
+			/* 29 */ imports.NewTable("TDateTimePicker_AutoButtonSize", 0), // property AutoButtonSize
+			/* 30 */ imports.NewTable("TDateTimePicker_AutoAdvance", 0), // property AutoAdvance
+			/* 31 */ imports.NewTable("TDateTimePicker_HideDateTimeParts", 0), // property HideDateTimeParts
+			/* 32 */ imports.NewTable("TDateTimePicker_MonthDisplay", 0), // property MonthDisplay
+			/* 33 */ imports.NewTable("TDateTimePicker_CustomMonthNames", 0), // property CustomMonthNames
+			/* 34 */ imports.NewTable("TDateTimePicker_ShowMonthNames", 0), // property ShowMonthNames
+			/* 35 */ imports.NewTable("TDateTimePicker_CalAlignment", 0), // property CalAlignment
+			/* 36 */ imports.NewTable("TDateTimePicker_Alignment", 0), // property Alignment
+			/* 37 */ imports.NewTable("TDateTimePicker_Options", 0), // property Options
+			/* 38 */ imports.NewTable("TDateTimePicker_OnChange", 0), // event OnChange
+			/* 39 */ imports.NewTable("TDateTimePicker_OnCheckBoxChange", 0), // event OnCheckBoxChange
+			/* 40 */ imports.NewTable("TDateTimePicker_OnDropDown", 0), // event OnDropDown
+			/* 41 */ imports.NewTable("TDateTimePicker_OnCloseUp", 0), // event OnCloseUp
+			/* 42 */ imports.NewTable("TDateTimePicker_OnContextPopup", 0), // event OnContextPopup
+			/* 43 */ imports.NewTable("TDateTimePicker_OnDblClick", 0), // event OnDblClick
+			/* 44 */ imports.NewTable("TDateTimePicker_OnEditingDone", 0), // event OnEditingDone
+			/* 45 */ imports.NewTable("TDateTimePicker_OnMouseDown", 0), // event OnMouseDown
+			/* 46 */ imports.NewTable("TDateTimePicker_OnMouseEnter", 0), // event OnMouseEnter
+			/* 47 */ imports.NewTable("TDateTimePicker_OnMouseLeave", 0), // event OnMouseLeave
+			/* 48 */ imports.NewTable("TDateTimePicker_OnMouseMove", 0), // event OnMouseMove
+			/* 49 */ imports.NewTable("TDateTimePicker_OnMouseUp", 0), // event OnMouseUp
+			/* 50 */ imports.NewTable("TDateTimePicker_OnMouseWheel", 0), // event OnMouseWheel
+			/* 51 */ imports.NewTable("TDateTimePicker_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 52 */ imports.NewTable("TDateTimePicker_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 53 */ imports.NewTable("TDateTimePicker_TClass", 0), // function TDateTimePickerClass
+		}
+	})
 	return dateTimePickerImport
 }

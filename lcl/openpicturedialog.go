@@ -9,58 +9,64 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IOpenPictureDialog Parent: IPreviewFileDialog
 type IOpenPictureDialog interface {
 	IPreviewFileDialog
-	DefaultFilter() string // property
 	GetFilterExt() string  // function
+	DefaultFilter() string // property DefaultFilter Getter
 }
 
-// TOpenPictureDialog Parent: TPreviewFileDialog
 type TOpenPictureDialog struct {
 	TPreviewFileDialog
 }
 
-func NewOpenPictureDialog(TheOwner IComponent) IOpenPictureDialog {
-	r1 := openPictureDialogImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsOpenPictureDialog(r1)
+func (m *TOpenPictureDialog) GetFilterExt() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := openPictureDialogAPI().SysCallN(1, m.Instance())
+	return api.GoStr(r)
 }
 
 func (m *TOpenPictureDialog) DefaultFilter() string {
-	r1 := openPictureDialogImportAPI().SysCallN(2, m.Instance())
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := openPictureDialogAPI().SysCallN(2, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TOpenPictureDialog) GetFilterExt() string {
-	r1 := openPictureDialogImportAPI().SysCallN(3, m.Instance())
-	return GoStr(r1)
+// NewOpenPictureDialog class constructor
+func NewOpenPictureDialog(theOwner IComponent) IOpenPictureDialog {
+	r := openPictureDialogAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsOpenPictureDialog(r)
 }
 
-func OpenPictureDialogClass() TClass {
-	ret := openPictureDialogImportAPI().SysCallN(0)
-	return TClass(ret)
+func TOpenPictureDialogClass() types.TClass {
+	r := openPictureDialogAPI().SysCallN(3)
+	return types.TClass(r)
 }
 
 var (
-	openPictureDialogImport       *imports.Imports = nil
-	openPictureDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("OpenPictureDialog_Class", 0),
-		/*1*/ imports.NewTable("OpenPictureDialog_Create", 0),
-		/*2*/ imports.NewTable("OpenPictureDialog_DefaultFilter", 0),
-		/*3*/ imports.NewTable("OpenPictureDialog_GetFilterExt", 0),
-	}
+	openPictureDialogOnce   base.Once
+	openPictureDialogImport *imports.Imports = nil
 )
 
-func openPictureDialogImportAPI() *imports.Imports {
-	if openPictureDialogImport == nil {
-		openPictureDialogImport = NewDefaultImports()
-		openPictureDialogImport.SetImportTable(openPictureDialogImportTables)
-		openPictureDialogImportTables = nil
-	}
+func openPictureDialogAPI() *imports.Imports {
+	openPictureDialogOnce.Do(func() {
+		openPictureDialogImport = api.NewDefaultImports()
+		openPictureDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TOpenPictureDialog_Create", 0), // constructor NewOpenPictureDialog
+			/* 1 */ imports.NewTable("TOpenPictureDialog_GetFilterExt", 0), // function GetFilterExt
+			/* 2 */ imports.NewTable("TOpenPictureDialog_DefaultFilter", 0), // property DefaultFilter
+			/* 3 */ imports.NewTable("TOpenPictureDialog_TClass", 0), // function TOpenPictureDialogClass
+		}
+	})
 	return openPictureDialogImport
 }

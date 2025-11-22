@@ -1,6 +1,6 @@
 //----------------------------------------
 //
-// Copyright © ying32. All Rights Reserved.
+// Copyright © yanghy. All Rights Reserved.
 //
 // Licensed under Apache License 2.0
 //
@@ -36,45 +36,59 @@ func (p ProcAddr) Call(args ...uintptr) (r1, r2 uintptr, err syscall.Errno) {
 	return SyscallN(uintptr(p), args...)
 }
 
-// SyscallN 调用一个函数，最大15个参数。
+// SyscallN 调用一个函数，最大18个参数
 func SyscallN(addr uintptr, args ...uintptr) (r1, r2 uintptr, err syscall.Errno) {
 	if addr == 0 {
 		return 0, 0, syscall.ERROR_PROC_NOT_FOUND
 	}
-	switch len(args) {
-	case 0:
-		return syscall.Syscall(addr, 0, 0, 0, 0)
-	case 1:
-		return syscall.Syscall(addr, 1, args[0], 0, 0)
-	case 2:
-		return syscall.Syscall(addr, 2, args[0], args[1], 0)
-	case 3:
-		return syscall.Syscall(addr, 3, args[0], args[1], args[2])
-	case 4:
-		return syscall.Syscall6(addr, 4, args[0], args[1], args[2], args[3], 0, 0)
-	case 5:
-		return syscall.Syscall6(addr, 5, args[0], args[1], args[2], args[3], args[4], 0)
-	case 6:
-		return syscall.Syscall6(addr, 6, args[0], args[1], args[2], args[3], args[4], args[5])
-	case 7:
-		return syscall.Syscall9(addr, 7, args[0], args[1], args[2], args[3], args[4], args[5], args[6], 0, 0)
-	case 8:
-		return syscall.Syscall9(addr, 8, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], 0)
-	case 9:
-		return syscall.Syscall9(addr, 9, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8])
-	case 10:
-		return syscall.Syscall12(addr, 10, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], 0, 0)
-	case 11:
-		return syscall.Syscall12(addr, 11, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], 0)
-	case 12:
-		return syscall.Syscall12(addr, 12, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11])
-	case 13:
-		return syscall.Syscall15(addr, 13, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], 0, 0)
-	case 14:
-		return syscall.Syscall15(addr, 14, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], 0)
-	case 15:
-		return syscall.Syscall15(addr, 15, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14])
-	default:
-		return 0, 0, 87 //ERROR_INVALID_PARAMETER = 87
-	}
+	return syscall.SyscallN(addr, args...)
 }
+
+// SyscallN 调用一个函数，最大18个参数
+//func SyscallN(addr uintptr, args ...uintptr) (r1, r2 uintptr, err syscall.Errno) {
+//	if addr == 0 {
+//		return 0, 0, syscall.ERROR_PROC_NOT_FOUND
+//	}
+//	switch len(args) {
+//	case 0:
+//		return syscall.Syscall(addr, 0, 0, 0, 0)
+//	case 1:
+//		return syscall.Syscall(addr, 1, args[0], 0, 0)
+//	case 2:
+//		return syscall.Syscall(addr, 2, args[0], args[1], 0)
+//	case 3:
+//		return syscall.Syscall(addr, 3, args[0], args[1], args[2])
+//	case 4:
+//		return syscall.Syscall6(addr, 4, args[0], args[1], args[2], args[3], 0, 0)
+//	case 5:
+//		return syscall.Syscall6(addr, 5, args[0], args[1], args[2], args[3], args[4], 0)
+//	case 6:
+//		return syscall.Syscall6(addr, 6, args[0], args[1], args[2], args[3], args[4], args[5])
+//	case 7:
+//		return syscall.Syscall9(addr, 7, args[0], args[1], args[2], args[3], args[4], args[5], args[6], 0, 0)
+//	case 8:
+//		return syscall.Syscall9(addr, 8, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], 0)
+//	case 9:
+//		return syscall.Syscall9(addr, 9, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8])
+//	case 10:
+//		return syscall.Syscall12(addr, 10, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], 0, 0)
+//	case 11:
+//		return syscall.Syscall12(addr, 11, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], 0)
+//	case 12:
+//		return syscall.Syscall12(addr, 12, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11])
+//	case 13:
+//		return syscall.Syscall15(addr, 13, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], 0, 0)
+//	case 14:
+//		return syscall.Syscall15(addr, 14, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], 0)
+//	case 15:
+//		return syscall.Syscall15(addr, 15, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14])
+//	case 16:
+//		return syscall.Syscall18(addr, 16, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15], 0, 0)
+//	case 17:
+//		return syscall.Syscall18(addr, 17, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15], args[16], 0)
+//	case 18:
+//		return syscall.Syscall18(addr, 18, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15], args[16], args[17])
+//	default:
+//		return 0, 0, 87 //ERROR_INVALID_PARAMETER = 87
+//	}
+//}

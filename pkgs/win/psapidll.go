@@ -12,11 +12,11 @@
 package win
 
 import (
-	. "github.com/energye/lcl/types"
+	"syscall"
 	"unsafe"
-)
 
-import "syscall"
+	. "github.com/energye/lcl/types"
+)
 
 var (
 	psapidll = syscall.NewLazyDLL("psapi.dll")

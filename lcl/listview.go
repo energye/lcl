@@ -9,69 +9,69 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IListView Parent: ICustomListView
 type IListView interface {
 	ICustomListView
-	DeleteSelected()
-	AllocBy() int32                                                      // property
-	SetAllocBy(AValue int32)                                             // property
-	AutoSort() bool                                                      // property
-	SetAutoSort(AValue bool)                                             // property
-	AutoSortIndicator() bool                                             // property
-	SetAutoSortIndicator(AValue bool)                                    // property
-	AutoWidthLastColumn() bool                                           // property
-	SetAutoWidthLastColumn(AValue bool)                                  // property
-	Columns() IListColumns                                               // property
-	SetColumns(AValue IListColumns)                                      // property
-	ColumnClick() bool                                                   // property
-	SetColumnClick(AValue bool)                                          // property
-	DragCursor() TCursor                                                 // property
-	SetDragCursor(AValue TCursor)                                        // property
-	DragKind() TDragKind                                                 // property
-	SetDragKind(AValue TDragKind)                                        // property
-	DragMode() TDragMode                                                 // property
-	SetDragMode(AValue TDragMode)                                        // property
-	HideSelection() bool                                                 // property
-	SetHideSelection(AValue bool)                                        // property
-	LargeImages() ICustomImageList                                       // property
-	SetLargeImages(AValue ICustomImageList)                              // property
-	LargeImagesWidth() int32                                             // property
-	SetLargeImagesWidth(AValue int32)                                    // property
-	OwnerDraw() bool                                                     // property
-	SetOwnerDraw(AValue bool)                                            // property
-	ParentColor() bool                                                   // property
-	SetParentColor(AValue bool)                                          // property
-	ParentFont() bool                                                    // property
-	SetParentFont(AValue bool)                                           // property
-	ParentShowHint() bool                                                // property
-	SetParentShowHint(AValue bool)                                       // property
-	ScrollBars() TScrollStyle                                            // property
-	SetScrollBars(AValue TScrollStyle)                                   // property
-	ShowColumnHeaders() bool                                             // property
-	SetShowColumnHeaders(AValue bool)                                    // property
-	SmallImages() ICustomImageList                                       // property
-	SetSmallImages(AValue ICustomImageList)                              // property
-	SmallImagesWidth() int32                                             // property
-	SetSmallImagesWidth(AValue int32)                                    // property
-	SortColumn() int32                                                   // property
-	SetSortColumn(AValue int32)                                          // property
-	SortDirection() TSortDirection                                       // property
-	SetSortDirection(AValue TSortDirection)                              // property
-	SortType() TSortType                                                 // property
-	SetSortType(AValue TSortType)                                        // property
-	StateImages() ICustomImageList                                       // property
-	SetStateImages(AValue ICustomImageList)                              // property
-	StateImagesWidth() int32                                             // property
-	SetStateImagesWidth(AValue int32)                                    // property
-	ToolTips() bool                                                      // property
-	SetToolTips(AValue bool)                                             // property
-	ViewStyle() TViewStyle                                               // property
-	SetViewStyle(AValue TViewStyle)                                      // property
+	AllocBy() int32                                                      // property AllocBy Getter
+	SetAllocBy(value int32)                                              // property AllocBy Setter
+	AutoSort() bool                                                      // property AutoSort Getter
+	SetAutoSort(value bool)                                              // property AutoSort Setter
+	AutoSortIndicator() bool                                             // property AutoSortIndicator Getter
+	SetAutoSortIndicator(value bool)                                     // property AutoSortIndicator Setter
+	AutoWidthLastColumn() bool                                           // property AutoWidthLastColumn Getter
+	SetAutoWidthLastColumn(value bool)                                   // property AutoWidthLastColumn Setter
+	Columns() IListColumns                                               // property Columns Getter
+	SetColumns(value IListColumns)                                       // property Columns Setter
+	ColumnClick() bool                                                   // property ColumnClick Getter
+	SetColumnClick(value bool)                                           // property ColumnClick Setter
+	DragCursor() types.TCursor                                           // property DragCursor Getter
+	SetDragCursor(value types.TCursor)                                   // property DragCursor Setter
+	DragKind() types.TDragKind                                           // property DragKind Getter
+	SetDragKind(value types.TDragKind)                                   // property DragKind Setter
+	DragMode() types.TDragMode                                           // property DragMode Getter
+	SetDragMode(value types.TDragMode)                                   // property DragMode Setter
+	HideSelection() bool                                                 // property HideSelection Getter
+	SetHideSelection(value bool)                                         // property HideSelection Setter
+	LargeImages() ICustomImageList                                       // property LargeImages Getter
+	SetLargeImages(value ICustomImageList)                               // property LargeImages Setter
+	LargeImagesWidth() int32                                             // property LargeImagesWidth Getter
+	SetLargeImagesWidth(value int32)                                     // property LargeImagesWidth Setter
+	OwnerDraw() bool                                                     // property OwnerDraw Getter
+	SetOwnerDraw(value bool)                                             // property OwnerDraw Setter
+	ParentColor() bool                                                   // property ParentColor Getter
+	SetParentColor(value bool)                                           // property ParentColor Setter
+	ParentFont() bool                                                    // property ParentFont Getter
+	SetParentFont(value bool)                                            // property ParentFont Setter
+	ParentShowHint() bool                                                // property ParentShowHint Getter
+	SetParentShowHint(value bool)                                        // property ParentShowHint Setter
+	ScrollBars() types.TScrollStyle                                      // property ScrollBars Getter
+	SetScrollBars(value types.TScrollStyle)                              // property ScrollBars Setter
+	ShowColumnHeaders() bool                                             // property ShowColumnHeaders Getter
+	SetShowColumnHeaders(value bool)                                     // property ShowColumnHeaders Setter
+	SmallImages() ICustomImageList                                       // property SmallImages Getter
+	SetSmallImages(value ICustomImageList)                               // property SmallImages Setter
+	SmallImagesWidth() int32                                             // property SmallImagesWidth Getter
+	SetSmallImagesWidth(value int32)                                     // property SmallImagesWidth Setter
+	SortColumn() int32                                                   // property SortColumn Getter
+	SetSortColumn(value int32)                                           // property SortColumn Setter
+	SortDirection() types.TSortDirection                                 // property SortDirection Getter
+	SetSortDirection(value types.TSortDirection)                         // property SortDirection Setter
+	SortType() types.TSortType                                           // property SortType Getter
+	SetSortType(value types.TSortType)                                   // property SortType Setter
+	StateImages() ICustomImageList                                       // property StateImages Getter
+	SetStateImages(value ICustomImageList)                               // property StateImages Setter
+	StateImagesWidth() int32                                             // property StateImagesWidth Getter
+	SetStateImagesWidth(value int32)                                     // property StateImagesWidth Setter
+	ToolTips() bool                                                      // property ToolTips Getter
+	SetToolTips(value bool)                                              // property ToolTips Setter
+	ViewStyle() types.TViewStyle                                         // property ViewStyle Getter
+	SetViewStyle(value types.TViewStyle)                                 // property ViewStyle Setter
 	SetOnAdvancedCustomDraw(fn TLVAdvancedCustomDrawEvent)               // property event
 	SetOnAdvancedCustomDrawItem(fn TLVAdvancedCustomDrawItemEvent)       // property event
 	SetOnAdvancedCustomDrawSubItem(fn TLVAdvancedCustomDrawSubItemEvent) // property event
@@ -115,714 +115,834 @@ type IListView interface {
 	SetOnStartDrag(fn TStartDragEvent)                                   // property event
 }
 
-// TListView Parent: TCustomListView
 type TListView struct {
 	TCustomListView
-	advancedCustomDrawPtr        uintptr
-	advancedCustomDrawItemPtr    uintptr
-	advancedCustomDrawSubItemPtr uintptr
-	changePtr                    uintptr
-	changingPtr                  uintptr
-	columnClickPtr               uintptr
-	comparePtr                   uintptr
-	contextPopupPtr              uintptr
-	createItemClassPtr           uintptr
-	customDrawPtr                uintptr
-	customDrawItemPtr            uintptr
-	customDrawSubItemPtr         uintptr
-	dataPtr                      uintptr
-	dataFindPtr                  uintptr
-	dataHintPtr                  uintptr
-	dataStateChangePtr           uintptr
-	dblClickPtr                  uintptr
-	deletionPtr                  uintptr
-	dragDropPtr                  uintptr
-	dragOverPtr                  uintptr
-	drawItemPtr                  uintptr
-	editedPtr                    uintptr
-	editingPtr                   uintptr
-	endDockPtr                   uintptr
-	endDragPtr                   uintptr
-	insertPtr                    uintptr
-	itemCheckedPtr               uintptr
-	mouseDownPtr                 uintptr
-	mouseEnterPtr                uintptr
-	mouseLeavePtr                uintptr
-	mouseMovePtr                 uintptr
-	mouseUpPtr                   uintptr
-	mouseWheelPtr                uintptr
-	mouseWheelDownPtr            uintptr
-	mouseWheelUpPtr              uintptr
-	mouseWheelHorzPtr            uintptr
-	mouseWheelLeftPtr            uintptr
-	mouseWheelRightPtr           uintptr
-	selectItemPtr                uintptr
-	startDockPtr                 uintptr
-	startDragPtr                 uintptr
-}
-
-func NewListView(AOwner IComponent) IListView {
-	r1 := listViewImportAPI().SysCallN(7, GetObjectUintptr(AOwner))
-	return AsListView(r1)
 }
 
 func (m *TListView) AllocBy() int32 {
-	r1 := listViewImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(1, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TListView) SetAllocBy(AValue int32) {
-	listViewImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetAllocBy(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListView) AutoSort() bool {
-	r1 := listViewImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(2, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetAutoSort(AValue bool) {
-	listViewImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetAutoSort(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(2, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TListView) AutoSortIndicator() bool {
-	r1 := listViewImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetAutoSortIndicator(AValue bool) {
-	listViewImportAPI().SysCallN(2, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetAutoSortIndicator(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TListView) AutoWidthLastColumn() bool {
-	r1 := listViewImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetAutoWidthLastColumn(AValue bool) {
-	listViewImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetAutoWidthLastColumn(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TListView) Columns() IListColumns {
-	r1 := listViewImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return AsListColumns(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := listViewAPI().SysCallN(5, 0, m.Instance())
+	return AsListColumns(r)
 }
 
-func (m *TListView) SetColumns(AValue IListColumns) {
-	listViewImportAPI().SysCallN(6, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TListView) SetColumns(value IListColumns) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(5, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TListView) ColumnClick() bool {
-	r1 := listViewImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetColumnClick(AValue bool) {
-	listViewImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetColumnClick(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TListView) DragCursor() TCursor {
-	r1 := listViewImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TListView) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(7, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TListView) SetDragCursor(AValue TCursor) {
-	listViewImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TListView) DragKind() TDragKind {
-	r1 := listViewImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TListView) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(8, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TListView) SetDragKind(AValue TDragKind) {
-	listViewImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TListView) DragMode() TDragMode {
-	r1 := listViewImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return TDragMode(r1)
+func (m *TListView) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(9, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TListView) SetDragMode(AValue TDragMode) {
-	listViewImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListView) HideSelection() bool {
-	r1 := listViewImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(10, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetHideSelection(AValue bool) {
-	listViewImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetHideSelection(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(10, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TListView) LargeImages() ICustomImageList {
-	r1 := listViewImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := listViewAPI().SysCallN(11, 0, m.Instance())
+	return AsCustomImageList(r)
 }
 
-func (m *TListView) SetLargeImages(AValue ICustomImageList) {
-	listViewImportAPI().SysCallN(12, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TListView) SetLargeImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(11, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TListView) LargeImagesWidth() int32 {
-	r1 := listViewImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(12, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TListView) SetLargeImagesWidth(AValue int32) {
-	listViewImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetLargeImagesWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListView) OwnerDraw() bool {
-	r1 := listViewImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(13, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetOwnerDraw(AValue bool) {
-	listViewImportAPI().SysCallN(14, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetOwnerDraw(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(13, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TListView) ParentColor() bool {
-	r1 := listViewImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(14, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetParentColor(AValue bool) {
-	listViewImportAPI().SysCallN(15, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(14, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TListView) ParentFont() bool {
-	r1 := listViewImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(15, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetParentFont(AValue bool) {
-	listViewImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(15, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TListView) ParentShowHint() bool {
-	r1 := listViewImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(16, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetParentShowHint(AValue bool) {
-	listViewImportAPI().SysCallN(17, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(16, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TListView) ScrollBars() TScrollStyle {
-	r1 := listViewImportAPI().SysCallN(18, 0, m.Instance(), 0)
-	return TScrollStyle(r1)
+func (m *TListView) ScrollBars() types.TScrollStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(17, 0, m.Instance())
+	return types.TScrollStyle(r)
 }
 
-func (m *TListView) SetScrollBars(AValue TScrollStyle) {
-	listViewImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetScrollBars(value types.TScrollStyle) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(17, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListView) ShowColumnHeaders() bool {
-	r1 := listViewImportAPI().SysCallN(60, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(18, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetShowColumnHeaders(AValue bool) {
-	listViewImportAPI().SysCallN(60, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetShowColumnHeaders(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(18, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TListView) SmallImages() ICustomImageList {
-	r1 := listViewImportAPI().SysCallN(61, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := listViewAPI().SysCallN(19, 0, m.Instance())
+	return AsCustomImageList(r)
 }
 
-func (m *TListView) SetSmallImages(AValue ICustomImageList) {
-	listViewImportAPI().SysCallN(61, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TListView) SetSmallImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(19, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TListView) SmallImagesWidth() int32 {
-	r1 := listViewImportAPI().SysCallN(62, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(20, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TListView) SetSmallImagesWidth(AValue int32) {
-	listViewImportAPI().SysCallN(62, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetSmallImagesWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(20, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListView) SortColumn() int32 {
-	r1 := listViewImportAPI().SysCallN(63, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(21, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TListView) SetSortColumn(AValue int32) {
-	listViewImportAPI().SysCallN(63, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetSortColumn(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(21, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TListView) SortDirection() TSortDirection {
-	r1 := listViewImportAPI().SysCallN(64, 0, m.Instance(), 0)
-	return TSortDirection(r1)
+func (m *TListView) SortDirection() types.TSortDirection {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(22, 0, m.Instance())
+	return types.TSortDirection(r)
 }
 
-func (m *TListView) SetSortDirection(AValue TSortDirection) {
-	listViewImportAPI().SysCallN(64, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetSortDirection(value types.TSortDirection) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TListView) SortType() TSortType {
-	r1 := listViewImportAPI().SysCallN(65, 0, m.Instance(), 0)
-	return TSortType(r1)
+func (m *TListView) SortType() types.TSortType {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(23, 0, m.Instance())
+	return types.TSortType(r)
 }
 
-func (m *TListView) SetSortType(AValue TSortType) {
-	listViewImportAPI().SysCallN(65, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetSortType(value types.TSortType) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListView) StateImages() ICustomImageList {
-	r1 := listViewImportAPI().SysCallN(66, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := listViewAPI().SysCallN(24, 0, m.Instance())
+	return AsCustomImageList(r)
 }
 
-func (m *TListView) SetStateImages(AValue ICustomImageList) {
-	listViewImportAPI().SysCallN(66, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TListView) SetStateImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(24, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TListView) StateImagesWidth() int32 {
-	r1 := listViewImportAPI().SysCallN(67, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(25, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TListView) SetStateImagesWidth(AValue int32) {
-	listViewImportAPI().SysCallN(67, 1, m.Instance(), uintptr(AValue))
+func (m *TListView) SetStateImagesWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(25, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListView) ToolTips() bool {
-	r1 := listViewImportAPI().SysCallN(68, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listViewAPI().SysCallN(26, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListView) SetToolTips(AValue bool) {
-	listViewImportAPI().SysCallN(68, 1, m.Instance(), PascalBool(AValue))
+func (m *TListView) SetToolTips(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(26, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TListView) ViewStyle() TViewStyle {
-	r1 := listViewImportAPI().SysCallN(69, 0, m.Instance(), 0)
-	return TViewStyle(r1)
+func (m *TListView) ViewStyle() types.TViewStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listViewAPI().SysCallN(27, 0, m.Instance())
+	return types.TViewStyle(r)
 }
 
-func (m *TListView) SetViewStyle(AValue TViewStyle) {
-	listViewImportAPI().SysCallN(69, 1, m.Instance(), uintptr(AValue))
-}
-
-func ListViewClass() TClass {
-	ret := listViewImportAPI().SysCallN(4)
-	return TClass(ret)
+func (m *TListView) SetViewStyle(value types.TViewStyle) {
+	if !m.IsValid() {
+		return
+	}
+	listViewAPI().SysCallN(27, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListView) SetOnAdvancedCustomDraw(fn TLVAdvancedCustomDrawEvent) {
-	if m.advancedCustomDrawPtr != 0 {
-		RemoveEventElement(m.advancedCustomDrawPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.advancedCustomDrawPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(19, m.Instance(), m.advancedCustomDrawPtr)
+	cb := makeTLVAdvancedCustomDrawEvent(fn)
+	base.SetEvent(m, 28, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnAdvancedCustomDrawItem(fn TLVAdvancedCustomDrawItemEvent) {
-	if m.advancedCustomDrawItemPtr != 0 {
-		RemoveEventElement(m.advancedCustomDrawItemPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.advancedCustomDrawItemPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(20, m.Instance(), m.advancedCustomDrawItemPtr)
+	cb := makeTLVAdvancedCustomDrawItemEvent(fn)
+	base.SetEvent(m, 29, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnAdvancedCustomDrawSubItem(fn TLVAdvancedCustomDrawSubItemEvent) {
-	if m.advancedCustomDrawSubItemPtr != 0 {
-		RemoveEventElement(m.advancedCustomDrawSubItemPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.advancedCustomDrawSubItemPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(21, m.Instance(), m.advancedCustomDrawSubItemPtr)
+	cb := makeTLVAdvancedCustomDrawSubItemEvent(fn)
+	base.SetEvent(m, 30, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnChange(fn TLVChangeEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(22, m.Instance(), m.changePtr)
+	cb := makeTLVChangeEvent(fn)
+	base.SetEvent(m, 31, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnChanging(fn TLVChangingEvent) {
-	if m.changingPtr != 0 {
-		RemoveEventElement(m.changingPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changingPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(23, m.Instance(), m.changingPtr)
+	cb := makeTLVChangingEvent(fn)
+	base.SetEvent(m, 32, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnColumnClick(fn TLVColumnClickEvent) {
-	if m.columnClickPtr != 0 {
-		RemoveEventElement(m.columnClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.columnClickPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(24, m.Instance(), m.columnClickPtr)
+	cb := makeTLVColumnClickEvent(fn)
+	base.SetEvent(m, 33, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnCompare(fn TLVCompareEvent) {
-	if m.comparePtr != 0 {
-		RemoveEventElement(m.comparePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.comparePtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(25, m.Instance(), m.comparePtr)
+	cb := makeTLVCompareEvent(fn)
+	base.SetEvent(m, 34, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(26, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 35, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnCreateItemClass(fn TLVCreateItemClassEvent) {
-	if m.createItemClassPtr != 0 {
-		RemoveEventElement(m.createItemClassPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.createItemClassPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(27, m.Instance(), m.createItemClassPtr)
+	cb := makeTLVCreateItemClassEvent(fn)
+	base.SetEvent(m, 36, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnCustomDraw(fn TLVCustomDrawEvent) {
-	if m.customDrawPtr != 0 {
-		RemoveEventElement(m.customDrawPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.customDrawPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(28, m.Instance(), m.customDrawPtr)
+	cb := makeTLVCustomDrawEvent(fn)
+	base.SetEvent(m, 37, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnCustomDrawItem(fn TLVCustomDrawItemEvent) {
-	if m.customDrawItemPtr != 0 {
-		RemoveEventElement(m.customDrawItemPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.customDrawItemPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(29, m.Instance(), m.customDrawItemPtr)
+	cb := makeTLVCustomDrawItemEvent(fn)
+	base.SetEvent(m, 38, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnCustomDrawSubItem(fn TLVCustomDrawSubItemEvent) {
-	if m.customDrawSubItemPtr != 0 {
-		RemoveEventElement(m.customDrawSubItemPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.customDrawSubItemPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(30, m.Instance(), m.customDrawSubItemPtr)
+	cb := makeTLVCustomDrawSubItemEvent(fn)
+	base.SetEvent(m, 39, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnData(fn TLVDataEvent) {
-	if m.dataPtr != 0 {
-		RemoveEventElement(m.dataPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dataPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(31, m.Instance(), m.dataPtr)
+	cb := makeTLVDataEvent(fn)
+	base.SetEvent(m, 40, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnDataFind(fn TLVDataFindEvent) {
-	if m.dataFindPtr != 0 {
-		RemoveEventElement(m.dataFindPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dataFindPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(32, m.Instance(), m.dataFindPtr)
+	cb := makeTLVDataFindEvent(fn)
+	base.SetEvent(m, 41, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnDataHint(fn TLVDataHintEvent) {
-	if m.dataHintPtr != 0 {
-		RemoveEventElement(m.dataHintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dataHintPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(33, m.Instance(), m.dataHintPtr)
+	cb := makeTLVDataHintEvent(fn)
+	base.SetEvent(m, 42, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnDataStateChange(fn TLVDataStateChangeEvent) {
-	if m.dataStateChangePtr != 0 {
-		RemoveEventElement(m.dataStateChangePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dataStateChangePtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(34, m.Instance(), m.dataStateChangePtr)
+	cb := makeTLVDataStateChangeEvent(fn)
+	base.SetEvent(m, 43, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(35, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 44, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnDeletion(fn TLVDeletedEvent) {
-	if m.deletionPtr != 0 {
-		RemoveEventElement(m.deletionPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.deletionPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(36, m.Instance(), m.deletionPtr)
+	cb := makeTLVDeletedEvent(fn)
+	base.SetEvent(m, 45, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(37, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 46, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(38, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 47, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnDrawItem(fn TLVDrawItemEvent) {
-	if m.drawItemPtr != 0 {
-		RemoveEventElement(m.drawItemPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.drawItemPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(39, m.Instance(), m.drawItemPtr)
+	cb := makeTLVDrawItemEvent(fn)
+	base.SetEvent(m, 48, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnEdited(fn TLVEditedEvent) {
-	if m.editedPtr != 0 {
-		RemoveEventElement(m.editedPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.editedPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(40, m.Instance(), m.editedPtr)
+	cb := makeTLVEditedEvent(fn)
+	base.SetEvent(m, 49, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnEditing(fn TLVEditingEvent) {
-	if m.editingPtr != 0 {
-		RemoveEventElement(m.editingPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.editingPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(41, m.Instance(), m.editingPtr)
+	cb := makeTLVEditingEvent(fn)
+	base.SetEvent(m, 50, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnEndDock(fn TEndDragEvent) {
-	if m.endDockPtr != 0 {
-		RemoveEventElement(m.endDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDockPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(42, m.Instance(), m.endDockPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 51, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(43, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 52, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnInsert(fn TLVInsertEvent) {
-	if m.insertPtr != 0 {
-		RemoveEventElement(m.insertPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.insertPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(44, m.Instance(), m.insertPtr)
+	cb := makeTLVInsertEvent(fn)
+	base.SetEvent(m, 53, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnItemChecked(fn TLVCheckedItemEvent) {
-	if m.itemCheckedPtr != 0 {
-		RemoveEventElement(m.itemCheckedPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.itemCheckedPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(45, m.Instance(), m.itemCheckedPtr)
+	cb := makeTLVCheckedItemEvent(fn)
+	base.SetEvent(m, 54, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(46, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 55, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(47, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 56, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(48, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 57, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(49, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 58, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(50, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 59, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(51, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 60, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(52, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 61, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(56, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 62, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(53, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 63, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(54, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 64, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(55, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 65, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnSelectItem(fn TLVSelectItemEvent) {
-	if m.selectItemPtr != 0 {
-		RemoveEventElement(m.selectItemPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.selectItemPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(57, m.Instance(), m.selectItemPtr)
+	cb := makeTLVSelectItemEvent(fn)
+	base.SetEvent(m, 66, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnStartDock(fn TStartDockEvent) {
-	if m.startDockPtr != 0 {
-		RemoveEventElement(m.startDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDockPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(58, m.Instance(), m.startDockPtr)
+	cb := makeTStartDockEvent(fn)
+	base.SetEvent(m, 67, listViewAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListView) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	listViewImportAPI().SysCallN(59, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 68, listViewAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewListView class constructor
+func NewListView(owner IComponent) IListView {
+	r := listViewAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsListView(r)
+}
+
+func TListViewClass() types.TClass {
+	r := listViewAPI().SysCallN(69)
+	return types.TClass(r)
 }
 
 var (
-	listViewImport       *imports.Imports = nil
-	listViewImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ListView_AllocBy", 0),
-		/*1*/ imports.NewTable("ListView_AutoSort", 0),
-		/*2*/ imports.NewTable("ListView_AutoSortIndicator", 0),
-		/*3*/ imports.NewTable("ListView_AutoWidthLastColumn", 0),
-		/*4*/ imports.NewTable("ListView_Class", 0),
-		/*5*/ imports.NewTable("ListView_ColumnClick", 0),
-		/*6*/ imports.NewTable("ListView_Columns", 0),
-		/*7*/ imports.NewTable("ListView_Create", 0),
-		/*8*/ imports.NewTable("ListView_DragCursor", 0),
-		/*9*/ imports.NewTable("ListView_DragKind", 0),
-		/*10*/ imports.NewTable("ListView_DragMode", 0),
-		/*11*/ imports.NewTable("ListView_HideSelection", 0),
-		/*12*/ imports.NewTable("ListView_LargeImages", 0),
-		/*13*/ imports.NewTable("ListView_LargeImagesWidth", 0),
-		/*14*/ imports.NewTable("ListView_OwnerDraw", 0),
-		/*15*/ imports.NewTable("ListView_ParentColor", 0),
-		/*16*/ imports.NewTable("ListView_ParentFont", 0),
-		/*17*/ imports.NewTable("ListView_ParentShowHint", 0),
-		/*18*/ imports.NewTable("ListView_ScrollBars", 0),
-		/*19*/ imports.NewTable("ListView_SetOnAdvancedCustomDraw", 0),
-		/*20*/ imports.NewTable("ListView_SetOnAdvancedCustomDrawItem", 0),
-		/*21*/ imports.NewTable("ListView_SetOnAdvancedCustomDrawSubItem", 0),
-		/*22*/ imports.NewTable("ListView_SetOnChange", 0),
-		/*23*/ imports.NewTable("ListView_SetOnChanging", 0),
-		/*24*/ imports.NewTable("ListView_SetOnColumnClick", 0),
-		/*25*/ imports.NewTable("ListView_SetOnCompare", 0),
-		/*26*/ imports.NewTable("ListView_SetOnContextPopup", 0),
-		/*27*/ imports.NewTable("ListView_SetOnCreateItemClass", 0),
-		/*28*/ imports.NewTable("ListView_SetOnCustomDraw", 0),
-		/*29*/ imports.NewTable("ListView_SetOnCustomDrawItem", 0),
-		/*30*/ imports.NewTable("ListView_SetOnCustomDrawSubItem", 0),
-		/*31*/ imports.NewTable("ListView_SetOnData", 0),
-		/*32*/ imports.NewTable("ListView_SetOnDataFind", 0),
-		/*33*/ imports.NewTable("ListView_SetOnDataHint", 0),
-		/*34*/ imports.NewTable("ListView_SetOnDataStateChange", 0),
-		/*35*/ imports.NewTable("ListView_SetOnDblClick", 0),
-		/*36*/ imports.NewTable("ListView_SetOnDeletion", 0),
-		/*37*/ imports.NewTable("ListView_SetOnDragDrop", 0),
-		/*38*/ imports.NewTable("ListView_SetOnDragOver", 0),
-		/*39*/ imports.NewTable("ListView_SetOnDrawItem", 0),
-		/*40*/ imports.NewTable("ListView_SetOnEdited", 0),
-		/*41*/ imports.NewTable("ListView_SetOnEditing", 0),
-		/*42*/ imports.NewTable("ListView_SetOnEndDock", 0),
-		/*43*/ imports.NewTable("ListView_SetOnEndDrag", 0),
-		/*44*/ imports.NewTable("ListView_SetOnInsert", 0),
-		/*45*/ imports.NewTable("ListView_SetOnItemChecked", 0),
-		/*46*/ imports.NewTable("ListView_SetOnMouseDown", 0),
-		/*47*/ imports.NewTable("ListView_SetOnMouseEnter", 0),
-		/*48*/ imports.NewTable("ListView_SetOnMouseLeave", 0),
-		/*49*/ imports.NewTable("ListView_SetOnMouseMove", 0),
-		/*50*/ imports.NewTable("ListView_SetOnMouseUp", 0),
-		/*51*/ imports.NewTable("ListView_SetOnMouseWheel", 0),
-		/*52*/ imports.NewTable("ListView_SetOnMouseWheelDown", 0),
-		/*53*/ imports.NewTable("ListView_SetOnMouseWheelHorz", 0),
-		/*54*/ imports.NewTable("ListView_SetOnMouseWheelLeft", 0),
-		/*55*/ imports.NewTable("ListView_SetOnMouseWheelRight", 0),
-		/*56*/ imports.NewTable("ListView_SetOnMouseWheelUp", 0),
-		/*57*/ imports.NewTable("ListView_SetOnSelectItem", 0),
-		/*58*/ imports.NewTable("ListView_SetOnStartDock", 0),
-		/*59*/ imports.NewTable("ListView_SetOnStartDrag", 0),
-		/*60*/ imports.NewTable("ListView_ShowColumnHeaders", 0),
-		/*61*/ imports.NewTable("ListView_SmallImages", 0),
-		/*62*/ imports.NewTable("ListView_SmallImagesWidth", 0),
-		/*63*/ imports.NewTable("ListView_SortColumn", 0),
-		/*64*/ imports.NewTable("ListView_SortDirection", 0),
-		/*65*/ imports.NewTable("ListView_SortType", 0),
-		/*66*/ imports.NewTable("ListView_StateImages", 0),
-		/*67*/ imports.NewTable("ListView_StateImagesWidth", 0),
-		/*68*/ imports.NewTable("ListView_ToolTips", 0),
-		/*69*/ imports.NewTable("ListView_ViewStyle", 0),
-	}
+	listViewOnce   base.Once
+	listViewImport *imports.Imports = nil
 )
 
-func listViewImportAPI() *imports.Imports {
-	if listViewImport == nil {
-		listViewImport = NewDefaultImports()
-		listViewImport.SetImportTable(listViewImportTables)
-		listViewImportTables = nil
-	}
+func listViewAPI() *imports.Imports {
+	listViewOnce.Do(func() {
+		listViewImport = api.NewDefaultImports()
+		listViewImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TListView_Create", 0), // constructor NewListView
+			/* 1 */ imports.NewTable("TListView_AllocBy", 0), // property AllocBy
+			/* 2 */ imports.NewTable("TListView_AutoSort", 0), // property AutoSort
+			/* 3 */ imports.NewTable("TListView_AutoSortIndicator", 0), // property AutoSortIndicator
+			/* 4 */ imports.NewTable("TListView_AutoWidthLastColumn", 0), // property AutoWidthLastColumn
+			/* 5 */ imports.NewTable("TListView_Columns", 0), // property Columns
+			/* 6 */ imports.NewTable("TListView_ColumnClick", 0), // property ColumnClick
+			/* 7 */ imports.NewTable("TListView_DragCursor", 0), // property DragCursor
+			/* 8 */ imports.NewTable("TListView_DragKind", 0), // property DragKind
+			/* 9 */ imports.NewTable("TListView_DragMode", 0), // property DragMode
+			/* 10 */ imports.NewTable("TListView_HideSelection", 0), // property HideSelection
+			/* 11 */ imports.NewTable("TListView_LargeImages", 0), // property LargeImages
+			/* 12 */ imports.NewTable("TListView_LargeImagesWidth", 0), // property LargeImagesWidth
+			/* 13 */ imports.NewTable("TListView_OwnerDraw", 0), // property OwnerDraw
+			/* 14 */ imports.NewTable("TListView_ParentColor", 0), // property ParentColor
+			/* 15 */ imports.NewTable("TListView_ParentFont", 0), // property ParentFont
+			/* 16 */ imports.NewTable("TListView_ParentShowHint", 0), // property ParentShowHint
+			/* 17 */ imports.NewTable("TListView_ScrollBars", 0), // property ScrollBars
+			/* 18 */ imports.NewTable("TListView_ShowColumnHeaders", 0), // property ShowColumnHeaders
+			/* 19 */ imports.NewTable("TListView_SmallImages", 0), // property SmallImages
+			/* 20 */ imports.NewTable("TListView_SmallImagesWidth", 0), // property SmallImagesWidth
+			/* 21 */ imports.NewTable("TListView_SortColumn", 0), // property SortColumn
+			/* 22 */ imports.NewTable("TListView_SortDirection", 0), // property SortDirection
+			/* 23 */ imports.NewTable("TListView_SortType", 0), // property SortType
+			/* 24 */ imports.NewTable("TListView_StateImages", 0), // property StateImages
+			/* 25 */ imports.NewTable("TListView_StateImagesWidth", 0), // property StateImagesWidth
+			/* 26 */ imports.NewTable("TListView_ToolTips", 0), // property ToolTips
+			/* 27 */ imports.NewTable("TListView_ViewStyle", 0), // property ViewStyle
+			/* 28 */ imports.NewTable("TListView_OnAdvancedCustomDraw", 0), // event OnAdvancedCustomDraw
+			/* 29 */ imports.NewTable("TListView_OnAdvancedCustomDrawItem", 0), // event OnAdvancedCustomDrawItem
+			/* 30 */ imports.NewTable("TListView_OnAdvancedCustomDrawSubItem", 0), // event OnAdvancedCustomDrawSubItem
+			/* 31 */ imports.NewTable("TListView_OnChange", 0), // event OnChange
+			/* 32 */ imports.NewTable("TListView_OnChanging", 0), // event OnChanging
+			/* 33 */ imports.NewTable("TListView_OnColumnClick", 0), // event OnColumnClick
+			/* 34 */ imports.NewTable("TListView_OnCompare", 0), // event OnCompare
+			/* 35 */ imports.NewTable("TListView_OnContextPopup", 0), // event OnContextPopup
+			/* 36 */ imports.NewTable("TListView_OnCreateItemClass", 0), // event OnCreateItemClass
+			/* 37 */ imports.NewTable("TListView_OnCustomDraw", 0), // event OnCustomDraw
+			/* 38 */ imports.NewTable("TListView_OnCustomDrawItem", 0), // event OnCustomDrawItem
+			/* 39 */ imports.NewTable("TListView_OnCustomDrawSubItem", 0), // event OnCustomDrawSubItem
+			/* 40 */ imports.NewTable("TListView_OnData", 0), // event OnData
+			/* 41 */ imports.NewTable("TListView_OnDataFind", 0), // event OnDataFind
+			/* 42 */ imports.NewTable("TListView_OnDataHint", 0), // event OnDataHint
+			/* 43 */ imports.NewTable("TListView_OnDataStateChange", 0), // event OnDataStateChange
+			/* 44 */ imports.NewTable("TListView_OnDblClick", 0), // event OnDblClick
+			/* 45 */ imports.NewTable("TListView_OnDeletion", 0), // event OnDeletion
+			/* 46 */ imports.NewTable("TListView_OnDragDrop", 0), // event OnDragDrop
+			/* 47 */ imports.NewTable("TListView_OnDragOver", 0), // event OnDragOver
+			/* 48 */ imports.NewTable("TListView_OnDrawItem", 0), // event OnDrawItem
+			/* 49 */ imports.NewTable("TListView_OnEdited", 0), // event OnEdited
+			/* 50 */ imports.NewTable("TListView_OnEditing", 0), // event OnEditing
+			/* 51 */ imports.NewTable("TListView_OnEndDock", 0), // event OnEndDock
+			/* 52 */ imports.NewTable("TListView_OnEndDrag", 0), // event OnEndDrag
+			/* 53 */ imports.NewTable("TListView_OnInsert", 0), // event OnInsert
+			/* 54 */ imports.NewTable("TListView_OnItemChecked", 0), // event OnItemChecked
+			/* 55 */ imports.NewTable("TListView_OnMouseDown", 0), // event OnMouseDown
+			/* 56 */ imports.NewTable("TListView_OnMouseEnter", 0), // event OnMouseEnter
+			/* 57 */ imports.NewTable("TListView_OnMouseLeave", 0), // event OnMouseLeave
+			/* 58 */ imports.NewTable("TListView_OnMouseMove", 0), // event OnMouseMove
+			/* 59 */ imports.NewTable("TListView_OnMouseUp", 0), // event OnMouseUp
+			/* 60 */ imports.NewTable("TListView_OnMouseWheel", 0), // event OnMouseWheel
+			/* 61 */ imports.NewTable("TListView_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 62 */ imports.NewTable("TListView_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 63 */ imports.NewTable("TListView_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 64 */ imports.NewTable("TListView_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 65 */ imports.NewTable("TListView_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 66 */ imports.NewTable("TListView_OnSelectItem", 0), // event OnSelectItem
+			/* 67 */ imports.NewTable("TListView_OnStartDock", 0), // event OnStartDock
+			/* 68 */ imports.NewTable("TListView_OnStartDrag", 0), // event OnStartDrag
+			/* 69 */ imports.NewTable("TListView_TClass", 0), // function TListViewClass
+		}
+	})
 	return listViewImport
 }

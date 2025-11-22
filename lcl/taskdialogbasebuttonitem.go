@@ -9,80 +9,110 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ITaskDialogBaseButtonItem Parent: ICollectionItem
 type ITaskDialogBaseButtonItem interface {
 	ICollectionItem
-	ModalResult() TModalResult          // property
-	SetModalResult(AValue TModalResult) // property
-	Caption() string                    // property
-	SetCaption(AValue string)           // property
-	Default() bool                      // property
-	SetDefault(AValue bool)             // property
+	ModalResult() types.TModalResult         // property ModalResult Getter
+	SetModalResult(value types.TModalResult) // property ModalResult Setter
+	CommandLinkHint() string                 // property CommandLinkHint Getter
+	SetCommandLinkHint(value string)         // property CommandLinkHint Setter
+	Caption() string                         // property Caption Getter
+	SetCaption(value string)                 // property Caption Setter
+	Default() bool                           // property Default Getter
+	SetDefault(value bool)                   // property Default Setter
 }
 
-// TTaskDialogBaseButtonItem Parent: TCollectionItem
 type TTaskDialogBaseButtonItem struct {
 	TCollectionItem
 }
 
-func NewTaskDialogBaseButtonItem(ACollection ICollection) ITaskDialogBaseButtonItem {
-	r1 := askDialogBaseButtonItemImportAPI().SysCallN(2, GetObjectUintptr(ACollection))
-	return AsTaskDialogBaseButtonItem(r1)
+func (m *TTaskDialogBaseButtonItem) ModalResult() types.TModalResult {
+	if !m.IsValid() {
+		return 0
+	}
+	r := taskDialogBaseButtonItemAPI().SysCallN(1, 0, m.Instance())
+	return types.TModalResult(r)
 }
 
-func (m *TTaskDialogBaseButtonItem) ModalResult() TModalResult {
-	r1 := askDialogBaseButtonItemImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TModalResult(r1)
+func (m *TTaskDialogBaseButtonItem) SetModalResult(value types.TModalResult) {
+	if !m.IsValid() {
+		return
+	}
+	taskDialogBaseButtonItemAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TTaskDialogBaseButtonItem) SetModalResult(AValue TModalResult) {
-	askDialogBaseButtonItemImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TTaskDialogBaseButtonItem) CommandLinkHint() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := taskDialogBaseButtonItemAPI().SysCallN(2, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TTaskDialogBaseButtonItem) SetCommandLinkHint(value string) {
+	if !m.IsValid() {
+		return
+	}
+	taskDialogBaseButtonItemAPI().SysCallN(2, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TTaskDialogBaseButtonItem) Caption() string {
-	r1 := askDialogBaseButtonItemImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := taskDialogBaseButtonItemAPI().SysCallN(3, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TTaskDialogBaseButtonItem) SetCaption(AValue string) {
-	askDialogBaseButtonItemImportAPI().SysCallN(0, 1, m.Instance(), PascalStr(AValue))
+func (m *TTaskDialogBaseButtonItem) SetCaption(value string) {
+	if !m.IsValid() {
+		return
+	}
+	taskDialogBaseButtonItemAPI().SysCallN(3, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TTaskDialogBaseButtonItem) Default() bool {
-	r1 := askDialogBaseButtonItemImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := taskDialogBaseButtonItemAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TTaskDialogBaseButtonItem) SetDefault(AValue bool) {
-	askDialogBaseButtonItemImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
+func (m *TTaskDialogBaseButtonItem) SetDefault(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	taskDialogBaseButtonItemAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
-func TaskDialogBaseButtonItemClass() TClass {
-	ret := askDialogBaseButtonItemImportAPI().SysCallN(1)
-	return TClass(ret)
+// NewTaskDialogBaseButtonItem class constructor
+func NewTaskDialogBaseButtonItem(collection ICollection) ITaskDialogBaseButtonItem {
+	r := taskDialogBaseButtonItemAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsTaskDialogBaseButtonItem(r)
 }
 
 var (
-	askDialogBaseButtonItemImport       *imports.Imports = nil
-	askDialogBaseButtonItemImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("TaskDialogBaseButtonItem_Caption", 0),
-		/*1*/ imports.NewTable("TaskDialogBaseButtonItem_Class", 0),
-		/*2*/ imports.NewTable("TaskDialogBaseButtonItem_Create", 0),
-		/*3*/ imports.NewTable("TaskDialogBaseButtonItem_Default", 0),
-		/*4*/ imports.NewTable("TaskDialogBaseButtonItem_ModalResult", 0),
-	}
+	taskDialogBaseButtonItemOnce   base.Once
+	taskDialogBaseButtonItemImport *imports.Imports = nil
 )
 
-func askDialogBaseButtonItemImportAPI() *imports.Imports {
-	if askDialogBaseButtonItemImport == nil {
-		askDialogBaseButtonItemImport = NewDefaultImports()
-		askDialogBaseButtonItemImport.SetImportTable(askDialogBaseButtonItemImportTables)
-		askDialogBaseButtonItemImportTables = nil
-	}
-	return askDialogBaseButtonItemImport
+func taskDialogBaseButtonItemAPI() *imports.Imports {
+	taskDialogBaseButtonItemOnce.Do(func() {
+		taskDialogBaseButtonItemImport = api.NewDefaultImports()
+		taskDialogBaseButtonItemImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TTaskDialogBaseButtonItem_Create", 0), // constructor NewTaskDialogBaseButtonItem
+			/* 1 */ imports.NewTable("TTaskDialogBaseButtonItem_ModalResult", 0), // property ModalResult
+			/* 2 */ imports.NewTable("TTaskDialogBaseButtonItem_CommandLinkHint", 0), // property CommandLinkHint
+			/* 3 */ imports.NewTable("TTaskDialogBaseButtonItem_Caption", 0), // property Caption
+			/* 4 */ imports.NewTable("TTaskDialogBaseButtonItem_Default", 0), // property Default
+		}
+	})
+	return taskDialogBaseButtonItemImport
 }

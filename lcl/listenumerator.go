@@ -9,65 +9,67 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IListEnumerator Parent: IObject
 type IListEnumerator interface {
 	IObject
-	Current() uintptr    // property
 	GetCurrent() uintptr // function
 	MoveNext() bool      // function
+	Current() uintptr    // property Current Getter
 }
 
-// TListEnumerator Parent: TObject
 type TListEnumerator struct {
 	TObject
 }
 
-func NewListEnumerator(AList IList) IListEnumerator {
-	r1 := listEnumeratorImportAPI().SysCallN(1, GetObjectUintptr(AList))
-	return AsListEnumerator(r1)
-}
-
-func (m *TListEnumerator) Current() uintptr {
-	r1 := listEnumeratorImportAPI().SysCallN(2, m.Instance())
-	return uintptr(r1)
-}
-
 func (m *TListEnumerator) GetCurrent() uintptr {
-	r1 := listEnumeratorImportAPI().SysCallN(3, m.Instance())
-	return uintptr(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := listEnumeratorAPI().SysCallN(1, m.Instance())
+	return uintptr(r)
 }
 
 func (m *TListEnumerator) MoveNext() bool {
-	r1 := listEnumeratorImportAPI().SysCallN(4, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listEnumeratorAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func ListEnumeratorClass() TClass {
-	ret := listEnumeratorImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TListEnumerator) Current() uintptr {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listEnumeratorAPI().SysCallN(3, m.Instance())
+	return uintptr(r)
+}
+
+// NewListEnumerator class constructor
+func NewListEnumerator(list IList) IListEnumerator {
+	r := listEnumeratorAPI().SysCallN(0, base.GetObjectUintptr(list))
+	return AsListEnumerator(r)
 }
 
 var (
-	listEnumeratorImport       *imports.Imports = nil
-	listEnumeratorImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ListEnumerator_Class", 0),
-		/*1*/ imports.NewTable("ListEnumerator_Create", 0),
-		/*2*/ imports.NewTable("ListEnumerator_Current", 0),
-		/*3*/ imports.NewTable("ListEnumerator_GetCurrent", 0),
-		/*4*/ imports.NewTable("ListEnumerator_MoveNext", 0),
-	}
+	listEnumeratorOnce   base.Once
+	listEnumeratorImport *imports.Imports = nil
 )
 
-func listEnumeratorImportAPI() *imports.Imports {
-	if listEnumeratorImport == nil {
-		listEnumeratorImport = NewDefaultImports()
-		listEnumeratorImport.SetImportTable(listEnumeratorImportTables)
-		listEnumeratorImportTables = nil
-	}
+func listEnumeratorAPI() *imports.Imports {
+	listEnumeratorOnce.Do(func() {
+		listEnumeratorImport = api.NewDefaultImports()
+		listEnumeratorImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TListEnumerator_Create", 0), // constructor NewListEnumerator
+			/* 1 */ imports.NewTable("TListEnumerator_GetCurrent", 0), // function GetCurrent
+			/* 2 */ imports.NewTable("TListEnumerator_MoveNext", 0), // function MoveNext
+			/* 3 */ imports.NewTable("TListEnumerator_Current", 0), // property Current
+		}
+	})
 	return listEnumeratorImport
 }

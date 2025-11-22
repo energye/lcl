@@ -9,10 +9,11 @@
 package rtl
 
 import (
-	"github.com/energye/lcl/api"
-	"github.com/energye/lcl/types"
 	"path/filepath"
 	"strings"
+
+	"github.com/energye/lcl/api"
+	"github.com/energye/lcl/types"
 )
 
 var (
@@ -32,7 +33,7 @@ const Separator = string(filepath.Separator) // 平台目录分隔符
 //
 // Memory operations in FreePascal, but pointers are passed here.
 func Move(src, dest uintptr, llen int) {
-	api.DMove(src, dest, llen)
+	api.Move(src, dest, llen)
 }
 
 // StrLen
@@ -41,14 +42,14 @@ func Move(src, dest uintptr, llen int) {
 //
 // FreePascal string length.
 func StrLen(str uintptr) int {
-	return api.DStrLen(str)
+	return api.StrLen(str)
 }
 
 // GetStringArrOf
 //
 // 从一个FreePascal字符串数组获取成员
 func GetStringArrOf(p uintptr, index int) string {
-	return api.DGetStringArrOf(p, index)
+	return api.GetStringArrOf(p, index)
 }
 
 //----------------------------Delphi/Lazarus集合操作-------------------------------------------------------
@@ -79,7 +80,7 @@ func InSets(r uint32, s int32) bool {
 //
 // Convert string to ShortCut type.
 func TextToShortCut(val string) types.TShortCut {
-	return api.DTextToShortCut(val)
+	return api.TextToShortCut(val)
 }
 
 // ShortCutToText
@@ -88,7 +89,7 @@ func TextToShortCut(val string) types.TShortCut {
 //
 // Convert ShortCut type to string.
 func ShortCutToText(val types.TShortCut) string {
-	return api.DShortCutToText(val)
+	return api.ShortCutToText(val)
 }
 
 // SysOpen 打开，windows下调用ShellExecute
@@ -103,21 +104,21 @@ func ShortCutToText(val types.TShortCut) string {
 	rtl.SysOpen("file:///xxx.png");
 */
 func SysOpen(filename string) {
-	api.DSysOpen(filename)
+	api.SysOpen(filename)
 }
 
 // ExtractFilePath
 //
 // 提取文件名的路径，带“\”的
 func ExtractFilePath(filename string) string {
-	return api.DExtractFilePath(filename)
+	return api.ExtractFilePath(filename)
 }
 
 // FileExists
 //
 // 判断文件是否存在
 func FileExists(filename string) bool {
-	return api.DFileExists(filename)
+	return api.FileExists(filename)
 }
 
 // ExtractFileExt
@@ -183,7 +184,7 @@ func Combine(path, name string) string {
 //
 // Set object property value
 func SetPropertyValue(instance uintptr, propName, value string) {
-	api.DSetPropertyValue(instance, propName, value)
+	api.SetPropertyValue(instance, propName, value)
 }
 
 // SetPropertySecValue
@@ -192,21 +193,21 @@ func SetPropertyValue(instance uintptr, propName, value string) {
 //
 // Set the secondary attribute value of the object
 func SetPropertySecValue(instance uintptr, propName, secPropName, value string) {
-	api.DSetPropertySecValue(instance, propName, secPropName, value)
+	api.SetPropertySecValue(instance, propName, secPropName, value)
 }
 
 // GetLibResourceCount
 //
 // 获取Lib中资源字符数组总数
 func GetLibResourceCount() int32 {
-	return api.DGetLibResourceCount()
+	return api.GetLibResourceCount()
 }
 
 // GetLibResourceItem
 //
 // 从指定索引中获取字符资源项目
 func GetLibResourceItem(aIndex int32) types.TLibResource {
-	return api.DGetLibResourceItem(aIndex)
+	return api.GetLibResourceItem(aIndex)
 }
 
 // GetLibResourceItems
@@ -224,7 +225,7 @@ func GetLibResourceItems() []types.TLibResource {
 //
 // 修改指定资源字符串
 func ModifyLibResource(aPtr uintptr, aValue string) {
-	api.DModifyLibResource(aPtr, aValue)
+	api.ModifyLibResource(aPtr, aValue)
 }
 
 // LCLVersion
@@ -262,32 +263,28 @@ func ShiftStateToWord(shift types.TShiftState) uint32 {
 
 // LibAbout
 //
-// liblcl的关于信息
+// lib 的关于信息
 func LibAbout() string {
-	return api.DLibAbout()
+	return api.LibAbout()
 }
 
 // MainThreadId
 //
-// 返回主线程ID
-//
 // Return the main thread id.
 func MainThreadId() uintptr {
-	return api.DMainThreadId()
+	return api.MainThreadId()
 }
 
 // CurrentThreadId
 //
-// 返回当前线程iD
-//
 // Return the current thread id.
 func CurrentThreadId() uintptr {
-	return api.DCurrentThreadId()
+	return api.CurrentThreadId()
 }
 
 // InitGoDll
 //
 // 一般无用，主要用来在go生成的dll中使用liblcl。
 func InitGoDll(aMainThreadId uintptr) {
-	api.DInitGoDll(aMainThreadId)
+	api.InitGoDll(aMainThreadId)
 }

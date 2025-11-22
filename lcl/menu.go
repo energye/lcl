@@ -9,234 +9,326 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IMenu Parent: ILCLComponent
 type IMenu interface {
 	ILCLComponent
-	Handle() HMENU                                             // property
-	Parent() IComponent                                        // property
-	SetParent(AValue IComponent)                               // property
-	ShortcutHandled() bool                                     // property
-	SetShortcutHandled(AValue bool)                            // property
-	BidiMode() TBiDiMode                                       // property
-	SetBidiMode(AValue TBiDiMode)                              // property
-	ParentBidiMode() bool                                      // property
-	SetParentBidiMode(AValue bool)                             // property
-	Items() IMenuItem                                          // property
-	Images() ICustomImageList                                  // property
-	SetImages(AValue ICustomImageList)                         // property
-	ImagesWidth() int32                                        // property
-	SetImagesWidth(AValue int32)                               // property
-	OwnerDraw() bool                                           // property
-	SetOwnerDraw(AValue bool)                                  // property
-	FindItem(AValue uint32, Kind TFindItemKind) IMenuItem      // function
-	GetHelpContext(AValue uint32, ByCommand bool) THelpContext // function
-	IsShortcut(Message *TLMKey) bool                           // function
-	HandleAllocated() bool                                     // function
-	IsRightToLeft() bool                                       // function
-	UseRightToLeftAlignment() bool                             // function
-	UseRightToLeftReading() bool                               // function
-	DispatchCommand(ACommand Word) bool                        // function
-	DestroyHandle()                                            // procedure
-	HandleNeeded()                                             // procedure
-	SetOnDrawItem(fn TMenuDrawItemEvent)                       // property event
-	SetOnMeasureItem(fn TMenuMeasureItemEvent)                 // property event
+	FindItem(value uintptr, kind types.TFindItemKind) IMenuItem      // function
+	GetHelpContext(value uintptr, byCommand bool) types.THelpContext // function
+	IsShortcut(message *types.TLMKey) bool                           // function
+	HandleAllocated() bool                                           // function
+	IsRightToLeft() bool                                             // function
+	UseRightToLeftAlignment() bool                                   // function
+	UseRightToLeftReading() bool                                     // function
+	DispatchCommand(command uint16) bool                             // function
+	DestroyHandle()                                                  // procedure
+	HandleNeeded()                                                   // procedure
+	Handle() types.HMENU                                             // property Handle Getter
+	Parent() IComponent                                              // property Parent Getter
+	SetParent(value IComponent)                                      // property Parent Setter
+	ShortcutHandled() bool                                           // property ShortcutHandled Getter
+	SetShortcutHandled(value bool)                                   // property ShortcutHandled Setter
+	AutoLineReduction() types.TMenuAutoFlag                          // property AutoLineReduction Getter
+	SetAutoLineReduction(value types.TMenuAutoFlag)                  // property AutoLineReduction Setter
+	BidiMode() types.TBiDiMode                                       // property BidiMode Getter
+	SetBidiMode(value types.TBiDiMode)                               // property BidiMode Setter
+	ParentBidiMode() bool                                            // property ParentBidiMode Getter
+	SetParentBidiMode(value bool)                                    // property ParentBidiMode Setter
+	Items() IMenuItem                                                // property Items Getter
+	Images() ICustomImageList                                        // property Images Getter
+	SetImages(value ICustomImageList)                                // property Images Setter
+	ImagesWidth() int32                                              // property ImagesWidth Getter
+	SetImagesWidth(value int32)                                      // property ImagesWidth Setter
+	OwnerDraw() bool                                                 // property OwnerDraw Getter
+	SetOwnerDraw(value bool)                                         // property OwnerDraw Setter
+	SetOnDrawItem(fn TMenuDrawItemEvent)                             // property event
+	SetOnMeasureItem(fn TMenuMeasureItemEvent)                       // property event
 }
 
-// TMenu Parent: TLCLComponent
 type TMenu struct {
 	TLCLComponent
-	drawItemPtr    uintptr
-	measureItemPtr uintptr
 }
 
-func NewMenu(AOwner IComponent) IMenu {
-	r1 := menuImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
-	return AsMenu(r1)
+func (m *TMenu) FindItem(value uintptr, kind types.TFindItemKind) IMenuItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := menuAPI().SysCallN(1, m.Instance(), uintptr(value), uintptr(kind))
+	return AsMenuItem(r)
 }
 
-func (m *TMenu) Handle() HMENU {
-	r1 := menuImportAPI().SysCallN(7, m.Instance())
-	return HMENU(r1)
+func (m *TMenu) GetHelpContext(value uintptr, byCommand bool) types.THelpContext {
+	if !m.IsValid() {
+		return 0
+	}
+	r := menuAPI().SysCallN(2, m.Instance(), uintptr(value), api.PasBool(byCommand))
+	return types.THelpContext(r)
 }
 
-func (m *TMenu) Parent() IComponent {
-	r1 := menuImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return AsComponent(r1)
-}
-
-func (m *TMenu) SetParent(AValue IComponent) {
-	menuImportAPI().SysCallN(16, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TMenu) ShortcutHandled() bool {
-	r1 := menuImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TMenu) SetShortcutHandled(AValue bool) {
-	menuImportAPI().SysCallN(20, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TMenu) BidiMode() TBiDiMode {
-	r1 := menuImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TBiDiMode(r1)
-}
-
-func (m *TMenu) SetBidiMode(AValue TBiDiMode) {
-	menuImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TMenu) ParentBidiMode() bool {
-	r1 := menuImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TMenu) SetParentBidiMode(AValue bool) {
-	menuImportAPI().SysCallN(17, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TMenu) Items() IMenuItem {
-	r1 := menuImportAPI().SysCallN(14, m.Instance())
-	return AsMenuItem(r1)
-}
-
-func (m *TMenu) Images() ICustomImageList {
-	r1 := menuImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
-}
-
-func (m *TMenu) SetImages(AValue ICustomImageList) {
-	menuImportAPI().SysCallN(10, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TMenu) ImagesWidth() int32 {
-	r1 := menuImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TMenu) SetImagesWidth(AValue int32) {
-	menuImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TMenu) OwnerDraw() bool {
-	r1 := menuImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TMenu) SetOwnerDraw(AValue bool) {
-	menuImportAPI().SysCallN(15, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TMenu) FindItem(AValue uint32, Kind TFindItemKind) IMenuItem {
-	r1 := menuImportAPI().SysCallN(5, m.Instance(), uintptr(AValue), uintptr(Kind))
-	return AsMenuItem(r1)
-}
-
-func (m *TMenu) GetHelpContext(AValue uint32, ByCommand bool) THelpContext {
-	r1 := menuImportAPI().SysCallN(6, m.Instance(), uintptr(AValue), PascalBool(ByCommand))
-	return THelpContext(r1)
-}
-
-func (m *TMenu) IsShortcut(Message *TLMKey) bool {
-	var result0 uintptr
-	r1 := menuImportAPI().SysCallN(13, m.Instance(), uintptr(unsafePointer(&result0)))
-	*Message = *(*TLMKey)(getPointer(result0))
-	return GoBool(r1)
+func (m *TMenu) IsShortcut(message *types.TLMKey) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := menuAPI().SysCallN(3, m.Instance(), uintptr(base.UnsafePointer(message)))
+	return api.GoBool(r)
 }
 
 func (m *TMenu) HandleAllocated() bool {
-	r1 := menuImportAPI().SysCallN(8, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := menuAPI().SysCallN(4, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TMenu) IsRightToLeft() bool {
-	r1 := menuImportAPI().SysCallN(12, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := menuAPI().SysCallN(5, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TMenu) UseRightToLeftAlignment() bool {
-	r1 := menuImportAPI().SysCallN(21, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := menuAPI().SysCallN(6, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TMenu) UseRightToLeftReading() bool {
-	r1 := menuImportAPI().SysCallN(22, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := menuAPI().SysCallN(7, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TMenu) DispatchCommand(ACommand Word) bool {
-	r1 := menuImportAPI().SysCallN(4, m.Instance(), uintptr(ACommand))
-	return GoBool(r1)
-}
-
-func MenuClass() TClass {
-	ret := menuImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TMenu) DispatchCommand(command uint16) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := menuAPI().SysCallN(8, m.Instance(), uintptr(command))
+	return api.GoBool(r)
 }
 
 func (m *TMenu) DestroyHandle() {
-	menuImportAPI().SysCallN(3, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	menuAPI().SysCallN(9, m.Instance())
 }
 
 func (m *TMenu) HandleNeeded() {
-	menuImportAPI().SysCallN(9, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	menuAPI().SysCallN(10, m.Instance())
+}
+
+func (m *TMenu) Handle() types.HMENU {
+	if !m.IsValid() {
+		return 0
+	}
+	r := menuAPI().SysCallN(11, m.Instance())
+	return types.HMENU(r)
+}
+
+func (m *TMenu) Parent() IComponent {
+	if !m.IsValid() {
+		return nil
+	}
+	r := menuAPI().SysCallN(12, 0, m.Instance())
+	return AsComponent(r)
+}
+
+func (m *TMenu) SetParent(value IComponent) {
+	if !m.IsValid() {
+		return
+	}
+	menuAPI().SysCallN(12, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TMenu) ShortcutHandled() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := menuAPI().SysCallN(13, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TMenu) SetShortcutHandled(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	menuAPI().SysCallN(13, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TMenu) AutoLineReduction() types.TMenuAutoFlag {
+	if !m.IsValid() {
+		return 0
+	}
+	r := menuAPI().SysCallN(14, 0, m.Instance())
+	return types.TMenuAutoFlag(r)
+}
+
+func (m *TMenu) SetAutoLineReduction(value types.TMenuAutoFlag) {
+	if !m.IsValid() {
+		return
+	}
+	menuAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TMenu) BidiMode() types.TBiDiMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := menuAPI().SysCallN(15, 0, m.Instance())
+	return types.TBiDiMode(r)
+}
+
+func (m *TMenu) SetBidiMode(value types.TBiDiMode) {
+	if !m.IsValid() {
+		return
+	}
+	menuAPI().SysCallN(15, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TMenu) ParentBidiMode() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := menuAPI().SysCallN(16, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TMenu) SetParentBidiMode(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	menuAPI().SysCallN(16, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TMenu) Items() IMenuItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := menuAPI().SysCallN(17, m.Instance())
+	return AsMenuItem(r)
+}
+
+func (m *TMenu) Images() ICustomImageList {
+	if !m.IsValid() {
+		return nil
+	}
+	r := menuAPI().SysCallN(18, 0, m.Instance())
+	return AsCustomImageList(r)
+}
+
+func (m *TMenu) SetImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	menuAPI().SysCallN(18, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TMenu) ImagesWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := menuAPI().SysCallN(19, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TMenu) SetImagesWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	menuAPI().SysCallN(19, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TMenu) OwnerDraw() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := menuAPI().SysCallN(20, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TMenu) SetOwnerDraw(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	menuAPI().SysCallN(20, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TMenu) SetOnDrawItem(fn TMenuDrawItemEvent) {
-	if m.drawItemPtr != 0 {
-		RemoveEventElement(m.drawItemPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.drawItemPtr = MakeEventDataPtr(fn)
-	menuImportAPI().SysCallN(18, m.Instance(), m.drawItemPtr)
+	cb := makeTMenuDrawItemEvent(fn)
+	base.SetEvent(m, 21, menuAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TMenu) SetOnMeasureItem(fn TMenuMeasureItemEvent) {
-	if m.measureItemPtr != 0 {
-		RemoveEventElement(m.measureItemPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.measureItemPtr = MakeEventDataPtr(fn)
-	menuImportAPI().SysCallN(19, m.Instance(), m.measureItemPtr)
+	cb := makeTMenuMeasureItemEvent(fn)
+	base.SetEvent(m, 22, menuAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewMenu class constructor
+func NewMenu(owner IComponent) IMenu {
+	r := menuAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsMenu(r)
+}
+
+func TMenuClass() types.TClass {
+	r := menuAPI().SysCallN(23)
+	return types.TClass(r)
 }
 
 var (
-	menuImport       *imports.Imports = nil
-	menuImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Menu_BidiMode", 0),
-		/*1*/ imports.NewTable("Menu_Class", 0),
-		/*2*/ imports.NewTable("Menu_Create", 0),
-		/*3*/ imports.NewTable("Menu_DestroyHandle", 0),
-		/*4*/ imports.NewTable("Menu_DispatchCommand", 0),
-		/*5*/ imports.NewTable("Menu_FindItem", 0),
-		/*6*/ imports.NewTable("Menu_GetHelpContext", 0),
-		/*7*/ imports.NewTable("Menu_Handle", 0),
-		/*8*/ imports.NewTable("Menu_HandleAllocated", 0),
-		/*9*/ imports.NewTable("Menu_HandleNeeded", 0),
-		/*10*/ imports.NewTable("Menu_Images", 0),
-		/*11*/ imports.NewTable("Menu_ImagesWidth", 0),
-		/*12*/ imports.NewTable("Menu_IsRightToLeft", 0),
-		/*13*/ imports.NewTable("Menu_IsShortcut", 0),
-		/*14*/ imports.NewTable("Menu_Items", 0),
-		/*15*/ imports.NewTable("Menu_OwnerDraw", 0),
-		/*16*/ imports.NewTable("Menu_Parent", 0),
-		/*17*/ imports.NewTable("Menu_ParentBidiMode", 0),
-		/*18*/ imports.NewTable("Menu_SetOnDrawItem", 0),
-		/*19*/ imports.NewTable("Menu_SetOnMeasureItem", 0),
-		/*20*/ imports.NewTable("Menu_ShortcutHandled", 0),
-		/*21*/ imports.NewTable("Menu_UseRightToLeftAlignment", 0),
-		/*22*/ imports.NewTable("Menu_UseRightToLeftReading", 0),
-	}
+	menuOnce   base.Once
+	menuImport *imports.Imports = nil
 )
 
-func menuImportAPI() *imports.Imports {
-	if menuImport == nil {
-		menuImport = NewDefaultImports()
-		menuImport.SetImportTable(menuImportTables)
-		menuImportTables = nil
-	}
+func menuAPI() *imports.Imports {
+	menuOnce.Do(func() {
+		menuImport = api.NewDefaultImports()
+		menuImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TMenu_Create", 0), // constructor NewMenu
+			/* 1 */ imports.NewTable("TMenu_FindItem", 0), // function FindItem
+			/* 2 */ imports.NewTable("TMenu_GetHelpContext", 0), // function GetHelpContext
+			/* 3 */ imports.NewTable("TMenu_IsShortcut", 0), // function IsShortcut
+			/* 4 */ imports.NewTable("TMenu_HandleAllocated", 0), // function HandleAllocated
+			/* 5 */ imports.NewTable("TMenu_IsRightToLeft", 0), // function IsRightToLeft
+			/* 6 */ imports.NewTable("TMenu_UseRightToLeftAlignment", 0), // function UseRightToLeftAlignment
+			/* 7 */ imports.NewTable("TMenu_UseRightToLeftReading", 0), // function UseRightToLeftReading
+			/* 8 */ imports.NewTable("TMenu_DispatchCommand", 0), // function DispatchCommand
+			/* 9 */ imports.NewTable("TMenu_DestroyHandle", 0), // procedure DestroyHandle
+			/* 10 */ imports.NewTable("TMenu_HandleNeeded", 0), // procedure HandleNeeded
+			/* 11 */ imports.NewTable("TMenu_Handle", 0), // property Handle
+			/* 12 */ imports.NewTable("TMenu_Parent", 0), // property Parent
+			/* 13 */ imports.NewTable("TMenu_ShortcutHandled", 0), // property ShortcutHandled
+			/* 14 */ imports.NewTable("TMenu_AutoLineReduction", 0), // property AutoLineReduction
+			/* 15 */ imports.NewTable("TMenu_BidiMode", 0), // property BidiMode
+			/* 16 */ imports.NewTable("TMenu_ParentBidiMode", 0), // property ParentBidiMode
+			/* 17 */ imports.NewTable("TMenu_Items", 0), // property Items
+			/* 18 */ imports.NewTable("TMenu_Images", 0), // property Images
+			/* 19 */ imports.NewTable("TMenu_ImagesWidth", 0), // property ImagesWidth
+			/* 20 */ imports.NewTable("TMenu_OwnerDraw", 0), // property OwnerDraw
+			/* 21 */ imports.NewTable("TMenu_OnDrawItem", 0), // event OnDrawItem
+			/* 22 */ imports.NewTable("TMenu_OnMeasureItem", 0), // event OnMeasureItem
+			/* 23 */ imports.NewTable("TMenu_TClass", 0), // function TMenuClass
+		}
+	})
 	return menuImport
 }

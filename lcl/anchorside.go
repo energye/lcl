@@ -9,120 +9,144 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IAnchorSide Parent: IPersistent
 type IAnchorSide interface {
 	IPersistent
-	Owner() IControl                                                                                                                                                     // property
-	Kind() TAnchorKind                                                                                                                                                   // property
-	Control() IControl                                                                                                                                                   // property
-	SetControl(AValue IControl)                                                                                                                                          // property
-	Side() TAnchorSideReference                                                                                                                                          // property
-	SetSide(AValue TAnchorSideReference)                                                                                                                                 // property
-	CheckSidePosition(NewControl IControl, NewSide TAnchorSideReference, OutReferenceControl *IControl, OutReferenceSide *TAnchorSideReference, OutPosition *int32) bool // function
-	IsAnchoredToParent(ParentSide TAnchorKind) bool                                                                                                                      // function
-	GetSidePosition(OutReferenceControl *IControl, OutReferenceSide *TAnchorSideReference, OutPosition *int32)                                                           // procedure
-	FixCenterAnchoring()                                                                                                                                                 // procedure
+	CheckSidePosition(newControl IControl, newSide types.TAnchorSideReference, outReferenceControl *IControl, outReferenceSide *types.TAnchorSideReference, outPosition *int32) bool // function
+	IsAnchoredToParent(parentSide types.TAnchorKind) bool                                                                                                                            // function
+	GetSidePosition(outReferenceControl *IControl, outReferenceSide *types.TAnchorSideReference, outPosition *int32)                                                                 // procedure
+	FixCenterAnchoring()                                                                                                                                                             // procedure
+	Owner() IControl                                                                                                                                                                 // property Owner Getter
+	Kind() types.TAnchorKind                                                                                                                                                         // property Kind Getter
+	Control() IControl                                                                                                                                                               // property Control Getter
+	SetControl(value IControl)                                                                                                                                                       // property Control Setter
+	Side() types.TAnchorSideReference                                                                                                                                                // property Side Getter
+	SetSide(value types.TAnchorSideReference)                                                                                                                                        // property Side Setter
 }
 
-// TAnchorSide Parent: TPersistent
 type TAnchorSide struct {
 	TPersistent
 }
 
-func NewAnchorSide(TheOwner IControl, TheKind TAnchorKind) IAnchorSide {
-	r1 := anchorSideImportAPI().SysCallN(3, GetObjectUintptr(TheOwner), uintptr(TheKind))
-	return AsAnchorSide(r1)
+func (m *TAnchorSide) CheckSidePosition(newControl IControl, newSide types.TAnchorSideReference, outReferenceControl *IControl, outReferenceSide *types.TAnchorSideReference, outPosition *int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	var referenceControlPtr uintptr
+	var referenceSidePtr uintptr
+	var positionPtr uintptr
+	r := anchorSideAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(newControl), uintptr(newSide), uintptr(base.UnsafePointer(&referenceControlPtr)), uintptr(base.UnsafePointer(&referenceSidePtr)), uintptr(base.UnsafePointer(&positionPtr)))
+	*outReferenceControl = AsControl(referenceControlPtr)
+	*outReferenceSide = types.TAnchorSideReference(referenceSidePtr)
+	*outPosition = int32(positionPtr)
+	return api.GoBool(r)
 }
 
-func (m *TAnchorSide) Owner() IControl {
-	r1 := anchorSideImportAPI().SysCallN(8, m.Instance())
-	return AsControl(r1)
+func (m *TAnchorSide) IsAnchoredToParent(parentSide types.TAnchorKind) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := anchorSideAPI().SysCallN(2, m.Instance(), uintptr(parentSide))
+	return api.GoBool(r)
 }
 
-func (m *TAnchorSide) Kind() TAnchorKind {
-	r1 := anchorSideImportAPI().SysCallN(7, m.Instance())
-	return TAnchorKind(r1)
-}
-
-func (m *TAnchorSide) Control() IControl {
-	r1 := anchorSideImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return AsControl(r1)
-}
-
-func (m *TAnchorSide) SetControl(AValue IControl) {
-	anchorSideImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TAnchorSide) Side() TAnchorSideReference {
-	r1 := anchorSideImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TAnchorSideReference(r1)
-}
-
-func (m *TAnchorSide) SetSide(AValue TAnchorSideReference) {
-	anchorSideImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TAnchorSide) CheckSidePosition(NewControl IControl, NewSide TAnchorSideReference, OutReferenceControl *IControl, OutReferenceSide *TAnchorSideReference, OutPosition *int32) bool {
-	var result2 uintptr
-	var result3 uintptr
-	var result4 uintptr
-	r1 := anchorSideImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(NewControl), uintptr(NewSide), uintptr(unsafePointer(&result2)), uintptr(unsafePointer(&result3)), uintptr(unsafePointer(&result4)))
-	*OutReferenceControl = AsControl(result2)
-	*OutReferenceSide = TAnchorSideReference(result3)
-	*OutPosition = int32(result4)
-	return GoBool(r1)
-}
-
-func (m *TAnchorSide) IsAnchoredToParent(ParentSide TAnchorKind) bool {
-	r1 := anchorSideImportAPI().SysCallN(6, m.Instance(), uintptr(ParentSide))
-	return GoBool(r1)
-}
-
-func AnchorSideClass() TClass {
-	ret := anchorSideImportAPI().SysCallN(1)
-	return TClass(ret)
-}
-
-func (m *TAnchorSide) GetSidePosition(OutReferenceControl *IControl, OutReferenceSide *TAnchorSideReference, OutPosition *int32) {
-	var result0 uintptr
-	var result1 uintptr
-	var result2 uintptr
-	anchorSideImportAPI().SysCallN(5, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
-	*OutReferenceControl = AsControl(result0)
-	*OutReferenceSide = TAnchorSideReference(result1)
-	*OutPosition = int32(result2)
+func (m *TAnchorSide) GetSidePosition(outReferenceControl *IControl, outReferenceSide *types.TAnchorSideReference, outPosition *int32) {
+	if !m.IsValid() {
+		return
+	}
+	var referenceControlPtr uintptr
+	var referenceSidePtr uintptr
+	var positionPtr uintptr
+	anchorSideAPI().SysCallN(3, m.Instance(), uintptr(base.UnsafePointer(&referenceControlPtr)), uintptr(base.UnsafePointer(&referenceSidePtr)), uintptr(base.UnsafePointer(&positionPtr)))
+	*outReferenceControl = AsControl(referenceControlPtr)
+	*outReferenceSide = types.TAnchorSideReference(referenceSidePtr)
+	*outPosition = int32(positionPtr)
 }
 
 func (m *TAnchorSide) FixCenterAnchoring() {
-	anchorSideImportAPI().SysCallN(4, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	anchorSideAPI().SysCallN(4, m.Instance())
+}
+
+func (m *TAnchorSide) Owner() IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := anchorSideAPI().SysCallN(5, m.Instance())
+	return AsControl(r)
+}
+
+func (m *TAnchorSide) Kind() types.TAnchorKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := anchorSideAPI().SysCallN(6, m.Instance())
+	return types.TAnchorKind(r)
+}
+
+func (m *TAnchorSide) Control() IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := anchorSideAPI().SysCallN(7, 0, m.Instance())
+	return AsControl(r)
+}
+
+func (m *TAnchorSide) SetControl(value IControl) {
+	if !m.IsValid() {
+		return
+	}
+	anchorSideAPI().SysCallN(7, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TAnchorSide) Side() types.TAnchorSideReference {
+	if !m.IsValid() {
+		return 0
+	}
+	r := anchorSideAPI().SysCallN(8, 0, m.Instance())
+	return types.TAnchorSideReference(r)
+}
+
+func (m *TAnchorSide) SetSide(value types.TAnchorSideReference) {
+	if !m.IsValid() {
+		return
+	}
+	anchorSideAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
+}
+
+// NewAnchorSide class constructor
+func NewAnchorSide(theOwner IControl, theKind types.TAnchorKind) IAnchorSide {
+	r := anchorSideAPI().SysCallN(0, base.GetObjectUintptr(theOwner), uintptr(theKind))
+	return AsAnchorSide(r)
 }
 
 var (
-	anchorSideImport       *imports.Imports = nil
-	anchorSideImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("AnchorSide_CheckSidePosition", 0),
-		/*1*/ imports.NewTable("AnchorSide_Class", 0),
-		/*2*/ imports.NewTable("AnchorSide_Control", 0),
-		/*3*/ imports.NewTable("AnchorSide_Create", 0),
-		/*4*/ imports.NewTable("AnchorSide_FixCenterAnchoring", 0),
-		/*5*/ imports.NewTable("AnchorSide_GetSidePosition", 0),
-		/*6*/ imports.NewTable("AnchorSide_IsAnchoredToParent", 0),
-		/*7*/ imports.NewTable("AnchorSide_Kind", 0),
-		/*8*/ imports.NewTable("AnchorSide_Owner", 0),
-		/*9*/ imports.NewTable("AnchorSide_Side", 0),
-	}
+	anchorSideOnce   base.Once
+	anchorSideImport *imports.Imports = nil
 )
 
-func anchorSideImportAPI() *imports.Imports {
-	if anchorSideImport == nil {
-		anchorSideImport = NewDefaultImports()
-		anchorSideImport.SetImportTable(anchorSideImportTables)
-		anchorSideImportTables = nil
-	}
+func anchorSideAPI() *imports.Imports {
+	anchorSideOnce.Do(func() {
+		anchorSideImport = api.NewDefaultImports()
+		anchorSideImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TAnchorSide_Create", 0), // constructor NewAnchorSide
+			/* 1 */ imports.NewTable("TAnchorSide_CheckSidePosition", 0), // function CheckSidePosition
+			/* 2 */ imports.NewTable("TAnchorSide_IsAnchoredToParent", 0), // function IsAnchoredToParent
+			/* 3 */ imports.NewTable("TAnchorSide_GetSidePosition", 0), // procedure GetSidePosition
+			/* 4 */ imports.NewTable("TAnchorSide_FixCenterAnchoring", 0), // procedure FixCenterAnchoring
+			/* 5 */ imports.NewTable("TAnchorSide_Owner", 0), // property Owner
+			/* 6 */ imports.NewTable("TAnchorSide_Kind", 0), // property Kind
+			/* 7 */ imports.NewTable("TAnchorSide_Control", 0), // property Control
+			/* 8 */ imports.NewTable("TAnchorSide_Side", 0), // property Side
+		}
+	})
 	return anchorSideImport
 }

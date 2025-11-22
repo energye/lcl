@@ -9,63 +9,72 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ILazDockPages Parent: ICustomTabControl
 type ILazDockPages interface {
 	ICustomTabControl
-	PageForLazDockPage(Index int32) ILazDockPage // property
-	ActivePageComponent() ILazDockPage           // property
-	SetActivePageComponent(AValue ILazDockPage)  // property
+	PageWithIntToLazDockPage(index int32) ILazDockPage // property Page Getter
+	ActivePageComponent() ILazDockPage                 // property ActivePageComponent Getter
+	SetActivePageComponent(value ILazDockPage)         // property ActivePageComponent Setter
 }
 
-// TLazDockPages Parent: TCustomTabControl
 type TLazDockPages struct {
 	TCustomTabControl
 }
 
-func NewLazDockPages(TheOwner IComponent) ILazDockPages {
-	r1 := lazDockPagesImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsLazDockPages(r1)
-}
-
-func (m *TLazDockPages) PageForLazDockPage(Index int32) ILazDockPage {
-	r1 := lazDockPagesImportAPI().SysCallN(3, m.Instance(), uintptr(Index))
-	return AsLazDockPage(r1)
+func (m *TLazDockPages) PageWithIntToLazDockPage(index int32) ILazDockPage {
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazDockPagesAPI().SysCallN(1, m.Instance(), uintptr(index))
+	return AsLazDockPage(r)
 }
 
 func (m *TLazDockPages) ActivePageComponent() ILazDockPage {
-	r1 := lazDockPagesImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return AsLazDockPage(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazDockPagesAPI().SysCallN(2, 0, m.Instance())
+	return AsLazDockPage(r)
 }
 
-func (m *TLazDockPages) SetActivePageComponent(AValue ILazDockPage) {
-	lazDockPagesImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TLazDockPages) SetActivePageComponent(value ILazDockPage) {
+	if !m.IsValid() {
+		return
+	}
+	lazDockPagesAPI().SysCallN(2, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func LazDockPagesClass() TClass {
-	ret := lazDockPagesImportAPI().SysCallN(1)
-	return TClass(ret)
+// NewLazDockPages class constructor
+func NewLazDockPages(theOwner IComponent) ILazDockPages {
+	r := lazDockPagesAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsLazDockPages(r)
+}
+
+func TLazDockPagesClass() types.TClass {
+	r := lazDockPagesAPI().SysCallN(3)
+	return types.TClass(r)
 }
 
 var (
-	lazDockPagesImport       *imports.Imports = nil
-	lazDockPagesImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("LazDockPages_ActivePageComponent", 0),
-		/*1*/ imports.NewTable("LazDockPages_Class", 0),
-		/*2*/ imports.NewTable("LazDockPages_Create", 0),
-		/*3*/ imports.NewTable("LazDockPages_PageForLazDockPage", 0),
-	}
+	lazDockPagesOnce   base.Once
+	lazDockPagesImport *imports.Imports = nil
 )
 
-func lazDockPagesImportAPI() *imports.Imports {
-	if lazDockPagesImport == nil {
-		lazDockPagesImport = NewDefaultImports()
-		lazDockPagesImport.SetImportTable(lazDockPagesImportTables)
-		lazDockPagesImportTables = nil
-	}
+func lazDockPagesAPI() *imports.Imports {
+	lazDockPagesOnce.Do(func() {
+		lazDockPagesImport = api.NewDefaultImports()
+		lazDockPagesImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TLazDockPages_Create", 0), // constructor NewLazDockPages
+			/* 1 */ imports.NewTable("TLazDockPages_PageWithIntToLazDockPage", 0), // property PageWithIntToLazDockPage
+			/* 2 */ imports.NewTable("TLazDockPages_ActivePageComponent", 0), // property ActivePageComponent
+			/* 3 */ imports.NewTable("TLazDockPages_TClass", 0), // function TLazDockPagesClass
+		}
+	})
 	return lazDockPagesImport
 }

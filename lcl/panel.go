@@ -9,371 +9,398 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IPanel Parent: ICustomPanel
 type IPanel interface {
 	ICustomPanel
-	DragCursor() TCursor                            // property
-	SetDragCursor(AValue TCursor)                   // property
-	DragKind() TDragKind                            // property
-	SetDragKind(AValue TDragKind)                   // property
-	DragMode() TDragMode                            // property
-	SetDragMode(AValue TDragMode)                   // property
-	ParentFont() bool                               // property
-	SetParentFont(AValue bool)                      // property
-	ParentShowHint() bool                           // property
-	SetParentShowHint(AValue bool)                  // property
-	ShowAccelChar() bool                            // property
-	SetShowAccelChar(AValue bool)                   // property
-	VerticalAlignment() TVerticalAlignment          // property
-	SetVerticalAlignment(AValue TVerticalAlignment) // property
-	Wordwrap() bool                                 // property
-	SetWordwrap(AValue bool)                        // property
-	SetOnContextPopup(fn TContextPopupEvent)        // property event
-	SetOnDblClick(fn TNotifyEvent)                  // property event
-	SetOnDragDrop(fn TDragDropEvent)                // property event
-	SetOnDragOver(fn TDragOverEvent)                // property event
-	SetOnEndDock(fn TEndDragEvent)                  // property event
-	SetOnEndDrag(fn TEndDragEvent)                  // property event
-	SetOnGetSiteInfo(fn TGetSiteInfoEvent)          // property event
-	SetOnGetDockCaption(fn TGetDockCaptionEvent)    // property event
-	SetOnMouseDown(fn TMouseEvent)                  // property event
-	SetOnMouseEnter(fn TNotifyEvent)                // property event
-	SetOnMouseLeave(fn TNotifyEvent)                // property event
-	SetOnMouseMove(fn TMouseMoveEvent)              // property event
-	SetOnMouseUp(fn TMouseEvent)                    // property event
-	SetOnMouseWheel(fn TMouseWheelEvent)            // property event
-	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent)  // property event
-	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)    // property event
-	SetOnMouseWheelHorz(fn TMouseWheelEvent)        // property event
-	SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent)  // property event
-	SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) // property event
-	SetOnStartDock(fn TStartDockEvent)              // property event
-	SetOnStartDrag(fn TStartDragEvent)              // property event
+	DragCursor() types.TCursor                           // property DragCursor Getter
+	SetDragCursor(value types.TCursor)                   // property DragCursor Setter
+	DragKind() types.TDragKind                           // property DragKind Getter
+	SetDragKind(value types.TDragKind)                   // property DragKind Setter
+	DragMode() types.TDragMode                           // property DragMode Getter
+	SetDragMode(value types.TDragMode)                   // property DragMode Setter
+	ParentFont() bool                                    // property ParentFont Getter
+	SetParentFont(value bool)                            // property ParentFont Setter
+	ParentShowHint() bool                                // property ParentShowHint Getter
+	SetParentShowHint(value bool)                        // property ParentShowHint Setter
+	ShowAccelChar() bool                                 // property ShowAccelChar Getter
+	SetShowAccelChar(value bool)                         // property ShowAccelChar Setter
+	VerticalAlignment() types.TVerticalAlignment         // property VerticalAlignment Getter
+	SetVerticalAlignment(value types.TVerticalAlignment) // property VerticalAlignment Setter
+	Wordwrap() bool                                      // property Wordwrap Getter
+	SetWordwrap(value bool)                              // property Wordwrap Setter
+	SetOnContextPopup(fn TContextPopupEvent)             // property event
+	SetOnDblClick(fn TNotifyEvent)                       // property event
+	SetOnDragDrop(fn TDragDropEvent)                     // property event
+	SetOnDragOver(fn TDragOverEvent)                     // property event
+	SetOnEndDock(fn TEndDragEvent)                       // property event
+	SetOnEndDrag(fn TEndDragEvent)                       // property event
+	SetOnGetSiteInfo(fn TGetSiteInfoEvent)               // property event
+	SetOnGetDockCaption(fn TGetDockCaptionEvent)         // property event
+	SetOnMouseDown(fn TMouseEvent)                       // property event
+	SetOnMouseEnter(fn TNotifyEvent)                     // property event
+	SetOnMouseLeave(fn TNotifyEvent)                     // property event
+	SetOnMouseMove(fn TMouseMoveEvent)                   // property event
+	SetOnMouseUp(fn TMouseEvent)                         // property event
+	SetOnMouseWheel(fn TMouseWheelEvent)                 // property event
+	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent)       // property event
+	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)         // property event
+	SetOnMouseWheelHorz(fn TMouseWheelEvent)             // property event
+	SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent)       // property event
+	SetOnMouseWheelRight(fn TMouseWheelUpDownEvent)      // property event
+	SetOnStartDock(fn TStartDockEvent)                   // property event
+	SetOnStartDrag(fn TStartDragEvent)                   // property event
 }
 
-// TPanel Parent: TCustomPanel
 type TPanel struct {
 	TCustomPanel
-	contextPopupPtr    uintptr
-	dblClickPtr        uintptr
-	dragDropPtr        uintptr
-	dragOverPtr        uintptr
-	endDockPtr         uintptr
-	endDragPtr         uintptr
-	getSiteInfoPtr     uintptr
-	getDockCaptionPtr  uintptr
-	mouseDownPtr       uintptr
-	mouseEnterPtr      uintptr
-	mouseLeavePtr      uintptr
-	mouseMovePtr       uintptr
-	mouseUpPtr         uintptr
-	mouseWheelPtr      uintptr
-	mouseWheelDownPtr  uintptr
-	mouseWheelUpPtr    uintptr
-	mouseWheelHorzPtr  uintptr
-	mouseWheelLeftPtr  uintptr
-	mouseWheelRightPtr uintptr
-	startDockPtr       uintptr
-	startDragPtr       uintptr
 }
 
-func NewPanel(TheOwner IComponent) IPanel {
-	r1 := panelImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsPanel(r1)
+func (m *TPanel) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := panelAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TPanel) DragCursor() TCursor {
-	r1 := panelImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TPanel) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	panelAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TPanel) SetDragCursor(AValue TCursor) {
-	panelImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TPanel) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := panelAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TPanel) DragKind() TDragKind {
-	r1 := panelImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TPanel) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	panelAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TPanel) SetDragKind(AValue TDragKind) {
-	panelImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TPanel) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := panelAPI().SysCallN(3, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TPanel) DragMode() TDragMode {
-	r1 := panelImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TPanel) SetDragMode(AValue TDragMode) {
-	panelImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TPanel) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	panelAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPanel) ParentFont() bool {
-	r1 := panelImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := panelAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TPanel) SetParentFont(AValue bool) {
-	panelImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TPanel) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	panelAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TPanel) ParentShowHint() bool {
-	r1 := panelImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := panelAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TPanel) SetParentShowHint(AValue bool) {
-	panelImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
+func (m *TPanel) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	panelAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TPanel) ShowAccelChar() bool {
-	r1 := panelImportAPI().SysCallN(28, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := panelAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TPanel) SetShowAccelChar(AValue bool) {
-	panelImportAPI().SysCallN(28, 1, m.Instance(), PascalBool(AValue))
+func (m *TPanel) SetShowAccelChar(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	panelAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TPanel) VerticalAlignment() TVerticalAlignment {
-	r1 := panelImportAPI().SysCallN(29, 0, m.Instance(), 0)
-	return TVerticalAlignment(r1)
+func (m *TPanel) VerticalAlignment() types.TVerticalAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := panelAPI().SysCallN(7, 0, m.Instance())
+	return types.TVerticalAlignment(r)
 }
 
-func (m *TPanel) SetVerticalAlignment(AValue TVerticalAlignment) {
-	panelImportAPI().SysCallN(29, 1, m.Instance(), uintptr(AValue))
+func (m *TPanel) SetVerticalAlignment(value types.TVerticalAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	panelAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPanel) Wordwrap() bool {
-	r1 := panelImportAPI().SysCallN(30, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := panelAPI().SysCallN(8, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TPanel) SetWordwrap(AValue bool) {
-	panelImportAPI().SysCallN(30, 1, m.Instance(), PascalBool(AValue))
-}
-
-func PanelClass() TClass {
-	ret := panelImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TPanel) SetWordwrap(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	panelAPI().SysCallN(8, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TPanel) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(7, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 9, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(8, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 10, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(9, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 11, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(10, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 12, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnEndDock(fn TEndDragEvent) {
-	if m.endDockPtr != 0 {
-		RemoveEventElement(m.endDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDockPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(11, m.Instance(), m.endDockPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 13, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(12, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 14, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnGetSiteInfo(fn TGetSiteInfoEvent) {
-	if m.getSiteInfoPtr != 0 {
-		RemoveEventElement(m.getSiteInfoPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getSiteInfoPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(14, m.Instance(), m.getSiteInfoPtr)
+	cb := makeTGetSiteInfoEvent(fn)
+	base.SetEvent(m, 15, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnGetDockCaption(fn TGetDockCaptionEvent) {
-	if m.getDockCaptionPtr != 0 {
-		RemoveEventElement(m.getDockCaptionPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getDockCaptionPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(13, m.Instance(), m.getDockCaptionPtr)
+	cb := makeTGetDockCaptionEvent(fn)
+	base.SetEvent(m, 16, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(15, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 17, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(16, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 18, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(17, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 19, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(18, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 20, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(19, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 21, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(20, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 22, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(21, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 23, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(25, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 24, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(22, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 25, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(23, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 26, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(24, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 27, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnStartDock(fn TStartDockEvent) {
-	if m.startDockPtr != 0 {
-		RemoveEventElement(m.startDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDockPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(26, m.Instance(), m.startDockPtr)
+	cb := makeTStartDockEvent(fn)
+	base.SetEvent(m, 28, panelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPanel) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	panelImportAPI().SysCallN(27, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 29, panelAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewPanel class constructor
+func NewPanel(theOwner IComponent) IPanel {
+	r := panelAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsPanel(r)
+}
+
+func TPanelClass() types.TClass {
+	r := panelAPI().SysCallN(30)
+	return types.TClass(r)
 }
 
 var (
-	panelImport       *imports.Imports = nil
-	panelImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Panel_Class", 0),
-		/*1*/ imports.NewTable("Panel_Create", 0),
-		/*2*/ imports.NewTable("Panel_DragCursor", 0),
-		/*3*/ imports.NewTable("Panel_DragKind", 0),
-		/*4*/ imports.NewTable("Panel_DragMode", 0),
-		/*5*/ imports.NewTable("Panel_ParentFont", 0),
-		/*6*/ imports.NewTable("Panel_ParentShowHint", 0),
-		/*7*/ imports.NewTable("Panel_SetOnContextPopup", 0),
-		/*8*/ imports.NewTable("Panel_SetOnDblClick", 0),
-		/*9*/ imports.NewTable("Panel_SetOnDragDrop", 0),
-		/*10*/ imports.NewTable("Panel_SetOnDragOver", 0),
-		/*11*/ imports.NewTable("Panel_SetOnEndDock", 0),
-		/*12*/ imports.NewTable("Panel_SetOnEndDrag", 0),
-		/*13*/ imports.NewTable("Panel_SetOnGetDockCaption", 0),
-		/*14*/ imports.NewTable("Panel_SetOnGetSiteInfo", 0),
-		/*15*/ imports.NewTable("Panel_SetOnMouseDown", 0),
-		/*16*/ imports.NewTable("Panel_SetOnMouseEnter", 0),
-		/*17*/ imports.NewTable("Panel_SetOnMouseLeave", 0),
-		/*18*/ imports.NewTable("Panel_SetOnMouseMove", 0),
-		/*19*/ imports.NewTable("Panel_SetOnMouseUp", 0),
-		/*20*/ imports.NewTable("Panel_SetOnMouseWheel", 0),
-		/*21*/ imports.NewTable("Panel_SetOnMouseWheelDown", 0),
-		/*22*/ imports.NewTable("Panel_SetOnMouseWheelHorz", 0),
-		/*23*/ imports.NewTable("Panel_SetOnMouseWheelLeft", 0),
-		/*24*/ imports.NewTable("Panel_SetOnMouseWheelRight", 0),
-		/*25*/ imports.NewTable("Panel_SetOnMouseWheelUp", 0),
-		/*26*/ imports.NewTable("Panel_SetOnStartDock", 0),
-		/*27*/ imports.NewTable("Panel_SetOnStartDrag", 0),
-		/*28*/ imports.NewTable("Panel_ShowAccelChar", 0),
-		/*29*/ imports.NewTable("Panel_VerticalAlignment", 0),
-		/*30*/ imports.NewTable("Panel_Wordwrap", 0),
-	}
+	panelOnce   base.Once
+	panelImport *imports.Imports = nil
 )
 
-func panelImportAPI() *imports.Imports {
-	if panelImport == nil {
-		panelImport = NewDefaultImports()
-		panelImport.SetImportTable(panelImportTables)
-		panelImportTables = nil
-	}
+func panelAPI() *imports.Imports {
+	panelOnce.Do(func() {
+		panelImport = api.NewDefaultImports()
+		panelImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPanel_Create", 0), // constructor NewPanel
+			/* 1 */ imports.NewTable("TPanel_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TPanel_DragKind", 0), // property DragKind
+			/* 3 */ imports.NewTable("TPanel_DragMode", 0), // property DragMode
+			/* 4 */ imports.NewTable("TPanel_ParentFont", 0), // property ParentFont
+			/* 5 */ imports.NewTable("TPanel_ParentShowHint", 0), // property ParentShowHint
+			/* 6 */ imports.NewTable("TPanel_ShowAccelChar", 0), // property ShowAccelChar
+			/* 7 */ imports.NewTable("TPanel_VerticalAlignment", 0), // property VerticalAlignment
+			/* 8 */ imports.NewTable("TPanel_Wordwrap", 0), // property Wordwrap
+			/* 9 */ imports.NewTable("TPanel_OnContextPopup", 0), // event OnContextPopup
+			/* 10 */ imports.NewTable("TPanel_OnDblClick", 0), // event OnDblClick
+			/* 11 */ imports.NewTable("TPanel_OnDragDrop", 0), // event OnDragDrop
+			/* 12 */ imports.NewTable("TPanel_OnDragOver", 0), // event OnDragOver
+			/* 13 */ imports.NewTable("TPanel_OnEndDock", 0), // event OnEndDock
+			/* 14 */ imports.NewTable("TPanel_OnEndDrag", 0), // event OnEndDrag
+			/* 15 */ imports.NewTable("TPanel_OnGetSiteInfo", 0), // event OnGetSiteInfo
+			/* 16 */ imports.NewTable("TPanel_OnGetDockCaption", 0), // event OnGetDockCaption
+			/* 17 */ imports.NewTable("TPanel_OnMouseDown", 0), // event OnMouseDown
+			/* 18 */ imports.NewTable("TPanel_OnMouseEnter", 0), // event OnMouseEnter
+			/* 19 */ imports.NewTable("TPanel_OnMouseLeave", 0), // event OnMouseLeave
+			/* 20 */ imports.NewTable("TPanel_OnMouseMove", 0), // event OnMouseMove
+			/* 21 */ imports.NewTable("TPanel_OnMouseUp", 0), // event OnMouseUp
+			/* 22 */ imports.NewTable("TPanel_OnMouseWheel", 0), // event OnMouseWheel
+			/* 23 */ imports.NewTable("TPanel_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 24 */ imports.NewTable("TPanel_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 25 */ imports.NewTable("TPanel_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 26 */ imports.NewTable("TPanel_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 27 */ imports.NewTable("TPanel_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 28 */ imports.NewTable("TPanel_OnStartDock", 0), // event OnStartDock
+			/* 29 */ imports.NewTable("TPanel_OnStartDrag", 0), // event OnStartDrag
+			/* 30 */ imports.NewTable("TPanel_TClass", 0), // function TPanelClass
+		}
+	})
 	return panelImport
 }

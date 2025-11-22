@@ -9,58 +9,57 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IMenuItemEnumerator Parent: IObject
 type IMenuItemEnumerator interface {
 	IObject
-	Current() IMenuItem // property
 	MoveNext() bool     // function
+	Current() IMenuItem // property Current Getter
 }
 
-// TMenuItemEnumerator Parent: TObject
 type TMenuItemEnumerator struct {
 	TObject
 }
 
-func NewMenuItemEnumerator(AMenuItem IMenuItem) IMenuItemEnumerator {
-	r1 := menuItemEnumeratorImportAPI().SysCallN(1, GetObjectUintptr(AMenuItem))
-	return AsMenuItemEnumerator(r1)
+func (m *TMenuItemEnumerator) MoveNext() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := menuItemEnumeratorAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TMenuItemEnumerator) Current() IMenuItem {
-	r1 := menuItemEnumeratorImportAPI().SysCallN(2, m.Instance())
-	return AsMenuItem(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := menuItemEnumeratorAPI().SysCallN(2, m.Instance())
+	return AsMenuItem(r)
 }
 
-func (m *TMenuItemEnumerator) MoveNext() bool {
-	r1 := menuItemEnumeratorImportAPI().SysCallN(3, m.Instance())
-	return GoBool(r1)
-}
-
-func MenuItemEnumeratorClass() TClass {
-	ret := menuItemEnumeratorImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewMenuItemEnumerator class constructor
+func NewMenuItemEnumerator(menuItem IMenuItem) IMenuItemEnumerator {
+	r := menuItemEnumeratorAPI().SysCallN(0, base.GetObjectUintptr(menuItem))
+	return AsMenuItemEnumerator(r)
 }
 
 var (
-	menuItemEnumeratorImport       *imports.Imports = nil
-	menuItemEnumeratorImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("MenuItemEnumerator_Class", 0),
-		/*1*/ imports.NewTable("MenuItemEnumerator_Create", 0),
-		/*2*/ imports.NewTable("MenuItemEnumerator_Current", 0),
-		/*3*/ imports.NewTable("MenuItemEnumerator_MoveNext", 0),
-	}
+	menuItemEnumeratorOnce   base.Once
+	menuItemEnumeratorImport *imports.Imports = nil
 )
 
-func menuItemEnumeratorImportAPI() *imports.Imports {
-	if menuItemEnumeratorImport == nil {
-		menuItemEnumeratorImport = NewDefaultImports()
-		menuItemEnumeratorImport.SetImportTable(menuItemEnumeratorImportTables)
-		menuItemEnumeratorImportTables = nil
-	}
+func menuItemEnumeratorAPI() *imports.Imports {
+	menuItemEnumeratorOnce.Do(func() {
+		menuItemEnumeratorImport = api.NewDefaultImports()
+		menuItemEnumeratorImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TMenuItemEnumerator_Create", 0), // constructor NewMenuItemEnumerator
+			/* 1 */ imports.NewTable("TMenuItemEnumerator_MoveNext", 0), // function MoveNext
+			/* 2 */ imports.NewTable("TMenuItemEnumerator_Current", 0), // property Current
+		}
+	})
 	return menuItemEnumeratorImport
 }

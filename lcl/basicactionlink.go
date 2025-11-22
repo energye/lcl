@@ -9,81 +9,85 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IBasicActionLink Parent: IObject
 type IBasicActionLink interface {
 	IObject
-	Action() IBasicAction               // property
-	SetAction(AValue IBasicAction)      // property
-	Execute(AComponent IComponent) bool // function
-	Update() bool                       // function
-	SetOnChange(fn TNotifyEvent)        // property event
+	Execute(component IComponent) bool // function
+	Update() bool                      // function
+	Action() IBasicAction              // property Action Getter
+	SetAction(value IBasicAction)      // property Action Setter
+	SetOnChange(fn TNotifyEvent)       // property event
 }
 
-// TBasicActionLink Parent: TObject
 type TBasicActionLink struct {
 	TObject
-	changePtr uintptr
 }
 
-func NewBasicActionLink(AClient IObject) IBasicActionLink {
-	r1 := basicActionLinkImportAPI().SysCallN(2, GetObjectUintptr(AClient))
-	return AsBasicActionLink(r1)
-}
-
-func (m *TBasicActionLink) Action() IBasicAction {
-	r1 := basicActionLinkImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return AsBasicAction(r1)
-}
-
-func (m *TBasicActionLink) SetAction(AValue IBasicAction) {
-	basicActionLinkImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TBasicActionLink) Execute(AComponent IComponent) bool {
-	r1 := basicActionLinkImportAPI().SysCallN(3, m.Instance(), GetObjectUintptr(AComponent))
-	return GoBool(r1)
+func (m *TBasicActionLink) Execute(component IComponent) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := basicActionLinkAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(component))
+	return api.GoBool(r)
 }
 
 func (m *TBasicActionLink) Update() bool {
-	r1 := basicActionLinkImportAPI().SysCallN(5, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := basicActionLinkAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func BasicActionLinkClass() TClass {
-	ret := basicActionLinkImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TBasicActionLink) Action() IBasicAction {
+	if !m.IsValid() {
+		return nil
+	}
+	r := basicActionLinkAPI().SysCallN(3, 0, m.Instance())
+	return AsBasicAction(r)
+}
+
+func (m *TBasicActionLink) SetAction(value IBasicAction) {
+	if !m.IsValid() {
+		return
+	}
+	basicActionLinkAPI().SysCallN(3, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TBasicActionLink) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	basicActionLinkImportAPI().SysCallN(4, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 4, basicActionLinkAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewBasicActionLink class constructor
+func NewBasicActionLink(client IObject) IBasicActionLink {
+	r := basicActionLinkAPI().SysCallN(0, base.GetObjectUintptr(client))
+	return AsBasicActionLink(r)
 }
 
 var (
-	basicActionLinkImport       *imports.Imports = nil
-	basicActionLinkImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("BasicActionLink_Action", 0),
-		/*1*/ imports.NewTable("BasicActionLink_Class", 0),
-		/*2*/ imports.NewTable("BasicActionLink_Create", 0),
-		/*3*/ imports.NewTable("BasicActionLink_Execute", 0),
-		/*4*/ imports.NewTable("BasicActionLink_SetOnChange", 0),
-		/*5*/ imports.NewTable("BasicActionLink_Update", 0),
-	}
+	basicActionLinkOnce   base.Once
+	basicActionLinkImport *imports.Imports = nil
 )
 
-func basicActionLinkImportAPI() *imports.Imports {
-	if basicActionLinkImport == nil {
-		basicActionLinkImport = NewDefaultImports()
-		basicActionLinkImport.SetImportTable(basicActionLinkImportTables)
-		basicActionLinkImportTables = nil
-	}
+func basicActionLinkAPI() *imports.Imports {
+	basicActionLinkOnce.Do(func() {
+		basicActionLinkImport = api.NewDefaultImports()
+		basicActionLinkImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TBasicActionLink_Create", 0), // constructor NewBasicActionLink
+			/* 1 */ imports.NewTable("TBasicActionLink_Execute", 0), // function Execute
+			/* 2 */ imports.NewTable("TBasicActionLink_Update", 0), // function Update
+			/* 3 */ imports.NewTable("TBasicActionLink_Action", 0), // property Action
+			/* 4 */ imports.NewTable("TBasicActionLink_OnChange", 0), // event OnChange
+		}
+	})
 	return basicActionLinkImport
 }

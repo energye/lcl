@@ -9,28 +9,29 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICheckBox Parent: ICustomCheckBox
 type ICheckBox interface {
 	ICustomCheckBox
-	Checked() bool                                 // property
-	SetChecked(AValue bool)                        // property
-	DragCursor() TCursor                           // property
-	SetDragCursor(AValue TCursor)                  // property
-	DragKind() TDragKind                           // property
-	SetDragKind(AValue TDragKind)                  // property
-	DragMode() TDragMode                           // property
-	SetDragMode(AValue TDragMode)                  // property
-	ParentColor() bool                             // property
-	SetParentColor(AValue bool)                    // property
-	ParentFont() bool                              // property
-	SetParentFont(AValue bool)                     // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
+	Checked() bool                                 // property Checked Getter
+	SetChecked(value bool)                         // property Checked Setter
+	DragCursor() types.TCursor                     // property DragCursor Getter
+	SetDragCursor(value types.TCursor)             // property DragCursor Setter
+	DragKind() types.TDragKind                     // property DragKind Getter
+	SetDragKind(value types.TDragKind)             // property DragKind Setter
+	DragMode() types.TDragMode                     // property DragMode Getter
+	SetDragMode(value types.TDragMode)             // property DragMode Setter
+	ParentColor() bool                             // property ParentColor Getter
+	SetParentColor(value bool)                     // property ParentColor Setter
+	ParentFont() bool                              // property ParentFont Getter
+	SetParentFont(value bool)                      // property ParentFont Setter
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
 	SetOnContextPopup(fn TContextPopupEvent)       // property event
 	SetOnDragDrop(fn TDragDropEvent)               // property event
 	SetOnDragOver(fn TDragOverEvent)               // property event
@@ -47,244 +48,271 @@ type ICheckBox interface {
 	SetOnStartDrag(fn TStartDragEvent)             // property event
 }
 
-// TCheckBox Parent: TCustomCheckBox
 type TCheckBox struct {
 	TCustomCheckBox
-	contextPopupPtr   uintptr
-	dragDropPtr       uintptr
-	dragOverPtr       uintptr
-	editingDonePtr    uintptr
-	endDragPtr        uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	startDragPtr      uintptr
-}
-
-func NewCheckBox(TheOwner IComponent) ICheckBox {
-	r1 := checkBoxImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsCheckBox(r1)
 }
 
 func (m *TCheckBox) Checked() bool {
-	r1 := checkBoxImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkBoxAPI().SysCallN(1, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckBox) SetChecked(AValue bool) {
-	checkBoxImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
+func (m *TCheckBox) SetChecked(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkBoxAPI().SysCallN(1, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCheckBox) DragCursor() TCursor {
-	r1 := checkBoxImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TCheckBox) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkBoxAPI().SysCallN(2, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TCheckBox) SetDragCursor(AValue TCursor) {
-	checkBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckBox) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	checkBoxAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCheckBox) DragKind() TDragKind {
-	r1 := checkBoxImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TCheckBox) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkBoxAPI().SysCallN(3, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TCheckBox) SetDragKind(AValue TDragKind) {
-	checkBoxImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckBox) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	checkBoxAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCheckBox) DragMode() TDragMode {
-	r1 := checkBoxImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TDragMode(r1)
+func (m *TCheckBox) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkBoxAPI().SysCallN(4, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TCheckBox) SetDragMode(AValue TDragMode) {
-	checkBoxImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckBox) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	checkBoxAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCheckBox) ParentColor() bool {
-	r1 := checkBoxImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkBoxAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckBox) SetParentColor(AValue bool) {
-	checkBoxImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
+func (m *TCheckBox) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkBoxAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCheckBox) ParentFont() bool {
-	r1 := checkBoxImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkBoxAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckBox) SetParentFont(AValue bool) {
-	checkBoxImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
+func (m *TCheckBox) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkBoxAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCheckBox) ParentShowHint() bool {
-	r1 := checkBoxImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkBoxAPI().SysCallN(7, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckBox) SetParentShowHint(AValue bool) {
-	checkBoxImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
-}
-
-func CheckBoxClass() TClass {
-	ret := checkBoxImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TCheckBox) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkBoxAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCheckBox) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(9, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 8, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(10, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 9, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(11, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 10, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnEditingDone(fn TNotifyEvent) {
-	if m.editingDonePtr != 0 {
-		RemoveEventElement(m.editingDonePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.editingDonePtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(12, m.Instance(), m.editingDonePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 11, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(13, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 12, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(14, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 13, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(15, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 14, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(16, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 15, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(17, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 16, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(18, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 17, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(19, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 18, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(20, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 19, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(21, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 20, checkBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckBox) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	checkBoxImportAPI().SysCallN(22, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 21, checkBoxAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCheckBox class constructor
+func NewCheckBox(theOwner IComponent) ICheckBox {
+	r := checkBoxAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsCheckBox(r)
+}
+
+func TCheckBoxClass() types.TClass {
+	r := checkBoxAPI().SysCallN(22)
+	return types.TClass(r)
 }
 
 var (
-	checkBoxImport       *imports.Imports = nil
-	checkBoxImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CheckBox_Checked", 0),
-		/*1*/ imports.NewTable("CheckBox_Class", 0),
-		/*2*/ imports.NewTable("CheckBox_Create", 0),
-		/*3*/ imports.NewTable("CheckBox_DragCursor", 0),
-		/*4*/ imports.NewTable("CheckBox_DragKind", 0),
-		/*5*/ imports.NewTable("CheckBox_DragMode", 0),
-		/*6*/ imports.NewTable("CheckBox_ParentColor", 0),
-		/*7*/ imports.NewTable("CheckBox_ParentFont", 0),
-		/*8*/ imports.NewTable("CheckBox_ParentShowHint", 0),
-		/*9*/ imports.NewTable("CheckBox_SetOnContextPopup", 0),
-		/*10*/ imports.NewTable("CheckBox_SetOnDragDrop", 0),
-		/*11*/ imports.NewTable("CheckBox_SetOnDragOver", 0),
-		/*12*/ imports.NewTable("CheckBox_SetOnEditingDone", 0),
-		/*13*/ imports.NewTable("CheckBox_SetOnEndDrag", 0),
-		/*14*/ imports.NewTable("CheckBox_SetOnMouseDown", 0),
-		/*15*/ imports.NewTable("CheckBox_SetOnMouseEnter", 0),
-		/*16*/ imports.NewTable("CheckBox_SetOnMouseLeave", 0),
-		/*17*/ imports.NewTable("CheckBox_SetOnMouseMove", 0),
-		/*18*/ imports.NewTable("CheckBox_SetOnMouseUp", 0),
-		/*19*/ imports.NewTable("CheckBox_SetOnMouseWheel", 0),
-		/*20*/ imports.NewTable("CheckBox_SetOnMouseWheelDown", 0),
-		/*21*/ imports.NewTable("CheckBox_SetOnMouseWheelUp", 0),
-		/*22*/ imports.NewTable("CheckBox_SetOnStartDrag", 0),
-	}
+	checkBoxOnce   base.Once
+	checkBoxImport *imports.Imports = nil
 )
 
-func checkBoxImportAPI() *imports.Imports {
-	if checkBoxImport == nil {
-		checkBoxImport = NewDefaultImports()
-		checkBoxImport.SetImportTable(checkBoxImportTables)
-		checkBoxImportTables = nil
-	}
+func checkBoxAPI() *imports.Imports {
+	checkBoxOnce.Do(func() {
+		checkBoxImport = api.NewDefaultImports()
+		checkBoxImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCheckBox_Create", 0), // constructor NewCheckBox
+			/* 1 */ imports.NewTable("TCheckBox_Checked", 0), // property Checked
+			/* 2 */ imports.NewTable("TCheckBox_DragCursor", 0), // property DragCursor
+			/* 3 */ imports.NewTable("TCheckBox_DragKind", 0), // property DragKind
+			/* 4 */ imports.NewTable("TCheckBox_DragMode", 0), // property DragMode
+			/* 5 */ imports.NewTable("TCheckBox_ParentColor", 0), // property ParentColor
+			/* 6 */ imports.NewTable("TCheckBox_ParentFont", 0), // property ParentFont
+			/* 7 */ imports.NewTable("TCheckBox_ParentShowHint", 0), // property ParentShowHint
+			/* 8 */ imports.NewTable("TCheckBox_OnContextPopup", 0), // event OnContextPopup
+			/* 9 */ imports.NewTable("TCheckBox_OnDragDrop", 0), // event OnDragDrop
+			/* 10 */ imports.NewTable("TCheckBox_OnDragOver", 0), // event OnDragOver
+			/* 11 */ imports.NewTable("TCheckBox_OnEditingDone", 0), // event OnEditingDone
+			/* 12 */ imports.NewTable("TCheckBox_OnEndDrag", 0), // event OnEndDrag
+			/* 13 */ imports.NewTable("TCheckBox_OnMouseDown", 0), // event OnMouseDown
+			/* 14 */ imports.NewTable("TCheckBox_OnMouseEnter", 0), // event OnMouseEnter
+			/* 15 */ imports.NewTable("TCheckBox_OnMouseLeave", 0), // event OnMouseLeave
+			/* 16 */ imports.NewTable("TCheckBox_OnMouseMove", 0), // event OnMouseMove
+			/* 17 */ imports.NewTable("TCheckBox_OnMouseUp", 0), // event OnMouseUp
+			/* 18 */ imports.NewTable("TCheckBox_OnMouseWheel", 0), // event OnMouseWheel
+			/* 19 */ imports.NewTable("TCheckBox_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 20 */ imports.NewTable("TCheckBox_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 21 */ imports.NewTable("TCheckBox_OnStartDrag", 0), // event OnStartDrag
+			/* 22 */ imports.NewTable("TCheckBox_TClass", 0), // function TCheckBoxClass
+		}
+	})
 	return checkBoxImport
 }

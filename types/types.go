@@ -8,27 +8,9 @@
 
 package types
 
-import (
-	"unsafe"
-)
+import "github.com/energye/lcl/types/colors"
 
-type Int8 int8
-type Int16 int16
-type Int32 int32
-type Int64 int64
-type Int int
-type UInt8 uint8
-type UInt16 uint16
-type UInt32 uint32
-type UInt64 uint64
-type UInt uint
-type UIntptr uintptr
-type String string
-type Boolean bool
-type Float32 float32
-type Float64 float64
-type TColor uint32 // TColor 常用值请见 types/colors 包
-
+// PByte = ^Byte = *uintptr
 type PByte = uintptr
 type HDWP = uintptr
 type HMODULE = uintptr
@@ -50,17 +32,20 @@ type TTabOrder = int16
 type PFNLVCOMPARE = uintptr
 type PFNTVCOMPARE = uintptr
 type Byte = uint8
-type TFontCharset = uint8
 type TSpacingSize = int32
 type TClass = uintptr
 type TThreadID = uintptr
 type TClipboardFormat = uintptr
 type Single = float32
-type PChar = string
-type Char = uint16 // Char Unicode 主要用于keymap, 参见types/keys包
+type Char = uint16   // Char Unicode 主要用于keymap, 参见types/keys包
+type PChar = uintptr // ^Char
+type PPChar = PChar  // ^PChar
+type PPAnsiChar = PPChar
+type PWideChar = uintptr    // ^WideChar
+type PPWideChar = PWideChar // ^PWideChar
 type AnsiChar = Char
-
-// type TCefColor = uint32
+type HBitmap = uintptr
+type TPenPattern = LongWord
 type Integer = int32
 type LongInt = int32
 type LongPtr = uintptr
@@ -68,8 +53,8 @@ type LongWord = uint32
 type NativeUInt = uint32
 type Cardinal = uint32
 type HWND = uintptr
-type WPARAM = uintptr
-type LPARAM = uintptr
+type WParam = uintptr
+type LParam = uintptr
 type HDC = uintptr
 type Pointer = uintptr
 type QWord = uintptr
@@ -85,16 +70,17 @@ type HMONITOR = uintptr
 type HBRUSH = uintptr
 type HPEN = uintptr
 type HKEY = uintptr
+type Variant = uintptr
 type TGraphicsColor = int32
 type SmallInt = int16
 type HFONT = uintptr
 type HRESULT = uintptr
 type SizeInt = int
 type DWORD = Cardinal
+type PDWORD = uintptr // PDWORD = ^DWORD
 type ACCESS_MASK = DWORD
 type REGSAM = ACCESS_MASK
-type LongBool = Boolean
-type BOOL = LongBool
+type Boolean = bool
 type UINT = LongWord
 type ULONG_PTR = QWord
 type THandle = QWord
@@ -104,6 +90,9 @@ type TColorRef = COLORREF
 type PtrUInt = QWord
 type HCURSOR = HICON
 type TFarProc = Pointer
+type LongBool int32
+type BOOL = LongBool
+type LANGID = Word
 
 // type TCefStringList = Pointer
 type TCriticalSection = PtrUInt
@@ -114,7 +103,6 @@ type TFontDataName = string
 type HFont = HANDLE
 type TFPResourceHandle = PtrUInt
 type TFontCharSet = byte
-type TResourceType = string
 type HIMAGELIST = HANDLE
 type TLCLHandle = PtrUInt
 
@@ -127,7 +115,7 @@ type TFPJPEGCompressionQuality = uint8
 type TJPEGQualityRange = TFPJPEGCompressionQuality
 
 // TDateTime Double
-type TDateTime = Float64
+type TDateTime = float64
 
 // TDate TDateTime
 type TDate = TDateTime
@@ -135,18 +123,27 @@ type TDate = TDateTime
 // TTime TDateTime
 type TTime = TDateTime
 
-type TDockZoneClass = uintptr
-type TCollectionItemClass = uintptr
-type TWinControlClass = uintptr
-type TFPCustomImageClass = uintptr
-type TGraphicClass = uintptr
-type TStatusPanelClass = uintptr
-type THeaderSectionClass = uintptr
-type TListItemClass = uintptr
-type TTreeNodeClass = uintptr
+type TDockZoneClass = TClass
+type TCollectionItemClass = TClass
+type TWinControlClass = TClass
+type TFPCustomImageClass = TClass
+type TGraphicClass = TClass
+type TStatusPanelClass = TClass
+type THeaderSectionClass = TClass
+type TListItemClass = TClass
+type TTreeNodeClass = TClass
+type TAVLTreeNodeClass = TClass
+type TFPImageBitmapClass = TClass
+type TSynEditMarkupClass = TClass
+
+func (m LongBool) Bool() bool {
+	return m != 0
+}
 
 // TSet Pascal集合类型 set of xxx
 type TSet uint32
+
+type TColor = colors.TColor
 
 // TUTF8Char
 //
@@ -158,9 +155,9 @@ type TUTF8Char struct {
 
 // TBrushPattern
 //
-//	array[0..PatternBitCount-1] of TPenPattern
-//	PatternBitCount = sizeof(longword) * 8;
-type TBrushPattern [32]uint32
+//	32 = PatternBitCount = SizeOf(uint32) * 8;
+//	[32]uint32 = array[0..PatternBitCount-1] of TPenPattern
+type TBrushPattern = uintptr
 
 // TOverlay = 0..14; // windows limitation
 type TOverlay uint8
@@ -507,7 +504,7 @@ type TagScrollInfo struct {
 	FMask     UINT
 	NMin      Integer
 	NMax      Integer
-	NPage     UInt
+	NPage     UINT
 	NPos      Integer
 	NTrackPos Integer
 }
@@ -561,7 +558,7 @@ type TLogRadialGradient struct {
 	RadStops   []TLogGradientStop
 }
 
-type TagBitmapInfoHeader struct { // use packed, this is the .bmp file format
+type TBitmapInfoHeader struct { // use packed, this is the .bmp file format
 	BiSize          DWORD
 	BiWidth         LongInt
 	BiHeight        LongInt
@@ -574,7 +571,7 @@ type TagBitmapInfoHeader struct { // use packed, this is the .bmp file format
 	BiClrUsed       DWORD
 	BiClrImportant  DWORD
 }
-type TagRGBQuad struct {
+type TRGBQuad struct {
 	RgbBlue     byte
 	RgbGreen    byte
 	RgbRed      byte
@@ -585,12 +582,12 @@ type TFPColor struct {
 	Red, Green, Blue, Alpha Word
 }
 
-type TagBitmapInfo struct {
-	BmiHeader TagBitmapInfoHeader
-	BmiColors []TagRGBQuad
+type TBitmapInfo struct {
+	BmiHeader TBitmapInfoHeader
+	BmiColors [1]TRGBQuad
 }
 
-type TagMonitorInfo struct {
+type TMonitorInfo struct {
 	CbSize    DWORD
 	RcMonitor TRect
 	RcWork    TRect
@@ -614,159 +611,50 @@ type LogFontA struct {
 	LfFaceName       []AnsiChar // len = 32
 }
 
-func (m Int8) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-func (m Int16) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-func (m Int32) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-func (m Int64) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-func (m Int) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-func (m UInt8) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-func (m UInt16) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-func (m UInt32) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-func (m UInt64) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-func (m UInt) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-func (m UIntptr) ToPtr() uintptr {
-	return uintptr(m)
-}
-
-// SetValue
-//
-// 给指针设置值, 仅基础类型, 字符串需直接赋值
-func (m UIntptr) SetValue(value interface{}) {
-	if m == 0 {
-		return
-	}
-	switch value.(type) {
-	case uintptr:
-		*(*uintptr)(unsafe.Pointer(m)) = value.(uintptr)
-	case int:
-		*(*int)(unsafe.Pointer(m)) = value.(int)
-	case int8:
-		*(*int8)(unsafe.Pointer(m)) = value.(int8)
-	case int16:
-		*(*int16)(unsafe.Pointer(m)) = value.(int16)
-	case int32:
-		*(*int32)(unsafe.Pointer(m)) = value.(int32)
-	case int64:
-		*(*int64)(unsafe.Pointer(m)) = value.(int64)
-	case uint:
-		*(*uint)(unsafe.Pointer(m)) = value.(uint)
-	case uint8:
-		*(*uint8)(unsafe.Pointer(m)) = value.(uint8)
-	case uint16:
-		*(*uint16)(unsafe.Pointer(m)) = value.(uint16)
-	case uint32:
-		*(*uint32)(unsafe.Pointer(m)) = value.(uint32)
-	case uint64:
-		*(*uint64)(unsafe.Pointer(m)) = value.(uint64)
-	case float32:
-		//*(*float32)(unsafe.Pointer(uintptr(unsafe.Pointer(&m)))) = value.(float32)
-		*(*float32)(unsafe.Pointer(m)) = value.(float32)
-	case float64:
-		//*(*float64)(unsafe.Pointer(uintptr(unsafe.Pointer(&m)))) = value.(float64)
-		*(*float64)(unsafe.Pointer(m)) = value.(float64)
-	case bool:
-		*(*bool)(unsafe.Pointer(m)) = value.(bool)
-	case string:
-
-	}
-}
-
-func (m String) ToPtr() uintptr {
-	if m == "" {
-		return 0
-	}
-	temp := []byte(m)
-	utf8StrArr := make([]uint8, len(temp)+1) // +1是因为Lazarus中PChar为0结尾
-	copy(utf8StrArr, temp)
-	return uintptr(unsafe.Pointer(&utf8StrArr[0]))
-}
-
-func (m Boolean) ToPtr() uintptr {
-	if m {
-		return 1
-	}
-	return 0
-}
-
-func (m Float32) ToPtr() uintptr {
-	return uintptr(unsafe.Pointer(&m))
-}
-
-func (m Float64) ToPtr() uintptr {
-	return uintptr(unsafe.Pointer(&m))
-}
+// PATFlatTheme = ^TATFlatTheme
+type PATFlatTheme = uintptr
 
 // TATFlatTheme Theme
 type TATFlatTheme struct {
-	FontName               string
-	FontSize               Integer
+	FontName               uintptr // string
+	FontSize               int32
 	FontStyles             TFontStyles
-	ColorFont              TColor
-	ColorFontDisabled      TColor
-	ColorFontListbox       TColor
-	ColorFontListboxSel    TColor
-	ColorFontOverlay       TColor
-	ColorBgPassive         TColor
-	ColorBgOver            TColor
-	ColorBgChecked         TColor
-	ColorBgDisabled        TColor
-	ColorBgListbox         TColor
-	ColorBgListboxSel      TColor
-	ColorBgListboxHottrack TColor
-	ColorBgOverlay         TColor
-	ColorArrows            TColor
-	ColorArrowsOver        TColor
-	ColorSeparators        TColor
-	ColorBorderPassive     TColor
-	ColorBorderOver        TColor
-	ColorBorderFocused     TColor
-	EnableColorBgOver      Boolean
-	MouseoverBorderWidth   Integer
-	PressedBorderWidth     Integer
-	PressedCaptionShiftY   Integer
-	PressedCaptionShiftX   Integer
-	BoldBorderWidth        Integer
-	ChoiceBorderWidth      Integer
-	ArrowSize              Integer
-	GapForAutoSize         Integer
+	ColorFont              colors.TColor
+	ColorFontDisabled      colors.TColor
+	ColorFontListbox       colors.TColor
+	ColorFontListboxSel    colors.TColor
+	ColorFontOverlay       colors.TColor
+	ColorBgPassive         colors.TColor
+	ColorBgOver            colors.TColor
+	ColorBgChecked         colors.TColor
+	ColorBgDisabled        colors.TColor
+	ColorBgListbox         colors.TColor
+	ColorBgListboxSel      colors.TColor
+	ColorBgListboxHottrack colors.TColor
+	ColorBgOverlay         colors.TColor
+	ColorArrows            colors.TColor
+	ColorArrowsOver        colors.TColor
+	ColorSeparators        colors.TColor
+	ColorBorderPassive     colors.TColor
+	ColorBorderOver        colors.TColor
+	ColorBorderFocused     colors.TColor
+	EnableColorBgOver      bool
+	MouseoverBorderWidth   int32
+	PressedBorderWidth     int32
+	PressedCaptionShiftY   int32
+	PressedCaptionShiftX   int32
+	BoldBorderWidth        int32
+	ChoiceBorderWidth      int32
+	ArrowSize              int32
+	GapForAutoSize         int32
 	TextOverlayPosition    TATButtonOverlayPosition
-	SeparatorOffset        Integer
-	XMarkWidth             Integer
-	XMarkOffsetLeft        Integer
-	XMarkOffsetRight       Integer
-	XMarkLineWidth         Integer
-	ScalePercents          Integer
-	ScaleFontPercents      Integer
+	SeparatorOffset        int32
+	XMarkWidth             int32
+	XMarkOffsetLeft        int32
+	XMarkOffsetRight       int32
+	XMarkLineWidth         int32
+	ScalePercents          int32
+	ScaleFontPercents      int32
 }
 
 func (m *TATFlatTheme) DoScale(AValue Integer) Integer {
@@ -779,10 +667,6 @@ func (m *TATFlatTheme) DoScaleFont(AValue Integer) Integer {
 	} else {
 		return AValue * m.ScaleFontPercents / 100
 	}
-}
-
-// TScaledImageListResolution TODO record
-type TScaledImageListResolution struct {
 }
 
 // TFontData record
@@ -825,10 +709,10 @@ type TThemedElementDetails struct {
 type TFontParams struct {
 	Name       string
 	Size       int32
-	Color      TColor
+	Color      colors.TColor
 	Style      TFontStyles
 	HasBkClr   bool
-	BkColor    TColor
+	BkColor    colors.TColor
 	VScriptPos TVScriptPos
 }
 

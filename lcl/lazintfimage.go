@@ -9,225 +9,316 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ILazIntfImage Parent: IFPCustomImage
 type ILazIntfImage interface {
 	IFPCustomImage
-	DataDescription() *TRawImageDescription
-	SetDataDescription(AValue *TRawImageDescription)
-	CheckDescription(ADescription *TRawImageDescription, ExceptionOnError bool) bool
-	SetDataDescriptionKeepData(ADescription *TRawImageDescription)
-	PixelData() PByte                                                                              // property
-	MaskData() PByte                                                                               // property
-	TColors(x, y int32) TGraphicsColor                                                             // property
-	SetTColors(x, y int32, AValue TGraphicsColor)                                                  // property
-	Masked(x, y int32) bool                                                                        // property
-	SetMasked(x, y int32, AValue bool)                                                             // property
-	GetDataLineStart(y int32) uintptr                                                              // function
-	HasTransparency() bool                                                                         // function
-	HasMask() bool                                                                                 // function
-	BeginUpdate()                                                                                  // procedure
-	EndUpdate()                                                                                    // procedure
-	LoadFromDevice(DC HDC)                                                                         // procedure
-	LoadFromBitmap(ABitmap, AMaskBitmap HBITMAP, AWidth int32, AHeight int32)                      // procedure
-	CreateBitmaps(OutBitmap, OutMask *HBITMAP, ASkipMask bool)                                     // procedure
-	SetRawImage(ARawImage *TRawImage, ADataOwner bool)                                             // procedure
-	GetRawImage(OutRawImage *TRawImage, ATransferOwnership bool)                                   // procedure
-	FillPixels(Color *TFPColor)                                                                    // procedure
-	CopyPixels(ASource IFPCustomImage, XDst int32, YDst int32, AlphaMask bool, AlphaTreshold Word) // procedure
-	AlphaBlend(ASource, ASourceAlpha ILazIntfImage, ADestX, ADestY int32)                          // procedure
-	AlphaFromMask(AKeepAlpha bool)                                                                 // procedure
-	Mask(AColor *TFPColor, AKeepOldMask bool)                                                      // procedure
-	GetXYDataPosition(x, y int32, OutPosition *TRawImagePosition)                                  // procedure
-	GetXYMaskPosition(x, y int32, OutPosition *TRawImagePosition)                                  // procedure
-	CreateData()                                                                                   // procedure
+	CheckDescription(description IRawImageDescriptionWrap, exceptionOnError bool) bool              // function
+	GetDataLineStart(Y int32) uintptr                                                               // function
+	HasTransparency() bool                                                                          // function
+	HasMask() bool                                                                                  // function
+	BeginUpdate()                                                                                   // procedure
+	EndUpdate()                                                                                     // procedure
+	LoadFromDevice(dC types.HDC)                                                                    // procedure
+	LoadFromBitmap(bitmap types.HBitmap, maskBitmap types.HBitmap, width int32, height int32)       // procedure
+	CreateBitmaps(outBitmap *types.HBitmap, outMask *types.HBitmap, skipMask bool)                  // procedure
+	SetRawImage(rawImage IRawImageWrap, dataOwner bool)                                             // procedure
+	GetRawImage(outRawImage *IRawImageWrap, transferOwnership bool)                                 // procedure
+	FillPixels(color TFPColor)                                                                      // procedure
+	CopyPixels(source IFPCustomImage, xDst int32, yDst int32, alphaMask bool, alphaTreshold uint16) // procedure
+	AlphaBlend(source ILazIntfImage, sourceAlpha ILazIntfImage, destX int32, destY int32)           // procedure
+	AlphaFromMask(keepAlpha bool)                                                                   // procedure
+	Mask(color TFPColor, keepOldMask bool)                                                          // procedure
+	GetXYDataPosition(X int32, Y int32, outPosition *TRawImagePosition)                             // procedure
+	GetXYMaskPosition(X int32, Y int32, outPosition *TRawImagePosition)                             // procedure
+	CreateData()                                                                                    // procedure
+	SetDataDescriptionKeepData(description IRawImageDescriptionWrap)                                // procedure
+	PixelData() types.PByte                                                                         // property PixelData Getter
+	MaskData() types.PByte                                                                          // property MaskData Getter
+	DataDescription() IRawImageDescriptionWrap                                                      // property DataDescription Getter
+	SetDataDescription(value IRawImageDescriptionWrap)                                              // property DataDescription Setter
+	TColors(X int32, Y int32) types.TGraphicsColor                                                  // property TColors Getter
+	SetTColors(X int32, Y int32, value types.TGraphicsColor)                                        // property TColors Setter
+	Masked(X int32, Y int32) bool                                                                   // property Masked Getter
+	SetMasked(X int32, Y int32, value bool)                                                         // property Masked Setter
 }
 
-// TLazIntfImage Parent: TFPCustomImage
 type TLazIntfImage struct {
 	TFPCustomImage
 }
 
-func NewLazIntfImage(AWidth, AHeight int32) ILazIntfImage {
-	r1 := lazIntfImageImportAPI().SysCallN(5, uintptr(AWidth), uintptr(AHeight))
-	return AsLazIntfImage(r1)
+func (m *TLazIntfImage) CheckDescription(description IRawImageDescriptionWrap, exceptionOnError bool) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := lazIntfImageAPI().SysCallN(3, m.Instance(), base.GetObjectUintptr(description), api.PasBool(exceptionOnError))
+	return api.GoBool(r)
 }
 
-func NewLazIntfImage1(AWidth, AHeight int32, AFlags TRawImageQueryFlags) ILazIntfImage {
-	r1 := lazIntfImageImportAPI().SysCallN(6, uintptr(AWidth), uintptr(AHeight), uintptr(AFlags))
-	return AsLazIntfImage(r1)
-}
-
-func NewLazIntfImage2(ARawImage *TRawImage, ADataOwner bool) ILazIntfImage {
-	r1 := lazIntfImageImportAPI().SysCallN(7, uintptr(unsafePointer(ARawImage)), PascalBool(ADataOwner))
-	return AsLazIntfImage(r1)
-}
-
-func NewLazIntfImageCompatible(IntfImg ILazIntfImage, AWidth, AHeight int32) ILazIntfImage {
-	r1 := lazIntfImageImportAPI().SysCallN(9, GetObjectUintptr(IntfImg), uintptr(AWidth), uintptr(AHeight))
-	return AsLazIntfImage(r1)
-}
-
-func (m *TLazIntfImage) PixelData() PByte {
-	r1 := lazIntfImageImportAPI().SysCallN(24, m.Instance())
-	return PByte(r1)
-}
-
-func (m *TLazIntfImage) MaskData() PByte {
-	r1 := lazIntfImageImportAPI().SysCallN(22, m.Instance())
-	return PByte(r1)
-}
-
-func (m *TLazIntfImage) TColors(x, y int32) TGraphicsColor {
-	r1 := lazIntfImageImportAPI().SysCallN(26, 0, m.Instance(), uintptr(x), uintptr(y))
-	return TGraphicsColor(r1)
-}
-
-func (m *TLazIntfImage) SetTColors(x, y int32, AValue TGraphicsColor) {
-	lazIntfImageImportAPI().SysCallN(26, 1, m.Instance(), uintptr(x), uintptr(y), uintptr(AValue))
-}
-
-func (m *TLazIntfImage) Masked(x, y int32) bool {
-	r1 := lazIntfImageImportAPI().SysCallN(23, 0, m.Instance(), uintptr(x), uintptr(y))
-	return GoBool(r1)
-}
-
-func (m *TLazIntfImage) SetMasked(x, y int32, AValue bool) {
-	lazIntfImageImportAPI().SysCallN(23, 1, m.Instance(), uintptr(x), uintptr(y), PascalBool(AValue))
-}
-
-func (m *TLazIntfImage) GetDataLineStart(y int32) uintptr {
-	r1 := lazIntfImageImportAPI().SysCallN(13, m.Instance(), uintptr(y))
-	return uintptr(r1)
+func (m *TLazIntfImage) GetDataLineStart(Y int32) uintptr {
+	if !m.IsValid() {
+		return 0
+	}
+	r := lazIntfImageAPI().SysCallN(4, m.Instance(), uintptr(Y))
+	return uintptr(r)
 }
 
 func (m *TLazIntfImage) HasTransparency() bool {
-	r1 := lazIntfImageImportAPI().SysCallN(18, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := lazIntfImageAPI().SysCallN(5, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TLazIntfImage) HasMask() bool {
-	r1 := lazIntfImageImportAPI().SysCallN(17, m.Instance())
-	return GoBool(r1)
-}
-
-func LazIntfImageClass() TClass {
-	ret := lazIntfImageImportAPI().SysCallN(3)
-	return TClass(ret)
+	if !m.IsValid() {
+		return false
+	}
+	r := lazIntfImageAPI().SysCallN(6, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TLazIntfImage) BeginUpdate() {
-	lazIntfImageImportAPI().SysCallN(2, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(7, m.Instance())
 }
 
 func (m *TLazIntfImage) EndUpdate() {
-	lazIntfImageImportAPI().SysCallN(11, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(8, m.Instance())
 }
 
-func (m *TLazIntfImage) LoadFromDevice(DC HDC) {
-	lazIntfImageImportAPI().SysCallN(20, m.Instance(), uintptr(DC))
+func (m *TLazIntfImage) LoadFromDevice(dC types.HDC) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(9, m.Instance(), uintptr(dC))
 }
 
-func (m *TLazIntfImage) LoadFromBitmap(ABitmap, AMaskBitmap HBITMAP, AWidth int32, AHeight int32) {
-	lazIntfImageImportAPI().SysCallN(19, m.Instance(), uintptr(ABitmap), uintptr(AMaskBitmap), uintptr(AWidth), uintptr(AHeight))
+func (m *TLazIntfImage) LoadFromBitmap(bitmap types.HBitmap, maskBitmap types.HBitmap, width int32, height int32) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(10, m.Instance(), uintptr(bitmap), uintptr(maskBitmap), uintptr(width), uintptr(height))
 }
 
-func (m *TLazIntfImage) CreateBitmaps(OutBitmap, OutMask *HBITMAP, ASkipMask bool) {
-	var result0 uintptr
-	var result1 uintptr
-	lazIntfImageImportAPI().SysCallN(8, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)), PascalBool(ASkipMask))
-	*OutBitmap = HBITMAP(result0)
-	*OutMask = HBITMAP(result1)
+func (m *TLazIntfImage) CreateBitmaps(outBitmap *types.HBitmap, outMask *types.HBitmap, skipMask bool) {
+	if !m.IsValid() {
+		return
+	}
+	var bitmapPtr uintptr
+	var maskPtr uintptr
+	lazIntfImageAPI().SysCallN(11, m.Instance(), uintptr(base.UnsafePointer(&bitmapPtr)), uintptr(base.UnsafePointer(&maskPtr)), api.PasBool(skipMask))
+	*outBitmap = types.HBitmap(bitmapPtr)
+	*outMask = types.HBitmap(maskPtr)
 }
 
-func (m *TLazIntfImage) SetRawImage(ARawImage *TRawImage, ADataOwner bool) {
-	lazIntfImageImportAPI().SysCallN(25, m.Instance(), uintptr(unsafePointer(ARawImage)), PascalBool(ADataOwner))
+func (m *TLazIntfImage) SetRawImage(rawImage IRawImageWrap, dataOwner bool) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(12, m.Instance(), base.GetObjectUintptr(rawImage), api.PasBool(dataOwner))
 }
 
-func (m *TLazIntfImage) GetRawImage(OutRawImage *TRawImage, ATransferOwnership bool) {
-	var result0 uintptr
-	lazIntfImageImportAPI().SysCallN(14, m.Instance(), uintptr(unsafePointer(&result0)), PascalBool(ATransferOwnership))
-	*OutRawImage = *(*TRawImage)(getPointer(result0))
+func (m *TLazIntfImage) GetRawImage(outRawImage *IRawImageWrap, transferOwnership bool) {
+	if !m.IsValid() {
+		return
+	}
+	var rawImagePtr uintptr
+	lazIntfImageAPI().SysCallN(13, m.Instance(), uintptr(base.UnsafePointer(&rawImagePtr)), api.PasBool(transferOwnership))
+	*outRawImage = AsRawImageWrap(rawImagePtr)
 }
 
-func (m *TLazIntfImage) FillPixels(Color *TFPColor) {
-	lazIntfImageImportAPI().SysCallN(12, m.Instance(), uintptr(unsafePointer(Color)))
+func (m *TLazIntfImage) FillPixels(color TFPColor) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(14, m.Instance(), uintptr(base.UnsafePointer(&color)))
 }
 
-func (m *TLazIntfImage) CopyPixels(ASource IFPCustomImage, XDst int32, YDst int32, AlphaMask bool, AlphaTreshold Word) {
-	lazIntfImageImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(ASource), uintptr(XDst), uintptr(YDst), PascalBool(AlphaMask), uintptr(AlphaTreshold))
+func (m *TLazIntfImage) CopyPixels(source IFPCustomImage, xDst int32, yDst int32, alphaMask bool, alphaTreshold uint16) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(15, m.Instance(), base.GetObjectUintptr(source), uintptr(xDst), uintptr(yDst), api.PasBool(alphaMask), uintptr(alphaTreshold))
 }
 
-func (m *TLazIntfImage) AlphaBlend(ASource, ASourceAlpha ILazIntfImage, ADestX, ADestY int32) {
-	lazIntfImageImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(ASource), GetObjectUintptr(ASourceAlpha), uintptr(ADestX), uintptr(ADestY))
+func (m *TLazIntfImage) AlphaBlend(source ILazIntfImage, sourceAlpha ILazIntfImage, destX int32, destY int32) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(16, m.Instance(), base.GetObjectUintptr(source), base.GetObjectUintptr(sourceAlpha), uintptr(destX), uintptr(destY))
 }
 
-func (m *TLazIntfImage) AlphaFromMask(AKeepAlpha bool) {
-	lazIntfImageImportAPI().SysCallN(1, m.Instance(), PascalBool(AKeepAlpha))
+func (m *TLazIntfImage) AlphaFromMask(keepAlpha bool) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(17, m.Instance(), api.PasBool(keepAlpha))
 }
 
-func (m *TLazIntfImage) Mask(AColor *TFPColor, AKeepOldMask bool) {
-	lazIntfImageImportAPI().SysCallN(21, m.Instance(), uintptr(unsafePointer(AColor)), PascalBool(AKeepOldMask))
+func (m *TLazIntfImage) Mask(color TFPColor, keepOldMask bool) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(18, m.Instance(), uintptr(base.UnsafePointer(&color)), api.PasBool(keepOldMask))
 }
 
-func (m *TLazIntfImage) GetXYDataPosition(x, y int32, OutPosition *TRawImagePosition) {
-	var result1 uintptr
-	lazIntfImageImportAPI().SysCallN(15, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(&result1)))
-	*OutPosition = *(*TRawImagePosition)(getPointer(result1))
+func (m *TLazIntfImage) GetXYDataPosition(X int32, Y int32, outPosition *TRawImagePosition) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(19, m.Instance(), uintptr(X), uintptr(Y), uintptr(base.UnsafePointer(outPosition)))
 }
 
-func (m *TLazIntfImage) GetXYMaskPosition(x, y int32, OutPosition *TRawImagePosition) {
-	var result1 uintptr
-	lazIntfImageImportAPI().SysCallN(16, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(&result1)))
-	*OutPosition = *(*TRawImagePosition)(getPointer(result1))
+func (m *TLazIntfImage) GetXYMaskPosition(X int32, Y int32, outPosition *TRawImagePosition) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(20, m.Instance(), uintptr(X), uintptr(Y), uintptr(base.UnsafePointer(outPosition)))
 }
 
 func (m *TLazIntfImage) CreateData() {
-	lazIntfImageImportAPI().SysCallN(10, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(21, m.Instance())
+}
+
+func (m *TLazIntfImage) SetDataDescriptionKeepData(description IRawImageDescriptionWrap) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(22, m.Instance(), base.GetObjectUintptr(description))
+}
+
+func (m *TLazIntfImage) PixelData() types.PByte {
+	if !m.IsValid() {
+		return 0
+	}
+	r := lazIntfImageAPI().SysCallN(23, m.Instance())
+	return types.PByte(r)
+}
+
+func (m *TLazIntfImage) MaskData() types.PByte {
+	if !m.IsValid() {
+		return 0
+	}
+	r := lazIntfImageAPI().SysCallN(24, m.Instance())
+	return types.PByte(r)
+}
+
+func (m *TLazIntfImage) DataDescription() IRawImageDescriptionWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazIntfImageAPI().SysCallN(25, 0, m.Instance())
+	return AsRawImageDescriptionWrap(r)
+}
+
+func (m *TLazIntfImage) SetDataDescription(value IRawImageDescriptionWrap) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(25, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TLazIntfImage) TColors(X int32, Y int32) types.TGraphicsColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := lazIntfImageAPI().SysCallN(26, 0, m.Instance(), uintptr(X), uintptr(Y))
+	return types.TGraphicsColor(r)
+}
+
+func (m *TLazIntfImage) SetTColors(X int32, Y int32, value types.TGraphicsColor) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(26, 1, m.Instance(), uintptr(X), uintptr(Y), uintptr(value))
+}
+
+func (m *TLazIntfImage) Masked(X int32, Y int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := lazIntfImageAPI().SysCallN(27, 0, m.Instance(), uintptr(X), uintptr(Y))
+	return api.GoBool(r)
+}
+
+func (m *TLazIntfImage) SetMasked(X int32, Y int32, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	lazIntfImageAPI().SysCallN(27, 1, m.Instance(), uintptr(X), uintptr(Y), api.PasBool(value))
+}
+
+// NewLazIntfImage class constructor
+func NewLazIntfImage(width int32, height int32) ILazIntfImage {
+	r := lazIntfImageAPI().SysCallN(0, uintptr(width), uintptr(height))
+	return AsLazIntfImage(r)
+}
+
+// NewLazIntfImageWithIntX2RawImageQueryFlags class constructor
+func NewLazIntfImageWithIntX2RawImageQueryFlags(width int32, height int32, flags types.TRawImageQueryFlags) ILazIntfImage {
+	r := lazIntfImageAPI().SysCallN(1, uintptr(width), uintptr(height), uintptr(flags))
+	return AsLazIntfImage(r)
+}
+
+// NewLazIntfImageCompatible class constructor
+func NewLazIntfImageCompatible(intfImg ILazIntfImage, width int32, height int32) ILazIntfImage {
+	r := lazIntfImageAPI().SysCallN(2, base.GetObjectUintptr(intfImg), uintptr(width), uintptr(height))
+	return AsLazIntfImage(r)
 }
 
 var (
-	lazIntfImageImport       *imports.Imports = nil
-	lazIntfImageImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("LazIntfImage_AlphaBlend", 0),
-		/*1*/ imports.NewTable("LazIntfImage_AlphaFromMask", 0),
-		/*2*/ imports.NewTable("LazIntfImage_BeginUpdate", 0),
-		/*3*/ imports.NewTable("LazIntfImage_Class", 0),
-		/*4*/ imports.NewTable("LazIntfImage_CopyPixels", 0),
-		/*5*/ imports.NewTable("LazIntfImage_Create", 0),
-		/*6*/ imports.NewTable("LazIntfImage_Create1", 0),
-		/*7*/ imports.NewTable("LazIntfImage_Create2", 0),
-		/*8*/ imports.NewTable("LazIntfImage_CreateBitmaps", 0),
-		/*9*/ imports.NewTable("LazIntfImage_CreateCompatible", 0),
-		/*10*/ imports.NewTable("LazIntfImage_CreateData", 0),
-		/*11*/ imports.NewTable("LazIntfImage_EndUpdate", 0),
-		/*12*/ imports.NewTable("LazIntfImage_FillPixels", 0),
-		/*13*/ imports.NewTable("LazIntfImage_GetDataLineStart", 0),
-		/*14*/ imports.NewTable("LazIntfImage_GetRawImage", 0),
-		/*15*/ imports.NewTable("LazIntfImage_GetXYDataPosition", 0),
-		/*16*/ imports.NewTable("LazIntfImage_GetXYMaskPosition", 0),
-		/*17*/ imports.NewTable("LazIntfImage_HasMask", 0),
-		/*18*/ imports.NewTable("LazIntfImage_HasTransparency", 0),
-		/*19*/ imports.NewTable("LazIntfImage_LoadFromBitmap", 0),
-		/*20*/ imports.NewTable("LazIntfImage_LoadFromDevice", 0),
-		/*21*/ imports.NewTable("LazIntfImage_Mask", 0),
-		/*22*/ imports.NewTable("LazIntfImage_MaskData", 0),
-		/*23*/ imports.NewTable("LazIntfImage_Masked", 0),
-		/*24*/ imports.NewTable("LazIntfImage_PixelData", 0),
-		/*25*/ imports.NewTable("LazIntfImage_SetRawImage", 0),
-		/*26*/ imports.NewTable("LazIntfImage_TColors", 0),
-	}
+	lazIntfImageOnce   base.Once
+	lazIntfImageImport *imports.Imports = nil
 )
 
-func lazIntfImageImportAPI() *imports.Imports {
-	if lazIntfImageImport == nil {
-		lazIntfImageImport = NewDefaultImports()
-		lazIntfImageImport.SetImportTable(lazIntfImageImportTables)
-		lazIntfImageImportTables = nil
-	}
+func lazIntfImageAPI() *imports.Imports {
+	lazIntfImageOnce.Do(func() {
+		lazIntfImageImport = api.NewDefaultImports()
+		lazIntfImageImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TLazIntfImage_Create", 0), // constructor NewLazIntfImage
+			/* 1 */ imports.NewTable("TLazIntfImage_CreateWithIntX2RawImageQueryFlags", 0), // constructor NewLazIntfImageWithIntX2RawImageQueryFlags
+			/* 2 */ imports.NewTable("TLazIntfImage_CreateCompatible", 0), // constructor NewLazIntfImageCompatible
+			/* 3 */ imports.NewTable("TLazIntfImage_CheckDescription", 0), // function CheckDescription
+			/* 4 */ imports.NewTable("TLazIntfImage_GetDataLineStart", 0), // function GetDataLineStart
+			/* 5 */ imports.NewTable("TLazIntfImage_HasTransparency", 0), // function HasTransparency
+			/* 6 */ imports.NewTable("TLazIntfImage_HasMask", 0), // function HasMask
+			/* 7 */ imports.NewTable("TLazIntfImage_BeginUpdate", 0), // procedure BeginUpdate
+			/* 8 */ imports.NewTable("TLazIntfImage_EndUpdate", 0), // procedure EndUpdate
+			/* 9 */ imports.NewTable("TLazIntfImage_LoadFromDevice", 0), // procedure LoadFromDevice
+			/* 10 */ imports.NewTable("TLazIntfImage_LoadFromBitmap", 0), // procedure LoadFromBitmap
+			/* 11 */ imports.NewTable("TLazIntfImage_CreateBitmaps", 0), // procedure CreateBitmaps
+			/* 12 */ imports.NewTable("TLazIntfImage_SetRawImage", 0), // procedure SetRawImage
+			/* 13 */ imports.NewTable("TLazIntfImage_GetRawImage", 0), // procedure GetRawImage
+			/* 14 */ imports.NewTable("TLazIntfImage_FillPixels", 0), // procedure FillPixels
+			/* 15 */ imports.NewTable("TLazIntfImage_CopyPixels", 0), // procedure CopyPixels
+			/* 16 */ imports.NewTable("TLazIntfImage_AlphaBlend", 0), // procedure AlphaBlend
+			/* 17 */ imports.NewTable("TLazIntfImage_AlphaFromMask", 0), // procedure AlphaFromMask
+			/* 18 */ imports.NewTable("TLazIntfImage_Mask", 0), // procedure Mask
+			/* 19 */ imports.NewTable("TLazIntfImage_GetXYDataPosition", 0), // procedure GetXYDataPosition
+			/* 20 */ imports.NewTable("TLazIntfImage_GetXYMaskPosition", 0), // procedure GetXYMaskPosition
+			/* 21 */ imports.NewTable("TLazIntfImage_CreateData", 0), // procedure CreateData
+			/* 22 */ imports.NewTable("TLazIntfImage_SetDataDescriptionKeepData", 0), // procedure SetDataDescriptionKeepData
+			/* 23 */ imports.NewTable("TLazIntfImage_PixelData", 0), // property PixelData
+			/* 24 */ imports.NewTable("TLazIntfImage_MaskData", 0), // property MaskData
+			/* 25 */ imports.NewTable("TLazIntfImage_DataDescription", 0), // property DataDescription
+			/* 26 */ imports.NewTable("TLazIntfImage_TColors", 0), // property TColors
+			/* 27 */ imports.NewTable("TLazIntfImage_Masked", 0), // property Masked
+		}
+	})
 	return lazIntfImageImport
 }

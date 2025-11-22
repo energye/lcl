@@ -8,49 +8,6 @@
 
 package types
 
-// PATFlatTheme = ^TATFlatTheme
-type PATFlatTheme struct {
-	FontName               uintptr // string
-	FontSize               uintptr // Integer
-	FontStyles             uintptr // TFontStyles
-	ColorFont              uintptr // TColor
-	ColorFontDisabled      uintptr // TColor
-	ColorFontListbox       uintptr // TColor
-	ColorFontListboxSel    uintptr // TColor
-	ColorFontOverlay       uintptr // TColor
-	ColorBgPassive         uintptr // TColor
-	ColorBgOver            uintptr // TColor
-	ColorBgChecked         uintptr // TColor
-	ColorBgDisabled        uintptr // TColor
-	ColorBgListbox         uintptr // TColor
-	ColorBgListboxSel      uintptr // TColor
-	ColorBgListboxHottrack uintptr // TColor
-	ColorBgOverlay         uintptr // TColor
-	ColorArrows            uintptr // TColor
-	ColorArrowsOver        uintptr // TColor
-	ColorSeparators        uintptr // TColor
-	ColorBorderPassive     uintptr // TColor
-	ColorBorderOver        uintptr // TColor
-	ColorBorderFocused     uintptr // TColor
-	EnableColorBgOver      uintptr // Boolean
-	MouseoverBorderWidth   uintptr // Integer
-	PressedBorderWidth     uintptr // Integer
-	PressedCaptionShiftY   uintptr // Integer
-	PressedCaptionShiftX   uintptr // Integer
-	BoldBorderWidth        uintptr // Integer
-	ChoiceBorderWidth      uintptr // Integer
-	ArrowSize              uintptr // Integer
-	GapForAutoSize         uintptr // Integer
-	TextOverlayPosition    uintptr // TATButtonOverlayPosition
-	SeparatorOffset        uintptr // Integer
-	XMarkWidth             uintptr // Integer
-	XMarkOffsetLeft        uintptr // Integer
-	XMarkOffsetRight       uintptr // Integer
-	XMarkLineWidth         uintptr // Integer
-	ScalePercents          uintptr // Integer
-	ScaleFontPercents      uintptr // Integer
-}
-
 // PThemedElementDetails = ^TThemedElementDetails
 type PThemedElementDetails struct {
 	Element uintptr // TThemedElement

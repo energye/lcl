@@ -8,28 +8,80 @@
 
 package types
 
-import "fmt"
+import (
+	"fmt"
+	"unsafe"
+)
 
 type TGridCoord struct {
 	X int32
 	Y int32
 }
 
+// PRawImageDescription > ^TRawImageDescription = object > TRawImageDescriptionWrap
+type PRawImageDescription = uintptr
+
+// PRawImage > ^TRawImage = object > TRawImageWrap
+type PRawImage = uintptr
+
+// TCustomData Pointer
 type TCustomData = uintptr
 
+// TGridRect TRect
 type TGridRect = TRect
 
-// IObjectArray 伪造，实际为一个接口类型
-type IObjectArray uintptr
+// PUint64Array = ^TUint64Array = array of uint64
+type PUint64Array uintptr
 
-// TStringArray Array of string
-type TStringArray uintptr
+// PInt64Array = ^TInt64Array = array of uint64
+type PInt64Array uintptr
+
+// PUint32Array = ^TUint32Array = array of uint32
+type PUint32Array uintptr
+
+// PStringArray = ^TStringArray = array of string
+type PStringArray uintptr
+
+// PBrushPattern = ^TBrushPattern = array[0..PatternBitCount-1] of TPenPattern;
+// PatternBitCount = SizeOf(uint32) * 8;
+type PBrushPattern uintptr
 
 // TObjectDynArray array of TObject;
 type TObjectDynArray uintptr
 
-// TStringDynArray Array of string
-type TStringDynArray uintptr
+// TColumnsArray array of TVirtualTreeColumn
+// TVirtualTreeColumn = class
+type TColumnsArray uintptr
+
+// TNodeArray = array of PVirtualNode = array of TVirtualNodeWrap
+type TNodeArray uintptr
+
+// PVTVirtualNodeEnumeration = ^TVTVirtualNodeEnumeration > TVTVirtualNodeEnumerationWrap
+type PVTVirtualNodeEnumeration uintptr
+
+// PScaledImageListResolution = ^TScaledImageListResolution > TScaledImageListResolutionWrap
+type PScaledImageListResolution uintptr
+
+// PPointArray = ^TPointArray
+type PPointArray uintptr
+
+// PPoint = ^TPoint = []TPoint pointer
+//
+//	Use: types.PPoint(unsafe.Pointer(&points[0]))
+type PPoint uintptr
+
+// PFormatEtcArray = ^TFormatEtcArray
+type PFormatEtcArray uintptr
+
+// PWVCustomSchemeInfoArray = ^TWVCustomSchemeInfoArray
+type PWVCustomSchemeInfoArray uintptr
+
+// PFormatEtc = ^TFormatEtc
+type PFormatEtc uintptr
+
+// PPointerList = ^TPointerList = array[0..MaxListSize - 1] of Pointer
+// MaxListSize = Maxint / 16
+type PPointerList uintptr
 
 type TSysLocale struct {
 	//Delphi compat fields
@@ -43,9 +95,55 @@ type TSysLocale struct {
 	// real meaning  2: (MBCS: boolean; RightToLeft: Boolean);
 }
 
-type TSmallPoint struct {
-	X int16
-	Y int16
+// PVirtualNode = ^TVirtualNode = TVirtualNode
+// 2: = ^TVirtualNode = TVirtualNodeWrap
+type PVirtualNode uintptr
+
+func (m PVirtualNode) ToGo() *TVirtualNode {
+	if m != 0 {
+		return (*TVirtualNode)(unsafe.Pointer(m))
+	}
+	return nil
+}
+
+type States uint16
+
+func (m States) Value() TSet {
+	return TSet(m)
+}
+
+type CheckState byte
+
+func (m CheckState) Value() TCheckState {
+	return TCheckState(m)
+}
+
+type CheckType byte
+
+func (m CheckType) Value() TCheckType {
+	return TCheckState(m)
+}
+
+type TVirtualNode struct {
+	Index       Cardinal   // index of node with regard to its parent
+	ChildCount  Cardinal   // number of child nodes
+	NodeHeight  uint16     // height in pixels
+	States      States     // states describing various properties of the node (expanded, initialized etc.)
+	Align       byte       // line/button alignment
+	CheckState  CheckState // indicates the current check state (e.g. checked, pressed etc.)
+	CheckType   CheckType  // indicates which check type shall be used for this node
+	Dummy       byte       // dummy value to fill DWORD boundary
+	TotalCount  Cardinal   // sum of this node, all of its child nodes and their child nodes etc.
+	TotalHeight Cardinal   // height in pixels this node covers on screen including the height of all of its
+	// children
+	// Note: Some copy routines require that all pointers (as well as the data area) in a node are
+	//       located at the end of the node! Hence if you want to add new member fields (except pointers to internal
+	//       data) then put them before field Parent.
+	Parent      PVirtualNode // reference to the node's parent (for the root this contains the treeview)
+	PrevSibling PVirtualNode // link to the node's previous sibling or nil if it is the first node
+	NextSibling PVirtualNode // link to the node's next sibling or nil if it is the last node
+	FirstChild  PVirtualNode // link to the node's first child...
+	LastChild   PVirtualNode // link to the node's last child...
 }
 
 type TGUID struct {
@@ -67,10 +165,10 @@ type TResItem struct {
 }
 
 // TConstraintSize = 0..MaxInt;
-type TConstraintSize int32
+type TConstraintSize = int32
 
 // TBorderWidth = 0..MaxInt;
-type TBorderWidth int32
+type TBorderWidth = int32
 
 type TAlignInfo struct {
 	AlignList    uintptr
@@ -97,24 +195,6 @@ type TCreateParams struct {
 	WinClassName [64]int8
 }
 
-// TColor
-
-func (c TColor) R() byte {
-	return byte(c)
-}
-
-func (c TColor) G() byte {
-	return byte(c >> 8)
-}
-
-func (c TColor) B() byte {
-	return byte(c >> 16)
-}
-
-func (c TColor) RGB(r, g, b byte) TColor {
-	return TColor(uint32(r) | (uint32(g) << 8) | (uint32(b) << 16))
-}
-
 // TGUID
 
 func (g TGUID) FromString(str string) (result TGUID) {
@@ -134,28 +214,4 @@ func (g TGUID) Empty() TGUID {
 
 func (g TGUID) IsEqual(val TGUID) bool {
 	return (g.D1 == val.D1) && (g.D2 == val.D2) && (g.D3 == val.D3) && (g.D4 == val.D4)
-}
-
-// TSmallPoint
-
-func (s TSmallPoint) Empty() TSmallPoint {
-	return TSmallPoint{}
-}
-
-func (s TSmallPoint) IsEqual(val TSmallPoint) bool {
-	return s.X == val.X && s.Y == val.Y
-}
-
-type TTextStyle struct {
-	Alignment   TAlignment  // TextRect Only: horizontal alignment
-	Layout      TTextLayout // TextRect Only: vertical alignment
-	SingleLine  bool        // If WordBreak is false then process #13, #10 as standard chars and perform no Line breaking.
-	Clipping    bool        // TextRect Only: Clip Text to passed Rectangle
-	ExpandTabs  bool        // Replace #9 by apropriate amount of spaces (default is usually 8)
-	ShowPrefix  bool        // TextRect Only: Process first single '&' per line as an underscore and draw '&&' as '&'
-	Wordbreak   bool        // TextRect Only: If line of text is too long too fit between left and right boundaries try to break into multiple lines between words See also EndEllipsis.
-	Opaque      bool        // TextRect: Fills background with current Brush TextOut : Fills background with current  foreground color
-	SystemFont  bool        // Use the system font instead of Canvas Font
-	RightToLeft bool        //For RightToLeft text reading (Text Direction)
-	EndEllipsis bool        // TextRect Only: If line of text is too long  to fit between left and right boundaries truncates the text and adds "..." If Wordbreak is set as well, Workbreak will dominate.
 }

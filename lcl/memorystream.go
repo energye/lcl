@@ -9,64 +9,73 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IMemoryStream Parent: ICustomMemoryStream
 type IMemoryStream interface {
 	ICustomMemoryStream
-	LoadFromBytes(data []byte)
-	LoadFromFSFile(Filename string) error
-	Clear()                        // procedure
-	LoadFromStream(Stream IStream) // procedure
-	LoadFromFile(FileName string)  // procedure
+	Clear()                         // procedure
+	LoadFromStream(stream IStream)  // procedure
+	LoadFromFile(fileName string)   // procedure
+	SetSizeWithInt64(newSize int64) // procedure
 }
 
-// TMemoryStream Parent: TCustomMemoryStream
 type TMemoryStream struct {
 	TCustomMemoryStream
 }
 
-func NewMemoryStream() IMemoryStream {
-	r1 := memoryStreamImportAPI().SysCallN(2)
-	return AsMemoryStream(r1)
-}
-
-func MemoryStreamClass() TClass {
-	ret := memoryStreamImportAPI().SysCallN(0)
-	return TClass(ret)
-}
-
 func (m *TMemoryStream) Clear() {
-	memoryStreamImportAPI().SysCallN(1, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	memoryStreamAPI().SysCallN(1, m.Instance())
 }
 
-func (m *TMemoryStream) LoadFromStream(Stream IStream) {
-	memoryStreamImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(Stream))
+func (m *TMemoryStream) LoadFromStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	memoryStreamAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(stream))
 }
 
-func (m *TMemoryStream) LoadFromFile(FileName string) {
-	memoryStreamImportAPI().SysCallN(3, m.Instance(), PascalStr(FileName))
+func (m *TMemoryStream) LoadFromFile(fileName string) {
+	if !m.IsValid() {
+		return
+	}
+	memoryStreamAPI().SysCallN(3, m.Instance(), api.PasStr(fileName))
+}
+
+func (m *TMemoryStream) SetSizeWithInt64(newSize int64) {
+	if !m.IsValid() {
+		return
+	}
+	memoryStreamAPI().SysCallN(4, m.Instance(), uintptr(base.UnsafePointer(&newSize)))
+}
+
+// NewMemoryStream class constructor
+func NewMemoryStream() IMemoryStream {
+	r := memoryStreamAPI().SysCallN(0)
+	return AsMemoryStream(r)
 }
 
 var (
-	memoryStreamImport       *imports.Imports = nil
-	memoryStreamImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("MemoryStream_Class", 0),
-		/*1*/ imports.NewTable("MemoryStream_Clear", 0),
-		/*2*/ imports.NewTable("MemoryStream_Create", 0),
-		/*3*/ imports.NewTable("MemoryStream_LoadFromFile", 0),
-		/*4*/ imports.NewTable("MemoryStream_LoadFromStream", 0),
-	}
+	memoryStreamOnce   base.Once
+	memoryStreamImport *imports.Imports = nil
 )
 
-func memoryStreamImportAPI() *imports.Imports {
-	if memoryStreamImport == nil {
-		memoryStreamImport = NewDefaultImports()
-		memoryStreamImport.SetImportTable(memoryStreamImportTables)
-		memoryStreamImportTables = nil
-	}
+func memoryStreamAPI() *imports.Imports {
+	memoryStreamOnce.Do(func() {
+		memoryStreamImport = api.NewDefaultImports()
+		memoryStreamImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TMemoryStream_Create", 0), // constructor NewMemoryStream
+			/* 1 */ imports.NewTable("TMemoryStream_Clear", 0), // procedure Clear
+			/* 2 */ imports.NewTable("TMemoryStream_LoadFromStream", 0), // procedure LoadFromStream
+			/* 3 */ imports.NewTable("TMemoryStream_LoadFromFile", 0), // procedure LoadFromFile
+			/* 4 */ imports.NewTable("TMemoryStream_SetSizeWithInt64", 0), // procedure SetSizeWithInt64
+		}
+	})
 	return memoryStreamImport
 }

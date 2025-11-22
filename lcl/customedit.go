@@ -9,303 +9,427 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomEdit Parent: IWinControl
 type ICustomEdit interface {
 	IWinControl
-	Alignment() TAlignment                           // property
-	SetAlignment(AValue TAlignment)                  // property
-	BorderStyle() TBorderStyle                       // property
-	SetBorderStyle(AValue TBorderStyle)              // property
-	CanUndo() bool                                   // property
-	CaretPos() (resultPoint TPoint)                  // property
-	SetCaretPos(AValue *TPoint)                      // property
-	CharCase() TEditCharCase                         // property
-	SetCharCase(AValue TEditCharCase)                // property
-	EchoMode() TEchoMode                             // property
-	SetEchoMode(AValue TEchoMode)                    // property
-	EmulatedTextHintStatus() TEmulatedTextHintStatus // property
-	HideSelection() bool                             // property
-	SetHideSelection(AValue bool)                    // property
-	MaxLength() int32                                // property
-	SetMaxLength(AValue int32)                       // property
-	Modified() bool                                  // property
-	SetModified(AValue bool)                         // property
-	NumbersOnly() bool                               // property
-	SetNumbersOnly(AValue bool)                      // property
-	PasswordChar() Char                              // property
-	SetPasswordChar(AValue Char)                     // property
-	ReadOnly() bool                                  // property
-	SetReadOnly(AValue bool)                         // property
-	SelLength() int32                                // property
-	SetSelLength(AValue int32)                       // property
-	SelStart() int32                                 // property
-	SetSelStart(AValue int32)                        // property
-	SelText() string                                 // property
-	SetSelText(AValue string)                        // property
-	Text() string                                    // property
-	SetText(AValue string)                           // property
-	TextHint() string                                // property
-	SetTextHint(AValue string)                       // property
-	Clear()                                          // procedure
-	SelectAll()                                      // procedure
-	ClearSelection()                                 // procedure
-	CopyToClipboard()                                // procedure
-	CutToClipboard()                                 // procedure
-	PasteFromClipboard()                             // procedure
-	Undo()                                           // procedure
-	SetOnChange(fn TNotifyEvent)                     // property event
+	Clear()                              // procedure
+	SelectAll()                          // procedure
+	ClearSelection()                     // procedure
+	CopyToClipboard()                    // procedure
+	CutToClipboard()                     // procedure
+	PasteFromClipboard()                 // procedure
+	Undo()                               // procedure
+	Alignment() types.TAlignment         // property Alignment Getter
+	SetAlignment(value types.TAlignment) // property Alignment Setter
+	// BorderStyle
+	//  properties which are not supported by all descendents
+	BorderStyle() types.TBorderStyle                       // property BorderStyle Getter
+	SetBorderStyle(value types.TBorderStyle)               // property BorderStyle Setter
+	CanUndo() bool                                         // property CanUndo Getter
+	CaretPos() types.TPoint                                // property CaretPos Getter
+	SetCaretPos(value types.TPoint)                        // property CaretPos Setter
+	CharCase() types.TEditCharCase                         // property CharCase Getter
+	SetCharCase(value types.TEditCharCase)                 // property CharCase Setter
+	EchoMode() types.TEchoMode                             // property EchoMode Getter
+	SetEchoMode(value types.TEchoMode)                     // property EchoMode Setter
+	EmulatedTextHintStatus() types.TEmulatedTextHintStatus // property EmulatedTextHintStatus Getter
+	HideSelection() bool                                   // property HideSelection Getter
+	SetHideSelection(value bool)                           // property HideSelection Setter
+	MaxLength() int32                                      // property MaxLength Getter
+	SetMaxLength(value int32)                              // property MaxLength Setter
+	Modified() bool                                        // property Modified Getter
+	SetModified(value bool)                                // property Modified Setter
+	NumbersOnly() bool                                     // property NumbersOnly Getter
+	SetNumbersOnly(value bool)                             // property NumbersOnly Setter
+	PasswordChar() uint16                                  // property PasswordChar Getter
+	SetPasswordChar(value uint16)                          // property PasswordChar Setter
+	ReadOnly() bool                                        // property ReadOnly Getter
+	SetReadOnly(value bool)                                // property ReadOnly Setter
+	SelLength() int32                                      // property SelLength Getter
+	SetSelLength(value int32)                              // property SelLength Setter
+	SelStart() int32                                       // property SelStart Getter
+	SetSelStart(value int32)                               // property SelStart Setter
+	SelText() string                                       // property SelText Getter
+	SetSelText(value string)                               // property SelText Setter
+	Text() string                                          // property Text Getter
+	SetText(value string)                                  // property Text Setter
+	TextHint() string                                      // property TextHint Getter
+	SetTextHint(value string)                              // property TextHint Setter
+	SetOnChange(fn TNotifyEvent)                           // property event
 }
 
-// TCustomEdit Parent: TWinControl
 type TCustomEdit struct {
 	TWinControl
-	changePtr uintptr
-}
-
-func NewCustomEdit(AOwner IComponent) ICustomEdit {
-	r1 := customEditImportAPI().SysCallN(9, GetObjectUintptr(AOwner))
-	return AsCustomEdit(r1)
-}
-
-func (m *TCustomEdit) Alignment() TAlignment {
-	r1 := customEditImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TAlignment(r1)
-}
-
-func (m *TCustomEdit) SetAlignment(AValue TAlignment) {
-	customEditImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomEdit) BorderStyle() TBorderStyle {
-	r1 := customEditImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TBorderStyle(r1)
-}
-
-func (m *TCustomEdit) SetBorderStyle(AValue TBorderStyle) {
-	customEditImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomEdit) CanUndo() bool {
-	r1 := customEditImportAPI().SysCallN(2, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TCustomEdit) CaretPos() (resultPoint TPoint) {
-	customEditImportAPI().SysCallN(3, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
-	return
-}
-
-func (m *TCustomEdit) SetCaretPos(AValue *TPoint) {
-	customEditImportAPI().SysCallN(3, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
-}
-
-func (m *TCustomEdit) CharCase() TEditCharCase {
-	r1 := customEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TEditCharCase(r1)
-}
-
-func (m *TCustomEdit) SetCharCase(AValue TEditCharCase) {
-	customEditImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomEdit) EchoMode() TEchoMode {
-	r1 := customEditImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return TEchoMode(r1)
-}
-
-func (m *TCustomEdit) SetEchoMode(AValue TEchoMode) {
-	customEditImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomEdit) EmulatedTextHintStatus() TEmulatedTextHintStatus {
-	r1 := customEditImportAPI().SysCallN(12, m.Instance())
-	return TEmulatedTextHintStatus(r1)
-}
-
-func (m *TCustomEdit) HideSelection() bool {
-	r1 := customEditImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomEdit) SetHideSelection(AValue bool) {
-	customEditImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomEdit) MaxLength() int32 {
-	r1 := customEditImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomEdit) SetMaxLength(AValue int32) {
-	customEditImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomEdit) Modified() bool {
-	r1 := customEditImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomEdit) SetModified(AValue bool) {
-	customEditImportAPI().SysCallN(15, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomEdit) NumbersOnly() bool {
-	r1 := customEditImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomEdit) SetNumbersOnly(AValue bool) {
-	customEditImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomEdit) PasswordChar() Char {
-	r1 := customEditImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return Char(r1)
-}
-
-func (m *TCustomEdit) SetPasswordChar(AValue Char) {
-	customEditImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomEdit) ReadOnly() bool {
-	r1 := customEditImportAPI().SysCallN(19, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomEdit) SetReadOnly(AValue bool) {
-	customEditImportAPI().SysCallN(19, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomEdit) SelLength() int32 {
-	r1 := customEditImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomEdit) SetSelLength(AValue int32) {
-	customEditImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomEdit) SelStart() int32 {
-	r1 := customEditImportAPI().SysCallN(21, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomEdit) SetSelStart(AValue int32) {
-	customEditImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomEdit) SelText() string {
-	r1 := customEditImportAPI().SysCallN(22, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TCustomEdit) SetSelText(AValue string) {
-	customEditImportAPI().SysCallN(22, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TCustomEdit) Text() string {
-	r1 := customEditImportAPI().SysCallN(25, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TCustomEdit) SetText(AValue string) {
-	customEditImportAPI().SysCallN(25, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TCustomEdit) TextHint() string {
-	r1 := customEditImportAPI().SysCallN(26, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TCustomEdit) SetTextHint(AValue string) {
-	customEditImportAPI().SysCallN(26, 1, m.Instance(), PascalStr(AValue))
-}
-
-func CustomEditClass() TClass {
-	ret := customEditImportAPI().SysCallN(5)
-	return TClass(ret)
 }
 
 func (m *TCustomEdit) Clear() {
-	customEditImportAPI().SysCallN(6, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(1, m.Instance())
 }
 
 func (m *TCustomEdit) SelectAll() {
-	customEditImportAPI().SysCallN(23, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(2, m.Instance())
 }
 
 func (m *TCustomEdit) ClearSelection() {
-	customEditImportAPI().SysCallN(7, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(3, m.Instance())
 }
 
 func (m *TCustomEdit) CopyToClipboard() {
-	customEditImportAPI().SysCallN(8, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(4, m.Instance())
 }
 
 func (m *TCustomEdit) CutToClipboard() {
-	customEditImportAPI().SysCallN(10, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(5, m.Instance())
 }
 
 func (m *TCustomEdit) PasteFromClipboard() {
-	customEditImportAPI().SysCallN(18, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(6, m.Instance())
 }
 
 func (m *TCustomEdit) Undo() {
-	customEditImportAPI().SysCallN(27, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(7, m.Instance())
+}
+
+func (m *TCustomEdit) Alignment() types.TAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customEditAPI().SysCallN(8, 0, m.Instance())
+	return types.TAlignment(r)
+}
+
+func (m *TCustomEdit) SetAlignment(value types.TAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomEdit) BorderStyle() types.TBorderStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customEditAPI().SysCallN(9, 0, m.Instance())
+	return types.TBorderStyle(r)
+}
+
+func (m *TCustomEdit) SetBorderStyle(value types.TBorderStyle) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomEdit) CanUndo() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customEditAPI().SysCallN(10, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomEdit) CaretPos() (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(11, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TCustomEdit) SetCaretPos(value types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(11, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TCustomEdit) CharCase() types.TEditCharCase {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customEditAPI().SysCallN(12, 0, m.Instance())
+	return types.TEditCharCase(r)
+}
+
+func (m *TCustomEdit) SetCharCase(value types.TEditCharCase) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomEdit) EchoMode() types.TEchoMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customEditAPI().SysCallN(13, 0, m.Instance())
+	return types.TEchoMode(r)
+}
+
+func (m *TCustomEdit) SetEchoMode(value types.TEchoMode) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(13, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomEdit) EmulatedTextHintStatus() types.TEmulatedTextHintStatus {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customEditAPI().SysCallN(14, m.Instance())
+	return types.TEmulatedTextHintStatus(r)
+}
+
+func (m *TCustomEdit) HideSelection() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customEditAPI().SysCallN(15, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomEdit) SetHideSelection(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(15, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomEdit) MaxLength() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customEditAPI().SysCallN(16, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomEdit) SetMaxLength(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(16, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomEdit) Modified() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customEditAPI().SysCallN(17, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomEdit) SetModified(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(17, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomEdit) NumbersOnly() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customEditAPI().SysCallN(18, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomEdit) SetNumbersOnly(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(18, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomEdit) PasswordChar() uint16 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customEditAPI().SysCallN(19, 0, m.Instance())
+	return uint16(r)
+}
+
+func (m *TCustomEdit) SetPasswordChar(value uint16) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(19, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomEdit) ReadOnly() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customEditAPI().SysCallN(20, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomEdit) SetReadOnly(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(20, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomEdit) SelLength() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customEditAPI().SysCallN(21, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomEdit) SetSelLength(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(21, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomEdit) SelStart() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customEditAPI().SysCallN(22, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomEdit) SetSelStart(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomEdit) SelText() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customEditAPI().SysCallN(23, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TCustomEdit) SetSelText(value string) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(23, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TCustomEdit) Text() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customEditAPI().SysCallN(24, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TCustomEdit) SetText(value string) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(24, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TCustomEdit) TextHint() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customEditAPI().SysCallN(25, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TCustomEdit) SetTextHint(value string) {
+	if !m.IsValid() {
+		return
+	}
+	customEditAPI().SysCallN(25, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TCustomEdit) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	customEditImportAPI().SysCallN(24, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 26, customEditAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomEdit class constructor
+func NewCustomEdit(owner IComponent) ICustomEdit {
+	r := customEditAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomEdit(r)
+}
+
+func TCustomEditClass() types.TClass {
+	r := customEditAPI().SysCallN(27)
+	return types.TClass(r)
 }
 
 var (
-	customEditImport       *imports.Imports = nil
-	customEditImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomEdit_Alignment", 0),
-		/*1*/ imports.NewTable("CustomEdit_BorderStyle", 0),
-		/*2*/ imports.NewTable("CustomEdit_CanUndo", 0),
-		/*3*/ imports.NewTable("CustomEdit_CaretPos", 0),
-		/*4*/ imports.NewTable("CustomEdit_CharCase", 0),
-		/*5*/ imports.NewTable("CustomEdit_Class", 0),
-		/*6*/ imports.NewTable("CustomEdit_Clear", 0),
-		/*7*/ imports.NewTable("CustomEdit_ClearSelection", 0),
-		/*8*/ imports.NewTable("CustomEdit_CopyToClipboard", 0),
-		/*9*/ imports.NewTable("CustomEdit_Create", 0),
-		/*10*/ imports.NewTable("CustomEdit_CutToClipboard", 0),
-		/*11*/ imports.NewTable("CustomEdit_EchoMode", 0),
-		/*12*/ imports.NewTable("CustomEdit_EmulatedTextHintStatus", 0),
-		/*13*/ imports.NewTable("CustomEdit_HideSelection", 0),
-		/*14*/ imports.NewTable("CustomEdit_MaxLength", 0),
-		/*15*/ imports.NewTable("CustomEdit_Modified", 0),
-		/*16*/ imports.NewTable("CustomEdit_NumbersOnly", 0),
-		/*17*/ imports.NewTable("CustomEdit_PasswordChar", 0),
-		/*18*/ imports.NewTable("CustomEdit_PasteFromClipboard", 0),
-		/*19*/ imports.NewTable("CustomEdit_ReadOnly", 0),
-		/*20*/ imports.NewTable("CustomEdit_SelLength", 0),
-		/*21*/ imports.NewTable("CustomEdit_SelStart", 0),
-		/*22*/ imports.NewTable("CustomEdit_SelText", 0),
-		/*23*/ imports.NewTable("CustomEdit_SelectAll", 0),
-		/*24*/ imports.NewTable("CustomEdit_SetOnChange", 0),
-		/*25*/ imports.NewTable("CustomEdit_Text", 0),
-		/*26*/ imports.NewTable("CustomEdit_TextHint", 0),
-		/*27*/ imports.NewTable("CustomEdit_Undo", 0),
-	}
+	customEditOnce   base.Once
+	customEditImport *imports.Imports = nil
 )
 
-func customEditImportAPI() *imports.Imports {
-	if customEditImport == nil {
-		customEditImport = NewDefaultImports()
-		customEditImport.SetImportTable(customEditImportTables)
-		customEditImportTables = nil
-	}
+func customEditAPI() *imports.Imports {
+	customEditOnce.Do(func() {
+		customEditImport = api.NewDefaultImports()
+		customEditImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomEdit_Create", 0), // constructor NewCustomEdit
+			/* 1 */ imports.NewTable("TCustomEdit_Clear", 0), // procedure Clear
+			/* 2 */ imports.NewTable("TCustomEdit_SelectAll", 0), // procedure SelectAll
+			/* 3 */ imports.NewTable("TCustomEdit_ClearSelection", 0), // procedure ClearSelection
+			/* 4 */ imports.NewTable("TCustomEdit_CopyToClipboard", 0), // procedure CopyToClipboard
+			/* 5 */ imports.NewTable("TCustomEdit_CutToClipboard", 0), // procedure CutToClipboard
+			/* 6 */ imports.NewTable("TCustomEdit_PasteFromClipboard", 0), // procedure PasteFromClipboard
+			/* 7 */ imports.NewTable("TCustomEdit_Undo", 0), // procedure Undo
+			/* 8 */ imports.NewTable("TCustomEdit_Alignment", 0), // property Alignment
+			/* 9 */ imports.NewTable("TCustomEdit_BorderStyle", 0), // property BorderStyle
+			/* 10 */ imports.NewTable("TCustomEdit_CanUndo", 0), // property CanUndo
+			/* 11 */ imports.NewTable("TCustomEdit_CaretPos", 0), // property CaretPos
+			/* 12 */ imports.NewTable("TCustomEdit_CharCase", 0), // property CharCase
+			/* 13 */ imports.NewTable("TCustomEdit_EchoMode", 0), // property EchoMode
+			/* 14 */ imports.NewTable("TCustomEdit_EmulatedTextHintStatus", 0), // property EmulatedTextHintStatus
+			/* 15 */ imports.NewTable("TCustomEdit_HideSelection", 0), // property HideSelection
+			/* 16 */ imports.NewTable("TCustomEdit_MaxLength", 0), // property MaxLength
+			/* 17 */ imports.NewTable("TCustomEdit_Modified", 0), // property Modified
+			/* 18 */ imports.NewTable("TCustomEdit_NumbersOnly", 0), // property NumbersOnly
+			/* 19 */ imports.NewTable("TCustomEdit_PasswordChar", 0), // property PasswordChar
+			/* 20 */ imports.NewTable("TCustomEdit_ReadOnly", 0), // property ReadOnly
+			/* 21 */ imports.NewTable("TCustomEdit_SelLength", 0), // property SelLength
+			/* 22 */ imports.NewTable("TCustomEdit_SelStart", 0), // property SelStart
+			/* 23 */ imports.NewTable("TCustomEdit_SelText", 0), // property SelText
+			/* 24 */ imports.NewTable("TCustomEdit_Text", 0), // property Text
+			/* 25 */ imports.NewTable("TCustomEdit_TextHint", 0), // property TextHint
+			/* 26 */ imports.NewTable("TCustomEdit_OnChange", 0), // event OnChange
+			/* 27 */ imports.NewTable("TCustomEdit_TClass", 0), // function TCustomEditClass
+		}
+	})
 	return customEditImport
 }

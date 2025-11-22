@@ -13,13 +13,14 @@ package wintaskbar
 import (
 	"errors"
 	"fmt"
+	"syscall"
+	"unsafe"
+
 	"github.com/energye/lcl/pkgs/win"
 	"github.com/energye/lcl/pkgs/wintaskbar/intf"
 	"github.com/energye/lcl/types"
 	"github.com/energye/lcl/types/messages"
 	"github.com/go-ole/go-ole"
-	"syscall"
-	"unsafe"
 )
 
 var (

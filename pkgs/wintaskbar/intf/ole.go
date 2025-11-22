@@ -12,11 +12,12 @@ package intf
 
 import (
 	"errors"
+	"syscall"
+	"unsafe"
+
 	"github.com/energye/lcl/pkgs/win"
 	"github.com/energye/lcl/types"
 	"github.com/go-ole/go-ole"
-	"syscall"
-	"unsafe"
 )
 
 var (

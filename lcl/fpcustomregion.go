@@ -9,52 +9,51 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
-// IFPCustomRegion Is Abstract Class Parent: IObject
+// IFPCustomRegion Parent: IObject
 type IFPCustomRegion interface {
 	IObject
-	GetBoundingRect() (resultRect TRect) // function Is Abstract
-	IsPointInRegion(AX, AY int32) bool   // function Is Abstract
+	GetBoundingRect() types.TRect          // function
+	IsPointInRegion(X int32, Y int32) bool // function
 }
 
-// TFPCustomRegion Is Abstract Class Parent: TObject
 type TFPCustomRegion struct {
 	TObject
 }
 
-func (m *TFPCustomRegion) GetBoundingRect() (resultRect TRect) {
-	fPCustomRegionImportAPI().SysCallN(1, m.Instance(), uintptr(unsafePointer(&resultRect)))
+func (m *TFPCustomRegion) GetBoundingRect() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	fPCustomRegionAPI().SysCallN(0, m.Instance(), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TFPCustomRegion) IsPointInRegion(AX, AY int32) bool {
-	r1 := fPCustomRegionImportAPI().SysCallN(2, m.Instance(), uintptr(AX), uintptr(AY))
-	return GoBool(r1)
-}
-
-func FPCustomRegionClass() TClass {
-	ret := fPCustomRegionImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TFPCustomRegion) IsPointInRegion(X int32, Y int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := fPCustomRegionAPI().SysCallN(1, m.Instance(), uintptr(X), uintptr(Y))
+	return api.GoBool(r)
 }
 
 var (
-	fPCustomRegionImport       *imports.Imports = nil
-	fPCustomRegionImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FPCustomRegion_Class", 0),
-		/*1*/ imports.NewTable("FPCustomRegion_GetBoundingRect", 0),
-		/*2*/ imports.NewTable("FPCustomRegion_IsPointInRegion", 0),
-	}
+	fPCustomRegionOnce   base.Once
+	fPCustomRegionImport *imports.Imports = nil
 )
 
-func fPCustomRegionImportAPI() *imports.Imports {
-	if fPCustomRegionImport == nil {
-		fPCustomRegionImport = NewDefaultImports()
-		fPCustomRegionImport.SetImportTable(fPCustomRegionImportTables)
-		fPCustomRegionImportTables = nil
-	}
+func fPCustomRegionAPI() *imports.Imports {
+	fPCustomRegionOnce.Do(func() {
+		fPCustomRegionImport = api.NewDefaultImports()
+		fPCustomRegionImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFPCustomRegion_GetBoundingRect", 0), // function GetBoundingRect
+			/* 1 */ imports.NewTable("TFPCustomRegion_IsPointInRegion", 0), // function IsPointInRegion
+		}
+	})
 	return fPCustomRegionImport
 }

@@ -9,67 +9,72 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IReplaceDialog Parent: IFindDialog
 type IReplaceDialog interface {
 	IFindDialog
-	ReplaceText() string          // property
-	SetReplaceText(AValue string) // property
+	ReplaceText() string          // property ReplaceText Getter
+	SetReplaceText(value string)  // property ReplaceText Setter
 	SetOnReplace(fn TNotifyEvent) // property event
 }
 
-// TReplaceDialog Parent: TFindDialog
 type TReplaceDialog struct {
 	TFindDialog
-	replacePtr uintptr
-}
-
-func NewReplaceDialog(AOwner IComponent) IReplaceDialog {
-	r1 := replaceDialogImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsReplaceDialog(r1)
 }
 
 func (m *TReplaceDialog) ReplaceText() string {
-	r1 := replaceDialogImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := replaceDialogAPI().SysCallN(1, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TReplaceDialog) SetReplaceText(AValue string) {
-	replaceDialogImportAPI().SysCallN(2, 1, m.Instance(), PascalStr(AValue))
-}
-
-func ReplaceDialogClass() TClass {
-	ret := replaceDialogImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TReplaceDialog) SetReplaceText(value string) {
+	if !m.IsValid() {
+		return
+	}
+	replaceDialogAPI().SysCallN(1, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TReplaceDialog) SetOnReplace(fn TNotifyEvent) {
-	if m.replacePtr != 0 {
-		RemoveEventElement(m.replacePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.replacePtr = MakeEventDataPtr(fn)
-	replaceDialogImportAPI().SysCallN(3, m.Instance(), m.replacePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 2, replaceDialogAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewReplaceDialog class constructor
+func NewReplaceDialog(owner IComponent) IReplaceDialog {
+	r := replaceDialogAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsReplaceDialog(r)
+}
+
+func TReplaceDialogClass() types.TClass {
+	r := replaceDialogAPI().SysCallN(3)
+	return types.TClass(r)
 }
 
 var (
-	replaceDialogImport       *imports.Imports = nil
-	replaceDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ReplaceDialog_Class", 0),
-		/*1*/ imports.NewTable("ReplaceDialog_Create", 0),
-		/*2*/ imports.NewTable("ReplaceDialog_ReplaceText", 0),
-		/*3*/ imports.NewTable("ReplaceDialog_SetOnReplace", 0),
-	}
+	replaceDialogOnce   base.Once
+	replaceDialogImport *imports.Imports = nil
 )
 
-func replaceDialogImportAPI() *imports.Imports {
-	if replaceDialogImport == nil {
-		replaceDialogImport = NewDefaultImports()
-		replaceDialogImport.SetImportTable(replaceDialogImportTables)
-		replaceDialogImportTables = nil
-	}
+func replaceDialogAPI() *imports.Imports {
+	replaceDialogOnce.Do(func() {
+		replaceDialogImport = api.NewDefaultImports()
+		replaceDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TReplaceDialog_Create", 0), // constructor NewReplaceDialog
+			/* 1 */ imports.NewTable("TReplaceDialog_ReplaceText", 0), // property ReplaceText
+			/* 2 */ imports.NewTable("TReplaceDialog_OnReplace", 0), // event OnReplace
+			/* 3 */ imports.NewTable("TReplaceDialog_TClass", 0), // function TReplaceDialogClass
+		}
+	})
 	return replaceDialogImport
 }

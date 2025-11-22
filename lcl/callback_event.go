@@ -9,1140 +9,4619 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
-	. "github.com/energye/lcl/types"
-	"unsafe"
+	"github.com/energye/lcl/api"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
-// TExtEventCallback
-//
-// 外部回调事件
-// 参数一：函数地址
-// 参数二：获取参数值的函数
-// 返回值：如果为true则终止事件传递，如果为false则继续向后转发事件。
-type TExtEventCallback func(fn interface{}, getVal func(idx int) uintptr) bool
-
-// 外部扩展的事件回调，先不管重复注册的问题
-var extEventCallback []TExtEventCallback
-
-// RegisterExtEventCallback
-//
-// 注册外部扩展回调事件
-//
-// Registering external extension callback events.
-func RegisterExtEventCallback(callback TExtEventCallback) {
-	extEventCallback = append(extEventCallback, callback)
+type callback struct {
+	name string
+	cb   func(getVal func(i int) uintptr)
 }
 
-// getParam 从指定索引和地址获取事件中的参数
-// 不再使用FreePascal导出的了，直接在这处理
-func getParamOf(index int, ptr uintptr) uintptr {
-	return *(*uintptr)(getPointer(ptr + uintptr(index)*unsafe.Sizeof(ptr)))
+func getPtr(val uintptr) base.UnsafePointer {
+	return base.UnsafePointer(val)
 }
 
-// 移除事件，释放相关的引用
-func removeEventCallbackProc(f uintptr) uintptr {
-	//RemoveEventElement(PtrToElementPtr(f))
-	RemoveEventElement(f)
-	return 0
-}
-
-func getPointer(ptr uintptr) unsafePointer {
-	return unsafePointer(ptr)
-}
-
-// 回调过程
-func eventCallbackProc(f uintptr, args uintptr, _ int) uintptr {
-	fn := PtrToElementValue(f)
-	if fn != nil {
-		// 获取值
-		getVal := func(i int) uintptr {
-			return getParamOf(i, args)
-		}
-		// 指针
-		getPtr := func(i int) unsafePointer {
-			return getPointer(getVal(i))
-		}
-		// 指针的值
-		getPtrVal := func(i int) uintptr {
-			return *(*uintptr)(getPtr(i))
-		}
-		setPtrVal := func(i int, val uintptr) {
-			*(*uintptr)(getPtr(i)) = val
-		}
-		getBoolPtr := func(i int) *bool {
-			return (*bool)(getPtr(i))
-		}
-		getI32Ptr := func(i int) *int32 {
-			return (*int32)(getPtr(i))
-		}
-		getRectPtr := func(i int) *TRect {
-			return (*TRect)(getPtr(i))
-		}
-		getPointPtr := func(i int) *TPoint {
-			return (*TPoint)(getPtr(i))
-		}
-
-		// 调用外部注册的事件回调过程
-		for n := 0; n < len(extEventCallback); n++ {
-			// 外部返回True则不继续下去了
-			if extEventCallback[n](fn, getVal) {
-				return 0
-			}
-		}
-
-		switch fn.(type) {
-		// func(sender IObject)
-		case TNotifyEvent:
-			fn.(TNotifyEvent)(AsObject(getVal(0)))
-
-		// func(sender IObject, button TUDBtnType)
-		case TUDClickEvent:
-			fn.(TUDClickEvent)(AsObject(getVal(0)), TUDBtnType(getVal(1)))
-
-		// func(sender IObject, item *TListItem, change int32)
-		case TLVChangeEvent:
-			fn.(TLVChangeEvent)(AsObject(getVal(0)), AsListItem(getVal(1)), TItemChange(getVal(2)))
-
-		// func(sender IObject, action *TCloseAction) // Action *uintptr
-		case TCloseEvent:
-			fn.(TCloseEvent)(AsObject(getVal(0)), (*TCloseAction)(getPtr(1)))
-
-		// func(sender IObject, canClose *bool) //CanClose *uintptr
-		case TCloseQueryEvent:
-			fn.(TCloseQueryEvent)(AsObject(getVal(0)), getBoolPtr(1))
-
-		// func(sender IObject, source *TMenuItem, rebuild bool)
-		case TMenuChangeEvent:
-			fn.(TMenuChangeEvent)(AsObject(getVal(0)), AsMenuItem(getVal(1)), GoBool(getVal(2)))
-
-		// func(sender IObject, node *TreeNode)
-		case TTVChangedEvent:
-			fn.(TTVChangedEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)))
-
-		// func(sender IObject, link string, linkType TSysLinkType)
-		case TSysLinkEvent:
-			fn.(TSysLinkEvent)(AsObject(getVal(0)), GoStr(getVal(1)), TSysLinkType(getVal(2)))
-
-		// func(sender, e IObject)
-		case TExceptionEvent:
-			fn.(TExceptionEvent)(AsObject(getVal(0)), AsException(getVal(1)))
-
-		// func(sender IObject, key *Char, shift TShiftState)
-		case TKeyEvent:
-			fn.(TKeyEvent)(AsObject(getVal(0)), (*Char)(getPtr(1)), TShiftState(getVal(2)))
-
-		// func(sender IObject, key *Char)
-		case TKeyPressEvent:
-			fn.(TKeyPressEvent)(AsObject(getVal(0)), (*Char)(getPtr(1)))
-
-		// func(sender IObject, button TMouseButton, shift TShiftState, x, y int32)
-		case TMouseEvent:
-			fn.(TMouseEvent)(AsObject(getVal(0)), TMouseButton(getVal(1)), TShiftState(getVal(2)), int32(getVal(3)), int32(getVal(4)))
-
-		// func(sender IObject, shift TShiftState, x, y int32)
-		case TMouseMoveEvent:
-			fn.(TMouseMoveEvent)(AsObject(getVal(0)), TShiftState(getVal(1)), int32(getVal(2)), int32(getVal(3)))
-
-		// func(sender IObject, shift TShiftState, wheelDelta, x, y int32, handled *bool)
-		case TMouseWheelEvent:
-			fn.(TMouseWheelEvent)(AsObject(getVal(0)), TShiftState(getVal(1)), int32(getVal(2)), int32(getVal(3)), int32(getVal(4)), getBoolPtr(5))
-
-		// func(control IWinControl, index int32, aRect TRect, state TOwnerDrawState)
-		case TDrawItemEvent:
-			fn.(TDrawItemEvent)(AsWinControl(getVal(0)), int32(getVal(1)), *getRectPtr(2), TOwnerDrawState(getVal(3)))
-
-		// func(sender IObject, aCanvas *TCanvas, aRect TRect, selected bool)
-		case TMenuDrawItemEvent:
-			fn.(TMenuDrawItemEvent)(AsObject(getVal(0)), AsCanvas(getVal(1)), *getRectPtr(2), TOwnerDrawState(getVal(3)))
-
-		// func(sender IObject, item *TListItem)
-		case TLVNotifyEvent:
-			fn.(TLVNotifyEvent)(AsObject(getVal(0)), AsListItem(getVal(1)))
-
-		// func(sender IObject, column *TListColumn)
-		case TLVColumnClickEvent:
-			fn.(TLVColumnClickEvent)(AsObject(getVal(0)), AsListColumn(getVal(1)))
-
-		// func(sender IObject, column *TListColumn, point TPoint)
-		case TLVColumnRClickEvent:
-			fn.(TLVColumnRClickEvent)(AsObject(getVal(0)), AsListColumn(getVal(1)), TPoint{X: int32(getVal(2)), Y: int32(getVal(3))})
-
-		// func(sender IObject, item *TListItem, selected bool)
-		case TLVSelectItemEvent:
-			fn.(TLVSelectItemEvent)(AsObject(getVal(0)), AsListItem(getVal(1)), GoBool(getVal(2)))
-
-		//  func(sender IObject, item *TListItem)
-		case TLVCheckedItemEvent:
-			fn.(TLVCheckedItemEvent)(AsObject(getVal(0)), AsListItem(getVal(1)))
-
-		// func(sender IObject, tabIndex int32, imageIndex *int32)
-		case TTabGetImageEvent:
-			fn.(TTabGetImageEvent)(AsObject(getVal(0)), int32(getVal(1)), getI32Ptr(2))
-
-		// func(sender IObject, node *TTreeNode)
-		case TTVExpandedEvent:
-			fn.(TTVExpandedEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)))
-
-		// func(sender IObject, item1, item2 *TListItem, data int32, compare *int32)
-		case TLVCompareEvent:
-			fn.(TLVCompareEvent)(AsObject(getVal(0)), AsListItem(getVal(1)), AsListItem(getVal(2)), int32(getVal(3)), getI32Ptr(4))
-
-		// func(sender IObject, node1, node2 *TTreeNode, data int32, compare *int32)
-		case TTVCompareEvent:
-			fn.(TTVCompareEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)), AsTreeNode(getVal(2)), int32(getVal(3)), getI32Ptr(4))
-
-		// func(sender *TTreeView, aRect TRect, stage TCustomDrawStage, defaultDraw *bool)
-		case TTVAdvancedCustomDrawEvent:
-			fn.(TTVAdvancedCustomDrawEvent)(AsTreeView(getVal(0)), *getRectPtr(1), TCustomDrawStage(getVal(2)), getBoolPtr(3))
-
-		// func(sender *TTreeView, node *TTreeNode, state TCustomDrawState, stage TCustomDrawStage, paintImages, defaultDraw *bool)
-		case TTVAdvancedCustomDrawItemEvent:
-			fn.(TTVAdvancedCustomDrawItemEvent)(AsTreeView(getVal(0)), AsTreeNode(getVal(1)), TCustomDrawState(getVal(2)), TCustomDrawStage(getVal(3)),
-				getBoolPtr(4), getBoolPtr(5))
-
-		// func(sender *TListView, aRect TRect, stage TCustomDrawStage, defaultDraw *bool)
-		case TLVAdvancedCustomDrawEvent:
-			fn.(TLVAdvancedCustomDrawEvent)(AsListView(getVal(0)), *getRectPtr(1), TCustomDrawStage(getVal(2)), getBoolPtr(3))
-
-		// func(sender *TListView, item *TListItem, state TCustomDrawState, Stage TCustomDrawStage, defaultDraw *bool)
-		case TLVAdvancedCustomDrawItemEvent:
-			fn.(TLVAdvancedCustomDrawItemEvent)(AsListView(getVal(0)), AsListItem(getVal(1)), TCustomDrawState(getVal(2)), TCustomDrawStage(getVal(3)),
-				getBoolPtr(4))
-
-		// func(sender *TListView, item *TListItem, subItem int32, state TCustomDrawState, stage TCustomDrawStage, defaultDraw *bool)
-		case TLVAdvancedCustomDrawSubItemEvent:
-			fn.(TLVAdvancedCustomDrawSubItemEvent)(AsListView(getVal(0)), AsListItem(getVal(1)), int32(getVal(2)), TCustomDrawState(getVal(3)),
-				TCustomDrawStage(getVal(4)), getBoolPtr(5))
-
-		// func(sender *TToolBar, aRect TRect, stage TCustomDrawStage, defaultDraw *bool)
-		case TTBAdvancedCustomDrawEvent:
-			fn.(TTBAdvancedCustomDrawEvent)(AsToolBar(getVal(0)), *getRectPtr(1), TCustomDrawStage(getVal(2)), getBoolPtr(3))
-
-		// func(sender IObject, aFileNames []string)
-		case TDropFilesEvent:
-			nLen := int(getVal(2))
-			tempArr := make([]string, nLen)
-			p := getVal(1)
-			for i := 0; i < nLen; i++ {
-				tempArr[i] = DGetStringArrOf(p, i)
-			}
-			fn.(TDropFilesEvent)(AsObject(getVal(0)), tempArr)
-
-		// func(sender IObject, minWidth, minHeight, maxWidth, maxHeight *int32)
-		case TConstrainedResizeEvent:
-			fn.(TConstrainedResizeEvent)(AsObject(getVal(0)), getI32Ptr(1), getI32Ptr(2), getI32Ptr(3), getI32Ptr(4))
-
-		// func(command uint16, data THelpEventData, callHelp *bool) bool
-		case THelpEvent:
-			fn.(THelpEvent)(uint16(getVal(0)), THelpEventData(getVal(1)), getBoolPtr(2), getBoolPtr(3))
-
-		// func(msg *TWMKey, handled *bool)
-		case TShortCutEvent:
-			fn.(TShortCutEvent)((*TWMKey)(getPtr(0)), getBoolPtr(1))
-
-		// func(sender IObject, mousePos TPoint, handled *bool)
-		case TContextPopupEvent:
-			fn.(TContextPopupEvent)(AsObject(getVal(0)), *getPointPtr(1), getBoolPtr(2))
-
-		// func(sender, source IObject, x, y int32, state TDragState, accept *bool)
-		case TDragOverEvent:
-			fn.(TDragOverEvent)(AsObject(getVal(0)), AsObject(getVal(1)), int32(getVal(2)), int32(getVal(3)), TDragState(getVal(4)), getBoolPtr(5))
-
-		//func(sender, source IObject, x, y int32)
-		case TDragDropEvent:
-			fn.(TDragDropEvent)(AsObject(getVal(0)), AsObject(getVal(1)), int32(getVal(2)), int32(getVal(3)))
-
-		//func(sender IObject, dragObject *TDragObject)
-		case TStartDragEvent:
-			obj := AsDragObject(getVal(1))
-			fn.(TStartDragEvent)(AsObject(getVal(0)), &obj)
-			if obj != nil {
-				*(*uintptr)(unsafePointer(getVal(1))) = obj.Instance()
-			}
-
-		//func(sender, target IObject, x, y int32)
-		case TEndDragEvent:
-			fn.(TEndDragEvent)(AsObject(getVal(0)), AsObject(getVal(1)), int32(getVal(2)), int32(getVal(3)))
-
-		// func(sender IObject, source *TDragDockObject, x, y int32)
-		case TDockDropEvent:
-			fn.(TDockDropEvent)(AsObject(getVal(0)), AsDragDockObject(getVal(1)), int32(getVal(2)), int32(getVal(3)))
-
-		//func(sender IObject, source *TDragDockObject, x, y int32, state TDragState, accept *bool)
-		case TDockOverEvent:
-			fn.(TDockOverEvent)(AsObject(getVal(0)), AsDragDockObject(getVal(1)), int32(getVal(2)), int32(getVal(3)),
-				TDragState(getVal(4)), getBoolPtr(5))
-
-		//func(sender IObject, client *TControl, newTarget *TControl, allow *bool)
-		case TUnDockEvent:
-			fn.(TUnDockEvent)(AsObject(getVal(0)), AsControl(getVal(1)), AsControl(getVal(2)), getBoolPtr(3))
-
-		//func(sender IObject, dragObject **TDragDockObject)
-		case TStartDockEvent:
-			obj := AsDragDockObject(getPtrVal(1))
-			fn.(TStartDockEvent)(AsObject(getVal(0)), &obj)
-			if obj != nil {
-				setPtrVal(1, obj.Instance())
-			}
-
-		//func(sender IObject, dockClient *TControl, influenceRect *TRect, mousePos TPoint, canDock *bool)
-		case TGetSiteInfoEvent:
-			fn.(TGetSiteInfoEvent)(AsObject(getVal(0)), AsControl(getVal(1)), getRectPtr(2), *getPointPtr(3), getBoolPtr(4))
-
-		//func(sender IObject, shift TShiftState, mousePos TPoint, handled *bool)
-		case TMouseWheelUpDownEvent:
-			fn.(TMouseWheelUpDownEvent)(AsObject(getVal(0)), TShiftState(getVal(1)), *getPointPtr(2), getBoolPtr(3))
-
-		// func(sender IObject, isColumn bool, sIndex, tIndex int32)
-		case TGridOperationEvent:
-			fn.(TGridOperationEvent)(AsObject(getVal(0)), GoBool(getVal(1)), int32(getVal(2)), int32(getVal(3)))
-
-		// func(sender IObject, aCol, aRow int32, aRect TRect, state TGridDrawState)
-		case TDrawCellEvent:
-			fn.(TDrawCellEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), *getRectPtr(3), TGridDrawState(getVal(4)))
-
-		// func(sender IObject, aCol, aRow int32)
-		case TFixedCellClickEvent:
-			fn.(TFixedCellClickEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)))
-
-		// func(sender IObject, aCol, aRow int32, value *string)
-		case TGetEditEvent:
-			str := GoStr(getPtrVal(3))
-			fn.(TGetEditEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), &str)
-			setPtrVal(3, PascalStr(str))
-
-		// func(sender IObject, aCol, aRow int32, canSelect *bool)
-		case TSelectCellEvent:
-			fn.(TSelectCellEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), getBoolPtr(3))
-
-		// func(sender IObject, aCol, aRow int32, value string)
-		case TSetEditEvent:
-			fn.(TSetEditEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), GoStr(getVal(3)))
-
-		// func(headerControl *THeaderControl, section *THeaderSection, aRect TRect, pressed bool)
-		case TDrawSectionEvent:
-			fn.(TDrawSectionEvent)(AsHeaderControl(getVal(0)), AsHeaderSection(getVal(1)), *getRectPtr(2), getVal(3) != 0)
-
-		// func(headerControl *THeaderControl, section *THeaderSection)
-		case TSectionNotifyEvent:
-			fn.(TSectionNotifyEvent)(AsHeaderControl(getVal(0)), AsHeaderSection(getVal(1)))
-
-		// func(headerControl *THeaderControl, section *THeaderSection, width int32, state TSectionTrackState)
-		case TSectionTrackEvent:
-			fn.(TSectionTrackEvent)(AsHeaderControl(getVal(0)), AsHeaderSection(getVal(1)), int32(getVal(2)), TSectionTrackState(getVal(3)))
-
-		// func(sender IObject, fromSection, toSection *THeaderSection, allowDrag *bool)
-		case TSectionDragEvent:
-			fn.(TSectionDragEvent)(AsObject(getVal(0)), AsHeaderSection(getVal(1)), AsHeaderSection(getVal(2)), getBoolPtr(3))
-
-		// func(headerControl *THeaderControl, section *THeaderSection)
-		case TCustomSectionNotifyEvent:
-			fn.(TCustomSectionNotifyEvent)(AsHeaderControl(getVal(0)), AsHeaderSection(getVal(1)))
-
-		// func(sender IObject, button TMouseButton, shift TShiftState, x, y int32, hitTest int32, mouseActivate *TMouseActivate)
-		case TMouseActivateEvent:
-			fn.(TMouseActivateEvent)(AsObject(getVal(0)), TMouseButton(getVal(1)), TShiftState(getVal(2)), int32(getVal(3)), int32(getVal(4)),
-				int32(getVal(5)), (*TMouseActivate)(getPtr(6)))
-
-		// func(control *TWinControl, index int32, data *string)
-		case TLBGetDataEvent:
-			str := GoStr(getPtrVal(2))
-			fn.(TLBGetDataEvent)(AsWinControl(getVal(0)), int32(getVal(1)), &str)
-			setPtrVal(2, PascalStr(str))
-
-		// func(control *TWinControl, index int32, dataObject IObject)
-		case TLBGetDataObjectEvent:
-			fn.(TLBGetDataObjectEvent)(AsWinControl(getVal(0)), int32(getVal(1)), AsObject(getVal(2))) // 这个参数要改，先这样
-
-		// func(control *TWinControl, findString string) int32
-		case TLBFindDataEvent:
-			result := fn.(TLBFindDataEvent)(AsWinControl(getVal(0)), GoStr(getVal(1)))
-			*getI32Ptr(2) = result
-
-		// func(control *TWinControl, index int32, height *int32)
-		case TMeasureItemEvent:
-			fn.(TMeasureItemEvent)(AsWinControl(getVal(0)), int32(getVal(1)), getI32Ptr(2))
-
-		// func(sender IObject, item *TListItem, change TItemChange, allowChange *bool)
-		case TLVChangingEvent:
-			fn.(TLVChangingEvent)(AsObject(getVal(0)), AsListItem(getVal(1)), TItemChange(getVal(2)), getBoolPtr(3))
-
-		// func(sender IObject, item *TListItem)
-		case TLVDataEvent:
-			fn.(TLVDataEvent)(AsObject(getVal(0)), AsListItem(getVal(1)))
-
-		// func(sender IObject, item *TListItem)
-		//case TLVDeletedEvent:
-		//	fn.(TLVDeletedEvent)(AsObject(getVal(0)), AsListItem(getVal(1)))
-
-		// func(sender IObject, find TItemFind, findString string, findPosition TPoint, findData TCustomData, startIndex int32,
-		//	direction TSearchDirection, warp bool, index *int32)
-		case TLVDataFindEvent:
-			fn.(TLVDataFindEvent)(AsObject(getVal(0)), TItemFind(getVal(1)), GoStr(getVal(2)), *getPointPtr(3), TCustomData(getVal(4)),
-				int32(getVal(5)), TSearchDirection(getVal(6)), GoBool(getVal(7)), getI32Ptr(8))
-
-		// func(sender IObject, item *TListItem, allowEdit *bool)
-		case TLVEditingEvent:
-			fn.(TLVEditingEvent)(AsObject(getVal(0)), AsListItem(getVal(1)), getBoolPtr(2))
-
-		// func(sender IObject, item *TListItem, s *string)
-		case TLVEditedEvent:
-			str := GoStr(getPtrVal(2))
-			fn.(TLVEditedEvent)(AsObject(getVal(0)), AsListItem(getVal(1)), &str)
-			setPtrVal(2, PascalStr(str))
-
-		// func(sender IObject, aCanvas *TCanvas, width, height *int32)
-		case TMenuMeasureItemEvent:
-			fn.(TMenuMeasureItemEvent)(AsObject(getVal(0)), AsCanvas(getVal(1)), getI32Ptr(2), getI32Ptr(3))
-
-		//type func(sender IObject, allowChange *bool)
-		case TTabChangingEvent:
-			fn.(TTabChangingEvent)(AsObject(getVal(0)), getBoolPtr(1))
-
-		// func(sender IObject, node *TTreeNode, allowChange *bool)
-		case TTVChangingEvent:
-			fn.(TTVChangingEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)), getBoolPtr(2))
-
-		// func(sender IObject, node *TTreeNode, allowCollapse *bool)
-		case TTVCollapsingEvent:
-			fn.(TTVCollapsingEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)), getBoolPtr(2))
-
-		// func(sender IObject, node *TTreeNode, s *string)
-		case TTVEditedEvent:
-			str := GoStr(getPtrVal(2))
-			fn.(TTVEditedEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)), &str)
-			setPtrVal(2, PascalStr(str))
-
-		// func(sender IObject, node *TTreeNode, allowEdit *bool)
-		case TTVEditingEvent:
-			fn.(TTVEditingEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)), getBoolPtr(2))
-
-		// func(sender IObject, node *TTreeNode, allowExpansion *bool)
-		case TTVExpandingEvent:
-			fn.(TTVExpandingEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)), getBoolPtr(2))
-
-		// func(sender IObject, node *TTreeNode, hint *string)
-		case TTVHintEvent:
-			str := GoStr(getPtrVal(2))
-			fn.(TTVHintEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)), &str)
-			setPtrVal(2, PascalStr(str))
-
-		// func(sender IObject, allowChange *bool)
-		case TUDChangingEvent:
-			fn.(TUDChangingEvent)(AsObject(getVal(0)), getBoolPtr(1))
-
-		// func(sender IObject, winErrorCode uint32, errorDescription string, handled *bool)
-		case TCreatingListErrorEvent:
-			fn.(TCreatingListErrorEvent)(AsObject(getVal(0)), uint32(getVal(1)), GoStr(getVal(2)), getBoolPtr(3))
-
-		// func(sender *TListView, aRect TRect, defaultDraw *bool)
-		case TLVCustomDrawEvent:
-			fn.(TLVCustomDrawEvent)(AsListView(getVal(0)), *getRectPtr(1), getBoolPtr(2))
-
-		// func(sender *TListView, item *TListItem, state TCustomDrawStage, defaultDraw *bool)
-		case TLVCustomDrawItemEvent:
-			fn.(TLVCustomDrawItemEvent)(AsListView(getVal(0)), AsListItem(getVal(1)), TCustomDrawState(getVal(2)), getBoolPtr(3))
-
-		// func(sender *TListView, item *TListItem, subItem int32, state TCustomDrawStage, defaultDraw *bool)
-		case TLVCustomDrawSubItemEvent:
-			fn.(TLVCustomDrawSubItemEvent)(AsListView(getVal(0)), AsListItem(getVal(1)), int32(getVal(2)), TCustomDrawState(getVal(3)), getBoolPtr(4))
-
-		// func(sender *TListView, item *TListItem, rect TRect, state TOwnerDrawState)
-		case TLVDrawItemEvent:
-			fn.(TLVDrawItemEvent)(AsListView(getVal(0)), AsListItem(getVal(1)), *getRectPtr(2), TOwnerDrawState(getVal(3)))
-
-		// func(sender IObject, startIndex, endIndex int32)
-		case TLVDataHintEvent:
-			fn.(TLVDataHintEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)))
-
-		// func(sender *TTreeView, aRect TRect, defaultDraw *bool)
-		case TTVCustomDrawEvent:
-			fn.(TTVCustomDrawEvent)(AsTreeView(getVal(0)), *getRectPtr(1), getBoolPtr(2))
-
-		// func(sender *TTreeView, node *TTreeNode, state TCustomDrawStage, defaultDraw *bool)
-		case TTVCustomDrawItemEvent:
-			fn.(TTVCustomDrawItemEvent)(AsTreeView(getVal(0)), AsTreeNode(getVal(1)), TCustomDrawState(getVal(2)), getBoolPtr(3))
-
-		// func(sender IObject, text string)
-		case TWebTitleChangeEvent:
-			fn.(TWebTitleChangeEvent)(AsObject(getVal(0)), GoStr(getVal(1)))
-
-		// func(sender IObject, funcName, args string, retVal *string)
-		case TWebJSExternalEvent:
-			str := GoStr(getPtrVal(3))
-			fn.(TWebJSExternalEvent)(AsObject(getVal(0)), GoStr(getVal(1)), GoStr(getVal(2)), &str)
-			setPtrVal(3, PascalStr(str))
-
-		// func(sender IObject, modalResult TModalResult, canClose *bool)
-		case TTaskDlgClickEvent:
-			fn.(TTaskDlgClickEvent)(AsObject(getVal(0)), TModalResult(getVal(1)), getBoolPtr(2))
-
-		// func(sender IObject, tickCount uint32, reset *bool)
-		case TTaskDlgTimerEvent:
-			fn.(TTaskDlgTimerEvent)(AsObject(getVal(0)), uint32(getVal(1)), getBoolPtr(2))
-
-		// func(sender *TWinControl, control *TControl, newLeft, newTop, newWidth, newHeight *int32, alignRect *TRect, alignInfo TAlignInfo)
-		case TAlignPositionEvent:
-			fn.(TAlignPositionEvent)(AsWinControl(getVal(0)), AsControl(getVal(1)), getI32Ptr(2), getI32Ptr(3), getI32Ptr(4),
-				getI32Ptr(5), getRectPtr(6), *(*TAlignInfo)(getPtr(7)))
-
-		// func(sender IObject, index int32)
-		case TCheckGroupClicked:
-			fn.(TCheckGroupClicked)(AsObject(getVal(0)), int32(getVal(1)))
-
-		// func(sender IObject, aCol, aRow int32)
-		case TOnSelectEvent:
-			fn.(TOnSelectEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)))
-
-		// func(sender IObject, aCol, aRow int32, aState TCheckBoxState)
-		case TToggledCheckboxEvent:
-			fn.(TToggledCheckboxEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), TCheckBoxState(getVal(3)))
-
-		// func(sender IObject, ACol, ARow, BCol, BRow int32, result *int32)
-		case TOnCompareCells:
-			fn.(TOnCompareCells)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), int32(getVal(3)), int32(getVal(4)), getI32Ptr(5))
-
-		// func(sender IObject, ACol, ARow int32, hintText *string)
-		case TGetCellHintEvent:
-			str := GoStr(getPtrVal(3))
-			fn.(TGetCellHintEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), &str)
-			setPtrVal(3, PascalStr(str))
-
-		// func(sender IObject, ACol, ARow int32, value *TCheckBoxState)
-		case TGetCheckboxStateEvent:
-			fn.(TGetCheckboxStateEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), (*TCheckBoxState)(getPtr(3)))
-
-		// func(sender IObject, ACol, ARow int32, Value TCheckBoxState)
-		case TSetCheckboxStateEvent:
-			fn.(TSetCheckboxStateEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), TCheckBoxState(getVal(3)))
-
-		// func(sender IObject, isColumn bool, index int32)
-		case THdrEvent:
-			fn.(THdrEvent)(AsObject(getVal(0)), GoBool(getVal(1)), int32(getVal(2)))
-
-		// func(sender IObject, isColumn bool, aIndex, aSize int32)
-		case THeaderSizingEvent:
-			fn.(THeaderSizingEvent)(AsObject(getVal(0)), GoBool(getVal(1)), int32(getVal(2)), int32(getVal(3)))
-
-		// func(sender IObject, aCol, aRow int32, editor **TWinControl)
-		case TSelectEditorEvent:
-			obj := AsWinControl(getPtrVal(3))
-			fn.(TSelectEditorEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), &obj)
-			if obj != nil {
-				setPtrVal(3, obj.Instance())
-			}
-
-		// func(sender IObject, aCol, aRow int32, CheckedState TCheckBoxState, aBitmap **TBitmap)
-		case TUserCheckBoxBitmapEvent:
-			obj := AsBitmap(getPtrVal(4))
-			fn.(TUserCheckBoxBitmapEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), TCheckBoxState(getVal(3)), &obj)
-			if obj != nil {
-				setPtrVal(4, obj.Instance())
-			}
-
-		// func(sender IObject, aCol, aRow int32, oldValue string, newValue *string)
-		case TValidateEntryEvent:
-			str := GoStr(getPtrVal(4))
-			fn.(TValidateEntryEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), GoStr(getVal(3)), &str)
-			setPtrVal(4, PascalStr(str))
-
-		// func(sender IObject, aCol, aRow int32, aState TGridDrawState)
-		case TOnPrepareCanvasEvent:
-			fn.(TOnPrepareCanvasEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), TGridDrawState(getVal(3)))
-
-		// func(sender IObject, value *string)
-		case TAcceptFileNameEvent:
-			str := GoStr(getPtrVal(1))
-			fn.(TAcceptFileNameEvent)(AsObject(getVal(0)), &str)
-			setPtrVal(1, PascalStr(str))
-
-		// func(sender IObject, index int32)
-		case TCheckItemChange:
-			fn.(TCheckItemChange)(AsObject(getVal(0)), int32(getVal(1)))
-
-		// func(sender IObject, utf8key *TUTF8Char)
-		case TUTF8KeyPressEvent:
-			fn.(TUTF8KeyPressEvent)(AsObject(getVal(0)), (*TUTF8Char)(getPtr(1)))
-
-		// type  func(sender IObject, aCanvas *TCanvas, aRect TRect)
-		case TImagePaintBackgroundEvent:
-			fn.(TImagePaintBackgroundEvent)(AsObject(getVal(0)), AsCanvas(getVal(1)), *getRectPtr(2))
-
-		// func(sender IObject, Action IBasicAction, handled *bool)
-		case TActionEvent:
-			fn.(TActionEvent)(AsObject(getVal(0)), AsBasicAction(getVal(1)), getBoolPtr(2))
-
-		// func(handle *HWND)
-		case TGetHandleEvent:
-			fn.(TGetHandleEvent)((*HWND)(getPtr(0)))
-
-		// func(sender IObject, result int32)
-		case TModalDialogFinished:
-			fn.(TModalDialogFinished)(AsObject(getVal(0)), int32(getVal(1)))
-
-		// func(sender IObject, control IControl, caption *string)
-		case TGetDockCaptionEvent:
-			str := GoStr(getPtrVal(2))
-			fn.(TGetDockCaptionEvent)(AsObject(getVal(0)), AsControl(getVal(1)), &str)
-			setPtrVal(2, PascalStr(str))
-
-		// func(sender IObject, aCol, aRow int32, aRect TRect, aState TGridDrawState)
-		case TOnDrawCell:
-			fn.(TOnDrawCell)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), *getRectPtr(3), TGridDrawState(getVal(4)))
-
-		// func(sender IObject, aCol, aRow int32, checkedState TCheckBoxState, imageList ICustomImageList, imageIndex TImageIndex)
-		case TUserCheckBoxImageEvent:
-			fn.(TUserCheckBoxImageEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), TCheckBoxState(getVal(3)), AsCustomImageList(getVal(4)),
-				TImageIndex(getVal(5)))
-
-		// func(sender IWinControl, control1, control2 IControl) bool
-		case TAlignInsertBeforeEvent:
-			fn.(TAlignInsertBeforeEvent)(AsWinControl(getVal(0)), AsControl(getVal(1)), AsControl(getVal(2)))
-
-		// func(sender IObject, AllowChange *bool, newValue int16, direction TUpDownDirection)
-		case TUDChangingEventEx:
-			fn.(TUDChangingEventEx)(AsObject(getVal(0)), getBoolPtr(1), int16(getVal(2)), TUpDownDirection(getVal(3)))
-
-		// func(sender IStatusBar, panelClass *TStatusPanelClass)
-		case TSBCreatePanelClassEvent:
-			fn.(TSBCreatePanelClassEvent)(AsStatusBar(getVal(0)), (*TStatusPanelClass)(getPtr(1)))
-
-		// func(statusBar IStatusBar, panel IStatusPanel, rect TRect)
-		case TDrawPanelEvent:
-			fn.(TDrawPanelEvent)(AsStatusBar(getVal(0)), AsStatusPanel(getVal(1)), *getRectPtr(2))
-
-		// func(sender IObject, success bool)
-		case TDialogResultEvent:
-			fn.(TDialogResultEvent)(AsObject(getVal(0)), *getBoolPtr(1))
-
-		// func(sender ICustomColorBox, items IStrings)
-		case TGetColorsEvent:
-			fn.(TGetColorsEvent)(AsCustomColorBox(getVal(0)), AsStrings(getVal(1)))
-
-		// func(hintStr *string, canShow bool)
-		case THintEvent:
-			str := GoStr(getPtrVal(0))
-			fn.(THintEvent)(&str, *getBoolPtr(1))
-			setPtrVal(0, PascalStr(str))
-
-		// func(sender IObject, aCol, aRow int32, canSelect *bool)
-		case TOnSelectCellEvent:
-			fn.(TOnSelectCellEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), getBoolPtr(3))
-
-		// func(sender IObject, user bool)
-		case TSelectionChangeEvent:
-			fn.(TSelectionChangeEvent)(AsObject(getVal(0)), *getBoolPtr(1))
-
-		// func(color1, color2 TFPColor) TFPColor
-		case TFPCanvasCombineColors:
-			fn.(TFPCanvasCombineColors)(*(*TFPColor)(getPtr(0)), *(*TFPColor)(getPtr(1)), (*TFPColor)(getPtr(2)))
-
-		// func(sender IObject, stage TFPImgProgressStage, percentDone byte, redrawNow bool, rect TRect, msg string, continue_ *bool)
-		case TFPImgProgressEvent:
-			fn.(TFPImgProgressEvent)(AsObject(getVal(0)), TFPImgProgressStage(getVal(1)), byte(getVal(2)), *getBoolPtr(3), *getRectPtr(4),
-				GoStr(getVal(5)), getBoolPtr(6))
-
-		// func(sender ICustomColorListBox, items IStrings)
-		case TLBGetColorsEvent:
-			fn.(TLBGetColorsEvent)(AsCustomColorListBox(getVal(0)), AsStrings(getVal(1)))
-
-		// func(sender ICustomHeaderControl, sectionClass *THeaderSectionClass)
-		case TCustomHCCreateSectionClassEvent:
-			fn.(TCustomHCCreateSectionClassEvent)(AsCustomHeaderControl(getVal(0)), (*THeaderSectionClass)(getPtr(1)))
-
-		// func(headerControl ICustomHeaderControl, section IHeaderSection, width int32, state TSectionTrackState)
-		case TCustomSectionTrackEvent:
-			fn.(TCustomSectionTrackEvent)(AsCustomHeaderControl(getVal(0)), AsHeaderSection(getVal(1)), int32(getVal(2)), TSectionTrackState(getVal(3)))
-
-		// func(sender IObject, newOffset *int32, accept *bool)
-		case TCanOffsetEvent:
-			fn.(TCanOffsetEvent)(AsObject(getVal(0)), getI32Ptr(1), getBoolPtr(2))
-
-		// func(sender IObject, newSize *int32, accept *bool)
-		case TCanResizeEvent:
-			fn.(TCanResizeEvent)(AsObject(getVal(0)), getI32Ptr(1), getBoolPtr(2))
-
-		// func(sender IObject, keyName string, values IStrings)
-		case TGetPickListEvent:
-			fn.(TGetPickListEvent)(AsObject(getVal(0)), GoStr(getVal(1)), AsStrings(getVal(2)))
-
-		// func(sender IObject, aCol, aRow int32, keyName, keyValue string)
-		case TOnValidateEvent:
-			fn.(TOnValidateEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), GoStr(getVal(3)), GoStr(getVal(4)))
-
-		// func(requestedFormatID TClipboardFormat, data IStream)
-		case TClipboardRequestEvent:
-			fn.(TClipboardRequestEvent)(getVal(0), AsStream(getVal(1)))
-
-		// func(sender IToolButton, state int32)
-		case TToolBarOnPaintButton:
-			fn.(TToolBarOnPaintButton)(AsToolButton(getVal(0)), int32(getVal(1)))
-
-		// func(sender IObject, aCol, aRow int32, processType TCellProcessType, aValue *string)
-		case TCellProcessEvent:
-			str := GoStr(getPtrVal(4))
-			fn.(TCellProcessEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), TCellProcessType(getVal(3)), &str)
-			setPtrVal(4, PascalStr(str))
-
-		// func(sender IObject, scrollCode TScrollCode, scrollPos *int32)
-		case TScrollEvent:
-			fn.(TScrollEvent)(AsObject(getVal(0)), TScrollCode(getVal(1)), getI32Ptr(2))
-
-		// func(aList IListControlItems, aItem1, aItem2 IListControlItem) int32
-		case TListCompareEvent:
-			fn.(TListCompareEvent)(AsListControlItems(getVal(0)), AsListControlItem(getVal(1)), AsListControlItem(getVal(2)), getI32Ptr(3))
-
-		// func(sender ICustomImageList, aImageWidth, aPPI int32, aResultWidth *int32)
-		case TCustomImageListGetWidthForPPI:
-			fn.(TCustomImageListGetWidthForPPI)(AsCustomImageList(getVal(0)), int32(getVal(1)), int32(getVal(2)), getI32Ptr(3))
-
-		// func(sender ICustomListView, itemClass *TListItemClass)
-		case TLVCreateItemClassEvent:
-			fn.(TLVCreateItemClassEvent)(AsCustomListView(getVal(0)), (*TListItemClass)(getPtr(1)))
-
-		// func(sender IObject, startIndex, endIndex int32, oldState, newState TListItemStates)
-		case TLVDataStateChangeEvent:
-			fn.(TLVDataStateChangeEvent)(AsObject(getVal(0)), int32(getVal(1)), int32(getVal(2)), TListItemStates(getVal(3)), TListItemStates(getVal(4)))
-
-		// func(sender ICustomTreeView, nodeClass *TTreeNodeClass)
-		case TTVCreateNodeClassEvent:
-			fn.(TTVCreateNodeClassEvent)(AsCustomTreeView(getVal(0)), (*TTreeNodeClass)(getPtr(1)))
-
-		// func(sender ICustomTreeView, aTreeNode ITreeNode)
-		case TTVCustomCreateNodeEvent:
-			fn.(TTVCustomCreateNodeEvent)(AsCustomTreeView(getVal(0)), AsTreeNode(getVal(1)))
-
-		// func(sender ICustomTreeView, ARect TRect, aCollapsed bool)
-		case TTVCustomDrawArrowEvent:
-			fn.(TTVCustomDrawArrowEvent)(AsCustomTreeView(getVal(0)), *getRectPtr(1), *getBoolPtr(2))
-
-		// func(sender IObject, node ITreeNode, cancel bool)
-		case TTVEditingEndEvent:
-			fn.(TTVEditingEndEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)), *getBoolPtr(2))
-
-		// func(sender ICustomTreeView, aNode ITreeNode) bool
-		case TTVHasChildrenEvent:
-			result := getBoolPtr(2)
-			*result = fn.(TTVHasChildrenEvent)(AsCustomTreeView(getVal(0)), AsTreeNode(getVal(1)))
-
-		// func(sender IObject, node ITreeNode, changeReason TTreeNodeChangeReason)
-		case TTVNodeChangedEvent:
-			fn.(TTVNodeChangedEvent)(AsObject(getVal(0)), AsTreeNode(getVal(1)), TTreeNodeChangeReason(getVal(2)))
-
-		// func(hintStr *string, canShow *bool, hintInfo *THintInfo) // var hintInfo
-		case TShowHintEvent:
-			str := GoStr(getPtrVal(0))
-			hitInfoPtr := (*tHintInfo)(getPtr(2))
-			hitInfo := hitInfoPtr.Convert()
-			fn.(TShowHintEvent)(&str, getBoolPtr(1), hitInfo)
-			setPtrVal(0, PascalStr(str))
-			hitInfo.SetInstanceValue()
-
-		// func(sender IObject, hintInfo *HintInfo)
-		case TControlShowHintEvent:
-			hitInfoPtr := (*tHintInfo)(getPtr(1))
-			hitInfo := hitInfoPtr.Convert()
-			fn.(TControlShowHintEvent)(AsObject(getVal(0)), *hitInfo)
-
-		// func(sender ICustomImageList, aWidth int32, aReferenceHandle TLCLHandle)
-		case TDestroyResolutionHandleEvent:
-			fn.(TDestroyResolutionHandleEvent)(AsCustomImageList(getVal(0)), int32(getVal(1)), TLCLHandle(getVal(2)))
-
-		// type TTreeNodeCompare func(node1, node2 ITreeNode) int32
-		case TTreeNodeCompare:
-			var result = getI32Ptr(2)
-			*result = fn.(TTreeNodeCompare)(AsTreeNode(getVal(0)), AsTreeNode(getVal(1)))
-
-		// type TStringListSortCompare func(list IStringList, index1, index2 int32) int32
-		case TStringListSortCompare:
-			var result = getI32Ptr(3)
-			*result = fn.(TStringListSortCompare)(AsStringList(getVal(0)), int32(getVal(1)), int32(getVal(2)))
-
-		// type TListItemsCompare func(list IListControlItems, item1, item2 int32) int32
-		case TListItemsCompare:
-			var result = getI32Ptr(3)
-			*result = fn.(TListItemsCompare)(AsListControlItems(getVal(0)), int32(getVal(1)), int32(getVal(2)))
-
-		// type TLVCompare func(item1, item2 IListItem, optionalParam int64) int32 //stdcall
-		case TLVCompare:
-			var result = getI32Ptr(3)
-			*result = fn.(TLVCompare)(AsListItem(getVal(0)), AsListItem(getVal(1)), uint32(getVal(2)))
-
-		// type TListSortCompare func(item1, item2 uintptr) int32
-		case TListSortCompare:
-			var result = getI32Ptr(2)
-			*result = fn.(TListSortCompare)(getVal(0), getVal(1))
-
-		// type TCollectionSortCompare func(item1, item2 ICollectionItem) int32
-		case TCollectionSortCompare:
-			var result = getI32Ptr(2)
-			*result = fn.(TCollectionSortCompare)(AsCollectionItem(getVal(0)), AsCollectionItem(getVal(1)))
-
-		case TVTChangingEvent:
-			fn.(TVTChangingEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), getBoolPtr(2))
-
-		case TVTCheckChangingEvent:
-			fn.(TVTCheckChangingEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), (*TCheckState)(getPtr(2)), getBoolPtr(3))
-
-		case TVTChangeEvent:
-			fn.(TVTChangeEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)))
-
-		case TVTStructureChangeEvent:
-			fn.(TVTStructureChangeEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TChangeReason(getVal(2)))
-
-		case TVTEditCancelEvent:
-			fn.(TVTEditCancelEvent)(AsBaseVirtualTree(getVal(0)), TColumnIndex(getVal(1)))
-
-		case TVTEditChangingEvent:
-			fn.(TVTEditChangingEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), getBoolPtr(3))
-
-		case TVTEditChangeEvent:
-			fn.(TVTEditChangeEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)))
-
-		case TVTFreeNodeEvent:
-			fn.(TVTFreeNodeEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)))
-
-		case TVTFocusChangingEvent:
-			fn.(TVTFocusChangingEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), AsVirtualNode(getVal(2)),
-				TColumnIndex(getVal(3)), TColumnIndex(getVal(4)), getBoolPtr(5))
-
-		case TVTFocusChangeEvent:
-			fn.(TVTFocusChangeEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)))
-
-		case TVTAddToSelectionEvent:
-			fn.(TVTAddToSelectionEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)))
-
-		case TVTRemoveFromSelectionEvent:
-			fn.(TVTRemoveFromSelectionEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)))
-
-		case TVTGetImageEvent:
-			fn.(TVTGetImageEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TVTImageKind(getVal(2)), TColumnIndex(getVal(3)),
-				getBoolPtr(4), getI32Ptr(5))
-
-		case TVTGetImageExEvent:
-			imageList := AsCustomImageList(getPtrVal(6))
-			fn.(TVTGetImageExEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TVTImageKind(getVal(2)), TColumnIndex(getVal(3)),
-				getBoolPtr(4), getI32Ptr(5), &imageList)
-			if imageList != nil {
-				setPtrVal(6, imageList.Instance())
-			}
-
-		case TVTGetImageTextEvent:
-			imageText := GoStr(getPtrVal(4))
-			fn.(TVTGetImageTextEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TVTImageKind(getVal(2)), TColumnIndex(getVal(3)),
-				&imageText)
-			setPtrVal(4, PascalStr(imageText))
-
-		case TVTHotNodeChangeEvent:
-			fn.(TVTHotNodeChangeEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), AsVirtualNode(getVal(2)))
-
-		case TVTInitChildrenEvent:
-			fn.(TVTInitChildrenEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), (*Cardinal)(getPtr(2)))
-
-		case TVTInitNodeEvent:
-			fn.(TVTInitNodeEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), AsVirtualNode(getVal(2)), (*TVirtualNodeInitStates)(getPtr(3)))
-
-		case TVTPopupEvent:
-			popupMenu := AsPopupMenu(getVal(5))
-			fn.(TVTPopupEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), *getPointPtr(3), getBoolPtr(4),
-				&popupMenu)
-			if popupMenu != nil {
-				setPtrVal(5, popupMenu.Instance())
-			}
-
-		case TVTHelpContextEvent:
-			fn.(TVTHelpContextEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), getI32Ptr(3))
-
-		case TVTCreateEditorEvent:
-			outEditLink := &IVTEditLink{instance: getPtr(3)}
-			fn.(TVTCreateEditorEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), outEditLink)
-
-		case TVTSaveTreeEvent:
-			fn.(TVTSaveTreeEvent)(AsBaseVirtualTree(getVal(0)), AsStream(getVal(1)))
-
-		case TVTSaveNodeEvent:
-			fn.(TVTSaveNodeEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), AsStream(getVal(2)))
-
-		case TVTNodeExportEvent:
-			fn.(TVTNodeExportEvent)(AsBaseVirtualTree(getVal(0)), TVTExportType(getVal(1)), AsVirtualNode(getVal(2)))
-
-		case TVTColumnExportEvent:
-			fn.(TVTColumnExportEvent)(AsBaseVirtualTree(getVal(0)), TVTExportType(getVal(1)), AsVirtualTreeColumn(getVal(2)))
-
-		case TVTTreeExportEvent:
-			fn.(TVTTreeExportEvent)(AsBaseVirtualTree(getVal(0)), TVTExportType(getVal(1)))
-
-		case TVTDrawNodeEvent:
-			paintInfoPtr := (*tVTPaintInfo)(getPtr(1))
-			paintInfo := paintInfoPtr.Convert()
-			fn.(TVTDrawNodeEvent)(AsBaseVirtualTree(getVal(0)), *paintInfo)
-
-		case TVTGetCellContentMarginEvent:
-			fn.(TVTGetCellContentMarginEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), TColumnIndex(getVal(3)),
-				TVTCellContentMarginType(getVal(4)), getPointPtr(5))
-
-		case TVTGetNodeWidthEvent:
-			fn.(TVTGetNodeWidthEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), TColumnIndex(getVal(3)),
-				getI32Ptr(4))
-
-		case TVTHeaderClickEvent:
-			fn.(TVTHeaderClickEvent)(AsVTHeader(getVal(0)), *(*TVTHeaderHitInfo)(getPtr(1)))
-
-		case TVTHeaderMouseEvent:
-			fn.(TVTHeaderMouseEvent)(AsVTHeader(getVal(0)), TMouseButton(getVal(1)), TShiftState(getVal(2)), int32(getVal(3)), int32(getVal(4)))
-
-		case TVTHeaderMouseMoveEvent:
-			fn.(TVTHeaderMouseMoveEvent)(AsVTHeader(getVal(0)), TShiftState(getVal(1)), int32(getVal(2)), int32(getVal(3)))
-
-		case TVTBeforeHeaderHeightTrackingEvent:
-			fn.(TVTBeforeHeaderHeightTrackingEvent)(AsVTHeader(getVal(0)), TShiftState(getVal(1)))
-
-		case TVTAfterHeaderHeightTrackingEvent:
-			fn.(TVTAfterHeaderHeightTrackingEvent)(AsVTHeader(getVal(0)))
-
-		case TVTHeaderHeightTrackingEvent:
-			fn.(TVTHeaderHeightTrackingEvent)(AsVTHeader(getVal(0)), getPointPtr(1), TShiftState(getVal(2)), getBoolPtr(3))
-
-		case TVTHeaderHeightDblClickResizeEvent:
-			fn.(TVTHeaderHeightDblClickResizeEvent)(AsVTHeader(getVal(0)), getPointPtr(1), TShiftState(getVal(2)), getBoolPtr(3))
-
-		case TVTHeaderNotifyEvent:
-			fn.(TVTHeaderNotifyEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)))
-
-		case TVTHeaderDraggingEvent:
-			fn.(TVTHeaderDraggingEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)), getBoolPtr(2))
-
-		case TVTHeaderDraggedEvent:
-			fn.(TVTHeaderDraggedEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)), int32(getVal(2)))
-
-		case TVTHeaderDraggedOutEvent:
-			fn.(TVTHeaderDraggedOutEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)), *getPointPtr(2))
-
-		case TVTHeaderPaintEvent:
-			fn.(TVTHeaderPaintEvent)(AsVTHeader(getVal(0)), AsCanvas(getVal(1)), AsVirtualTreeColumn(getVal(2)), *getRectPtr(3), *getBoolPtr(4),
-				*getBoolPtr(5), TVTDropMarkMode(getVal(6)))
-
-		case TVTHeaderPaintQueryElementsEvent:
-			paintInfoPtr := (*tHeaderPaintInfo)(getPtr(1))
-			paintInfo := paintInfoPtr.Convert()
-			fn.(TVTHeaderPaintQueryElementsEvent)(AsVTHeader(getVal(0)), paintInfo, (*THeaderPaintElements)(getPtr(2)))
-			paintInfo.SetInstanceValue()
-
-		case TVTAdvancedHeaderPaintEvent:
-			paintInfoPtr := (*tHeaderPaintInfo)(getPtr(1))
-			paintInfo := paintInfoPtr.Convert()
-			fn.(TVTAdvancedHeaderPaintEvent)(AsVTHeader(getVal(0)), paintInfo, *(*THeaderPaintElements)(getPtr(2)))
-			paintInfo.SetInstanceValue()
-
-		case TVTBeforeAutoFitColumnsEvent:
-			fn.(TVTBeforeAutoFitColumnsEvent)(AsVTHeader(getVal(0)), (*TSmartAutoFitType)(getPtr(1)))
-
-		case TVTBeforeAutoFitColumnEvent:
-			fn.(TVTBeforeAutoFitColumnEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)), (*TSmartAutoFitType)(getPtr(2)), getBoolPtr(3))
-
-		case TVTAfterAutoFitColumnEvent:
-			fn.(TVTAfterAutoFitColumnEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)))
-
-		case TVTAfterAutoFitColumnsEvent:
-			fn.(TVTAfterAutoFitColumnsEvent)(AsVTHeader(getVal(0)))
-
-		case TVTColumnClickEvent:
-			fn.(TVTColumnClickEvent)(AsBaseVirtualTree(getVal(0)), TColumnIndex(getVal(1)), TShiftState(getVal(2)))
-
-		case TVTColumnDblClickEvent:
-			fn.(TVTColumnDblClickEvent)(AsBaseVirtualTree(getVal(0)), TColumnIndex(getVal(1)), TShiftState(getVal(2)))
-
-		case TVTColumnWidthDblClickResizeEvent:
-			fn.(TVTColumnWidthDblClickResizeEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)), TShiftState(getVal(2)), *getPointPtr(3),
-				getBoolPtr(4))
-
-		case TVTBeforeColumnWidthTrackingEvent:
-			fn.(TVTBeforeColumnWidthTrackingEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)), TShiftState(getVal(2)))
-
-		case TVTAfterColumnWidthTrackingEvent:
-			fn.(TVTAfterColumnWidthTrackingEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)))
-
-		case TVTColumnWidthTrackingEvent:
-			fn.(TVTColumnWidthTrackingEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)), TShiftState(getVal(2)), getPointPtr(3),
-				*getPointPtr(4), getBoolPtr(5))
-
-		case TVTGetHeaderCursorEvent:
-			fn.(TVTGetHeaderCursorEvent)(AsVTHeader(getVal(0)), (*HCURSOR)(getPtr(1)))
-
-		case TVTBeforeGetMaxColumnWidthEvent:
-			fn.(TVTBeforeGetMaxColumnWidthEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)), getBoolPtr(2))
-
-		case TVTAfterGetMaxColumnWidthEvent:
-			fn.(TVTAfterGetMaxColumnWidthEvent)(AsVTHeader(getVal(0)), TColumnIndex(getVal(1)), getI32Ptr(2))
-
-		case TVTCanSplitterResizeColumnEvent:
-			fn.(TVTCanSplitterResizeColumnEvent)(AsVTHeader(getVal(0)), *getPointPtr(1), TColumnIndex(getVal(2)), getBoolPtr(3))
-
-		case TVTCanSplitterResizeHeaderEvent:
-			fn.(TVTCanSplitterResizeHeaderEvent)(AsVTHeader(getVal(0)), *getPointPtr(1), getBoolPtr(2))
-
-		case TVTNodeMovedEvent:
-			fn.(TVTNodeMovedEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)))
-
-		case TVTNodeMovingEvent:
-			fn.(TVTNodeMovingEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), AsVirtualNode(getVal(2)), getBoolPtr(3))
-
-		case TVTNodeCopiedEvent:
-			fn.(TVTNodeCopiedEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)))
-
-		case TVTNodeCopyingEvent:
-			fn.(TVTNodeCopyingEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), AsVirtualNode(getVal(2)), getBoolPtr(3))
-
-		case TVTNodeClickEvent:
-			hitInfoPtr := (*tHitInfo)(getPtr(1))
-			hitInfo := hitInfoPtr.Convert()
-			fn.(TVTNodeClickEvent)(AsBaseVirtualTree(getVal(0)), *hitInfo)
-
-		case TVTNodeHeightTrackingEvent:
-			fn.(TVTNodeHeightTrackingEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), TShiftState(getVal(3)),
-				getPointPtr(4), *getPointPtr(5), getBoolPtr(6))
-
-		case TVTNodeHeightDblClickResizeEvent:
-			fn.(TVTNodeHeightDblClickResizeEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), TShiftState(getVal(3)),
-				*getPointPtr(4), getBoolPtr(5))
-
-		case TVTCanSplitterResizeNodeEvent:
-			fn.(TVTCanSplitterResizeNodeEvent)(AsBaseVirtualTree(getVal(0)), *getPointPtr(1), AsVirtualNode(getVal(2)), TColumnIndex(getVal(3)), getBoolPtr(4))
-
-		case TVTCreateDragManagerEvent:
-			outDragManager := &IVTDragManager{instance: getPtr(1)}
-			fn.(TVTCreateDragManagerEvent)(AsBaseVirtualTree(getVal(0)), outDragManager)
-
-		case TVTCreateDataObjectEvent:
-			outIDataObject := AsDataObject(getVal(1))
-			fn.(TVTCreateDataObjectEvent)(AsBaseVirtualTree(getVal(0)), &outIDataObject)
-
-		case TVTDragAllowedEvent:
-			fn.(TVTDragAllowedEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), getBoolPtr(3))
-
-		case TVTDragOverEvent:
-			fn.(TVTDragOverEvent)(AsBaseVirtualTree(getVal(0)), AsObject(getVal(1)), TShiftState(getVal(2)), TDragState(getVal(3)), *getPointPtr(4),
-				TDropMode(getVal(5)), (*LongWord)(getPtr(6)), getBoolPtr(7))
-
-		case TVTDragDropEvent:
-			formats := &TFormatArray{instance: getPtr(3), count: int(getVal(4))} // @formats
-			fn.(TVTDragDropEvent)(AsBaseVirtualTree(getVal(0)), AsObject(getVal(1)), AsDataObject(getVal(2)), formats, TShiftState(getVal(5)),
-				*getPointPtr(6), (*LongWord)(getPtr(7)), TDropMode(getVal(8)))
-
-		case TVTBeforeItemEraseEvent:
-			fn.(TVTBeforeItemEraseEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), *getRectPtr(3), (*TColor)(getPtr(4)),
-				(*TItemEraseAction)(getPtr(5)))
-
-		case TVTAfterItemEraseEvent:
-			fn.(TVTAfterItemEraseEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), *getRectPtr(3))
-
-		case TVTBeforeItemPaintEvent:
-			fn.(TVTBeforeItemPaintEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), *getRectPtr(3), getBoolPtr(4))
-
-		case TVTAfterItemPaintEvent:
-			fn.(TVTAfterItemPaintEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), *getRectPtr(3))
-
-		case TVTBeforeCellPaintEvent:
-			fn.(TVTBeforeCellPaintEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), TColumnIndex(getVal(3)),
-				TVTCellPaintMode(getVal(4)), *getRectPtr(5), getRectPtr(6))
-
-		case TVTAfterCellPaintEvent:
-			fn.(TVTAfterCellPaintEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), TColumnIndex(getVal(3)),
-				*getRectPtr(4))
-
-		case TVTPaintEvent:
-			fn.(TVTPaintEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)))
-
-		case TVTBackgroundPaintEvent:
-			fn.(TVTBackgroundPaintEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), *getRectPtr(2), getBoolPtr(3))
-
-		case TVTGetLineStyleEvent:
-			fn.(TVTGetLineStyleEvent)(AsBaseVirtualTree(getVal(0)), (*Pointer)(getPtr(1)))
-
-		case TVTMeasureItemEvent:
-			fn.(TVTMeasureItemEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), getI32Ptr(3))
-
-		case TVTCompareEvent:
-			fn.(TVTCompareEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), AsVirtualNode(getVal(2)), TColumnIndex(getVal(3)), getI32Ptr(4))
-
-		case TVTIncrementalSearchEvent:
-			fn.(TVTIncrementalSearchEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), GoStr(getVal(2)), getI32Ptr(3))
-
-		case TVTOperationEvent:
-			fn.(TVTOperationEvent)(AsBaseVirtualTree(getVal(0)), TVTOperationKind(getVal(1)))
-
-		case TVTHintKindEvent:
-			fn.(TVTHintKindEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), (*TVTHintKind)(getPtr(3)))
-
-		case TVTDrawHintEvent:
-			fn.(TVTDrawHintEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), *getRectPtr(3), TColumnIndex(getVal(4)))
-
-		case TVTGetHintSizeEvent:
-			fn.(TVTGetHintSizeEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), getRectPtr(3))
-
-		case TVTBeforeDrawLineImageEvent:
-			fn.(TVTBeforeDrawLineImageEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), int32(getVal(2)), getI32Ptr(3))
-
-		case TVTGetNodeDataSizeEvent:
-			fn.(TVTGetNodeDataSizeEvent)(AsBaseVirtualTree(getVal(0)), getI32Ptr(1))
-
-		case TVTKeyActionEvent:
-			fn.(TVTKeyActionEvent)(AsBaseVirtualTree(getVal(0)), (*Word)(getPtr(1)), (*TShiftState)(getPtr(2)), getBoolPtr(3))
-
-		case TVTScrollEvent:
-			fn.(TVTScrollEvent)(AsBaseVirtualTree(getVal(0)), int32(getVal(1)), int32(getVal(2)))
-
-		case TVTUpdatingEvent:
-			fn.(TVTUpdatingEvent)(AsBaseVirtualTree(getVal(0)), TVTUpdateState(getVal(1)))
-
-		case TVTGetCursorEvent:
-			fn.(TVTGetCursorEvent)(AsBaseVirtualTree(getVal(0)), (*TCursor)(getPtr(1)))
-
-		case TVTStateChangeEvent:
-			fn.(TVTStateChangeEvent)(AsBaseVirtualTree(getVal(0)), TVirtualTreeStates(getVal(1)), TVirtualTreeStates(getVal(2)))
-
-		case TVTGetCellIsEmptyEvent:
-			fn.(TVTGetCellIsEmptyEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), getBoolPtr(3))
-
-		case TVTScrollBarShowEvent:
-			fn.(TVTScrollBarShowEvent)(AsBaseVirtualTree(getVal(0)), int32(getVal(1)), *getBoolPtr(2))
-
-		case TVTDrawTextEvent:
-			fn.(TVTDrawTextEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), TColumnIndex(getVal(3)), GoStr(getVal(4)),
-				*getRectPtr(5), *getBoolPtr(6))
-
-		case TVSTGetTextEvent:
-			cellText := GoStr(getPtrVal(4))
-			fn.(TVSTGetTextEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), TVSTTextType(getVal(3)), &cellText)
-			setPtrVal(4, PascalStr(cellText))
-
-		case TVTPaintText:
-			fn.(TVTPaintText)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), TColumnIndex(getVal(3)), TVSTTextType(getVal(3)))
-
-		case TVSTGetHintEvent:
-			hintText := GoStr(getPtrVal(4))
-			fn.(TVSTGetHintEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), (*TVTTooltipLineBreakStyle)(getPtr(3)),
-				&hintText)
-			setPtrVal(4, PascalStr(hintText))
-
-		case TVTMeasureTextEvent:
-			fn.(TVTMeasureTextEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), TColumnIndex(getVal(3)),
-				GoStr(getVal(4)), getI32Ptr(5))
-
-		case TVSTNewTextEvent:
-			fn.(TVSTNewTextEvent)(AsBaseVirtualTree(getVal(0)), AsVirtualNode(getVal(1)), TColumnIndex(getVal(2)), GoStr(getVal(3)))
-
-		case TVSTShortenstringEvent:
-			result := GoStr(getPtrVal(6))
-			fn.(TVSTShortenstringEvent)(AsBaseVirtualTree(getVal(0)), AsCanvas(getVal(1)), AsVirtualNode(getVal(2)), TColumnIndex(getVal(3)),
-				GoStr(getVal(4)), *getI32Ptr(5), &result, getBoolPtr(6))
-			setPtrVal(6, PascalStr(result))
-
-		case TOpenGlCtrlMakeCurrentEvent:
-			fn.(TOpenGlCtrlMakeCurrentEvent)(AsObject(getVal(0)), getBoolPtr(1))
-		default:
-		}
+func makeTAcceptDateEvent(cb TAcceptDateEvent) *callback {
+	if cb == nil {
+		return nil
 	}
-	return 0
+	return &callback{
+		name: "TAcceptDateEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (Sender : TObject; var ADate : TDateTime; var AcceptDate: Boolean);
+			sender := AsObject(getVal(0))
+			date := (*types.TDateTime)(getPtr(getVal(1)))
+			acceptDate := (*bool)(getPtr(getVal(2)))
+			cb(sender, date, acceptDate)
+		},
+	}
+}
+
+func makeTAcceptFileNameEvent(cb TAcceptFileNameEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TAcceptFileNameEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (Sender : TObject; Var Value : String);
+			sender := AsObject(getVal(0))
+			value := api.GoStr(*(*uintptr)(getPtr(getVal(1))))
+			cb(sender, &value)
+			*(*uintptr)(getPtr(getVal(1))) = api.PasStr(value)
+		},
+	}
+}
+
+func makeTAcceptTimeEvent(cb TAcceptTimeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TAcceptTimeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (Sender : TObject; var ATime : TDateTime; var AcceptTime: Boolean);
+			sender := AsObject(getVal(0))
+			time := (*types.TDateTime)(getPtr(getVal(1)))
+			acceptTime := (*bool)(getPtr(getVal(2)))
+			cb(sender, time, acceptTime)
+		},
+	}
+}
+
+func makeTActionEvent(cb TActionEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TActionEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (AAction: TBasicAction; var Handled: Boolean);
+			action := AsBasicAction(getVal(0))
+			handled := (*bool)(getPtr(getVal(1)))
+			cb(action, handled)
+		},
+	}
+}
+
+func makeTAddHeaderPopupItemEvent(cb TAddHeaderPopupItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TAddHeaderPopupItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(const Sender: TBaseVirtualTree; const Column: TColumnIndex; var Cmd: TAddPopupItemType);
+			sender := AsBaseVirtualTree(getVal(0))
+			column := int32(getVal(1))
+			cmd := (*types.TAddPopupItemType)(getPtr(getVal(2)))
+			cb(sender, column, cmd)
+		},
+	}
+}
+
+func makeTAlignInsertBeforeEvent(cb TAlignInsertBeforeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TAlignInsertBeforeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : function (Sender: TWinControl; Control1, Control2: TControl): Boolean;
+			sender := AsWinControl(getVal(0))
+			control1 := AsControl(getVal(1))
+			control2 := AsControl(getVal(2))
+			ret := cb(sender, control1, control2)
+			*(*bool)(getPtr(getVal(3))) = ret
+		},
+	}
+}
+
+func makeTAlignPositionEvent(cb TAlignPositionEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TAlignPositionEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 8 : procedure (Sender: TWinControl; Control: TControl; var NewLeft, NewTop, NewWidth, NewHeight: Integer; var AlignRect: TRect; AlignInfo: TAlignInfo);
+			sender := AsWinControl(getVal(0))
+			control := AsControl(getVal(1))
+			newLeft := (*int32)(getPtr(getVal(2)))
+			newTop := (*int32)(getPtr(getVal(3)))
+			newWidth := (*int32)(getPtr(getVal(4)))
+			newHeight := (*int32)(getPtr(getVal(5)))
+			alignRect := (*types.TRect)(getPtr(getVal(6)))
+			alignInfoPtr := (*tAlignInfo)(getPtr(getVal(7)))
+			alignInfo := alignInfoPtr.ToGo()
+			cb(sender, control, newLeft, newTop, newWidth, newHeight, alignRect, alignInfo)
+		},
+	}
+}
+
+func makeTBandDragEvent(cb TBandDragEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TBandDragEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (Sender: TObject; Control: TControl; var Drag: Boolean);
+			sender := AsObject(getVal(0))
+			control := AsControl(getVal(1))
+			drag := (*bool)(getPtr(getVal(2)))
+			cb(sender, control, drag)
+		},
+	}
+}
+
+func makeTBandInfoEvent(cb TBandInfoEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TBandInfoEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure (Sender: TObject; Control: TControl; var Insets: TRect; var PreferredSize, RowCount: Integer);
+			sender := AsObject(getVal(0))
+			control := AsControl(getVal(1))
+			insets := (*types.TRect)(getPtr(getVal(2)))
+			preferredSize := (*int32)(getPtr(getVal(3)))
+			rowCount := (*int32)(getPtr(getVal(4)))
+			cb(sender, control, insets, preferredSize, rowCount)
+		},
+	}
+}
+
+func makeTBandMoveEvent(cb TBandMoveEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TBandMoveEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (Sender: TObject; Control: TControl; var ARect: TRect);
+			sender := AsObject(getVal(0))
+			control := AsControl(getVal(1))
+			rect := (*types.TRect)(getPtr(getVal(2)))
+			cb(sender, control, rect)
+		},
+	}
+}
+
+func makeTBandPaintEvent(cb TBandPaintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TBandPaintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure (Sender: TObject; Control: TControl; ACanvas: TCanvas; var ARect: TRect; var Options: TBandPaintOptions);
+			sender := AsObject(getVal(0))
+			control := AsControl(getVal(1))
+			canvas := AsCanvas(getVal(2))
+			rect := (*types.TRect)(getPtr(getVal(3)))
+			options := (*types.TBandPaintOptions)(getPtr(getVal(4)))
+			cb(sender, control, canvas, rect, options)
+		},
+	}
+}
+
+func makeTCanOffsetEvent(cb TCanOffsetEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCanOffsetEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; var NewOffset: Integer; var Accept: Boolean);
+			sender := AsObject(getVal(0))
+			newOffset := (*int32)(getPtr(getVal(1)))
+			accept := (*bool)(getPtr(getVal(2)))
+			cb(sender, newOffset, accept)
+		},
+	}
+}
+
+func makeTCanResizeEvent(cb TCanResizeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCanResizeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; var NewSize: Integer; var Accept: Boolean);
+			sender := AsObject(getVal(0))
+			newSize := (*int32)(getPtr(getVal(1)))
+			accept := (*bool)(getPtr(getVal(2)))
+			cb(sender, newSize, accept)
+		},
+	}
+}
+
+func makeTCellProcessEvent(cb TCellProcessEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCellProcessEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; aCol, aRow: Integer; processType: TCellProcessType; var aValue: string);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			processType := types.TCellProcessType(getVal(3))
+			value := api.GoStr(*(*uintptr)(getPtr(getVal(4))))
+			cb(sender, col, row, processType, &value)
+			*(*uintptr)(getPtr(getVal(4))) = api.PasStr(value)
+		},
+	}
+}
+
+func makeTCheckGroupClicked(cb TCheckGroupClicked) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCheckGroupClicked",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; Index: integer);
+			sender := AsObject(getVal(0))
+			index := int32(getVal(1))
+			cb(sender, index)
+		},
+	}
+}
+
+func makeTCheckItemChange(cb TCheckItemChange) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCheckItemChange",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; AIndex: Integer);
+			sender := AsObject(getVal(0))
+			index := int32(getVal(1))
+			cb(sender, index)
+		},
+	}
+}
+
+func makeTCheckItemEvent(cb TCheckItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCheckItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function (Item: TObject): Boolean;
+			item := AsObject(getVal(0))
+			ret := cb(item)
+			*(*bool)(getPtr(getVal(1))) = ret
+		},
+	}
+}
+
+func makeTClipboardRequestEvent(cb TClipboardRequestEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TClipboardRequestEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(const RequestedFormatID: TClipboardFormat; Data: TStream);
+			requestedFormatID := types.TClipboardFormat(getVal(0))
+			data := AsStream(getVal(1))
+			cb(requestedFormatID, data)
+		},
+	}
+}
+
+func makeTCloseEvent(cb TCloseEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCloseEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; var CloseAction: TCloseAction);
+			sender := AsObject(getVal(0))
+			closeAction := (*types.TCloseAction)(getPtr(getVal(1)))
+			cb(sender, closeAction)
+		},
+	}
+}
+
+func makeTCloseQueryEvent(cb TCloseQueryEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCloseQueryEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender : TObject; var CanClose: Boolean);
+			sender := AsObject(getVal(0))
+			canClose := (*bool)(getPtr(getVal(1)))
+			cb(sender, canClose)
+		},
+	}
+}
+
+func makeTColumnChangeEvent(cb TColumnChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TColumnChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(const Sender: TBaseVirtualTree; const Column: TColumnIndex; Visible: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			column := int32(getVal(1))
+			visible := api.GoBool(getVal(2))
+			cb(sender, column, visible)
+		},
+	}
+}
+
+func makeTConstrainedResizeEvent(cb TConstrainedResizeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TConstrainedResizeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; var MinWidth, MinHeight, MaxWidth, MaxHeight: TConstraintSize);
+			sender := AsObject(getVal(0))
+			minWidth := (*types.TConstraintSize)(getPtr(getVal(1)))
+			minHeight := (*types.TConstraintSize)(getPtr(getVal(2)))
+			maxWidth := (*types.TConstraintSize)(getPtr(getVal(3)))
+			maxHeight := (*types.TConstraintSize)(getPtr(getVal(4)))
+			cb(sender, minWidth, minHeight, maxWidth, maxHeight)
+		},
+	}
+}
+
+func makeTContextPopupEvent(cb TContextPopupEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TContextPopupEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
+			sender := AsObject(getVal(0))
+			mousePos := *(*types.TPoint)(getPtr(getVal(1)))
+			handled := (*bool)(getPtr(getVal(2)))
+			cb(sender, mousePos, handled)
+		},
+	}
+}
+
+func makeTControlShowHintEvent(cb TControlShowHintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TControlShowHintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; HintInfo: PHintInfo);
+			sender := AsObject(getVal(0))
+			hintInfoPtr := (*tHintInfo)(getPtr(getVal(1)))
+			hintInfo := hintInfoPtr.ToGo()
+			cb(sender, hintInfo)
+		},
+	}
+}
+
+func makeTCustomDateEvent(cb TCustomDateEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCustomDateEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (Sender : TObject; var ADate : string);
+			sender := AsObject(getVal(0))
+			date := api.GoStr(*(*uintptr)(getPtr(getVal(1))))
+			cb(sender, &date)
+			*(*uintptr)(getPtr(getVal(1))) = api.PasStr(date)
+		},
+	}
+}
+
+func makeTCustomGraphicNotify(cb TCustomGraphicNotify) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCustomGraphicNotify",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : procedure();
+			cb()
+		},
+	}
+}
+
+func makeTCustomHCCreateSectionClassEvent(cb TCustomHCCreateSectionClassEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCustomHCCreateSectionClassEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TCustomHeaderControl; var SectionClass: THeaderSectionClass);
+			sender := AsCustomHeaderControl(getVal(0))
+			sectionClass := (*types.THeaderSectionClass)(getPtr(getVal(1)))
+			cb(sender, sectionClass)
+		},
+	}
+}
+
+func makeTCustomImageListGetWidthForPPI(cb TCustomImageListGetWidthForPPI) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCustomImageListGetWidthForPPI",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TCustomImageList; AImageWidth, APPI: Integer; var AResultWidth: Integer);
+			sender := AsCustomImageList(getVal(0))
+			imageWidth := int32(getVal(1))
+			pPI := int32(getVal(2))
+			resultWidth := (*int32)(getPtr(getVal(3)))
+			cb(sender, imageWidth, pPI, resultWidth)
+		},
+	}
+}
+
+func makeTCustomSectionNotifyEvent(cb TCustomSectionNotifyEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCustomSectionNotifyEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(HeaderControl: TCustomHeaderControl; Section: THeaderSection);
+			headerControl := AsCustomHeaderControl(getVal(0))
+			section := AsHeaderSection(getVal(1))
+			cb(headerControl, section)
+		},
+	}
+}
+
+func makeTCustomSectionTrackEvent(cb TCustomSectionTrackEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCustomSectionTrackEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(HeaderControl: TCustomHeaderControl; Section: THeaderSection; Width: Integer; State: TSectionTrackState);
+			headerControl := AsCustomHeaderControl(getVal(0))
+			section := AsHeaderSection(getVal(1))
+			width := int32(getVal(2))
+			state := types.TSectionTrackState(getVal(3))
+			cb(headerControl, section, width, state)
+		},
+	}
+}
+
+func makeTCustomTimeEvent(cb TCustomTimeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCustomTimeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (Sender : TObject; var ATime : TDateTime);
+			sender := AsObject(getVal(0))
+			time := (*types.TDateTime)(getPtr(getVal(1)))
+			cb(sender, time)
+		},
+	}
+}
+
+func makeTDateRangeCheckEvent(cb TDateRangeCheckEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDateRangeCheckEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (Sender : TObject; var ADate : TDateTime);
+			sender := AsObject(getVal(0))
+			date := (*types.TDateTime)(getPtr(getVal(1)))
+			cb(sender, date)
+		},
+	}
+}
+
+func makeTDesignerGetShiftStateEvent(cb TDesignerGetShiftStateEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDesignerGetShiftStateEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): TShiftState;
+			ret := cb()
+			*(*types.TShiftState)(getPtr(getVal(0))) = ret
+		},
+	}
+}
+
+func makeTDesignerIsDesignMsgEvent(cb TDesignerIsDesignMsgEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDesignerIsDesignMsgEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : function(Sender: TControl; var Message: TLMessage): boolean;
+			sender := AsControl(getVal(0))
+			message := (*types.TLMessage)(getPtr(getVal(1)))
+			ret := cb(sender, message)
+			*(*bool)(getPtr(getVal(2))) = ret
+		},
+	}
+}
+
+func makeTDesignerModifiedEvent(cb TDesignerModifiedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDesignerModifiedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : procedure();
+			cb()
+		},
+	}
+}
+
+func makeTDesignerNotificationEvent(cb TDesignerNotificationEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDesignerNotificationEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(AComponent: TComponent; Operation: TOperation);
+			component := AsComponent(getVal(0))
+			operation := types.TOperation(getVal(1))
+			cb(component, operation)
+		},
+	}
+}
+
+func makeTDesignerPaintGridEvent(cb TDesignerPaintGridEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDesignerPaintGridEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : procedure();
+			cb()
+		},
+	}
+}
+
+func makeTDesignerPrepareFreeDesignerEvent(cb TDesignerPrepareFreeDesignerEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDesignerPrepareFreeDesignerEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(AFreeComponent: boolean);
+			freeComponent := api.GoBool(getVal(0))
+			cb(freeComponent)
+		},
+	}
+}
+
+func makeTDesignerSelectOnlyThisComponentEvent(cb TDesignerSelectOnlyThisComponentEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDesignerSelectOnlyThisComponentEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(AComponent: TComponent);
+			component := AsComponent(getVal(0))
+			cb(component)
+		},
+	}
+}
+
+func makeTDesignerUTF8KeyPressEvent(cb TDesignerUTF8KeyPressEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDesignerUTF8KeyPressEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(var UTF8Key: TUTF8Char);
+			uTF8Key := api.GoStr(*(*uintptr)(getPtr(getVal(0))))
+			cb(&uTF8Key)
+			*(*uintptr)(getPtr(getVal(0))) = api.PasStr(uTF8Key)
+		},
+	}
+}
+
+func makeTDesignerUniqueNameEvent(cb TDesignerUniqueNameEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDesignerUniqueNameEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function(const BaseName: string): string;
+			baseName := api.GoStr(getVal(0))
+			ret := cb(baseName)
+			*(*uintptr)(getPtr(getVal(1))) = api.PasStr(ret)
+		},
+	}
+}
+
+func makeTDesignerValidateRenameEvent(cb TDesignerValidateRenameEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDesignerValidateRenameEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(AComponent: TComponent; const CurName, NewName: string);
+			component := AsComponent(getVal(0))
+			curName := api.GoStr(getVal(1))
+			newName := api.GoStr(getVal(2))
+			cb(component, curName, newName)
+		},
+	}
+}
+
+func makeTDestroyResolutionHandleEvent(cb TDestroyResolutionHandleEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDestroyResolutionHandleEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TCustomImageList; AWidth: Integer; AReferenceHandle: TLCLHandle);
+			sender := AsCustomImageList(getVal(0))
+			width := int32(getVal(1))
+			referenceHandle := types.TLCLHandle(getVal(2))
+			cb(sender, width, referenceHandle)
+		},
+	}
+}
+
+func makeTDialogResultEvent(cb TDialogResultEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDialogResultEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; Success: Boolean);
+			sender := AsObject(getVal(0))
+			success := api.GoBool(getVal(1))
+			cb(sender, success)
+		},
+	}
+}
+
+func makeTDockDropEvent(cb TDockDropEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDockDropEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; Source: TDragDockObject; X, Y: Integer);
+			sender := AsObject(getVal(0))
+			source := AsDragDockObject(getVal(1))
+			X := int32(getVal(2))
+			Y := int32(getVal(3))
+			cb(sender, source, X, Y)
+		},
+	}
+}
+
+func makeTDockOverEvent(cb TDockOverEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDockOverEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TObject; Source: TDragDockObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+			sender := AsObject(getVal(0))
+			source := AsDragDockObject(getVal(1))
+			X := int32(getVal(2))
+			Y := int32(getVal(3))
+			state := types.TDragState(getVal(4))
+			accept := (*bool)(getPtr(getVal(5)))
+			cb(sender, source, X, Y, state, accept)
+		},
+	}
+}
+
+func makeTDragDropEvent(cb TDragDropEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDragDropEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender, Source: TObject; X,Y: Integer);
+			sender := AsObject(getVal(0))
+			source := AsObject(getVal(1))
+			X := int32(getVal(2))
+			Y := int32(getVal(3))
+			cb(sender, source, X, Y)
+		},
+	}
+}
+
+func makeTDragOverEvent(cb TDragOverEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDragOverEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender, Source: TObject; X,Y: Integer; State: TDragState; var Accept: Boolean);
+			sender := AsObject(getVal(0))
+			source := AsObject(getVal(1))
+			X := int32(getVal(2))
+			Y := int32(getVal(3))
+			state := types.TDragState(getVal(4))
+			accept := (*bool)(getPtr(getVal(5)))
+			cb(sender, source, X, Y, state, accept)
+		},
+	}
+}
+
+func makeTDrawItemEvent(cb TDrawItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDrawItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Control: TWinControl; Index: Integer; ARect: TRect; State: TOwnerDrawState);
+			control := AsWinControl(getVal(0))
+			index := int32(getVal(1))
+			rect := *(*types.TRect)(getPtr(getVal(2)))
+			state := types.TOwnerDrawState(getVal(3))
+			cb(control, index, rect, state)
+		},
+	}
+}
+
+func makeTDrawPanelEvent(cb TDrawPanelEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDrawPanelEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(StatusBar: TStatusBar; Panel: TStatusPanel; const Rect: TRect);
+			statusBar := AsStatusBar(getVal(0))
+			panel := AsStatusPanel(getVal(1))
+			rect := *(*types.TRect)(getPtr(getVal(2)))
+			cb(statusBar, panel, rect)
+		},
+	}
+}
+
+func makeTDropFilesEvent(cb TDropFilesEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TDropFilesEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (Sender: TObject; const FileNames: array of string);
+			sender := AsObject(getVal(0))
+			fileNamesPtr := getVal(1)
+			fileNamesLen := int32(getVal(2))
+			fileNames := NewStringArray(int(fileNamesLen), fileNamesPtr)
+			cb(sender, fileNames)
+		},
+	}
+}
+
+func makeTEndDragEvent(cb TEndDragEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TEndDragEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender, Target: TObject; X,Y: Integer);
+			sender := AsObject(getVal(0))
+			target := AsObject(getVal(1))
+			X := int32(getVal(2))
+			Y := int32(getVal(3))
+			cb(sender, target, X, Y)
+		},
+	}
+}
+
+func makeTFPCanvasCombineColors(cb TFPCanvasCombineColors) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TFPCanvasCombineColors",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : function(const color1, color2: TFPColor): TFPColor;
+			color1 := *(*TFPColor)(getPtr(getVal(0)))
+			color2 := *(*TFPColor)(getPtr(getVal(1)))
+			ret := cb(color1, color2)
+			*(*TFPColor)(getPtr(getVal(2))) = ret
+		},
+	}
+}
+
+func makeTFPImgProgressEvent(cb TFPImgProgressEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TFPImgProgressEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 7 : procedure (Sender: TObject; Stage: TFPImgProgressStage; PercentDone: Byte; RedrawNow: Boolean; const R: TRect; const Msg: AnsiString; var Continue : Boolean);
+			sender := AsObject(getVal(0))
+			stage := types.TFPImgProgressStage(getVal(1))
+			percentDone := byte(getVal(2))
+			redrawNow := api.GoBool(getVal(3))
+			R := *(*types.TRect)(getPtr(getVal(4)))
+			msg := api.GoStr(getVal(5))
+			continue_ := (*bool)(getPtr(getVal(6)))
+			cb(sender, stage, percentDone, redrawNow, R, msg, continue_)
+		},
+	}
+}
+
+func makeTFilterItemEvent(cb TFilterItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TFilterItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : function (ItemData: Pointer; out Done: Boolean): Boolean;
+			itemData := uintptr(getVal(0))
+			done := (*bool)(getPtr(getVal(1)))
+			ret := cb(itemData, done)
+			*(*bool)(getPtr(getVal(2))) = ret
+		},
+	}
+}
+
+func makeTFilterItemExEvent(cb TFilterItemExEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TFilterItemExEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : function (const ACaption: string; ItemData: Pointer; out Done: Boolean): Boolean;
+			caption := api.GoStr(getVal(0))
+			itemData := uintptr(getVal(1))
+			done := (*bool)(getPtr(getVal(2)))
+			ret := cb(caption, itemData, done)
+			*(*bool)(getPtr(getVal(3))) = ret
+		},
+	}
+}
+
+func makeTFilterNodeEvent(cb TFilterNodeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TFilterNodeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : function (ItemNode: TTreeNode; out Done: Boolean): Boolean;
+			itemNode := AsTreeNode(getVal(0))
+			done := (*bool)(getPtr(getVal(1)))
+			ret := cb(itemNode, done)
+			*(*bool)(getPtr(getVal(2))) = ret
+		},
+	}
+}
+
+func makeTGetCellHintEvent(cb TGetCellHintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TGetCellHintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure (Sender: TObject; ACol, ARow: Integer; var HintText: String);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			hintText := api.GoStr(*(*uintptr)(getPtr(getVal(3))))
+			cb(sender, col, row, &hintText)
+			*(*uintptr)(getPtr(getVal(3))) = api.PasStr(hintText)
+		},
+	}
+}
+
+func makeTGetCheckboxStateEvent(cb TGetCheckboxStateEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TGetCheckboxStateEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure (Sender: TObject; ACol, ARow: Integer; var Value: TCheckboxState);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			value := (*types.TCheckBoxState)(getPtr(getVal(3)))
+			cb(sender, col, row, value)
+		},
+	}
+}
+
+func makeTGetColorsEvent(cb TGetColorsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TGetColorsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TCustomColorBox; Items: TStrings);
+			sender := AsCustomColorBox(getVal(0))
+			items := AsStrings(getVal(1))
+			cb(sender, items)
+		},
+	}
+}
+
+func makeTGetDockCaptionEvent(cb TGetDockCaptionEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TGetDockCaptionEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; AControl: TControl; var ACaption: string);
+			sender := AsObject(getVal(0))
+			control := AsControl(getVal(1))
+			caption := api.GoStr(*(*uintptr)(getPtr(getVal(2))))
+			cb(sender, control, &caption)
+			*(*uintptr)(getPtr(getVal(2))) = api.PasStr(caption)
+		},
+	}
+}
+
+func makeTGetEditEvent(cb TGetEditEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TGetEditEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure (Sender: TObject; ACol, ARow: Integer; var Value: string);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			value := api.GoStr(*(*uintptr)(getPtr(getVal(3))))
+			cb(sender, col, row, &value)
+			*(*uintptr)(getPtr(getVal(3))) = api.PasStr(value)
+		},
+	}
+}
+
+func makeTGetHandleEvent(cb TGetHandleEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TGetHandleEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(var Handle: HWND);
+			handle := (*types.HWND)(getPtr(getVal(0)))
+			cb(handle)
+		},
+	}
+}
+
+func makeTGetPickListEvent(cb TGetPickListEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TGetPickListEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; const KeyName: string; Values: TStrings);
+			sender := AsObject(getVal(0))
+			keyName := api.GoStr(getVal(1))
+			values := AsStrings(getVal(2))
+			cb(sender, keyName, values)
+		},
+	}
+}
+
+func makeTGetSiteInfoEvent(cb TGetSiteInfoEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TGetSiteInfoEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; DockClient: TControl; var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
+			sender := AsObject(getVal(0))
+			dockClient := AsControl(getVal(1))
+			influenceRect := (*types.TRect)(getPtr(getVal(2)))
+			mousePos := *(*types.TPoint)(getPtr(getVal(3)))
+			canDock := (*bool)(getPtr(getVal(4)))
+			cb(sender, dockClient, influenceRect, mousePos, canDock)
+		},
+	}
+}
+
+func makeTHdrEvent(cb THdrEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "THdrEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; IsColumn: Boolean; Index: Integer);
+			sender := AsObject(getVal(0))
+			isColumn := api.GoBool(getVal(1))
+			index := int32(getVal(2))
+			cb(sender, isColumn, index)
+		},
+	}
+}
+
+func makeTHeaderSizingEvent(cb THeaderSizingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "THeaderSizingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; const IsColumn: boolean; const aIndex, aSize: Integer);
+			sender := AsObject(getVal(0))
+			isColumn := api.GoBool(getVal(1))
+			index := int32(getVal(2))
+			size := int32(getVal(3))
+			cb(sender, isColumn, index, size)
+		},
+	}
+}
+
+func makeTHelpEvent(cb THelpEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "THelpEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : function(Command: Word; Data: PtrInt; var CallHelp: Boolean): Boolean;
+			command := uint16(getVal(0))
+			data := uintptr(getVal(1))
+			callHelp := (*bool)(getPtr(getVal(2)))
+			ret := cb(command, data, callHelp)
+			*(*bool)(getPtr(getVal(3))) = ret
+		},
+	}
+}
+
+func makeTHintEvent(cb THintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "THintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (var HintStr: string; var CanShow: Boolean);
+			hintStr := api.GoStr(*(*uintptr)(getPtr(getVal(0))))
+			canShow := (*bool)(getPtr(getVal(1)))
+			cb(&hintStr, canShow)
+			*(*uintptr)(getPtr(getVal(0))) = api.PasStr(hintStr)
+		},
+	}
+}
+
+func makeTIdleEvent(cb TIdleEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TIdleEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (Sender: TObject; var Done: Boolean);
+			sender := AsObject(getVal(0))
+			done := (*bool)(getPtr(getVal(1)))
+			cb(sender, done)
+		},
+	}
+}
+
+func makeTImageIndexEvent(cb TImageIndexEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TImageIndexEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : function (Str: String; Data: TObject; var AIsEnabled: Boolean): Integer;
+			str := api.GoStr(getVal(0))
+			data := AsObject(getVal(1))
+			isEnabled := (*bool)(getPtr(getVal(2)))
+			ret := cb(str, data, isEnabled)
+			*(*int32)(getPtr(getVal(3))) = ret
+		},
+	}
+}
+
+func makeTImagePaintBackgroundEvent(cb TImagePaintBackgroundEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TImagePaintBackgroundEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (ASender: TObject; ACanvas: TCanvas; ARect: TRect);
+			sender := AsObject(getVal(0))
+			canvas := AsCanvas(getVal(1))
+			rect := *(*types.TRect)(getPtr(getVal(2)))
+			cb(sender, canvas, rect)
+		},
+	}
+}
+
+func makeTKeyEvent(cb TKeyEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TKeyEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; var Key: Word; Shift: TShiftState);
+			sender := AsObject(getVal(0))
+			key := (*uint16)(getPtr(getVal(1)))
+			shift := types.TShiftState(getVal(2))
+			cb(sender, key, shift)
+		},
+	}
+}
+
+func makeTKeyPressEvent(cb TKeyPressEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TKeyPressEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; var Key: char);
+			sender := AsObject(getVal(0))
+			key := (*uint16)(getPtr(getVal(1)))
+			cb(sender, key)
+		},
+	}
+}
+
+func makeTLBGetColorsEvent(cb TLBGetColorsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLBGetColorsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TCustomColorListBox; Items: TStrings);
+			sender := AsCustomColorListBox(getVal(0))
+			items := AsStrings(getVal(1))
+			cb(sender, items)
+		},
+	}
+}
+
+func makeTLVAdvancedCustomDrawEvent(cb TLVAdvancedCustomDrawEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVAdvancedCustomDrawEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TCustomListView; const ARect: TRect; Stage: TCustomDrawStage; var DefaultDraw: Boolean);
+			sender := AsCustomListView(getVal(0))
+			rect := *(*types.TRect)(getPtr(getVal(1)))
+			stage := types.TCustomDrawStage(getVal(2))
+			defaultDraw := (*bool)(getPtr(getVal(3)))
+			cb(sender, rect, stage, defaultDraw)
+		},
+	}
+}
+
+func makeTLVAdvancedCustomDrawItemEvent(cb TLVAdvancedCustomDrawItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVAdvancedCustomDrawItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TCustomListView; Item: TListItem; State: TCustomDrawState; Stage: TCustomDrawStage; var DefaultDraw: Boolean);
+			sender := AsCustomListView(getVal(0))
+			item := AsListItem(getVal(1))
+			state := types.TCustomDrawState(getVal(2))
+			stage := types.TCustomDrawStage(getVal(3))
+			defaultDraw := (*bool)(getPtr(getVal(4)))
+			cb(sender, item, state, stage, defaultDraw)
+		},
+	}
+}
+
+func makeTLVAdvancedCustomDrawSubItemEvent(cb TLVAdvancedCustomDrawSubItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVAdvancedCustomDrawSubItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TCustomListView; Item: TListItem; SubItem: Integer; State: TCustomDrawState; Stage: TCustomDrawStage; var DefaultDraw: Boolean);
+			sender := AsCustomListView(getVal(0))
+			item := AsListItem(getVal(1))
+			subItem := int32(getVal(2))
+			state := types.TCustomDrawState(getVal(3))
+			stage := types.TCustomDrawStage(getVal(4))
+			defaultDraw := (*bool)(getPtr(getVal(5)))
+			cb(sender, item, subItem, state, stage, defaultDraw)
+		},
+	}
+}
+
+func makeTLVChangeEvent(cb TLVChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Item: TListItem; Change: TItemChange);
+			sender := AsObject(getVal(0))
+			item := AsListItem(getVal(1))
+			change := types.TItemChange(getVal(2))
+			cb(sender, item, change)
+		},
+	}
+}
+
+func makeTLVChangingEvent(cb TLVChangingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVChangingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure (Sender: TObject; Item: TListItem; Change: TItemChange; var AllowChange: Boolean);
+			sender := AsObject(getVal(0))
+			item := AsListItem(getVal(1))
+			change := types.TItemChange(getVal(2))
+			allowChange := (*bool)(getPtr(getVal(3)))
+			cb(sender, item, change, allowChange)
+		},
+	}
+}
+
+func makeTLVCheckedItemEvent(cb TLVCheckedItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVCheckedItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (Sender: TObject; Item: TListItem);
+			sender := AsObject(getVal(0))
+			item := AsListItem(getVal(1))
+			cb(sender, item)
+		},
+	}
+}
+
+func makeTLVColumnClickEvent(cb TLVColumnClickEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVColumnClickEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; Column: TListColumn);
+			sender := AsObject(getVal(0))
+			column := AsListColumn(getVal(1))
+			cb(sender, column)
+		},
+	}
+}
+
+func makeTLVCompareEvent(cb TLVCompareEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVCompareEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
+			sender := AsObject(getVal(0))
+			item1 := AsListItem(getVal(1))
+			item2 := AsListItem(getVal(2))
+			data := int32(getVal(3))
+			compare := (*int32)(getPtr(getVal(4)))
+			cb(sender, item1, item2, data, compare)
+		},
+	}
+}
+
+func makeTLVCreateItemClassEvent(cb TLVCreateItemClassEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVCreateItemClassEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TCustomListView; var ItemClass: TListItemClass);
+			sender := AsCustomListView(getVal(0))
+			itemClass := (*types.TListItemClass)(getPtr(getVal(1)))
+			cb(sender, itemClass)
+		},
+	}
+}
+
+func makeTLVCustomDrawEvent(cb TLVCustomDrawEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVCustomDrawEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TCustomListView; const ARect: TRect; var DefaultDraw: Boolean);
+			sender := AsCustomListView(getVal(0))
+			rect := *(*types.TRect)(getPtr(getVal(1)))
+			defaultDraw := (*bool)(getPtr(getVal(2)))
+			cb(sender, rect, defaultDraw)
+		},
+	}
+}
+
+func makeTLVCustomDrawItemEvent(cb TLVCustomDrawItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVCustomDrawItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TCustomListView; Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+			sender := AsCustomListView(getVal(0))
+			item := AsListItem(getVal(1))
+			state := types.TCustomDrawState(getVal(2))
+			defaultDraw := (*bool)(getPtr(getVal(3)))
+			cb(sender, item, state, defaultDraw)
+		},
+	}
+}
+
+func makeTLVCustomDrawSubItemEvent(cb TLVCustomDrawSubItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVCustomDrawSubItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TCustomListView; Item: TListItem; SubItem: Integer; State: TCustomDrawState; var DefaultDraw: Boolean);
+			sender := AsCustomListView(getVal(0))
+			item := AsListItem(getVal(1))
+			subItem := int32(getVal(2))
+			state := types.TCustomDrawState(getVal(3))
+			defaultDraw := (*bool)(getPtr(getVal(4)))
+			cb(sender, item, subItem, state, defaultDraw)
+		},
+	}
+}
+
+func makeTLVDataEvent(cb TLVDataEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVDataEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; Item: TListItem);
+			sender := AsObject(getVal(0))
+			item := AsListItem(getVal(1))
+			cb(sender, item)
+		},
+	}
+}
+
+func makeTLVDataFindEvent(cb TLVDataFindEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVDataFindEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 9 : procedure(Sender: TObject; AFind: TItemFind; const AFindString: string; const AFindPosition: TPoint; AFindData: Pointer; AStartIndex: Integer; ADirection: TSearchDirection; AWrap: Boolean; var AIndex: Integer);
+			sender := AsObject(getVal(0))
+			find := types.TItemFind(getVal(1))
+			findString := api.GoStr(getVal(2))
+			findPosition := *(*types.TPoint)(getPtr(getVal(3)))
+			findData := uintptr(getVal(4))
+			startIndex := int32(getVal(5))
+			direction := types.TSearchDirection(getVal(6))
+			wrap := api.GoBool(getVal(7))
+			index := (*int32)(getPtr(getVal(8)))
+			cb(sender, find, findString, findPosition, findData, startIndex, direction, wrap, index)
+		},
+	}
+}
+
+func makeTLVDataHintEvent(cb TLVDataHintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVDataHintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; StartIndex, EndIndex: Integer);
+			sender := AsObject(getVal(0))
+			startIndex := int32(getVal(1))
+			endIndex := int32(getVal(2))
+			cb(sender, startIndex, endIndex)
+		},
+	}
+}
+
+func makeTLVDataStateChangeEvent(cb TLVDataStateChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVDataStateChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; StartIndex, EndIndex: Integer; OldState, NewState: TListItemStates);
+			sender := AsObject(getVal(0))
+			startIndex := int32(getVal(1))
+			endIndex := int32(getVal(2))
+			oldState := types.TListItemStates(getVal(3))
+			newState := types.TListItemStates(getVal(4))
+			cb(sender, startIndex, endIndex, oldState, newState)
+		},
+	}
+}
+
+func makeTLVDeletedEvent(cb TLVDeletedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVDeletedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; Item: TListItem);
+			sender := AsObject(getVal(0))
+			item := AsListItem(getVal(1))
+			cb(sender, item)
+		},
+	}
+}
+
+func makeTLVDrawItemEvent(cb TLVDrawItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVDrawItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TCustomListView; AItem: TListItem; ARect: TRect; AState: TOwnerDrawState);
+			sender := AsCustomListView(getVal(0))
+			item := AsListItem(getVal(1))
+			rect := *(*types.TRect)(getPtr(getVal(2)))
+			state := types.TOwnerDrawState(getVal(3))
+			cb(sender, item, rect, state)
+		},
+	}
+}
+
+func makeTLVEditedEvent(cb TLVEditedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVEditedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Item: TListItem; var AValue: string);
+			sender := AsObject(getVal(0))
+			item := AsListItem(getVal(1))
+			value := api.GoStr(*(*uintptr)(getPtr(getVal(2))))
+			cb(sender, item, &value)
+			*(*uintptr)(getPtr(getVal(2))) = api.PasStr(value)
+		},
+	}
+}
+
+func makeTLVEditingEvent(cb TLVEditingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVEditingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Item: TListItem; var AllowEdit: Boolean);
+			sender := AsObject(getVal(0))
+			item := AsListItem(getVal(1))
+			allowEdit := (*bool)(getPtr(getVal(2)))
+			cb(sender, item, allowEdit)
+		},
+	}
+}
+
+func makeTLVInsertEvent(cb TLVInsertEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVInsertEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; Item: TListItem);
+			sender := AsObject(getVal(0))
+			item := AsListItem(getVal(1))
+			cb(sender, item)
+		},
+	}
+}
+
+func makeTLVSelectItemEvent(cb TLVSelectItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLVSelectItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Item: TListItem; Selected: Boolean);
+			sender := AsObject(getVal(0))
+			item := AsListItem(getVal(1))
+			selected := api.GoBool(getVal(2))
+			cb(sender, item, selected)
+		},
+	}
+}
+
+func makeTLinkActionEvent(cb TLinkActionEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TLinkActionEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure (Sender: TObject; ALinkAction: TLinkAction; const info: TLinkMouseInfo; LinkStart, LinkLen: Integer);
+			sender := AsObject(getVal(0))
+			linkAction := types.TLinkAction(getVal(1))
+			infoPtr := (*tLinkMouseInfo)(getPtr(getVal(2)))
+			info := infoPtr.ToGo()
+			linkStart := int32(getVal(3))
+			linkLen := int32(getVal(4))
+			cb(sender, linkAction, info, linkStart, linkLen)
+		},
+	}
+}
+
+func makeTListCompareEvent(cb TListCompareEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TListCompareEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : function(AList: TListControlItems; AItem1, AItem2: TListControlItem): Integer;
+			list := AsListControlItems(getVal(0))
+			item1 := AsListControlItem(getVal(1))
+			item2 := AsListControlItem(getVal(2))
+			ret := cb(list, item1, item2)
+			*(*int32)(getPtr(getVal(3))) = ret
+		},
+	}
+}
+
+func makeTMeasureItemEvent(cb TMeasureItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TMeasureItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Control: TWinControl; Index: Integer; var AHeight: Integer);
+			control := AsWinControl(getVal(0))
+			index := int32(getVal(1))
+			height := (*int32)(getPtr(getVal(2)))
+			cb(control, index, height)
+		},
+	}
+}
+
+func makeTMenuChangeEvent(cb TMenuChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TMenuChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (Sender: TObject; Source: TMenuItem; Rebuild: Boolean);
+			sender := AsObject(getVal(0))
+			source := AsMenuItem(getVal(1))
+			rebuild := api.GoBool(getVal(2))
+			cb(sender, source, rebuild)
+		},
+	}
+}
+
+func makeTMenuDrawItemEvent(cb TMenuDrawItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TMenuDrawItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; ACanvas: TCanvas; ARect: TRect; AState: TOwnerDrawState);
+			sender := AsObject(getVal(0))
+			canvas := AsCanvas(getVal(1))
+			rect := *(*types.TRect)(getPtr(getVal(2)))
+			state := types.TOwnerDrawState(getVal(3))
+			cb(sender, canvas, rect, state)
+		},
+	}
+}
+
+func makeTMenuMeasureItemEvent(cb TMenuMeasureItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TMenuMeasureItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; ACanvas: TCanvas; var AWidth, AHeight: Integer);
+			sender := AsObject(getVal(0))
+			canvas := AsCanvas(getVal(1))
+			width := (*int32)(getPtr(getVal(2)))
+			height := (*int32)(getPtr(getVal(3)))
+			cb(sender, canvas, width, height)
+		},
+	}
+}
+
+func makeTModalDialogFinished(cb TModalDialogFinished) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TModalDialogFinished",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (Sender: TObject; AResult: Integer);
+			sender := AsObject(getVal(0))
+			result := int32(getVal(1))
+			cb(sender, result)
+		},
+	}
+}
+
+func makeTMouseEvent(cb TMouseEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TMouseEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+			sender := AsObject(getVal(0))
+			button := types.TMouseButton(getVal(1))
+			shift := types.TShiftState(getVal(2))
+			X := int32(getVal(3))
+			Y := int32(getVal(4))
+			cb(sender, button, shift, X, Y)
+		},
+	}
+}
+
+func makeTMouseMoveEvent(cb TMouseMoveEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TMouseMoveEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+			sender := AsObject(getVal(0))
+			shift := types.TShiftState(getVal(1))
+			X := int32(getVal(2))
+			Y := int32(getVal(3))
+			cb(sender, shift, X, Y)
+		},
+	}
+}
+
+func makeTMouseWheelEvent(cb TMouseWheelEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TMouseWheelEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+			sender := AsObject(getVal(0))
+			shift := types.TShiftState(getVal(1))
+			wheelDelta := int32(getVal(2))
+			mousePos := *(*types.TPoint)(getPtr(getVal(3)))
+			handled := (*bool)(getPtr(getVal(4)))
+			cb(sender, shift, wheelDelta, mousePos, handled)
+		},
+	}
+}
+
+func makeTMouseWheelUpDownEvent(cb TMouseWheelUpDownEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TMouseWheelUpDownEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+			sender := AsObject(getVal(0))
+			shift := types.TShiftState(getVal(1))
+			mousePos := *(*types.TPoint)(getPtr(getVal(2)))
+			handled := (*bool)(getPtr(getVal(3)))
+			cb(sender, shift, mousePos, handled)
+		},
+	}
+}
+
+func makeTNotebookTabDragDropEvent(cb TNotebookTabDragDropEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TNotebookTabDragDropEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender, Source: TObject; OldIndex, NewIndex: Integer; CopyDrag: Boolean; var Done: Boolean);
+			sender := AsObject(getVal(0))
+			source := AsObject(getVal(1))
+			oldIndex := int32(getVal(2))
+			newIndex := int32(getVal(3))
+			copyDrag := api.GoBool(getVal(4))
+			done := (*bool)(getPtr(getVal(5)))
+			cb(sender, source, oldIndex, newIndex, copyDrag, done)
+		},
+	}
+}
+
+func makeTNotebookTabDragOverEvent(cb TNotebookTabDragOverEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TNotebookTabDragOverEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender, Source: TObject; OldIndex, NewIndex: Integer; CopyDrag: Boolean; var Accept: Boolean);
+			sender := AsObject(getVal(0))
+			source := AsObject(getVal(1))
+			oldIndex := int32(getVal(2))
+			newIndex := int32(getVal(3))
+			copyDrag := api.GoBool(getVal(4))
+			accept := (*bool)(getPtr(getVal(5)))
+			cb(sender, source, oldIndex, newIndex, copyDrag, accept)
+		},
+	}
+}
+
+func makeTNotifyEvent(cb TNotifyEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TNotifyEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(Sender: TObject);
+			sender := AsObject(getVal(0))
+			cb(sender)
+		},
+	}
+}
+
+func makeTOnCompareCells(cb TOnCompareCells) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TOnCompareCells",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure (Sender: TObject; ACol, ARow, BCol,BRow: Integer; var Result: integer);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			bCol := int32(getVal(3))
+			bRow := int32(getVal(4))
+			result := (*int32)(getPtr(getVal(5)))
+			cb(sender, col, row, bCol, bRow, result)
+		},
+	}
+}
+
+func makeTOnDrawCell(cb TOnDrawCell) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TOnDrawCell",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState:TGridDrawState);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			rect := *(*types.TRect)(getPtr(getVal(3)))
+			state := types.TGridDrawState(getVal(4))
+			cb(sender, col, row, rect, state)
+		},
+	}
+}
+
+func makeTOnPrepareCanvasEvent(cb TOnPrepareCanvasEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TOnPrepareCanvasEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; aCol, aRow: Integer; aState: TGridDrawState);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			state := types.TGridDrawState(getVal(3))
+			cb(sender, col, row, state)
+		},
+	}
+}
+
+func makeTOnSelectCellEvent(cb TOnSelectCellEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TOnSelectCellEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; aCol, aRow: Integer; var CanSelect: Boolean);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			canSelect := (*bool)(getPtr(getVal(3)))
+			cb(sender, col, row, canSelect)
+		},
+	}
+}
+
+func makeTOnSelectEvent(cb TOnSelectEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TOnSelectEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; aCol, aRow: Integer);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			cb(sender, col, row)
+		},
+	}
+}
+
+func makeTOnUserInputEvent(cb TOnUserInputEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TOnUserInputEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; Msg: Cardinal);
+			sender := AsObject(getVal(0))
+			msg := uint32(getVal(1))
+			cb(sender, msg)
+		},
+	}
+}
+
+func makeTOnValidateEvent(cb TOnValidateEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TOnValidateEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; ACol, ARow: Longint; const KeyName, KeyValue: string);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			keyName := api.GoStr(getVal(3))
+			keyValue := api.GoStr(getVal(4))
+			cb(sender, col, row, keyName, keyValue)
+		},
+	}
+}
+
+func makeTOpenGlCtrlMakeCurrentEvent(cb TOpenGlCtrlMakeCurrentEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TOpenGlCtrlMakeCurrentEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; var Allow: boolean);
+			sender := AsObject(getVal(0))
+			allow := (*bool)(getPtr(getVal(1)))
+			cb(sender, allow)
+		},
+	}
+}
+
+func makeTPrintActionEvent(cb TPrintActionEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TPrintActionEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure (Sender: TObject; APrintAction: TPrintAction; PrintCanvas: TCanvas; CurrentPage: Integer; var AbortPrint: Boolean);
+			sender := AsObject(getVal(0))
+			printAction := types.TPrintAction(getVal(1))
+			printCanvas := AsCanvas(getVal(2))
+			currentPage := int32(getVal(3))
+			abortPrint := (*bool)(getPtr(getVal(4)))
+			cb(sender, printAction, printCanvas, currentPage, abortPrint)
+		},
+	}
+}
+
+func makeTProgressEvent(cb TProgressEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TProgressEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 7 : procedure (Sender: TObject; Stage: TFPImgProgressStage; PercentDone: Byte; RedrawNow: Boolean; const R: TRect; const Msg: AnsiString; var Continue : Boolean);
+			sender := AsObject(getVal(0))
+			stage := types.TFPImgProgressStage(getVal(1))
+			percentDone := byte(getVal(2))
+			redrawNow := api.GoBool(getVal(3))
+			R := *(*types.TRect)(getPtr(getVal(4)))
+			msg := api.GoStr(getVal(5))
+			continue_ := (*bool)(getPtr(getVal(6)))
+			cb(sender, stage, percentDone, redrawNow, R, msg, continue_)
+		},
+	}
+}
+
+func makeTQueryEndSessionEvent(cb TQueryEndSessionEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TQueryEndSessionEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure (var Cancel: Boolean);
+			cancel := (*bool)(getPtr(getVal(0)))
+			cb(cancel)
+		},
+	}
+}
+
+func makeTSBCreatePanelClassEvent(cb TSBCreatePanelClassEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSBCreatePanelClassEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TStatusBar; var PanelClass: TStatusPanelClass);
+			sender := AsStatusBar(getVal(0))
+			panelClass := (*types.TStatusPanelClass)(getPtr(getVal(1)))
+			cb(sender, panelClass)
+		},
+	}
+}
+
+func makeTScrollEvent(cb TScrollEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TScrollEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; ScrollCode: TScrollCode; var ScrollPos: Integer);
+			sender := AsObject(getVal(0))
+			scrollCode := types.TScrollCode(getVal(1))
+			scrollPos := (*int32)(getPtr(getVal(2)))
+			cb(sender, scrollCode, scrollPos)
+		},
+	}
+}
+
+func makeTSectionDragEvent(cb TSectionDragEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSectionDragEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure (Sender: TObject; FromSection, ToSection: THeaderSection; var AllowDrag: Boolean);
+			sender := AsObject(getVal(0))
+			fromSection := AsHeaderSection(getVal(1))
+			toSection := AsHeaderSection(getVal(2))
+			allowDrag := (*bool)(getPtr(getVal(3)))
+			cb(sender, fromSection, toSection, allowDrag)
+		},
+	}
+}
+
+func makeTSelectEditorEvent(cb TSelectEditorEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSelectEditorEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; aCol, aRow: Integer; var Editor: TWinControl);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			var editor IWinControl
+			editor = AsWinControl(*(*uintptr)(getPtr(getVal(3))))
+			cb(sender, col, row, &editor)
+			if editor != nil {
+				*(*uintptr)(getPtr(getVal(3))) = editor.Instance()
+			}
+		},
+	}
+}
+
+func makeTSelectionChangeEvent(cb TSelectionChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSelectionChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; User: boolean);
+			sender := AsObject(getVal(0))
+			user := api.GoBool(getVal(1))
+			cb(sender, user)
+		},
+	}
+}
+
+func makeTSetCheckboxStateEvent(cb TSetCheckboxStateEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSetCheckboxStateEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure (Sender: TObject; ACol, ARow: Integer; const Value: TCheckboxState);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			value := types.TCheckBoxState(getVal(3))
+			cb(sender, col, row, value)
+		},
+	}
+}
+
+func makeTSetEditEvent(cb TSetEditEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSetEditEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure (Sender: TObject; ACol, ARow: Integer; const Value: string);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			value := api.GoStr(getVal(3))
+			cb(sender, col, row, value)
+		},
+	}
+}
+
+func makeTShapePointsEvent(cb TShapePointsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TShapePointsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (Sender: TObject; var Points: TPointArray; var Winding: Boolean);
+			sender := AsObject(getVal(0))
+			var points IPointArrayWrap
+			points = AsPointArrayWrap(*(*uintptr)(getPtr(getVal(1))))
+			winding := (*bool)(getPtr(getVal(2)))
+			cb(sender, &points, winding)
+			if points != nil {
+				*(*uintptr)(getPtr(getVal(1))) = points.Instance()
+			}
+		},
+	}
+}
+
+func makeTShortcutEvent(cb TShortcutEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TShortcutEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (var Msg: TLMKey; var Handled: Boolean);
+			msg := (*types.TLMKey)(getPtr(getVal(0)))
+			handled := (*bool)(getPtr(getVal(1)))
+			cb(msg, handled)
+		},
+	}
+}
+
+func makeTShowHintEvent(cb TShowHintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TShowHintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
+			hintStr := api.GoStr(*(*uintptr)(getPtr(getVal(0))))
+			canShow := (*bool)(getPtr(getVal(1)))
+			hintInfoPtr := *(*tHintInfo)(getPtr(getVal(2)))
+			hintInfo := hintInfoPtr.ToGo()
+			cb(&hintStr, canShow, &hintInfo)
+			*(*uintptr)(getPtr(getVal(0))) = api.PasStr(hintStr)
+			if r := hintInfo.ToPas(); r != nil {
+				*(*tHintInfo)(getPtr(getVal(2))) = *r
+			}
+		},
+	}
+}
+
+func makeTStartDockEvent(cb TStartDockEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TStartDockEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; var DragObject: TDragDockObject);
+			sender := AsObject(getVal(0))
+			var dragObject IDragDockObject
+			dragObject = AsDragDockObject(*(*uintptr)(getPtr(getVal(1))))
+			cb(sender, &dragObject)
+			if dragObject != nil {
+				*(*uintptr)(getPtr(getVal(1))) = dragObject.Instance()
+			}
+		},
+	}
+}
+
+func makeTStartDragEvent(cb TStartDragEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TStartDragEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; var DragObject: TDragObject);
+			sender := AsObject(getVal(0))
+			var dragObject IDragObject
+			dragObject = AsDragObject(*(*uintptr)(getPtr(getVal(1))))
+			cb(sender, &dragObject)
+			if dragObject != nil {
+				*(*uintptr)(getPtr(getVal(1))) = dragObject.Instance()
+			}
+		},
+	}
+}
+
+func makeTSysLinkEvent(cb TSysLinkEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSysLinkEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; const Link: string; LinkType: TSysLinkType);
+			sender := AsObject(getVal(0))
+			link := api.GoStr(getVal(1))
+			linkType := types.TSysLinkType(getVal(2))
+			cb(sender, link, linkType)
+		},
+	}
+}
+
+func makeTTVAdvancedCustomDrawEvent(cb TTVAdvancedCustomDrawEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVAdvancedCustomDrawEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TCustomTreeView; const ARect: TRect; Stage: TCustomDrawStage; var DefaultDraw: Boolean);
+			sender := AsCustomTreeView(getVal(0))
+			rect := *(*types.TRect)(getPtr(getVal(1)))
+			stage := types.TCustomDrawStage(getVal(2))
+			defaultDraw := (*bool)(getPtr(getVal(3)))
+			cb(sender, rect, stage, defaultDraw)
+		},
+	}
+}
+
+func makeTTVAdvancedCustomDrawItemEvent(cb TTVAdvancedCustomDrawItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVAdvancedCustomDrawItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState; Stage: TCustomDrawStage; var PaintImages, DefaultDraw: Boolean);
+			sender := AsCustomTreeView(getVal(0))
+			node := AsTreeNode(getVal(1))
+			state := types.TCustomDrawState(getVal(2))
+			stage := types.TCustomDrawStage(getVal(3))
+			paintImages := (*bool)(getPtr(getVal(4)))
+			defaultDraw := (*bool)(getPtr(getVal(5)))
+			cb(sender, node, state, stage, paintImages, defaultDraw)
+		},
+	}
+}
+
+func makeTTVChangedEvent(cb TTVChangedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVChangedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; Node: TTreeNode);
+			sender := AsObject(getVal(0))
+			node := AsTreeNode(getVal(1))
+			cb(sender, node)
+		},
+	}
+}
+
+func makeTTVChangingEvent(cb TTVChangingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVChangingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Node: TTreeNode; var AllowChange: Boolean);
+			sender := AsObject(getVal(0))
+			node := AsTreeNode(getVal(1))
+			allowChange := (*bool)(getPtr(getVal(2)))
+			cb(sender, node, allowChange)
+		},
+	}
+}
+
+func makeTTVCollapsingEvent(cb TTVCollapsingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVCollapsingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Node: TTreeNode; var AllowCollapse: Boolean);
+			sender := AsObject(getVal(0))
+			node := AsTreeNode(getVal(1))
+			allowCollapse := (*bool)(getPtr(getVal(2)))
+			cb(sender, node, allowCollapse)
+		},
+	}
+}
+
+func makeTTVCompareEvent(cb TTVCompareEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVCompareEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; Node1, Node2: TTreeNode; var Compare: Integer);
+			sender := AsObject(getVal(0))
+			node1 := AsTreeNode(getVal(1))
+			node2 := AsTreeNode(getVal(2))
+			compare := (*int32)(getPtr(getVal(3)))
+			cb(sender, node1, node2, compare)
+		},
+	}
+}
+
+func makeTTVCreateNodeClassEvent(cb TTVCreateNodeClassEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVCreateNodeClassEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TCustomTreeView; var NodeClass: TTreeNodeClass);
+			sender := AsCustomTreeView(getVal(0))
+			nodeClass := (*types.TTreeNodeClass)(getPtr(getVal(1)))
+			cb(sender, nodeClass)
+		},
+	}
+}
+
+func makeTTVCustomCreateNodeEvent(cb TTVCustomCreateNodeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVCustomCreateNodeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TCustomTreeView; var ATreeNode: TTreenode);
+			sender := AsCustomTreeView(getVal(0))
+			var treeNode ITreeNode
+			treeNode = AsTreeNode(*(*uintptr)(getPtr(getVal(1))))
+			cb(sender, &treeNode)
+			if treeNode != nil {
+				*(*uintptr)(getPtr(getVal(1))) = treeNode.Instance()
+			}
+		},
+	}
+}
+
+func makeTTVCustomDrawArrowEvent(cb TTVCustomDrawArrowEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVCustomDrawArrowEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TCustomTreeView; const ARect: TRect; ACollapsed: Boolean);
+			sender := AsCustomTreeView(getVal(0))
+			rect := *(*types.TRect)(getPtr(getVal(1)))
+			collapsed := api.GoBool(getVal(2))
+			cb(sender, rect, collapsed)
+		},
+	}
+}
+
+func makeTTVCustomDrawEvent(cb TTVCustomDrawEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVCustomDrawEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TCustomTreeView; const ARect: TRect; var DefaultDraw: Boolean);
+			sender := AsCustomTreeView(getVal(0))
+			rect := *(*types.TRect)(getPtr(getVal(1)))
+			defaultDraw := (*bool)(getPtr(getVal(2)))
+			cb(sender, rect, defaultDraw)
+		},
+	}
+}
+
+func makeTTVCustomDrawItemEvent(cb TTVCustomDrawItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVCustomDrawItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
+			sender := AsCustomTreeView(getVal(0))
+			node := AsTreeNode(getVal(1))
+			state := types.TCustomDrawState(getVal(2))
+			defaultDraw := (*bool)(getPtr(getVal(3)))
+			cb(sender, node, state, defaultDraw)
+		},
+	}
+}
+
+func makeTTVEditedEvent(cb TTVEditedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVEditedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Node: TTreeNode; var S: string);
+			sender := AsObject(getVal(0))
+			node := AsTreeNode(getVal(1))
+			S := api.GoStr(*(*uintptr)(getPtr(getVal(2))))
+			cb(sender, node, &S)
+			*(*uintptr)(getPtr(getVal(2))) = api.PasStr(S)
+		},
+	}
+}
+
+func makeTTVEditingEndEvent(cb TTVEditingEndEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVEditingEndEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Node: TTreeNode; Cancel: Boolean);
+			sender := AsObject(getVal(0))
+			node := AsTreeNode(getVal(1))
+			cancel := api.GoBool(getVal(2))
+			cb(sender, node, cancel)
+		},
+	}
+}
+
+func makeTTVEditingEvent(cb TTVEditingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVEditingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
+			sender := AsObject(getVal(0))
+			node := AsTreeNode(getVal(1))
+			allowEdit := (*bool)(getPtr(getVal(2)))
+			cb(sender, node, allowEdit)
+		},
+	}
+}
+
+func makeTTVExpandedEvent(cb TTVExpandedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVExpandedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; Node: TTreeNode);
+			sender := AsObject(getVal(0))
+			node := AsTreeNode(getVal(1))
+			cb(sender, node)
+		},
+	}
+}
+
+func makeTTVExpandingEvent(cb TTVExpandingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVExpandingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Node: TTreeNode; var AllowExpansion: Boolean);
+			sender := AsObject(getVal(0))
+			node := AsTreeNode(getVal(1))
+			allowExpansion := (*bool)(getPtr(getVal(2)))
+			cb(sender, node, allowExpansion)
+		},
+	}
+}
+
+func makeTTVHasChildrenEvent(cb TTVHasChildrenEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVHasChildrenEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : function(Sender: TCustomTreeView; ANode: TTreeNode): Boolean;
+			sender := AsCustomTreeView(getVal(0))
+			node := AsTreeNode(getVal(1))
+			ret := cb(sender, node)
+			*(*bool)(getPtr(getVal(2))) = ret
+		},
+	}
+}
+
+func makeTTVNodeChangedEvent(cb TTVNodeChangedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTVNodeChangedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; Node: TTreeNode; ChangeReason: TTreeNodeChangeReason);
+			sender := AsObject(getVal(0))
+			node := AsTreeNode(getVal(1))
+			changeReason := types.TTreeNodeChangeReason(getVal(2))
+			cb(sender, node, changeReason)
+		},
+	}
+}
+
+func makeTTabChangingEvent(cb TTabChangingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTabChangingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; var AllowChange: Boolean);
+			sender := AsObject(getVal(0))
+			allowChange := (*bool)(getPtr(getVal(1)))
+			cb(sender, allowChange)
+		},
+	}
+}
+
+func makeTTabGetImageEvent(cb TTabGetImageEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTabGetImageEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; TabIndex: Integer; var ImageIndex: Integer);
+			sender := AsObject(getVal(0))
+			tabIndex := int32(getVal(1))
+			imageIndex := (*int32)(getPtr(getVal(2)))
+			cb(sender, tabIndex, imageIndex)
+		},
+	}
+}
+
+func makeTTaskDlgClickEvent(cb TTaskDlgClickEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTaskDlgClickEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; AModalResult: TModalResult; var ACanClose: Boolean);
+			sender := AsObject(getVal(0))
+			modalResult := types.TModalResult(getVal(1))
+			canClose := (*bool)(getPtr(getVal(2)))
+			cb(sender, modalResult, canClose)
+		},
+	}
+}
+
+func makeTTaskDlgTimerEvent(cb TTaskDlgTimerEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TTaskDlgTimerEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; TickCount: Cardinal; var Reset: Boolean);
+			sender := AsObject(getVal(0))
+			tickCount := uint32(getVal(1))
+			reset := (*bool)(getPtr(getVal(2)))
+			cb(sender, tickCount, reset)
+		},
+	}
+}
+
+func makeTToggledCheckboxEvent(cb TToggledCheckboxEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TToggledCheckboxEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; aCol, aRow: Integer; aState: TCheckboxState);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			state := types.TCheckBoxState(getVal(3))
+			cb(sender, col, row, state)
+		},
+	}
+}
+
+func makeTToolBarOnPaintButton(cb TToolBarOnPaintButton) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TToolBarOnPaintButton",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TToolButton; State: integer);
+			sender := AsToolButton(getVal(0))
+			state := int32(getVal(1))
+			cb(sender, state)
+		},
+	}
+}
+
+func makeTUDChangingEvent(cb TUDChangingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TUDChangingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (Sender: TObject; var AllowChange: Boolean);
+			sender := AsObject(getVal(0))
+			allowChange := (*bool)(getPtr(getVal(1)))
+			cb(sender, allowChange)
+		},
+	}
+}
+
+func makeTUDChangingEventEx(cb TUDChangingEventEx) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TUDChangingEventEx",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure (Sender: TObject; var AllowChange: Boolean; NewValue: SmallInt; Direction: TUpDownDirection);
+			sender := AsObject(getVal(0))
+			allowChange := (*bool)(getPtr(getVal(1)))
+			newValue := types.SmallInt(getVal(2))
+			direction := types.TUpDownDirection(getVal(3))
+			cb(sender, allowChange, newValue, direction)
+		},
+	}
+}
+
+func makeTUDClickEvent(cb TUDClickEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TUDClickEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure (Sender: TObject; Button: TUDBtnType);
+			sender := AsObject(getVal(0))
+			button := types.TUDBtnType(getVal(1))
+			cb(sender, button)
+		},
+	}
+}
+
+func makeTUTF8KeyPressEvent(cb TUTF8KeyPressEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TUTF8KeyPressEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; var UTF8Key: TUTF8Char);
+			sender := AsObject(getVal(0))
+			uTF8Key := api.GoStr(*(*uintptr)(getPtr(getVal(1))))
+			cb(sender, &uTF8Key)
+			*(*uintptr)(getPtr(getVal(1))) = api.PasStr(uTF8Key)
+		},
+	}
+}
+
+func makeTUnDockEvent(cb TUnDockEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TUnDockEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; Client: TControl; NewTarget: TWinControl; var Allow: Boolean);
+			sender := AsObject(getVal(0))
+			client := AsControl(getVal(1))
+			newTarget := AsWinControl(getVal(2))
+			allow := (*bool)(getPtr(getVal(3)))
+			cb(sender, client, newTarget, allow)
+		},
+	}
+}
+
+func makeTUserCheckBoxImageEvent(cb TUserCheckBoxImageEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TUserCheckBoxImageEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TObject; const aCol, aRow: Integer; const CheckedState: TCheckBoxState; var ImageList: TCustomImageList; var ImageIndex: TImageIndex);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			checkedState := types.TCheckBoxState(getVal(3))
+			var imageList ICustomImageList
+			imageList = AsCustomImageList(*(*uintptr)(getPtr(getVal(4))))
+			imageIndex := (*int32)(getPtr(getVal(5)))
+			cb(sender, col, row, checkedState, &imageList, imageIndex)
+			if imageList != nil {
+				*(*uintptr)(getPtr(getVal(4))) = imageList.Instance()
+			}
+		},
+	}
+}
+
+func makeTUserCheckboxBitmapEvent(cb TUserCheckboxBitmapEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TUserCheckboxBitmapEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; const aCol, aRow: Integer; const CheckedState: TCheckboxState; var ABitmap: TBitmap);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			checkedState := types.TCheckBoxState(getVal(3))
+			var bitmap IBitmap
+			bitmap = AsBitmap(*(*uintptr)(getPtr(getVal(4))))
+			cb(sender, col, row, checkedState, &bitmap)
+			if bitmap != nil {
+				*(*uintptr)(getPtr(getVal(4))) = bitmap.Instance()
+			}
+		},
+	}
+}
+
+func makeTVSTGetTextEvent(cb TVSTGetTextEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVSTGetTextEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			textType := types.TVSTTextType(getVal(3))
+			cellText := api.GoStr(*(*uintptr)(getPtr(getVal(4))))
+			cb(sender, node, column, textType, &cellText)
+			*(*uintptr)(getPtr(getVal(4))) = api.PasStr(cellText)
+		},
+	}
+}
+
+func makeTVSTNewTextEvent(cb TVSTNewTextEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVSTNewTextEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; const NewText: String);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			newText := api.GoStr(getVal(3))
+			cb(sender, node, column, newText)
+		},
+	}
+}
+
+func makeTVSTShortenStringEvent(cb TVSTShortenStringEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVSTShortenStringEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 8 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; const S: String; TextSpace: Integer; var Result: String; var Done: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			column := int32(getVal(3))
+			S := api.GoStr(getVal(4))
+			textSpace := int32(getVal(5))
+			result := api.GoStr(*(*uintptr)(getPtr(getVal(6))))
+			done := (*bool)(getPtr(getVal(7)))
+			cb(sender, targetCanvas, node, column, S, textSpace, &result, done)
+			*(*uintptr)(getPtr(getVal(6))) = api.PasStr(result)
+		},
+	}
+}
+
+func makeTVTAddToSelectionEvent(cb TVTAddToSelectionEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTAddToSelectionEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			cb(sender, node)
+		},
+	}
+}
+
+func makeTVTAdvancedHeaderPaintEvent(cb TVTAdvancedHeaderPaintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTAdvancedHeaderPaintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TVTHeader; var PaintInfo: THeaderPaintInfo; const Elements: THeaderPaintElements);
+			sender := AsVTHeader(getVal(0))
+			paintInfoPtr := *(*tHeaderPaintInfo)(getPtr(getVal(1)))
+			paintInfo := paintInfoPtr.ToGo()
+			elements := types.THeaderPaintElements(getVal(2))
+			cb(sender, &paintInfo, elements)
+			if r := paintInfo.ToPas(); r != nil {
+				*(*tHeaderPaintInfo)(getPtr(getVal(1))) = *r
+			}
+		},
+	}
+}
+
+func makeTVTAfterAutoFitColumnEvent(cb TVTAfterAutoFitColumnEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTAfterAutoFitColumnEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TVTHeader; Column: TColumnIndex);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			cb(sender, column)
+		},
+	}
+}
+
+func makeTVTAfterAutoFitColumnsEvent(cb TVTAfterAutoFitColumnsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTAfterAutoFitColumnsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(Sender: TVTHeader);
+			sender := AsVTHeader(getVal(0))
+			cb(sender)
+		},
+	}
+}
+
+func makeTVTAfterCellPaintEvent(cb TVTAfterCellPaintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTAfterCellPaintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; const CellRect: TRect);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			column := int32(getVal(3))
+			cellRect := *(*types.TRect)(getPtr(getVal(4)))
+			cb(sender, targetCanvas, node, column, cellRect)
+		},
+	}
+}
+
+func makeTVTAfterColumnWidthTrackingEvent(cb TVTAfterColumnWidthTrackingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTAfterColumnWidthTrackingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TVTHeader; Column: TColumnIndex);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			cb(sender, column)
+		},
+	}
+}
+
+func makeTVTAfterGetMaxColumnWidthEvent(cb TVTAfterGetMaxColumnWidthEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTAfterGetMaxColumnWidthEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TVTHeader; Column: TColumnIndex; var MaxWidth: Integer);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			maxWidth := (*int32)(getPtr(getVal(2)))
+			cb(sender, column, maxWidth)
+		},
+	}
+}
+
+func makeTVTAfterHeaderHeightTrackingEvent(cb TVTAfterHeaderHeightTrackingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTAfterHeaderHeightTrackingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(Sender: TVTHeader);
+			sender := AsVTHeader(getVal(0))
+			cb(sender)
+		},
+	}
+}
+
+func makeTVTAfterItemEraseEvent(cb TVTAfterItemEraseEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTAfterItemEraseEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode; const ItemRect: TRect);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			itemRect := *(*types.TRect)(getPtr(getVal(3)))
+			cb(sender, targetCanvas, node, itemRect)
+		},
+	}
+}
+
+func makeTVTAfterItemPaintEvent(cb TVTAfterItemPaintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTAfterItemPaintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode; const ItemRect: TRect);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			itemRect := *(*types.TRect)(getPtr(getVal(3)))
+			cb(sender, targetCanvas, node, itemRect)
+		},
+	}
+}
+
+func makeTVTBackgroundPaintEvent(cb TVTBackgroundPaintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBackgroundPaintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; const R: TRect; var Handled: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			R := *(*types.TRect)(getPtr(getVal(2)))
+			handled := (*bool)(getPtr(getVal(3)))
+			cb(sender, targetCanvas, R, handled)
+		},
+	}
+}
+
+func makeTVTBeforeAutoFitColumnEvent(cb TVTBeforeAutoFitColumnEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBeforeAutoFitColumnEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TVTHeader; Column: TColumnIndex; var SmartAutoFitType: TSmartAutoFitType; var Allowed: Boolean);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			smartAutoFitType := (*types.TSmartAutoFitType)(getPtr(getVal(2)))
+			allowed := (*bool)(getPtr(getVal(3)))
+			cb(sender, column, smartAutoFitType, allowed)
+		},
+	}
+}
+
+func makeTVTBeforeAutoFitColumnsEvent(cb TVTBeforeAutoFitColumnsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBeforeAutoFitColumnsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TVTHeader; var SmartAutoFitType: TSmartAutoFitType);
+			sender := AsVTHeader(getVal(0))
+			smartAutoFitType := (*types.TSmartAutoFitType)(getPtr(getVal(1)))
+			cb(sender, smartAutoFitType)
+		},
+	}
+}
+
+func makeTVTBeforeCellPaintEvent(cb TVTBeforeCellPaintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBeforeCellPaintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 7 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			column := int32(getVal(3))
+			cellPaintMode := types.TVTCellPaintMode(getVal(4))
+			cellRect := *(*types.TRect)(getPtr(getVal(5)))
+			contentRect := (*types.TRect)(getPtr(getVal(6)))
+			cb(sender, targetCanvas, node, column, cellPaintMode, cellRect, contentRect)
+		},
+	}
+}
+
+func makeTVTBeforeColumnWidthTrackingEvent(cb TVTBeforeColumnWidthTrackingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBeforeColumnWidthTrackingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TVTHeader; Column: TColumnIndex; Shift: TShiftState);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			shift := types.TShiftState(getVal(2))
+			cb(sender, column, shift)
+		},
+	}
+}
+
+func makeTVTBeforeDrawLineImageEvent(cb TVTBeforeDrawLineImageEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBeforeDrawLineImageEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Level: Integer; var PosX: Integer);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			level := int32(getVal(2))
+			posX := (*int32)(getPtr(getVal(3)))
+			cb(sender, node, level, posX)
+		},
+	}
+}
+
+func makeTVTBeforeGetMaxColumnWidthEvent(cb TVTBeforeGetMaxColumnWidthEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBeforeGetMaxColumnWidthEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TVTHeader; Column: TColumnIndex; var UseSmartColumnWidth: Boolean);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			useSmartColumnWidth := (*bool)(getPtr(getVal(2)))
+			cb(sender, column, useSmartColumnWidth)
+		},
+	}
+}
+
+func makeTVTBeforeHeaderHeightTrackingEvent(cb TVTBeforeHeaderHeightTrackingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBeforeHeaderHeightTrackingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TVTHeader; Shift: TShiftState);
+			sender := AsVTHeader(getVal(0))
+			shift := types.TShiftState(getVal(1))
+			cb(sender, shift)
+		},
+	}
+}
+
+func makeTVTBeforeItemEraseEvent(cb TVTBeforeItemEraseEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBeforeItemEraseEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode; const ItemRect: TRect; var ItemColor: TColor; var EraseAction: TItemEraseAction);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			itemRect := *(*types.TRect)(getPtr(getVal(3)))
+			itemColor := (*types.TColor)(getPtr(getVal(4)))
+			eraseAction := (*types.TItemEraseAction)(getPtr(getVal(5)))
+			cb(sender, targetCanvas, node, itemRect, itemColor, eraseAction)
+		},
+	}
+}
+
+func makeTVTBeforeItemPaintEvent(cb TVTBeforeItemPaintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBeforeItemPaintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode; const ItemRect: TRect; var CustomDraw: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			itemRect := *(*types.TRect)(getPtr(getVal(3)))
+			customDraw := (*bool)(getPtr(getVal(4)))
+			cb(sender, targetCanvas, node, itemRect, customDraw)
+		},
+	}
+}
+
+func makeTVTBeginCancelEndEditEvent(cb TVTBeginCancelEndEditEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTBeginCancelEndEditEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): Boolean;
+			ret := cb()
+			*(*bool)(getPtr(getVal(0))) = ret
+		},
+	}
+}
+
+func makeTVTCanSplitterResizeColumnEvent(cb TVTCanSplitterResizeColumnEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTCanSplitterResizeColumnEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TVTHeader; P: TPoint; Column: TColumnIndex; var Allowed: Boolean);
+			sender := AsVTHeader(getVal(0))
+			P := *(*types.TPoint)(getPtr(getVal(1)))
+			column := int32(getVal(2))
+			allowed := (*bool)(getPtr(getVal(3)))
+			cb(sender, P, column, allowed)
+		},
+	}
+}
+
+func makeTVTCanSplitterResizeHeaderEvent(cb TVTCanSplitterResizeHeaderEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTCanSplitterResizeHeaderEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TVTHeader; P: TPoint; var Allowed: Boolean);
+			sender := AsVTHeader(getVal(0))
+			P := *(*types.TPoint)(getPtr(getVal(1)))
+			allowed := (*bool)(getPtr(getVal(2)))
+			cb(sender, P, allowed)
+		},
+	}
+}
+
+func makeTVTCanSplitterResizeNodeEvent(cb TVTCanSplitterResizeNodeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTCanSplitterResizeNodeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TBaseVirtualTree; P: TPoint; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			P := *(*types.TPoint)(getPtr(getVal(1)))
+			node := types.PVirtualNode(getVal(2))
+			column := int32(getVal(3))
+			allowed := (*bool)(getPtr(getVal(4)))
+			cb(sender, P, node, column, allowed)
+		},
+	}
+}
+
+func makeTVTChangeEvent(cb TVTChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			cb(sender, node)
+		},
+	}
+}
+
+func makeTVTChangingEvent(cb TVTChangingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTChangingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; var Allowed: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			allowed := (*bool)(getPtr(getVal(2)))
+			cb(sender, node, allowed)
+		},
+	}
+}
+
+func makeTVTCheckChangingEvent(cb TVTCheckChangingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTCheckChangingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; var NewState: TCheckState; var Allowed: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			newState := (*types.TCheckState)(getPtr(getVal(2)))
+			allowed := (*bool)(getPtr(getVal(3)))
+			cb(sender, node, newState, allowed)
+		},
+	}
+}
+
+func makeTVTColumnClickEvent(cb TVTColumnClickEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTColumnClickEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (Sender: TBaseVirtualTree; Column: TColumnIndex; Shift: TShiftState);
+			sender := AsBaseVirtualTree(getVal(0))
+			column := int32(getVal(1))
+			shift := types.TShiftState(getVal(2))
+			cb(sender, column, shift)
+		},
+	}
+}
+
+func makeTVTColumnDblClickEvent(cb TVTColumnDblClickEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTColumnDblClickEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (Sender: TBaseVirtualTree; Column: TColumnIndex; Shift: TShiftState);
+			sender := AsBaseVirtualTree(getVal(0))
+			column := int32(getVal(1))
+			shift := types.TShiftState(getVal(2))
+			cb(sender, column, shift)
+		},
+	}
+}
+
+func makeTVTColumnExportEvent(cb TVTColumnExportEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTColumnExportEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (Sender: TBaseVirtualTree; aExportType: TVTExportType; Column: TVirtualTreeColumn);
+			sender := AsBaseVirtualTree(getVal(0))
+			exportType := types.TVTExportType(getVal(1))
+			column := AsVirtualTreeColumn(getVal(2))
+			cb(sender, exportType, column)
+		},
+	}
+}
+
+func makeTVTColumnWidthDblClickResizeEvent(cb TVTColumnWidthDblClickResizeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTColumnWidthDblClickResizeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TVTHeader; Column: TColumnIndex; Shift: TShiftState; P: TPoint; var Allowed: Boolean);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			shift := types.TShiftState(getVal(2))
+			P := *(*types.TPoint)(getPtr(getVal(3)))
+			allowed := (*bool)(getPtr(getVal(4)))
+			cb(sender, column, shift, P, allowed)
+		},
+	}
+}
+
+func makeTVTColumnWidthTrackingEvent(cb TVTColumnWidthTrackingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTColumnWidthTrackingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TVTHeader; Column: TColumnIndex; Shift: TShiftState; var TrackPoint: TPoint; P: TPoint; var Allowed: Boolean);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			shift := types.TShiftState(getVal(2))
+			trackPoint := (*types.TPoint)(getPtr(getVal(3)))
+			P := *(*types.TPoint)(getPtr(getVal(4)))
+			allowed := (*bool)(getPtr(getVal(5)))
+			cb(sender, column, shift, trackPoint, P, allowed)
+		},
+	}
+}
+
+func makeTVTCompareEvent(cb TVTCompareEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTCompareEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TBaseVirtualTree; Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+			sender := AsBaseVirtualTree(getVal(0))
+			node1 := types.PVirtualNode(getVal(1))
+			node2 := types.PVirtualNode(getVal(2))
+			column := int32(getVal(3))
+			result := (*int32)(getPtr(getVal(4)))
+			cb(sender, node1, node2, column, result)
+		},
+	}
+}
+
+func makeTVTCreateDataObjectEvent(cb TVTCreateDataObjectEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTCreateDataObjectEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; out IDataObject: IDataObject);
+			sender := AsBaseVirtualTree(getVal(0))
+			iDataObject := (*IDataObject)(getPtr(getVal(1)))
+			cb(sender, iDataObject)
+		},
+	}
+}
+
+func makeTVTCreateDragManagerEvent(cb TVTCreateDragManagerEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTCreateDragManagerEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; out DragManager: IVTDragManager);
+			sender := AsBaseVirtualTree(getVal(0))
+			var dragManager IVTDragManager
+			cb(sender, &dragManager)
+			if dragManager != nil {
+				*(*uintptr)(getPtr(getVal(1))) = dragManager.Instance()
+			}
+		},
+	}
+}
+
+func makeTVTCreateEditorEvent(cb TVTCreateEditorEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTCreateEditorEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			var editLink IVTEditLink
+			cb(sender, node, column, &editLink)
+			if editLink != nil {
+				*(*uintptr)(getPtr(getVal(3))) = editLink.Instance()
+			}
+		},
+	}
+}
+
+func makeTVTDragAllowedEvent(cb TVTDragAllowedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTDragAllowedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			allowed := (*bool)(getPtr(getVal(3)))
+			cb(sender, node, column, allowed)
+		},
+	}
+}
+
+func makeTVTDragDropEvent(cb TVTDragDropEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTDragDropEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 8 : procedure(Sender: TBaseVirtualTree; Source: TObject; DataObject: IDataObject; Formats: TFormatArray; Shift: TShiftState; const Pt: TPoint; var Effect: LongWord; Mode: TDropMode);
+			sender := AsBaseVirtualTree(getVal(0))
+			source := AsObject(getVal(1))
+			dataObject := IDataObject(getVal(2))
+			formatsPtr := getVal(3)
+			formatsLen := int32(getVal(4))
+			formats := NewFormatArray(int(formatsLen), formatsPtr)
+			shift := types.TShiftState(getVal(5))
+			pt := *(*types.TPoint)(getPtr(getVal(6)))
+			effect := (*uint32)(getPtr(getVal(7)))
+			mode := types.TDropMode(getVal(8))
+			cb(sender, source, dataObject, formats, shift, pt, effect, mode)
+		},
+	}
+}
+
+func makeTVTDragOverEvent(cb TVTDragOverEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTDragOverEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 8 : procedure(Sender: TBaseVirtualTree; Source: TObject; Shift: TShiftState; State: TDragState; const Pt: TPoint; Mode: TDropMode; var Effect: LongWord; var Accept: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			source := AsObject(getVal(1))
+			shift := types.TShiftState(getVal(2))
+			state := types.TDragState(getVal(3))
+			pt := *(*types.TPoint)(getPtr(getVal(4)))
+			mode := types.TDropMode(getVal(5))
+			effect := (*uint32)(getPtr(getVal(6)))
+			accept := (*bool)(getPtr(getVal(7)))
+			cb(sender, source, shift, state, pt, mode, effect, accept)
+		},
+	}
+}
+
+func makeTVTDrawHintEvent(cb TVTDrawHintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTDrawHintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TBaseVirtualTree; HintCanvas: TCanvas; Node: PVirtualNode; R: TRect; Column: TColumnIndex);
+			sender := AsBaseVirtualTree(getVal(0))
+			hintCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			R := *(*types.TRect)(getPtr(getVal(3)))
+			column := int32(getVal(4))
+			cb(sender, hintCanvas, node, R, column)
+		},
+	}
+}
+
+func makeTVTDrawNodeEvent(cb TVTDrawNodeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTDrawNodeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; const PaintInfo: TVTPaintInfo);
+			sender := AsBaseVirtualTree(getVal(0))
+			paintInfoPtr := (*tVTPaintInfo)(getPtr(getVal(1)))
+			paintInfo := paintInfoPtr.ToGo()
+			cb(sender, paintInfo)
+		},
+	}
+}
+
+func makeTVTDrawTextEvent(cb TVTDrawTextEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTDrawTextEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 7 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; const CellText: String; const CellRect: TRect; var DefaultDraw: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			column := int32(getVal(3))
+			cellText := api.GoStr(getVal(4))
+			cellRect := *(*types.TRect)(getPtr(getVal(5)))
+			defaultDraw := (*bool)(getPtr(getVal(6)))
+			cb(sender, targetCanvas, node, column, cellText, cellRect, defaultDraw)
+		},
+	}
+}
+
+func makeTVTEditCancelEvent(cb TVTEditCancelEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTEditCancelEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; Column: TColumnIndex);
+			sender := AsBaseVirtualTree(getVal(0))
+			column := int32(getVal(1))
+			cb(sender, column)
+		},
+	}
+}
+
+func makeTVTEditChangeEvent(cb TVTEditChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTEditChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			cb(sender, node, column)
+		},
+	}
+}
+
+func makeTVTEditChangingEvent(cb TVTEditChangingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTEditChangingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			allowed := (*bool)(getPtr(getVal(3)))
+			cb(sender, node, column, allowed)
+		},
+	}
+}
+
+func makeTVTFocusChangeEvent(cb TVTFocusChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTFocusChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			cb(sender, node, column)
+		},
+	}
+}
+
+func makeTVTFocusChangingEvent(cb TVTFocusChangingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTFocusChangingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TBaseVirtualTree; OldNode, NewNode: PVirtualNode; OldColumn, NewColumn: TColumnIndex; var Allowed: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			oldNode := types.PVirtualNode(getVal(1))
+			newNode := types.PVirtualNode(getVal(2))
+			oldColumn := int32(getVal(3))
+			newColumn := int32(getVal(4))
+			allowed := (*bool)(getPtr(getVal(5)))
+			cb(sender, oldNode, newNode, oldColumn, newColumn, allowed)
+		},
+	}
+}
+
+func makeTVTFreeNodeEvent(cb TVTFreeNodeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTFreeNodeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			cb(sender, node)
+		},
+	}
+}
+
+func makeTVTGetBoundsEvent(cb TVTGetBoundsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetBoundsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): TRect;
+			ret := cb()
+			*(*types.TRect)(getPtr(getVal(0))) = ret
+		},
+	}
+}
+
+func makeTVTGetCellIsEmptyEvent(cb TVTGetCellIsEmptyEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetCellIsEmptyEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var IsEmpty: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			isEmpty := (*bool)(getPtr(getVal(3)))
+			cb(sender, node, column, isEmpty)
+		},
+	}
+}
+
+func makeTVTGetCursorEvent(cb TVTGetCursorEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetCursorEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; var Cursor: TCursor);
+			sender := AsBaseVirtualTree(getVal(0))
+			cursor := (*types.TCursor)(getPtr(getVal(1)))
+			cb(sender, cursor)
+		},
+	}
+}
+
+func makeTVTGetHeaderCursorEvent(cb TVTGetHeaderCursorEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetHeaderCursorEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TVTHeader; var Cursor: HCURSOR);
+			sender := AsVTHeader(getVal(0))
+			cursor := (*types.HCURSOR)(getPtr(getVal(1)))
+			cb(sender, cursor)
+		},
+	}
+}
+
+func makeTVTGetHintEvent(cb TVTGetHintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetHintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: String);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			lineBreakStyle := (*types.TVTTooltipLineBreakStyle)(getPtr(getVal(3)))
+			hintText := api.GoStr(*(*uintptr)(getPtr(getVal(4))))
+			cb(sender, node, column, lineBreakStyle, &hintText)
+			*(*uintptr)(getPtr(getVal(4))) = api.PasStr(hintText)
+		},
+	}
+}
+
+func makeTVTGetHintSizeEvent(cb TVTGetHintSizeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetHintSizeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var R: TRect);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			R := (*types.TRect)(getPtr(getVal(3)))
+			cb(sender, node, column, R)
+		},
+	}
+}
+
+func makeTVTGetImageEvent(cb TVTGetImageEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetImageEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			kind := types.TVTImageKind(getVal(2))
+			column := int32(getVal(3))
+			ghosted := (*bool)(getPtr(getVal(4)))
+			imageIndex := (*int32)(getPtr(getVal(5)))
+			cb(sender, node, kind, column, ghosted, imageIndex)
+		},
+	}
+}
+
+func makeTVTGetImageExEvent(cb TVTGetImageExEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetImageExEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 7 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer; var ImageList: TCustomImageList);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			kind := types.TVTImageKind(getVal(2))
+			column := int32(getVal(3))
+			ghosted := (*bool)(getPtr(getVal(4)))
+			imageIndex := (*int32)(getPtr(getVal(5)))
+			var imageList ICustomImageList
+			imageList = AsCustomImageList(*(*uintptr)(getPtr(getVal(6))))
+			cb(sender, node, kind, column, ghosted, imageIndex, &imageList)
+			if imageList != nil {
+				*(*uintptr)(getPtr(getVal(6))) = imageList.Instance()
+			}
+		},
+	}
+}
+
+func makeTVTGetImageTextEvent(cb TVTGetImageTextEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetImageTextEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var ImageText: String);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			kind := types.TVTImageKind(getVal(2))
+			column := int32(getVal(3))
+			imageText := api.GoStr(*(*uintptr)(getPtr(getVal(4))))
+			cb(sender, node, kind, column, &imageText)
+			*(*uintptr)(getPtr(getVal(4))) = api.PasStr(imageText)
+		},
+	}
+}
+
+func makeTVTGetLineStyleEvent(cb TVTGetLineStyleEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetLineStyleEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; var Bits: Pointer);
+			sender := AsBaseVirtualTree(getVal(0))
+			bits := (*uintptr)(getPtr(getVal(1)))
+			cb(sender, bits)
+		},
+	}
+}
+
+func makeTVTGetNodeDataSizeEvent(cb TVTGetNodeDataSizeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetNodeDataSizeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+			sender := AsBaseVirtualTree(getVal(0))
+			nodeDataSize := (*int32)(getPtr(getVal(1)))
+			cb(sender, nodeDataSize)
+		},
+	}
+}
+
+func makeTVTGetNodeWidthEvent(cb TVTGetNodeWidthEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetNodeWidthEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TBaseVirtualTree; HintCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; var NodeWidth: Integer);
+			sender := AsBaseVirtualTree(getVal(0))
+			hintCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			column := int32(getVal(3))
+			nodeWidth := (*int32)(getPtr(getVal(4)))
+			cb(sender, hintCanvas, node, column, nodeWidth)
+		},
+	}
+}
+
+func makeTVTGetUserClipboardFormatsEvent(cb TVTGetUserClipboardFormatsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTGetUserClipboardFormatsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; var Formats: TFormatEtcArray);
+			sender := AsBaseVirtualTree(getVal(0))
+			var formats IFormatEtcArrayWrap
+			formats = AsFormatEtcArrayWrap(*(*uintptr)(getPtr(getVal(1))))
+			cb(sender, &formats)
+			if formats != nil {
+				*(*uintptr)(getPtr(getVal(1))) = formats.Instance()
+			}
+		},
+	}
+}
+
+func makeTVTHeaderClickEvent(cb TVTHeaderClickEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderClickEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+			sender := AsVTHeader(getVal(0))
+			hitInfo := *(*TVTHeaderHitInfo)(getPtr(getVal(1)))
+			cb(sender, hitInfo)
+		},
+	}
+}
+
+func makeTVTHeaderDraggedEvent(cb TVTHeaderDraggedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderDraggedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TVTHeader; Column: TColumnIndex; OldPosition: Integer);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			oldPosition := int32(getVal(2))
+			cb(sender, column, oldPosition)
+		},
+	}
+}
+
+func makeTVTHeaderDraggedOutEvent(cb TVTHeaderDraggedOutEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderDraggedOutEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TVTHeader; Column: TColumnIndex; const DropPosition: TPoint);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			dropPosition := *(*types.TPoint)(getPtr(getVal(2)))
+			cb(sender, column, dropPosition)
+		},
+	}
+}
+
+func makeTVTHeaderDraggingEvent(cb TVTHeaderDraggingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderDraggingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TVTHeader; Column: TColumnIndex; var Allowed: Boolean);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			allowed := (*bool)(getPtr(getVal(2)))
+			cb(sender, column, allowed)
+		},
+	}
+}
+
+func makeTVTHeaderHeightDblClickResizeEvent(cb TVTHeaderHeightDblClickResizeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderHeightDblClickResizeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TVTHeader; var P: TPoint; Shift: TShiftState; var Allowed: Boolean);
+			sender := AsVTHeader(getVal(0))
+			P := (*types.TPoint)(getPtr(getVal(1)))
+			shift := types.TShiftState(getVal(2))
+			allowed := (*bool)(getPtr(getVal(3)))
+			cb(sender, P, shift, allowed)
+		},
+	}
+}
+
+func makeTVTHeaderHeightTrackingEvent(cb TVTHeaderHeightTrackingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderHeightTrackingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TVTHeader; var P: TPoint; Shift: TShiftState; var Allowed: Boolean);
+			sender := AsVTHeader(getVal(0))
+			P := (*types.TPoint)(getPtr(getVal(1)))
+			shift := types.TShiftState(getVal(2))
+			allowed := (*bool)(getPtr(getVal(3)))
+			cb(sender, P, shift, allowed)
+		},
+	}
+}
+
+func makeTVTHeaderMouseEvent(cb TVTHeaderMouseEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderMouseEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TVTHeader; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+			sender := AsVTHeader(getVal(0))
+			button := types.TMouseButton(getVal(1))
+			shift := types.TShiftState(getVal(2))
+			X := int32(getVal(3))
+			Y := int32(getVal(4))
+			cb(sender, button, shift, X, Y)
+		},
+	}
+}
+
+func makeTVTHeaderMouseMoveEvent(cb TVTHeaderMouseMoveEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderMouseMoveEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TVTHeader; Shift: TShiftState; X, Y: Integer);
+			sender := AsVTHeader(getVal(0))
+			shift := types.TShiftState(getVal(1))
+			X := int32(getVal(2))
+			Y := int32(getVal(3))
+			cb(sender, shift, X, Y)
+		},
+	}
+}
+
+func makeTVTHeaderNotifyEvent(cb TVTHeaderNotifyEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderNotifyEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TVTHeader; Column: TColumnIndex);
+			sender := AsVTHeader(getVal(0))
+			column := int32(getVal(1))
+			cb(sender, column)
+		},
+	}
+}
+
+func makeTVTHeaderPaintEvent(cb TVTHeaderPaintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderPaintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 7 : procedure(Sender: TVTHeader; HeaderCanvas: TCanvas; Column: TVirtualTreeColumn; const R: TRect; Hover, Pressed: Boolean; DropMark: TVTDropMarkMode);
+			sender := AsVTHeader(getVal(0))
+			headerCanvas := AsCanvas(getVal(1))
+			column := AsVirtualTreeColumn(getVal(2))
+			R := *(*types.TRect)(getPtr(getVal(3)))
+			hover := api.GoBool(getVal(4))
+			pressed := api.GoBool(getVal(5))
+			dropMark := types.TVTDropMarkMode(getVal(6))
+			cb(sender, headerCanvas, column, R, hover, pressed, dropMark)
+		},
+	}
+}
+
+func makeTVTHeaderPaintQueryElementsEvent(cb TVTHeaderPaintQueryElementsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHeaderPaintQueryElementsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TVTHeader; var PaintInfo: THeaderPaintInfo; var Elements: THeaderPaintElements);
+			sender := AsVTHeader(getVal(0))
+			paintInfoPtr := *(*tHeaderPaintInfo)(getPtr(getVal(1)))
+			paintInfo := paintInfoPtr.ToGo()
+			elements := (*types.THeaderPaintElements)(getPtr(getVal(2)))
+			cb(sender, &paintInfo, elements)
+			if r := paintInfo.ToPas(); r != nil {
+				*(*tHeaderPaintInfo)(getPtr(getVal(1))) = *r
+			}
+		},
+	}
+}
+
+func makeTVTHelpContextEvent(cb TVTHelpContextEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHelpContextEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var HelpContext: Integer);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			helpContext := (*int32)(getPtr(getVal(3)))
+			cb(sender, node, column, helpContext)
+		},
+	}
+}
+
+func makeTVTHintKindEvent(cb TVTHintKindEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHintKindEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Kind: TVTHintKind);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			kind := (*types.TVTHintKind)(getPtr(getVal(3)))
+			cb(sender, node, column, kind)
+		},
+	}
+}
+
+func makeTVTHotNodeChangeEvent(cb TVTHotNodeChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTHotNodeChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TBaseVirtualTree; OldNode, NewNode: PVirtualNode);
+			sender := AsBaseVirtualTree(getVal(0))
+			oldNode := types.PVirtualNode(getVal(1))
+			newNode := types.PVirtualNode(getVal(2))
+			cb(sender, oldNode, newNode)
+		},
+	}
+}
+
+func makeTVTIncrementalSearchEvent(cb TVTIncrementalSearchEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTIncrementalSearchEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; const SearchText: String; var Result: Integer);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			searchText := api.GoStr(getVal(2))
+			result := (*int32)(getPtr(getVal(3)))
+			cb(sender, node, searchText, result)
+		},
+	}
+}
+
+func makeTVTInitChildrenEvent(cb TVTInitChildrenEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTInitChildrenEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; var ChildCount: Cardinal);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			childCount := (*uint32)(getPtr(getVal(2)))
+			cb(sender, node, childCount)
+		},
+	}
+}
+
+func makeTVTInitNodeEvent(cb TVTInitNodeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTInitNodeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+			sender := AsBaseVirtualTree(getVal(0))
+			parentNode := types.PVirtualNode(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			initialStates := (*types.TVirtualNodeInitStates)(getPtr(getVal(3)))
+			cb(sender, parentNode, node, initialStates)
+		},
+	}
+}
+
+func makeTVTKeyActionEvent(cb TVTKeyActionEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTKeyActionEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; var CharCode: Word; var Shift: TShiftState; var DoDefault: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			charCode := (*uint16)(getPtr(getVal(1)))
+			shift := (*types.TShiftState)(getPtr(getVal(2)))
+			doDefault := (*bool)(getPtr(getVal(3)))
+			cb(sender, charCode, shift, doDefault)
+		},
+	}
+}
+
+func makeTVTMeasureItemEvent(cb TVTMeasureItemEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTMeasureItemEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode; var NodeHeight: Integer);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			nodeHeight := (*int32)(getPtr(getVal(3)))
+			cb(sender, targetCanvas, node, nodeHeight)
+		},
+	}
+}
+
+func makeTVTMeasureTextEvent(cb TVTMeasureTextEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTMeasureTextEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; const CellText: String; var Extent: Integer);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			column := int32(getVal(3))
+			cellText := api.GoStr(getVal(4))
+			extent := (*int32)(getPtr(getVal(5)))
+			cb(sender, targetCanvas, node, column, cellText, extent)
+		},
+	}
+}
+
+func makeTVTNodeClickEvent(cb TVTNodeClickEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTNodeClickEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; const HitInfo: THitInfo);
+			sender := AsBaseVirtualTree(getVal(0))
+			hitInfo := *(*THitInfo)(getPtr(getVal(1)))
+			cb(sender, hitInfo)
+		},
+	}
+}
+
+func makeTVTNodeCopiedEvent(cb TVTNodeCopiedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTNodeCopiedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			cb(sender, node)
+		},
+	}
+}
+
+func makeTVTNodeCopyingEvent(cb TVTNodeCopyingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTNodeCopyingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node, Target: PVirtualNode; var Allowed: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			target := types.PVirtualNode(getVal(2))
+			allowed := (*bool)(getPtr(getVal(3)))
+			cb(sender, node, target, allowed)
+		},
+	}
+}
+
+func makeTVTNodeExportEvent(cb TVTNodeExportEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTNodeExportEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : function (Sender: TBaseVirtualTree; aExportType: TVTExportType; Node: PVirtualNode): Boolean;
+			sender := AsBaseVirtualTree(getVal(0))
+			exportType := types.TVTExportType(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			ret := cb(sender, exportType, node)
+			*(*bool)(getPtr(getVal(3))) = ret
+		},
+	}
+}
+
+func makeTVTNodeHeightDblClickResizeEvent(cb TVTNodeHeightDblClickResizeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTNodeHeightDblClickResizeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; Shift: TShiftState; P: TPoint; var Allowed: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			shift := types.TShiftState(getVal(3))
+			P := *(*types.TPoint)(getPtr(getVal(4)))
+			allowed := (*bool)(getPtr(getVal(5)))
+			cb(sender, node, column, shift, P, allowed)
+		},
+	}
+}
+
+func makeTVTNodeHeightTrackingEvent(cb TVTNodeHeightTrackingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTNodeHeightTrackingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 7 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; Shift: TShiftState; var TrackPoint: TPoint; P: TPoint; var Allowed: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			shift := types.TShiftState(getVal(3))
+			trackPoint := (*types.TPoint)(getPtr(getVal(4)))
+			P := *(*types.TPoint)(getPtr(getVal(5)))
+			allowed := (*bool)(getPtr(getVal(6)))
+			cb(sender, node, column, shift, trackPoint, P, allowed)
+		},
+	}
+}
+
+func makeTVTNodeMovedEvent(cb TVTNodeMovedEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTNodeMovedEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			cb(sender, node)
+		},
+	}
+}
+
+func makeTVTNodeMovingEvent(cb TVTNodeMovingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTNodeMovingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TBaseVirtualTree; Node, Target: PVirtualNode; var Allowed: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			target := types.PVirtualNode(getVal(2))
+			allowed := (*bool)(getPtr(getVal(3)))
+			cb(sender, node, target, allowed)
+		},
+	}
+}
+
+func makeTVTOperationEvent(cb TVTOperationEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTOperationEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; OperationKind: TVTOperationKind);
+			sender := AsBaseVirtualTree(getVal(0))
+			operationKind := types.TVTOperationKind(getVal(1))
+			cb(sender, operationKind)
+		},
+	}
+}
+
+func makeTVTPaintEvent(cb TVTPaintEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTPaintEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			cb(sender, targetCanvas)
+		},
+	}
+}
+
+func makeTVTPaintText(cb TVTPaintText) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTPaintText",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
+			sender := AsBaseVirtualTree(getVal(0))
+			targetCanvas := AsCanvas(getVal(1))
+			node := types.PVirtualNode(getVal(2))
+			column := int32(getVal(3))
+			textType := types.TVSTTextType(getVal(4))
+			cb(sender, targetCanvas, node, column, textType)
+		},
+	}
+}
+
+func makeTVTPopupEvent(cb TVTPopupEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTPopupEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; const P: TPoint; var AskParent: Boolean; var PopupMenu: TPopupMenu);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			P := *(*types.TPoint)(getPtr(getVal(3)))
+			askParent := (*bool)(getPtr(getVal(4)))
+			var popupMenu IPopupMenu
+			popupMenu = AsPopupMenu(*(*uintptr)(getPtr(getVal(5))))
+			cb(sender, node, column, P, askParent, &popupMenu)
+			if popupMenu != nil {
+				*(*uintptr)(getPtr(getVal(5))) = popupMenu.Instance()
+			}
+		},
+	}
+}
+
+func makeTVTPrepareEditEvent(cb TVTPrepareEditEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTPrepareEditEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : function(Tree: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex): Boolean;
+			tree := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			column := int32(getVal(2))
+			ret := cb(tree, node, column)
+			*(*bool)(getPtr(getVal(3))) = ret
+		},
+	}
+}
+
+func makeTVTProcessMessageEvent(cb TVTProcessMessageEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTProcessMessageEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(var Msg: TLMessage);
+			msg := (*types.TLMessage)(getPtr(getVal(0)))
+			cb(msg)
+		},
+	}
+}
+
+func makeTVTRemoveFromSelectionEvent(cb TVTRemoveFromSelectionEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTRemoveFromSelectionEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			cb(sender, node)
+		},
+	}
+}
+
+func makeTVTSaveNodeEvent(cb TVTSaveNodeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTSaveNodeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Stream: TStream);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			stream := AsStream(getVal(2))
+			cb(sender, node, stream)
+		},
+	}
+}
+
+func makeTVTSaveTreeEvent(cb TVTSaveTreeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTSaveTreeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; Stream: TStream);
+			sender := AsBaseVirtualTree(getVal(0))
+			stream := AsStream(getVal(1))
+			cb(sender, stream)
+		},
+	}
+}
+
+func makeTVTScrollBarShowEvent(cb TVTScrollBarShowEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTScrollBarShowEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TBaseVirtualTree; Bar: Integer; Show: Boolean);
+			sender := AsBaseVirtualTree(getVal(0))
+			bar := int32(getVal(1))
+			show := api.GoBool(getVal(2))
+			cb(sender, bar, show)
+		},
+	}
+}
+
+func makeTVTScrollEvent(cb TVTScrollEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTScrollEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TBaseVirtualTree; DeltaX, DeltaY: Integer);
+			sender := AsBaseVirtualTree(getVal(0))
+			deltaX := int32(getVal(1))
+			deltaY := int32(getVal(2))
+			cb(sender, deltaX, deltaY)
+		},
+	}
+}
+
+func makeTVTSetBoundsEvent(cb TVTSetBoundsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTSetBoundsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(R: TRect);
+			R := *(*types.TRect)(getPtr(getVal(0)))
+			cb(R)
+		},
+	}
+}
+
+func makeTVTStateChangeEvent(cb TVTStateChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTStateChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TBaseVirtualTree; Enter, Leave: TVirtualTreeStates);
+			sender := AsBaseVirtualTree(getVal(0))
+			enter := types.TVirtualTreeStates(getVal(1))
+			leave := types.TVirtualTreeStates(getVal(2))
+			cb(sender, enter, leave)
+		},
+	}
+}
+
+func makeTVTStructureChangeEvent(cb TVTStructureChangeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTStructureChangeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Reason: TChangeReason);
+			sender := AsBaseVirtualTree(getVal(0))
+			node := types.PVirtualNode(getVal(1))
+			reason := types.TChangeReason(getVal(2))
+			cb(sender, node, reason)
+		},
+	}
+}
+
+func makeTVTTreeExportEvent(cb TVTTreeExportEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTTreeExportEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; aExportType: TVTExportType);
+			sender := AsBaseVirtualTree(getVal(0))
+			exportType := types.TVTExportType(getVal(1))
+			cb(sender, exportType)
+		},
+	}
+}
+
+func makeTVTUpdatingEvent(cb TVTUpdatingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TVTUpdatingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TBaseVirtualTree; State: TVTUpdateState);
+			sender := AsBaseVirtualTree(getVal(0))
+			state := types.TVTUpdateState(getVal(1))
+			cb(sender, state)
+		},
+	}
+}
+
+func makeTValidateEntryEvent(cb TValidateEntryEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TValidateEntryEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
+			sender := AsObject(getVal(0))
+			col := int32(getVal(1))
+			row := int32(getVal(2))
+			oldValue := api.GoStr(getVal(3))
+			newValue := api.GoStr(*(*uintptr)(getPtr(getVal(4))))
+			cb(sender, col, row, oldValue, &newValue)
+			*(*uintptr)(getPtr(getVal(4))) = api.PasStr(newValue)
+		},
+	}
+}
+
+func makeTWndMethod(cb TWndMethod) func(msg uintptr) {
+	if cb == nil {
+		return nil
+	}
+	return func(msg uintptr) {
+		message := (*types.TLMessage)(getPtr(msg))
+		cb(message)
+	}
 }

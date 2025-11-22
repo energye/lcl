@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IAction Parent: ICustomAction
@@ -19,34 +20,33 @@ type IAction interface {
 	ICustomAction
 }
 
-// TAction Parent: TCustomAction
 type TAction struct {
 	TCustomAction
 }
 
-func NewAction(AOwner IComponent) IAction {
-	r1 := actionImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsAction(r1)
+// NewAction class constructor
+func NewAction(owner IComponent) IAction {
+	r := actionAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsAction(r)
 }
 
-func ActionClass() TClass {
-	ret := actionImportAPI().SysCallN(0)
-	return TClass(ret)
+func TActionClass() types.TClass {
+	r := actionAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	actionImport       *imports.Imports = nil
-	actionImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Action_Class", 0),
-		/*1*/ imports.NewTable("Action_Create", 0),
-	}
+	actionOnce   base.Once
+	actionImport *imports.Imports = nil
 )
 
-func actionImportAPI() *imports.Imports {
-	if actionImport == nil {
-		actionImport = NewDefaultImports()
-		actionImport.SetImportTable(actionImportTables)
-		actionImportTables = nil
-	}
+func actionAPI() *imports.Imports {
+	actionOnce.Do(func() {
+		actionImport = api.NewDefaultImports()
+		actionImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TAction_Create", 0), // constructor NewAction
+			/* 1 */ imports.NewTable("TAction_TClass", 0), // function TActionClass
+		}
+	})
 	return actionImport
 }

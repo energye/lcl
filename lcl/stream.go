@@ -9,239 +9,326 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IStream Parent: IObject
 type IStream interface {
 	IObject
-	Position() (resultInt64 int64)                                    // property
-	SetPosition(AValue int64)                                         // property
-	Size() (resultInt64 int64)                                        // property
-	SetSize(AValue int64)                                             // property
-	Read(count int32) []byte                                          // function
-	Write(Buffer []byte) int32                                        // function
-	Seek(Offset int32, Origin Word) int32                             // function
-	Seek1(Offset int64, Origin TSeekOrigin) (resultInt64 int64)       // function
-	CopyFrom(Source IStream, Count int64) (resultInt64 int64)         // function
-	ReadComponent(Instance IComponent) IComponent                     // function
-	ReadComponentRes(Instance IComponent) IComponent                  // function
-	ReadByte() Byte                                                   // function
-	ReadWord() Word                                                   // function
-	ReadDWord() uint32                                                // function
-	ReadQWord() QWord                                                 // function
-	ReadAnsiString() string                                           // function
-	ReadBuffer(count int32) []byte                                    // procedure
-	WriteBuffer(Buffer []byte)                                        // procedure
-	WriteComponent(Instance IComponent)                               // procedure
-	WriteComponentRes(ResName string, Instance IComponent)            // procedure
-	WriteDescendent(Instance, Ancestor IComponent)                    // procedure
-	WriteDescendentRes(ResName string, Instance, Ancestor IComponent) // procedure
-	WriteResourceHeader(ResName string, FixupInfo *int32)             // procedure
-	FixupResourceHeader(FixupInfo int32)                              // procedure
-	ReadResHeader()                                                   // procedure
-	WriteByte(b Byte)                                                 // procedure
-	WriteWord(w Word)                                                 // procedure
-	WriteDWord(d uint32)                                              // procedure
-	WriteQWord(q QWord)                                               // procedure
-	WriteAnsiString(S string)                                         // procedure
+	Read(buffer *uintptr, count int32) int32                                     // function
+	Write(buffer uintptr, count int32) int32                                     // function
+	SeekWithIntWord(offset int32, origin uint16) int32                           // function
+	SeekWithInt64SeekOrigin(offset int64, origin types.TSeekOrigin) int64        // function
+	CopyFrom(source IStream, count int64) int64                                  // function
+	ReadComponent(instance IComponent) IComponent                                // function
+	ReadComponentRes(instance IComponent) IComponent                             // function
+	ReadByte() byte                                                              // function
+	ReadWord() uint16                                                            // function
+	ReadDWord() uint32                                                           // function
+	ReadQWord() uintptr                                                          // function
+	ReadAnsiString() string                                                      // function
+	ReadBuffer(buffer *uintptr, count int32)                                     // procedure
+	WriteBuffer(buffer uintptr, count int32)                                     // procedure
+	WriteComponent(instance IComponent)                                          // procedure
+	WriteComponentRes(resName string, instance IComponent)                       // procedure
+	WriteDescendent(instance IComponent, ancestor IComponent)                    // procedure
+	WriteDescendentRes(resName string, instance IComponent, ancestor IComponent) // procedure
+	WriteResourceHeader(resName string, fixupInfo *int32)                        // procedure
+	FixupResourceHeader(fixupInfo int32)                                         // procedure
+	ReadResHeader()                                                              // procedure
+	WriteByte(B byte)                                                            // procedure
+	WriteWord(W uint16)                                                          // procedure
+	WriteDWord(D uint32)                                                         // procedure
+	WriteQWord(Q uintptr)                                                        // procedure
+	WriteAnsiString(S string)                                                    // procedure
+	Position() int64                                                             // property Position Getter
+	SetPosition(value int64)                                                     // property Position Setter
+	Size() int64                                                                 // property Size Getter
+	SetSizeToInt64(value int64)                                                  // property Size Setter
 }
 
-// TStream Parent: TObject
 type TStream struct {
 	TObject
 }
 
-func NewStream() IStream {
-	r1 := streamImportAPI().SysCallN(2)
-	return AsStream(r1)
+func (m *TStream) Read(buffer *uintptr, count int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	bufferPtr := uintptr(*buffer)
+	r := streamAPI().SysCallN(1, m.Instance(), uintptr(base.UnsafePointer(&bufferPtr)), uintptr(count))
+	*buffer = uintptr(bufferPtr)
+	return int32(r)
 }
 
-func (m *TStream) Position() (resultInt64 int64) {
-	streamImportAPI().SysCallN(4, 0, m.Instance(), uintptr(unsafePointer(&resultInt64)), uintptr(unsafePointer(&resultInt64)))
+func (m *TStream) Write(buffer uintptr, count int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := streamAPI().SysCallN(2, m.Instance(), uintptr(buffer), uintptr(count))
+	return int32(r)
+}
+
+func (m *TStream) SeekWithIntWord(offset int32, origin uint16) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := streamAPI().SysCallN(3, m.Instance(), uintptr(offset), uintptr(origin))
+	return int32(r)
+}
+
+func (m *TStream) SeekWithInt64SeekOrigin(offset int64, origin types.TSeekOrigin) (result int64) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(4, m.Instance(), uintptr(base.UnsafePointer(&offset)), uintptr(origin), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TStream) SetPosition(AValue int64) {
-	streamImportAPI().SysCallN(4, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
-}
-
-func (m *TStream) Size() (resultInt64 int64) {
-	streamImportAPI().SysCallN(17, 0, m.Instance(), uintptr(unsafePointer(&resultInt64)), uintptr(unsafePointer(&resultInt64)))
+func (m *TStream) CopyFrom(source IStream, count int64) (result int64) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(5, m.Instance(), base.GetObjectUintptr(source), uintptr(base.UnsafePointer(&count)), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TStream) SetSize(AValue int64) {
-	streamImportAPI().SysCallN(17, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
+func (m *TStream) ReadComponent(instance IComponent) IComponent {
+	if !m.IsValid() {
+		return nil
+	}
+	r := streamAPI().SysCallN(6, m.Instance(), base.GetObjectUintptr(instance))
+	return AsComponent(r)
 }
 
-func (m *TStream) Read(count int32) []byte {
-	_, d := sysCallBufferRead(streamImportAPI(), 5, m.Instance(), count)
-	return d
+func (m *TStream) ReadComponentRes(instance IComponent) IComponent {
+	if !m.IsValid() {
+		return nil
+	}
+	r := streamAPI().SysCallN(7, m.Instance(), base.GetObjectUintptr(instance))
+	return AsComponent(r)
 }
 
-func (m *TStream) Write(Buffer []byte) int32 {
-	r1 := sysCallBufferWrite(streamImportAPI(), 18, m.Instance(), Buffer)
-	return int32(r1)
+func (m *TStream) ReadByte() byte {
+	if !m.IsValid() {
+		return 0
+	}
+	r := streamAPI().SysCallN(8, m.Instance())
+	return byte(r)
 }
 
-func (m *TStream) Seek(Offset int32, Origin Word) int32 {
-	r1 := streamImportAPI().SysCallN(15, m.Instance(), uintptr(Offset), uintptr(Origin))
-	return int32(r1)
-}
-
-func (m *TStream) Seek1(Offset int64, Origin TSeekOrigin) (resultInt64 int64) {
-	streamImportAPI().SysCallN(16, m.Instance(), uintptr(unsafePointer(&Offset)), uintptr(Origin), uintptr(unsafePointer(&resultInt64)))
-	return
-}
-
-func (m *TStream) CopyFrom(Source IStream, Count int64) (resultInt64 int64) {
-	streamImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Source), uintptr(unsafePointer(&Count)), uintptr(unsafePointer(&resultInt64)))
-	return
-}
-
-func (m *TStream) ReadComponent(Instance IComponent) IComponent {
-	r1 := streamImportAPI().SysCallN(9, m.Instance(), GetObjectUintptr(Instance))
-	return AsComponent(r1)
-}
-
-func (m *TStream) ReadComponentRes(Instance IComponent) IComponent {
-	r1 := streamImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(Instance))
-	return AsComponent(r1)
-}
-
-func (m *TStream) ReadByte() Byte {
-	r1 := streamImportAPI().SysCallN(8, m.Instance())
-	return Byte(r1)
-}
-
-func (m *TStream) ReadWord() Word {
-	r1 := streamImportAPI().SysCallN(14, m.Instance())
-	return Word(r1)
+func (m *TStream) ReadWord() uint16 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := streamAPI().SysCallN(9, m.Instance())
+	return uint16(r)
 }
 
 func (m *TStream) ReadDWord() uint32 {
-	r1 := streamImportAPI().SysCallN(11, m.Instance())
-	return uint32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := streamAPI().SysCallN(10, m.Instance())
+	return uint32(r)
 }
 
-func (m *TStream) ReadQWord() QWord {
-	r1 := streamImportAPI().SysCallN(12, m.Instance())
-	return QWord(r1)
+func (m *TStream) ReadQWord() uintptr {
+	if !m.IsValid() {
+		return 0
+	}
+	r := streamAPI().SysCallN(11, m.Instance())
+	return uintptr(r)
 }
 
 func (m *TStream) ReadAnsiString() string {
-	r1 := streamImportAPI().SysCallN(6, m.Instance())
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := streamAPI().SysCallN(12, m.Instance())
+	return api.GoStr(r)
 }
 
-func StreamClass() TClass {
-	ret := streamImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TStream) ReadBuffer(buffer *uintptr, count int32) {
+	if !m.IsValid() {
+		return
+	}
+	bufferPtr := uintptr(*buffer)
+	streamAPI().SysCallN(13, m.Instance(), uintptr(base.UnsafePointer(&bufferPtr)), uintptr(count))
+	*buffer = uintptr(bufferPtr)
 }
 
-func (m *TStream) ReadBuffer(count int32) []byte {
-	_, d := sysCallBufferRead(streamImportAPI(), 7, m.Instance(), count)
-	return d
+func (m *TStream) WriteBuffer(buffer uintptr, count int32) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(14, m.Instance(), uintptr(buffer), uintptr(count))
 }
 
-func (m *TStream) WriteBuffer(Buffer []byte) {
-	sysCallBufferWrite(streamImportAPI(), 20, m.Instance(), Buffer)
+func (m *TStream) WriteComponent(instance IComponent) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(15, m.Instance(), base.GetObjectUintptr(instance))
 }
 
-func (m *TStream) WriteComponent(Instance IComponent) {
-	streamImportAPI().SysCallN(22, m.Instance(), GetObjectUintptr(Instance))
+func (m *TStream) WriteComponentRes(resName string, instance IComponent) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(16, m.Instance(), api.PasStr(resName), base.GetObjectUintptr(instance))
 }
 
-func (m *TStream) WriteComponentRes(ResName string, Instance IComponent) {
-	streamImportAPI().SysCallN(23, m.Instance(), PascalStr(ResName), GetObjectUintptr(Instance))
+func (m *TStream) WriteDescendent(instance IComponent, ancestor IComponent) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(17, m.Instance(), base.GetObjectUintptr(instance), base.GetObjectUintptr(ancestor))
 }
 
-func (m *TStream) WriteDescendent(Instance, Ancestor IComponent) {
-	streamImportAPI().SysCallN(25, m.Instance(), GetObjectUintptr(Instance), GetObjectUintptr(Ancestor))
+func (m *TStream) WriteDescendentRes(resName string, instance IComponent, ancestor IComponent) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(18, m.Instance(), api.PasStr(resName), base.GetObjectUintptr(instance), base.GetObjectUintptr(ancestor))
 }
 
-func (m *TStream) WriteDescendentRes(ResName string, Instance, Ancestor IComponent) {
-	streamImportAPI().SysCallN(26, m.Instance(), PascalStr(ResName), GetObjectUintptr(Instance), GetObjectUintptr(Ancestor))
+func (m *TStream) WriteResourceHeader(resName string, fixupInfo *int32) {
+	if !m.IsValid() {
+		return
+	}
+	fixupInfoPtr := uintptr(*fixupInfo)
+	streamAPI().SysCallN(19, m.Instance(), api.PasStr(resName), uintptr(base.UnsafePointer(&fixupInfoPtr)))
+	*fixupInfo = int32(fixupInfoPtr)
 }
 
-func (m *TStream) WriteResourceHeader(ResName string, FixupInfo *int32) {
-	var result1 uintptr
-	streamImportAPI().SysCallN(28, m.Instance(), PascalStr(ResName), uintptr(unsafePointer(&result1)))
-	*FixupInfo = int32(result1)
-}
-
-func (m *TStream) FixupResourceHeader(FixupInfo int32) {
-	streamImportAPI().SysCallN(3, m.Instance(), uintptr(FixupInfo))
+func (m *TStream) FixupResourceHeader(fixupInfo int32) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(20, m.Instance(), uintptr(fixupInfo))
 }
 
 func (m *TStream) ReadResHeader() {
-	streamImportAPI().SysCallN(13, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(21, m.Instance())
 }
 
-func (m *TStream) WriteByte(b Byte) {
-	streamImportAPI().SysCallN(21, m.Instance(), uintptr(b))
+func (m *TStream) WriteByte(B byte) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(22, m.Instance(), uintptr(B))
 }
 
-func (m *TStream) WriteWord(w Word) {
-	streamImportAPI().SysCallN(29, m.Instance(), uintptr(w))
+func (m *TStream) WriteWord(W uint16) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(23, m.Instance(), uintptr(W))
 }
 
-func (m *TStream) WriteDWord(d uint32) {
-	streamImportAPI().SysCallN(24, m.Instance(), uintptr(d))
+func (m *TStream) WriteDWord(D uint32) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(24, m.Instance(), uintptr(D))
 }
 
-func (m *TStream) WriteQWord(q QWord) {
-	streamImportAPI().SysCallN(27, m.Instance(), uintptr(q))
+func (m *TStream) WriteQWord(Q uintptr) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(25, m.Instance(), uintptr(Q))
 }
 
 func (m *TStream) WriteAnsiString(S string) {
-	streamImportAPI().SysCallN(19, m.Instance(), PascalStr(S))
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(26, m.Instance(), api.PasStr(S))
+}
+
+func (m *TStream) Position() (result int64) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(27, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TStream) SetPosition(value int64) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(27, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TStream) Size() (result int64) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(28, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TStream) SetSizeToInt64(value int64) {
+	if !m.IsValid() {
+		return
+	}
+	streamAPI().SysCallN(28, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+// NewStream class constructor
+func NewStream() IStream {
+	r := streamAPI().SysCallN(0)
+	return AsStream(r)
 }
 
 var (
-	streamImport       *imports.Imports = nil
-	streamImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Stream_Class", 0),
-		/*1*/ imports.NewTable("Stream_CopyFrom", 0),
-		/*2*/ imports.NewTable("Stream_Create", 0),
-		/*3*/ imports.NewTable("Stream_FixupResourceHeader", 0),
-		/*4*/ imports.NewTable("Stream_Position", 0),
-		/*5*/ imports.NewTable("Stream_Read", 0),
-		/*6*/ imports.NewTable("Stream_ReadAnsiString", 0),
-		/*7*/ imports.NewTable("Stream_ReadBuffer", 0),
-		/*8*/ imports.NewTable("Stream_ReadByte", 0),
-		/*9*/ imports.NewTable("Stream_ReadComponent", 0),
-		/*10*/ imports.NewTable("Stream_ReadComponentRes", 0),
-		/*11*/ imports.NewTable("Stream_ReadDWord", 0),
-		/*12*/ imports.NewTable("Stream_ReadQWord", 0),
-		/*13*/ imports.NewTable("Stream_ReadResHeader", 0),
-		/*14*/ imports.NewTable("Stream_ReadWord", 0),
-		/*15*/ imports.NewTable("Stream_Seek", 0),
-		/*16*/ imports.NewTable("Stream_Seek1", 0),
-		/*17*/ imports.NewTable("Stream_Size", 0),
-		/*18*/ imports.NewTable("Stream_Write", 0),
-		/*19*/ imports.NewTable("Stream_WriteAnsiString", 0),
-		/*20*/ imports.NewTable("Stream_WriteBuffer", 0),
-		/*21*/ imports.NewTable("Stream_WriteByte", 0),
-		/*22*/ imports.NewTable("Stream_WriteComponent", 0),
-		/*23*/ imports.NewTable("Stream_WriteComponentRes", 0),
-		/*24*/ imports.NewTable("Stream_WriteDWord", 0),
-		/*25*/ imports.NewTable("Stream_WriteDescendent", 0),
-		/*26*/ imports.NewTable("Stream_WriteDescendentRes", 0),
-		/*27*/ imports.NewTable("Stream_WriteQWord", 0),
-		/*28*/ imports.NewTable("Stream_WriteResourceHeader", 0),
-		/*29*/ imports.NewTable("Stream_WriteWord", 0),
-	}
+	streamOnce   base.Once
+	streamImport *imports.Imports = nil
 )
 
-func streamImportAPI() *imports.Imports {
-	if streamImport == nil {
-		streamImport = NewDefaultImports()
-		streamImport.SetImportTable(streamImportTables)
-		streamImportTables = nil
-	}
+func streamAPI() *imports.Imports {
+	streamOnce.Do(func() {
+		streamImport = api.NewDefaultImports()
+		streamImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TStream_Create", 0), // constructor NewStream
+			/* 1 */ imports.NewTable("TStream_Read", 0), // function Read
+			/* 2 */ imports.NewTable("TStream_Write", 0), // function Write
+			/* 3 */ imports.NewTable("TStream_SeekWithIntWord", 0), // function SeekWithIntWord
+			/* 4 */ imports.NewTable("TStream_SeekWithInt64SeekOrigin", 0), // function SeekWithInt64SeekOrigin
+			/* 5 */ imports.NewTable("TStream_CopyFrom", 0), // function CopyFrom
+			/* 6 */ imports.NewTable("TStream_ReadComponent", 0), // function ReadComponent
+			/* 7 */ imports.NewTable("TStream_ReadComponentRes", 0), // function ReadComponentRes
+			/* 8 */ imports.NewTable("TStream_ReadByte", 0), // function ReadByte
+			/* 9 */ imports.NewTable("TStream_ReadWord", 0), // function ReadWord
+			/* 10 */ imports.NewTable("TStream_ReadDWord", 0), // function ReadDWord
+			/* 11 */ imports.NewTable("TStream_ReadQWord", 0), // function ReadQWord
+			/* 12 */ imports.NewTable("TStream_ReadAnsiString", 0), // function ReadAnsiString
+			/* 13 */ imports.NewTable("TStream_ReadBuffer", 0), // procedure ReadBuffer
+			/* 14 */ imports.NewTable("TStream_WriteBuffer", 0), // procedure WriteBuffer
+			/* 15 */ imports.NewTable("TStream_WriteComponent", 0), // procedure WriteComponent
+			/* 16 */ imports.NewTable("TStream_WriteComponentRes", 0), // procedure WriteComponentRes
+			/* 17 */ imports.NewTable("TStream_WriteDescendent", 0), // procedure WriteDescendent
+			/* 18 */ imports.NewTable("TStream_WriteDescendentRes", 0), // procedure WriteDescendentRes
+			/* 19 */ imports.NewTable("TStream_WriteResourceHeader", 0), // procedure WriteResourceHeader
+			/* 20 */ imports.NewTable("TStream_FixupResourceHeader", 0), // procedure FixupResourceHeader
+			/* 21 */ imports.NewTable("TStream_ReadResHeader", 0), // procedure ReadResHeader
+			/* 22 */ imports.NewTable("TStream_WriteByte", 0), // procedure WriteByte
+			/* 23 */ imports.NewTable("TStream_WriteWord", 0), // procedure WriteWord
+			/* 24 */ imports.NewTable("TStream_WriteDWord", 0), // procedure WriteDWord
+			/* 25 */ imports.NewTable("TStream_WriteQWord", 0), // procedure WriteQWord
+			/* 26 */ imports.NewTable("TStream_WriteAnsiString", 0), // procedure WriteAnsiString
+			/* 27 */ imports.NewTable("TStream_Position", 0), // property Position
+			/* 28 */ imports.NewTable("TStream_Size", 0), // property Size
+		}
+	})
 	return streamImport
 }

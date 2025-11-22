@@ -9,44 +9,39 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
-// IFPCustomImageWriter Is Abstract Class Parent: IFPCustomImageHandler
+// IFPCustomImageWriter Parent: IFPCustomImageHandler
 type IFPCustomImageWriter interface {
 	IFPCustomImageHandler
-	ImageWrite(Str IStream, Img IFPCustomImage) // procedure
+	ImageWrite(str IStream, img IFPCustomImage) // procedure
 }
 
-// TFPCustomImageWriter Is Abstract Class Parent: TFPCustomImageHandler
 type TFPCustomImageWriter struct {
 	TFPCustomImageHandler
 }
 
-func FPCustomImageWriterClass() TClass {
-	ret := fPCustomImageWriterImportAPI().SysCallN(0)
-	return TClass(ret)
-}
-
-func (m *TFPCustomImageWriter) ImageWrite(Str IStream, Img IFPCustomImage) {
-	fPCustomImageWriterImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Str), GetObjectUintptr(Img))
+func (m *TFPCustomImageWriter) ImageWrite(str IStream, img IFPCustomImage) {
+	if !m.IsValid() {
+		return
+	}
+	fPCustomImageWriterAPI().SysCallN(0, m.Instance(), base.GetObjectUintptr(str), base.GetObjectUintptr(img))
 }
 
 var (
-	fPCustomImageWriterImport       *imports.Imports = nil
-	fPCustomImageWriterImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FPCustomImageWriter_Class", 0),
-		/*1*/ imports.NewTable("FPCustomImageWriter_ImageWrite", 0),
-	}
+	fPCustomImageWriterOnce   base.Once
+	fPCustomImageWriterImport *imports.Imports = nil
 )
 
-func fPCustomImageWriterImportAPI() *imports.Imports {
-	if fPCustomImageWriterImport == nil {
-		fPCustomImageWriterImport = NewDefaultImports()
-		fPCustomImageWriterImport.SetImportTable(fPCustomImageWriterImportTables)
-		fPCustomImageWriterImportTables = nil
-	}
+func fPCustomImageWriterAPI() *imports.Imports {
+	fPCustomImageWriterOnce.Do(func() {
+		fPCustomImageWriterImport = api.NewDefaultImports()
+		fPCustomImageWriterImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFPCustomImageWriter_ImageWrite", 0), // procedure ImageWrite
+		}
+	})
 	return fPCustomImageWriterImport
 }

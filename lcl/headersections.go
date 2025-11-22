@@ -9,77 +9,94 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IHeaderSections Parent: ICollection
 type IHeaderSections interface {
 	ICollection
-	ItemsForHeaderSection(Index int32) IHeaderSection            // property
-	SetItemsForHeaderSection(Index int32, AValue IHeaderSection) // property
-	AddForHeaderSection() IHeaderSection                         // function
-	AddItem(Item IHeaderSection, Index int32) IHeaderSection     // function
-	InsertForHeaderSection(Index int32) IHeaderSection           // function
+	AddToHeaderSection() IHeaderSection                               // function
+	AddItem(item IHeaderSection, index int32) IHeaderSection          // function
+	InsertWithInt(index int32) IHeaderSection                         // function
+	DeleteWithInt(index int32)                                        // procedure
+	ItemsWithIntToHeaderSection(index int32) IHeaderSection           // property Items Getter
+	SetItemsWithIntToHeaderSection(index int32, value IHeaderSection) // property Items Setter
 }
 
-// THeaderSections Parent: TCollection
 type THeaderSections struct {
 	TCollection
 }
 
-func NewHeaderSections(HeaderControl ICustomHeaderControl) IHeaderSections {
-	r1 := headerSectionsImportAPI().SysCallN(3, GetObjectUintptr(HeaderControl))
-	return AsHeaderSections(r1)
+func (m *THeaderSections) AddToHeaderSection() IHeaderSection {
+	if !m.IsValid() {
+		return nil
+	}
+	r := headerSectionsAPI().SysCallN(1, m.Instance())
+	return AsHeaderSection(r)
 }
 
-func (m *THeaderSections) ItemsForHeaderSection(Index int32) IHeaderSection {
-	r1 := headerSectionsImportAPI().SysCallN(5, 0, m.Instance(), uintptr(Index))
-	return AsHeaderSection(r1)
+func (m *THeaderSections) AddItem(item IHeaderSection, index int32) IHeaderSection {
+	if !m.IsValid() {
+		return nil
+	}
+	r := headerSectionsAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(item), uintptr(index))
+	return AsHeaderSection(r)
 }
 
-func (m *THeaderSections) SetItemsForHeaderSection(Index int32, AValue IHeaderSection) {
-	headerSectionsImportAPI().SysCallN(5, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
+func (m *THeaderSections) InsertWithInt(index int32) IHeaderSection {
+	if !m.IsValid() {
+		return nil
+	}
+	r := headerSectionsAPI().SysCallN(3, m.Instance(), uintptr(index))
+	return AsHeaderSection(r)
 }
 
-func (m *THeaderSections) AddForHeaderSection() IHeaderSection {
-	r1 := headerSectionsImportAPI().SysCallN(0, m.Instance())
-	return AsHeaderSection(r1)
+func (m *THeaderSections) DeleteWithInt(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	headerSectionsAPI().SysCallN(4, m.Instance(), uintptr(index))
 }
 
-func (m *THeaderSections) AddItem(Item IHeaderSection, Index int32) IHeaderSection {
-	r1 := headerSectionsImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Item), uintptr(Index))
-	return AsHeaderSection(r1)
+func (m *THeaderSections) ItemsWithIntToHeaderSection(index int32) IHeaderSection {
+	if !m.IsValid() {
+		return nil
+	}
+	r := headerSectionsAPI().SysCallN(5, 0, m.Instance(), uintptr(index))
+	return AsHeaderSection(r)
 }
 
-func (m *THeaderSections) InsertForHeaderSection(Index int32) IHeaderSection {
-	r1 := headerSectionsImportAPI().SysCallN(4, m.Instance(), uintptr(Index))
-	return AsHeaderSection(r1)
+func (m *THeaderSections) SetItemsWithIntToHeaderSection(index int32, value IHeaderSection) {
+	if !m.IsValid() {
+		return
+	}
+	headerSectionsAPI().SysCallN(5, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
 }
 
-func HeaderSectionsClass() TClass {
-	ret := headerSectionsImportAPI().SysCallN(2)
-	return TClass(ret)
+// NewHeaderSections class constructor
+func NewHeaderSections(headerControl ICustomHeaderControl) IHeaderSections {
+	r := headerSectionsAPI().SysCallN(0, base.GetObjectUintptr(headerControl))
+	return AsHeaderSections(r)
 }
 
 var (
-	headerSectionsImport       *imports.Imports = nil
-	headerSectionsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("HeaderSections_AddForHeaderSection", 0),
-		/*1*/ imports.NewTable("HeaderSections_AddItem", 0),
-		/*2*/ imports.NewTable("HeaderSections_Class", 0),
-		/*3*/ imports.NewTable("HeaderSections_Create", 0),
-		/*4*/ imports.NewTable("HeaderSections_InsertForHeaderSection", 0),
-		/*5*/ imports.NewTable("HeaderSections_ItemsForHeaderSection", 0),
-	}
+	headerSectionsOnce   base.Once
+	headerSectionsImport *imports.Imports = nil
 )
 
-func headerSectionsImportAPI() *imports.Imports {
-	if headerSectionsImport == nil {
-		headerSectionsImport = NewDefaultImports()
-		headerSectionsImport.SetImportTable(headerSectionsImportTables)
-		headerSectionsImportTables = nil
-	}
+func headerSectionsAPI() *imports.Imports {
+	headerSectionsOnce.Do(func() {
+		headerSectionsImport = api.NewDefaultImports()
+		headerSectionsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("THeaderSections_Create", 0), // constructor NewHeaderSections
+			/* 1 */ imports.NewTable("THeaderSections_AddToHeaderSection", 0), // function AddToHeaderSection
+			/* 2 */ imports.NewTable("THeaderSections_AddItem", 0), // function AddItem
+			/* 3 */ imports.NewTable("THeaderSections_InsertWithInt", 0), // function InsertWithInt
+			/* 4 */ imports.NewTable("THeaderSections_DeleteWithInt", 0), // procedure DeleteWithInt
+			/* 5 */ imports.NewTable("THeaderSections_ItemsWithIntToHeaderSection", 0), // property ItemsWithIntToHeaderSection
+		}
+	})
 	return headerSectionsImport
 }

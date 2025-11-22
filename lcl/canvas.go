@@ -9,414 +9,698 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICanvas Parent: IFPCustomCanvas
 type ICanvas interface {
 	IFPCustomCanvas
-	TextRect2(aRect *TRect, text string, textFormat TTextFormat)
-	Pixels(X, Y int32) TColor                                                                  // property
-	SetPixels(X, Y int32, AValue TColor)                                                       // property
-	Handle() HDC                                                                               // property
-	SetHandle(AValue HDC)                                                                      // property
-	TextStyle() (resultTextStyle TTextStyle)                                                   // property
-	SetTextStyle(AValue *TTextStyle)                                                           // property
-	AntialiasingMode() TAntialiasingMode                                                       // property
-	SetAntialiasingMode(AValue TAntialiasingMode)                                              // property
-	AutoRedraw() bool                                                                          // property
-	SetAutoRedraw(AValue bool)                                                                 // property
-	BrushForBrush() IBrush                                                                     // property
-	SetBrushForBrush(AValue IBrush)                                                            // property
-	CopyMode() TCopyMode                                                                       // property
-	SetCopyMode(AValue TCopyMode)                                                              // property
-	FontForFont() IFont                                                                        // property
-	SetFontForFont(AValue IFont)                                                               // property
-	PenForPen() IPen                                                                           // property
-	SetPenForPen(AValue IPen)                                                                  // property
-	Region() IRegion                                                                           // property
-	SetRegion(AValue IRegion)                                                                  // property
-	TryLock() bool                                                                             // function
-	GetTextMetrics(OutTM *TLCLTextMetric) bool                                                 // function
-	TextFitInfo(Text string, MaxWidth int32) int32                                             // function
-	HandleAllocated() bool                                                                     // function
-	GetUpdatedHandle(ReqState TCanvasState) HDC                                                // function
-	Lock()                                                                                     // procedure
-	Unlock()                                                                                   // procedure
-	Refresh()                                                                                  // procedure
-	Changing()                                                                                 // procedure
-	Changed()                                                                                  // procedure
-	SaveHandleState()                                                                          // procedure
-	RestoreHandleState()                                                                       // procedure
-	ArcTo(ALeft, ATop, ARight, ABottom, SX, SY, EX, EY int32)                                  // procedure
-	AngleArc(X, Y int32, Radius uint32, StartAngle, SweepAngle float32)                        // procedure
-	BrushCopy(ADestRect *TRect, ABitmap IBitmap, ASourceRect *TRect, ATransparentColor TColor) // procedure
-	Chord(x1, y1, x2, y2, Angle16Deg, Angle16DegLength int32)                                  // procedure
-	Chord1(x1, y1, x2, y2, SX, SY, EX, EY int32)                                               // procedure
-	CopyRectForCanvas(Dest *TRect, SrcCanvas ICanvas, Source *TRect)                           // procedure
-	DrawForGraphic(X, Y int32, SrcGraphic IGraphic)                                            // procedure
-	DrawFocusRect(ARect *TRect)                                                                // procedure
-	StretchDrawForGraphic(DestRect *TRect, SrcGraphic IGraphic)                                // procedure
-	FloodFillForInteger(X, Y int32, FillColor TColor, FillStyle TFillStyle)                    // procedure
-	Frame3d(ARect *TRect, FrameWidth int32, Style TGraphicsBevelCut)                           // procedure
-	Frame3D1(ARect *TRect, TopColor, BottomColor TColor, FrameWidth int32)                     // procedure
-	Frame(ARect *TRect)                                                                        // procedure
-	Frame1(X1, Y1, X2, Y2 int32)                                                               // procedure
-	FrameRect(ARect *TRect)                                                                    // procedure
-	FrameRect1(X1, Y1, X2, Y2 int32)                                                           // procedure
-	GradientFill(ARect *TRect, AStart, AStop TColor, ADirection TGradientDirection)            // procedure
-	Pie(EllipseX1, EllipseY1, EllipseX2, EllipseY2, StartX, StartY, EndX, EndY int32)          // procedure
-	Polygon(Points []TPoint, Winding bool)                                                     // procedure
-	Polyline(Points []TPoint)                                                                  // procedure
-	RoundRect(X1, Y1, X2, Y2 int32, RX, RY int32)                                              // procedure
-	RoundRect1(Rect *TRect, RX, RY int32)                                                      // procedure
-	TextRect(ARect *TRect, X, Y int32, Text string)                                            // procedure
-	TextRect1(ARect *TRect, X, Y int32, Text string, Style *TTextStyle)                        // procedure
-	SetOnChange(fn TNotifyEvent)                                                               // property event
-	SetOnChanging(fn TNotifyEvent)                                                             // property event
+	TryLock() bool                                          // function
+	GetTextMetrics(outTM *TLCLTextMetric) bool              // function
+	TextExtentWithString(text string) types.TSize           // function
+	TextHeightWithString(text string) int32                 // function
+	TextWidthWithString(text string) int32                  // function
+	TextFitInfo(text string, maxWidth int32) int32          // function
+	HandleAllocated() bool                                  // function
+	GetUpdatedHandle(reqState types.TCanvasState) types.HDC // function
+	Lock()                                                  // procedure
+	Unlock()                                                // procedure
+	Refresh()                                               // procedure
+	Changing()                                              // procedure
+	Changed()                                               // procedure
+	SaveHandleState()                                       // procedure
+	RestoreHandleState()                                    // procedure
+	// ArcWithIntX6
+	//  extra drawing methods (there are more in the ancestor TFPCustomCanvas)
+	ArcWithIntX6(left int32, top int32, right int32, bottom int32, angle16Deg int32, angle16DegLength int32)                    // procedure
+	ArcWithIntX8(left int32, top int32, right int32, bottom int32, sX int32, sY int32, eX int32, eY int32)                      // procedure
+	ArcTo(left int32, top int32, right int32, bottom int32, sX int32, sY int32, eX int32, eY int32)                             // procedure
+	AngleArc(X int32, Y int32, radius uint32, startAngle float32, sweepAngle float32)                                           // procedure
+	BrushCopy(destRect types.TRect, bitmap IBitmap, sourceRect types.TRect, transparentColor types.TColor)                      // procedure
+	ChordWithIntX6(x1 int32, y1 int32, x2 int32, y2 int32, angle16Deg int32, angle16DegLength int32)                            // procedure
+	ChordWithIntX8(x1 int32, y1 int32, x2 int32, y2 int32, sX int32, sY int32, eX int32, eY int32)                              // procedure
+	CopyRectWithRectX2Canvas(dest types.TRect, srcCanvas ICanvas, source types.TRect)                                           // procedure
+	DrawWithIntX2Graphic(X int32, Y int32, srcGraphic IGraphic)                                                                 // procedure
+	DrawFocusRect(rect types.TRect)                                                                                             // procedure
+	StretchDrawWithRectGraphic(destRect types.TRect, srcGraphic IGraphic)                                                       // procedure
+	EllipseWithRect(rect types.TRect)                                                                                           // procedure
+	EllipseWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32)                                                                    // procedure
+	FillRectWithRect(rect types.TRect)                                                                                          // procedure
+	FillRectWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32)                                                                   // procedure
+	FloodFillWithIntX2ColorFillStyle(X int32, Y int32, fillColor types.TColor, fillStyle types.TFillStyle)                      // procedure
+	Frame3dWithRectIntGraphicsBevelCut(rect *types.TRect, frameWidth int32, style types.TGraphicsBevelCut)                      // procedure
+	Frame3DWithRectColorX2Int(rect *types.TRect, topColor types.TColor, bottomColor types.TColor, frameWidth int32)             // procedure
+	FrameWithRect(rect types.TRect)                                                                                             // procedure
+	FrameWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32)                                                                      // procedure
+	FrameRectWithRect(rect types.TRect)                                                                                         // procedure
+	FrameRectWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32)                                                                  // procedure
+	GradientFill(rect types.TRect, start types.TColor, stop types.TColor, direction types.TGradientDirection)                   // procedure
+	RadialPieWithIntX6(x1 int32, y1 int32, x2 int32, y2 int32, startAngle16Deg int32, angle16DegLength int32)                   // procedure
+	Pie(ellipseX1 int32, ellipseY1 int32, ellipseX2 int32, ellipseY2 int32, startX int32, startY int32, endX int32, endY int32) // procedure
+	PolyBezierWithPointIntBoolX2(points types.PPoint, numPts int32, filled bool, continuous bool)                               // procedure
+	Polygon(points types.PPoint, numPts int32, winding bool)                                                                    // procedure
+	Polyline(points types.PPoint, numPts int32)                                                                                 // procedure
+	RectangleWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32)                                                                  // procedure
+	RectangleWithRect(rect types.TRect)                                                                                         // procedure
+	RoundRectWithIntX6(x1 int32, y1 int32, x2 int32, y2 int32, rX int32, rY int32)                                              // procedure
+	RoundRectWithRectIntX2(rect types.TRect, rX int32, rY int32)                                                                // procedure
+	TextOutWithIntX2String(X int32, Y int32, text string)                                                                       // procedure
+	TextRectWithRectIntX2String(rect types.TRect, X int32, Y int32, text string)                                                // procedure
+	TextRectWithRectIntX2StringTextStyle(rect types.TRect, X int32, Y int32, text string, style TTextStyle)                     // procedure
+	Pixels(X int32, Y int32) types.TColor                                                                                       // property Pixels Getter
+	SetPixels(X int32, Y int32, value types.TColor)                                                                             // property Pixels Setter
+	Handle() types.HDC                                                                                                          // property Handle Getter
+	SetHandle(value types.HDC)                                                                                                  // property Handle Setter
+	TextStyle() TTextStyle                                                                                                      // property TextStyle Getter
+	SetTextStyle(value TTextStyle)                                                                                              // property TextStyle Setter
+	AntialiasingMode() types.TAntialiasingMode                                                                                  // property AntialiasingMode Getter
+	SetAntialiasingMode(value types.TAntialiasingMode)                                                                          // property AntialiasingMode Setter
+	AutoRedraw() bool                                                                                                           // property AutoRedraw Getter
+	SetAutoRedraw(value bool)                                                                                                   // property AutoRedraw Setter
+	BrushToBrush() IBrush                                                                                                       // property Brush Getter
+	SetBrushToBrush(value IBrush)                                                                                               // property Brush Setter
+	CopyMode() types.TCopyMode                                                                                                  // property CopyMode Getter
+	SetCopyMode(value types.TCopyMode)                                                                                          // property CopyMode Setter
+	FontToFont() IFont                                                                                                          // property Font Getter
+	SetFontToFont(value IFont)                                                                                                  // property Font Setter
+	PenToPen() IPen                                                                                                             // property Pen Getter
+	SetPenToPen(value IPen)                                                                                                     // property Pen Setter
+	Region() IRegion                                                                                                            // property Region Getter
+	SetRegion(value IRegion)                                                                                                    // property Region Setter
+	SetOnChange(fn TNotifyEvent)                                                                                                // property event
+	SetOnChanging(fn TNotifyEvent)                                                                                              // property event
 }
 
-// TCanvas Parent: TFPCustomCanvas
 type TCanvas struct {
 	TFPCustomCanvas
-	changePtr   uintptr
-	changingPtr uintptr
-}
-
-func NewCanvas() ICanvas {
-	r1 := canvasImportAPI().SysCallN(13)
-	return AsCanvas(r1)
-}
-
-func (m *TCanvas) Pixels(X, Y int32) TColor {
-	r1 := canvasImportAPI().SysCallN(32, 0, m.Instance(), uintptr(X), uintptr(Y))
-	return TColor(r1)
-}
-
-func (m *TCanvas) SetPixels(X, Y int32, AValue TColor) {
-	canvasImportAPI().SysCallN(32, 1, m.Instance(), uintptr(X), uintptr(Y), uintptr(AValue))
-}
-
-func (m *TCanvas) Handle() HDC {
-	r1 := canvasImportAPI().SysCallN(27, 0, m.Instance(), 0)
-	return HDC(r1)
-}
-
-func (m *TCanvas) SetHandle(AValue HDC) {
-	canvasImportAPI().SysCallN(27, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCanvas) TextStyle() (resultTextStyle TTextStyle) {
-	canvasImportAPI().SysCallN(47, 0, m.Instance(), uintptr(unsafePointer(&resultTextStyle)), uintptr(unsafePointer(&resultTextStyle)))
-	return
-}
-
-func (m *TCanvas) SetTextStyle(AValue *TTextStyle) {
-	canvasImportAPI().SysCallN(47, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
-}
-
-func (m *TCanvas) AntialiasingMode() TAntialiasingMode {
-	r1 := canvasImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TAntialiasingMode(r1)
-}
-
-func (m *TCanvas) SetAntialiasingMode(AValue TAntialiasingMode) {
-	canvasImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCanvas) AutoRedraw() bool {
-	r1 := canvasImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCanvas) SetAutoRedraw(AValue bool) {
-	canvasImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCanvas) BrushForBrush() IBrush {
-	r1 := canvasImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return AsBrush(r1)
-}
-
-func (m *TCanvas) SetBrushForBrush(AValue IBrush) {
-	canvasImportAPI().SysCallN(5, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCanvas) CopyMode() TCopyMode {
-	r1 := canvasImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return TCopyMode(r1)
-}
-
-func (m *TCanvas) SetCopyMode(AValue TCopyMode) {
-	canvasImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCanvas) FontForFont() IFont {
-	r1 := canvasImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return AsFont(r1)
-}
-
-func (m *TCanvas) SetFontForFont(AValue IFont) {
-	canvasImportAPI().SysCallN(17, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCanvas) PenForPen() IPen {
-	r1 := canvasImportAPI().SysCallN(30, 0, m.Instance(), 0)
-	return AsPen(r1)
-}
-
-func (m *TCanvas) SetPenForPen(AValue IPen) {
-	canvasImportAPI().SysCallN(30, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCanvas) Region() IRegion {
-	r1 := canvasImportAPI().SysCallN(36, 0, m.Instance(), 0)
-	return AsRegion(r1)
-}
-
-func (m *TCanvas) SetRegion(AValue IRegion) {
-	canvasImportAPI().SysCallN(36, 1, m.Instance(), GetObjectUintptr(AValue))
 }
 
 func (m *TCanvas) TryLock() bool {
-	r1 := canvasImportAPI().SysCallN(48, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := canvasAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCanvas) GetTextMetrics(OutTM *TLCLTextMetric) bool {
-	var result0 uintptr
-	r1 := canvasImportAPI().SysCallN(24, m.Instance(), uintptr(unsafePointer(&result0)))
-	*OutTM = *(*TLCLTextMetric)(getPointer(result0))
-	return GoBool(r1)
+func (m *TCanvas) GetTextMetrics(outTM *TLCLTextMetric) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := canvasAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(outTM)))
+	return api.GoBool(r)
 }
 
-func (m *TCanvas) TextFitInfo(Text string, MaxWidth int32) int32 {
-	r1 := canvasImportAPI().SysCallN(44, m.Instance(), PascalStr(Text), uintptr(MaxWidth))
-	return int32(r1)
+func (m *TCanvas) TextExtentWithString(text string) (result types.TSize) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(3, m.Instance(), api.PasStr(text), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TCanvas) TextHeightWithString(text string) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := canvasAPI().SysCallN(4, m.Instance(), api.PasStr(text))
+	return int32(r)
+}
+
+func (m *TCanvas) TextWidthWithString(text string) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := canvasAPI().SysCallN(5, m.Instance(), api.PasStr(text))
+	return int32(r)
+}
+
+func (m *TCanvas) TextFitInfo(text string, maxWidth int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := canvasAPI().SysCallN(6, m.Instance(), api.PasStr(text), uintptr(maxWidth))
+	return int32(r)
 }
 
 func (m *TCanvas) HandleAllocated() bool {
-	r1 := canvasImportAPI().SysCallN(28, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := canvasAPI().SysCallN(7, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCanvas) GetUpdatedHandle(ReqState TCanvasState) HDC {
-	r1 := canvasImportAPI().SysCallN(25, m.Instance(), uintptr(ReqState))
-	return HDC(r1)
-}
-
-func CanvasClass() TClass {
-	ret := canvasImportAPI().SysCallN(10)
-	return TClass(ret)
+func (m *TCanvas) GetUpdatedHandle(reqState types.TCanvasState) types.HDC {
+	if !m.IsValid() {
+		return 0
+	}
+	r := canvasAPI().SysCallN(8, m.Instance(), uintptr(reqState))
+	return types.HDC(r)
 }
 
 func (m *TCanvas) Lock() {
-	canvasImportAPI().SysCallN(29, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(9, m.Instance())
 }
 
 func (m *TCanvas) Unlock() {
-	canvasImportAPI().SysCallN(49, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(10, m.Instance())
 }
 
 func (m *TCanvas) Refresh() {
-	canvasImportAPI().SysCallN(35, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(11, m.Instance())
 }
 
 func (m *TCanvas) Changing() {
-	canvasImportAPI().SysCallN(7, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(12, m.Instance())
 }
 
 func (m *TCanvas) Changed() {
-	canvasImportAPI().SysCallN(6, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(13, m.Instance())
 }
 
 func (m *TCanvas) SaveHandleState() {
-	canvasImportAPI().SysCallN(40, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(14, m.Instance())
 }
 
 func (m *TCanvas) RestoreHandleState() {
-	canvasImportAPI().SysCallN(37, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(15, m.Instance())
 }
 
-func (m *TCanvas) ArcTo(ALeft, ATop, ARight, ABottom, SX, SY, EX, EY int32) {
-	canvasImportAPI().SysCallN(2, m.Instance(), uintptr(ALeft), uintptr(ATop), uintptr(ARight), uintptr(ABottom), uintptr(SX), uintptr(SY), uintptr(EX), uintptr(EY))
+func (m *TCanvas) ArcWithIntX6(left int32, top int32, right int32, bottom int32, angle16Deg int32, angle16DegLength int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(16, m.Instance(), uintptr(left), uintptr(top), uintptr(right), uintptr(bottom), uintptr(angle16Deg), uintptr(angle16DegLength))
 }
 
-func (m *TCanvas) AngleArc(X, Y int32, Radius uint32, StartAngle, SweepAngle float32) {
-	canvasImportAPI().SysCallN(0, m.Instance(), uintptr(X), uintptr(Y), uintptr(Radius), uintptr(StartAngle), uintptr(SweepAngle))
+func (m *TCanvas) ArcWithIntX8(left int32, top int32, right int32, bottom int32, sX int32, sY int32, eX int32, eY int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(17, m.Instance(), uintptr(left), uintptr(top), uintptr(right), uintptr(bottom), uintptr(sX), uintptr(sY), uintptr(eX), uintptr(eY))
 }
 
-func (m *TCanvas) BrushCopy(ADestRect *TRect, ABitmap IBitmap, ASourceRect *TRect, ATransparentColor TColor) {
-	canvasImportAPI().SysCallN(4, m.Instance(), uintptr(unsafePointer(ADestRect)), GetObjectUintptr(ABitmap), uintptr(unsafePointer(ASourceRect)), uintptr(ATransparentColor))
+func (m *TCanvas) ArcTo(left int32, top int32, right int32, bottom int32, sX int32, sY int32, eX int32, eY int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(18, m.Instance(), uintptr(left), uintptr(top), uintptr(right), uintptr(bottom), uintptr(sX), uintptr(sY), uintptr(eX), uintptr(eY))
 }
 
-func (m *TCanvas) Chord(x1, y1, x2, y2, Angle16Deg, Angle16DegLength int32) {
-	canvasImportAPI().SysCallN(8, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2), uintptr(Angle16Deg), uintptr(Angle16DegLength))
+func (m *TCanvas) AngleArc(X int32, Y int32, radius uint32, startAngle float32, sweepAngle float32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(19, m.Instance(), uintptr(X), uintptr(Y), uintptr(radius), uintptr(base.UnsafePointer(&startAngle)), uintptr(base.UnsafePointer(&sweepAngle)))
 }
 
-func (m *TCanvas) Chord1(x1, y1, x2, y2, SX, SY, EX, EY int32) {
-	canvasImportAPI().SysCallN(9, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2), uintptr(SX), uintptr(SY), uintptr(EX), uintptr(EY))
+func (m *TCanvas) BrushCopy(destRect types.TRect, bitmap IBitmap, sourceRect types.TRect, transparentColor types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(20, m.Instance(), uintptr(base.UnsafePointer(&destRect)), base.GetObjectUintptr(bitmap), uintptr(base.UnsafePointer(&sourceRect)), uintptr(transparentColor))
 }
 
-func (m *TCanvas) CopyRectForCanvas(Dest *TRect, SrcCanvas ICanvas, Source *TRect) {
-	canvasImportAPI().SysCallN(12, m.Instance(), uintptr(unsafePointer(Dest)), GetObjectUintptr(SrcCanvas), uintptr(unsafePointer(Source)))
+func (m *TCanvas) ChordWithIntX6(x1 int32, y1 int32, x2 int32, y2 int32, angle16Deg int32, angle16DegLength int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(21, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2), uintptr(angle16Deg), uintptr(angle16DegLength))
 }
 
-func (m *TCanvas) DrawForGraphic(X, Y int32, SrcGraphic IGraphic) {
-	canvasImportAPI().SysCallN(15, m.Instance(), uintptr(X), uintptr(Y), GetObjectUintptr(SrcGraphic))
+func (m *TCanvas) ChordWithIntX8(x1 int32, y1 int32, x2 int32, y2 int32, sX int32, sY int32, eX int32, eY int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(22, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2), uintptr(sX), uintptr(sY), uintptr(eX), uintptr(eY))
 }
 
-func (m *TCanvas) DrawFocusRect(ARect *TRect) {
-	canvasImportAPI().SysCallN(14, m.Instance(), uintptr(unsafePointer(ARect)))
+func (m *TCanvas) CopyRectWithRectX2Canvas(dest types.TRect, srcCanvas ICanvas, source types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(23, m.Instance(), uintptr(base.UnsafePointer(&dest)), base.GetObjectUintptr(srcCanvas), uintptr(base.UnsafePointer(&source)))
 }
 
-func (m *TCanvas) StretchDrawForGraphic(DestRect *TRect, SrcGraphic IGraphic) {
-	canvasImportAPI().SysCallN(43, m.Instance(), uintptr(unsafePointer(DestRect)), GetObjectUintptr(SrcGraphic))
+func (m *TCanvas) DrawWithIntX2Graphic(X int32, Y int32, srcGraphic IGraphic) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(24, m.Instance(), uintptr(X), uintptr(Y), base.GetObjectUintptr(srcGraphic))
 }
 
-func (m *TCanvas) FloodFillForInteger(X, Y int32, FillColor TColor, FillStyle TFillStyle) {
-	canvasImportAPI().SysCallN(16, m.Instance(), uintptr(X), uintptr(Y), uintptr(FillColor), uintptr(FillStyle))
+func (m *TCanvas) DrawFocusRect(rect types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(25, m.Instance(), uintptr(base.UnsafePointer(&rect)))
 }
 
-func (m *TCanvas) Frame3d(ARect *TRect, FrameWidth int32, Style TGraphicsBevelCut) {
-	var result0 uintptr
-	canvasImportAPI().SysCallN(21, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(FrameWidth), uintptr(Style))
-	*ARect = *(*TRect)(getPointer(result0))
+func (m *TCanvas) StretchDrawWithRectGraphic(destRect types.TRect, srcGraphic IGraphic) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(26, m.Instance(), uintptr(base.UnsafePointer(&destRect)), base.GetObjectUintptr(srcGraphic))
 }
 
-func (m *TCanvas) Frame3D1(ARect *TRect, TopColor, BottomColor TColor, FrameWidth int32) {
-	var result0 uintptr
-	canvasImportAPI().SysCallN(20, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(TopColor), uintptr(BottomColor), uintptr(FrameWidth))
-	*ARect = *(*TRect)(getPointer(result0))
+func (m *TCanvas) EllipseWithRect(rect types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(27, m.Instance(), uintptr(base.UnsafePointer(&rect)))
 }
 
-func (m *TCanvas) Frame(ARect *TRect) {
-	canvasImportAPI().SysCallN(18, m.Instance(), uintptr(unsafePointer(ARect)))
+func (m *TCanvas) EllipseWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(28, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2))
 }
 
-func (m *TCanvas) Frame1(X1, Y1, X2, Y2 int32) {
-	canvasImportAPI().SysCallN(19, m.Instance(), uintptr(X1), uintptr(Y1), uintptr(X2), uintptr(Y2))
+func (m *TCanvas) FillRectWithRect(rect types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(29, m.Instance(), uintptr(base.UnsafePointer(&rect)))
 }
 
-func (m *TCanvas) FrameRect(ARect *TRect) {
-	canvasImportAPI().SysCallN(22, m.Instance(), uintptr(unsafePointer(ARect)))
+func (m *TCanvas) FillRectWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(30, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2))
 }
 
-func (m *TCanvas) FrameRect1(X1, Y1, X2, Y2 int32) {
-	canvasImportAPI().SysCallN(23, m.Instance(), uintptr(X1), uintptr(Y1), uintptr(X2), uintptr(Y2))
+func (m *TCanvas) FloodFillWithIntX2ColorFillStyle(X int32, Y int32, fillColor types.TColor, fillStyle types.TFillStyle) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(31, m.Instance(), uintptr(X), uintptr(Y), uintptr(fillColor), uintptr(fillStyle))
 }
 
-func (m *TCanvas) GradientFill(ARect *TRect, AStart, AStop TColor, ADirection TGradientDirection) {
-	canvasImportAPI().SysCallN(26, m.Instance(), uintptr(unsafePointer(ARect)), uintptr(AStart), uintptr(AStop), uintptr(ADirection))
+func (m *TCanvas) Frame3dWithRectIntGraphicsBevelCut(rect *types.TRect, frameWidth int32, style types.TGraphicsBevelCut) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(32, m.Instance(), uintptr(base.UnsafePointer(rect)), uintptr(frameWidth), uintptr(style))
 }
 
-func (m *TCanvas) Pie(EllipseX1, EllipseY1, EllipseX2, EllipseY2, StartX, StartY, EndX, EndY int32) {
-	canvasImportAPI().SysCallN(31, m.Instance(), uintptr(EllipseX1), uintptr(EllipseY1), uintptr(EllipseX2), uintptr(EllipseY2), uintptr(StartX), uintptr(StartY), uintptr(EndX), uintptr(EndY))
+func (m *TCanvas) Frame3DWithRectColorX2Int(rect *types.TRect, topColor types.TColor, bottomColor types.TColor, frameWidth int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(33, m.Instance(), uintptr(base.UnsafePointer(rect)), uintptr(topColor), uintptr(bottomColor), uintptr(frameWidth))
 }
 
-func (m *TCanvas) Polygon(Points []TPoint, Winding bool) {
-	sysCallPoint(canvasImportAPI(), 33, m.Instance(), Points, PascalBool(Winding))
+func (m *TCanvas) FrameWithRect(rect types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(34, m.Instance(), uintptr(base.UnsafePointer(&rect)))
 }
 
-func (m *TCanvas) Polyline(Points []TPoint) {
-	sysCallPoint(canvasImportAPI(), 34, m.Instance(), Points)
+func (m *TCanvas) FrameWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(35, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2))
 }
 
-func (m *TCanvas) RoundRect(X1, Y1, X2, Y2 int32, RX, RY int32) {
-	canvasImportAPI().SysCallN(38, m.Instance(), uintptr(X1), uintptr(Y1), uintptr(X2), uintptr(Y2), uintptr(RX), uintptr(RY))
+func (m *TCanvas) FrameRectWithRect(rect types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(36, m.Instance(), uintptr(base.UnsafePointer(&rect)))
 }
 
-func (m *TCanvas) RoundRect1(Rect *TRect, RX, RY int32) {
-	canvasImportAPI().SysCallN(39, m.Instance(), uintptr(unsafePointer(Rect)), uintptr(RX), uintptr(RY))
+func (m *TCanvas) FrameRectWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(37, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2))
 }
 
-func (m *TCanvas) TextRect(ARect *TRect, X, Y int32, Text string) {
-	canvasImportAPI().SysCallN(45, m.Instance(), uintptr(unsafePointer(ARect)), uintptr(X), uintptr(Y), PascalStr(Text))
+func (m *TCanvas) GradientFill(rect types.TRect, start types.TColor, stop types.TColor, direction types.TGradientDirection) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(38, m.Instance(), uintptr(base.UnsafePointer(&rect)), uintptr(start), uintptr(stop), uintptr(direction))
 }
 
-func (m *TCanvas) TextRect1(ARect *TRect, X, Y int32, Text string, Style *TTextStyle) {
-	canvasImportAPI().SysCallN(46, m.Instance(), uintptr(unsafePointer(ARect)), uintptr(X), uintptr(Y), PascalStr(Text), uintptr(unsafePointer(Style)))
+func (m *TCanvas) RadialPieWithIntX6(x1 int32, y1 int32, x2 int32, y2 int32, startAngle16Deg int32, angle16DegLength int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(39, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2), uintptr(startAngle16Deg), uintptr(angle16DegLength))
+}
+
+func (m *TCanvas) Pie(ellipseX1 int32, ellipseY1 int32, ellipseX2 int32, ellipseY2 int32, startX int32, startY int32, endX int32, endY int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(40, m.Instance(), uintptr(ellipseX1), uintptr(ellipseY1), uintptr(ellipseX2), uintptr(ellipseY2), uintptr(startX), uintptr(startY), uintptr(endX), uintptr(endY))
+}
+
+func (m *TCanvas) PolyBezierWithPointIntBoolX2(points types.PPoint, numPts int32, filled bool, continuous bool) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(41, m.Instance(), uintptr(points), uintptr(numPts), api.PasBool(filled), api.PasBool(continuous))
+}
+
+func (m *TCanvas) Polygon(points types.PPoint, numPts int32, winding bool) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(42, m.Instance(), uintptr(points), uintptr(numPts), api.PasBool(winding))
+}
+
+func (m *TCanvas) Polyline(points types.PPoint, numPts int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(43, m.Instance(), uintptr(points), uintptr(numPts))
+}
+
+func (m *TCanvas) RectangleWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(44, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2))
+}
+
+func (m *TCanvas) RectangleWithRect(rect types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(45, m.Instance(), uintptr(base.UnsafePointer(&rect)))
+}
+
+func (m *TCanvas) RoundRectWithIntX6(x1 int32, y1 int32, x2 int32, y2 int32, rX int32, rY int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(46, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2), uintptr(rX), uintptr(rY))
+}
+
+func (m *TCanvas) RoundRectWithRectIntX2(rect types.TRect, rX int32, rY int32) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(47, m.Instance(), uintptr(base.UnsafePointer(&rect)), uintptr(rX), uintptr(rY))
+}
+
+func (m *TCanvas) TextOutWithIntX2String(X int32, Y int32, text string) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(48, m.Instance(), uintptr(X), uintptr(Y), api.PasStr(text))
+}
+
+func (m *TCanvas) TextRectWithRectIntX2String(rect types.TRect, X int32, Y int32, text string) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(49, m.Instance(), uintptr(base.UnsafePointer(&rect)), uintptr(X), uintptr(Y), api.PasStr(text))
+}
+
+func (m *TCanvas) TextRectWithRectIntX2StringTextStyle(rect types.TRect, X int32, Y int32, text string, style TTextStyle) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(50, m.Instance(), uintptr(base.UnsafePointer(&rect)), uintptr(X), uintptr(Y), api.PasStr(text), uintptr(base.UnsafePointer(&style)))
+}
+
+func (m *TCanvas) Pixels(X int32, Y int32) types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := canvasAPI().SysCallN(51, 0, m.Instance(), uintptr(X), uintptr(Y))
+	return types.TColor(r)
+}
+
+func (m *TCanvas) SetPixels(X int32, Y int32, value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(51, 1, m.Instance(), uintptr(X), uintptr(Y), uintptr(value))
+}
+
+func (m *TCanvas) Handle() types.HDC {
+	if !m.IsValid() {
+		return 0
+	}
+	r := canvasAPI().SysCallN(52, 0, m.Instance())
+	return types.HDC(r)
+}
+
+func (m *TCanvas) SetHandle(value types.HDC) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(52, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCanvas) TextStyle() (result TTextStyle) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(53, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TCanvas) SetTextStyle(value TTextStyle) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(53, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TCanvas) AntialiasingMode() types.TAntialiasingMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := canvasAPI().SysCallN(54, 0, m.Instance())
+	return types.TAntialiasingMode(r)
+}
+
+func (m *TCanvas) SetAntialiasingMode(value types.TAntialiasingMode) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(54, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCanvas) AutoRedraw() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := canvasAPI().SysCallN(55, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCanvas) SetAutoRedraw(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(55, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCanvas) BrushToBrush() IBrush {
+	if !m.IsValid() {
+		return nil
+	}
+	r := canvasAPI().SysCallN(56, 0, m.Instance())
+	return AsBrush(r)
+}
+
+func (m *TCanvas) SetBrushToBrush(value IBrush) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(56, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCanvas) CopyMode() types.TCopyMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := canvasAPI().SysCallN(57, 0, m.Instance())
+	return types.TCopyMode(r)
+}
+
+func (m *TCanvas) SetCopyMode(value types.TCopyMode) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(57, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCanvas) FontToFont() IFont {
+	if !m.IsValid() {
+		return nil
+	}
+	r := canvasAPI().SysCallN(58, 0, m.Instance())
+	return AsFont(r)
+}
+
+func (m *TCanvas) SetFontToFont(value IFont) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(58, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCanvas) PenToPen() IPen {
+	if !m.IsValid() {
+		return nil
+	}
+	r := canvasAPI().SysCallN(59, 0, m.Instance())
+	return AsPen(r)
+}
+
+func (m *TCanvas) SetPenToPen(value IPen) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(59, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCanvas) Region() IRegion {
+	if !m.IsValid() {
+		return nil
+	}
+	r := canvasAPI().SysCallN(60, 0, m.Instance())
+	return AsRegion(r)
+}
+
+func (m *TCanvas) SetRegion(value IRegion) {
+	if !m.IsValid() {
+		return
+	}
+	canvasAPI().SysCallN(60, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TCanvas) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	canvasImportAPI().SysCallN(41, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 61, canvasAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCanvas) SetOnChanging(fn TNotifyEvent) {
-	if m.changingPtr != 0 {
-		RemoveEventElement(m.changingPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changingPtr = MakeEventDataPtr(fn)
-	canvasImportAPI().SysCallN(42, m.Instance(), m.changingPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 62, canvasAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCanvas class constructor
+func NewCanvas() ICanvas {
+	r := canvasAPI().SysCallN(0)
+	return AsCanvas(r)
 }
 
 var (
-	canvasImport       *imports.Imports = nil
-	canvasImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Canvas_AngleArc", 0),
-		/*1*/ imports.NewTable("Canvas_AntialiasingMode", 0),
-		/*2*/ imports.NewTable("Canvas_ArcTo", 0),
-		/*3*/ imports.NewTable("Canvas_AutoRedraw", 0),
-		/*4*/ imports.NewTable("Canvas_BrushCopy", 0),
-		/*5*/ imports.NewTable("Canvas_BrushForBrush", 0),
-		/*6*/ imports.NewTable("Canvas_Changed", 0),
-		/*7*/ imports.NewTable("Canvas_Changing", 0),
-		/*8*/ imports.NewTable("Canvas_Chord", 0),
-		/*9*/ imports.NewTable("Canvas_Chord1", 0),
-		/*10*/ imports.NewTable("Canvas_Class", 0),
-		/*11*/ imports.NewTable("Canvas_CopyMode", 0),
-		/*12*/ imports.NewTable("Canvas_CopyRectForCanvas", 0),
-		/*13*/ imports.NewTable("Canvas_Create", 0),
-		/*14*/ imports.NewTable("Canvas_DrawFocusRect", 0),
-		/*15*/ imports.NewTable("Canvas_DrawForGraphic", 0),
-		/*16*/ imports.NewTable("Canvas_FloodFillForInteger", 0),
-		/*17*/ imports.NewTable("Canvas_FontForFont", 0),
-		/*18*/ imports.NewTable("Canvas_Frame", 0),
-		/*19*/ imports.NewTable("Canvas_Frame1", 0),
-		/*20*/ imports.NewTable("Canvas_Frame3D1", 0),
-		/*21*/ imports.NewTable("Canvas_Frame3d", 0),
-		/*22*/ imports.NewTable("Canvas_FrameRect", 0),
-		/*23*/ imports.NewTable("Canvas_FrameRect1", 0),
-		/*24*/ imports.NewTable("Canvas_GetTextMetrics", 0),
-		/*25*/ imports.NewTable("Canvas_GetUpdatedHandle", 0),
-		/*26*/ imports.NewTable("Canvas_GradientFill", 0),
-		/*27*/ imports.NewTable("Canvas_Handle", 0),
-		/*28*/ imports.NewTable("Canvas_HandleAllocated", 0),
-		/*29*/ imports.NewTable("Canvas_Lock", 0),
-		/*30*/ imports.NewTable("Canvas_PenForPen", 0),
-		/*31*/ imports.NewTable("Canvas_Pie", 0),
-		/*32*/ imports.NewTable("Canvas_Pixels", 0),
-		/*33*/ imports.NewTable("Canvas_Polygon", 0),
-		/*34*/ imports.NewTable("Canvas_Polyline", 0),
-		/*35*/ imports.NewTable("Canvas_Refresh", 0),
-		/*36*/ imports.NewTable("Canvas_Region", 0),
-		/*37*/ imports.NewTable("Canvas_RestoreHandleState", 0),
-		/*38*/ imports.NewTable("Canvas_RoundRect", 0),
-		/*39*/ imports.NewTable("Canvas_RoundRect1", 0),
-		/*40*/ imports.NewTable("Canvas_SaveHandleState", 0),
-		/*41*/ imports.NewTable("Canvas_SetOnChange", 0),
-		/*42*/ imports.NewTable("Canvas_SetOnChanging", 0),
-		/*43*/ imports.NewTable("Canvas_StretchDrawForGraphic", 0),
-		/*44*/ imports.NewTable("Canvas_TextFitInfo", 0),
-		/*45*/ imports.NewTable("Canvas_TextRect", 0),
-		/*46*/ imports.NewTable("Canvas_TextRect1", 0),
-		/*47*/ imports.NewTable("Canvas_TextStyle", 0),
-		/*48*/ imports.NewTable("Canvas_TryLock", 0),
-		/*49*/ imports.NewTable("Canvas_Unlock", 0),
-	}
+	canvasOnce   base.Once
+	canvasImport *imports.Imports = nil
 )
 
-func canvasImportAPI() *imports.Imports {
-	if canvasImport == nil {
-		canvasImport = NewDefaultImports()
-		canvasImport.SetImportTable(canvasImportTables)
-		canvasImportTables = nil
-	}
+func canvasAPI() *imports.Imports {
+	canvasOnce.Do(func() {
+		canvasImport = api.NewDefaultImports()
+		canvasImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCanvas_Create", 0), // constructor NewCanvas
+			/* 1 */ imports.NewTable("TCanvas_TryLock", 0), // function TryLock
+			/* 2 */ imports.NewTable("TCanvas_GetTextMetrics", 0), // function GetTextMetrics
+			/* 3 */ imports.NewTable("TCanvas_TextExtentWithString", 0), // function TextExtentWithString
+			/* 4 */ imports.NewTable("TCanvas_TextHeightWithString", 0), // function TextHeightWithString
+			/* 5 */ imports.NewTable("TCanvas_TextWidthWithString", 0), // function TextWidthWithString
+			/* 6 */ imports.NewTable("TCanvas_TextFitInfo", 0), // function TextFitInfo
+			/* 7 */ imports.NewTable("TCanvas_HandleAllocated", 0), // function HandleAllocated
+			/* 8 */ imports.NewTable("TCanvas_GetUpdatedHandle", 0), // function GetUpdatedHandle
+			/* 9 */ imports.NewTable("TCanvas_Lock", 0), // procedure Lock
+			/* 10 */ imports.NewTable("TCanvas_Unlock", 0), // procedure Unlock
+			/* 11 */ imports.NewTable("TCanvas_Refresh", 0), // procedure Refresh
+			/* 12 */ imports.NewTable("TCanvas_Changing", 0), // procedure Changing
+			/* 13 */ imports.NewTable("TCanvas_Changed", 0), // procedure Changed
+			/* 14 */ imports.NewTable("TCanvas_SaveHandleState", 0), // procedure SaveHandleState
+			/* 15 */ imports.NewTable("TCanvas_RestoreHandleState", 0), // procedure RestoreHandleState
+			/* 16 */ imports.NewTable("TCanvas_ArcWithIntX6", 0), // procedure ArcWithIntX6
+			/* 17 */ imports.NewTable("TCanvas_ArcWithIntX8", 0), // procedure ArcWithIntX8
+			/* 18 */ imports.NewTable("TCanvas_ArcTo", 0), // procedure ArcTo
+			/* 19 */ imports.NewTable("TCanvas_AngleArc", 0), // procedure AngleArc
+			/* 20 */ imports.NewTable("TCanvas_BrushCopy", 0), // procedure BrushCopy
+			/* 21 */ imports.NewTable("TCanvas_ChordWithIntX6", 0), // procedure ChordWithIntX6
+			/* 22 */ imports.NewTable("TCanvas_ChordWithIntX8", 0), // procedure ChordWithIntX8
+			/* 23 */ imports.NewTable("TCanvas_CopyRectWithRectX2Canvas", 0), // procedure CopyRectWithRectX2Canvas
+			/* 24 */ imports.NewTable("TCanvas_DrawWithIntX2Graphic", 0), // procedure DrawWithIntX2Graphic
+			/* 25 */ imports.NewTable("TCanvas_DrawFocusRect", 0), // procedure DrawFocusRect
+			/* 26 */ imports.NewTable("TCanvas_StretchDrawWithRectGraphic", 0), // procedure StretchDrawWithRectGraphic
+			/* 27 */ imports.NewTable("TCanvas_EllipseWithRect", 0), // procedure EllipseWithRect
+			/* 28 */ imports.NewTable("TCanvas_EllipseWithIntX4", 0), // procedure EllipseWithIntX4
+			/* 29 */ imports.NewTable("TCanvas_FillRectWithRect", 0), // procedure FillRectWithRect
+			/* 30 */ imports.NewTable("TCanvas_FillRectWithIntX4", 0), // procedure FillRectWithIntX4
+			/* 31 */ imports.NewTable("TCanvas_FloodFillWithIntX2ColorFillStyle", 0), // procedure FloodFillWithIntX2ColorFillStyle
+			/* 32 */ imports.NewTable("TCanvas_Frame3dWithRectIntGraphicsBevelCut", 0), // procedure Frame3dWithRectIntGraphicsBevelCut
+			/* 33 */ imports.NewTable("TCanvas_Frame3DWithRectColorX2Int", 0), // procedure Frame3DWithRectColorX2Int
+			/* 34 */ imports.NewTable("TCanvas_FrameWithRect", 0), // procedure FrameWithRect
+			/* 35 */ imports.NewTable("TCanvas_FrameWithIntX4", 0), // procedure FrameWithIntX4
+			/* 36 */ imports.NewTable("TCanvas_FrameRectWithRect", 0), // procedure FrameRectWithRect
+			/* 37 */ imports.NewTable("TCanvas_FrameRectWithIntX4", 0), // procedure FrameRectWithIntX4
+			/* 38 */ imports.NewTable("TCanvas_GradientFill", 0), // procedure GradientFill
+			/* 39 */ imports.NewTable("TCanvas_RadialPieWithIntX6", 0), // procedure RadialPieWithIntX6
+			/* 40 */ imports.NewTable("TCanvas_Pie", 0), // procedure Pie
+			/* 41 */ imports.NewTable("TCanvas_PolyBezierWithPointIntBoolX2", 0), // procedure PolyBezierWithPointIntBoolX2
+			/* 42 */ imports.NewTable("TCanvas_Polygon", 0), // procedure Polygon
+			/* 43 */ imports.NewTable("TCanvas_Polyline", 0), // procedure Polyline
+			/* 44 */ imports.NewTable("TCanvas_RectangleWithIntX4", 0), // procedure RectangleWithIntX4
+			/* 45 */ imports.NewTable("TCanvas_RectangleWithRect", 0), // procedure RectangleWithRect
+			/* 46 */ imports.NewTable("TCanvas_RoundRectWithIntX6", 0), // procedure RoundRectWithIntX6
+			/* 47 */ imports.NewTable("TCanvas_RoundRectWithRectIntX2", 0), // procedure RoundRectWithRectIntX2
+			/* 48 */ imports.NewTable("TCanvas_TextOutWithIntX2String", 0), // procedure TextOutWithIntX2String
+			/* 49 */ imports.NewTable("TCanvas_TextRectWithRectIntX2String", 0), // procedure TextRectWithRectIntX2String
+			/* 50 */ imports.NewTable("TCanvas_TextRectWithRectIntX2StringTextStyle", 0), // procedure TextRectWithRectIntX2StringTextStyle
+			/* 51 */ imports.NewTable("TCanvas_Pixels", 0), // property Pixels
+			/* 52 */ imports.NewTable("TCanvas_Handle", 0), // property Handle
+			/* 53 */ imports.NewTable("TCanvas_TextStyle", 0), // property TextStyle
+			/* 54 */ imports.NewTable("TCanvas_AntialiasingMode", 0), // property AntialiasingMode
+			/* 55 */ imports.NewTable("TCanvas_AutoRedraw", 0), // property AutoRedraw
+			/* 56 */ imports.NewTable("TCanvas_BrushToBrush", 0), // property BrushToBrush
+			/* 57 */ imports.NewTable("TCanvas_CopyMode", 0), // property CopyMode
+			/* 58 */ imports.NewTable("TCanvas_FontToFont", 0), // property FontToFont
+			/* 59 */ imports.NewTable("TCanvas_PenToPen", 0), // property PenToPen
+			/* 60 */ imports.NewTable("TCanvas_Region", 0), // property Region
+			/* 61 */ imports.NewTable("TCanvas_OnChange", 0), // event OnChange
+			/* 62 */ imports.NewTable("TCanvas_OnChanging", 0), // event OnChanging
+		}
+	})
 	return canvasImport
 }

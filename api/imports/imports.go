@@ -6,13 +6,12 @@
 //
 //----------------------------------------
 
-// 导入表实例
-
 package imports
 
 import (
 	"errors"
-	"github.com/energye/lcl/api/internal/exception"
+	"sync/atomic"
+	"unsafe"
 )
 
 // CallImport 调用导入表接口
@@ -21,11 +20,14 @@ type CallImport interface {
 	SysCallN(index int, args ...uintptr) (result uintptr)
 }
 
+// 全局 API 表所属类对象类型
+var classType int32
+
 // Imports 导入表实例
 type Imports struct {
-	dll   DLL
-	table []*Table
-	ok    bool
+	Dll   DLL
+	Table []*Table
+	Type  int32
 }
 
 // LoadLib 加载动态库，适用自定义导入动态链接库，支持Windows, MacOS, Linux
@@ -37,20 +39,20 @@ func LoadLib(libName string) (*Imports, error) {
 	if dll == 0 && err != nil {
 		return nil, err
 	}
-	return &Imports{
-		dll: dll,
-		ok:  true,
-	}, nil
+	return &Imports{Dll: dll}, nil
+}
+
+// NextType 设置API表类型, 用于区分不同所属类对象
+func (m *Imports) NextType() {
+	// m.Type >= math.AddInt32 ???
+	m.Type = atomic.AddInt32(&classType, 1)
 }
 
 // Proc 返回api实例
 //
 //	index: 导入表索引
 func (m *Imports) Proc(index int) ProcAddr {
-	if m.IsOk() {
-		return internalGetImportFunc(m.dll, m.table, index)
-	}
-	return 0
+	return m.internalGetImportFunc(index)
 }
 
 // SysCallN 调用api
@@ -58,51 +60,35 @@ func (m *Imports) Proc(index int) ProcAddr {
 //	 参数
 //		index: 导入表索引
 //		args: 调用api参数, 指针数组
-func (m *Imports) SysCallN(index int, args ...uintptr) (result uintptr) {
-	if m.IsOk() {
-		proc := internalGetImportFunc(m.dll, m.table, index)
-		if proc > 0 {
-			defer func() {
-				if err := recover(); err != nil {
-					exception.GlobalException(m.table[index].Name(), err.(error).Error())
-				}
-			}()
-			//var err syscall.Errno
-			result, _, _ = proc.Call(args...)
-			//if err != 0 && err != 1400 {
-			//	exception.CallException(m.table[index].Name(), err.Error())
+func (m *Imports) SysCallN(index int, args ...uintptr) uintptr {
+	proc := m.internalGetImportFunc(index)
+	if proc > 0 {
+		defer func() {
+			//if err := recover(); err != nil {
+			//	println("[ERROR] SysCallN Name:", m.Table[index].Name(), "Message:", err.(error).Error())
+			//	// TODO 增加用户回调
+			//	//exception.GlobalException(m.table[index].Name(), err.(error).Error())
 			//}
-		}
+		}()
+		r1, _, _ := proc.Call(args...)
+		//if err != 0 && err != 1400 {
+		//exception.CallException(m.table[index].Name(), err.Error())
+		//	}
+		return r1
 	}
-	return
+	return 0
 }
 
-// IsOk 是否成功导入, 如果为false不能调用api
-func (m *Imports) IsOk() bool {
-	return m.ok
-}
-
-// SetOk 设置是否成功导入
-func (m *Imports) SetOk(v bool) {
-	m.ok = v
-}
-
-// Dll 返回导入DLL实例
-func (m *Imports) Dll() DLL {
-	return m.dll
-}
-
-// SetDll 设置导入DLL实例
-func (m *Imports) SetDll(dll DLL) {
-	m.dll = dll
-}
-
-// ImportTable 返回导入表
-func (m *Imports) ImportTable() []*Table {
-	return m.table
-}
-
-// SetImportTable 设置导入表
-func (m *Imports) SetImportTable(table []*Table) {
-	m.table = table
+func (m *Imports) internalGetImportFunc(index int) ProcAddr {
+	item := m.Table[index]
+	if atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&item.addr))) == nil {
+		var err error
+		item.addr, err = m.Dll.GetProcAddr(item.name)
+		if err != nil {
+			println("[ERROR] GetImport Name:", item.name, "Message:", err.Error())
+			return 0
+		}
+		atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&m.Table[index].addr)), unsafe.Pointer(item.addr))
+	}
+	return item.addr
 }

@@ -9,9 +9,9 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IValueListStrings Parent: IStringList
@@ -19,34 +19,27 @@ type IValueListStrings interface {
 	IStringList
 }
 
-// TValueListStrings Parent: TStringList
 type TValueListStrings struct {
 	TStringList
 }
 
-func NewValueListStrings(AOwner IValueListEditor) IValueListStrings {
-	r1 := valueListStringsImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsValueListStrings(r1)
-}
-
-func ValueListStringsClass() TClass {
-	ret := valueListStringsImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewValueListStrings class constructor
+func NewValueListStrings(owner IValueListEditor) IValueListStrings {
+	r := valueListStringsAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsValueListStrings(r)
 }
 
 var (
-	valueListStringsImport       *imports.Imports = nil
-	valueListStringsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ValueListStrings_Class", 0),
-		/*1*/ imports.NewTable("ValueListStrings_Create", 0),
-	}
+	valueListStringsOnce   base.Once
+	valueListStringsImport *imports.Imports = nil
 )
 
-func valueListStringsImportAPI() *imports.Imports {
-	if valueListStringsImport == nil {
-		valueListStringsImport = NewDefaultImports()
-		valueListStringsImport.SetImportTable(valueListStringsImportTables)
-		valueListStringsImportTables = nil
-	}
+func valueListStringsAPI() *imports.Imports {
+	valueListStringsOnce.Do(func() {
+		valueListStringsImport = api.NewDefaultImports()
+		valueListStringsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TValueListStrings_Create", 0), // constructor NewValueListStrings
+		}
+	})
 	return valueListStringsImport
 }

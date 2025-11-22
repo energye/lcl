@@ -9,126 +9,165 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IGridColumns Parent: ICollection
 type IGridColumns interface {
 	ICollection
-	Grid() ICustomGrid                                     // property
-	ItemsForGridColumn(Index int32) IGridColumn            // property
-	SetItemsForGridColumn(Index int32, AValue IGridColumn) // property
-	VisibleCount() int32                                   // property
-	Enabled() bool                                         // property
-	AddForGridColumn() IGridColumn                         // function
-	ColumnByTitle(aTitle string) IGridColumn               // function
-	RealIndex(Index int32) int32                           // function
-	IndexOf(Column IGridColumn) int32                      // function
-	IsDefault() bool                                       // function
-	HasIndex(Index int32) bool                             // function
-	VisibleIndex(Index int32) int32                        // function
+	AddToGridColumn() IGridColumn                               // function
+	ColumnByTitle(title string) IGridColumn                     // function
+	RealIndex(index int32) int32                                // function
+	IndexOf(column IGridColumn) int32                           // function
+	IsDefault() bool                                            // function
+	HasIndex(index int32) bool                                  // function
+	VisibleIndex(index int32) int32                             // function
+	Clear()                                                     // procedure
+	Grid() ICustomGrid                                          // property Grid Getter
+	ItemsWithIntToGridColumn(index int32) IGridColumn           // property Items Getter
+	SetItemsWithIntToGridColumn(index int32, value IGridColumn) // property Items Setter
+	VisibleCount() int32                                        // property VisibleCount Getter
+	Enabled() bool                                              // property Enabled Getter
 }
 
-// TGridColumns Parent: TCollection
 type TGridColumns struct {
 	TCollection
 }
 
-func NewGridColumns(AGrid ICustomGrid, aItemClass TCollectionItemClass) IGridColumns {
-	r1 := gridColumnsImportAPI().SysCallN(3, GetObjectUintptr(AGrid), uintptr(aItemClass))
-	return AsGridColumns(r1)
+func (m *TGridColumns) AddToGridColumn() IGridColumn {
+	if !m.IsValid() {
+		return nil
+	}
+	r := gridColumnsAPI().SysCallN(1, m.Instance())
+	return AsGridColumn(r)
 }
 
-func (m *TGridColumns) Grid() ICustomGrid {
-	r1 := gridColumnsImportAPI().SysCallN(5, m.Instance())
-	return AsCustomGrid(r1)
+func (m *TGridColumns) ColumnByTitle(title string) IGridColumn {
+	if !m.IsValid() {
+		return nil
+	}
+	r := gridColumnsAPI().SysCallN(2, m.Instance(), api.PasStr(title))
+	return AsGridColumn(r)
 }
 
-func (m *TGridColumns) ItemsForGridColumn(Index int32) IGridColumn {
-	r1 := gridColumnsImportAPI().SysCallN(9, 0, m.Instance(), uintptr(Index))
-	return AsGridColumn(r1)
+func (m *TGridColumns) RealIndex(index int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := gridColumnsAPI().SysCallN(3, m.Instance(), uintptr(index))
+	return int32(r)
 }
 
-func (m *TGridColumns) SetItemsForGridColumn(Index int32, AValue IGridColumn) {
-	gridColumnsImportAPI().SysCallN(9, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
-}
-
-func (m *TGridColumns) VisibleCount() int32 {
-	r1 := gridColumnsImportAPI().SysCallN(11, m.Instance())
-	return int32(r1)
-}
-
-func (m *TGridColumns) Enabled() bool {
-	r1 := gridColumnsImportAPI().SysCallN(4, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TGridColumns) AddForGridColumn() IGridColumn {
-	r1 := gridColumnsImportAPI().SysCallN(0, m.Instance())
-	return AsGridColumn(r1)
-}
-
-func (m *TGridColumns) ColumnByTitle(aTitle string) IGridColumn {
-	r1 := gridColumnsImportAPI().SysCallN(2, m.Instance(), PascalStr(aTitle))
-	return AsGridColumn(r1)
-}
-
-func (m *TGridColumns) RealIndex(Index int32) int32 {
-	r1 := gridColumnsImportAPI().SysCallN(10, m.Instance(), uintptr(Index))
-	return int32(r1)
-}
-
-func (m *TGridColumns) IndexOf(Column IGridColumn) int32 {
-	r1 := gridColumnsImportAPI().SysCallN(7, m.Instance(), GetObjectUintptr(Column))
-	return int32(r1)
+func (m *TGridColumns) IndexOf(column IGridColumn) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := gridColumnsAPI().SysCallN(4, m.Instance(), base.GetObjectUintptr(column))
+	return int32(r)
 }
 
 func (m *TGridColumns) IsDefault() bool {
-	r1 := gridColumnsImportAPI().SysCallN(8, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := gridColumnsAPI().SysCallN(5, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TGridColumns) HasIndex(Index int32) bool {
-	r1 := gridColumnsImportAPI().SysCallN(6, m.Instance(), uintptr(Index))
-	return GoBool(r1)
+func (m *TGridColumns) HasIndex(index int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := gridColumnsAPI().SysCallN(6, m.Instance(), uintptr(index))
+	return api.GoBool(r)
 }
 
-func (m *TGridColumns) VisibleIndex(Index int32) int32 {
-	r1 := gridColumnsImportAPI().SysCallN(12, m.Instance(), uintptr(Index))
-	return int32(r1)
+func (m *TGridColumns) VisibleIndex(index int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := gridColumnsAPI().SysCallN(7, m.Instance(), uintptr(index))
+	return int32(r)
 }
 
-func GridColumnsClass() TClass {
-	ret := gridColumnsImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TGridColumns) Clear() {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnsAPI().SysCallN(8, m.Instance())
+}
+
+func (m *TGridColumns) Grid() ICustomGrid {
+	if !m.IsValid() {
+		return nil
+	}
+	r := gridColumnsAPI().SysCallN(9, m.Instance())
+	return AsCustomGrid(r)
+}
+
+func (m *TGridColumns) ItemsWithIntToGridColumn(index int32) IGridColumn {
+	if !m.IsValid() {
+		return nil
+	}
+	r := gridColumnsAPI().SysCallN(10, 0, m.Instance(), uintptr(index))
+	return AsGridColumn(r)
+}
+
+func (m *TGridColumns) SetItemsWithIntToGridColumn(index int32, value IGridColumn) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnsAPI().SysCallN(10, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
+}
+
+func (m *TGridColumns) VisibleCount() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := gridColumnsAPI().SysCallN(11, m.Instance())
+	return int32(r)
+}
+
+func (m *TGridColumns) Enabled() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := gridColumnsAPI().SysCallN(12, m.Instance())
+	return api.GoBool(r)
+}
+
+// NewGridColumns class constructor
+func NewGridColumns(grid ICustomGrid, itemClass types.TCollectionItemClass) IGridColumns {
+	r := gridColumnsAPI().SysCallN(0, base.GetObjectUintptr(grid), uintptr(itemClass))
+	return AsGridColumns(r)
 }
 
 var (
-	gridColumnsImport       *imports.Imports = nil
-	gridColumnsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("GridColumns_AddForGridColumn", 0),
-		/*1*/ imports.NewTable("GridColumns_Class", 0),
-		/*2*/ imports.NewTable("GridColumns_ColumnByTitle", 0),
-		/*3*/ imports.NewTable("GridColumns_Create", 0),
-		/*4*/ imports.NewTable("GridColumns_Enabled", 0),
-		/*5*/ imports.NewTable("GridColumns_Grid", 0),
-		/*6*/ imports.NewTable("GridColumns_HasIndex", 0),
-		/*7*/ imports.NewTable("GridColumns_IndexOf", 0),
-		/*8*/ imports.NewTable("GridColumns_IsDefault", 0),
-		/*9*/ imports.NewTable("GridColumns_ItemsForGridColumn", 0),
-		/*10*/ imports.NewTable("GridColumns_RealIndex", 0),
-		/*11*/ imports.NewTable("GridColumns_VisibleCount", 0),
-		/*12*/ imports.NewTable("GridColumns_VisibleIndex", 0),
-	}
+	gridColumnsOnce   base.Once
+	gridColumnsImport *imports.Imports = nil
 )
 
-func gridColumnsImportAPI() *imports.Imports {
-	if gridColumnsImport == nil {
-		gridColumnsImport = NewDefaultImports()
-		gridColumnsImport.SetImportTable(gridColumnsImportTables)
-		gridColumnsImportTables = nil
-	}
+func gridColumnsAPI() *imports.Imports {
+	gridColumnsOnce.Do(func() {
+		gridColumnsImport = api.NewDefaultImports()
+		gridColumnsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TGridColumns_Create", 0), // constructor NewGridColumns
+			/* 1 */ imports.NewTable("TGridColumns_AddToGridColumn", 0), // function AddToGridColumn
+			/* 2 */ imports.NewTable("TGridColumns_ColumnByTitle", 0), // function ColumnByTitle
+			/* 3 */ imports.NewTable("TGridColumns_RealIndex", 0), // function RealIndex
+			/* 4 */ imports.NewTable("TGridColumns_IndexOf", 0), // function IndexOf
+			/* 5 */ imports.NewTable("TGridColumns_IsDefault", 0), // function IsDefault
+			/* 6 */ imports.NewTable("TGridColumns_HasIndex", 0), // function HasIndex
+			/* 7 */ imports.NewTable("TGridColumns_VisibleIndex", 0), // function VisibleIndex
+			/* 8 */ imports.NewTable("TGridColumns_Clear", 0), // procedure Clear
+			/* 9 */ imports.NewTable("TGridColumns_Grid", 0), // property Grid
+			/* 10 */ imports.NewTable("TGridColumns_ItemsWithIntToGridColumn", 0), // property ItemsWithIntToGridColumn
+			/* 11 */ imports.NewTable("TGridColumns_VisibleCount", 0), // property VisibleCount
+			/* 12 */ imports.NewTable("TGridColumns_Enabled", 0), // property Enabled
+		}
+	})
 	return gridColumnsImport
 }

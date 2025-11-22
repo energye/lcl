@@ -9,9 +9,9 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IPortableAnyMapGraphic Parent: IFPImageBitmap
@@ -19,34 +19,27 @@ type IPortableAnyMapGraphic interface {
 	IFPImageBitmap
 }
 
-// TPortableAnyMapGraphic Parent: TFPImageBitmap
 type TPortableAnyMapGraphic struct {
 	TFPImageBitmap
 }
 
+// NewPortableAnyMapGraphic class constructor
 func NewPortableAnyMapGraphic() IPortableAnyMapGraphic {
-	r1 := portableAnyMapGraphicImportAPI().SysCallN(1)
-	return AsPortableAnyMapGraphic(r1)
-}
-
-func PortableAnyMapGraphicClass() TClass {
-	ret := portableAnyMapGraphicImportAPI().SysCallN(0)
-	return TClass(ret)
+	r := portableAnyMapGraphicAPI().SysCallN(0)
+	return AsPortableAnyMapGraphic(r)
 }
 
 var (
-	portableAnyMapGraphicImport       *imports.Imports = nil
-	portableAnyMapGraphicImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("PortableAnyMapGraphic_Class", 0),
-		/*1*/ imports.NewTable("PortableAnyMapGraphic_Create", 0),
-	}
+	portableAnyMapGraphicOnce   base.Once
+	portableAnyMapGraphicImport *imports.Imports = nil
 )
 
-func portableAnyMapGraphicImportAPI() *imports.Imports {
-	if portableAnyMapGraphicImport == nil {
-		portableAnyMapGraphicImport = NewDefaultImports()
-		portableAnyMapGraphicImport.SetImportTable(portableAnyMapGraphicImportTables)
-		portableAnyMapGraphicImportTables = nil
-	}
+func portableAnyMapGraphicAPI() *imports.Imports {
+	portableAnyMapGraphicOnce.Do(func() {
+		portableAnyMapGraphicImport = api.NewDefaultImports()
+		portableAnyMapGraphicImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPortableAnyMapGraphic_Create", 0), // constructor NewPortableAnyMapGraphic
+		}
+	})
 	return portableAnyMapGraphicImport
 }

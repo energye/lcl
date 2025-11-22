@@ -11,6 +11,7 @@
 package i18n
 
 // initZhCn
+//
 //	初始 zh_CN
 func initZhCn() {
 	resources["undo"] = "撤销"
@@ -33,6 +34,7 @@ func initZhCn() {
 }
 
 // initEnUs
+//
 //	初始 en_US
 func initEnUs() {
 	resources["undo"] = "Undo"

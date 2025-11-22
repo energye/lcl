@@ -9,245 +9,343 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
-// IGraphic Is Abstract Class Parent: IPersistent
+// IGraphic Parent: IPersistent
 type IGraphic interface {
 	IPersistent
-	LoadFromBytes(data []byte)
-	Empty() bool                                                                       // property
-	Height() int32                                                                     // property
-	SetHeight(AValue int32)                                                            // property
-	Modified() bool                                                                    // property
-	SetModified(AValue bool)                                                           // property
-	MimeType() string                                                                  // property
-	Palette() HPALETTE                                                                 // property
-	SetPalette(AValue HPALETTE)                                                        // property
-	PaletteModified() bool                                                             // property
-	SetPaletteModified(AValue bool)                                                    // property
-	Transparent() bool                                                                 // property
-	SetTransparent(AValue bool)                                                        // property
-	Width() int32                                                                      // property
-	SetWidth(AValue int32)                                                             // property
-	LazarusResourceTypeValid(AResourceType string) bool                                // function
-	GetResourceType() TResourceType                                                    // function
-	Clear()                                                                            // procedure
-	LoadFromFile(Filename string)                                                      // procedure
-	LoadFromStream(Stream IStream)                                                     // procedure Is Abstract
-	LoadFromMimeStream(AStream IStream, AMimeType string)                              // procedure
-	LoadFromLazarusResource(ResName string)                                            // procedure
-	LoadFromResourceName(Instance THandle, ResName string)                             // procedure
-	LoadFromResourceID(Instance THandle, ResID uint32)                                 // procedure
-	LoadFromClipboardFormat(FormatID TClipboardFormat)                                 // procedure
-	LoadFromClipboardFormatID(ClipboardType TClipboardType, FormatID TClipboardFormat) // procedure
-	SaveToFile(Filename string)                                                        // procedure
-	SaveToStream(Stream IStream)                                                       // procedure Is Abstract
-	SaveToClipboardFormat(FormatID TClipboardFormat)                                   // procedure
-	SaveToClipboardFormatID(ClipboardType TClipboardType, FormatID TClipboardFormat)   // procedure
-	GetSupportedSourceMimeTypes(List IStrings)                                         // procedure
-	SetOnChange(fn TNotifyEvent)                                                       // property event
-	SetOnProgress(fn TProgressEvent)                                                   // property event
+	LazarusResourceTypeValid(resourceType string) bool                                             // function
+	GetResourceType() string                                                                       // function
+	Clear()                                                                                        // procedure
+	LoadFromFile(filename string)                                                                  // procedure
+	LoadFromStreamWithStream(stream IStream)                                                       // procedure
+	LoadFromMimeStream(stream IStream, mimeType string)                                            // procedure
+	LoadFromLazarusResource(resName string)                                                        // procedure
+	LoadFromResourceName(instance types.TLCLHandle, resName string)                                // procedure
+	LoadFromResourceID(instance types.TLCLHandle, resID uintptr)                                   // procedure
+	LoadFromClipboardFormat(formatID types.TClipboardFormat)                                       // procedure
+	LoadFromClipboardFormatID(clipboardType types.TClipboardType, formatID types.TClipboardFormat) // procedure
+	SaveToFile(filename string)                                                                    // procedure
+	SaveToStream(stream IStream)                                                                   // procedure
+	SaveToClipboardFormat(formatID types.TClipboardFormat)                                         // procedure
+	SaveToClipboardFormatID(clipboardType types.TClipboardType, formatID types.TClipboardFormat)   // procedure
+	GetSupportedSourceMimeTypes(list IStrings)                                                     // procedure
+	Empty() bool                                                                                   // property Empty Getter
+	Height() int32                                                                                 // property Height Getter
+	SetHeight(value int32)                                                                         // property Height Setter
+	Modified() bool                                                                                // property Modified Getter
+	SetModified(value bool)                                                                        // property Modified Setter
+	MimeType() string                                                                              // property MimeType Getter
+	Palette() types.HPALETTE                                                                       // property Palette Getter
+	SetPalette(value types.HPALETTE)                                                               // property Palette Setter
+	PaletteModified() bool                                                                         // property PaletteModified Getter
+	SetPaletteModified(value bool)                                                                 // property PaletteModified Setter
+	Transparent() bool                                                                             // property Transparent Getter
+	SetTransparent(value bool)                                                                     // property Transparent Setter
+	Width() int32                                                                                  // property Width Getter
+	SetWidth(value int32)                                                                          // property Width Setter
+	SetOnChange(fn TNotifyEvent)                                                                   // property event
+	SetOnProgress(fn TProgressEvent)                                                               // property event
 }
 
-// TGraphic Is Abstract Class Parent: TPersistent
 type TGraphic struct {
 	TPersistent
-	changePtr   uintptr
-	progressPtr uintptr
 }
 
-func (m *TGraphic) Empty() bool {
-	r1 := graphicImportAPI().SysCallN(2, m.Instance())
-	return GoBool(r1)
+func (m *TGraphic) LazarusResourceTypeValid(resourceType string) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := graphicAPI().SysCallN(0, m.Instance(), api.PasStr(resourceType))
+	return api.GoBool(r)
 }
 
-func (m *TGraphic) Height() int32 {
-	r1 := graphicImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TGraphic) SetHeight(AValue int32) {
-	graphicImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TGraphic) Modified() bool {
-	r1 := graphicImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TGraphic) SetModified(AValue bool) {
-	graphicImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TGraphic) MimeType() string {
-	r1 := graphicImportAPI().SysCallN(15, m.Instance())
-	return GoStr(r1)
-}
-
-func (m *TGraphic) Palette() HPALETTE {
-	r1 := graphicImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return HPALETTE(r1)
-}
-
-func (m *TGraphic) SetPalette(AValue HPALETTE) {
-	graphicImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TGraphic) PaletteModified() bool {
-	r1 := graphicImportAPI().SysCallN(18, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TGraphic) SetPaletteModified(AValue bool) {
-	graphicImportAPI().SysCallN(18, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TGraphic) Transparent() bool {
-	r1 := graphicImportAPI().SysCallN(25, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TGraphic) SetTransparent(AValue bool) {
-	graphicImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TGraphic) Width() int32 {
-	r1 := graphicImportAPI().SysCallN(26, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TGraphic) SetWidth(AValue int32) {
-	graphicImportAPI().SysCallN(26, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TGraphic) LazarusResourceTypeValid(AResourceType string) bool {
-	r1 := graphicImportAPI().SysCallN(6, m.Instance(), PascalStr(AResourceType))
-	return GoBool(r1)
-}
-
-func (m *TGraphic) GetResourceType() TResourceType {
-	r1 := graphicImportAPI().SysCallN(3, m.Instance())
-	return TResourceType(r1)
-}
-
-func GraphicClass() TClass {
-	ret := graphicImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TGraphic) GetResourceType() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := graphicAPI().SysCallN(1, m.Instance())
+	return api.GoStr(r)
 }
 
 func (m *TGraphic) Clear() {
-	graphicImportAPI().SysCallN(1, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(4, m.Instance())
 }
 
-func (m *TGraphic) LoadFromFile(Filename string) {
-	graphicImportAPI().SysCallN(9, m.Instance(), PascalStr(Filename))
+func (m *TGraphic) LoadFromFile(filename string) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(5, m.Instance(), api.PasStr(filename))
 }
 
-func (m *TGraphic) LoadFromStream(Stream IStream) {
-	graphicImportAPI().SysCallN(14, m.Instance(), GetObjectUintptr(Stream))
+func (m *TGraphic) LoadFromStreamWithStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(6, m.Instance(), base.GetObjectUintptr(stream))
 }
 
-func (m *TGraphic) LoadFromMimeStream(AStream IStream, AMimeType string) {
-	graphicImportAPI().SysCallN(11, m.Instance(), GetObjectUintptr(AStream), PascalStr(AMimeType))
+func (m *TGraphic) LoadFromMimeStream(stream IStream, mimeType string) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(7, m.Instance(), base.GetObjectUintptr(stream), api.PasStr(mimeType))
 }
 
-func (m *TGraphic) LoadFromLazarusResource(ResName string) {
-	graphicImportAPI().SysCallN(10, m.Instance(), PascalStr(ResName))
+func (m *TGraphic) LoadFromLazarusResource(resName string) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(8, m.Instance(), api.PasStr(resName))
 }
 
-func (m *TGraphic) LoadFromResourceName(Instance THandle, ResName string) {
-	graphicImportAPI().SysCallN(13, m.Instance(), uintptr(Instance), PascalStr(ResName))
+func (m *TGraphic) LoadFromResourceName(instance types.TLCLHandle, resName string) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(9, m.Instance(), uintptr(instance), api.PasStr(resName))
 }
 
-func (m *TGraphic) LoadFromResourceID(Instance THandle, ResID uint32) {
-	graphicImportAPI().SysCallN(12, m.Instance(), uintptr(Instance), uintptr(ResID))
+func (m *TGraphic) LoadFromResourceID(instance types.TLCLHandle, resID uintptr) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(10, m.Instance(), uintptr(instance), uintptr(resID))
 }
 
-func (m *TGraphic) LoadFromClipboardFormat(FormatID TClipboardFormat) {
-	graphicImportAPI().SysCallN(7, m.Instance(), uintptr(FormatID))
+func (m *TGraphic) LoadFromClipboardFormat(formatID types.TClipboardFormat) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(11, m.Instance(), uintptr(formatID))
 }
 
-func (m *TGraphic) LoadFromClipboardFormatID(ClipboardType TClipboardType, FormatID TClipboardFormat) {
-	graphicImportAPI().SysCallN(8, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
+func (m *TGraphic) LoadFromClipboardFormatID(clipboardType types.TClipboardType, formatID types.TClipboardFormat) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(12, m.Instance(), uintptr(clipboardType), uintptr(formatID))
 }
 
-func (m *TGraphic) SaveToFile(Filename string) {
-	graphicImportAPI().SysCallN(21, m.Instance(), PascalStr(Filename))
+func (m *TGraphic) SaveToFile(filename string) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(13, m.Instance(), api.PasStr(filename))
 }
 
-func (m *TGraphic) SaveToStream(Stream IStream) {
-	graphicImportAPI().SysCallN(22, m.Instance(), GetObjectUintptr(Stream))
+func (m *TGraphic) SaveToStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(14, m.Instance(), base.GetObjectUintptr(stream))
 }
 
-func (m *TGraphic) SaveToClipboardFormat(FormatID TClipboardFormat) {
-	graphicImportAPI().SysCallN(19, m.Instance(), uintptr(FormatID))
+func (m *TGraphic) SaveToClipboardFormat(formatID types.TClipboardFormat) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(15, m.Instance(), uintptr(formatID))
 }
 
-func (m *TGraphic) SaveToClipboardFormatID(ClipboardType TClipboardType, FormatID TClipboardFormat) {
-	graphicImportAPI().SysCallN(20, m.Instance(), uintptr(ClipboardType), uintptr(FormatID))
+func (m *TGraphic) SaveToClipboardFormatID(clipboardType types.TClipboardType, formatID types.TClipboardFormat) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(16, m.Instance(), uintptr(clipboardType), uintptr(formatID))
 }
 
-func (m *TGraphic) GetSupportedSourceMimeTypes(List IStrings) {
-	graphicImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(List))
+func (m *TGraphic) GetSupportedSourceMimeTypes(list IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(17, m.Instance(), base.GetObjectUintptr(list))
+}
+
+func (m *TGraphic) Empty() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := graphicAPI().SysCallN(18, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TGraphic) Height() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := graphicAPI().SysCallN(19, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TGraphic) SetHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(19, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TGraphic) Modified() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := graphicAPI().SysCallN(20, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TGraphic) SetModified(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(20, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TGraphic) MimeType() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := graphicAPI().SysCallN(21, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TGraphic) Palette() types.HPALETTE {
+	if !m.IsValid() {
+		return 0
+	}
+	r := graphicAPI().SysCallN(22, 0, m.Instance())
+	return types.HPALETTE(r)
+}
+
+func (m *TGraphic) SetPalette(value types.HPALETTE) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TGraphic) PaletteModified() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := graphicAPI().SysCallN(23, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TGraphic) SetPaletteModified(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(23, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TGraphic) Transparent() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := graphicAPI().SysCallN(24, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TGraphic) SetTransparent(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(24, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TGraphic) Width() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := graphicAPI().SysCallN(25, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TGraphic) SetWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	graphicAPI().SysCallN(25, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TGraphic) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	graphicImportAPI().SysCallN(23, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 26, graphicAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TGraphic) SetOnProgress(fn TProgressEvent) {
-	if m.progressPtr != 0 {
-		RemoveEventElement(m.progressPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.progressPtr = MakeEventDataPtr(fn)
-	graphicImportAPI().SysCallN(24, m.Instance(), m.progressPtr)
+	cb := makeTProgressEvent(fn)
+	base.SetEvent(m, 27, graphicAPI(), api.MakeEventDataPtr(cb))
+}
+
+// Graphic  is static instance
+var Graphic _GraphicClass
+
+// _GraphicClass is class type defined by TGraphic
+type _GraphicClass uintptr
+
+func (_GraphicClass) GetFileExtensions() string {
+	r := graphicAPI().SysCallN(2)
+	return api.GoStr(r)
+}
+
+func (_GraphicClass) IsStreamFormatSupported(stream IStream) bool {
+	r := graphicAPI().SysCallN(3, base.GetObjectUintptr(stream))
+	return api.GoBool(r)
 }
 
 var (
-	graphicImport       *imports.Imports = nil
-	graphicImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Graphic_Class", 0),
-		/*1*/ imports.NewTable("Graphic_Clear", 0),
-		/*2*/ imports.NewTable("Graphic_Empty", 0),
-		/*3*/ imports.NewTable("Graphic_GetResourceType", 0),
-		/*4*/ imports.NewTable("Graphic_GetSupportedSourceMimeTypes", 0),
-		/*5*/ imports.NewTable("Graphic_Height", 0),
-		/*6*/ imports.NewTable("Graphic_LazarusResourceTypeValid", 0),
-		/*7*/ imports.NewTable("Graphic_LoadFromClipboardFormat", 0),
-		/*8*/ imports.NewTable("Graphic_LoadFromClipboardFormatID", 0),
-		/*9*/ imports.NewTable("Graphic_LoadFromFile", 0),
-		/*10*/ imports.NewTable("Graphic_LoadFromLazarusResource", 0),
-		/*11*/ imports.NewTable("Graphic_LoadFromMimeStream", 0),
-		/*12*/ imports.NewTable("Graphic_LoadFromResourceID", 0),
-		/*13*/ imports.NewTable("Graphic_LoadFromResourceName", 0),
-		/*14*/ imports.NewTable("Graphic_LoadFromStream", 0),
-		/*15*/ imports.NewTable("Graphic_MimeType", 0),
-		/*16*/ imports.NewTable("Graphic_Modified", 0),
-		/*17*/ imports.NewTable("Graphic_Palette", 0),
-		/*18*/ imports.NewTable("Graphic_PaletteModified", 0),
-		/*19*/ imports.NewTable("Graphic_SaveToClipboardFormat", 0),
-		/*20*/ imports.NewTable("Graphic_SaveToClipboardFormatID", 0),
-		/*21*/ imports.NewTable("Graphic_SaveToFile", 0),
-		/*22*/ imports.NewTable("Graphic_SaveToStream", 0),
-		/*23*/ imports.NewTable("Graphic_SetOnChange", 0),
-		/*24*/ imports.NewTable("Graphic_SetOnProgress", 0),
-		/*25*/ imports.NewTable("Graphic_Transparent", 0),
-		/*26*/ imports.NewTable("Graphic_Width", 0),
-	}
+	graphicOnce   base.Once
+	graphicImport *imports.Imports = nil
 )
 
-func graphicImportAPI() *imports.Imports {
-	if graphicImport == nil {
-		graphicImport = NewDefaultImports()
-		graphicImport.SetImportTable(graphicImportTables)
-		graphicImportTables = nil
-	}
+func graphicAPI() *imports.Imports {
+	graphicOnce.Do(func() {
+		graphicImport = api.NewDefaultImports()
+		graphicImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TGraphic_LazarusResourceTypeValid", 0), // function LazarusResourceTypeValid
+			/* 1 */ imports.NewTable("TGraphic_GetResourceType", 0), // function GetResourceType
+			/* 2 */ imports.NewTable("TGraphic_GetFileExtensions", 0), // static function GetFileExtensions
+			/* 3 */ imports.NewTable("TGraphic_IsStreamFormatSupported", 0), // static function IsStreamFormatSupported
+			/* 4 */ imports.NewTable("TGraphic_Clear", 0), // procedure Clear
+			/* 5 */ imports.NewTable("TGraphic_LoadFromFile", 0), // procedure LoadFromFile
+			/* 6 */ imports.NewTable("TGraphic_LoadFromStreamWithStream", 0), // procedure LoadFromStreamWithStream
+			/* 7 */ imports.NewTable("TGraphic_LoadFromMimeStream", 0), // procedure LoadFromMimeStream
+			/* 8 */ imports.NewTable("TGraphic_LoadFromLazarusResource", 0), // procedure LoadFromLazarusResource
+			/* 9 */ imports.NewTable("TGraphic_LoadFromResourceName", 0), // procedure LoadFromResourceName
+			/* 10 */ imports.NewTable("TGraphic_LoadFromResourceID", 0), // procedure LoadFromResourceID
+			/* 11 */ imports.NewTable("TGraphic_LoadFromClipboardFormat", 0), // procedure LoadFromClipboardFormat
+			/* 12 */ imports.NewTable("TGraphic_LoadFromClipboardFormatID", 0), // procedure LoadFromClipboardFormatID
+			/* 13 */ imports.NewTable("TGraphic_SaveToFile", 0), // procedure SaveToFile
+			/* 14 */ imports.NewTable("TGraphic_SaveToStream", 0), // procedure SaveToStream
+			/* 15 */ imports.NewTable("TGraphic_SaveToClipboardFormat", 0), // procedure SaveToClipboardFormat
+			/* 16 */ imports.NewTable("TGraphic_SaveToClipboardFormatID", 0), // procedure SaveToClipboardFormatID
+			/* 17 */ imports.NewTable("TGraphic_GetSupportedSourceMimeTypes", 0), // procedure GetSupportedSourceMimeTypes
+			/* 18 */ imports.NewTable("TGraphic_Empty", 0), // property Empty
+			/* 19 */ imports.NewTable("TGraphic_Height", 0), // property Height
+			/* 20 */ imports.NewTable("TGraphic_Modified", 0), // property Modified
+			/* 21 */ imports.NewTable("TGraphic_MimeType", 0), // property MimeType
+			/* 22 */ imports.NewTable("TGraphic_Palette", 0), // property Palette
+			/* 23 */ imports.NewTable("TGraphic_PaletteModified", 0), // property PaletteModified
+			/* 24 */ imports.NewTable("TGraphic_Transparent", 0), // property Transparent
+			/* 25 */ imports.NewTable("TGraphic_Width", 0), // property Width
+			/* 26 */ imports.NewTable("TGraphic_OnChange", 0), // event OnChange
+			/* 27 */ imports.NewTable("TGraphic_OnProgress", 0), // event OnProgress
+		}
+	})
 	return graphicImport
 }

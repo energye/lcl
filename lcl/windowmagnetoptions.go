@@ -9,98 +9,118 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IWindowMagnetOptions Parent: IPersistent
 type IWindowMagnetOptions interface {
 	IPersistent
-	SnapToMonitor() bool           // property
-	SetSnapToMonitor(AValue bool)  // property
-	SnapToForms() bool             // property
-	SetSnapToForms(AValue bool)    // property
-	SnapFormTarget() bool          // property
-	SetSnapFormTarget(AValue bool) // property
-	Distance() int32               // property
-	SetDistance(AValue int32)      // property
-	AssignTo(Dest IPersistent)     // procedure
+	AssignTo(dest IPersistent)    // procedure
+	SnapToMonitor() bool          // property SnapToMonitor Getter
+	SetSnapToMonitor(value bool)  // property SnapToMonitor Setter
+	SnapToForms() bool            // property SnapToForms Getter
+	SetSnapToForms(value bool)    // property SnapToForms Setter
+	SnapFormTarget() bool         // property SnapFormTarget Getter
+	SetSnapFormTarget(value bool) // property SnapFormTarget Setter
+	Distance() int32              // property Distance Getter
+	SetDistance(value int32)      // property Distance Setter
 }
 
-// TWindowMagnetOptions Parent: TPersistent
 type TWindowMagnetOptions struct {
 	TPersistent
 }
 
-func NewWindowMagnetOptions() IWindowMagnetOptions {
-	r1 := windowMagnetOptionsImportAPI().SysCallN(2)
-	return AsWindowMagnetOptions(r1)
+func (m *TWindowMagnetOptions) AssignTo(dest IPersistent) {
+	if !m.IsValid() {
+		return
+	}
+	windowMagnetOptionsAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(dest))
 }
 
 func (m *TWindowMagnetOptions) SnapToMonitor() bool {
-	r1 := windowMagnetOptionsImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := windowMagnetOptionsAPI().SysCallN(2, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TWindowMagnetOptions) SetSnapToMonitor(AValue bool) {
-	windowMagnetOptionsImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
+func (m *TWindowMagnetOptions) SetSnapToMonitor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	windowMagnetOptionsAPI().SysCallN(2, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TWindowMagnetOptions) SnapToForms() bool {
-	r1 := windowMagnetOptionsImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := windowMagnetOptionsAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TWindowMagnetOptions) SetSnapToForms(AValue bool) {
-	windowMagnetOptionsImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TWindowMagnetOptions) SetSnapToForms(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	windowMagnetOptionsAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TWindowMagnetOptions) SnapFormTarget() bool {
-	r1 := windowMagnetOptionsImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := windowMagnetOptionsAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TWindowMagnetOptions) SetSnapFormTarget(AValue bool) {
-	windowMagnetOptionsImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
+func (m *TWindowMagnetOptions) SetSnapFormTarget(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	windowMagnetOptionsAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TWindowMagnetOptions) Distance() int32 {
-	r1 := windowMagnetOptionsImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := windowMagnetOptionsAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TWindowMagnetOptions) SetDistance(AValue int32) {
-	windowMagnetOptionsImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TWindowMagnetOptions) SetDistance(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	windowMagnetOptionsAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
-func WindowMagnetOptionsClass() TClass {
-	ret := windowMagnetOptionsImportAPI().SysCallN(1)
-	return TClass(ret)
-}
-
-func (m *TWindowMagnetOptions) AssignTo(Dest IPersistent) {
-	windowMagnetOptionsImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(Dest))
+// NewWindowMagnetOptions class constructor
+func NewWindowMagnetOptions() IWindowMagnetOptions {
+	r := windowMagnetOptionsAPI().SysCallN(0)
+	return AsWindowMagnetOptions(r)
 }
 
 var (
-	windowMagnetOptionsImport       *imports.Imports = nil
-	windowMagnetOptionsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("WindowMagnetOptions_AssignTo", 0),
-		/*1*/ imports.NewTable("WindowMagnetOptions_Class", 0),
-		/*2*/ imports.NewTable("WindowMagnetOptions_Create", 0),
-		/*3*/ imports.NewTable("WindowMagnetOptions_Distance", 0),
-		/*4*/ imports.NewTable("WindowMagnetOptions_SnapFormTarget", 0),
-		/*5*/ imports.NewTable("WindowMagnetOptions_SnapToForms", 0),
-		/*6*/ imports.NewTable("WindowMagnetOptions_SnapToMonitor", 0),
-	}
+	windowMagnetOptionsOnce   base.Once
+	windowMagnetOptionsImport *imports.Imports = nil
 )
 
-func windowMagnetOptionsImportAPI() *imports.Imports {
-	if windowMagnetOptionsImport == nil {
-		windowMagnetOptionsImport = NewDefaultImports()
-		windowMagnetOptionsImport.SetImportTable(windowMagnetOptionsImportTables)
-		windowMagnetOptionsImportTables = nil
-	}
+func windowMagnetOptionsAPI() *imports.Imports {
+	windowMagnetOptionsOnce.Do(func() {
+		windowMagnetOptionsImport = api.NewDefaultImports()
+		windowMagnetOptionsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TWindowMagnetOptions_Create", 0), // constructor NewWindowMagnetOptions
+			/* 1 */ imports.NewTable("TWindowMagnetOptions_AssignTo", 0), // procedure AssignTo
+			/* 2 */ imports.NewTable("TWindowMagnetOptions_SnapToMonitor", 0), // property SnapToMonitor
+			/* 3 */ imports.NewTable("TWindowMagnetOptions_SnapToForms", 0), // property SnapToForms
+			/* 4 */ imports.NewTable("TWindowMagnetOptions_SnapFormTarget", 0), // property SnapFormTarget
+			/* 5 */ imports.NewTable("TWindowMagnetOptions_Distance", 0), // property Distance
+		}
+	})
 	return windowMagnetOptionsImport
 }

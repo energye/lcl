@@ -9,110 +9,134 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IPaperSize Parent: IObject
 type IPaperSize interface {
 	IObject
-	DefaultPapers() bool                                   // property
-	Width() int32                                          // property
-	Height() int32                                         // property
-	PaperName() string                                     // property
-	SetPaperName(AValue string)                            // property
-	DefaultPaperName() string                              // property
-	PaperRect() (resultPaperRect TPaperRect)               // property
-	SetPaperRect(AValue *TPaperRect)                       // property
-	SupportedPapers() IStrings                             // property
-	PaperRectOf(aName string) (resultPaperRect TPaperRect) // property
+	DefaultPapers() bool                      // property DefaultPapers Getter
+	Width() int32                             // property Width Getter
+	Height() int32                            // property Height Getter
+	PaperName() string                        // property PaperName Getter
+	SetPaperName(value string)                // property PaperName Setter
+	DefaultPaperName() string                 // property DefaultPaperName Getter
+	PaperRect() types.TPaperRect              // property PaperRect Getter
+	SetPaperRect(value types.TPaperRect)      // property PaperRect Setter
+	SupportedPapers() IStrings                // property SupportedPapers Getter
+	PaperRectOf(name string) types.TPaperRect // property PaperRectOf Getter
 }
 
-// TPaperSize Parent: TObject
 type TPaperSize struct {
 	TObject
 }
 
-func NewPaperSize(aOwner IPrinter) IPaperSize {
-	r1 := paperSizeImportAPI().SysCallN(1, GetObjectUintptr(aOwner))
-	return AsPaperSize(r1)
-}
-
 func (m *TPaperSize) DefaultPapers() bool {
-	r1 := paperSizeImportAPI().SysCallN(3, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := paperSizeAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TPaperSize) Width() int32 {
-	r1 := paperSizeImportAPI().SysCallN(9, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := paperSizeAPI().SysCallN(2, m.Instance())
+	return int32(r)
 }
 
 func (m *TPaperSize) Height() int32 {
-	r1 := paperSizeImportAPI().SysCallN(4, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := paperSizeAPI().SysCallN(3, m.Instance())
+	return int32(r)
 }
 
 func (m *TPaperSize) PaperName() string {
-	r1 := paperSizeImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := paperSizeAPI().SysCallN(4, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TPaperSize) SetPaperName(AValue string) {
-	paperSizeImportAPI().SysCallN(5, 1, m.Instance(), PascalStr(AValue))
+func (m *TPaperSize) SetPaperName(value string) {
+	if !m.IsValid() {
+		return
+	}
+	paperSizeAPI().SysCallN(4, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TPaperSize) DefaultPaperName() string {
-	r1 := paperSizeImportAPI().SysCallN(2, m.Instance())
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := paperSizeAPI().SysCallN(5, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TPaperSize) PaperRect() (resultPaperRect TPaperRect) {
-	r1 := paperSizeImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return *(*TPaperRect)(getPointer(r1))
+func (m *TPaperSize) PaperRect() (result types.TPaperRect) {
+	if !m.IsValid() {
+		return
+	}
+	paperSizeAPI().SysCallN(6, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TPaperSize) SetPaperRect(AValue *TPaperRect) {
-	paperSizeImportAPI().SysCallN(6, 1, m.Instance(), uintptr(unsafePointer(AValue)))
+func (m *TPaperSize) SetPaperRect(value types.TPaperRect) {
+	if !m.IsValid() {
+		return
+	}
+	paperSizeAPI().SysCallN(6, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
 func (m *TPaperSize) SupportedPapers() IStrings {
-	r1 := paperSizeImportAPI().SysCallN(8, m.Instance())
-	return AsStrings(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := paperSizeAPI().SysCallN(7, m.Instance())
+	return AsStrings(r)
 }
 
-func (m *TPaperSize) PaperRectOf(aName string) (resultPaperRect TPaperRect) {
-	r1 := paperSizeImportAPI().SysCallN(7, m.Instance(), PascalStr(aName))
-	return *(*TPaperRect)(getPointer(r1))
+func (m *TPaperSize) PaperRectOf(name string) (result types.TPaperRect) {
+	if !m.IsValid() {
+		return
+	}
+	paperSizeAPI().SysCallN(8, m.Instance(), api.PasStr(name), uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func PaperSizeClass() TClass {
-	ret := paperSizeImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewPaperSize class constructor
+func NewPaperSize(owner IPrinter) IPaperSize {
+	r := paperSizeAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsPaperSize(r)
 }
 
 var (
-	paperSizeImport       *imports.Imports = nil
-	paperSizeImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("PaperSize_Class", 0),
-		/*1*/ imports.NewTable("PaperSize_Create", 0),
-		/*2*/ imports.NewTable("PaperSize_DefaultPaperName", 0),
-		/*3*/ imports.NewTable("PaperSize_DefaultPapers", 0),
-		/*4*/ imports.NewTable("PaperSize_Height", 0),
-		/*5*/ imports.NewTable("PaperSize_PaperName", 0),
-		/*6*/ imports.NewTable("PaperSize_PaperRect", 0),
-		/*7*/ imports.NewTable("PaperSize_PaperRectOf", 0),
-		/*8*/ imports.NewTable("PaperSize_SupportedPapers", 0),
-		/*9*/ imports.NewTable("PaperSize_Width", 0),
-	}
+	paperSizeOnce   base.Once
+	paperSizeImport *imports.Imports = nil
 )
 
-func paperSizeImportAPI() *imports.Imports {
-	if paperSizeImport == nil {
-		paperSizeImport = NewDefaultImports()
-		paperSizeImport.SetImportTable(paperSizeImportTables)
-		paperSizeImportTables = nil
-	}
+func paperSizeAPI() *imports.Imports {
+	paperSizeOnce.Do(func() {
+		paperSizeImport = api.NewDefaultImports()
+		paperSizeImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPaperSize_Create", 0), // constructor NewPaperSize
+			/* 1 */ imports.NewTable("TPaperSize_DefaultPapers", 0), // property DefaultPapers
+			/* 2 */ imports.NewTable("TPaperSize_Width", 0), // property Width
+			/* 3 */ imports.NewTable("TPaperSize_Height", 0), // property Height
+			/* 4 */ imports.NewTable("TPaperSize_PaperName", 0), // property PaperName
+			/* 5 */ imports.NewTable("TPaperSize_DefaultPaperName", 0), // property DefaultPaperName
+			/* 6 */ imports.NewTable("TPaperSize_PaperRect", 0), // property PaperRect
+			/* 7 */ imports.NewTable("TPaperSize_SupportedPapers", 0), // property SupportedPapers
+			/* 8 */ imports.NewTable("TPaperSize_PaperRectOf", 0), // property PaperRectOf
+		}
+	})
 	return paperSizeImport
 }

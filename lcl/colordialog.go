@@ -9,68 +9,100 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IColorDialog Parent: ICommonDialog
 type IColorDialog interface {
 	ICommonDialog
-	Color() TColor                   // property
-	SetColor(AValue TColor)          // property
-	CustomColors() IStrings          // property
-	SetCustomColors(AValue IStrings) // property
+	Color() types.TColor         // property Color Getter
+	SetColor(value types.TColor) // property Color Setter
+	// CustomColors
+	//  entry looks like ColorA = FFFF00 ... ColorX = C0C0C0
+	CustomColors() IStrings                     // property CustomColors Getter
+	SetCustomColors(value IStrings)             // property CustomColors Setter
+	Options() types.TColorDialogOptions         // property Options Getter
+	SetOptions(value types.TColorDialogOptions) // property Options Setter
 }
 
-// TColorDialog Parent: TCommonDialog
 type TColorDialog struct {
 	TCommonDialog
 }
 
-func NewColorDialog(TheOwner IComponent) IColorDialog {
-	r1 := colorDialogImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsColorDialog(r1)
+func (m *TColorDialog) Color() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := colorDialogAPI().SysCallN(1, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TColorDialog) Color() TColor {
-	r1 := colorDialogImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TColorDialog) SetColor(AValue TColor) {
-	colorDialogImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
+func (m *TColorDialog) SetColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	colorDialogAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TColorDialog) CustomColors() IStrings {
-	r1 := colorDialogImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return AsStrings(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := colorDialogAPI().SysCallN(2, 0, m.Instance())
+	return AsStrings(r)
 }
 
-func (m *TColorDialog) SetCustomColors(AValue IStrings) {
-	colorDialogImportAPI().SysCallN(3, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TColorDialog) SetCustomColors(value IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	colorDialogAPI().SysCallN(2, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func ColorDialogClass() TClass {
-	ret := colorDialogImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TColorDialog) Options() types.TColorDialogOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := colorDialogAPI().SysCallN(3, 0, m.Instance())
+	return types.TColorDialogOptions(r)
+}
+
+func (m *TColorDialog) SetOptions(value types.TColorDialogOptions) {
+	if !m.IsValid() {
+		return
+	}
+	colorDialogAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
+}
+
+// NewColorDialog class constructor
+func NewColorDialog(theOwner IComponent) IColorDialog {
+	r := colorDialogAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsColorDialog(r)
+}
+
+func TColorDialogClass() types.TClass {
+	r := colorDialogAPI().SysCallN(4)
+	return types.TClass(r)
 }
 
 var (
-	colorDialogImport       *imports.Imports = nil
-	colorDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ColorDialog_Class", 0),
-		/*1*/ imports.NewTable("ColorDialog_Color", 0),
-		/*2*/ imports.NewTable("ColorDialog_Create", 0),
-		/*3*/ imports.NewTable("ColorDialog_CustomColors", 0),
-	}
+	colorDialogOnce   base.Once
+	colorDialogImport *imports.Imports = nil
 )
 
-func colorDialogImportAPI() *imports.Imports {
-	if colorDialogImport == nil {
-		colorDialogImport = NewDefaultImports()
-		colorDialogImport.SetImportTable(colorDialogImportTables)
-		colorDialogImportTables = nil
-	}
+func colorDialogAPI() *imports.Imports {
+	colorDialogOnce.Do(func() {
+		colorDialogImport = api.NewDefaultImports()
+		colorDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TColorDialog_Create", 0), // constructor NewColorDialog
+			/* 1 */ imports.NewTable("TColorDialog_Color", 0), // property Color
+			/* 2 */ imports.NewTable("TColorDialog_CustomColors", 0), // property CustomColors
+			/* 3 */ imports.NewTable("TColorDialog_Options", 0), // property Options
+			/* 4 */ imports.NewTable("TColorDialog_TClass", 0), // function TColorDialogClass
+		}
+	})
 	return colorDialogImport
 }

@@ -9,56 +9,62 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IPreviewFileControl Parent: IWinControl
 type IPreviewFileControl interface {
 	IWinControl
-	PreviewFileDialog() IPreviewFileDialog          // property
-	SetPreviewFileDialog(AValue IPreviewFileDialog) // property
+	PreviewFileDialog() IPreviewFileDialog         // property PreviewFileDialog Getter
+	SetPreviewFileDialog(value IPreviewFileDialog) // property PreviewFileDialog Setter
 }
 
-// TPreviewFileControl Parent: TWinControl
 type TPreviewFileControl struct {
 	TWinControl
 }
 
-func NewPreviewFileControl(TheOwner IComponent) IPreviewFileControl {
-	r1 := previewFileControlImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsPreviewFileControl(r1)
-}
-
 func (m *TPreviewFileControl) PreviewFileDialog() IPreviewFileDialog {
-	r1 := previewFileControlImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return AsPreviewFileDialog(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := previewFileControlAPI().SysCallN(1, 0, m.Instance())
+	return AsPreviewFileDialog(r)
 }
 
-func (m *TPreviewFileControl) SetPreviewFileDialog(AValue IPreviewFileDialog) {
-	previewFileControlImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TPreviewFileControl) SetPreviewFileDialog(value IPreviewFileDialog) {
+	if !m.IsValid() {
+		return
+	}
+	previewFileControlAPI().SysCallN(1, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func PreviewFileControlClass() TClass {
-	ret := previewFileControlImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewPreviewFileControl class constructor
+func NewPreviewFileControl(theOwner IComponent) IPreviewFileControl {
+	r := previewFileControlAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsPreviewFileControl(r)
+}
+
+func TPreviewFileControlClass() types.TClass {
+	r := previewFileControlAPI().SysCallN(2)
+	return types.TClass(r)
 }
 
 var (
-	previewFileControlImport       *imports.Imports = nil
-	previewFileControlImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("PreviewFileControl_Class", 0),
-		/*1*/ imports.NewTable("PreviewFileControl_Create", 0),
-		/*2*/ imports.NewTable("PreviewFileControl_PreviewFileDialog", 0),
-	}
+	previewFileControlOnce   base.Once
+	previewFileControlImport *imports.Imports = nil
 )
 
-func previewFileControlImportAPI() *imports.Imports {
-	if previewFileControlImport == nil {
-		previewFileControlImport = NewDefaultImports()
-		previewFileControlImport.SetImportTable(previewFileControlImportTables)
-		previewFileControlImportTables = nil
-	}
+func previewFileControlAPI() *imports.Imports {
+	previewFileControlOnce.Do(func() {
+		previewFileControlImport = api.NewDefaultImports()
+		previewFileControlImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPreviewFileControl_Create", 0), // constructor NewPreviewFileControl
+			/* 1 */ imports.NewTable("TPreviewFileControl_PreviewFileDialog", 0), // property PreviewFileDialog
+			/* 2 */ imports.NewTable("TPreviewFileControl_TClass", 0), // function TPreviewFileControlClass
+		}
+	})
 	return previewFileControlImport
 }

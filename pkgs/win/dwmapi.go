@@ -4,9 +4,10 @@
 package win
 
 import (
-	"github.com/energye/lcl/types"
 	"syscall"
 	"unsafe"
+
+	"github.com/energye/lcl/types"
 )
 
 var (

@@ -9,162 +9,208 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomScrollBar Parent: IWinControl
 type ICustomScrollBar interface {
 	IWinControl
-	Kind() TScrollBarKind                             // property
-	SetKind(AValue TScrollBarKind)                    // property
-	LargeChange() TScrollBarInc                       // property
-	SetLargeChange(AValue TScrollBarInc)              // property
-	Max() int32                                       // property
-	SetMax(AValue int32)                              // property
-	Min() int32                                       // property
-	SetMin(AValue int32)                              // property
-	PageSize() int32                                  // property
-	SetPageSize(AValue int32)                         // property
-	Position() int32                                  // property
-	SetPosition(AValue int32)                         // property
-	SmallChange() TScrollBarInc                       // property
-	SetSmallChange(AValue TScrollBarInc)              // property
-	SetParams(APosition, AMin, AMax, APageSize int32) // procedure
-	SetParams1(APosition, AMin, AMax int32)           // procedure
-	SetOnChange(fn TNotifyEvent)                      // property event
-	SetOnScroll(fn TScrollEvent)                      // property event
+	SetParamsWithIntX4(position int32, min int32, max int32, pageSize int32) // procedure
+	SetParamsWithIntX3(position int32, min int32, max int32)                 // procedure
+	Kind() types.TScrollBarKind                                              // property Kind Getter
+	SetKind(value types.TScrollBarKind)                                      // property Kind Setter
+	LargeChange() types.TScrollBarInc                                        // property LargeChange Getter
+	SetLargeChange(value types.TScrollBarInc)                                // property LargeChange Setter
+	Max() int32                                                              // property Max Getter
+	SetMax(value int32)                                                      // property Max Setter
+	Min() int32                                                              // property Min Getter
+	SetMin(value int32)                                                      // property Min Setter
+	PageSize() int32                                                         // property PageSize Getter
+	SetPageSize(value int32)                                                 // property PageSize Setter
+	Position() int32                                                         // property Position Getter
+	SetPosition(value int32)                                                 // property Position Setter
+	SmallChange() types.TScrollBarInc                                        // property SmallChange Getter
+	SetSmallChange(value types.TScrollBarInc)                                // property SmallChange Setter
+	SetOnChange(fn TNotifyEvent)                                             // property event
+	SetOnScroll(fn TScrollEvent)                                             // property event
 }
 
-// TCustomScrollBar Parent: TWinControl
 type TCustomScrollBar struct {
 	TWinControl
-	changePtr uintptr
-	scrollPtr uintptr
 }
 
-func NewCustomScrollBar(AOwner IComponent) ICustomScrollBar {
-	r1 := customScrollBarImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsCustomScrollBar(r1)
+func (m *TCustomScrollBar) SetParamsWithIntX4(position int32, min int32, max int32, pageSize int32) {
+	if !m.IsValid() {
+		return
+	}
+	customScrollBarAPI().SysCallN(1, m.Instance(), uintptr(position), uintptr(min), uintptr(max), uintptr(pageSize))
 }
 
-func (m *TCustomScrollBar) Kind() TScrollBarKind {
-	r1 := customScrollBarImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TScrollBarKind(r1)
+func (m *TCustomScrollBar) SetParamsWithIntX3(position int32, min int32, max int32) {
+	if !m.IsValid() {
+		return
+	}
+	customScrollBarAPI().SysCallN(2, m.Instance(), uintptr(position), uintptr(min), uintptr(max))
 }
 
-func (m *TCustomScrollBar) SetKind(AValue TScrollBarKind) {
-	customScrollBarImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomScrollBar) Kind() types.TScrollBarKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customScrollBarAPI().SysCallN(3, 0, m.Instance())
+	return types.TScrollBarKind(r)
 }
 
-func (m *TCustomScrollBar) LargeChange() TScrollBarInc {
-	r1 := customScrollBarImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TScrollBarInc(r1)
+func (m *TCustomScrollBar) SetKind(value types.TScrollBarKind) {
+	if !m.IsValid() {
+		return
+	}
+	customScrollBarAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomScrollBar) SetLargeChange(AValue TScrollBarInc) {
-	customScrollBarImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomScrollBar) LargeChange() types.TScrollBarInc {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customScrollBarAPI().SysCallN(4, 0, m.Instance())
+	return types.TScrollBarInc(r)
+}
+
+func (m *TCustomScrollBar) SetLargeChange(value types.TScrollBarInc) {
+	if !m.IsValid() {
+		return
+	}
+	customScrollBarAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomScrollBar) Max() int32 {
-	r1 := customScrollBarImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customScrollBarAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomScrollBar) SetMax(AValue int32) {
-	customScrollBarImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomScrollBar) SetMax(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customScrollBarAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomScrollBar) Min() int32 {
-	r1 := customScrollBarImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customScrollBarAPI().SysCallN(6, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomScrollBar) SetMin(AValue int32) {
-	customScrollBarImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomScrollBar) SetMin(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customScrollBarAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomScrollBar) PageSize() int32 {
-	r1 := customScrollBarImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customScrollBarAPI().SysCallN(7, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomScrollBar) SetPageSize(AValue int32) {
-	customScrollBarImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomScrollBar) SetPageSize(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customScrollBarAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomScrollBar) Position() int32 {
-	r1 := customScrollBarImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customScrollBarAPI().SysCallN(8, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomScrollBar) SetPosition(AValue int32) {
-	customScrollBarImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomScrollBar) SetPosition(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customScrollBarAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomScrollBar) SmallChange() TScrollBarInc {
-	r1 := customScrollBarImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return TScrollBarInc(r1)
+func (m *TCustomScrollBar) SmallChange() types.TScrollBarInc {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customScrollBarAPI().SysCallN(9, 0, m.Instance())
+	return types.TScrollBarInc(r)
 }
 
-func (m *TCustomScrollBar) SetSmallChange(AValue TScrollBarInc) {
-	customScrollBarImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
-}
-
-func CustomScrollBarClass() TClass {
-	ret := customScrollBarImportAPI().SysCallN(0)
-	return TClass(ret)
-}
-
-func (m *TCustomScrollBar) SetParams(APosition, AMin, AMax, APageSize int32) {
-	customScrollBarImportAPI().SysCallN(10, m.Instance(), uintptr(APosition), uintptr(AMin), uintptr(AMax), uintptr(APageSize))
-}
-
-func (m *TCustomScrollBar) SetParams1(APosition, AMin, AMax int32) {
-	customScrollBarImportAPI().SysCallN(11, m.Instance(), uintptr(APosition), uintptr(AMin), uintptr(AMax))
+func (m *TCustomScrollBar) SetSmallChange(value types.TScrollBarInc) {
+	if !m.IsValid() {
+		return
+	}
+	customScrollBarAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomScrollBar) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	customScrollBarImportAPI().SysCallN(8, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 10, customScrollBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomScrollBar) SetOnScroll(fn TScrollEvent) {
-	if m.scrollPtr != 0 {
-		RemoveEventElement(m.scrollPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.scrollPtr = MakeEventDataPtr(fn)
-	customScrollBarImportAPI().SysCallN(9, m.Instance(), m.scrollPtr)
+	cb := makeTScrollEvent(fn)
+	base.SetEvent(m, 11, customScrollBarAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomScrollBar class constructor
+func NewCustomScrollBar(owner IComponent) ICustomScrollBar {
+	r := customScrollBarAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomScrollBar(r)
+}
+
+func TCustomScrollBarClass() types.TClass {
+	r := customScrollBarAPI().SysCallN(12)
+	return types.TClass(r)
 }
 
 var (
-	customScrollBarImport       *imports.Imports = nil
-	customScrollBarImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomScrollBar_Class", 0),
-		/*1*/ imports.NewTable("CustomScrollBar_Create", 0),
-		/*2*/ imports.NewTable("CustomScrollBar_Kind", 0),
-		/*3*/ imports.NewTable("CustomScrollBar_LargeChange", 0),
-		/*4*/ imports.NewTable("CustomScrollBar_Max", 0),
-		/*5*/ imports.NewTable("CustomScrollBar_Min", 0),
-		/*6*/ imports.NewTable("CustomScrollBar_PageSize", 0),
-		/*7*/ imports.NewTable("CustomScrollBar_Position", 0),
-		/*8*/ imports.NewTable("CustomScrollBar_SetOnChange", 0),
-		/*9*/ imports.NewTable("CustomScrollBar_SetOnScroll", 0),
-		/*10*/ imports.NewTable("CustomScrollBar_SetParams", 0),
-		/*11*/ imports.NewTable("CustomScrollBar_SetParams1", 0),
-		/*12*/ imports.NewTable("CustomScrollBar_SmallChange", 0),
-	}
+	customScrollBarOnce   base.Once
+	customScrollBarImport *imports.Imports = nil
 )
 
-func customScrollBarImportAPI() *imports.Imports {
-	if customScrollBarImport == nil {
-		customScrollBarImport = NewDefaultImports()
-		customScrollBarImport.SetImportTable(customScrollBarImportTables)
-		customScrollBarImportTables = nil
-	}
+func customScrollBarAPI() *imports.Imports {
+	customScrollBarOnce.Do(func() {
+		customScrollBarImport = api.NewDefaultImports()
+		customScrollBarImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomScrollBar_Create", 0), // constructor NewCustomScrollBar
+			/* 1 */ imports.NewTable("TCustomScrollBar_SetParamsWithIntX4", 0), // procedure SetParamsWithIntX4
+			/* 2 */ imports.NewTable("TCustomScrollBar_SetParamsWithIntX3", 0), // procedure SetParamsWithIntX3
+			/* 3 */ imports.NewTable("TCustomScrollBar_Kind", 0), // property Kind
+			/* 4 */ imports.NewTable("TCustomScrollBar_LargeChange", 0), // property LargeChange
+			/* 5 */ imports.NewTable("TCustomScrollBar_Max", 0), // property Max
+			/* 6 */ imports.NewTable("TCustomScrollBar_Min", 0), // property Min
+			/* 7 */ imports.NewTable("TCustomScrollBar_PageSize", 0), // property PageSize
+			/* 8 */ imports.NewTable("TCustomScrollBar_Position", 0), // property Position
+			/* 9 */ imports.NewTable("TCustomScrollBar_SmallChange", 0), // property SmallChange
+			/* 10 */ imports.NewTable("TCustomScrollBar_OnChange", 0), // event OnChange
+			/* 11 */ imports.NewTable("TCustomScrollBar_OnScroll", 0), // event OnScroll
+			/* 12 */ imports.NewTable("TCustomScrollBar_TClass", 0), // function TCustomScrollBarClass
+		}
+	})
 	return customScrollBarImport
 }

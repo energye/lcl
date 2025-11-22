@@ -9,80 +9,91 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IComboExItem Parent: IListControlItem
 type IComboExItem interface {
 	IListControlItem
-	Indent() int32                            // property
-	SetIndent(AValue int32)                   // property
-	OverlayImageIndex() TImageIndex           // property
-	SetOverlayImageIndex(AValue TImageIndex)  // property
-	SelectedImageIndex() TImageIndex          // property
-	SetSelectedImageIndex(AValue TImageIndex) // property
+	Indent() int32                     // property Indent Getter
+	SetIndent(value int32)             // property Indent Setter
+	OverlayImageIndex() int32          // property OverlayImageIndex Getter
+	SetOverlayImageIndex(value int32)  // property OverlayImageIndex Setter
+	SelectedImageIndex() int32         // property SelectedImageIndex Getter
+	SetSelectedImageIndex(value int32) // property SelectedImageIndex Setter
 }
 
-// TComboExItem Parent: TListControlItem
 type TComboExItem struct {
 	TListControlItem
 }
 
-func NewComboExItem(ACollection ICollection) IComboExItem {
-	r1 := comboExItemImportAPI().SysCallN(1, GetObjectUintptr(ACollection))
-	return AsComboExItem(r1)
-}
-
 func (m *TComboExItem) Indent() int32 {
-	r1 := comboExItemImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := comboExItemAPI().SysCallN(1, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TComboExItem) SetIndent(AValue int32) {
-	comboExItemImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TComboExItem) SetIndent(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	comboExItemAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TComboExItem) OverlayImageIndex() TImageIndex {
-	r1 := comboExItemImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TImageIndex(r1)
+func (m *TComboExItem) OverlayImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := comboExItemAPI().SysCallN(2, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TComboExItem) SetOverlayImageIndex(AValue TImageIndex) {
-	comboExItemImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TComboExItem) SetOverlayImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	comboExItemAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TComboExItem) SelectedImageIndex() TImageIndex {
-	r1 := comboExItemImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TImageIndex(r1)
+func (m *TComboExItem) SelectedImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := comboExItemAPI().SysCallN(3, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TComboExItem) SetSelectedImageIndex(AValue TImageIndex) {
-	comboExItemImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TComboExItem) SetSelectedImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	comboExItemAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func ComboExItemClass() TClass {
-	ret := comboExItemImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewComboExItem class constructor
+func NewComboExItem(collection ICollection) IComboExItem {
+	r := comboExItemAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsComboExItem(r)
 }
 
 var (
-	comboExItemImport       *imports.Imports = nil
-	comboExItemImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ComboExItem_Class", 0),
-		/*1*/ imports.NewTable("ComboExItem_Create", 0),
-		/*2*/ imports.NewTable("ComboExItem_Indent", 0),
-		/*3*/ imports.NewTable("ComboExItem_OverlayImageIndex", 0),
-		/*4*/ imports.NewTable("ComboExItem_SelectedImageIndex", 0),
-	}
+	comboExItemOnce   base.Once
+	comboExItemImport *imports.Imports = nil
 )
 
-func comboExItemImportAPI() *imports.Imports {
-	if comboExItemImport == nil {
-		comboExItemImport = NewDefaultImports()
-		comboExItemImport.SetImportTable(comboExItemImportTables)
-		comboExItemImportTables = nil
-	}
+func comboExItemAPI() *imports.Imports {
+	comboExItemOnce.Do(func() {
+		comboExItemImport = api.NewDefaultImports()
+		comboExItemImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TComboExItem_Create", 0), // constructor NewComboExItem
+			/* 1 */ imports.NewTable("TComboExItem_Indent", 0), // property Indent
+			/* 2 */ imports.NewTable("TComboExItem_OverlayImageIndex", 0), // property OverlayImageIndex
+			/* 3 */ imports.NewTable("TComboExItem_SelectedImageIndex", 0), // property SelectedImageIndex
+		}
+	})
 	return comboExItemImport
 }

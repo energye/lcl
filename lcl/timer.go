@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ITimer Parent: ICustomTimer
@@ -19,34 +20,33 @@ type ITimer interface {
 	ICustomTimer
 }
 
-// TTimer Parent: TCustomTimer
 type TTimer struct {
 	TCustomTimer
 }
 
-func NewTimer(AOwner IComponent) ITimer {
-	r1 := imerImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsTimer(r1)
+// NewTimer class constructor
+func NewTimer(owner IComponent) ITimer {
+	r := timerAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsTimer(r)
 }
 
-func TimerClass() TClass {
-	ret := imerImportAPI().SysCallN(0)
-	return TClass(ret)
+func TTimerClass() types.TClass {
+	r := timerAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	imerImport       *imports.Imports = nil
-	imerImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Timer_Class", 0),
-		/*1*/ imports.NewTable("Timer_Create", 0),
-	}
+	timerOnce   base.Once
+	timerImport *imports.Imports = nil
 )
 
-func imerImportAPI() *imports.Imports {
-	if imerImport == nil {
-		imerImport = NewDefaultImports()
-		imerImport.SetImportTable(imerImportTables)
-		imerImportTables = nil
-	}
-	return imerImport
+func timerAPI() *imports.Imports {
+	timerOnce.Do(func() {
+		timerImport = api.NewDefaultImports()
+		timerImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TTimer_Create", 0), // constructor NewTimer
+			/* 1 */ imports.NewTable("TTimer_TClass", 0), // function TTimerClass
+		}
+	})
+	return timerImport
 }

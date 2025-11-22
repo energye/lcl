@@ -9,18 +9,19 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ISplitter Parent: ICustomSplitter
 type ISplitter interface {
 	ICustomSplitter
-	ParentColor() bool                              // property
-	SetParentColor(AValue bool)                     // property
-	ParentShowHint() bool                           // property
-	SetParentShowHint(AValue bool)                  // property
+	ParentColor() bool                              // property ParentColor Getter
+	SetParentColor(value bool)                      // property ParentColor Setter
+	ParentShowHint() bool                           // property ParentShowHint Getter
+	SetParentShowHint(value bool)                   // property ParentShowHint Setter
 	SetOnMouseWheel(fn TMouseWheelEvent)            // property event
 	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent)  // property event
 	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)    // property event
@@ -29,114 +30,119 @@ type ISplitter interface {
 	SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) // property event
 }
 
-// TSplitter Parent: TCustomSplitter
 type TSplitter struct {
 	TCustomSplitter
-	mouseWheelPtr      uintptr
-	mouseWheelDownPtr  uintptr
-	mouseWheelUpPtr    uintptr
-	mouseWheelHorzPtr  uintptr
-	mouseWheelLeftPtr  uintptr
-	mouseWheelRightPtr uintptr
-}
-
-func NewSplitter(TheOwner IComponent) ISplitter {
-	r1 := splitterImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsSplitter(r1)
 }
 
 func (m *TSplitter) ParentColor() bool {
-	r1 := splitterImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := splitterAPI().SysCallN(1, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TSplitter) SetParentColor(AValue bool) {
-	splitterImportAPI().SysCallN(2, 1, m.Instance(), PascalBool(AValue))
+func (m *TSplitter) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	splitterAPI().SysCallN(1, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TSplitter) ParentShowHint() bool {
-	r1 := splitterImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := splitterAPI().SysCallN(2, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TSplitter) SetParentShowHint(AValue bool) {
-	splitterImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
-}
-
-func SplitterClass() TClass {
-	ret := splitterImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TSplitter) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	splitterAPI().SysCallN(2, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TSplitter) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	splitterImportAPI().SysCallN(4, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 3, splitterAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSplitter) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	splitterImportAPI().SysCallN(5, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 4, splitterAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSplitter) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	splitterImportAPI().SysCallN(9, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 5, splitterAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSplitter) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	splitterImportAPI().SysCallN(6, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 6, splitterAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSplitter) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	splitterImportAPI().SysCallN(7, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 7, splitterAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSplitter) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	splitterImportAPI().SysCallN(8, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 8, splitterAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewSplitter class constructor
+func NewSplitter(theOwner IComponent) ISplitter {
+	r := splitterAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsSplitter(r)
+}
+
+func TSplitterClass() types.TClass {
+	r := splitterAPI().SysCallN(9)
+	return types.TClass(r)
 }
 
 var (
-	splitterImport       *imports.Imports = nil
-	splitterImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Splitter_Class", 0),
-		/*1*/ imports.NewTable("Splitter_Create", 0),
-		/*2*/ imports.NewTable("Splitter_ParentColor", 0),
-		/*3*/ imports.NewTable("Splitter_ParentShowHint", 0),
-		/*4*/ imports.NewTable("Splitter_SetOnMouseWheel", 0),
-		/*5*/ imports.NewTable("Splitter_SetOnMouseWheelDown", 0),
-		/*6*/ imports.NewTable("Splitter_SetOnMouseWheelHorz", 0),
-		/*7*/ imports.NewTable("Splitter_SetOnMouseWheelLeft", 0),
-		/*8*/ imports.NewTable("Splitter_SetOnMouseWheelRight", 0),
-		/*9*/ imports.NewTable("Splitter_SetOnMouseWheelUp", 0),
-	}
+	splitterOnce   base.Once
+	splitterImport *imports.Imports = nil
 )
 
-func splitterImportAPI() *imports.Imports {
-	if splitterImport == nil {
-		splitterImport = NewDefaultImports()
-		splitterImport.SetImportTable(splitterImportTables)
-		splitterImportTables = nil
-	}
+func splitterAPI() *imports.Imports {
+	splitterOnce.Do(func() {
+		splitterImport = api.NewDefaultImports()
+		splitterImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TSplitter_Create", 0), // constructor NewSplitter
+			/* 1 */ imports.NewTable("TSplitter_ParentColor", 0), // property ParentColor
+			/* 2 */ imports.NewTable("TSplitter_ParentShowHint", 0), // property ParentShowHint
+			/* 3 */ imports.NewTable("TSplitter_OnMouseWheel", 0), // event OnMouseWheel
+			/* 4 */ imports.NewTable("TSplitter_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 5 */ imports.NewTable("TSplitter_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 6 */ imports.NewTable("TSplitter_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 7 */ imports.NewTable("TSplitter_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 8 */ imports.NewTable("TSplitter_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 9 */ imports.NewTable("TSplitter_TClass", 0), // function TSplitterClass
+		}
+	})
 	return splitterImport
 }

@@ -9,276 +9,384 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICoolBand Parent: ICollectionItem
 type ICoolBand interface {
 	ICollectionItem
-	Height() int32                      // property
-	Left() int32                        // property
-	Right() int32                       // property
-	Top() int32                         // property
-	Bitmap() IBitmap                    // property
-	SetBitmap(AValue IBitmap)           // property
-	BorderStyle() TBorderStyle          // property
-	SetBorderStyle(AValue TBorderStyle) // property
-	Break() bool                        // property
-	SetBreak(AValue bool)               // property
-	Color() TColor                      // property
-	SetColor(AValue TColor)             // property
-	Control() IControl                  // property
-	SetControl(AValue IControl)         // property
-	FixedBackground() bool              // property
-	SetFixedBackground(AValue bool)     // property
-	FixedSize() bool                    // property
-	SetFixedSize(AValue bool)           // property
-	HorizontalOnly() bool               // property
-	SetHorizontalOnly(AValue bool)      // property
-	ImageIndex() TImageIndex            // property
-	SetImageIndex(AValue TImageIndex)   // property
-	MinHeight() int32                   // property
-	SetMinHeight(AValue int32)          // property
-	MinWidth() int32                    // property
-	SetMinWidth(AValue int32)           // property
-	ParentColor() bool                  // property
-	SetParentColor(AValue bool)         // property
-	ParentBitmap() bool                 // property
-	SetParentBitmap(AValue bool)        // property
-	Text() string                       // property
-	SetText(AValue string)              // property
-	Visible() bool                      // property
-	SetVisible(AValue bool)             // property
-	Width() int32                       // property
-	SetWidth(AValue int32)              // property
-	AutosizeWidth()                     // procedure
-	InvalidateCoolBar(Sender IObject)   // procedure
+	AutosizeWidth()                          // procedure
+	InvalidateCoolBar(sender IObject)        // procedure
+	Height() int32                           // property Height Getter
+	Left() int32                             // property Left Getter
+	Right() int32                            // property Right Getter
+	Top() int32                              // property Top Getter
+	Bitmap() IBitmap                         // property Bitmap Getter
+	SetBitmap(value IBitmap)                 // property Bitmap Setter
+	BorderStyle() types.TBorderStyle         // property BorderStyle Getter
+	SetBorderStyle(value types.TBorderStyle) // property BorderStyle Setter
+	Break() bool                             // property Break Getter
+	SetBreak(value bool)                     // property Break Setter
+	Color() types.TColor                     // property Color Getter
+	SetColor(value types.TColor)             // property Color Setter
+	Control() IControl                       // property Control Getter
+	SetControl(value IControl)               // property Control Setter
+	FixedBackground() bool                   // property FixedBackground Getter
+	SetFixedBackground(value bool)           // property FixedBackground Setter
+	FixedSize() bool                         // property FixedSize Getter
+	SetFixedSize(value bool)                 // property FixedSize Setter
+	HorizontalOnly() bool                    // property HorizontalOnly Getter
+	SetHorizontalOnly(value bool)            // property HorizontalOnly Setter
+	ImageIndex() int32                       // property ImageIndex Getter
+	SetImageIndex(value int32)               // property ImageIndex Setter
+	MinHeight() int32                        // property MinHeight Getter
+	SetMinHeight(value int32)                // property MinHeight Setter
+	MinWidth() int32                         // property MinWidth Getter
+	SetMinWidth(value int32)                 // property MinWidth Setter
+	ParentColor() bool                       // property ParentColor Getter
+	SetParentColor(value bool)               // property ParentColor Setter
+	ParentBitmap() bool                      // property ParentBitmap Getter
+	SetParentBitmap(value bool)              // property ParentBitmap Setter
+	Text() string                            // property Text Getter
+	SetText(value string)                    // property Text Setter
+	Visible() bool                           // property Visible Getter
+	SetVisible(value bool)                   // property Visible Setter
+	Width() int32                            // property Width Getter
+	SetWidth(value int32)                    // property Width Setter
 }
 
-// TCoolBand Parent: TCollectionItem
 type TCoolBand struct {
 	TCollectionItem
 }
 
-func NewCoolBand(aCollection ICollection) ICoolBand {
-	r1 := coolBandImportAPI().SysCallN(7, GetObjectUintptr(aCollection))
-	return AsCoolBand(r1)
+func (m *TCoolBand) AutosizeWidth() {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(1, m.Instance())
+}
+
+func (m *TCoolBand) InvalidateCoolBar(sender IObject) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(sender))
 }
 
 func (m *TCoolBand) Height() int32 {
-	r1 := coolBandImportAPI().SysCallN(10, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandAPI().SysCallN(3, m.Instance())
+	return int32(r)
 }
 
 func (m *TCoolBand) Left() int32 {
-	r1 := coolBandImportAPI().SysCallN(14, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandAPI().SysCallN(4, m.Instance())
+	return int32(r)
 }
 
 func (m *TCoolBand) Right() int32 {
-	r1 := coolBandImportAPI().SysCallN(19, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandAPI().SysCallN(5, m.Instance())
+	return int32(r)
 }
 
 func (m *TCoolBand) Top() int32 {
-	r1 := coolBandImportAPI().SysCallN(21, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandAPI().SysCallN(6, m.Instance())
+	return int32(r)
 }
 
 func (m *TCoolBand) Bitmap() IBitmap {
-	r1 := coolBandImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return AsBitmap(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := coolBandAPI().SysCallN(7, 0, m.Instance())
+	return AsBitmap(r)
 }
 
-func (m *TCoolBand) SetBitmap(AValue IBitmap) {
-	coolBandImportAPI().SysCallN(1, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TCoolBand) SetBitmap(value IBitmap) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(7, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TCoolBand) BorderStyle() TBorderStyle {
-	r1 := coolBandImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TBorderStyle(r1)
+func (m *TCoolBand) BorderStyle() types.TBorderStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandAPI().SysCallN(8, 0, m.Instance())
+	return types.TBorderStyle(r)
 }
 
-func (m *TCoolBand) SetBorderStyle(AValue TBorderStyle) {
-	coolBandImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TCoolBand) SetBorderStyle(value types.TBorderStyle) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCoolBand) Break() bool {
-	r1 := coolBandImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := coolBandAPI().SysCallN(9, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCoolBand) SetBreak(AValue bool) {
-	coolBandImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
+func (m *TCoolBand) SetBreak(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(9, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCoolBand) Color() TColor {
-	r1 := coolBandImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCoolBand) Color() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandAPI().SysCallN(10, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCoolBand) SetColor(AValue TColor) {
-	coolBandImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TCoolBand) SetColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCoolBand) Control() IControl {
-	r1 := coolBandImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return AsControl(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := coolBandAPI().SysCallN(11, 0, m.Instance())
+	return AsControl(r)
 }
 
-func (m *TCoolBand) SetControl(AValue IControl) {
-	coolBandImportAPI().SysCallN(6, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TCoolBand) SetControl(value IControl) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(11, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TCoolBand) FixedBackground() bool {
-	r1 := coolBandImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := coolBandAPI().SysCallN(12, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCoolBand) SetFixedBackground(AValue bool) {
-	coolBandImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
+func (m *TCoolBand) SetFixedBackground(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(12, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCoolBand) FixedSize() bool {
-	r1 := coolBandImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := coolBandAPI().SysCallN(13, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCoolBand) SetFixedSize(AValue bool) {
-	coolBandImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
+func (m *TCoolBand) SetFixedSize(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(13, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCoolBand) HorizontalOnly() bool {
-	r1 := coolBandImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := coolBandAPI().SysCallN(14, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCoolBand) SetHorizontalOnly(AValue bool) {
-	coolBandImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
+func (m *TCoolBand) SetHorizontalOnly(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(14, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCoolBand) ImageIndex() TImageIndex {
-	r1 := coolBandImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return TImageIndex(r1)
+func (m *TCoolBand) ImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandAPI().SysCallN(15, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCoolBand) SetImageIndex(AValue TImageIndex) {
-	coolBandImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
+func (m *TCoolBand) SetImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(15, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCoolBand) MinHeight() int32 {
-	r1 := coolBandImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandAPI().SysCallN(16, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCoolBand) SetMinHeight(AValue int32) {
-	coolBandImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
+func (m *TCoolBand) SetMinHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(16, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCoolBand) MinWidth() int32 {
-	r1 := coolBandImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandAPI().SysCallN(17, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCoolBand) SetMinWidth(AValue int32) {
-	coolBandImportAPI().SysCallN(16, 1, m.Instance(), uintptr(AValue))
+func (m *TCoolBand) SetMinWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(17, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCoolBand) ParentColor() bool {
-	r1 := coolBandImportAPI().SysCallN(18, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := coolBandAPI().SysCallN(18, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCoolBand) SetParentColor(AValue bool) {
-	coolBandImportAPI().SysCallN(18, 1, m.Instance(), PascalBool(AValue))
+func (m *TCoolBand) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(18, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCoolBand) ParentBitmap() bool {
-	r1 := coolBandImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := coolBandAPI().SysCallN(19, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCoolBand) SetParentBitmap(AValue bool) {
-	coolBandImportAPI().SysCallN(17, 1, m.Instance(), PascalBool(AValue))
+func (m *TCoolBand) SetParentBitmap(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(19, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCoolBand) Text() string {
-	r1 := coolBandImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := coolBandAPI().SysCallN(20, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TCoolBand) SetText(AValue string) {
-	coolBandImportAPI().SysCallN(20, 1, m.Instance(), PascalStr(AValue))
+func (m *TCoolBand) SetText(value string) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(20, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TCoolBand) Visible() bool {
-	r1 := coolBandImportAPI().SysCallN(22, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := coolBandAPI().SysCallN(21, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCoolBand) SetVisible(AValue bool) {
-	coolBandImportAPI().SysCallN(22, 1, m.Instance(), PascalBool(AValue))
+func (m *TCoolBand) SetVisible(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(21, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCoolBand) Width() int32 {
-	r1 := coolBandImportAPI().SysCallN(23, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandAPI().SysCallN(22, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCoolBand) SetWidth(AValue int32) {
-	coolBandImportAPI().SysCallN(23, 1, m.Instance(), uintptr(AValue))
+func (m *TCoolBand) SetWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
 }
 
-func CoolBandClass() TClass {
-	ret := coolBandImportAPI().SysCallN(4)
-	return TClass(ret)
-}
-
-func (m *TCoolBand) AutosizeWidth() {
-	coolBandImportAPI().SysCallN(0, m.Instance())
-}
-
-func (m *TCoolBand) InvalidateCoolBar(Sender IObject) {
-	coolBandImportAPI().SysCallN(13, m.Instance(), GetObjectUintptr(Sender))
+// NewCoolBand class constructor
+func NewCoolBand(collection ICollection) ICoolBand {
+	r := coolBandAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsCoolBand(r)
 }
 
 var (
-	coolBandImport       *imports.Imports = nil
-	coolBandImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CoolBand_AutosizeWidth", 0),
-		/*1*/ imports.NewTable("CoolBand_Bitmap", 0),
-		/*2*/ imports.NewTable("CoolBand_BorderStyle", 0),
-		/*3*/ imports.NewTable("CoolBand_Break", 0),
-		/*4*/ imports.NewTable("CoolBand_Class", 0),
-		/*5*/ imports.NewTable("CoolBand_Color", 0),
-		/*6*/ imports.NewTable("CoolBand_Control", 0),
-		/*7*/ imports.NewTable("CoolBand_Create", 0),
-		/*8*/ imports.NewTable("CoolBand_FixedBackground", 0),
-		/*9*/ imports.NewTable("CoolBand_FixedSize", 0),
-		/*10*/ imports.NewTable("CoolBand_Height", 0),
-		/*11*/ imports.NewTable("CoolBand_HorizontalOnly", 0),
-		/*12*/ imports.NewTable("CoolBand_ImageIndex", 0),
-		/*13*/ imports.NewTable("CoolBand_InvalidateCoolBar", 0),
-		/*14*/ imports.NewTable("CoolBand_Left", 0),
-		/*15*/ imports.NewTable("CoolBand_MinHeight", 0),
-		/*16*/ imports.NewTable("CoolBand_MinWidth", 0),
-		/*17*/ imports.NewTable("CoolBand_ParentBitmap", 0),
-		/*18*/ imports.NewTable("CoolBand_ParentColor", 0),
-		/*19*/ imports.NewTable("CoolBand_Right", 0),
-		/*20*/ imports.NewTable("CoolBand_Text", 0),
-		/*21*/ imports.NewTable("CoolBand_Top", 0),
-		/*22*/ imports.NewTable("CoolBand_Visible", 0),
-		/*23*/ imports.NewTable("CoolBand_Width", 0),
-	}
+	coolBandOnce   base.Once
+	coolBandImport *imports.Imports = nil
 )
 
-func coolBandImportAPI() *imports.Imports {
-	if coolBandImport == nil {
-		coolBandImport = NewDefaultImports()
-		coolBandImport.SetImportTable(coolBandImportTables)
-		coolBandImportTables = nil
-	}
+func coolBandAPI() *imports.Imports {
+	coolBandOnce.Do(func() {
+		coolBandImport = api.NewDefaultImports()
+		coolBandImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCoolBand_Create", 0), // constructor NewCoolBand
+			/* 1 */ imports.NewTable("TCoolBand_AutosizeWidth", 0), // procedure AutosizeWidth
+			/* 2 */ imports.NewTable("TCoolBand_InvalidateCoolBar", 0), // procedure InvalidateCoolBar
+			/* 3 */ imports.NewTable("TCoolBand_Height", 0), // property Height
+			/* 4 */ imports.NewTable("TCoolBand_Left", 0), // property Left
+			/* 5 */ imports.NewTable("TCoolBand_Right", 0), // property Right
+			/* 6 */ imports.NewTable("TCoolBand_Top", 0), // property Top
+			/* 7 */ imports.NewTable("TCoolBand_Bitmap", 0), // property Bitmap
+			/* 8 */ imports.NewTable("TCoolBand_BorderStyle", 0), // property BorderStyle
+			/* 9 */ imports.NewTable("TCoolBand_Break", 0), // property Break
+			/* 10 */ imports.NewTable("TCoolBand_Color", 0), // property Color
+			/* 11 */ imports.NewTable("TCoolBand_Control", 0), // property Control
+			/* 12 */ imports.NewTable("TCoolBand_FixedBackground", 0), // property FixedBackground
+			/* 13 */ imports.NewTable("TCoolBand_FixedSize", 0), // property FixedSize
+			/* 14 */ imports.NewTable("TCoolBand_HorizontalOnly", 0), // property HorizontalOnly
+			/* 15 */ imports.NewTable("TCoolBand_ImageIndex", 0), // property ImageIndex
+			/* 16 */ imports.NewTable("TCoolBand_MinHeight", 0), // property MinHeight
+			/* 17 */ imports.NewTable("TCoolBand_MinWidth", 0), // property MinWidth
+			/* 18 */ imports.NewTable("TCoolBand_ParentColor", 0), // property ParentColor
+			/* 19 */ imports.NewTable("TCoolBand_ParentBitmap", 0), // property ParentBitmap
+			/* 20 */ imports.NewTable("TCoolBand_Text", 0), // property Text
+			/* 21 */ imports.NewTable("TCoolBand_Visible", 0), // property Visible
+			/* 22 */ imports.NewTable("TCoolBand_Width", 0), // property Width
+		}
+	})
 	return coolBandImport
 }

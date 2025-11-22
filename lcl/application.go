@@ -9,975 +9,1369 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IApplication Parent: ICustomApplication
 type IApplication interface {
 	ICustomApplication
-	CreateForm(forms ...IForm) IForm
-	Initialize()
-	SetRunLoopReceived(proc uintptr)
-	SetIconResId(id int)
-	Active() bool                                                              // property
-	ApplicationType() TApplicationType                                         // property
-	SetApplicationType(AValue TApplicationType)                                // property
-	BidiMode() TBiDiMode                                                       // property
-	SetBidiMode(AValue TBiDiMode)                                              // property
-	CaptureExceptions() bool                                                   // property
-	SetCaptureExceptions(AValue bool)                                          // property
-	DoubleBuffered() TApplicationDoubleBuffered                                // property
-	SetDoubleBuffered(AValue TApplicationDoubleBuffered)                       // property
-	ExtendedKeysSupport() bool                                                 // property
-	SetExtendedKeysSupport(AValue bool)                                        // property
-	ExceptionDialog() TApplicationExceptionDlg                                 // property
-	SetExceptionDialog(AValue TApplicationExceptionDlg)                        // property
-	FindGlobalComponentEnabled() bool                                          // property
-	SetFindGlobalComponentEnabled(AValue bool)                                 // property
-	Flags() TApplicationFlags                                                  // property
-	SetFlags(AValue TApplicationFlags)                                         // property
-	Handle() THandle                                                           // property
-	SetHandle(AValue THandle)                                                  // property
-	Hint() string                                                              // property
-	SetHint(AValue string)                                                     // property
-	HintColor() TColor                                                         // property
-	SetHintColor(AValue TColor)                                                // property
-	HintHidePause() int32                                                      // property
-	SetHintHidePause(AValue int32)                                             // property
-	HintHidePausePerChar() int32                                               // property
-	SetHintHidePausePerChar(AValue int32)                                      // property
-	HintPause() int32                                                          // property
-	SetHintPause(AValue int32)                                                 // property
-	HintShortCuts() bool                                                       // property
-	SetHintShortCuts(AValue bool)                                              // property
-	HintShortPause() int32                                                     // property
-	SetHintShortPause(AValue int32)                                            // property
-	Icon() IIcon                                                               // property
-	SetIcon(AValue IIcon)                                                      // property
-	LayoutAdjustmentPolicy() TLayoutAdjustmentPolicy                           // property
-	SetLayoutAdjustmentPolicy(AValue TLayoutAdjustmentPolicy)                  // property
-	Navigation() TApplicationNavigationOptions                                 // property
-	SetNavigation(AValue TApplicationNavigationOptions)                        // property
-	MainForm() IForm                                                           // property
-	MainFormHandle() HWND                                                      // property
-	MainFormOnTaskBar() bool                                                   // property
-	SetMainFormOnTaskBar(AValue bool)                                          // property
-	ModalLevel() int32                                                         // property
-	MoveFormFocusToChildren() bool                                             // property
-	SetMoveFormFocusToChildren(AValue bool)                                    // property
-	MouseControl() IControl                                                    // property
-	TaskBarBehavior() TTaskBarBehavior                                         // property
-	SetTaskBarBehavior(AValue TTaskBarBehavior)                                // property
-	UpdateFormatSettings() bool                                                // property
-	SetUpdateFormatSettings(AValue bool)                                       // property
-	ShowButtonGlyphs() TApplicationShowGlyphs                                  // property
-	SetShowButtonGlyphs(AValue TApplicationShowGlyphs)                         // property
-	ShowMenuGlyphs() TApplicationShowGlyphs                                    // property
-	SetShowMenuGlyphs(AValue TApplicationShowGlyphs)                           // property
-	ShowHint() bool                                                            // property
-	SetShowHint(AValue bool)                                                   // property
-	ShowMainForm() bool                                                        // property
-	SetShowMainForm(AValue bool)                                               // property
-	Scaled() bool                                                              // property
-	SetScaled(AValue bool)                                                     // property
-	GetControlAtMouse() IControl                                               // function
-	GetControlAtPos(P *TPoint) IControl                                        // function
-	BigIconHandle() HICON                                                      // function
-	SmallIconHandle() HICON                                                    // function
-	HelpCommand(Command Word, Data uint32) bool                                // function
-	HelpContext(Context THelpContext) bool                                     // function
-	HelpKeyword(Keyword string) bool                                           // function
-	HelpShowTableOfContents() bool                                             // function
-	IsWaiting() bool                                                           // function
-	MessageBox(Text, Caption string, Flags int32) int32                        // function
-	IsShortcut(Message *TLMKey) bool                                           // function
-	IsRightToLeft() bool                                                       // function
-	IsRTLLang(ALang string) bool                                               // function
-	Direction(ALang string) TBiDiMode                                          // function
-	ActivateHint(CursorPos *TPoint, CheckHintControlChange bool)               // procedure
-	ControlDestroyed(AControl IControl)                                        // procedure
-	BringToFront()                                                             // procedure
-	UpdateMainForm(AForm IForm)                                                // procedure
-	RemoveAsyncCalls(AnObject IObject)                                         // procedure
-	ReleaseComponent(AComponent IComponent)                                    // procedure
-	HandleMessage()                                                            // procedure
-	ShowHelpForObject(Sender IObject)                                          // procedure
-	RemoveStayOnTop(ASystemTopAlso bool)                                       // procedure
-	RestoreStayOnTop(ASystemTopAlso bool)                                      // procedure
-	CancelHint()                                                               // procedure
-	HideHint()                                                                 // procedure
-	HintMouseMessage(Control IControl, AMessage *TLMessage)                    // procedure
-	Minimize()                                                                 // procedure
-	ModalStarted()                                                             // procedure
-	ModalFinished()                                                            // procedure
-	Restore()                                                                  // procedure
-	Notification(AComponent IComponent, Operation TOperation)                  // procedure
-	ProcessMessages()                                                          // procedure
-	Idle(Wait bool)                                                            // procedure
-	DisableIdleHandler()                                                       // procedure
-	EnableIdleHandler()                                                        // procedure
-	NotifyUserInputHandler(Sender IObject, Msg uint32)                         // procedure
-	NotifyKeyDownBeforeHandler(Sender IObject, Key *Word, Shift TShiftState)   // procedure
-	NotifyKeyDownHandler(Sender IObject, Key *Word, Shift TShiftState)         // procedure
-	ControlKeyDown(Sender IObject, Key *Word, Shift TShiftState)               // procedure
-	ControlKeyUp(Sender IObject, Key *Word, Shift TShiftState)                 // procedure
-	RemoveAllHandlersOfObject(AnObject IObject)                                // procedure
-	DoBeforeMouseMessage(CurMouseControl IControl)                             // procedure
-	IntfEndSession()                                                           // procedure
-	IntfAppActivate(Async bool)                                                // procedure
-	IntfAppDeactivate(Async bool)                                              // procedure
-	IntfAppMinimize()                                                          // procedure
-	IntfAppRestore()                                                           // procedure
-	IntfSettingsChange()                                                       // procedure
-	IntfThemeOptionChange(AThemeServices IThemeServices, AOption TThemeOption) // procedure
-	DoArrowKey(AControl IWinControl, Key *Word, Shift TShiftState)             // procedure
-	DoTabKey(AControl IWinControl, Key *Word, Shift TShiftState)               // procedure
-	DoEscapeKey(AControl IWinControl, Key *Word, Shift TShiftState)            // procedure
-	DoReturnKey(AControl IWinControl, Key *Word, Shift TShiftState)            // procedure
-	SetOnActionExecute(fn TActionEvent)                                        // property event
-	SetOnActionUpdate(fn TActionEvent)                                         // property event
-	SetOnActivate(fn TNotifyEvent)                                             // property event
-	SetOnDeactivate(fn TNotifyEvent)                                           // property event
-	SetOnGetMainFormHandle(fn TGetHandleEvent)                                 // property event
-	SetOnIdleEnd(fn TNotifyEvent)                                              // property event
-	SetOnEndSession(fn TNotifyEvent)                                           // property event
-	SetOnMinimize(fn TNotifyEvent)                                             // property event
-	SetOnModalBegin(fn TNotifyEvent)                                           // property event
-	SetOnModalEnd(fn TNotifyEvent)                                             // property event
-	SetOnRestore(fn TNotifyEvent)                                              // property event
-	SetOnDropFiles(fn TDropFilesEvent)                                         // property event
-	SetOnHelp(fn THelpEvent)                                                   // property event
-	SetOnHint(fn TNotifyEvent)                                                 // property event
-	SetOnShortcut(fn TShortCutEvent)                                           // property event
-	SetOnShowHint(fn TShowHintEvent)                                           // property event
-	SetOnDestroy(fn TNotifyEvent)                                              // property event
-	SetOnCircularException(fn TExceptionEvent)                                 // property event
+	GetControlAtMouse() IControl                                                     // function
+	GetControlAtPos(P types.TPoint) IControl                                         // function
+	BigIconHandle() types.HICON                                                      // function
+	SmallIconHandle() types.HICON                                                    // function
+	HelpCommand(command uint16, data uintptr) bool                                   // function
+	HelpContext(context types.THelpContext) bool                                     // function
+	HelpKeyword(keyword string) bool                                                 // function
+	HelpShowTableOfContents() bool                                                   // function
+	IsWaiting() bool                                                                 // function
+	MessageBox(text uintptr, caption uintptr, flags int32) int32                     // function
+	IsShortcut(message *types.TLMKey) bool                                           // function
+	IsRightToLeft() bool                                                             // function
+	IsRTLLang(lang string) bool                                                      // function
+	Direction(lang string) types.TBiDiMode                                           // function
+	ActivateHint(cursorPos types.TPoint, checkHintControlChange bool)                // procedure
+	ControlDestroyed(control IControl)                                               // procedure
+	BringToFront()                                                                   // procedure
+	CreateForm(instanceClass IComponent, outReference *uintptr)                      // procedure
+	UpdateMainForm(form IForm)                                                       // procedure
+	RemoveAsyncCalls(anObject IObject)                                               // procedure
+	ReleaseComponent(component IComponent)                                           // procedure
+	HandleMessage()                                                                  // procedure
+	ShowHelpForObject(sender IObject)                                                // procedure
+	RemoveStayOnTop(systemTopAlso bool)                                              // procedure
+	RestoreStayOnTop(systemTopAlso bool)                                             // procedure
+	CancelHint()                                                                     // procedure
+	HideHint()                                                                       // procedure
+	HintMouseMessage(control IControl, message *types.TLMessage)                     // procedure
+	Minimize()                                                                       // procedure
+	ModalStarted()                                                                   // procedure
+	ModalFinished()                                                                  // procedure
+	Restore()                                                                        // procedure
+	Notification(component IComponent, operation types.TOperation)                   // procedure
+	ProcessMessages()                                                                // procedure
+	Idle(wait bool)                                                                  // procedure
+	Run()                                                                            // procedure
+	DisableIdleHandler()                                                             // procedure
+	EnableIdleHandler()                                                              // procedure
+	NotifyUserInputHandler(sender IObject, msg uint32)                               // procedure
+	NotifyKeyDownBeforeHandler(sender IObject, key *uint16, shift types.TShiftState) // procedure
+	NotifyKeyDownHandler(sender IObject, key *uint16, shift types.TShiftState)       // procedure
+	ControlKeyDown(sender IObject, key *uint16, shift types.TShiftState)             // procedure
+	ControlKeyUp(sender IObject, key *uint16, shift types.TShiftState)               // procedure
+	RemoveAllHandlersOfObject(anObject IObject)                                      // procedure
+	DoBeforeMouseMessage(curMouseControl IControl)                                   // procedure
+	IntfQueryEndSession(cancel *bool)                                                // procedure
+	IntfEndSession()                                                                 // procedure
+	IntfAppActivate(async bool)                                                      // procedure
+	IntfAppDeactivate(async bool)                                                    // procedure
+	IntfAppMinimize()                                                                // procedure
+	IntfAppRestore()                                                                 // procedure
+	IntfSettingsChange()                                                             // procedure
+	IntfThemeOptionChange(themeServices IThemeServices, option types.TThemeOption)   // procedure
+	// DoArrowKey
+	//  on key down
+	DoArrowKey(control IWinControl, key *uint16, shift types.TShiftState) // procedure
+	DoTabKey(control IWinControl, key *uint16, shift types.TShiftState)   // procedure
+	// DoEscapeKey
+	//  on key up
+	DoEscapeKey(control IWinControl, key *uint16, shift types.TShiftState) // procedure
+	DoReturnKey(control IWinControl, key *uint16, shift types.TShiftState) // procedure
+	Active() bool                                                          // property Active Getter
+	ActiveFormHandle() types.HWND                                          // property ActiveFormHandle Getter
+	ApplicationType() types.TApplicationType                               // property ApplicationType Getter
+	SetApplicationType(value types.TApplicationType)                       // property ApplicationType Setter
+	BidiMode() types.TBiDiMode                                             // property BidiMode Getter
+	SetBidiMode(value types.TBiDiMode)                                     // property BidiMode Setter
+	CaptureExceptions() bool                                               // property CaptureExceptions Getter
+	SetCaptureExceptions(value bool)                                       // property CaptureExceptions Setter
+	DoubleBuffered() types.TApplicationDoubleBuffered                      // property DoubleBuffered Getter
+	SetDoubleBuffered(value types.TApplicationDoubleBuffered)              // property DoubleBuffered Setter
+	ExtendedKeysSupport() bool                                             // property ExtendedKeysSupport Getter
+	SetExtendedKeysSupport(value bool)                                     // property ExtendedKeysSupport Setter
+	ExceptionDialog() types.TApplicationExceptionDlg                       // property ExceptionDialog Getter
+	SetExceptionDialog(value types.TApplicationExceptionDlg)               // property ExceptionDialog Setter
+	FindGlobalComponentEnabled() bool                                      // property FindGlobalComponentEnabled Getter
+	SetFindGlobalComponentEnabled(value bool)                              // property FindGlobalComponentEnabled Setter
+	Flags() types.TApplicationFlags                                        // property Flags Getter
+	SetFlags(value types.TApplicationFlags)                                // property Flags Setter
+	// Handle
+	//  property HelpSystem : IHelpSystem read FHelpSystem;
+	Handle() types.TLCLHandle                                      // property Handle Getter
+	SetHandle(value types.TLCLHandle)                              // property Handle Setter
+	Hint() string                                                  // property Hint Getter
+	SetHint(value string)                                          // property Hint Setter
+	HintColor() types.TColor                                       // property HintColor Getter
+	SetHintColor(value types.TColor)                               // property HintColor Setter
+	HintHidePause() int32                                          // property HintHidePause Getter
+	SetHintHidePause(value int32)                                  // property HintHidePause Setter
+	HintHidePausePerChar() int32                                   // property HintHidePausePerChar Getter
+	SetHintHidePausePerChar(value int32)                           // property HintHidePausePerChar Setter
+	HintPause() int32                                              // property HintPause Getter
+	SetHintPause(value int32)                                      // property HintPause Setter
+	HintShortCuts() bool                                           // property HintShortCuts Getter
+	SetHintShortCuts(value bool)                                   // property HintShortCuts Setter
+	HintShortPause() int32                                         // property HintShortPause Getter
+	SetHintShortPause(value int32)                                 // property HintShortPause Setter
+	Icon() IIcon                                                   // property Icon Getter
+	SetIcon(value IIcon)                                           // property Icon Setter
+	LayoutAdjustmentPolicy() types.TLayoutAdjustmentPolicy         // property LayoutAdjustmentPolicy Getter
+	SetLayoutAdjustmentPolicy(value types.TLayoutAdjustmentPolicy) // property LayoutAdjustmentPolicy Setter
+	Navigation() types.TApplicationNavigationOptions               // property Navigation Getter
+	SetNavigation(value types.TApplicationNavigationOptions)       // property Navigation Setter
+	MainForm() IForm                                               // property MainForm Getter
+	MainFormHandle() types.HWND                                    // property MainFormHandle Getter
+	MainFormOnTaskBar() bool                                       // property MainFormOnTaskBar Getter
+	SetMainFormOnTaskBar(value bool)                               // property MainFormOnTaskBar Setter
+	ModalLevel() int32                                             // property ModalLevel Getter
+	MoveFormFocusToChildren() bool                                 // property MoveFormFocusToChildren Getter
+	SetMoveFormFocusToChildren(value bool)                         // property MoveFormFocusToChildren Setter
+	MouseControl() IControl                                        // property MouseControl Getter
+	TaskBarBehavior() types.TTaskBarBehavior                       // property TaskBarBehavior Getter
+	SetTaskBarBehavior(value types.TTaskBarBehavior)               // property TaskBarBehavior Setter
+	UpdateFormatSettings() bool                                    // property UpdateFormatSettings Getter
+	SetUpdateFormatSettings(value bool)                            // property UpdateFormatSettings Setter
+	ShowButtonGlyphs() types.TApplicationShowGlyphs                // property ShowButtonGlyphs Getter
+	SetShowButtonGlyphs(value types.TApplicationShowGlyphs)        // property ShowButtonGlyphs Setter
+	ShowMenuGlyphs() types.TApplicationShowGlyphs                  // property ShowMenuGlyphs Getter
+	SetShowMenuGlyphs(value types.TApplicationShowGlyphs)          // property ShowMenuGlyphs Setter
+	ShowHint() bool                                                // property ShowHint Getter
+	SetShowHint(value bool)                                        // property ShowHint Setter
+	ShowMainForm() bool                                            // property ShowMainForm Getter
+	SetShowMainForm(value bool)                                    // property ShowMainForm Setter
+	Scaled() bool                                                  // property Scaled Getter
+	SetScaled(value bool)                                          // property Scaled Setter
+	SetOnActionExecute(fn TActionEvent)                            // property event
+	SetOnActionUpdate(fn TActionEvent)                             // property event
+	SetOnActivate(fn TNotifyEvent)                                 // property event
+	SetOnDeactivate(fn TNotifyEvent)                               // property event
+	SetOnGetMainFormHandle(fn TGetHandleEvent)                     // property event
+	SetOnIdle(fn TIdleEvent)                                       // property event
+	SetOnIdleEnd(fn TNotifyEvent)                                  // property event
+	SetOnEndSession(fn TNotifyEvent)                               // property event
+	SetOnQueryEndSession(fn TQueryEndSessionEvent)                 // property event
+	SetOnMinimize(fn TNotifyEvent)                                 // property event
+	SetOnMessageDialogFinished(fn TModalDialogFinished)            // property event
+	SetOnModalBegin(fn TNotifyEvent)                               // property event
+	SetOnModalEnd(fn TNotifyEvent)                                 // property event
+	SetOnRestore(fn TNotifyEvent)                                  // property event
+	SetOnDropFiles(fn TDropFilesEvent)                             // property event
+	SetOnHelp(fn THelpEvent)                                       // property event
+	SetOnHint(fn TNotifyEvent)                                     // property event
+	SetOnShortcut(fn TShortcutEvent)                               // property event
+	SetOnShowHint(fn TShowHintEvent)                               // property event
+	SetOnUserInput(fn TOnUserInputEvent)                           // property event
+	SetOnDestroy(fn TNotifyEvent)                                  // property event
 }
 
-// TApplication Parent: TCustomApplication
 type TApplication struct {
 	TCustomApplication
-	actionExecutePtr     uintptr
-	actionUpdatePtr      uintptr
-	activatePtr          uintptr
-	deactivatePtr        uintptr
-	getMainFormHandlePtr uintptr
-	idleEndPtr           uintptr
-	endSessionPtr        uintptr
-	minimizePtr          uintptr
-	modalBeginPtr        uintptr
-	modalEndPtr          uintptr
-	restorePtr           uintptr
-	dropFilesPtr         uintptr
-	helpPtr              uintptr
-	hintPtr              uintptr
-	shortcutPtr          uintptr
-	showHintPtr          uintptr
-	destroyPtr           uintptr
-	circularExceptionPtr uintptr
-}
-
-func NewApplication(AOwner IComponent) IApplication {
-	r1 := applicationImportAPI().SysCallN(12, GetObjectUintptr(AOwner))
-	return AsApplication(r1)
-}
-
-func (m *TApplication) Active() bool {
-	r1 := applicationImportAPI().SysCallN(1, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TApplication) ApplicationType() TApplicationType {
-	r1 := applicationImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TApplicationType(r1)
-}
-
-func (m *TApplication) SetApplicationType(AValue TApplicationType) {
-	applicationImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) BidiMode() TBiDiMode {
-	r1 := applicationImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TBiDiMode(r1)
-}
-
-func (m *TApplication) SetBidiMode(AValue TBiDiMode) {
-	applicationImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) CaptureExceptions() bool {
-	r1 := applicationImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TApplication) SetCaptureExceptions(AValue bool) {
-	applicationImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TApplication) DoubleBuffered() TApplicationDoubleBuffered {
-	r1 := applicationImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return TApplicationDoubleBuffered(r1)
-}
-
-func (m *TApplication) SetDoubleBuffered(AValue TApplicationDoubleBuffered) {
-	applicationImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) ExtendedKeysSupport() bool {
-	r1 := applicationImportAPI().SysCallN(23, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TApplication) SetExtendedKeysSupport(AValue bool) {
-	applicationImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TApplication) ExceptionDialog() TApplicationExceptionDlg {
-	r1 := applicationImportAPI().SysCallN(22, 0, m.Instance(), 0)
-	return TApplicationExceptionDlg(r1)
-}
-
-func (m *TApplication) SetExceptionDialog(AValue TApplicationExceptionDlg) {
-	applicationImportAPI().SysCallN(22, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) FindGlobalComponentEnabled() bool {
-	r1 := applicationImportAPI().SysCallN(24, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TApplication) SetFindGlobalComponentEnabled(AValue bool) {
-	applicationImportAPI().SysCallN(24, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TApplication) Flags() TApplicationFlags {
-	r1 := applicationImportAPI().SysCallN(25, 0, m.Instance(), 0)
-	return TApplicationFlags(r1)
-}
-
-func (m *TApplication) SetFlags(AValue TApplicationFlags) {
-	applicationImportAPI().SysCallN(25, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) Handle() THandle {
-	r1 := applicationImportAPI().SysCallN(28, 0, m.Instance(), 0)
-	return THandle(r1)
-}
-
-func (m *TApplication) SetHandle(AValue THandle) {
-	applicationImportAPI().SysCallN(28, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) Hint() string {
-	r1 := applicationImportAPI().SysCallN(35, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TApplication) SetHint(AValue string) {
-	applicationImportAPI().SysCallN(35, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TApplication) HintColor() TColor {
-	r1 := applicationImportAPI().SysCallN(36, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TApplication) SetHintColor(AValue TColor) {
-	applicationImportAPI().SysCallN(36, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) HintHidePause() int32 {
-	r1 := applicationImportAPI().SysCallN(37, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TApplication) SetHintHidePause(AValue int32) {
-	applicationImportAPI().SysCallN(37, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) HintHidePausePerChar() int32 {
-	r1 := applicationImportAPI().SysCallN(38, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TApplication) SetHintHidePausePerChar(AValue int32) {
-	applicationImportAPI().SysCallN(38, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) HintPause() int32 {
-	r1 := applicationImportAPI().SysCallN(40, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TApplication) SetHintPause(AValue int32) {
-	applicationImportAPI().SysCallN(40, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) HintShortCuts() bool {
-	r1 := applicationImportAPI().SysCallN(41, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TApplication) SetHintShortCuts(AValue bool) {
-	applicationImportAPI().SysCallN(41, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TApplication) HintShortPause() int32 {
-	r1 := applicationImportAPI().SysCallN(42, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TApplication) SetHintShortPause(AValue int32) {
-	applicationImportAPI().SysCallN(42, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) Icon() IIcon {
-	r1 := applicationImportAPI().SysCallN(43, 0, m.Instance(), 0)
-	return AsIcon(r1)
-}
-
-func (m *TApplication) SetIcon(AValue IIcon) {
-	applicationImportAPI().SysCallN(43, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TApplication) LayoutAdjustmentPolicy() TLayoutAdjustmentPolicy {
-	r1 := applicationImportAPI().SysCallN(56, 0, m.Instance(), 0)
-	return TLayoutAdjustmentPolicy(r1)
-}
-
-func (m *TApplication) SetLayoutAdjustmentPolicy(AValue TLayoutAdjustmentPolicy) {
-	applicationImportAPI().SysCallN(56, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) Navigation() TApplicationNavigationOptions {
-	r1 := applicationImportAPI().SysCallN(67, 0, m.Instance(), 0)
-	return TApplicationNavigationOptions(r1)
-}
-
-func (m *TApplication) SetNavigation(AValue TApplicationNavigationOptions) {
-	applicationImportAPI().SysCallN(67, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) MainForm() IForm {
-	r1 := applicationImportAPI().SysCallN(57, m.Instance())
-	return AsForm(r1)
-}
-
-func (m *TApplication) MainFormHandle() HWND {
-	r1 := applicationImportAPI().SysCallN(58, m.Instance())
-	return HWND(r1)
-}
-
-func (m *TApplication) MainFormOnTaskBar() bool {
-	r1 := applicationImportAPI().SysCallN(59, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TApplication) SetMainFormOnTaskBar(AValue bool) {
-	applicationImportAPI().SysCallN(59, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TApplication) ModalLevel() int32 {
-	r1 := applicationImportAPI().SysCallN(63, m.Instance())
-	return int32(r1)
-}
-
-func (m *TApplication) MoveFormFocusToChildren() bool {
-	r1 := applicationImportAPI().SysCallN(66, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TApplication) SetMoveFormFocusToChildren(AValue bool) {
-	applicationImportAPI().SysCallN(66, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TApplication) MouseControl() IControl {
-	r1 := applicationImportAPI().SysCallN(65, m.Instance())
-	return AsControl(r1)
-}
-
-func (m *TApplication) TaskBarBehavior() TTaskBarBehavior {
-	r1 := applicationImportAPI().SysCallN(104, 0, m.Instance(), 0)
-	return TTaskBarBehavior(r1)
-}
-
-func (m *TApplication) SetTaskBarBehavior(AValue TTaskBarBehavior) {
-	applicationImportAPI().SysCallN(104, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) UpdateFormatSettings() bool {
-	r1 := applicationImportAPI().SysCallN(105, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TApplication) SetUpdateFormatSettings(AValue bool) {
-	applicationImportAPI().SysCallN(105, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TApplication) ShowButtonGlyphs() TApplicationShowGlyphs {
-	r1 := applicationImportAPI().SysCallN(98, 0, m.Instance(), 0)
-	return TApplicationShowGlyphs(r1)
-}
-
-func (m *TApplication) SetShowButtonGlyphs(AValue TApplicationShowGlyphs) {
-	applicationImportAPI().SysCallN(98, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) ShowMenuGlyphs() TApplicationShowGlyphs {
-	r1 := applicationImportAPI().SysCallN(102, 0, m.Instance(), 0)
-	return TApplicationShowGlyphs(r1)
-}
-
-func (m *TApplication) SetShowMenuGlyphs(AValue TApplicationShowGlyphs) {
-	applicationImportAPI().SysCallN(102, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TApplication) ShowHint() bool {
-	r1 := applicationImportAPI().SysCallN(100, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TApplication) SetShowHint(AValue bool) {
-	applicationImportAPI().SysCallN(100, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TApplication) ShowMainForm() bool {
-	r1 := applicationImportAPI().SysCallN(101, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TApplication) SetShowMainForm(AValue bool) {
-	applicationImportAPI().SysCallN(101, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TApplication) Scaled() bool {
-	r1 := applicationImportAPI().SysCallN(79, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TApplication) SetScaled(AValue bool) {
-	applicationImportAPI().SysCallN(79, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TApplication) GetControlAtMouse() IControl {
-	r1 := applicationImportAPI().SysCallN(26, m.Instance())
-	return AsControl(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := applicationAPI().SysCallN(1, m.Instance())
+	return AsControl(r)
 }
 
-func (m *TApplication) GetControlAtPos(P *TPoint) IControl {
-	r1 := applicationImportAPI().SysCallN(27, m.Instance(), uintptr(unsafePointer(P)))
-	return AsControl(r1)
+func (m *TApplication) GetControlAtPos(P types.TPoint) IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := applicationAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(&P)))
+	return AsControl(r)
 }
 
-func (m *TApplication) BigIconHandle() HICON {
-	r1 := applicationImportAPI().SysCallN(4, m.Instance())
-	return HICON(r1)
+func (m *TApplication) BigIconHandle() types.HICON {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(3, m.Instance())
+	return types.HICON(r)
 }
 
-func (m *TApplication) SmallIconHandle() HICON {
-	r1 := applicationImportAPI().SysCallN(103, m.Instance())
-	return HICON(r1)
+func (m *TApplication) SmallIconHandle() types.HICON {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(4, m.Instance())
+	return types.HICON(r)
 }
 
-func (m *TApplication) HelpCommand(Command Word, Data uint32) bool {
-	r1 := applicationImportAPI().SysCallN(30, m.Instance(), uintptr(Command), uintptr(Data))
-	return GoBool(r1)
+func (m *TApplication) HelpCommand(command uint16, data uintptr) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(5, m.Instance(), uintptr(command), uintptr(data))
+	return api.GoBool(r)
 }
 
-func (m *TApplication) HelpContext(Context THelpContext) bool {
-	r1 := applicationImportAPI().SysCallN(31, m.Instance(), uintptr(Context))
-	return GoBool(r1)
+func (m *TApplication) HelpContext(context types.THelpContext) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(6, m.Instance(), uintptr(context))
+	return api.GoBool(r)
 }
 
-func (m *TApplication) HelpKeyword(Keyword string) bool {
-	r1 := applicationImportAPI().SysCallN(32, m.Instance(), PascalStr(Keyword))
-	return GoBool(r1)
+func (m *TApplication) HelpKeyword(keyword string) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(7, m.Instance(), api.PasStr(keyword))
+	return api.GoBool(r)
 }
 
 func (m *TApplication) HelpShowTableOfContents() bool {
-	r1 := applicationImportAPI().SysCallN(33, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(8, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TApplication) IsWaiting() bool {
-	r1 := applicationImportAPI().SysCallN(55, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(9, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TApplication) MessageBox(Text, Caption string, Flags int32) int32 {
-	r1 := applicationImportAPI().SysCallN(60, m.Instance(), PascalStr(Text), PascalStr(Caption), uintptr(Flags))
-	return int32(r1)
+func (m *TApplication) MessageBox(text uintptr, caption uintptr, flags int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(10, m.Instance(), uintptr(text), uintptr(caption), uintptr(flags))
+	return int32(r)
 }
 
-func (m *TApplication) IsShortcut(Message *TLMKey) bool {
-	var result0 uintptr
-	r1 := applicationImportAPI().SysCallN(54, m.Instance(), uintptr(unsafePointer(&result0)))
-	*Message = *(*TLMKey)(getPointer(result0))
-	return GoBool(r1)
+func (m *TApplication) IsShortcut(message *types.TLMKey) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(11, m.Instance(), uintptr(base.UnsafePointer(message)))
+	return api.GoBool(r)
 }
 
 func (m *TApplication) IsRightToLeft() bool {
-	r1 := applicationImportAPI().SysCallN(53, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(12, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TApplication) IsRTLLang(ALang string) bool {
-	r1 := applicationImportAPI().SysCallN(52, m.Instance(), PascalStr(ALang))
-	return GoBool(r1)
+func (m *TApplication) IsRTLLang(lang string) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(13, m.Instance(), api.PasStr(lang))
+	return api.GoBool(r)
 }
 
-func (m *TApplication) Direction(ALang string) TBiDiMode {
-	r1 := applicationImportAPI().SysCallN(13, m.Instance(), PascalStr(ALang))
-	return TBiDiMode(r1)
+func (m *TApplication) Direction(lang string) types.TBiDiMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(14, m.Instance(), api.PasStr(lang))
+	return types.TBiDiMode(r)
 }
 
-func ApplicationClass() TClass {
-	ret := applicationImportAPI().SysCallN(8)
-	return TClass(ret)
+func (m *TApplication) ActivateHint(cursorPos types.TPoint, checkHintControlChange bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(15, m.Instance(), uintptr(base.UnsafePointer(&cursorPos)), api.PasBool(checkHintControlChange))
 }
 
-func (m *TApplication) ActivateHint(CursorPos *TPoint, CheckHintControlChange bool) {
-	applicationImportAPI().SysCallN(0, m.Instance(), uintptr(unsafePointer(CursorPos)), PascalBool(CheckHintControlChange))
-}
-
-func (m *TApplication) ControlDestroyed(AControl IControl) {
-	applicationImportAPI().SysCallN(9, m.Instance(), GetObjectUintptr(AControl))
+func (m *TApplication) ControlDestroyed(control IControl) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(16, m.Instance(), base.GetObjectUintptr(control))
 }
 
 func (m *TApplication) BringToFront() {
-	applicationImportAPI().SysCallN(5, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(17, m.Instance())
 }
 
-func (m *TApplication) UpdateMainForm(AForm IForm) {
-	applicationImportAPI().SysCallN(106, m.Instance(), GetObjectUintptr(AForm))
+func (m *TApplication) CreateForm(instanceClass IComponent, outReference *uintptr) {
+	if !m.IsValid() {
+		return
+	}
+	var referencePtr uintptr
+	applicationAPI().SysCallN(18, m.Instance(), base.GetObjectUintptr(instanceClass), uintptr(base.UnsafePointer(&referencePtr)))
+	*outReference = uintptr(referencePtr)
 }
 
-func (m *TApplication) RemoveAsyncCalls(AnObject IObject) {
-	applicationImportAPI().SysCallN(75, m.Instance(), GetObjectUintptr(AnObject))
+func (m *TApplication) UpdateMainForm(form IForm) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(19, m.Instance(), base.GetObjectUintptr(form))
 }
 
-func (m *TApplication) ReleaseComponent(AComponent IComponent) {
-	applicationImportAPI().SysCallN(73, m.Instance(), GetObjectUintptr(AComponent))
+func (m *TApplication) RemoveAsyncCalls(anObject IObject) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(20, m.Instance(), base.GetObjectUintptr(anObject))
+}
+
+func (m *TApplication) ReleaseComponent(component IComponent) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(21, m.Instance(), base.GetObjectUintptr(component))
 }
 
 func (m *TApplication) HandleMessage() {
-	applicationImportAPI().SysCallN(29, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(22, m.Instance())
 }
 
-func (m *TApplication) ShowHelpForObject(Sender IObject) {
-	applicationImportAPI().SysCallN(99, m.Instance(), GetObjectUintptr(Sender))
+func (m *TApplication) ShowHelpForObject(sender IObject) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(23, m.Instance(), base.GetObjectUintptr(sender))
 }
 
-func (m *TApplication) RemoveStayOnTop(ASystemTopAlso bool) {
-	applicationImportAPI().SysCallN(76, m.Instance(), PascalBool(ASystemTopAlso))
+func (m *TApplication) RemoveStayOnTop(systemTopAlso bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(24, m.Instance(), api.PasBool(systemTopAlso))
 }
 
-func (m *TApplication) RestoreStayOnTop(ASystemTopAlso bool) {
-	applicationImportAPI().SysCallN(78, m.Instance(), PascalBool(ASystemTopAlso))
+func (m *TApplication) RestoreStayOnTop(systemTopAlso bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(25, m.Instance(), api.PasBool(systemTopAlso))
 }
 
 func (m *TApplication) CancelHint() {
-	applicationImportAPI().SysCallN(6, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(26, m.Instance())
 }
 
 func (m *TApplication) HideHint() {
-	applicationImportAPI().SysCallN(34, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(27, m.Instance())
 }
 
-func (m *TApplication) HintMouseMessage(Control IControl, AMessage *TLMessage) {
-	var result1 uintptr
-	applicationImportAPI().SysCallN(39, m.Instance(), GetObjectUintptr(Control), uintptr(unsafePointer(&result1)))
-	*AMessage = *(*TLMessage)(getPointer(result1))
+func (m *TApplication) HintMouseMessage(control IControl, message *types.TLMessage) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(28, m.Instance(), base.GetObjectUintptr(control), uintptr(base.UnsafePointer(message)))
 }
 
 func (m *TApplication) Minimize() {
-	applicationImportAPI().SysCallN(61, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(29, m.Instance())
 }
 
 func (m *TApplication) ModalStarted() {
-	applicationImportAPI().SysCallN(64, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(30, m.Instance())
 }
 
 func (m *TApplication) ModalFinished() {
-	applicationImportAPI().SysCallN(62, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(31, m.Instance())
 }
 
 func (m *TApplication) Restore() {
-	applicationImportAPI().SysCallN(77, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(32, m.Instance())
 }
 
-func (m *TApplication) Notification(AComponent IComponent, Operation TOperation) {
-	applicationImportAPI().SysCallN(68, m.Instance(), GetObjectUintptr(AComponent), uintptr(Operation))
+func (m *TApplication) Notification(component IComponent, operation types.TOperation) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(33, m.Instance(), base.GetObjectUintptr(component), uintptr(operation))
 }
 
 func (m *TApplication) ProcessMessages() {
-	applicationImportAPI().SysCallN(72, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(34, m.Instance())
 }
 
-func (m *TApplication) Idle(Wait bool) {
-	applicationImportAPI().SysCallN(44, m.Instance(), PascalBool(Wait))
+func (m *TApplication) Idle(wait bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(35, m.Instance(), api.PasBool(wait))
+}
+
+func (m *TApplication) Run() {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(36, m.Instance())
 }
 
 func (m *TApplication) DisableIdleHandler() {
-	applicationImportAPI().SysCallN(14, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(37, m.Instance())
 }
 
 func (m *TApplication) EnableIdleHandler() {
-	applicationImportAPI().SysCallN(21, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(38, m.Instance())
 }
 
-func (m *TApplication) NotifyUserInputHandler(Sender IObject, Msg uint32) {
-	applicationImportAPI().SysCallN(71, m.Instance(), GetObjectUintptr(Sender), uintptr(Msg))
+func (m *TApplication) NotifyUserInputHandler(sender IObject, msg uint32) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(39, m.Instance(), base.GetObjectUintptr(sender), uintptr(msg))
 }
 
-func (m *TApplication) NotifyKeyDownBeforeHandler(Sender IObject, Key *Word, Shift TShiftState) {
-	var result1 uintptr
-	applicationImportAPI().SysCallN(69, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)), uintptr(Shift))
-	*Key = Word(result1)
+func (m *TApplication) NotifyKeyDownBeforeHandler(sender IObject, key *uint16, shift types.TShiftState) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	applicationAPI().SysCallN(40, m.Instance(), base.GetObjectUintptr(sender), uintptr(base.UnsafePointer(&keyPtr)), uintptr(shift))
+	*key = uint16(keyPtr)
 }
 
-func (m *TApplication) NotifyKeyDownHandler(Sender IObject, Key *Word, Shift TShiftState) {
-	var result1 uintptr
-	applicationImportAPI().SysCallN(70, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)), uintptr(Shift))
-	*Key = Word(result1)
+func (m *TApplication) NotifyKeyDownHandler(sender IObject, key *uint16, shift types.TShiftState) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	applicationAPI().SysCallN(41, m.Instance(), base.GetObjectUintptr(sender), uintptr(base.UnsafePointer(&keyPtr)), uintptr(shift))
+	*key = uint16(keyPtr)
 }
 
-func (m *TApplication) ControlKeyDown(Sender IObject, Key *Word, Shift TShiftState) {
-	var result1 uintptr
-	applicationImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)), uintptr(Shift))
-	*Key = Word(result1)
+func (m *TApplication) ControlKeyDown(sender IObject, key *uint16, shift types.TShiftState) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	applicationAPI().SysCallN(42, m.Instance(), base.GetObjectUintptr(sender), uintptr(base.UnsafePointer(&keyPtr)), uintptr(shift))
+	*key = uint16(keyPtr)
 }
 
-func (m *TApplication) ControlKeyUp(Sender IObject, Key *Word, Shift TShiftState) {
-	var result1 uintptr
-	applicationImportAPI().SysCallN(11, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)), uintptr(Shift))
-	*Key = Word(result1)
+func (m *TApplication) ControlKeyUp(sender IObject, key *uint16, shift types.TShiftState) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	applicationAPI().SysCallN(43, m.Instance(), base.GetObjectUintptr(sender), uintptr(base.UnsafePointer(&keyPtr)), uintptr(shift))
+	*key = uint16(keyPtr)
 }
 
-func (m *TApplication) RemoveAllHandlersOfObject(AnObject IObject) {
-	applicationImportAPI().SysCallN(74, m.Instance(), GetObjectUintptr(AnObject))
+func (m *TApplication) RemoveAllHandlersOfObject(anObject IObject) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(44, m.Instance(), base.GetObjectUintptr(anObject))
 }
 
-func (m *TApplication) DoBeforeMouseMessage(CurMouseControl IControl) {
-	applicationImportAPI().SysCallN(16, m.Instance(), GetObjectUintptr(CurMouseControl))
+func (m *TApplication) DoBeforeMouseMessage(curMouseControl IControl) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(45, m.Instance(), base.GetObjectUintptr(curMouseControl))
+}
+
+func (m *TApplication) IntfQueryEndSession(cancel *bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(46, m.Instance(), uintptr(base.UnsafePointer(cancel)))
 }
 
 func (m *TApplication) IntfEndSession() {
-	applicationImportAPI().SysCallN(49, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(47, m.Instance())
 }
 
-func (m *TApplication) IntfAppActivate(Async bool) {
-	applicationImportAPI().SysCallN(45, m.Instance(), PascalBool(Async))
+func (m *TApplication) IntfAppActivate(async bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(48, m.Instance(), api.PasBool(async))
 }
 
-func (m *TApplication) IntfAppDeactivate(Async bool) {
-	applicationImportAPI().SysCallN(46, m.Instance(), PascalBool(Async))
+func (m *TApplication) IntfAppDeactivate(async bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(49, m.Instance(), api.PasBool(async))
 }
 
 func (m *TApplication) IntfAppMinimize() {
-	applicationImportAPI().SysCallN(47, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(50, m.Instance())
 }
 
 func (m *TApplication) IntfAppRestore() {
-	applicationImportAPI().SysCallN(48, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(51, m.Instance())
 }
 
 func (m *TApplication) IntfSettingsChange() {
-	applicationImportAPI().SysCallN(50, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(52, m.Instance())
 }
 
-func (m *TApplication) IntfThemeOptionChange(AThemeServices IThemeServices, AOption TThemeOption) {
-	applicationImportAPI().SysCallN(51, m.Instance(), GetObjectUintptr(AThemeServices), uintptr(AOption))
+func (m *TApplication) IntfThemeOptionChange(themeServices IThemeServices, option types.TThemeOption) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(53, m.Instance(), base.GetObjectUintptr(themeServices), uintptr(option))
 }
 
-func (m *TApplication) DoArrowKey(AControl IWinControl, Key *Word, Shift TShiftState) {
-	var result1 uintptr
-	applicationImportAPI().SysCallN(15, m.Instance(), GetObjectUintptr(AControl), uintptr(unsafePointer(&result1)), uintptr(Shift))
-	*Key = Word(result1)
+func (m *TApplication) DoArrowKey(control IWinControl, key *uint16, shift types.TShiftState) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	applicationAPI().SysCallN(54, m.Instance(), base.GetObjectUintptr(control), uintptr(base.UnsafePointer(&keyPtr)), uintptr(shift))
+	*key = uint16(keyPtr)
 }
 
-func (m *TApplication) DoTabKey(AControl IWinControl, Key *Word, Shift TShiftState) {
-	var result1 uintptr
-	applicationImportAPI().SysCallN(19, m.Instance(), GetObjectUintptr(AControl), uintptr(unsafePointer(&result1)), uintptr(Shift))
-	*Key = Word(result1)
+func (m *TApplication) DoTabKey(control IWinControl, key *uint16, shift types.TShiftState) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	applicationAPI().SysCallN(55, m.Instance(), base.GetObjectUintptr(control), uintptr(base.UnsafePointer(&keyPtr)), uintptr(shift))
+	*key = uint16(keyPtr)
 }
 
-func (m *TApplication) DoEscapeKey(AControl IWinControl, Key *Word, Shift TShiftState) {
-	var result1 uintptr
-	applicationImportAPI().SysCallN(17, m.Instance(), GetObjectUintptr(AControl), uintptr(unsafePointer(&result1)), uintptr(Shift))
-	*Key = Word(result1)
+func (m *TApplication) DoEscapeKey(control IWinControl, key *uint16, shift types.TShiftState) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	applicationAPI().SysCallN(56, m.Instance(), base.GetObjectUintptr(control), uintptr(base.UnsafePointer(&keyPtr)), uintptr(shift))
+	*key = uint16(keyPtr)
 }
 
-func (m *TApplication) DoReturnKey(AControl IWinControl, Key *Word, Shift TShiftState) {
-	var result1 uintptr
-	applicationImportAPI().SysCallN(18, m.Instance(), GetObjectUintptr(AControl), uintptr(unsafePointer(&result1)), uintptr(Shift))
-	*Key = Word(result1)
+func (m *TApplication) DoReturnKey(control IWinControl, key *uint16, shift types.TShiftState) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	applicationAPI().SysCallN(57, m.Instance(), base.GetObjectUintptr(control), uintptr(base.UnsafePointer(&keyPtr)), uintptr(shift))
+	*key = uint16(keyPtr)
+}
+
+func (m *TApplication) Active() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(58, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) ActiveFormHandle() types.HWND {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(59, m.Instance())
+	return types.HWND(r)
+}
+
+func (m *TApplication) ApplicationType() types.TApplicationType {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(60, 0, m.Instance())
+	return types.TApplicationType(r)
+}
+
+func (m *TApplication) SetApplicationType(value types.TApplicationType) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(60, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) BidiMode() types.TBiDiMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(61, 0, m.Instance())
+	return types.TBiDiMode(r)
+}
+
+func (m *TApplication) SetBidiMode(value types.TBiDiMode) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(61, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) CaptureExceptions() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(62, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) SetCaptureExceptions(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(62, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TApplication) DoubleBuffered() types.TApplicationDoubleBuffered {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(63, 0, m.Instance())
+	return types.TApplicationDoubleBuffered(r)
+}
+
+func (m *TApplication) SetDoubleBuffered(value types.TApplicationDoubleBuffered) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(63, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) ExtendedKeysSupport() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(64, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) SetExtendedKeysSupport(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(64, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TApplication) ExceptionDialog() types.TApplicationExceptionDlg {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(65, 0, m.Instance())
+	return types.TApplicationExceptionDlg(r)
+}
+
+func (m *TApplication) SetExceptionDialog(value types.TApplicationExceptionDlg) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(65, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) FindGlobalComponentEnabled() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(66, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) SetFindGlobalComponentEnabled(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(66, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TApplication) Flags() types.TApplicationFlags {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(67, 0, m.Instance())
+	return types.TApplicationFlags(r)
+}
+
+func (m *TApplication) SetFlags(value types.TApplicationFlags) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(67, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) Handle() types.TLCLHandle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(68, 0, m.Instance())
+	return types.TLCLHandle(r)
+}
+
+func (m *TApplication) SetHandle(value types.TLCLHandle) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(68, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) Hint() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := applicationAPI().SysCallN(69, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TApplication) SetHint(value string) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(69, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TApplication) HintColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(70, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TApplication) SetHintColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(70, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) HintHidePause() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(71, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TApplication) SetHintHidePause(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(71, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) HintHidePausePerChar() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(72, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TApplication) SetHintHidePausePerChar(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(72, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) HintPause() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(73, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TApplication) SetHintPause(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(73, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) HintShortCuts() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(74, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) SetHintShortCuts(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(74, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TApplication) HintShortPause() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(75, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TApplication) SetHintShortPause(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(75, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) Icon() IIcon {
+	if !m.IsValid() {
+		return nil
+	}
+	r := applicationAPI().SysCallN(76, 0, m.Instance())
+	return AsIcon(r)
+}
+
+func (m *TApplication) SetIcon(value IIcon) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(76, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TApplication) LayoutAdjustmentPolicy() types.TLayoutAdjustmentPolicy {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(77, 0, m.Instance())
+	return types.TLayoutAdjustmentPolicy(r)
+}
+
+func (m *TApplication) SetLayoutAdjustmentPolicy(value types.TLayoutAdjustmentPolicy) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(77, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) Navigation() types.TApplicationNavigationOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(78, 0, m.Instance())
+	return types.TApplicationNavigationOptions(r)
+}
+
+func (m *TApplication) SetNavigation(value types.TApplicationNavigationOptions) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(78, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) MainForm() IForm {
+	if !m.IsValid() {
+		return nil
+	}
+	r := applicationAPI().SysCallN(79, m.Instance())
+	return AsForm(r)
+}
+
+func (m *TApplication) MainFormHandle() types.HWND {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(80, m.Instance())
+	return types.HWND(r)
+}
+
+func (m *TApplication) MainFormOnTaskBar() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(81, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) SetMainFormOnTaskBar(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(81, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TApplication) ModalLevel() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(82, m.Instance())
+	return int32(r)
+}
+
+func (m *TApplication) MoveFormFocusToChildren() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(83, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) SetMoveFormFocusToChildren(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(83, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TApplication) MouseControl() IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := applicationAPI().SysCallN(84, m.Instance())
+	return AsControl(r)
+}
+
+func (m *TApplication) TaskBarBehavior() types.TTaskBarBehavior {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(85, 0, m.Instance())
+	return types.TTaskBarBehavior(r)
+}
+
+func (m *TApplication) SetTaskBarBehavior(value types.TTaskBarBehavior) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(85, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) UpdateFormatSettings() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(86, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) SetUpdateFormatSettings(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(86, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TApplication) ShowButtonGlyphs() types.TApplicationShowGlyphs {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(87, 0, m.Instance())
+	return types.TApplicationShowGlyphs(r)
+}
+
+func (m *TApplication) SetShowButtonGlyphs(value types.TApplicationShowGlyphs) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(87, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) ShowMenuGlyphs() types.TApplicationShowGlyphs {
+	if !m.IsValid() {
+		return 0
+	}
+	r := applicationAPI().SysCallN(88, 0, m.Instance())
+	return types.TApplicationShowGlyphs(r)
+}
+
+func (m *TApplication) SetShowMenuGlyphs(value types.TApplicationShowGlyphs) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(88, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TApplication) ShowHint() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(89, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) SetShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(89, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TApplication) ShowMainForm() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(90, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) SetShowMainForm(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(90, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TApplication) Scaled() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := applicationAPI().SysCallN(91, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TApplication) SetScaled(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	applicationAPI().SysCallN(91, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TApplication) SetOnActionExecute(fn TActionEvent) {
-	if m.actionExecutePtr != 0 {
-		RemoveEventElement(m.actionExecutePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.actionExecutePtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(80, m.Instance(), m.actionExecutePtr)
+	cb := makeTActionEvent(fn)
+	base.SetEvent(m, 92, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnActionUpdate(fn TActionEvent) {
-	if m.actionUpdatePtr != 0 {
-		RemoveEventElement(m.actionUpdatePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.actionUpdatePtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(81, m.Instance(), m.actionUpdatePtr)
+	cb := makeTActionEvent(fn)
+	base.SetEvent(m, 93, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnActivate(fn TNotifyEvent) {
-	if m.activatePtr != 0 {
-		RemoveEventElement(m.activatePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.activatePtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(82, m.Instance(), m.activatePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 94, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnDeactivate(fn TNotifyEvent) {
-	if m.deactivatePtr != 0 {
-		RemoveEventElement(m.deactivatePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.deactivatePtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(84, m.Instance(), m.deactivatePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 95, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnGetMainFormHandle(fn TGetHandleEvent) {
-	if m.getMainFormHandlePtr != 0 {
-		RemoveEventElement(m.getMainFormHandlePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getMainFormHandlePtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(88, m.Instance(), m.getMainFormHandlePtr)
+	cb := makeTGetHandleEvent(fn)
+	base.SetEvent(m, 96, applicationAPI(), api.MakeEventDataPtr(cb))
+}
+
+func (m *TApplication) SetOnIdle(fn TIdleEvent) {
+	if !m.IsValid() {
+		return
+	}
+	cb := makeTIdleEvent(fn)
+	base.SetEvent(m, 97, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnIdleEnd(fn TNotifyEvent) {
-	if m.idleEndPtr != 0 {
-		RemoveEventElement(m.idleEndPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.idleEndPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(91, m.Instance(), m.idleEndPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 98, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnEndSession(fn TNotifyEvent) {
-	if m.endSessionPtr != 0 {
-		RemoveEventElement(m.endSessionPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endSessionPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(87, m.Instance(), m.endSessionPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 99, applicationAPI(), api.MakeEventDataPtr(cb))
+}
+
+func (m *TApplication) SetOnQueryEndSession(fn TQueryEndSessionEvent) {
+	if !m.IsValid() {
+		return
+	}
+	cb := makeTQueryEndSessionEvent(fn)
+	base.SetEvent(m, 100, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnMinimize(fn TNotifyEvent) {
-	if m.minimizePtr != 0 {
-		RemoveEventElement(m.minimizePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.minimizePtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(92, m.Instance(), m.minimizePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 101, applicationAPI(), api.MakeEventDataPtr(cb))
+}
+
+func (m *TApplication) SetOnMessageDialogFinished(fn TModalDialogFinished) {
+	if !m.IsValid() {
+		return
+	}
+	cb := makeTModalDialogFinished(fn)
+	base.SetEvent(m, 102, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnModalBegin(fn TNotifyEvent) {
-	if m.modalBeginPtr != 0 {
-		RemoveEventElement(m.modalBeginPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.modalBeginPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(93, m.Instance(), m.modalBeginPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 103, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnModalEnd(fn TNotifyEvent) {
-	if m.modalEndPtr != 0 {
-		RemoveEventElement(m.modalEndPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.modalEndPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(94, m.Instance(), m.modalEndPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 104, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnRestore(fn TNotifyEvent) {
-	if m.restorePtr != 0 {
-		RemoveEventElement(m.restorePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.restorePtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(95, m.Instance(), m.restorePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 105, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnDropFiles(fn TDropFilesEvent) {
-	if m.dropFilesPtr != 0 {
-		RemoveEventElement(m.dropFilesPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dropFilesPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(86, m.Instance(), m.dropFilesPtr)
+	cb := makeTDropFilesEvent(fn)
+	base.SetEvent(m, 106, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnHelp(fn THelpEvent) {
-	if m.helpPtr != 0 {
-		RemoveEventElement(m.helpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.helpPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(89, m.Instance(), m.helpPtr)
+	cb := makeTHelpEvent(fn)
+	base.SetEvent(m, 107, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnHint(fn TNotifyEvent) {
-	if m.hintPtr != 0 {
-		RemoveEventElement(m.hintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.hintPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(90, m.Instance(), m.hintPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 108, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
-func (m *TApplication) SetOnShortcut(fn TShortCutEvent) {
-	if m.shortcutPtr != 0 {
-		RemoveEventElement(m.shortcutPtr)
+func (m *TApplication) SetOnShortcut(fn TShortcutEvent) {
+	if !m.IsValid() {
+		return
 	}
-	m.shortcutPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(96, m.Instance(), m.shortcutPtr)
+	cb := makeTShortcutEvent(fn)
+	base.SetEvent(m, 109, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnShowHint(fn TShowHintEvent) {
-	if m.showHintPtr != 0 {
-		RemoveEventElement(m.showHintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.showHintPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(97, m.Instance(), m.showHintPtr)
+	cb := makeTShowHintEvent(fn)
+	base.SetEvent(m, 110, applicationAPI(), api.MakeEventDataPtr(cb))
+}
+
+func (m *TApplication) SetOnUserInput(fn TOnUserInputEvent) {
+	if !m.IsValid() {
+		return
+	}
+	cb := makeTOnUserInputEvent(fn)
+	base.SetEvent(m, 111, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TApplication) SetOnDestroy(fn TNotifyEvent) {
-	if m.destroyPtr != 0 {
-		RemoveEventElement(m.destroyPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.destroyPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(85, m.Instance(), m.destroyPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 112, applicationAPI(), api.MakeEventDataPtr(cb))
 }
 
-func (m *TApplication) SetOnCircularException(fn TExceptionEvent) {
-	if m.circularExceptionPtr != 0 {
-		RemoveEventElement(m.circularExceptionPtr)
-	}
-	m.circularExceptionPtr = MakeEventDataPtr(fn)
-	applicationImportAPI().SysCallN(83, m.Instance(), m.circularExceptionPtr)
+// NewApplication class constructor
+func NewApplication(owner IComponent) IApplication {
+	r := applicationAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsApplication(r)
+}
+
+func TApplicationClass() types.TClass {
+	r := applicationAPI().SysCallN(113)
+	return types.TClass(r)
 }
 
 var (
-	applicationImport       *imports.Imports = nil
-	applicationImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Application_ActivateHint", 0),
-		/*1*/ imports.NewTable("Application_Active", 0),
-		/*2*/ imports.NewTable("Application_ApplicationType", 0),
-		/*3*/ imports.NewTable("Application_BidiMode", 0),
-		/*4*/ imports.NewTable("Application_BigIconHandle", 0),
-		/*5*/ imports.NewTable("Application_BringToFront", 0),
-		/*6*/ imports.NewTable("Application_CancelHint", 0),
-		/*7*/ imports.NewTable("Application_CaptureExceptions", 0),
-		/*8*/ imports.NewTable("Application_Class", 0),
-		/*9*/ imports.NewTable("Application_ControlDestroyed", 0),
-		/*10*/ imports.NewTable("Application_ControlKeyDown", 0),
-		/*11*/ imports.NewTable("Application_ControlKeyUp", 0),
-		/*12*/ imports.NewTable("Application_Create", 0),
-		/*13*/ imports.NewTable("Application_Direction", 0),
-		/*14*/ imports.NewTable("Application_DisableIdleHandler", 0),
-		/*15*/ imports.NewTable("Application_DoArrowKey", 0),
-		/*16*/ imports.NewTable("Application_DoBeforeMouseMessage", 0),
-		/*17*/ imports.NewTable("Application_DoEscapeKey", 0),
-		/*18*/ imports.NewTable("Application_DoReturnKey", 0),
-		/*19*/ imports.NewTable("Application_DoTabKey", 0),
-		/*20*/ imports.NewTable("Application_DoubleBuffered", 0),
-		/*21*/ imports.NewTable("Application_EnableIdleHandler", 0),
-		/*22*/ imports.NewTable("Application_ExceptionDialog", 0),
-		/*23*/ imports.NewTable("Application_ExtendedKeysSupport", 0),
-		/*24*/ imports.NewTable("Application_FindGlobalComponentEnabled", 0),
-		/*25*/ imports.NewTable("Application_Flags", 0),
-		/*26*/ imports.NewTable("Application_GetControlAtMouse", 0),
-		/*27*/ imports.NewTable("Application_GetControlAtPos", 0),
-		/*28*/ imports.NewTable("Application_Handle", 0),
-		/*29*/ imports.NewTable("Application_HandleMessage", 0),
-		/*30*/ imports.NewTable("Application_HelpCommand", 0),
-		/*31*/ imports.NewTable("Application_HelpContext", 0),
-		/*32*/ imports.NewTable("Application_HelpKeyword", 0),
-		/*33*/ imports.NewTable("Application_HelpShowTableOfContents", 0),
-		/*34*/ imports.NewTable("Application_HideHint", 0),
-		/*35*/ imports.NewTable("Application_Hint", 0),
-		/*36*/ imports.NewTable("Application_HintColor", 0),
-		/*37*/ imports.NewTable("Application_HintHidePause", 0),
-		/*38*/ imports.NewTable("Application_HintHidePausePerChar", 0),
-		/*39*/ imports.NewTable("Application_HintMouseMessage", 0),
-		/*40*/ imports.NewTable("Application_HintPause", 0),
-		/*41*/ imports.NewTable("Application_HintShortCuts", 0),
-		/*42*/ imports.NewTable("Application_HintShortPause", 0),
-		/*43*/ imports.NewTable("Application_Icon", 0),
-		/*44*/ imports.NewTable("Application_Idle", 0),
-		/*45*/ imports.NewTable("Application_IntfAppActivate", 0),
-		/*46*/ imports.NewTable("Application_IntfAppDeactivate", 0),
-		/*47*/ imports.NewTable("Application_IntfAppMinimize", 0),
-		/*48*/ imports.NewTable("Application_IntfAppRestore", 0),
-		/*49*/ imports.NewTable("Application_IntfEndSession", 0),
-		/*50*/ imports.NewTable("Application_IntfSettingsChange", 0),
-		/*51*/ imports.NewTable("Application_IntfThemeOptionChange", 0),
-		/*52*/ imports.NewTable("Application_IsRTLLang", 0),
-		/*53*/ imports.NewTable("Application_IsRightToLeft", 0),
-		/*54*/ imports.NewTable("Application_IsShortcut", 0),
-		/*55*/ imports.NewTable("Application_IsWaiting", 0),
-		/*56*/ imports.NewTable("Application_LayoutAdjustmentPolicy", 0),
-		/*57*/ imports.NewTable("Application_MainForm", 0),
-		/*58*/ imports.NewTable("Application_MainFormHandle", 0),
-		/*59*/ imports.NewTable("Application_MainFormOnTaskBar", 0),
-		/*60*/ imports.NewTable("Application_MessageBox", 0),
-		/*61*/ imports.NewTable("Application_Minimize", 0),
-		/*62*/ imports.NewTable("Application_ModalFinished", 0),
-		/*63*/ imports.NewTable("Application_ModalLevel", 0),
-		/*64*/ imports.NewTable("Application_ModalStarted", 0),
-		/*65*/ imports.NewTable("Application_MouseControl", 0),
-		/*66*/ imports.NewTable("Application_MoveFormFocusToChildren", 0),
-		/*67*/ imports.NewTable("Application_Navigation", 0),
-		/*68*/ imports.NewTable("Application_Notification", 0),
-		/*69*/ imports.NewTable("Application_NotifyKeyDownBeforeHandler", 0),
-		/*70*/ imports.NewTable("Application_NotifyKeyDownHandler", 0),
-		/*71*/ imports.NewTable("Application_NotifyUserInputHandler", 0),
-		/*72*/ imports.NewTable("Application_ProcessMessages", 0),
-		/*73*/ imports.NewTable("Application_ReleaseComponent", 0),
-		/*74*/ imports.NewTable("Application_RemoveAllHandlersOfObject", 0),
-		/*75*/ imports.NewTable("Application_RemoveAsyncCalls", 0),
-		/*76*/ imports.NewTable("Application_RemoveStayOnTop", 0),
-		/*77*/ imports.NewTable("Application_Restore", 0),
-		/*78*/ imports.NewTable("Application_RestoreStayOnTop", 0),
-		/*79*/ imports.NewTable("Application_Scaled", 0),
-		/*80*/ imports.NewTable("Application_SetOnActionExecute", 0),
-		/*81*/ imports.NewTable("Application_SetOnActionUpdate", 0),
-		/*82*/ imports.NewTable("Application_SetOnActivate", 0),
-		/*83*/ imports.NewTable("Application_SetOnCircularException", 0),
-		/*84*/ imports.NewTable("Application_SetOnDeactivate", 0),
-		/*85*/ imports.NewTable("Application_SetOnDestroy", 0),
-		/*86*/ imports.NewTable("Application_SetOnDropFiles", 0),
-		/*87*/ imports.NewTable("Application_SetOnEndSession", 0),
-		/*88*/ imports.NewTable("Application_SetOnGetMainFormHandle", 0),
-		/*89*/ imports.NewTable("Application_SetOnHelp", 0),
-		/*90*/ imports.NewTable("Application_SetOnHint", 0),
-		/*91*/ imports.NewTable("Application_SetOnIdleEnd", 0),
-		/*92*/ imports.NewTable("Application_SetOnMinimize", 0),
-		/*93*/ imports.NewTable("Application_SetOnModalBegin", 0),
-		/*94*/ imports.NewTable("Application_SetOnModalEnd", 0),
-		/*95*/ imports.NewTable("Application_SetOnRestore", 0),
-		/*96*/ imports.NewTable("Application_SetOnShortcut", 0),
-		/*97*/ imports.NewTable("Application_SetOnShowHint", 0),
-		/*98*/ imports.NewTable("Application_ShowButtonGlyphs", 0),
-		/*99*/ imports.NewTable("Application_ShowHelpForObject", 0),
-		/*100*/ imports.NewTable("Application_ShowHint", 0),
-		/*101*/ imports.NewTable("Application_ShowMainForm", 0),
-		/*102*/ imports.NewTable("Application_ShowMenuGlyphs", 0),
-		/*103*/ imports.NewTable("Application_SmallIconHandle", 0),
-		/*104*/ imports.NewTable("Application_TaskBarBehavior", 0),
-		/*105*/ imports.NewTable("Application_UpdateFormatSettings", 0),
-		/*106*/ imports.NewTable("Application_UpdateMainForm", 0),
-	}
+	applicationOnce   base.Once
+	applicationImport *imports.Imports = nil
 )
 
-func applicationImportAPI() *imports.Imports {
-	if applicationImport == nil {
-		applicationImport = NewDefaultImports()
-		applicationImport.SetImportTable(applicationImportTables)
-		applicationImportTables = nil
-	}
+func applicationAPI() *imports.Imports {
+	applicationOnce.Do(func() {
+		applicationImport = api.NewDefaultImports()
+		applicationImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TApplication_Create", 0), // constructor NewApplication
+			/* 1 */ imports.NewTable("TApplication_GetControlAtMouse", 0), // function GetControlAtMouse
+			/* 2 */ imports.NewTable("TApplication_GetControlAtPos", 0), // function GetControlAtPos
+			/* 3 */ imports.NewTable("TApplication_BigIconHandle", 0), // function BigIconHandle
+			/* 4 */ imports.NewTable("TApplication_SmallIconHandle", 0), // function SmallIconHandle
+			/* 5 */ imports.NewTable("TApplication_HelpCommand", 0), // function HelpCommand
+			/* 6 */ imports.NewTable("TApplication_HelpContext", 0), // function HelpContext
+			/* 7 */ imports.NewTable("TApplication_HelpKeyword", 0), // function HelpKeyword
+			/* 8 */ imports.NewTable("TApplication_HelpShowTableOfContents", 0), // function HelpShowTableOfContents
+			/* 9 */ imports.NewTable("TApplication_IsWaiting", 0), // function IsWaiting
+			/* 10 */ imports.NewTable("TApplication_MessageBox", 0), // function MessageBox
+			/* 11 */ imports.NewTable("TApplication_IsShortcut", 0), // function IsShortcut
+			/* 12 */ imports.NewTable("TApplication_IsRightToLeft", 0), // function IsRightToLeft
+			/* 13 */ imports.NewTable("TApplication_IsRTLLang", 0), // function IsRTLLang
+			/* 14 */ imports.NewTable("TApplication_Direction", 0), // function Direction
+			/* 15 */ imports.NewTable("TApplication_ActivateHint", 0), // procedure ActivateHint
+			/* 16 */ imports.NewTable("TApplication_ControlDestroyed", 0), // procedure ControlDestroyed
+			/* 17 */ imports.NewTable("TApplication_BringToFront", 0), // procedure BringToFront
+			/* 18 */ imports.NewTable("TApplication_CreateForm", 0), // procedure CreateForm
+			/* 19 */ imports.NewTable("TApplication_UpdateMainForm", 0), // procedure UpdateMainForm
+			/* 20 */ imports.NewTable("TApplication_RemoveAsyncCalls", 0), // procedure RemoveAsyncCalls
+			/* 21 */ imports.NewTable("TApplication_ReleaseComponent", 0), // procedure ReleaseComponent
+			/* 22 */ imports.NewTable("TApplication_HandleMessage", 0), // procedure HandleMessage
+			/* 23 */ imports.NewTable("TApplication_ShowHelpForObject", 0), // procedure ShowHelpForObject
+			/* 24 */ imports.NewTable("TApplication_RemoveStayOnTop", 0), // procedure RemoveStayOnTop
+			/* 25 */ imports.NewTable("TApplication_RestoreStayOnTop", 0), // procedure RestoreStayOnTop
+			/* 26 */ imports.NewTable("TApplication_CancelHint", 0), // procedure CancelHint
+			/* 27 */ imports.NewTable("TApplication_HideHint", 0), // procedure HideHint
+			/* 28 */ imports.NewTable("TApplication_HintMouseMessage", 0), // procedure HintMouseMessage
+			/* 29 */ imports.NewTable("TApplication_Minimize", 0), // procedure Minimize
+			/* 30 */ imports.NewTable("TApplication_ModalStarted", 0), // procedure ModalStarted
+			/* 31 */ imports.NewTable("TApplication_ModalFinished", 0), // procedure ModalFinished
+			/* 32 */ imports.NewTable("TApplication_Restore", 0), // procedure Restore
+			/* 33 */ imports.NewTable("TApplication_Notification", 0), // procedure Notification
+			/* 34 */ imports.NewTable("TApplication_ProcessMessages", 0), // procedure ProcessMessages
+			/* 35 */ imports.NewTable("TApplication_Idle", 0), // procedure Idle
+			/* 36 */ imports.NewTable("TApplication_Run", 0), // procedure Run
+			/* 37 */ imports.NewTable("TApplication_DisableIdleHandler", 0), // procedure DisableIdleHandler
+			/* 38 */ imports.NewTable("TApplication_EnableIdleHandler", 0), // procedure EnableIdleHandler
+			/* 39 */ imports.NewTable("TApplication_NotifyUserInputHandler", 0), // procedure NotifyUserInputHandler
+			/* 40 */ imports.NewTable("TApplication_NotifyKeyDownBeforeHandler", 0), // procedure NotifyKeyDownBeforeHandler
+			/* 41 */ imports.NewTable("TApplication_NotifyKeyDownHandler", 0), // procedure NotifyKeyDownHandler
+			/* 42 */ imports.NewTable("TApplication_ControlKeyDown", 0), // procedure ControlKeyDown
+			/* 43 */ imports.NewTable("TApplication_ControlKeyUp", 0), // procedure ControlKeyUp
+			/* 44 */ imports.NewTable("TApplication_RemoveAllHandlersOfObject", 0), // procedure RemoveAllHandlersOfObject
+			/* 45 */ imports.NewTable("TApplication_DoBeforeMouseMessage", 0), // procedure DoBeforeMouseMessage
+			/* 46 */ imports.NewTable("TApplication_IntfQueryEndSession", 0), // procedure IntfQueryEndSession
+			/* 47 */ imports.NewTable("TApplication_IntfEndSession", 0), // procedure IntfEndSession
+			/* 48 */ imports.NewTable("TApplication_IntfAppActivate", 0), // procedure IntfAppActivate
+			/* 49 */ imports.NewTable("TApplication_IntfAppDeactivate", 0), // procedure IntfAppDeactivate
+			/* 50 */ imports.NewTable("TApplication_IntfAppMinimize", 0), // procedure IntfAppMinimize
+			/* 51 */ imports.NewTable("TApplication_IntfAppRestore", 0), // procedure IntfAppRestore
+			/* 52 */ imports.NewTable("TApplication_IntfSettingsChange", 0), // procedure IntfSettingsChange
+			/* 53 */ imports.NewTable("TApplication_IntfThemeOptionChange", 0), // procedure IntfThemeOptionChange
+			/* 54 */ imports.NewTable("TApplication_DoArrowKey", 0), // procedure DoArrowKey
+			/* 55 */ imports.NewTable("TApplication_DoTabKey", 0), // procedure DoTabKey
+			/* 56 */ imports.NewTable("TApplication_DoEscapeKey", 0), // procedure DoEscapeKey
+			/* 57 */ imports.NewTable("TApplication_DoReturnKey", 0), // procedure DoReturnKey
+			/* 58 */ imports.NewTable("TApplication_Active", 0), // property Active
+			/* 59 */ imports.NewTable("TApplication_ActiveFormHandle", 0), // property ActiveFormHandle
+			/* 60 */ imports.NewTable("TApplication_ApplicationType", 0), // property ApplicationType
+			/* 61 */ imports.NewTable("TApplication_BidiMode", 0), // property BidiMode
+			/* 62 */ imports.NewTable("TApplication_CaptureExceptions", 0), // property CaptureExceptions
+			/* 63 */ imports.NewTable("TApplication_DoubleBuffered", 0), // property DoubleBuffered
+			/* 64 */ imports.NewTable("TApplication_ExtendedKeysSupport", 0), // property ExtendedKeysSupport
+			/* 65 */ imports.NewTable("TApplication_ExceptionDialog", 0), // property ExceptionDialog
+			/* 66 */ imports.NewTable("TApplication_FindGlobalComponentEnabled", 0), // property FindGlobalComponentEnabled
+			/* 67 */ imports.NewTable("TApplication_Flags", 0), // property Flags
+			/* 68 */ imports.NewTable("TApplication_Handle", 0), // property Handle
+			/* 69 */ imports.NewTable("TApplication_Hint", 0), // property Hint
+			/* 70 */ imports.NewTable("TApplication_HintColor", 0), // property HintColor
+			/* 71 */ imports.NewTable("TApplication_HintHidePause", 0), // property HintHidePause
+			/* 72 */ imports.NewTable("TApplication_HintHidePausePerChar", 0), // property HintHidePausePerChar
+			/* 73 */ imports.NewTable("TApplication_HintPause", 0), // property HintPause
+			/* 74 */ imports.NewTable("TApplication_HintShortCuts", 0), // property HintShortCuts
+			/* 75 */ imports.NewTable("TApplication_HintShortPause", 0), // property HintShortPause
+			/* 76 */ imports.NewTable("TApplication_Icon", 0), // property Icon
+			/* 77 */ imports.NewTable("TApplication_LayoutAdjustmentPolicy", 0), // property LayoutAdjustmentPolicy
+			/* 78 */ imports.NewTable("TApplication_Navigation", 0), // property Navigation
+			/* 79 */ imports.NewTable("TApplication_MainForm", 0), // property MainForm
+			/* 80 */ imports.NewTable("TApplication_MainFormHandle", 0), // property MainFormHandle
+			/* 81 */ imports.NewTable("TApplication_MainFormOnTaskBar", 0), // property MainFormOnTaskBar
+			/* 82 */ imports.NewTable("TApplication_ModalLevel", 0), // property ModalLevel
+			/* 83 */ imports.NewTable("TApplication_MoveFormFocusToChildren", 0), // property MoveFormFocusToChildren
+			/* 84 */ imports.NewTable("TApplication_MouseControl", 0), // property MouseControl
+			/* 85 */ imports.NewTable("TApplication_TaskBarBehavior", 0), // property TaskBarBehavior
+			/* 86 */ imports.NewTable("TApplication_UpdateFormatSettings", 0), // property UpdateFormatSettings
+			/* 87 */ imports.NewTable("TApplication_ShowButtonGlyphs", 0), // property ShowButtonGlyphs
+			/* 88 */ imports.NewTable("TApplication_ShowMenuGlyphs", 0), // property ShowMenuGlyphs
+			/* 89 */ imports.NewTable("TApplication_ShowHint", 0), // property ShowHint
+			/* 90 */ imports.NewTable("TApplication_ShowMainForm", 0), // property ShowMainForm
+			/* 91 */ imports.NewTable("TApplication_Scaled", 0), // property Scaled
+			/* 92 */ imports.NewTable("TApplication_OnActionExecute", 0), // event OnActionExecute
+			/* 93 */ imports.NewTable("TApplication_OnActionUpdate", 0), // event OnActionUpdate
+			/* 94 */ imports.NewTable("TApplication_OnActivate", 0), // event OnActivate
+			/* 95 */ imports.NewTable("TApplication_OnDeactivate", 0), // event OnDeactivate
+			/* 96 */ imports.NewTable("TApplication_OnGetMainFormHandle", 0), // event OnGetMainFormHandle
+			/* 97 */ imports.NewTable("TApplication_OnIdle", 0), // event OnIdle
+			/* 98 */ imports.NewTable("TApplication_OnIdleEnd", 0), // event OnIdleEnd
+			/* 99 */ imports.NewTable("TApplication_OnEndSession", 0), // event OnEndSession
+			/* 100 */ imports.NewTable("TApplication_OnQueryEndSession", 0), // event OnQueryEndSession
+			/* 101 */ imports.NewTable("TApplication_OnMinimize", 0), // event OnMinimize
+			/* 102 */ imports.NewTable("TApplication_OnMessageDialogFinished", 0), // event OnMessageDialogFinished
+			/* 103 */ imports.NewTable("TApplication_OnModalBegin", 0), // event OnModalBegin
+			/* 104 */ imports.NewTable("TApplication_OnModalEnd", 0), // event OnModalEnd
+			/* 105 */ imports.NewTable("TApplication_OnRestore", 0), // event OnRestore
+			/* 106 */ imports.NewTable("TApplication_OnDropFiles", 0), // event OnDropFiles
+			/* 107 */ imports.NewTable("TApplication_OnHelp", 0), // event OnHelp
+			/* 108 */ imports.NewTable("TApplication_OnHint", 0), // event OnHint
+			/* 109 */ imports.NewTable("TApplication_OnShortcut", 0), // event OnShortcut
+			/* 110 */ imports.NewTable("TApplication_OnShowHint", 0), // event OnShowHint
+			/* 111 */ imports.NewTable("TApplication_OnUserInput", 0), // event OnUserInput
+			/* 112 */ imports.NewTable("TApplication_OnDestroy", 0), // event OnDestroy
+			/* 113 */ imports.NewTable("TApplication_TClass", 0), // function TApplicationClass
+		}
+	})
 	return applicationImport
 }

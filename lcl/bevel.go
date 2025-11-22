@@ -9,20 +9,21 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IBevel Parent: IGraphicControl
 type IBevel interface {
 	IGraphicControl
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
-	Shape() TBevelShape                            // property
-	SetShape(AValue TBevelShape)                   // property
-	Style() TBevelStyle                            // property
-	SetStyle(AValue TBevelStyle)                   // property
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
+	Shape() types.TBevelShape                      // property Shape Getter
+	SetShape(value types.TBevelShape)              // property Shape Setter
+	Style() types.TBevelStyle                      // property Style Getter
+	SetStyle(value types.TBevelStyle)              // property Style Setter
 	SetOnMouseDown(fn TMouseEvent)                 // property event
 	SetOnMouseEnter(fn TNotifyEvent)               // property event
 	SetOnMouseLeave(fn TNotifyEvent)               // property event
@@ -34,154 +35,162 @@ type IBevel interface {
 	SetOnPaint(fn TNotifyEvent)                    // property event
 }
 
-// TBevel Parent: TGraphicControl
 type TBevel struct {
 	TGraphicControl
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	paintPtr          uintptr
-}
-
-func NewBevel(AOwner IComponent) IBevel {
-	r1 := bevelImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsBevel(r1)
 }
 
 func (m *TBevel) ParentShowHint() bool {
-	r1 := bevelImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := bevelAPI().SysCallN(1, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TBevel) SetParentShowHint(AValue bool) {
-	bevelImportAPI().SysCallN(2, 1, m.Instance(), PascalBool(AValue))
+func (m *TBevel) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	bevelAPI().SysCallN(1, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TBevel) Shape() TBevelShape {
-	r1 := bevelImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return TBevelShape(r1)
+func (m *TBevel) Shape() types.TBevelShape {
+	if !m.IsValid() {
+		return 0
+	}
+	r := bevelAPI().SysCallN(2, 0, m.Instance())
+	return types.TBevelShape(r)
 }
 
-func (m *TBevel) SetShape(AValue TBevelShape) {
-	bevelImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
+func (m *TBevel) SetShape(value types.TBevelShape) {
+	if !m.IsValid() {
+		return
+	}
+	bevelAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TBevel) Style() TBevelStyle {
-	r1 := bevelImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return TBevelStyle(r1)
+func (m *TBevel) Style() types.TBevelStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := bevelAPI().SysCallN(3, 0, m.Instance())
+	return types.TBevelStyle(r)
 }
 
-func (m *TBevel) SetStyle(AValue TBevelStyle) {
-	bevelImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
-}
-
-func BevelClass() TClass {
-	ret := bevelImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TBevel) SetStyle(value types.TBevelStyle) {
+	if !m.IsValid() {
+		return
+	}
+	bevelAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TBevel) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	bevelImportAPI().SysCallN(3, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 4, bevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TBevel) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	bevelImportAPI().SysCallN(4, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 5, bevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TBevel) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	bevelImportAPI().SysCallN(5, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 6, bevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TBevel) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	bevelImportAPI().SysCallN(6, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 7, bevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TBevel) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	bevelImportAPI().SysCallN(7, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 8, bevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TBevel) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	bevelImportAPI().SysCallN(8, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 9, bevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TBevel) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	bevelImportAPI().SysCallN(9, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 10, bevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TBevel) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	bevelImportAPI().SysCallN(10, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 11, bevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TBevel) SetOnPaint(fn TNotifyEvent) {
-	if m.paintPtr != 0 {
-		RemoveEventElement(m.paintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.paintPtr = MakeEventDataPtr(fn)
-	bevelImportAPI().SysCallN(11, m.Instance(), m.paintPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, bevelAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewBevel class constructor
+func NewBevel(owner IComponent) IBevel {
+	r := bevelAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsBevel(r)
+}
+
+func TBevelClass() types.TClass {
+	r := bevelAPI().SysCallN(13)
+	return types.TClass(r)
 }
 
 var (
-	bevelImport       *imports.Imports = nil
-	bevelImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Bevel_Class", 0),
-		/*1*/ imports.NewTable("Bevel_Create", 0),
-		/*2*/ imports.NewTable("Bevel_ParentShowHint", 0),
-		/*3*/ imports.NewTable("Bevel_SetOnMouseDown", 0),
-		/*4*/ imports.NewTable("Bevel_SetOnMouseEnter", 0),
-		/*5*/ imports.NewTable("Bevel_SetOnMouseLeave", 0),
-		/*6*/ imports.NewTable("Bevel_SetOnMouseMove", 0),
-		/*7*/ imports.NewTable("Bevel_SetOnMouseUp", 0),
-		/*8*/ imports.NewTable("Bevel_SetOnMouseWheel", 0),
-		/*9*/ imports.NewTable("Bevel_SetOnMouseWheelDown", 0),
-		/*10*/ imports.NewTable("Bevel_SetOnMouseWheelUp", 0),
-		/*11*/ imports.NewTable("Bevel_SetOnPaint", 0),
-		/*12*/ imports.NewTable("Bevel_Shape", 0),
-		/*13*/ imports.NewTable("Bevel_Style", 0),
-	}
+	bevelOnce   base.Once
+	bevelImport *imports.Imports = nil
 )
 
-func bevelImportAPI() *imports.Imports {
-	if bevelImport == nil {
-		bevelImport = NewDefaultImports()
-		bevelImport.SetImportTable(bevelImportTables)
-		bevelImportTables = nil
-	}
+func bevelAPI() *imports.Imports {
+	bevelOnce.Do(func() {
+		bevelImport = api.NewDefaultImports()
+		bevelImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TBevel_Create", 0), // constructor NewBevel
+			/* 1 */ imports.NewTable("TBevel_ParentShowHint", 0), // property ParentShowHint
+			/* 2 */ imports.NewTable("TBevel_Shape", 0), // property Shape
+			/* 3 */ imports.NewTable("TBevel_Style", 0), // property Style
+			/* 4 */ imports.NewTable("TBevel_OnMouseDown", 0), // event OnMouseDown
+			/* 5 */ imports.NewTable("TBevel_OnMouseEnter", 0), // event OnMouseEnter
+			/* 6 */ imports.NewTable("TBevel_OnMouseLeave", 0), // event OnMouseLeave
+			/* 7 */ imports.NewTable("TBevel_OnMouseMove", 0), // event OnMouseMove
+			/* 8 */ imports.NewTable("TBevel_OnMouseUp", 0), // event OnMouseUp
+			/* 9 */ imports.NewTable("TBevel_OnMouseWheel", 0), // event OnMouseWheel
+			/* 10 */ imports.NewTable("TBevel_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 11 */ imports.NewTable("TBevel_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 12 */ imports.NewTable("TBevel_OnPaint", 0), // event OnPaint
+			/* 13 */ imports.NewTable("TBevel_TClass", 0), // function TBevelClass
+		}
+	})
 	return bevelImport
 }

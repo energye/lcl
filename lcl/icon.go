@@ -9,65 +9,66 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IIcon Parent: ICustomIcon
 type IIcon interface {
 	ICustomIcon
-	LoadFromBytes(data []byte)
-	LoadFromFSFile(Filename string) error
-	Handle() HICON          // property
-	SetHandle(AValue HICON) // property
-	ReleaseHandle() HICON   // function
+	ReleaseHandle() types.HICON  // function
+	Handle() types.HICON         // property Handle Getter
+	SetHandle(value types.HICON) // property Handle Setter
 }
 
-// TIcon Parent: TCustomIcon
 type TIcon struct {
 	TCustomIcon
 }
 
+func (m *TIcon) ReleaseHandle() types.HICON {
+	if !m.IsValid() {
+		return 0
+	}
+	r := iconAPI().SysCallN(1, m.Instance())
+	return types.HICON(r)
+}
+
+func (m *TIcon) Handle() types.HICON {
+	if !m.IsValid() {
+		return 0
+	}
+	r := iconAPI().SysCallN(2, 0, m.Instance())
+	return types.HICON(r)
+}
+
+func (m *TIcon) SetHandle(value types.HICON) {
+	if !m.IsValid() {
+		return
+	}
+	iconAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
+}
+
+// NewIcon class constructor
 func NewIcon() IIcon {
-	r1 := conImportAPI().SysCallN(1)
-	return AsIcon(r1)
-}
-
-func (m *TIcon) Handle() HICON {
-	r1 := conImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return HICON(r1)
-}
-
-func (m *TIcon) SetHandle(AValue HICON) {
-	conImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TIcon) ReleaseHandle() HICON {
-	r1 := conImportAPI().SysCallN(3, m.Instance())
-	return HICON(r1)
-}
-
-func IconClass() TClass {
-	ret := conImportAPI().SysCallN(0)
-	return TClass(ret)
+	r := iconAPI().SysCallN(0)
+	return AsIcon(r)
 }
 
 var (
-	conImport       *imports.Imports = nil
-	conImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Icon_Class", 0),
-		/*1*/ imports.NewTable("Icon_Create", 0),
-		/*2*/ imports.NewTable("Icon_Handle", 0),
-		/*3*/ imports.NewTable("Icon_ReleaseHandle", 0),
-	}
+	iconOnce   base.Once
+	iconImport *imports.Imports = nil
 )
 
-func conImportAPI() *imports.Imports {
-	if conImport == nil {
-		conImport = NewDefaultImports()
-		conImport.SetImportTable(conImportTables)
-		conImportTables = nil
-	}
-	return conImport
+func iconAPI() *imports.Imports {
+	iconOnce.Do(func() {
+		iconImport = api.NewDefaultImports()
+		iconImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TIcon_Create", 0), // constructor NewIcon
+			/* 1 */ imports.NewTable("TIcon_ReleaseHandle", 0), // function ReleaseHandle
+			/* 2 */ imports.NewTable("TIcon_Handle", 0), // property Handle
+		}
+	})
+	return iconImport
 }

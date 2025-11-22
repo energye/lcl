@@ -9,361 +9,511 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IVirtualTreeColumn Parent: ICollectionItem
 type IVirtualTreeColumn interface {
 	ICollectionItem
-	Left() int32                                   // property
-	Owner() IVirtualTreeColumns                    // property
-	Alignment() TAlignment                         // property
-	SetAlignment(AValue TAlignment)                // property
-	BiDiMode() TBiDiMode                           // property
-	SetBiDiMode(AValue TBiDiMode)                  // property
-	CaptionAlignment() TAlignment                  // property
-	SetCaptionAlignment(AValue TAlignment)         // property
-	CaptionText() string                           // property
-	CheckType() TCheckType                         // property
-	SetCheckType(AValue TCheckType)                // property
-	CheckState() TCheckState                       // property
-	SetCheckState(AValue TCheckState)              // property
-	CheckBox() bool                                // property
-	SetCheckBox(AValue bool)                       // property
-	Color() TColor                                 // property
-	SetColor(AValue TColor)                        // property
-	DefaultSortDirection() TSortDirection          // property
-	SetDefaultSortDirection(AValue TSortDirection) // property
-	Hint() string                                  // property
-	SetHint(AValue string)                         // property
-	ImageIndex() TImageIndex                       // property
-	SetImageIndex(AValue TImageIndex)              // property
-	Layout() TVTHeaderColumnLayout                 // property
-	SetLayout(AValue TVTHeaderColumnLayout)        // property
-	Margin() int32                                 // property
-	SetMargin(AValue int32)                        // property
-	MaxWidth() int32                               // property
-	SetMaxWidth(AValue int32)                      // property
-	MinWidth() int32                               // property
-	SetMinWidth(AValue int32)                      // property
-	Options() TVTColumnOptions                     // property
-	SetOptions(AValue TVTColumnOptions)            // property
-	Position() TColumnPosition                     // property
-	SetPosition(AValue TColumnPosition)            // property
-	Spacing() int32                                // property
-	SetSpacing(AValue int32)                       // property
-	Style() TVirtualTreeColumnStyle                // property
-	SetStyle(AValue TVirtualTreeColumnStyle)       // property
-	Tag() uint32                                   // property
-	SetTag(AValue uint32)                          // property
-	Text() string                                  // property
-	SetText(AValue string)                         // property
-	Width() int32                                  // property
-	SetWidth(AValue int32)                         // property
-	GetRect() (resultRect TRect)                   // function
-	UseRightToLeftReading() bool                   // function
-	LoadFromStream(Stream IStream, Version int32)  // procedure
-	ParentBiDiModeChanged()                        // procedure
-	ParentColorChanged()                           // procedure
-	RestoreLastWidth()                             // procedure
-	SaveToStream(Stream IStream)                   // procedure
+	GetRect() types.TRect                               // function
+	UseRightToLeftReading() bool                        // function
+	LoadFromStream(stream IStream, version int32)       // procedure
+	ParentBiDiModeChanged()                             // procedure
+	ParentColorChanged()                                // procedure
+	RestoreLastWidth()                                  // procedure
+	SaveToStream(stream IStream)                        // procedure
+	Left() int32                                        // property Left Getter
+	Owner() IVirtualTreeColumns                         // property Owner Getter
+	Alignment() types.TAlignment                        // property Alignment Getter
+	SetAlignment(value types.TAlignment)                // property Alignment Setter
+	BiDiMode() types.TBiDiMode                          // property BiDiMode Getter
+	SetBiDiMode(value types.TBiDiMode)                  // property BiDiMode Setter
+	CaptionAlignment() types.TAlignment                 // property CaptionAlignment Getter
+	SetCaptionAlignment(value types.TAlignment)         // property CaptionAlignment Setter
+	CaptionText() string                                // property CaptionText Getter
+	CheckType() types.TCheckType                        // property CheckType Getter
+	SetCheckType(value types.TCheckType)                // property CheckType Setter
+	CheckState() types.TCheckState                      // property CheckState Getter
+	SetCheckState(value types.TCheckState)              // property CheckState Setter
+	CheckBox() bool                                     // property CheckBox Getter
+	SetCheckBox(value bool)                             // property CheckBox Setter
+	Color() types.TColor                                // property Color Getter
+	SetColor(value types.TColor)                        // property Color Setter
+	DefaultSortDirection() types.TSortDirection         // property DefaultSortDirection Getter
+	SetDefaultSortDirection(value types.TSortDirection) // property DefaultSortDirection Setter
+	Hint() string                                       // property Hint Getter
+	SetHint(value string)                               // property Hint Setter
+	ImageIndex() int32                                  // property ImageIndex Getter
+	SetImageIndex(value int32)                          // property ImageIndex Setter
+	Layout() types.TVTHeaderColumnLayout                // property Layout Getter
+	SetLayout(value types.TVTHeaderColumnLayout)        // property Layout Setter
+	Margin() int32                                      // property Margin Getter
+	SetMargin(value int32)                              // property Margin Setter
+	MaxWidth() int32                                    // property MaxWidth Getter
+	SetMaxWidth(value int32)                            // property MaxWidth Setter
+	MinWidth() int32                                    // property MinWidth Getter
+	SetMinWidth(value int32)                            // property MinWidth Setter
+	Options() types.TVTColumnOptions                    // property Options Getter
+	SetOptions(value types.TVTColumnOptions)            // property Options Setter
+	Position() uint32                                   // property Position Getter
+	SetPosition(value uint32)                           // property Position Setter
+	Spacing() int32                                     // property Spacing Getter
+	SetSpacing(value int32)                             // property Spacing Setter
+	Style() types.TVirtualTreeColumnStyle               // property Style Getter
+	SetStyle(value types.TVirtualTreeColumnStyle)       // property Style Setter
+	Tag() uint32                                        // property Tag Getter
+	SetTag(value uint32)                                // property Tag Setter
+	Text() string                                       // property Text Getter
+	SetText(value string)                               // property Text Setter
+	Width() int32                                       // property Width Getter
+	SetWidth(value int32)                               // property Width Setter
 }
 
-// TVirtualTreeColumn Parent: TCollectionItem
 type TVirtualTreeColumn struct {
 	TCollectionItem
 }
 
-func NewVirtualTreeColumn(Collection ICollection) IVirtualTreeColumn {
-	r1 := virtualTreeColumnImportAPI().SysCallN(9, GetObjectUintptr(Collection))
-	return AsVirtualTreeColumn(r1)
-}
-
-func (m *TVirtualTreeColumn) Left() int32 {
-	r1 := virtualTreeColumnImportAPI().SysCallN(15, m.Instance())
-	return int32(r1)
-}
-
-func (m *TVirtualTreeColumn) Owner() IVirtualTreeColumns {
-	r1 := virtualTreeColumnImportAPI().SysCallN(21, m.Instance())
-	return AsVirtualTreeColumns(r1)
-}
-
-func (m *TVirtualTreeColumn) Alignment() TAlignment {
-	r1 := virtualTreeColumnImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TAlignment(r1)
-}
-
-func (m *TVirtualTreeColumn) SetAlignment(AValue TAlignment) {
-	virtualTreeColumnImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) BiDiMode() TBiDiMode {
-	r1 := virtualTreeColumnImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TBiDiMode(r1)
-}
-
-func (m *TVirtualTreeColumn) SetBiDiMode(AValue TBiDiMode) {
-	virtualTreeColumnImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) CaptionAlignment() TAlignment {
-	r1 := virtualTreeColumnImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TAlignment(r1)
-}
-
-func (m *TVirtualTreeColumn) SetCaptionAlignment(AValue TAlignment) {
-	virtualTreeColumnImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) CaptionText() string {
-	r1 := virtualTreeColumnImportAPI().SysCallN(3, m.Instance())
-	return GoStr(r1)
-}
-
-func (m *TVirtualTreeColumn) CheckType() TCheckType {
-	r1 := virtualTreeColumnImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return TCheckType(r1)
-}
-
-func (m *TVirtualTreeColumn) SetCheckType(AValue TCheckType) {
-	virtualTreeColumnImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) CheckState() TCheckState {
-	r1 := virtualTreeColumnImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TCheckState(r1)
-}
-
-func (m *TVirtualTreeColumn) SetCheckState(AValue TCheckState) {
-	virtualTreeColumnImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) CheckBox() bool {
-	r1 := virtualTreeColumnImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TVirtualTreeColumn) SetCheckBox(AValue bool) {
-	virtualTreeColumnImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TVirtualTreeColumn) Color() TColor {
-	r1 := virtualTreeColumnImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TVirtualTreeColumn) SetColor(AValue TColor) {
-	virtualTreeColumnImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) DefaultSortDirection() TSortDirection {
-	r1 := virtualTreeColumnImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return TSortDirection(r1)
-}
-
-func (m *TVirtualTreeColumn) SetDefaultSortDirection(AValue TSortDirection) {
-	virtualTreeColumnImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) Hint() string {
-	r1 := virtualTreeColumnImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TVirtualTreeColumn) SetHint(AValue string) {
-	virtualTreeColumnImportAPI().SysCallN(12, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TVirtualTreeColumn) ImageIndex() TImageIndex {
-	r1 := virtualTreeColumnImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *TVirtualTreeColumn) SetImageIndex(AValue TImageIndex) {
-	virtualTreeColumnImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) Layout() TVTHeaderColumnLayout {
-	r1 := virtualTreeColumnImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return TVTHeaderColumnLayout(r1)
-}
-
-func (m *TVirtualTreeColumn) SetLayout(AValue TVTHeaderColumnLayout) {
-	virtualTreeColumnImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) Margin() int32 {
-	r1 := virtualTreeColumnImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TVirtualTreeColumn) SetMargin(AValue int32) {
-	virtualTreeColumnImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) MaxWidth() int32 {
-	r1 := virtualTreeColumnImportAPI().SysCallN(18, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TVirtualTreeColumn) SetMaxWidth(AValue int32) {
-	virtualTreeColumnImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) MinWidth() int32 {
-	r1 := virtualTreeColumnImportAPI().SysCallN(19, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TVirtualTreeColumn) SetMinWidth(AValue int32) {
-	virtualTreeColumnImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) Options() TVTColumnOptions {
-	r1 := virtualTreeColumnImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return TVTColumnOptions(r1)
-}
-
-func (m *TVirtualTreeColumn) SetOptions(AValue TVTColumnOptions) {
-	virtualTreeColumnImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) Position() TColumnPosition {
-	r1 := virtualTreeColumnImportAPI().SysCallN(24, 0, m.Instance(), 0)
-	return TColumnPosition(r1)
-}
-
-func (m *TVirtualTreeColumn) SetPosition(AValue TColumnPosition) {
-	virtualTreeColumnImportAPI().SysCallN(24, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) Spacing() int32 {
-	r1 := virtualTreeColumnImportAPI().SysCallN(27, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TVirtualTreeColumn) SetSpacing(AValue int32) {
-	virtualTreeColumnImportAPI().SysCallN(27, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) Style() TVirtualTreeColumnStyle {
-	r1 := virtualTreeColumnImportAPI().SysCallN(28, 0, m.Instance(), 0)
-	return TVirtualTreeColumnStyle(r1)
-}
-
-func (m *TVirtualTreeColumn) SetStyle(AValue TVirtualTreeColumnStyle) {
-	virtualTreeColumnImportAPI().SysCallN(28, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) Tag() uint32 {
-	r1 := virtualTreeColumnImportAPI().SysCallN(29, 0, m.Instance(), 0)
-	return uint32(r1)
-}
-
-func (m *TVirtualTreeColumn) SetTag(AValue uint32) {
-	virtualTreeColumnImportAPI().SysCallN(29, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) Text() string {
-	r1 := virtualTreeColumnImportAPI().SysCallN(30, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TVirtualTreeColumn) SetText(AValue string) {
-	virtualTreeColumnImportAPI().SysCallN(30, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TVirtualTreeColumn) Width() int32 {
-	r1 := virtualTreeColumnImportAPI().SysCallN(32, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TVirtualTreeColumn) SetWidth(AValue int32) {
-	virtualTreeColumnImportAPI().SysCallN(32, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVirtualTreeColumn) GetRect() (resultRect TRect) {
-	virtualTreeColumnImportAPI().SysCallN(11, m.Instance(), uintptr(unsafePointer(&resultRect)))
+func (m *TVirtualTreeColumn) GetRect() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(1, m.Instance(), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
 func (m *TVirtualTreeColumn) UseRightToLeftReading() bool {
-	r1 := virtualTreeColumnImportAPI().SysCallN(31, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := virtualTreeColumnAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func VirtualTreeColumnClass() TClass {
-	ret := virtualTreeColumnImportAPI().SysCallN(7)
-	return TClass(ret)
-}
-
-func (m *TVirtualTreeColumn) LoadFromStream(Stream IStream, Version int32) {
-	virtualTreeColumnImportAPI().SysCallN(16, m.Instance(), GetObjectUintptr(Stream), uintptr(Version))
+func (m *TVirtualTreeColumn) LoadFromStream(stream IStream, version int32) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(3, m.Instance(), base.GetObjectUintptr(stream), uintptr(version))
 }
 
 func (m *TVirtualTreeColumn) ParentBiDiModeChanged() {
-	virtualTreeColumnImportAPI().SysCallN(22, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(4, m.Instance())
 }
 
 func (m *TVirtualTreeColumn) ParentColorChanged() {
-	virtualTreeColumnImportAPI().SysCallN(23, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(5, m.Instance())
 }
 
 func (m *TVirtualTreeColumn) RestoreLastWidth() {
-	virtualTreeColumnImportAPI().SysCallN(25, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(6, m.Instance())
 }
 
-func (m *TVirtualTreeColumn) SaveToStream(Stream IStream) {
-	virtualTreeColumnImportAPI().SysCallN(26, m.Instance(), GetObjectUintptr(Stream))
+func (m *TVirtualTreeColumn) SaveToStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(7, m.Instance(), base.GetObjectUintptr(stream))
+}
+
+func (m *TVirtualTreeColumn) Left() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(8, m.Instance())
+	return int32(r)
+}
+
+func (m *TVirtualTreeColumn) Owner() IVirtualTreeColumns {
+	if !m.IsValid() {
+		return nil
+	}
+	r := virtualTreeColumnAPI().SysCallN(9, m.Instance())
+	return AsVirtualTreeColumns(r)
+}
+
+func (m *TVirtualTreeColumn) Alignment() types.TAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(10, 0, m.Instance())
+	return types.TAlignment(r)
+}
+
+func (m *TVirtualTreeColumn) SetAlignment(value types.TAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) BiDiMode() types.TBiDiMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(11, 0, m.Instance())
+	return types.TBiDiMode(r)
+}
+
+func (m *TVirtualTreeColumn) SetBiDiMode(value types.TBiDiMode) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) CaptionAlignment() types.TAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(12, 0, m.Instance())
+	return types.TAlignment(r)
+}
+
+func (m *TVirtualTreeColumn) SetCaptionAlignment(value types.TAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) CaptionText() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := virtualTreeColumnAPI().SysCallN(13, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TVirtualTreeColumn) CheckType() types.TCheckType {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(14, 0, m.Instance())
+	return types.TCheckType(r)
+}
+
+func (m *TVirtualTreeColumn) SetCheckType(value types.TCheckType) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) CheckState() types.TCheckState {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(15, 0, m.Instance())
+	return types.TCheckState(r)
+}
+
+func (m *TVirtualTreeColumn) SetCheckState(value types.TCheckState) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(15, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) CheckBox() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := virtualTreeColumnAPI().SysCallN(16, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TVirtualTreeColumn) SetCheckBox(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(16, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TVirtualTreeColumn) Color() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(17, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TVirtualTreeColumn) SetColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(17, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) DefaultSortDirection() types.TSortDirection {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(18, 0, m.Instance())
+	return types.TSortDirection(r)
+}
+
+func (m *TVirtualTreeColumn) SetDefaultSortDirection(value types.TSortDirection) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(18, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) Hint() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := virtualTreeColumnAPI().SysCallN(19, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TVirtualTreeColumn) SetHint(value string) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(19, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TVirtualTreeColumn) ImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(20, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVirtualTreeColumn) SetImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(20, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) Layout() types.TVTHeaderColumnLayout {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(21, 0, m.Instance())
+	return types.TVTHeaderColumnLayout(r)
+}
+
+func (m *TVirtualTreeColumn) SetLayout(value types.TVTHeaderColumnLayout) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(21, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) Margin() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(22, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVirtualTreeColumn) SetMargin(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) MaxWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(23, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVirtualTreeColumn) SetMaxWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) MinWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(24, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVirtualTreeColumn) SetMinWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(24, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) Options() types.TVTColumnOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(25, 0, m.Instance())
+	return types.TVTColumnOptions(r)
+}
+
+func (m *TVirtualTreeColumn) SetOptions(value types.TVTColumnOptions) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(25, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) Position() uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(26, 0, m.Instance())
+	return uint32(r)
+}
+
+func (m *TVirtualTreeColumn) SetPosition(value uint32) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(26, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) Spacing() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(27, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVirtualTreeColumn) SetSpacing(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(27, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) Style() types.TVirtualTreeColumnStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(28, 0, m.Instance())
+	return types.TVirtualTreeColumnStyle(r)
+}
+
+func (m *TVirtualTreeColumn) SetStyle(value types.TVirtualTreeColumnStyle) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(28, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) Tag() uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(29, 0, m.Instance())
+	return uint32(r)
+}
+
+func (m *TVirtualTreeColumn) SetTag(value uint32) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(29, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVirtualTreeColumn) Text() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := virtualTreeColumnAPI().SysCallN(30, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TVirtualTreeColumn) SetText(value string) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(30, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TVirtualTreeColumn) Width() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := virtualTreeColumnAPI().SysCallN(31, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVirtualTreeColumn) SetWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	virtualTreeColumnAPI().SysCallN(31, 1, m.Instance(), uintptr(value))
+}
+
+// NewVirtualTreeColumn class constructor
+func NewVirtualTreeColumn(collection ICollection) IVirtualTreeColumn {
+	r := virtualTreeColumnAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsVirtualTreeColumn(r)
 }
 
 var (
-	virtualTreeColumnImport       *imports.Imports = nil
-	virtualTreeColumnImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("VirtualTreeColumn_Alignment", 0),
-		/*1*/ imports.NewTable("VirtualTreeColumn_BiDiMode", 0),
-		/*2*/ imports.NewTable("VirtualTreeColumn_CaptionAlignment", 0),
-		/*3*/ imports.NewTable("VirtualTreeColumn_CaptionText", 0),
-		/*4*/ imports.NewTable("VirtualTreeColumn_CheckBox", 0),
-		/*5*/ imports.NewTable("VirtualTreeColumn_CheckState", 0),
-		/*6*/ imports.NewTable("VirtualTreeColumn_CheckType", 0),
-		/*7*/ imports.NewTable("VirtualTreeColumn_Class", 0),
-		/*8*/ imports.NewTable("VirtualTreeColumn_Color", 0),
-		/*9*/ imports.NewTable("VirtualTreeColumn_Create", 0),
-		/*10*/ imports.NewTable("VirtualTreeColumn_DefaultSortDirection", 0),
-		/*11*/ imports.NewTable("VirtualTreeColumn_GetRect", 0),
-		/*12*/ imports.NewTable("VirtualTreeColumn_Hint", 0),
-		/*13*/ imports.NewTable("VirtualTreeColumn_ImageIndex", 0),
-		/*14*/ imports.NewTable("VirtualTreeColumn_Layout", 0),
-		/*15*/ imports.NewTable("VirtualTreeColumn_Left", 0),
-		/*16*/ imports.NewTable("VirtualTreeColumn_LoadFromStream", 0),
-		/*17*/ imports.NewTable("VirtualTreeColumn_Margin", 0),
-		/*18*/ imports.NewTable("VirtualTreeColumn_MaxWidth", 0),
-		/*19*/ imports.NewTable("VirtualTreeColumn_MinWidth", 0),
-		/*20*/ imports.NewTable("VirtualTreeColumn_Options", 0),
-		/*21*/ imports.NewTable("VirtualTreeColumn_Owner", 0),
-		/*22*/ imports.NewTable("VirtualTreeColumn_ParentBiDiModeChanged", 0),
-		/*23*/ imports.NewTable("VirtualTreeColumn_ParentColorChanged", 0),
-		/*24*/ imports.NewTable("VirtualTreeColumn_Position", 0),
-		/*25*/ imports.NewTable("VirtualTreeColumn_RestoreLastWidth", 0),
-		/*26*/ imports.NewTable("VirtualTreeColumn_SaveToStream", 0),
-		/*27*/ imports.NewTable("VirtualTreeColumn_Spacing", 0),
-		/*28*/ imports.NewTable("VirtualTreeColumn_Style", 0),
-		/*29*/ imports.NewTable("VirtualTreeColumn_Tag", 0),
-		/*30*/ imports.NewTable("VirtualTreeColumn_Text", 0),
-		/*31*/ imports.NewTable("VirtualTreeColumn_UseRightToLeftReading", 0),
-		/*32*/ imports.NewTable("VirtualTreeColumn_Width", 0),
-	}
+	virtualTreeColumnOnce   base.Once
+	virtualTreeColumnImport *imports.Imports = nil
 )
 
-func virtualTreeColumnImportAPI() *imports.Imports {
-	if virtualTreeColumnImport == nil {
-		virtualTreeColumnImport = NewDefaultImports()
-		virtualTreeColumnImport.SetImportTable(virtualTreeColumnImportTables)
-		virtualTreeColumnImportTables = nil
-	}
+func virtualTreeColumnAPI() *imports.Imports {
+	virtualTreeColumnOnce.Do(func() {
+		virtualTreeColumnImport = api.NewDefaultImports()
+		virtualTreeColumnImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TVirtualTreeColumn_Create", 0), // constructor NewVirtualTreeColumn
+			/* 1 */ imports.NewTable("TVirtualTreeColumn_GetRect", 0), // function GetRect
+			/* 2 */ imports.NewTable("TVirtualTreeColumn_UseRightToLeftReading", 0), // function UseRightToLeftReading
+			/* 3 */ imports.NewTable("TVirtualTreeColumn_LoadFromStream", 0), // procedure LoadFromStream
+			/* 4 */ imports.NewTable("TVirtualTreeColumn_ParentBiDiModeChanged", 0), // procedure ParentBiDiModeChanged
+			/* 5 */ imports.NewTable("TVirtualTreeColumn_ParentColorChanged", 0), // procedure ParentColorChanged
+			/* 6 */ imports.NewTable("TVirtualTreeColumn_RestoreLastWidth", 0), // procedure RestoreLastWidth
+			/* 7 */ imports.NewTable("TVirtualTreeColumn_SaveToStream", 0), // procedure SaveToStream
+			/* 8 */ imports.NewTable("TVirtualTreeColumn_Left", 0), // property Left
+			/* 9 */ imports.NewTable("TVirtualTreeColumn_Owner", 0), // property Owner
+			/* 10 */ imports.NewTable("TVirtualTreeColumn_Alignment", 0), // property Alignment
+			/* 11 */ imports.NewTable("TVirtualTreeColumn_BiDiMode", 0), // property BiDiMode
+			/* 12 */ imports.NewTable("TVirtualTreeColumn_CaptionAlignment", 0), // property CaptionAlignment
+			/* 13 */ imports.NewTable("TVirtualTreeColumn_CaptionText", 0), // property CaptionText
+			/* 14 */ imports.NewTable("TVirtualTreeColumn_CheckType", 0), // property CheckType
+			/* 15 */ imports.NewTable("TVirtualTreeColumn_CheckState", 0), // property CheckState
+			/* 16 */ imports.NewTable("TVirtualTreeColumn_CheckBox", 0), // property CheckBox
+			/* 17 */ imports.NewTable("TVirtualTreeColumn_Color", 0), // property Color
+			/* 18 */ imports.NewTable("TVirtualTreeColumn_DefaultSortDirection", 0), // property DefaultSortDirection
+			/* 19 */ imports.NewTable("TVirtualTreeColumn_Hint", 0), // property Hint
+			/* 20 */ imports.NewTable("TVirtualTreeColumn_ImageIndex", 0), // property ImageIndex
+			/* 21 */ imports.NewTable("TVirtualTreeColumn_Layout", 0), // property Layout
+			/* 22 */ imports.NewTable("TVirtualTreeColumn_Margin", 0), // property Margin
+			/* 23 */ imports.NewTable("TVirtualTreeColumn_MaxWidth", 0), // property MaxWidth
+			/* 24 */ imports.NewTable("TVirtualTreeColumn_MinWidth", 0), // property MinWidth
+			/* 25 */ imports.NewTable("TVirtualTreeColumn_Options", 0), // property Options
+			/* 26 */ imports.NewTable("TVirtualTreeColumn_Position", 0), // property Position
+			/* 27 */ imports.NewTable("TVirtualTreeColumn_Spacing", 0), // property Spacing
+			/* 28 */ imports.NewTable("TVirtualTreeColumn_Style", 0), // property Style
+			/* 29 */ imports.NewTable("TVirtualTreeColumn_Tag", 0), // property Tag
+			/* 30 */ imports.NewTable("TVirtualTreeColumn_Text", 0), // property Text
+			/* 31 */ imports.NewTable("TVirtualTreeColumn_Width", 0), // property Width
+		}
+	})
 	return virtualTreeColumnImport
 }

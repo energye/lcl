@@ -6,6 +6,8 @@
 //
 //----------------------------------------
 
+// :predefine:
+
 //go:build !windows && cgo
 // +build !windows,cgo
 
@@ -21,29 +23,34 @@ package lcl
 //    return &doEventCallbackProc;
 // }
 //
+// extern void* doRemoveEventCallbackProc(uintptr_t ptr);
+// static void* doRemoveEventCallbackAddr() {
+//    return &doRemoveEventCallbackProc;
+// }
+//
 // extern void* doMessageCallbackProc(uintptr_t f, void* msg);
-// static void* doGetMessageCallbackAddr() {
+// static void* doMessageCallbackAddr() {
 //    return &doMessageCallbackProc;
 // }
 //
 // extern void* doThreadSyncCallbackProc();
-// static void* doGetThreadSyncCallbackAddr() {
+// static void* doThreadSyncCallbackAddr() {
 //    return &doThreadSyncCallbackProc;
 // }
 //
-// extern void* doRequestCallCreateParamsCallbackProc(uintptr_t ptr, void* sender, void* params);
-// static void* doRequestCallCreateParamsCallbackAddr() {
-//    return &doRequestCallCreateParamsCallbackProc;
+// extern void* doThreadAsyncCallbackProc(void* data);
+// static void* doThreadAsyncCallbackAddr() {
+//    return &doThreadAsyncCallbackProc;
 // }
 //
-// extern void* doRequestCallFormCreateCallbackProc(uintptr_t ptr, void* sender);
-// static void* doRequestCallFormCreateCallbackAddr() {
-//    return &doRequestCallFormCreateCallbackProc;
+// extern void* doCreateParamsCallbackProc(uintptr_t ptr, void* sender, void* params);
+// static void* doCreateParamsCallbackAddr() {
+//    return &doCreateParamsCallbackProc;
 // }
 //
-// extern void* doRemoveEventCallbackProc(uintptr_t ptr);
-// static void* doRemoveEventCallbackAddr() {
-//    return &doRemoveEventCallbackProc;
+// extern void* doFormCreateCallbackProc(uintptr_t ptr, void* sender);
+// static void* doFormCreateCallbackAddr() {
+//    return &doFormCreateCallbackProc;
 // }
 import "C"
 
@@ -54,6 +61,12 @@ import (
 //export doEventCallbackProc
 func doEventCallbackProc(f C.uintptr_t, args unsafe.Pointer, argcount C.long) unsafe.Pointer {
 	eventCallbackProc(uintptr(f), uintptr(args), int(argcount))
+	return nil
+}
+
+//export doRemoveEventCallbackProc
+func doRemoveEventCallbackProc(ptr C.uintptr_t) unsafe.Pointer {
+	removeEventCallbackProc(uintptr(ptr))
 	return nil
 }
 
@@ -69,29 +82,30 @@ func doThreadSyncCallbackProc() unsafe.Pointer {
 	return nil
 }
 
-//export doRequestCallCreateParamsCallbackProc
-func doRequestCallCreateParamsCallbackProc(ptr C.uintptr_t, sender, params unsafe.Pointer) unsafe.Pointer {
-	requestCallCreateParamsCallbackProc(uintptr(ptr), uintptr(sender), uintptr(params))
+//export doThreadAsyncCallbackProc
+func doThreadAsyncCallbackProc(data unsafe.Pointer) unsafe.Pointer {
+	threadAsyncCallbackProc(uintptr(data))
 	return nil
 }
 
-//export doRequestCallFormCreateCallbackProc
-func doRequestCallFormCreateCallbackProc(ptr C.uintptr_t, sender unsafe.Pointer) unsafe.Pointer {
-	requestCallFormCreateCallbackProc(uintptr(ptr), uintptr(sender))
+//export doCreateParamsCallbackProc
+func doCreateParamsCallbackProc(ptr C.uintptr_t, sender, params unsafe.Pointer) unsafe.Pointer {
+	createParamsCallbackProc(uintptr(ptr), uintptr(sender), uintptr(params))
 	return nil
 }
 
-//export doRemoveEventCallbackProc
-func doRemoveEventCallbackProc(ptr C.uintptr_t) unsafe.Pointer {
-	removeEventCallbackProc(uintptr(ptr))
+//export doFormCreateCallbackProc
+func doFormCreateCallbackProc(ptr C.uintptr_t, sender unsafe.Pointer) unsafe.Pointer {
+	formCreateCallbackProc(uintptr(ptr), uintptr(sender))
 	return nil
 }
 
 var (
-	eventCallback                   = uintptr(C.doGetEventCallbackAddr())
-	messageCallback                 = uintptr(C.doGetMessageCallbackAddr())
-	threadSyncCallback              = uintptr(C.doGetThreadSyncCallbackAddr())
-	requestCallCreateParamsCallback = uintptr(C.doRequestCallCreateParamsCallbackAddr())
-	requestCallFormCreateCallback   = uintptr(C.doRequestCallFormCreateCallbackAddr())
-	removeEventCallback             = uintptr(C.doRemoveEventCallbackAddr())
+	eventCallback        = uintptr(C.doGetEventCallbackAddr())
+	removeEventCallback  = uintptr(C.doRemoveEventCallbackAddr())
+	messageCallback      = uintptr(C.doMessageCallbackAddr())
+	threadSyncCallback   = uintptr(C.doThreadSyncCallbackAddr())
+	threadAsyncCallback  = uintptr(C.doThreadAsyncCallbackAddr())
+	createParamsCallback = uintptr(C.doCreateParamsCallbackAddr())
+	formCreateCallback   = uintptr(C.doFormCreateCallbackAddr())
 )

@@ -9,30 +9,23 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
-// IShape Parent: IGraphicControl
+// IShape Parent: ICustomShape
 type IShape interface {
-	IGraphicControl
-	Brush() IBrush                                  // property
-	SetBrush(AValue IBrush)                         // property
-	DragCursor() TCursor                            // property
-	SetDragCursor(AValue TCursor)                   // property
-	DragKind() TDragKind                            // property
-	SetDragKind(AValue TDragKind)                   // property
-	DragMode() TDragMode                            // property
-	SetDragMode(AValue TDragMode)                   // property
-	ParentShowHint() bool                           // property
-	SetParentShowHint(AValue bool)                  // property
-	Pen() IPen                                      // property
-	SetPen(AValue IPen)                             // property
-	Shape() TShapeType                              // property
-	SetShape(AValue TShapeType)                     // property
-	Paint()                                         // procedure
-	StyleChanged(Sender IObject)                    // procedure
+	ICustomShape
+	DragCursor() types.TCursor                      // property DragCursor Getter
+	SetDragCursor(value types.TCursor)              // property DragCursor Setter
+	DragKind() types.TDragKind                      // property DragKind Getter
+	SetDragKind(value types.TDragKind)              // property DragKind Setter
+	DragMode() types.TDragMode                      // property DragMode Getter
+	SetDragMode(value types.TDragMode)              // property DragMode Setter
+	ParentShowHint() bool                           // property ParentShowHint Getter
+	SetParentShowHint(value bool)                   // property ParentShowHint Setter
 	SetOnDragDrop(fn TDragDropEvent)                // property event
 	SetOnDragOver(fn TDragOverEvent)                // property event
 	SetOnEndDock(fn TEndDragEvent)                  // property event
@@ -53,294 +46,259 @@ type IShape interface {
 	SetOnStartDrag(fn TStartDragEvent)              // property event
 }
 
-// TShape Parent: TGraphicControl
 type TShape struct {
-	TGraphicControl
-	dragDropPtr        uintptr
-	dragOverPtr        uintptr
-	endDockPtr         uintptr
-	endDragPtr         uintptr
-	mouseDownPtr       uintptr
-	mouseEnterPtr      uintptr
-	mouseLeavePtr      uintptr
-	mouseMovePtr       uintptr
-	mouseUpPtr         uintptr
-	mouseWheelPtr      uintptr
-	mouseWheelDownPtr  uintptr
-	mouseWheelUpPtr    uintptr
-	mouseWheelHorzPtr  uintptr
-	mouseWheelLeftPtr  uintptr
-	mouseWheelRightPtr uintptr
-	paintPtr           uintptr
-	startDockPtr       uintptr
-	startDragPtr       uintptr
+	TCustomShape
 }
 
-func NewShape(TheOwner IComponent) IShape {
-	r1 := shapeImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsShape(r1)
+func (m *TShape) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := shapeAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TShape) Brush() IBrush {
-	r1 := shapeImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return AsBrush(r1)
+func (m *TShape) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	shapeAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TShape) SetBrush(AValue IBrush) {
-	shapeImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TShape) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := shapeAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TShape) DragCursor() TCursor {
-	r1 := shapeImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TShape) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	shapeAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TShape) SetDragCursor(AValue TCursor) {
-	shapeImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TShape) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := shapeAPI().SysCallN(3, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TShape) DragKind() TDragKind {
-	r1 := shapeImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDragKind(r1)
-}
-
-func (m *TShape) SetDragKind(AValue TDragKind) {
-	shapeImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TShape) DragMode() TDragMode {
-	r1 := shapeImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TShape) SetDragMode(AValue TDragMode) {
-	shapeImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TShape) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	shapeAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TShape) ParentShowHint() bool {
-	r1 := shapeImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := shapeAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TShape) SetParentShowHint(AValue bool) {
-	shapeImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TShape) Pen() IPen {
-	r1 := shapeImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return AsPen(r1)
-}
-
-func (m *TShape) SetPen(AValue IPen) {
-	shapeImportAPI().SysCallN(8, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TShape) Shape() TShapeType {
-	r1 := shapeImportAPI().SysCallN(27, 0, m.Instance(), 0)
-	return TShapeType(r1)
-}
-
-func (m *TShape) SetShape(AValue TShapeType) {
-	shapeImportAPI().SysCallN(27, 1, m.Instance(), uintptr(AValue))
-}
-
-func ShapeClass() TClass {
-	ret := shapeImportAPI().SysCallN(1)
-	return TClass(ret)
-}
-
-func (m *TShape) Paint() {
-	shapeImportAPI().SysCallN(6, m.Instance())
-}
-
-func (m *TShape) StyleChanged(Sender IObject) {
-	shapeImportAPI().SysCallN(28, m.Instance(), GetObjectUintptr(Sender))
+func (m *TShape) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	shapeAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TShape) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(9, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 5, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(10, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 6, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnEndDock(fn TEndDragEvent) {
-	if m.endDockPtr != 0 {
-		RemoveEventElement(m.endDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDockPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(11, m.Instance(), m.endDockPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 7, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(12, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 8, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(13, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 9, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(14, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 10, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(15, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 11, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(16, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 12, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(17, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 13, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(18, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 14, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(19, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 15, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(23, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 16, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(20, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 17, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(21, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 18, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(22, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 19, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnPaint(fn TNotifyEvent) {
-	if m.paintPtr != 0 {
-		RemoveEventElement(m.paintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.paintPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(24, m.Instance(), m.paintPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 20, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnStartDock(fn TStartDockEvent) {
-	if m.startDockPtr != 0 {
-		RemoveEventElement(m.startDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDockPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(25, m.Instance(), m.startDockPtr)
+	cb := makeTStartDockEvent(fn)
+	base.SetEvent(m, 21, shapeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TShape) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	shapeImportAPI().SysCallN(26, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 22, shapeAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewShape class constructor
+func NewShape(theOwner IComponent) IShape {
+	r := shapeAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsShape(r)
+}
+
+func TShapeClass() types.TClass {
+	r := shapeAPI().SysCallN(23)
+	return types.TClass(r)
 }
 
 var (
-	shapeImport       *imports.Imports = nil
-	shapeImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Shape_Brush", 0),
-		/*1*/ imports.NewTable("Shape_Class", 0),
-		/*2*/ imports.NewTable("Shape_Create", 0),
-		/*3*/ imports.NewTable("Shape_DragCursor", 0),
-		/*4*/ imports.NewTable("Shape_DragKind", 0),
-		/*5*/ imports.NewTable("Shape_DragMode", 0),
-		/*6*/ imports.NewTable("Shape_Paint", 0),
-		/*7*/ imports.NewTable("Shape_ParentShowHint", 0),
-		/*8*/ imports.NewTable("Shape_Pen", 0),
-		/*9*/ imports.NewTable("Shape_SetOnDragDrop", 0),
-		/*10*/ imports.NewTable("Shape_SetOnDragOver", 0),
-		/*11*/ imports.NewTable("Shape_SetOnEndDock", 0),
-		/*12*/ imports.NewTable("Shape_SetOnEndDrag", 0),
-		/*13*/ imports.NewTable("Shape_SetOnMouseDown", 0),
-		/*14*/ imports.NewTable("Shape_SetOnMouseEnter", 0),
-		/*15*/ imports.NewTable("Shape_SetOnMouseLeave", 0),
-		/*16*/ imports.NewTable("Shape_SetOnMouseMove", 0),
-		/*17*/ imports.NewTable("Shape_SetOnMouseUp", 0),
-		/*18*/ imports.NewTable("Shape_SetOnMouseWheel", 0),
-		/*19*/ imports.NewTable("Shape_SetOnMouseWheelDown", 0),
-		/*20*/ imports.NewTable("Shape_SetOnMouseWheelHorz", 0),
-		/*21*/ imports.NewTable("Shape_SetOnMouseWheelLeft", 0),
-		/*22*/ imports.NewTable("Shape_SetOnMouseWheelRight", 0),
-		/*23*/ imports.NewTable("Shape_SetOnMouseWheelUp", 0),
-		/*24*/ imports.NewTable("Shape_SetOnPaint", 0),
-		/*25*/ imports.NewTable("Shape_SetOnStartDock", 0),
-		/*26*/ imports.NewTable("Shape_SetOnStartDrag", 0),
-		/*27*/ imports.NewTable("Shape_Shape", 0),
-		/*28*/ imports.NewTable("Shape_StyleChanged", 0),
-	}
+	shapeOnce   base.Once
+	shapeImport *imports.Imports = nil
 )
 
-func shapeImportAPI() *imports.Imports {
-	if shapeImport == nil {
-		shapeImport = NewDefaultImports()
-		shapeImport.SetImportTable(shapeImportTables)
-		shapeImportTables = nil
-	}
+func shapeAPI() *imports.Imports {
+	shapeOnce.Do(func() {
+		shapeImport = api.NewDefaultImports()
+		shapeImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TShape_Create", 0), // constructor NewShape
+			/* 1 */ imports.NewTable("TShape_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TShape_DragKind", 0), // property DragKind
+			/* 3 */ imports.NewTable("TShape_DragMode", 0), // property DragMode
+			/* 4 */ imports.NewTable("TShape_ParentShowHint", 0), // property ParentShowHint
+			/* 5 */ imports.NewTable("TShape_OnDragDrop", 0), // event OnDragDrop
+			/* 6 */ imports.NewTable("TShape_OnDragOver", 0), // event OnDragOver
+			/* 7 */ imports.NewTable("TShape_OnEndDock", 0), // event OnEndDock
+			/* 8 */ imports.NewTable("TShape_OnEndDrag", 0), // event OnEndDrag
+			/* 9 */ imports.NewTable("TShape_OnMouseDown", 0), // event OnMouseDown
+			/* 10 */ imports.NewTable("TShape_OnMouseEnter", 0), // event OnMouseEnter
+			/* 11 */ imports.NewTable("TShape_OnMouseLeave", 0), // event OnMouseLeave
+			/* 12 */ imports.NewTable("TShape_OnMouseMove", 0), // event OnMouseMove
+			/* 13 */ imports.NewTable("TShape_OnMouseUp", 0), // event OnMouseUp
+			/* 14 */ imports.NewTable("TShape_OnMouseWheel", 0), // event OnMouseWheel
+			/* 15 */ imports.NewTable("TShape_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 16 */ imports.NewTable("TShape_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 17 */ imports.NewTable("TShape_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 18 */ imports.NewTable("TShape_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 19 */ imports.NewTable("TShape_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 20 */ imports.NewTable("TShape_OnPaint", 0), // event OnPaint
+			/* 21 */ imports.NewTable("TShape_OnStartDock", 0), // event OnStartDock
+			/* 22 */ imports.NewTable("TShape_OnStartDrag", 0), // event OnStartDrag
+			/* 23 */ imports.NewTable("TShape_TClass", 0), // function TShapeClass
+		}
+	})
 	return shapeImport
 }

@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IOpenGLControl Parent: ICustomOpenGLControl
@@ -31,154 +32,141 @@ type IOpenGLControl interface {
 	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)       // property event
 }
 
-// TOpenGLControl Parent: TCustomOpenGLControl
 type TOpenGLControl struct {
 	TCustomOpenGLControl
-	constrainedResizePtr uintptr
-	dblClickPtr          uintptr
-	dragDropPtr          uintptr
-	dragOverPtr          uintptr
-	mouseDownPtr         uintptr
-	mouseEnterPtr        uintptr
-	mouseLeavePtr        uintptr
-	mouseMovePtr         uintptr
-	mouseUpPtr           uintptr
-	mouseWheelPtr        uintptr
-	mouseWheelDownPtr    uintptr
-	mouseWheelUpPtr      uintptr
-}
-
-func NewOpenGLControl(TheOwner IComponent) IOpenGLControl {
-	r1 := openGLControlImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsOpenGLControl(r1)
-}
-
-func OpenGLControlClass() TClass {
-	ret := openGLControlImportAPI().SysCallN(0)
-	return TClass(ret)
 }
 
 func (m *TOpenGLControl) SetOnConstrainedResize(fn TConstrainedResizeEvent) {
-	if m.constrainedResizePtr != 0 {
-		RemoveEventElement(m.constrainedResizePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.constrainedResizePtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(2, m.Instance(), m.constrainedResizePtr)
+	cb := makeTConstrainedResizeEvent(fn)
+	base.SetEvent(m, 1, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(3, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 2, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(4, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 3, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(5, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 4, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(6, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 5, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(7, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 6, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(8, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 7, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(9, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 8, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(10, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 9, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(11, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 10, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(12, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 11, openGLControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TOpenGLControl) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	openGLControlImportAPI().SysCallN(13, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 12, openGLControlAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewOpenGLControl class constructor
+func NewOpenGLControl(theOwner IComponent) IOpenGLControl {
+	r := openGLControlAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsOpenGLControl(r)
+}
+
+func TOpenGLControlClass() types.TClass {
+	r := openGLControlAPI().SysCallN(13)
+	return types.TClass(r)
 }
 
 var (
-	openGLControlImport       *imports.Imports = nil
-	openGLControlImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("OpenGLControl_Class", 0),
-		/*1*/ imports.NewTable("OpenGLControl_Create", 0),
-		/*2*/ imports.NewTable("OpenGLControl_SetOnConstrainedResize", 0),
-		/*3*/ imports.NewTable("OpenGLControl_SetOnDblClick", 0),
-		/*4*/ imports.NewTable("OpenGLControl_SetOnDragDrop", 0),
-		/*5*/ imports.NewTable("OpenGLControl_SetOnDragOver", 0),
-		/*6*/ imports.NewTable("OpenGLControl_SetOnMouseDown", 0),
-		/*7*/ imports.NewTable("OpenGLControl_SetOnMouseEnter", 0),
-		/*8*/ imports.NewTable("OpenGLControl_SetOnMouseLeave", 0),
-		/*9*/ imports.NewTable("OpenGLControl_SetOnMouseMove", 0),
-		/*10*/ imports.NewTable("OpenGLControl_SetOnMouseUp", 0),
-		/*11*/ imports.NewTable("OpenGLControl_SetOnMouseWheel", 0),
-		/*12*/ imports.NewTable("OpenGLControl_SetOnMouseWheelDown", 0),
-		/*13*/ imports.NewTable("OpenGLControl_SetOnMouseWheelUp", 0),
-	}
+	openGLControlOnce   base.Once
+	openGLControlImport *imports.Imports = nil
 )
 
-func openGLControlImportAPI() *imports.Imports {
-	if openGLControlImport == nil {
-		openGLControlImport = NewDefaultImports()
-		openGLControlImport.SetImportTable(openGLControlImportTables)
-		openGLControlImportTables = nil
-	}
+func openGLControlAPI() *imports.Imports {
+	openGLControlOnce.Do(func() {
+		openGLControlImport = api.NewDefaultImports()
+		openGLControlImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TOpenGLControl_Create", 0), // constructor NewOpenGLControl
+			/* 1 */ imports.NewTable("TOpenGLControl_OnConstrainedResize", 0), // event OnConstrainedResize
+			/* 2 */ imports.NewTable("TOpenGLControl_OnDblClick", 0), // event OnDblClick
+			/* 3 */ imports.NewTable("TOpenGLControl_OnDragDrop", 0), // event OnDragDrop
+			/* 4 */ imports.NewTable("TOpenGLControl_OnDragOver", 0), // event OnDragOver
+			/* 5 */ imports.NewTable("TOpenGLControl_OnMouseDown", 0), // event OnMouseDown
+			/* 6 */ imports.NewTable("TOpenGLControl_OnMouseEnter", 0), // event OnMouseEnter
+			/* 7 */ imports.NewTable("TOpenGLControl_OnMouseLeave", 0), // event OnMouseLeave
+			/* 8 */ imports.NewTable("TOpenGLControl_OnMouseMove", 0), // event OnMouseMove
+			/* 9 */ imports.NewTable("TOpenGLControl_OnMouseUp", 0), // event OnMouseUp
+			/* 10 */ imports.NewTable("TOpenGLControl_OnMouseWheel", 0), // event OnMouseWheel
+			/* 11 */ imports.NewTable("TOpenGLControl_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 12 */ imports.NewTable("TOpenGLControl_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 13 */ imports.NewTable("TOpenGLControl_TClass", 0), // function TOpenGLControlClass
+		}
+	})
 	return openGLControlImport
 }

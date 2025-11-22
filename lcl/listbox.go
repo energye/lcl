@@ -9,20 +9,21 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IListBox Parent: ICustomListBox
 type IListBox interface {
 	ICustomListBox
-	DragCursor() TCursor                            // property
-	SetDragCursor(AValue TCursor)                   // property
-	DragKind() TDragKind                            // property
-	SetDragKind(AValue TDragKind)                   // property
-	DragMode() TDragMode                            // property
-	SetDragMode(AValue TDragMode)                   // property
+	DragCursor() types.TCursor                      // property DragCursor Getter
+	SetDragCursor(value types.TCursor)              // property DragCursor Setter
+	DragKind() types.TDragKind                      // property DragKind Getter
+	SetDragKind(value types.TDragKind)              // property DragKind Setter
+	DragMode() types.TDragMode                      // property DragMode Getter
+	SetDragMode(value types.TDragMode)              // property DragMode Setter
 	SetOnContextPopup(fn TContextPopupEvent)        // property event
 	SetOnDragDrop(fn TDragDropEvent)                // property event
 	SetOnDragOver(fn TDragOverEvent)                // property event
@@ -33,144 +34,153 @@ type IListBox interface {
 	SetOnStartDrag(fn TStartDragEvent)              // property event
 }
 
-// TListBox Parent: TCustomListBox
 type TListBox struct {
 	TCustomListBox
-	contextPopupPtr    uintptr
-	dragDropPtr        uintptr
-	dragOverPtr        uintptr
-	endDragPtr         uintptr
-	mouseWheelHorzPtr  uintptr
-	mouseWheelLeftPtr  uintptr
-	mouseWheelRightPtr uintptr
-	startDragPtr       uintptr
 }
 
-func NewListBox(TheOwner IComponent) IListBox {
-	r1 := listBoxImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsListBox(r1)
+func (m *TListBox) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listBoxAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TListBox) DragCursor() TCursor {
-	r1 := listBoxImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TListBox) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	listBoxAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TListBox) SetDragCursor(AValue TCursor) {
-	listBoxImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TListBox) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listBoxAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TListBox) DragKind() TDragKind {
-	r1 := listBoxImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TListBox) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	listBoxAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TListBox) SetDragKind(AValue TDragKind) {
-	listBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TListBox) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listBoxAPI().SysCallN(3, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TListBox) DragMode() TDragMode {
-	r1 := listBoxImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TListBox) SetDragMode(AValue TDragMode) {
-	listBoxImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
-}
-
-func ListBoxClass() TClass {
-	ret := listBoxImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TListBox) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	listBoxAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListBox) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	listBoxImportAPI().SysCallN(5, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 4, listBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListBox) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	listBoxImportAPI().SysCallN(6, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 5, listBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListBox) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	listBoxImportAPI().SysCallN(7, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 6, listBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListBox) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	listBoxImportAPI().SysCallN(8, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 7, listBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListBox) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	listBoxImportAPI().SysCallN(9, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 8, listBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListBox) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	listBoxImportAPI().SysCallN(10, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 9, listBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListBox) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	listBoxImportAPI().SysCallN(11, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 10, listBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TListBox) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	listBoxImportAPI().SysCallN(12, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 11, listBoxAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewListBox class constructor
+func NewListBox(theOwner IComponent) IListBox {
+	r := listBoxAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsListBox(r)
+}
+
+func TListBoxClass() types.TClass {
+	r := listBoxAPI().SysCallN(12)
+	return types.TClass(r)
 }
 
 var (
-	listBoxImport       *imports.Imports = nil
-	listBoxImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ListBox_Class", 0),
-		/*1*/ imports.NewTable("ListBox_Create", 0),
-		/*2*/ imports.NewTable("ListBox_DragCursor", 0),
-		/*3*/ imports.NewTable("ListBox_DragKind", 0),
-		/*4*/ imports.NewTable("ListBox_DragMode", 0),
-		/*5*/ imports.NewTable("ListBox_SetOnContextPopup", 0),
-		/*6*/ imports.NewTable("ListBox_SetOnDragDrop", 0),
-		/*7*/ imports.NewTable("ListBox_SetOnDragOver", 0),
-		/*8*/ imports.NewTable("ListBox_SetOnEndDrag", 0),
-		/*9*/ imports.NewTable("ListBox_SetOnMouseWheelHorz", 0),
-		/*10*/ imports.NewTable("ListBox_SetOnMouseWheelLeft", 0),
-		/*11*/ imports.NewTable("ListBox_SetOnMouseWheelRight", 0),
-		/*12*/ imports.NewTable("ListBox_SetOnStartDrag", 0),
-	}
+	listBoxOnce   base.Once
+	listBoxImport *imports.Imports = nil
 )
 
-func listBoxImportAPI() *imports.Imports {
-	if listBoxImport == nil {
-		listBoxImport = NewDefaultImports()
-		listBoxImport.SetImportTable(listBoxImportTables)
-		listBoxImportTables = nil
-	}
+func listBoxAPI() *imports.Imports {
+	listBoxOnce.Do(func() {
+		listBoxImport = api.NewDefaultImports()
+		listBoxImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TListBox_Create", 0), // constructor NewListBox
+			/* 1 */ imports.NewTable("TListBox_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TListBox_DragKind", 0), // property DragKind
+			/* 3 */ imports.NewTable("TListBox_DragMode", 0), // property DragMode
+			/* 4 */ imports.NewTable("TListBox_OnContextPopup", 0), // event OnContextPopup
+			/* 5 */ imports.NewTable("TListBox_OnDragDrop", 0), // event OnDragDrop
+			/* 6 */ imports.NewTable("TListBox_OnDragOver", 0), // event OnDragOver
+			/* 7 */ imports.NewTable("TListBox_OnEndDrag", 0), // event OnEndDrag
+			/* 8 */ imports.NewTable("TListBox_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 9 */ imports.NewTable("TListBox_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 10 */ imports.NewTable("TListBox_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 11 */ imports.NewTable("TListBox_OnStartDrag", 0), // event OnStartDrag
+			/* 12 */ imports.NewTable("TListBox_TClass", 0), // function TListBoxClass
+		}
+	})
 	return listBoxImport
 }

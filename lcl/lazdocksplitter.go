@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ILazDockSplitter Parent: ICustomSplitter
@@ -19,34 +20,33 @@ type ILazDockSplitter interface {
 	ICustomSplitter
 }
 
-// TLazDockSplitter Parent: TCustomSplitter
 type TLazDockSplitter struct {
 	TCustomSplitter
 }
 
-func NewLazDockSplitter(AOwner IComponent) ILazDockSplitter {
-	r1 := lazDockSplitterImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsLazDockSplitter(r1)
+// NewLazDockSplitter class constructor
+func NewLazDockSplitter(owner IComponent) ILazDockSplitter {
+	r := lazDockSplitterAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsLazDockSplitter(r)
 }
 
-func LazDockSplitterClass() TClass {
-	ret := lazDockSplitterImportAPI().SysCallN(0)
-	return TClass(ret)
+func TLazDockSplitterClass() types.TClass {
+	r := lazDockSplitterAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	lazDockSplitterImport       *imports.Imports = nil
-	lazDockSplitterImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("LazDockSplitter_Class", 0),
-		/*1*/ imports.NewTable("LazDockSplitter_Create", 0),
-	}
+	lazDockSplitterOnce   base.Once
+	lazDockSplitterImport *imports.Imports = nil
 )
 
-func lazDockSplitterImportAPI() *imports.Imports {
-	if lazDockSplitterImport == nil {
-		lazDockSplitterImport = NewDefaultImports()
-		lazDockSplitterImport.SetImportTable(lazDockSplitterImportTables)
-		lazDockSplitterImportTables = nil
-	}
+func lazDockSplitterAPI() *imports.Imports {
+	lazDockSplitterOnce.Do(func() {
+		lazDockSplitterImport = api.NewDefaultImports()
+		lazDockSplitterImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TLazDockSplitter_Create", 0), // constructor NewLazDockSplitter
+			/* 1 */ imports.NewTable("TLazDockSplitter_TClass", 0), // function TLazDockSplitterClass
+		}
+	})
 	return lazDockSplitterImport
 }

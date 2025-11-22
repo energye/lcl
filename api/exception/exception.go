@@ -11,26 +11,28 @@
 // Package exception
 //
 //	Underlying dynamic link library exception capture
-//	Supports: Windows, MacOS.
 package exception
 
 import (
 	"github.com/energye/lcl/api"
-	"github.com/energye/lcl/api/internal/exception"
 )
 
-// SetOnException
-// 捕获底层库异常
-func SetOnException(fn exception.Callback) {
-	if exception.HandlerCallback == nil {
-		api.SetExceptionHandlerCallback(exceptionHandlerProcEventAddr)
-		exception.HandlerCallback = fn
+type Callback func(exception int32, message string)
+
+var exceptionCallback Callback
+
+// SetOnException	`
+// Base library exception callback
+func SetOnException(fn Callback) {
+	if exceptionCallback == nil {
+		api.SetEventCallback(exceptionHandlerProcEventAddr, api.EctExceptionHandler)
+		exceptionCallback = fn
 	}
 }
 
-func exceptionHandlerProc(funcName, message uintptr) uintptr {
-	if exception.HandlerCallback != nil {
-		exception.HandlerCallback(api.GoStr(funcName), api.GoStr(message))
+func exceptionHandlerProc(idType uintptr, message uintptr) uintptr {
+	if exceptionCallback != nil {
+		exceptionCallback(int32(idType), api.GoStr(message))
 	}
 	return 0
 }

@@ -9,65 +9,67 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IFPListEnumerator Parent: IObject
 type IFPListEnumerator interface {
 	IObject
-	Current() uintptr    // property
 	GetCurrent() uintptr // function
 	MoveNext() bool      // function
+	Current() uintptr    // property Current Getter
 }
 
-// TFPListEnumerator Parent: TObject
 type TFPListEnumerator struct {
 	TObject
 }
 
-func NewFPListEnumerator(AList IFPList) IFPListEnumerator {
-	r1 := fPListEnumeratorImportAPI().SysCallN(1, GetObjectUintptr(AList))
-	return AsFPListEnumerator(r1)
-}
-
-func (m *TFPListEnumerator) Current() uintptr {
-	r1 := fPListEnumeratorImportAPI().SysCallN(2, m.Instance())
-	return uintptr(r1)
-}
-
 func (m *TFPListEnumerator) GetCurrent() uintptr {
-	r1 := fPListEnumeratorImportAPI().SysCallN(3, m.Instance())
-	return uintptr(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPListEnumeratorAPI().SysCallN(1, m.Instance())
+	return uintptr(r)
 }
 
 func (m *TFPListEnumerator) MoveNext() bool {
-	r1 := fPListEnumeratorImportAPI().SysCallN(4, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := fPListEnumeratorAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func FPListEnumeratorClass() TClass {
-	ret := fPListEnumeratorImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TFPListEnumerator) Current() uintptr {
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPListEnumeratorAPI().SysCallN(3, m.Instance())
+	return uintptr(r)
+}
+
+// NewFPListEnumerator class constructor
+func NewFPListEnumerator(list IFPList) IFPListEnumerator {
+	r := fPListEnumeratorAPI().SysCallN(0, base.GetObjectUintptr(list))
+	return AsFPListEnumerator(r)
 }
 
 var (
-	fPListEnumeratorImport       *imports.Imports = nil
-	fPListEnumeratorImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FPListEnumerator_Class", 0),
-		/*1*/ imports.NewTable("FPListEnumerator_Create", 0),
-		/*2*/ imports.NewTable("FPListEnumerator_Current", 0),
-		/*3*/ imports.NewTable("FPListEnumerator_GetCurrent", 0),
-		/*4*/ imports.NewTable("FPListEnumerator_MoveNext", 0),
-	}
+	fPListEnumeratorOnce   base.Once
+	fPListEnumeratorImport *imports.Imports = nil
 )
 
-func fPListEnumeratorImportAPI() *imports.Imports {
-	if fPListEnumeratorImport == nil {
-		fPListEnumeratorImport = NewDefaultImports()
-		fPListEnumeratorImport.SetImportTable(fPListEnumeratorImportTables)
-		fPListEnumeratorImportTables = nil
-	}
+func fPListEnumeratorAPI() *imports.Imports {
+	fPListEnumeratorOnce.Do(func() {
+		fPListEnumeratorImport = api.NewDefaultImports()
+		fPListEnumeratorImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFPListEnumerator_Create", 0), // constructor NewFPListEnumerator
+			/* 1 */ imports.NewTable("TFPListEnumerator_GetCurrent", 0), // function GetCurrent
+			/* 2 */ imports.NewTable("TFPListEnumerator_MoveNext", 0), // function MoveNext
+			/* 3 */ imports.NewTable("TFPListEnumerator_Current", 0), // property Current
+		}
+	})
 	return fPListEnumeratorImport
 }

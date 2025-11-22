@@ -9,51 +9,40 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
-// ILazAccessibleObjectEnumerator Parent: IAVLTreeNodeEnumerator
+// ILazAccessibleObjectEnumerator Parent: IObject
 type ILazAccessibleObjectEnumerator interface {
-	IAVLTreeNodeEnumerator
-	CurrentForLazAccessibleObject() ILazAccessibleObject // property
+	IObject
+	Current() ILazAccessibleObject // property Current Getter
 }
 
-// TLazAccessibleObjectEnumerator Parent: TAVLTreeNodeEnumerator
 type TLazAccessibleObjectEnumerator struct {
-	TAVLTreeNodeEnumerator
+	TObject
 }
 
-func NewLazAccessibleObjectEnumerator(Tree IAVLTree, aLowToHigh bool) ILazAccessibleObjectEnumerator {
-	r1 := lazAccessibleObjectEnumeratorImportAPI().SysCallN(1, GetObjectUintptr(Tree), PascalBool(aLowToHigh))
-	return AsLazAccessibleObjectEnumerator(r1)
-}
-
-func (m *TLazAccessibleObjectEnumerator) CurrentForLazAccessibleObject() ILazAccessibleObject {
-	r1 := lazAccessibleObjectEnumeratorImportAPI().SysCallN(2, m.Instance())
-	return AsLazAccessibleObject(r1)
-}
-
-func LazAccessibleObjectEnumeratorClass() TClass {
-	ret := lazAccessibleObjectEnumeratorImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TLazAccessibleObjectEnumerator) Current() ILazAccessibleObject {
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazAccessibleObjectEnumeratorAPI().SysCallN(0, m.Instance())
+	return AsLazAccessibleObject(r)
 }
 
 var (
-	lazAccessibleObjectEnumeratorImport       *imports.Imports = nil
-	lazAccessibleObjectEnumeratorImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("LazAccessibleObjectEnumerator_Class", 0),
-		/*1*/ imports.NewTable("LazAccessibleObjectEnumerator_Create", 0),
-		/*2*/ imports.NewTable("LazAccessibleObjectEnumerator_CurrentForLazAccessibleObject", 0),
-	}
+	lazAccessibleObjectEnumeratorOnce   base.Once
+	lazAccessibleObjectEnumeratorImport *imports.Imports = nil
 )
 
-func lazAccessibleObjectEnumeratorImportAPI() *imports.Imports {
-	if lazAccessibleObjectEnumeratorImport == nil {
-		lazAccessibleObjectEnumeratorImport = NewDefaultImports()
-		lazAccessibleObjectEnumeratorImport.SetImportTable(lazAccessibleObjectEnumeratorImportTables)
-		lazAccessibleObjectEnumeratorImportTables = nil
-	}
+func lazAccessibleObjectEnumeratorAPI() *imports.Imports {
+	lazAccessibleObjectEnumeratorOnce.Do(func() {
+		lazAccessibleObjectEnumeratorImport = api.NewDefaultImports()
+		lazAccessibleObjectEnumeratorImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TLazAccessibleObjectEnumerator_Current", 0), // property Current
+		}
+	})
 	return lazAccessibleObjectEnumeratorImport
 }

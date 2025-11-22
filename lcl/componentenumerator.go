@@ -9,65 +9,67 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IComponentEnumerator Parent: IObject
 type IComponentEnumerator interface {
 	IObject
-	Current() IComponent    // property
 	GetCurrent() IComponent // function
 	MoveNext() bool         // function
+	Current() IComponent    // property Current Getter
 }
 
-// TComponentEnumerator Parent: TObject
 type TComponentEnumerator struct {
 	TObject
 }
 
-func NewComponentEnumerator(AComponent IComponent) IComponentEnumerator {
-	r1 := componentEnumeratorImportAPI().SysCallN(1, GetObjectUintptr(AComponent))
-	return AsComponentEnumerator(r1)
-}
-
-func (m *TComponentEnumerator) Current() IComponent {
-	r1 := componentEnumeratorImportAPI().SysCallN(2, m.Instance())
-	return AsComponent(r1)
-}
-
 func (m *TComponentEnumerator) GetCurrent() IComponent {
-	r1 := componentEnumeratorImportAPI().SysCallN(3, m.Instance())
-	return AsComponent(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := componentEnumeratorAPI().SysCallN(1, m.Instance())
+	return AsComponent(r)
 }
 
 func (m *TComponentEnumerator) MoveNext() bool {
-	r1 := componentEnumeratorImportAPI().SysCallN(4, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := componentEnumeratorAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func ComponentEnumeratorClass() TClass {
-	ret := componentEnumeratorImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TComponentEnumerator) Current() IComponent {
+	if !m.IsValid() {
+		return nil
+	}
+	r := componentEnumeratorAPI().SysCallN(3, m.Instance())
+	return AsComponent(r)
+}
+
+// NewComponentEnumerator class constructor
+func NewComponentEnumerator(component IComponent) IComponentEnumerator {
+	r := componentEnumeratorAPI().SysCallN(0, base.GetObjectUintptr(component))
+	return AsComponentEnumerator(r)
 }
 
 var (
-	componentEnumeratorImport       *imports.Imports = nil
-	componentEnumeratorImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ComponentEnumerator_Class", 0),
-		/*1*/ imports.NewTable("ComponentEnumerator_Create", 0),
-		/*2*/ imports.NewTable("ComponentEnumerator_Current", 0),
-		/*3*/ imports.NewTable("ComponentEnumerator_GetCurrent", 0),
-		/*4*/ imports.NewTable("ComponentEnumerator_MoveNext", 0),
-	}
+	componentEnumeratorOnce   base.Once
+	componentEnumeratorImport *imports.Imports = nil
 )
 
-func componentEnumeratorImportAPI() *imports.Imports {
-	if componentEnumeratorImport == nil {
-		componentEnumeratorImport = NewDefaultImports()
-		componentEnumeratorImport.SetImportTable(componentEnumeratorImportTables)
-		componentEnumeratorImportTables = nil
-	}
+func componentEnumeratorAPI() *imports.Imports {
+	componentEnumeratorOnce.Do(func() {
+		componentEnumeratorImport = api.NewDefaultImports()
+		componentEnumeratorImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TComponentEnumerator_Create", 0), // constructor NewComponentEnumerator
+			/* 1 */ imports.NewTable("TComponentEnumerator_GetCurrent", 0), // function GetCurrent
+			/* 2 */ imports.NewTable("TComponentEnumerator_MoveNext", 0), // function MoveNext
+			/* 3 */ imports.NewTable("TComponentEnumerator_Current", 0), // property Current
+		}
+	})
 	return componentEnumeratorImport
 }

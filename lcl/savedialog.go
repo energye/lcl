@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ISaveDialog Parent: IOpenDialog
@@ -19,34 +20,33 @@ type ISaveDialog interface {
 	IOpenDialog
 }
 
-// TSaveDialog Parent: TOpenDialog
 type TSaveDialog struct {
 	TOpenDialog
 }
 
-func NewSaveDialog(AOwner IComponent) ISaveDialog {
-	r1 := saveDialogImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsSaveDialog(r1)
+// NewSaveDialog class constructor
+func NewSaveDialog(owner IComponent) ISaveDialog {
+	r := saveDialogAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsSaveDialog(r)
 }
 
-func SaveDialogClass() TClass {
-	ret := saveDialogImportAPI().SysCallN(0)
-	return TClass(ret)
+func TSaveDialogClass() types.TClass {
+	r := saveDialogAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	saveDialogImport       *imports.Imports = nil
-	saveDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("SaveDialog_Class", 0),
-		/*1*/ imports.NewTable("SaveDialog_Create", 0),
-	}
+	saveDialogOnce   base.Once
+	saveDialogImport *imports.Imports = nil
 )
 
-func saveDialogImportAPI() *imports.Imports {
-	if saveDialogImport == nil {
-		saveDialogImport = NewDefaultImports()
-		saveDialogImport.SetImportTable(saveDialogImportTables)
-		saveDialogImportTables = nil
-	}
+func saveDialogAPI() *imports.Imports {
+	saveDialogOnce.Do(func() {
+		saveDialogImport = api.NewDefaultImports()
+		saveDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TSaveDialog_Create", 0), // constructor NewSaveDialog
+			/* 1 */ imports.NewTable("TSaveDialog_TClass", 0), // function TSaveDialogClass
+		}
+	})
 	return saveDialogImport
 }

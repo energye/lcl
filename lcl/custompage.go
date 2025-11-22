@@ -9,116 +9,138 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomPage Parent: IWinControl
 type ICustomPage interface {
 	IWinControl
-	PageIndex() int32                 // property
-	SetPageIndex(AValue int32)        // property
-	TabVisible() bool                 // property
-	SetTabVisible(AValue bool)        // property
-	ImageIndex() TImageIndex          // property
-	SetImageIndex(AValue TImageIndex) // property
-	CanTab() bool                     // function
-	VisibleIndex() int32              // function
-	SetOnHide(fn TNotifyEvent)        // property event
-	SetOnShow(fn TNotifyEvent)        // property event
+	CanTab() bool              // function
+	VisibleIndex() int32       // function
+	PageIndex() int32          // property PageIndex Getter
+	SetPageIndex(value int32)  // property PageIndex Setter
+	TabVisible() bool          // property TabVisible Getter
+	SetTabVisible(value bool)  // property TabVisible Setter
+	ImageIndex() int32         // property ImageIndex Getter
+	SetImageIndex(value int32) // property ImageIndex Setter
+	SetOnHide(fn TNotifyEvent) // property event
+	SetOnShow(fn TNotifyEvent) // property event
 }
 
-// TCustomPage Parent: TWinControl
 type TCustomPage struct {
 	TWinControl
-	hidePtr uintptr
-	showPtr uintptr
-}
-
-func NewCustomPage(TheOwner IComponent) ICustomPage {
-	r1 := customPageImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsCustomPage(r1)
-}
-
-func (m *TCustomPage) PageIndex() int32 {
-	r1 := customPageImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomPage) SetPageIndex(AValue int32) {
-	customPageImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomPage) TabVisible() bool {
-	r1 := customPageImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomPage) SetTabVisible(AValue bool) {
-	customPageImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomPage) ImageIndex() TImageIndex {
-	r1 := customPageImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *TCustomPage) SetImageIndex(AValue TImageIndex) {
-	customPageImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
 }
 
 func (m *TCustomPage) CanTab() bool {
-	r1 := customPageImportAPI().SysCallN(0, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customPageAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TCustomPage) VisibleIndex() int32 {
-	r1 := customPageImportAPI().SysCallN(8, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPageAPI().SysCallN(2, m.Instance())
+	return int32(r)
 }
 
-func CustomPageClass() TClass {
-	ret := customPageImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TCustomPage) PageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPageAPI().SysCallN(3, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomPage) SetPageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customPageAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomPage) TabVisible() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customPageAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomPage) SetTabVisible(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customPageAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomPage) ImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPageAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomPage) SetImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customPageAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomPage) SetOnHide(fn TNotifyEvent) {
-	if m.hidePtr != 0 {
-		RemoveEventElement(m.hidePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.hidePtr = MakeEventDataPtr(fn)
-	customPageImportAPI().SysCallN(5, m.Instance(), m.hidePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 6, customPageAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomPage) SetOnShow(fn TNotifyEvent) {
-	if m.showPtr != 0 {
-		RemoveEventElement(m.showPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.showPtr = MakeEventDataPtr(fn)
-	customPageImportAPI().SysCallN(6, m.Instance(), m.showPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 7, customPageAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomPage class constructor
+func NewCustomPage(theOwner IComponent) ICustomPage {
+	r := customPageAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsCustomPage(r)
+}
+
+func TCustomPageClass() types.TClass {
+	r := customPageAPI().SysCallN(8)
+	return types.TClass(r)
 }
 
 var (
-	customPageImport       *imports.Imports = nil
-	customPageImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomPage_CanTab", 0),
-		/*1*/ imports.NewTable("CustomPage_Class", 0),
-		/*2*/ imports.NewTable("CustomPage_Create", 0),
-		/*3*/ imports.NewTable("CustomPage_ImageIndex", 0),
-		/*4*/ imports.NewTable("CustomPage_PageIndex", 0),
-		/*5*/ imports.NewTable("CustomPage_SetOnHide", 0),
-		/*6*/ imports.NewTable("CustomPage_SetOnShow", 0),
-		/*7*/ imports.NewTable("CustomPage_TabVisible", 0),
-		/*8*/ imports.NewTable("CustomPage_VisibleIndex", 0),
-	}
+	customPageOnce   base.Once
+	customPageImport *imports.Imports = nil
 )
 
-func customPageImportAPI() *imports.Imports {
-	if customPageImport == nil {
-		customPageImport = NewDefaultImports()
-		customPageImport.SetImportTable(customPageImportTables)
-		customPageImportTables = nil
-	}
+func customPageAPI() *imports.Imports {
+	customPageOnce.Do(func() {
+		customPageImport = api.NewDefaultImports()
+		customPageImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomPage_Create", 0), // constructor NewCustomPage
+			/* 1 */ imports.NewTable("TCustomPage_CanTab", 0), // function CanTab
+			/* 2 */ imports.NewTable("TCustomPage_VisibleIndex", 0), // function VisibleIndex
+			/* 3 */ imports.NewTable("TCustomPage_PageIndex", 0), // property PageIndex
+			/* 4 */ imports.NewTable("TCustomPage_TabVisible", 0), // property TabVisible
+			/* 5 */ imports.NewTable("TCustomPage_ImageIndex", 0), // property ImageIndex
+			/* 6 */ imports.NewTable("TCustomPage_OnHide", 0), // event OnHide
+			/* 7 */ imports.NewTable("TCustomPage_OnShow", 0), // event OnShow
+			/* 8 */ imports.NewTable("TCustomPage_TClass", 0), // function TCustomPageClass
+		}
+	})
 	return customPageImport
 }

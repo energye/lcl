@@ -12,8 +12,9 @@
 package win
 
 import (
-	"github.com/energye/lcl/types"
 	"unsafe"
+
+	"github.com/energye/lcl/types"
 )
 
 const (

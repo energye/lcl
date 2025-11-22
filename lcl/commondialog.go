@@ -9,169 +9,238 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICommonDialog Parent: ILCLComponent
 type ICommonDialog interface {
 	ILCLComponent
-	Handle() THandle                    // property
-	SetHandle(AValue THandle)           // property
-	UserChoice() int32                  // property
-	SetUserChoice(AValue int32)         // property
-	Width() int32                       // property
-	SetWidth(AValue int32)              // property
-	Height() int32                      // property
-	SetHeight(AValue int32)             // property
-	HelpContext() THelpContext          // property
-	SetHelpContext(AValue THelpContext) // property
-	Title() string                      // property
-	SetTitle(AValue string)             // property
-	Execute() bool                      // function
-	HandleAllocated() bool              // function
-	Close()                             // procedure
-	SetOnClose(fn TNotifyEvent)         // property event
-	SetOnCanClose(fn TCloseQueryEvent)  // property event
-	SetOnShow(fn TNotifyEvent)          // property event
+	Execute() bool                           // function
+	HandleAllocated() bool                   // function
+	Close()                                  // procedure
+	DoShow()                                 // procedure
+	DoCanClose(canClose *bool)               // procedure
+	DoClose()                                // procedure
+	Handle() types.TLCLHandle                // property Handle Getter
+	SetHandle(value types.TLCLHandle)        // property Handle Setter
+	UserChoice() int32                       // property UserChoice Getter
+	SetUserChoice(value int32)               // property UserChoice Setter
+	Width() int32                            // property Width Getter
+	SetWidth(value int32)                    // property Width Setter
+	Height() int32                           // property Height Getter
+	SetHeight(value int32)                   // property Height Setter
+	HelpContext() types.THelpContext         // property HelpContext Getter
+	SetHelpContext(value types.THelpContext) // property HelpContext Setter
+	Title() string                           // property Title Getter
+	SetTitle(value string)                   // property Title Setter
+	SetOnClose(fn TNotifyEvent)              // property event
+	SetOnCanClose(fn TCloseQueryEvent)       // property event
+	SetOnShow(fn TNotifyEvent)               // property event
 }
 
-// TCommonDialog Parent: TLCLComponent
 type TCommonDialog struct {
 	TLCLComponent
-	closePtr    uintptr
-	canClosePtr uintptr
-	showPtr     uintptr
-}
-
-func NewCommonDialog(TheOwner IComponent) ICommonDialog {
-	r1 := commonDialogImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsCommonDialog(r1)
-}
-
-func (m *TCommonDialog) Handle() THandle {
-	r1 := commonDialogImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return THandle(r1)
-}
-
-func (m *TCommonDialog) SetHandle(AValue THandle) {
-	commonDialogImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCommonDialog) UserChoice() int32 {
-	r1 := commonDialogImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCommonDialog) SetUserChoice(AValue int32) {
-	commonDialogImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCommonDialog) Width() int32 {
-	r1 := commonDialogImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCommonDialog) SetWidth(AValue int32) {
-	commonDialogImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCommonDialog) Height() int32 {
-	r1 := commonDialogImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCommonDialog) SetHeight(AValue int32) {
-	commonDialogImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCommonDialog) HelpContext() THelpContext {
-	r1 := commonDialogImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return THelpContext(r1)
-}
-
-func (m *TCommonDialog) SetHelpContext(AValue THelpContext) {
-	commonDialogImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCommonDialog) Title() string {
-	r1 := commonDialogImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TCommonDialog) SetTitle(AValue string) {
-	commonDialogImportAPI().SysCallN(11, 1, m.Instance(), PascalStr(AValue))
 }
 
 func (m *TCommonDialog) Execute() bool {
-	r1 := commonDialogImportAPI().SysCallN(3, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := commonDialogAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TCommonDialog) HandleAllocated() bool {
-	r1 := commonDialogImportAPI().SysCallN(5, m.Instance())
-	return GoBool(r1)
-}
-
-func CommonDialogClass() TClass {
-	ret := commonDialogImportAPI().SysCallN(0)
-	return TClass(ret)
+	if !m.IsValid() {
+		return false
+	}
+	r := commonDialogAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TCommonDialog) Close() {
-	commonDialogImportAPI().SysCallN(1, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	commonDialogAPI().SysCallN(3, m.Instance())
+}
+
+func (m *TCommonDialog) DoShow() {
+	if !m.IsValid() {
+		return
+	}
+	commonDialogAPI().SysCallN(4, m.Instance())
+}
+
+func (m *TCommonDialog) DoCanClose(canClose *bool) {
+	if !m.IsValid() {
+		return
+	}
+	commonDialogAPI().SysCallN(5, m.Instance(), uintptr(base.UnsafePointer(canClose)))
+}
+
+func (m *TCommonDialog) DoClose() {
+	if !m.IsValid() {
+		return
+	}
+	commonDialogAPI().SysCallN(6, m.Instance())
+}
+
+func (m *TCommonDialog) Handle() types.TLCLHandle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := commonDialogAPI().SysCallN(7, 0, m.Instance())
+	return types.TLCLHandle(r)
+}
+
+func (m *TCommonDialog) SetHandle(value types.TLCLHandle) {
+	if !m.IsValid() {
+		return
+	}
+	commonDialogAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCommonDialog) UserChoice() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := commonDialogAPI().SysCallN(8, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCommonDialog) SetUserChoice(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	commonDialogAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCommonDialog) Width() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := commonDialogAPI().SysCallN(9, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCommonDialog) SetWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	commonDialogAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCommonDialog) Height() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := commonDialogAPI().SysCallN(10, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCommonDialog) SetHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	commonDialogAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCommonDialog) HelpContext() types.THelpContext {
+	if !m.IsValid() {
+		return 0
+	}
+	r := commonDialogAPI().SysCallN(11, 0, m.Instance())
+	return types.THelpContext(r)
+}
+
+func (m *TCommonDialog) SetHelpContext(value types.THelpContext) {
+	if !m.IsValid() {
+		return
+	}
+	commonDialogAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCommonDialog) Title() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := commonDialogAPI().SysCallN(12, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TCommonDialog) SetTitle(value string) {
+	if !m.IsValid() {
+		return
+	}
+	commonDialogAPI().SysCallN(12, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TCommonDialog) SetOnClose(fn TNotifyEvent) {
-	if m.closePtr != 0 {
-		RemoveEventElement(m.closePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.closePtr = MakeEventDataPtr(fn)
-	commonDialogImportAPI().SysCallN(9, m.Instance(), m.closePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 13, commonDialogAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCommonDialog) SetOnCanClose(fn TCloseQueryEvent) {
-	if m.canClosePtr != 0 {
-		RemoveEventElement(m.canClosePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.canClosePtr = MakeEventDataPtr(fn)
-	commonDialogImportAPI().SysCallN(8, m.Instance(), m.canClosePtr)
+	cb := makeTCloseQueryEvent(fn)
+	base.SetEvent(m, 14, commonDialogAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCommonDialog) SetOnShow(fn TNotifyEvent) {
-	if m.showPtr != 0 {
-		RemoveEventElement(m.showPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.showPtr = MakeEventDataPtr(fn)
-	commonDialogImportAPI().SysCallN(10, m.Instance(), m.showPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 15, commonDialogAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCommonDialog class constructor
+func NewCommonDialog(theOwner IComponent) ICommonDialog {
+	r := commonDialogAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsCommonDialog(r)
+}
+
+func TCommonDialogClass() types.TClass {
+	r := commonDialogAPI().SysCallN(16)
+	return types.TClass(r)
 }
 
 var (
-	commonDialogImport       *imports.Imports = nil
-	commonDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CommonDialog_Class", 0),
-		/*1*/ imports.NewTable("CommonDialog_Close", 0),
-		/*2*/ imports.NewTable("CommonDialog_Create", 0),
-		/*3*/ imports.NewTable("CommonDialog_Execute", 0),
-		/*4*/ imports.NewTable("CommonDialog_Handle", 0),
-		/*5*/ imports.NewTable("CommonDialog_HandleAllocated", 0),
-		/*6*/ imports.NewTable("CommonDialog_Height", 0),
-		/*7*/ imports.NewTable("CommonDialog_HelpContext", 0),
-		/*8*/ imports.NewTable("CommonDialog_SetOnCanClose", 0),
-		/*9*/ imports.NewTable("CommonDialog_SetOnClose", 0),
-		/*10*/ imports.NewTable("CommonDialog_SetOnShow", 0),
-		/*11*/ imports.NewTable("CommonDialog_Title", 0),
-		/*12*/ imports.NewTable("CommonDialog_UserChoice", 0),
-		/*13*/ imports.NewTable("CommonDialog_Width", 0),
-	}
+	commonDialogOnce   base.Once
+	commonDialogImport *imports.Imports = nil
 )
 
-func commonDialogImportAPI() *imports.Imports {
-	if commonDialogImport == nil {
-		commonDialogImport = NewDefaultImports()
-		commonDialogImport.SetImportTable(commonDialogImportTables)
-		commonDialogImportTables = nil
-	}
+func commonDialogAPI() *imports.Imports {
+	commonDialogOnce.Do(func() {
+		commonDialogImport = api.NewDefaultImports()
+		commonDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCommonDialog_Create", 0), // constructor NewCommonDialog
+			/* 1 */ imports.NewTable("TCommonDialog_Execute", 0), // function Execute
+			/* 2 */ imports.NewTable("TCommonDialog_HandleAllocated", 0), // function HandleAllocated
+			/* 3 */ imports.NewTable("TCommonDialog_Close", 0), // procedure Close
+			/* 4 */ imports.NewTable("TCommonDialog_DoShow", 0), // procedure DoShow
+			/* 5 */ imports.NewTable("TCommonDialog_DoCanClose", 0), // procedure DoCanClose
+			/* 6 */ imports.NewTable("TCommonDialog_DoClose", 0), // procedure DoClose
+			/* 7 */ imports.NewTable("TCommonDialog_Handle", 0), // property Handle
+			/* 8 */ imports.NewTable("TCommonDialog_UserChoice", 0), // property UserChoice
+			/* 9 */ imports.NewTable("TCommonDialog_Width", 0), // property Width
+			/* 10 */ imports.NewTable("TCommonDialog_Height", 0), // property Height
+			/* 11 */ imports.NewTable("TCommonDialog_HelpContext", 0), // property HelpContext
+			/* 12 */ imports.NewTable("TCommonDialog_Title", 0), // property Title
+			/* 13 */ imports.NewTable("TCommonDialog_OnClose", 0), // event OnClose
+			/* 14 */ imports.NewTable("TCommonDialog_OnCanClose", 0), // event OnCanClose
+			/* 15 */ imports.NewTable("TCommonDialog_OnShow", 0), // event OnShow
+			/* 16 */ imports.NewTable("TCommonDialog_TClass", 0), // function TCommonDialogClass
+		}
+	})
 	return commonDialogImport
 }

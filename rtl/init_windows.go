@@ -10,8 +10,8 @@ package rtl
 
 import "github.com/energye/lcl/api"
 
-// 初始化
-func RtlInit() {
+// Init 初始化
+func Init() {
 	// 初始
-	api.DSysLocale(&SysLocale)
+	api.SysLocale(&SysLocale)
 }

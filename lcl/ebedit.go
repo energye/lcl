@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IEbEdit Parent: IGEEdit
@@ -19,34 +20,33 @@ type IEbEdit interface {
 	IGEEdit
 }
 
-// TEbEdit Parent: TGEEdit
 type TEbEdit struct {
 	TGEEdit
 }
 
-func NewEbEdit(TheOwner IComponent) IEbEdit {
-	r1 := ebEditImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsEbEdit(r1)
+// NewEbEdit class constructor
+func NewEbEdit(theOwner IComponent) IEbEdit {
+	r := ebEditAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsEbEdit(r)
 }
 
-func EbEditClass() TClass {
-	ret := ebEditImportAPI().SysCallN(0)
-	return TClass(ret)
+func TEbEditClass() types.TClass {
+	r := ebEditAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	ebEditImport       *imports.Imports = nil
-	ebEditImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("EbEdit_Class", 0),
-		/*1*/ imports.NewTable("EbEdit_Create", 0),
-	}
+	ebEditOnce   base.Once
+	ebEditImport *imports.Imports = nil
 )
 
-func ebEditImportAPI() *imports.Imports {
-	if ebEditImport == nil {
-		ebEditImport = NewDefaultImports()
-		ebEditImport.SetImportTable(ebEditImportTables)
-		ebEditImportTables = nil
-	}
+func ebEditAPI() *imports.Imports {
+	ebEditOnce.Do(func() {
+		ebEditImport = api.NewDefaultImports()
+		ebEditImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TEbEdit_Create", 0), // constructor NewEbEdit
+			/* 1 */ imports.NewTable("TEbEdit_TClass", 0), // function TEbEditClass
+		}
+	})
 	return ebEditImport
 }

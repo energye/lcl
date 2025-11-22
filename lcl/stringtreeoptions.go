@@ -9,128 +9,164 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IStringTreeOptions Parent: ICustomStringTreeOptions
 type IStringTreeOptions interface {
 	ICustomStringTreeOptions
-	AnimationOptions() TVTAnimationOptions          // property
-	SetAnimationOptions(AValue TVTAnimationOptions) // property
-	AutoOptions() TVTAutoOptions                    // property
-	SetAutoOptions(AValue TVTAutoOptions)           // property
-	ExportMode() TVTExportMode                      // property
-	SetExportMode(AValue TVTExportMode)             // property
-	MiscOptions() TVTMiscOptions                    // property
-	SetMiscOptions(AValue TVTMiscOptions)           // property
-	PaintOptions() TVTPaintOptions                  // property
-	SetPaintOptions(AValue TVTPaintOptions)         // property
-	SelectionOptions() TVTSelectionOptions          // property
-	SetSelectionOptions(AValue TVTSelectionOptions) // property
-	StringOptions() TVTStringOptions                // property
-	SetStringOptions(AValue TVTStringOptions)       // property
+	AnimationOptions() types.TVTAnimationOptions         // property AnimationOptions Getter
+	SetAnimationOptions(value types.TVTAnimationOptions) // property AnimationOptions Setter
+	AutoOptions() types.TVTAutoOptions                   // property AutoOptions Getter
+	SetAutoOptions(value types.TVTAutoOptions)           // property AutoOptions Setter
+	ExportMode() types.TVTExportMode                     // property ExportMode Getter
+	SetExportMode(value types.TVTExportMode)             // property ExportMode Setter
+	MiscOptions() types.TVTMiscOptions                   // property MiscOptions Getter
+	SetMiscOptions(value types.TVTMiscOptions)           // property MiscOptions Setter
+	PaintOptions() types.TVTPaintOptions                 // property PaintOptions Getter
+	SetPaintOptions(value types.TVTPaintOptions)         // property PaintOptions Setter
+	SelectionOptions() types.TVTSelectionOptions         // property SelectionOptions Getter
+	SetSelectionOptions(value types.TVTSelectionOptions) // property SelectionOptions Setter
+	StringOptions() types.TVTStringOptions               // property StringOptions Getter
+	SetStringOptions(value types.TVTStringOptions)       // property StringOptions Setter
 }
 
-// TStringTreeOptions Parent: TCustomStringTreeOptions
 type TStringTreeOptions struct {
 	TCustomStringTreeOptions
 }
 
-func NewStringTreeOptions(AOwner IBaseVirtualTree) IStringTreeOptions {
-	r1 := stringTreeOptionsImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
-	return AsStringTreeOptions(r1)
+func (m *TStringTreeOptions) AnimationOptions() types.TVTAnimationOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringTreeOptionsAPI().SysCallN(1, 0, m.Instance())
+	return types.TVTAnimationOptions(r)
 }
 
-func (m *TStringTreeOptions) AnimationOptions() TVTAnimationOptions {
-	r1 := stringTreeOptionsImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TVTAnimationOptions(r1)
+func (m *TStringTreeOptions) SetAnimationOptions(value types.TVTAnimationOptions) {
+	if !m.IsValid() {
+		return
+	}
+	stringTreeOptionsAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStringTreeOptions) SetAnimationOptions(AValue TVTAnimationOptions) {
-	stringTreeOptionsImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TStringTreeOptions) AutoOptions() types.TVTAutoOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringTreeOptionsAPI().SysCallN(2, 0, m.Instance())
+	return types.TVTAutoOptions(r)
 }
 
-func (m *TStringTreeOptions) AutoOptions() TVTAutoOptions {
-	r1 := stringTreeOptionsImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TVTAutoOptions(r1)
+func (m *TStringTreeOptions) SetAutoOptions(value types.TVTAutoOptions) {
+	if !m.IsValid() {
+		return
+	}
+	stringTreeOptionsAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStringTreeOptions) SetAutoOptions(AValue TVTAutoOptions) {
-	stringTreeOptionsImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
+func (m *TStringTreeOptions) ExportMode() types.TVTExportMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringTreeOptionsAPI().SysCallN(3, 0, m.Instance())
+	return types.TVTExportMode(r)
 }
 
-func (m *TStringTreeOptions) ExportMode() TVTExportMode {
-	r1 := stringTreeOptionsImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TVTExportMode(r1)
+func (m *TStringTreeOptions) SetExportMode(value types.TVTExportMode) {
+	if !m.IsValid() {
+		return
+	}
+	stringTreeOptionsAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStringTreeOptions) SetExportMode(AValue TVTExportMode) {
-	stringTreeOptionsImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TStringTreeOptions) MiscOptions() types.TVTMiscOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringTreeOptionsAPI().SysCallN(4, 0, m.Instance())
+	return types.TVTMiscOptions(r)
 }
 
-func (m *TStringTreeOptions) MiscOptions() TVTMiscOptions {
-	r1 := stringTreeOptionsImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TVTMiscOptions(r1)
+func (m *TStringTreeOptions) SetMiscOptions(value types.TVTMiscOptions) {
+	if !m.IsValid() {
+		return
+	}
+	stringTreeOptionsAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStringTreeOptions) SetMiscOptions(AValue TVTMiscOptions) {
-	stringTreeOptionsImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TStringTreeOptions) PaintOptions() types.TVTPaintOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringTreeOptionsAPI().SysCallN(5, 0, m.Instance())
+	return types.TVTPaintOptions(r)
 }
 
-func (m *TStringTreeOptions) PaintOptions() TVTPaintOptions {
-	r1 := stringTreeOptionsImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return TVTPaintOptions(r1)
+func (m *TStringTreeOptions) SetPaintOptions(value types.TVTPaintOptions) {
+	if !m.IsValid() {
+		return
+	}
+	stringTreeOptionsAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStringTreeOptions) SetPaintOptions(AValue TVTPaintOptions) {
-	stringTreeOptionsImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TStringTreeOptions) SelectionOptions() types.TVTSelectionOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringTreeOptionsAPI().SysCallN(6, 0, m.Instance())
+	return types.TVTSelectionOptions(r)
 }
 
-func (m *TStringTreeOptions) SelectionOptions() TVTSelectionOptions {
-	r1 := stringTreeOptionsImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return TVTSelectionOptions(r1)
+func (m *TStringTreeOptions) SetSelectionOptions(value types.TVTSelectionOptions) {
+	if !m.IsValid() {
+		return
+	}
+	stringTreeOptionsAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStringTreeOptions) SetSelectionOptions(AValue TVTSelectionOptions) {
-	stringTreeOptionsImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TStringTreeOptions) StringOptions() types.TVTStringOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringTreeOptionsAPI().SysCallN(7, 0, m.Instance())
+	return types.TVTStringOptions(r)
 }
 
-func (m *TStringTreeOptions) StringOptions() TVTStringOptions {
-	r1 := stringTreeOptionsImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TVTStringOptions(r1)
+func (m *TStringTreeOptions) SetStringOptions(value types.TVTStringOptions) {
+	if !m.IsValid() {
+		return
+	}
+	stringTreeOptionsAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStringTreeOptions) SetStringOptions(AValue TVTStringOptions) {
-	stringTreeOptionsImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
-}
-
-func StringTreeOptionsClass() TClass {
-	ret := stringTreeOptionsImportAPI().SysCallN(2)
-	return TClass(ret)
+// NewStringTreeOptions class constructor
+func NewStringTreeOptions(owner IBaseVirtualTree) IStringTreeOptions {
+	r := stringTreeOptionsAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsStringTreeOptions(r)
 }
 
 var (
-	stringTreeOptionsImport       *imports.Imports = nil
-	stringTreeOptionsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("StringTreeOptions_AnimationOptions", 0),
-		/*1*/ imports.NewTable("StringTreeOptions_AutoOptions", 0),
-		/*2*/ imports.NewTable("StringTreeOptions_Class", 0),
-		/*3*/ imports.NewTable("StringTreeOptions_Create", 0),
-		/*4*/ imports.NewTable("StringTreeOptions_ExportMode", 0),
-		/*5*/ imports.NewTable("StringTreeOptions_MiscOptions", 0),
-		/*6*/ imports.NewTable("StringTreeOptions_PaintOptions", 0),
-		/*7*/ imports.NewTable("StringTreeOptions_SelectionOptions", 0),
-		/*8*/ imports.NewTable("StringTreeOptions_StringOptions", 0),
-	}
+	stringTreeOptionsOnce   base.Once
+	stringTreeOptionsImport *imports.Imports = nil
 )
 
-func stringTreeOptionsImportAPI() *imports.Imports {
-	if stringTreeOptionsImport == nil {
-		stringTreeOptionsImport = NewDefaultImports()
-		stringTreeOptionsImport.SetImportTable(stringTreeOptionsImportTables)
-		stringTreeOptionsImportTables = nil
-	}
+func stringTreeOptionsAPI() *imports.Imports {
+	stringTreeOptionsOnce.Do(func() {
+		stringTreeOptionsImport = api.NewDefaultImports()
+		stringTreeOptionsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TStringTreeOptions_Create", 0), // constructor NewStringTreeOptions
+			/* 1 */ imports.NewTable("TStringTreeOptions_AnimationOptions", 0), // property AnimationOptions
+			/* 2 */ imports.NewTable("TStringTreeOptions_AutoOptions", 0), // property AutoOptions
+			/* 3 */ imports.NewTable("TStringTreeOptions_ExportMode", 0), // property ExportMode
+			/* 4 */ imports.NewTable("TStringTreeOptions_MiscOptions", 0), // property MiscOptions
+			/* 5 */ imports.NewTable("TStringTreeOptions_PaintOptions", 0), // property PaintOptions
+			/* 6 */ imports.NewTable("TStringTreeOptions_SelectionOptions", 0), // property SelectionOptions
+			/* 7 */ imports.NewTable("TStringTreeOptions_StringOptions", 0), // property StringOptions
+		}
+	})
 	return stringTreeOptionsImport
 }

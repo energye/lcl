@@ -9,57 +9,56 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // ICustomVirtualTreeOptions Parent: IPersistent
 type ICustomVirtualTreeOptions interface {
 	IPersistent
-	Owner() IBaseVirtualTree   // property
-	AssignTo(Dest IPersistent) // procedure
+	AssignTo(dest IPersistent) // procedure
+	Owner() IBaseVirtualTree   // property Owner Getter
 }
 
-// TCustomVirtualTreeOptions Parent: TPersistent
 type TCustomVirtualTreeOptions struct {
 	TPersistent
 }
 
-func NewCustomVirtualTreeOptions(AOwner IBaseVirtualTree) ICustomVirtualTreeOptions {
-	r1 := customVirtualTreeOptionsImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
-	return AsCustomVirtualTreeOptions(r1)
+func (m *TCustomVirtualTreeOptions) AssignTo(dest IPersistent) {
+	if !m.IsValid() {
+		return
+	}
+	customVirtualTreeOptionsAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(dest))
 }
 
 func (m *TCustomVirtualTreeOptions) Owner() IBaseVirtualTree {
-	r1 := customVirtualTreeOptionsImportAPI().SysCallN(3, m.Instance())
-	return AsBaseVirtualTree(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := customVirtualTreeOptionsAPI().SysCallN(2, m.Instance())
+	return AsBaseVirtualTree(r)
 }
 
-func CustomVirtualTreeOptionsClass() TClass {
-	ret := customVirtualTreeOptionsImportAPI().SysCallN(1)
-	return TClass(ret)
-}
-
-func (m *TCustomVirtualTreeOptions) AssignTo(Dest IPersistent) {
-	customVirtualTreeOptionsImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(Dest))
+// NewCustomVirtualTreeOptions class constructor
+func NewCustomVirtualTreeOptions(owner IBaseVirtualTree) ICustomVirtualTreeOptions {
+	r := customVirtualTreeOptionsAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomVirtualTreeOptions(r)
 }
 
 var (
-	customVirtualTreeOptionsImport       *imports.Imports = nil
-	customVirtualTreeOptionsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomVirtualTreeOptions_AssignTo", 0),
-		/*1*/ imports.NewTable("CustomVirtualTreeOptions_Class", 0),
-		/*2*/ imports.NewTable("CustomVirtualTreeOptions_Create", 0),
-		/*3*/ imports.NewTable("CustomVirtualTreeOptions_Owner", 0),
-	}
+	customVirtualTreeOptionsOnce   base.Once
+	customVirtualTreeOptionsImport *imports.Imports = nil
 )
 
-func customVirtualTreeOptionsImportAPI() *imports.Imports {
-	if customVirtualTreeOptionsImport == nil {
-		customVirtualTreeOptionsImport = NewDefaultImports()
-		customVirtualTreeOptionsImport.SetImportTable(customVirtualTreeOptionsImportTables)
-		customVirtualTreeOptionsImportTables = nil
-	}
+func customVirtualTreeOptionsAPI() *imports.Imports {
+	customVirtualTreeOptionsOnce.Do(func() {
+		customVirtualTreeOptionsImport = api.NewDefaultImports()
+		customVirtualTreeOptionsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomVirtualTreeOptions_Create", 0), // constructor NewCustomVirtualTreeOptions
+			/* 1 */ imports.NewTable("TCustomVirtualTreeOptions_AssignTo", 0), // procedure AssignTo
+			/* 2 */ imports.NewTable("TCustomVirtualTreeOptions_Owner", 0), // property Owner
+		}
+	})
 	return customVirtualTreeOptionsImport
 }

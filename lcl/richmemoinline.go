@@ -9,69 +9,75 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IRichMemoInline Parent: IObject
 type IRichMemoInline interface {
 	IObject
-	Owner() ICustomRichMemo            // property
-	Draw(Canvas ICanvas, ASize *TSize) // procedure
-	SetVisible(AVisible bool)          // procedure
-	Invalidate()                       // procedure
+	Draw(canvas ICanvas, size types.TSize) // procedure
+	SetVisible(visible bool)               // procedure
+	Invalidate()                           // procedure
+	Owner() ICustomRichMemo                // property Owner Getter
 }
 
-// TRichMemoInline Parent: TObject
 type TRichMemoInline struct {
 	TObject
 }
 
-func NewRichMemoInline() IRichMemoInline {
-	r1 := richMemoInlineImportAPI().SysCallN(1)
-	return AsRichMemoInline(r1)
+func (m *TRichMemoInline) Draw(canvas ICanvas, size types.TSize) {
+	if !m.IsValid() {
+		return
+	}
+	richMemoInlineAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(canvas), uintptr(base.UnsafePointer(&size)))
 }
 
-func (m *TRichMemoInline) Owner() ICustomRichMemo {
-	r1 := richMemoInlineImportAPI().SysCallN(4, m.Instance())
-	return AsCustomRichMemo(r1)
-}
-
-func RichMemoInlineClass() TClass {
-	ret := richMemoInlineImportAPI().SysCallN(0)
-	return TClass(ret)
-}
-
-func (m *TRichMemoInline) Draw(Canvas ICanvas, ASize *TSize) {
-	richMemoInlineImportAPI().SysCallN(2, m.Instance(), GetObjectUintptr(Canvas), uintptr(unsafePointer(ASize)))
-}
-
-func (m *TRichMemoInline) SetVisible(AVisible bool) {
-	richMemoInlineImportAPI().SysCallN(5, m.Instance(), PascalBool(AVisible))
+func (m *TRichMemoInline) SetVisible(visible bool) {
+	if !m.IsValid() {
+		return
+	}
+	richMemoInlineAPI().SysCallN(2, m.Instance(), api.PasBool(visible))
 }
 
 func (m *TRichMemoInline) Invalidate() {
-	richMemoInlineImportAPI().SysCallN(3, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	richMemoInlineAPI().SysCallN(3, m.Instance())
+}
+
+func (m *TRichMemoInline) Owner() ICustomRichMemo {
+	if !m.IsValid() {
+		return nil
+	}
+	r := richMemoInlineAPI().SysCallN(4, m.Instance())
+	return AsCustomRichMemo(r)
+}
+
+// NewRichMemoInline class constructor
+func NewRichMemoInline() IRichMemoInline {
+	r := richMemoInlineAPI().SysCallN(0)
+	return AsRichMemoInline(r)
 }
 
 var (
-	richMemoInlineImport       *imports.Imports = nil
-	richMemoInlineImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("RichMemoInline_Class", 0),
-		/*1*/ imports.NewTable("RichMemoInline_Create", 0),
-		/*2*/ imports.NewTable("RichMemoInline_Draw", 0),
-		/*3*/ imports.NewTable("RichMemoInline_Invalidate", 0),
-		/*4*/ imports.NewTable("RichMemoInline_Owner", 0),
-		/*5*/ imports.NewTable("RichMemoInline_SetVisible", 0),
-	}
+	richMemoInlineOnce   base.Once
+	richMemoInlineImport *imports.Imports = nil
 )
 
-func richMemoInlineImportAPI() *imports.Imports {
-	if richMemoInlineImport == nil {
-		richMemoInlineImport = NewDefaultImports()
-		richMemoInlineImport.SetImportTable(richMemoInlineImportTables)
-		richMemoInlineImportTables = nil
-	}
+func richMemoInlineAPI() *imports.Imports {
+	richMemoInlineOnce.Do(func() {
+		richMemoInlineImport = api.NewDefaultImports()
+		richMemoInlineImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TRichMemoInline_Create", 0), // constructor NewRichMemoInline
+			/* 1 */ imports.NewTable("TRichMemoInline_Draw", 0), // procedure Draw
+			/* 2 */ imports.NewTable("TRichMemoInline_SetVisible", 0), // procedure SetVisible
+			/* 3 */ imports.NewTable("TRichMemoInline_Invalidate", 0), // procedure Invalidate
+			/* 4 */ imports.NewTable("TRichMemoInline_Owner", 0), // property Owner
+		}
+	})
 	return richMemoInlineImport
 }

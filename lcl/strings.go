@@ -9,640 +9,916 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
-// IStrings Is Abstract Class Parent: IPersistent
+// IStrings Parent: IPersistent
 type IStrings interface {
 	IPersistent
-	AddStrings2(sArr []string)
-	AddStrings3(list IStrings, clearFirst bool)
-	AddPair2(name, value string, object IObject) IStrings
-	LoadFromBytes(data []byte)
-	AlwaysQuote() bool                                                          // property
-	SetAlwaysQuote(AValue bool)                                                 // property
-	Capacity() int32                                                            // property
-	SetCapacity(AValue int32)                                                   // property
-	CommaText() string                                                          // property
-	SetCommaText(AValue string)                                                 // property
-	Count() int32                                                               // property
-	DelimitedText() string                                                      // property
-	SetDelimitedText(AValue string)                                             // property
-	Delimiter() Char                                                            // property
-	SetDelimiter(AValue Char)                                                   // property
-	LineBreak() string                                                          // property
-	SetLineBreak(AValue string)                                                 // property
-	MissingNameValueSeparatorAction() TMissingNameValueSeparatorAction          // property
-	SetMissingNameValueSeparatorAction(AValue TMissingNameValueSeparatorAction) // property
-	Names(Index int32) string                                                   // property
-	NameValueSeparator() Char                                                   // property
-	SetNameValueSeparator(AValue Char)                                          // property
-	Objects(Index int32) IObject                                                // property
-	SetObjects(Index int32, AValue IObject)                                     // property
-	Options() TStringsOptions                                                   // property
-	SetOptions(AValue TStringsOptions)                                          // property
-	QuoteChar() Char                                                            // property
-	SetQuoteChar(AValue Char)                                                   // property
-	SkipLastLineBreak() bool                                                    // property
-	SetSkipLastLineBreak(AValue bool)                                           // property
-	TrailingLineBreak() bool                                                    // property
-	SetTrailingLineBreak(AValue bool)                                           // property
-	StrictDelimiter() bool                                                      // property
-	SetStrictDelimiter(AValue bool)                                             // property
-	Strings(Index int32) string                                                 // property
-	SetStrings(Index int32, AValue string)                                      // property
-	Text() string                                                               // property
-	SetText(AValue string)                                                      // property
-	TextLineBreakStyle() TTextLineBreakStyle                                    // property
-	SetTextLineBreakStyle(AValue TTextLineBreakStyle)                           // property
-	UseLocale() bool                                                            // property
-	SetUseLocale(AValue bool)                                                   // property
-	ValueFromIndex(Index int32) string                                          // property
-	SetValueFromIndex(Index int32, AValue string)                               // property
-	Values(Name string) string                                                  // property
-	SetValues(Name string, AValue string)                                       // property
-	WriteBOM() bool                                                             // property
-	SetWriteBOM(AValue bool)                                                    // property
-	ToObjectArray(aStart, aEnd int32) TObjectDynArray                           // function
-	ToObjectArray1() TObjectDynArray                                            // function
-	ToStringArray(aStart, aEnd int32) TStringDynArray                           // function
-	ToStringArray1() TStringDynArray                                            // function
-	Add(S string) int32                                                         // function
-	AddObject(S string, AObject IObject) int32                                  // function
-	AddPair(AName, AValue string) IStrings                                      // function
-	AddPair1(AName, AValue string, AObject IObject) IStrings                    // function
-	EqualsForBool(TheStrings IStrings) bool                                     // function
-	ExtractName(S string) string                                                // function
-	GetEnumerator() IStringsEnumerator                                          // function
-	GetText1() string                                                           // function
-	IndexOf(S string) int32                                                     // function
-	IndexOf1(S string, aStart int32) int32                                      // function
-	IndexOfName(Name string) int32                                              // function
-	IndexOfObject(AObject IObject) int32                                        // function
-	LastIndexOf(S string, aStart int32) int32                                   // function
-	LastIndexOf1(S string) int32                                                // function
-	Pop() string                                                                // function
-	Reverse() IStrings                                                          // function
-	Shift() string                                                              // function
-	Slice(fromIndex int32) IStrings                                             // function
-	AddStrings(TheStrings IStrings)                                             // procedure
-	AddStrings1(TheStrings IStrings, ClearFirst bool)                           // procedure
-	SetStrings1(TheStrings IStrings)                                            // procedure
-	AddText(S string)                                                           // procedure
-	AddCommaText(S string)                                                      // procedure
-	AddDelimitedText(S string, ADelimiter Char, AStrictDelimiter bool)          // procedure
-	AddDelimitedtext1(S string)                                                 // procedure
-	Append(S string)                                                            // procedure
-	BeginUpdate()                                                               // procedure
-	Clear()                                                                     // procedure Is Abstract
-	Delete(Index int32)                                                         // procedure Is Abstract
-	EndUpdate()                                                                 // procedure
-	Exchange(Index1, Index2 int32)                                              // procedure
-	Fill(aValue string, aStart, aEnd int32)                                     // procedure
-	GetNameValue(Index int32, OutName, OutValue *string)                        // procedure
-	Insert(Index int32, S string)                                               // procedure Is Abstract
-	InsertObject(Index int32, S string, AObject IObject)                        // procedure
-	LoadFromFile(FileName string)                                               // procedure
-	LoadFromFile1(FileName string, IgnoreEncoding bool)                         // procedure
-	LoadFromStream(Stream IStream)                                              // procedure
-	LoadFromStream1(Stream IStream, IgnoreEncoding bool)                        // procedure
-	Move(CurIndex, NewIndex int32)                                              // procedure
-	Reverse1(aList IStrings)                                                    // procedure
-	SaveToFile(FileName string)                                                 // procedure
-	SaveToFile1(FileName string, IgnoreEncoding bool)                           // procedure
-	SaveToStream(Stream IStream)                                                // procedure
-	SaveToStream1(Stream IStream, IgnoreEncoding bool)                          // procedure
-	Slice1(fromIndex int32, aList IStrings)                                     // procedure
-	SetText1(TheText string)                                                    // procedure
+	ToObjectArrayWithIntX2(start int32, end int32) types.TObjectDynArray                 // function
+	ToObjectArrayToObjectDynArray() types.TObjectDynArray                                // function
+	ToStringArrayWithIntX2(start int32, end int32) IStringArrayWrap                      // function
+	ToStringArrayToStringDynArray() IStringArrayWrap                                     // function
+	Add(S string) int32                                                                  // function
+	AddObject(S string, object IObject) int32                                            // function
+	AddPairWithStringX2(name string, value string) IStrings                              // function
+	AddPairWithStringX2Object(name string, value string, object IObject) IStrings        // function
+	EqualsWithStrings(theStrings IStrings) bool                                          // function
+	ExtractName(S string) string                                                         // function
+	GetEnumerator() IStringsEnumerator                                                   // function
+	GetText() uintptr                                                                    // function
+	IndexOfWithString(S string) int32                                                    // function
+	IndexOfWithStringInt(S string, start int32) int32                                    // function
+	IndexOfName(name string) int32                                                       // function
+	IndexOfObject(object IObject) int32                                                  // function
+	LastIndexOfWithStringInt(S string, start int32) int32                                // function
+	LastIndexOfWithString(S string) int32                                                // function
+	Pop() string                                                                         // function
+	ReverseToStrings() IStrings                                                          // function
+	Shift() string                                                                       // function
+	SliceWithInt(fromIndex int32) IStrings                                               // function
+	AddStringsWithStrings(theStrings IStrings)                                           // procedure
+	AddStringsWithStringsBool(theStrings IStrings, clearFirst bool)                      // procedure
+	SetStringsWithStrings(theStrings IStrings)                                           // procedure
+	AddText(S string)                                                                    // procedure
+	AddCommaText(S string)                                                               // procedure
+	AddDelimitedTextWithStringCharBool(S string, delimiter uint16, strictDelimiter bool) // procedure
+	AddDelimitedtextWithString(S string)                                                 // procedure
+	Append(S string)                                                                     // procedure
+	BeginUpdate()                                                                        // procedure
+	Clear()                                                                              // procedure
+	Delete(index int32)                                                                  // procedure
+	EndUpdate()                                                                          // procedure
+	Exchange(index1 int32, index2 int32)                                                 // procedure
+	Fill(value string, start int32, end int32)                                           // procedure
+	GetNameValue(index int32, outName *string, outValue *string)                         // procedure
+	Insert(index int32, S string)                                                        // procedure
+	InsertObject(index int32, S string, object IObject)                                  // procedure
+	LoadFromFileWithString(fileName string)                                              // procedure
+	LoadFromFileWithStringBool(fileName string, ignoreEncoding bool)                     // procedure
+	LoadFromStreamWithStream(stream IStream)                                             // procedure
+	LoadFromStreamWithStreamBool(stream IStream, ignoreEncoding bool)                    // procedure
+	Move(curIndex int32, newIndex int32)                                                 // procedure
+	ReverseWithStrings(list IStrings)                                                    // procedure
+	SaveToFileWithString(fileName string)                                                // procedure
+	SaveToFileWithStringBool(fileName string, ignoreEncoding bool)                       // procedure
+	SaveToStreamWithStream(stream IStream)                                               // procedure
+	SaveToStreamWithStreamBool(stream IStream, ignoreEncoding bool)                      // procedure
+	SliceWithIntStrings(fromIndex int32, list IStrings)                                  // procedure
+	SetTextWithString(theText uintptr)                                                   // procedure
+	AlwaysQuote() bool                                                                   // property AlwaysQuote Getter
+	SetAlwaysQuote(value bool)                                                           // property AlwaysQuote Setter
+	Capacity() int32                                                                     // property Capacity Getter
+	SetCapacity(value int32)                                                             // property Capacity Setter
+	CommaText() string                                                                   // property CommaText Getter
+	SetCommaText(value string)                                                           // property CommaText Setter
+	Count() int32                                                                        // property Count Getter
+	DelimitedText() string                                                               // property DelimitedText Getter
+	SetDelimitedText(value string)                                                       // property DelimitedText Setter
+	Delimiter() uint16                                                                   // property Delimiter Getter
+	SetDelimiter(value uint16)                                                           // property Delimiter Setter
+	LineBreak() string                                                                   // property LineBreak Getter
+	SetLineBreak(value string)                                                           // property LineBreak Setter
+	MissingNameValueSeparatorAction() types.TMissingNameValueSeparatorAction             // property MissingNameValueSeparatorAction Getter
+	SetMissingNameValueSeparatorAction(value types.TMissingNameValueSeparatorAction)     // property MissingNameValueSeparatorAction Setter
+	Names(index int32) string                                                            // property Names Getter
+	NameValueSeparator() uint16                                                          // property NameValueSeparator Getter
+	SetNameValueSeparator(value uint16)                                                  // property NameValueSeparator Setter
+	Objects(index int32) IObject                                                         // property Objects Getter
+	SetObjects(index int32, value IObject)                                               // property Objects Setter
+	Options() types.TStringsOptions                                                      // property Options Getter
+	SetOptions(value types.TStringsOptions)                                              // property Options Setter
+	QuoteChar() uint16                                                                   // property QuoteChar Getter
+	SetQuoteChar(value uint16)                                                           // property QuoteChar Setter
+	SkipLastLineBreak() bool                                                             // property SkipLastLineBreak Getter
+	SetSkipLastLineBreak(value bool)                                                     // property SkipLastLineBreak Setter
+	// TrailingLineBreak
+	//  Same as SkipLastLineBreak but for Delphi compatibility. Note it has opposite meaning.
+	TrailingLineBreak() bool                               // property TrailingLineBreak Getter
+	SetTrailingLineBreak(value bool)                       // property TrailingLineBreak Setter
+	StrictDelimiter() bool                                 // property StrictDelimiter Getter
+	SetStrictDelimiter(value bool)                         // property StrictDelimiter Setter
+	Strings(index int32) string                            // property Strings Getter
+	SetStringsWithIntToString(index int32, value string)   // property Strings Setter
+	Text() string                                          // property Text Getter
+	SetTextToString(value string)                          // property Text Setter
+	TextLineBreakStyle() types.TTextLineBreakStyle         // property TextLineBreakStyle Getter
+	SetTextLineBreakStyle(value types.TTextLineBreakStyle) // property TextLineBreakStyle Setter
+	UseLocale() bool                                       // property UseLocale Getter
+	SetUseLocale(value bool)                               // property UseLocale Setter
+	ValueFromIndex(index int32) string                     // property ValueFromIndex Getter
+	SetValueFromIndex(index int32, value string)           // property ValueFromIndex Setter
+	Values(name string) string                             // property Values Getter
+	SetValues(name string, value string)                   // property Values Setter
+	WriteBOM() bool                                        // property WriteBOM Getter
+	SetWriteBOM(value bool)                                // property WriteBOM Setter
 }
 
-// TStrings Is Abstract Class Parent: TPersistent
 type TStrings struct {
 	TPersistent
 }
 
-func (m *TStrings) AlwaysQuote() bool {
-	r1 := stringsImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return GoBool(r1)
+func (m *TStrings) ToObjectArrayWithIntX2(start int32, end int32) types.TObjectDynArray {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(0, m.Instance(), uintptr(start), uintptr(end))
+	return types.TObjectDynArray(r)
 }
 
-func (m *TStrings) SetAlwaysQuote(AValue bool) {
-	stringsImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
+func (m *TStrings) ToObjectArrayToObjectDynArray() types.TObjectDynArray {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(1, m.Instance())
+	return types.TObjectDynArray(r)
 }
 
-func (m *TStrings) Capacity() int32 {
-	r1 := stringsImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return int32(r1)
+func (m *TStrings) ToStringArrayWithIntX2(start int32, end int32) IStringArrayWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := stringsAPI().SysCallN(2, m.Instance(), uintptr(start), uintptr(end))
+	return AsStringArrayWrap(r)
 }
 
-func (m *TStrings) SetCapacity(AValue int32) {
-	stringsImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStrings) CommaText() string {
-	r1 := stringsImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TStrings) SetCommaText(AValue string) {
-	stringsImportAPI().SysCallN(16, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TStrings) Count() int32 {
-	r1 := stringsImportAPI().SysCallN(17, m.Instance())
-	return int32(r1)
-}
-
-func (m *TStrings) DelimitedText() string {
-	r1 := stringsImportAPI().SysCallN(19, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TStrings) SetDelimitedText(AValue string) {
-	stringsImportAPI().SysCallN(19, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TStrings) Delimiter() Char {
-	r1 := stringsImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return Char(r1)
-}
-
-func (m *TStrings) SetDelimiter(AValue Char) {
-	stringsImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStrings) LineBreak() string {
-	r1 := stringsImportAPI().SysCallN(37, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TStrings) SetLineBreak(AValue string) {
-	stringsImportAPI().SysCallN(37, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TStrings) MissingNameValueSeparatorAction() TMissingNameValueSeparatorAction {
-	r1 := stringsImportAPI().SysCallN(42, 0, m.Instance(), 0)
-	return TMissingNameValueSeparatorAction(r1)
-}
-
-func (m *TStrings) SetMissingNameValueSeparatorAction(AValue TMissingNameValueSeparatorAction) {
-	stringsImportAPI().SysCallN(42, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStrings) Names(Index int32) string {
-	r1 := stringsImportAPI().SysCallN(45, m.Instance(), uintptr(Index))
-	return GoStr(r1)
-}
-
-func (m *TStrings) NameValueSeparator() Char {
-	r1 := stringsImportAPI().SysCallN(44, 0, m.Instance(), 0)
-	return Char(r1)
-}
-
-func (m *TStrings) SetNameValueSeparator(AValue Char) {
-	stringsImportAPI().SysCallN(44, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStrings) Objects(Index int32) IObject {
-	r1 := stringsImportAPI().SysCallN(46, 0, m.Instance(), uintptr(Index))
-	return AsObject(r1)
-}
-
-func (m *TStrings) SetObjects(Index int32, AValue IObject) {
-	stringsImportAPI().SysCallN(46, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
-}
-
-func (m *TStrings) Options() TStringsOptions {
-	r1 := stringsImportAPI().SysCallN(47, 0, m.Instance(), 0)
-	return TStringsOptions(r1)
-}
-
-func (m *TStrings) SetOptions(AValue TStringsOptions) {
-	stringsImportAPI().SysCallN(47, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStrings) QuoteChar() Char {
-	r1 := stringsImportAPI().SysCallN(49, 0, m.Instance(), 0)
-	return Char(r1)
-}
-
-func (m *TStrings) SetQuoteChar(AValue Char) {
-	stringsImportAPI().SysCallN(49, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStrings) SkipLastLineBreak() bool {
-	r1 := stringsImportAPI().SysCallN(59, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStrings) SetSkipLastLineBreak(AValue bool) {
-	stringsImportAPI().SysCallN(59, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStrings) TrailingLineBreak() bool {
-	r1 := stringsImportAPI().SysCallN(70, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStrings) SetTrailingLineBreak(AValue bool) {
-	stringsImportAPI().SysCallN(70, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStrings) StrictDelimiter() bool {
-	r1 := stringsImportAPI().SysCallN(62, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStrings) SetStrictDelimiter(AValue bool) {
-	stringsImportAPI().SysCallN(62, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStrings) Strings(Index int32) string {
-	r1 := stringsImportAPI().SysCallN(63, 0, m.Instance(), uintptr(Index))
-	return GoStr(r1)
-}
-
-func (m *TStrings) SetStrings(Index int32, AValue string) {
-	stringsImportAPI().SysCallN(63, 1, m.Instance(), uintptr(Index), PascalStr(AValue))
-}
-
-func (m *TStrings) Text() string {
-	r1 := stringsImportAPI().SysCallN(64, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TStrings) SetText(AValue string) {
-	stringsImportAPI().SysCallN(64, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TStrings) TextLineBreakStyle() TTextLineBreakStyle {
-	r1 := stringsImportAPI().SysCallN(65, 0, m.Instance(), 0)
-	return TTextLineBreakStyle(r1)
-}
-
-func (m *TStrings) SetTextLineBreakStyle(AValue TTextLineBreakStyle) {
-	stringsImportAPI().SysCallN(65, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStrings) UseLocale() bool {
-	r1 := stringsImportAPI().SysCallN(71, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStrings) SetUseLocale(AValue bool) {
-	stringsImportAPI().SysCallN(71, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStrings) ValueFromIndex(Index int32) string {
-	r1 := stringsImportAPI().SysCallN(72, 0, m.Instance(), uintptr(Index))
-	return GoStr(r1)
-}
-
-func (m *TStrings) SetValueFromIndex(Index int32, AValue string) {
-	stringsImportAPI().SysCallN(72, 1, m.Instance(), uintptr(Index), PascalStr(AValue))
-}
-
-func (m *TStrings) Values(Name string) string {
-	r1 := stringsImportAPI().SysCallN(73, 0, m.Instance(), PascalStr(Name))
-	return GoStr(r1)
-}
-
-func (m *TStrings) SetValues(Name string, AValue string) {
-	stringsImportAPI().SysCallN(73, 1, m.Instance(), PascalStr(Name), PascalStr(AValue))
-}
-
-func (m *TStrings) WriteBOM() bool {
-	r1 := stringsImportAPI().SysCallN(74, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStrings) SetWriteBOM(AValue bool) {
-	stringsImportAPI().SysCallN(74, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStrings) ToObjectArray(aStart, aEnd int32) TObjectDynArray {
-	r1 := stringsImportAPI().SysCallN(66, m.Instance(), uintptr(aStart), uintptr(aEnd))
-	return TObjectDynArray(r1)
-}
-
-func (m *TStrings) ToObjectArray1() TObjectDynArray {
-	r1 := stringsImportAPI().SysCallN(67, m.Instance())
-	return TObjectDynArray(r1)
-}
-
-func (m *TStrings) ToStringArray(aStart, aEnd int32) TStringDynArray {
-	r1 := stringsImportAPI().SysCallN(68, m.Instance(), uintptr(aStart), uintptr(aEnd))
-	return TStringDynArray(r1)
-}
-
-func (m *TStrings) ToStringArray1() TStringDynArray {
-	r1 := stringsImportAPI().SysCallN(69, m.Instance())
-	return TStringDynArray(r1)
+func (m *TStrings) ToStringArrayToStringDynArray() IStringArrayWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := stringsAPI().SysCallN(3, m.Instance())
+	return AsStringArrayWrap(r)
 }
 
 func (m *TStrings) Add(S string) int32 {
-	r1 := stringsImportAPI().SysCallN(0, m.Instance(), PascalStr(S))
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(4, m.Instance(), api.PasStr(S))
+	return int32(r)
 }
 
-func (m *TStrings) AddObject(S string, AObject IObject) int32 {
-	r1 := stringsImportAPI().SysCallN(4, m.Instance(), PascalStr(S), GetObjectUintptr(AObject))
-	return int32(r1)
+func (m *TStrings) AddObject(S string, object IObject) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(5, m.Instance(), api.PasStr(S), base.GetObjectUintptr(object))
+	return int32(r)
 }
 
-func (m *TStrings) AddPair(AName, AValue string) IStrings {
-	r1 := stringsImportAPI().SysCallN(5, m.Instance(), PascalStr(AName), PascalStr(AValue))
-	return AsStrings(r1)
+func (m *TStrings) AddPairWithStringX2(name string, value string) IStrings {
+	if !m.IsValid() {
+		return nil
+	}
+	r := stringsAPI().SysCallN(6, m.Instance(), api.PasStr(name), api.PasStr(value))
+	return AsStrings(r)
 }
 
-func (m *TStrings) AddPair1(AName, AValue string, AObject IObject) IStrings {
-	r1 := stringsImportAPI().SysCallN(6, m.Instance(), PascalStr(AName), PascalStr(AValue), GetObjectUintptr(AObject))
-	return AsStrings(r1)
+func (m *TStrings) AddPairWithStringX2Object(name string, value string, object IObject) IStrings {
+	if !m.IsValid() {
+		return nil
+	}
+	r := stringsAPI().SysCallN(7, m.Instance(), api.PasStr(name), api.PasStr(value), base.GetObjectUintptr(object))
+	return AsStrings(r)
 }
 
-func (m *TStrings) EqualsForBool(TheStrings IStrings) bool {
-	r1 := stringsImportAPI().SysCallN(22, m.Instance(), GetObjectUintptr(TheStrings))
-	return GoBool(r1)
+func (m *TStrings) EqualsWithStrings(theStrings IStrings) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := stringsAPI().SysCallN(8, m.Instance(), base.GetObjectUintptr(theStrings))
+	return api.GoBool(r)
 }
 
 func (m *TStrings) ExtractName(S string) string {
-	r1 := stringsImportAPI().SysCallN(24, m.Instance(), PascalStr(S))
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(9, m.Instance(), api.PasStr(S))
+	return api.GoStr(r)
 }
 
 func (m *TStrings) GetEnumerator() IStringsEnumerator {
-	r1 := stringsImportAPI().SysCallN(26, m.Instance())
-	return AsStringsEnumerator(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := stringsAPI().SysCallN(10, m.Instance())
+	return AsStringsEnumerator(r)
 }
 
-func (m *TStrings) GetText1() string {
-	r1 := stringsImportAPI().SysCallN(28, m.Instance())
-	return GoStr(r1)
+func (m *TStrings) GetText() uintptr {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(11, m.Instance())
+	return uintptr(r)
 }
 
-func (m *TStrings) IndexOf(S string) int32 {
-	r1 := stringsImportAPI().SysCallN(29, m.Instance(), PascalStr(S))
-	return int32(r1)
+func (m *TStrings) IndexOfWithString(S string) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(12, m.Instance(), api.PasStr(S))
+	return int32(r)
 }
 
-func (m *TStrings) IndexOf1(S string, aStart int32) int32 {
-	r1 := stringsImportAPI().SysCallN(30, m.Instance(), PascalStr(S), uintptr(aStart))
-	return int32(r1)
+func (m *TStrings) IndexOfWithStringInt(S string, start int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(13, m.Instance(), api.PasStr(S), uintptr(start))
+	return int32(r)
 }
 
-func (m *TStrings) IndexOfName(Name string) int32 {
-	r1 := stringsImportAPI().SysCallN(31, m.Instance(), PascalStr(Name))
-	return int32(r1)
+func (m *TStrings) IndexOfName(name string) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(14, m.Instance(), api.PasStr(name))
+	return int32(r)
 }
 
-func (m *TStrings) IndexOfObject(AObject IObject) int32 {
-	r1 := stringsImportAPI().SysCallN(32, m.Instance(), GetObjectUintptr(AObject))
-	return int32(r1)
+func (m *TStrings) IndexOfObject(object IObject) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(15, m.Instance(), base.GetObjectUintptr(object))
+	return int32(r)
 }
 
-func (m *TStrings) LastIndexOf(S string, aStart int32) int32 {
-	r1 := stringsImportAPI().SysCallN(35, m.Instance(), PascalStr(S), uintptr(aStart))
-	return int32(r1)
+func (m *TStrings) LastIndexOfWithStringInt(S string, start int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(16, m.Instance(), api.PasStr(S), uintptr(start))
+	return int32(r)
 }
 
-func (m *TStrings) LastIndexOf1(S string) int32 {
-	r1 := stringsImportAPI().SysCallN(36, m.Instance(), PascalStr(S))
-	return int32(r1)
+func (m *TStrings) LastIndexOfWithString(S string) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(17, m.Instance(), api.PasStr(S))
+	return int32(r)
 }
 
 func (m *TStrings) Pop() string {
-	r1 := stringsImportAPI().SysCallN(48, m.Instance())
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(18, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TStrings) Reverse() IStrings {
-	r1 := stringsImportAPI().SysCallN(50, m.Instance())
-	return AsStrings(r1)
+func (m *TStrings) ReverseToStrings() IStrings {
+	if !m.IsValid() {
+		return nil
+	}
+	r := stringsAPI().SysCallN(19, m.Instance())
+	return AsStrings(r)
 }
 
 func (m *TStrings) Shift() string {
-	r1 := stringsImportAPI().SysCallN(58, m.Instance())
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(20, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TStrings) Slice(fromIndex int32) IStrings {
-	r1 := stringsImportAPI().SysCallN(60, m.Instance(), uintptr(fromIndex))
-	return AsStrings(r1)
+func (m *TStrings) SliceWithInt(fromIndex int32) IStrings {
+	if !m.IsValid() {
+		return nil
+	}
+	r := stringsAPI().SysCallN(21, m.Instance(), uintptr(fromIndex))
+	return AsStrings(r)
 }
 
-func StringsClass() TClass {
-	ret := stringsImportAPI().SysCallN(14)
-	return TClass(ret)
+func (m *TStrings) AddStringsWithStrings(theStrings IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(22, m.Instance(), base.GetObjectUintptr(theStrings))
 }
 
-func (m *TStrings) AddStrings(TheStrings IStrings) {
-	stringsImportAPI().SysCallN(7, m.Instance(), GetObjectUintptr(TheStrings))
+func (m *TStrings) AddStringsWithStringsBool(theStrings IStrings, clearFirst bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(23, m.Instance(), base.GetObjectUintptr(theStrings), api.PasBool(clearFirst))
 }
 
-func (m *TStrings) AddStrings1(TheStrings IStrings, ClearFirst bool) {
-	stringsImportAPI().SysCallN(8, m.Instance(), GetObjectUintptr(TheStrings), PascalBool(ClearFirst))
-}
-
-func (m *TStrings) SetStrings1(TheStrings IStrings) {
-	stringsImportAPI().SysCallN(56, m.Instance(), GetObjectUintptr(TheStrings))
+func (m *TStrings) SetStringsWithStrings(theStrings IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(24, m.Instance(), base.GetObjectUintptr(theStrings))
 }
 
 func (m *TStrings) AddText(S string) {
-	stringsImportAPI().SysCallN(9, m.Instance(), PascalStr(S))
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(25, m.Instance(), api.PasStr(S))
 }
 
 func (m *TStrings) AddCommaText(S string) {
-	stringsImportAPI().SysCallN(1, m.Instance(), PascalStr(S))
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(26, m.Instance(), api.PasStr(S))
 }
 
-func (m *TStrings) AddDelimitedText(S string, ADelimiter Char, AStrictDelimiter bool) {
-	stringsImportAPI().SysCallN(2, m.Instance(), PascalStr(S), uintptr(ADelimiter), PascalBool(AStrictDelimiter))
+func (m *TStrings) AddDelimitedTextWithStringCharBool(S string, delimiter uint16, strictDelimiter bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(27, m.Instance(), api.PasStr(S), uintptr(delimiter), api.PasBool(strictDelimiter))
 }
 
-func (m *TStrings) AddDelimitedtext1(S string) {
-	stringsImportAPI().SysCallN(3, m.Instance(), PascalStr(S))
+func (m *TStrings) AddDelimitedtextWithString(S string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(28, m.Instance(), api.PasStr(S))
 }
 
 func (m *TStrings) Append(S string) {
-	stringsImportAPI().SysCallN(11, m.Instance(), PascalStr(S))
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(29, m.Instance(), api.PasStr(S))
 }
 
 func (m *TStrings) BeginUpdate() {
-	stringsImportAPI().SysCallN(12, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(30, m.Instance())
 }
 
 func (m *TStrings) Clear() {
-	stringsImportAPI().SysCallN(15, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(31, m.Instance())
 }
 
-func (m *TStrings) Delete(Index int32) {
-	stringsImportAPI().SysCallN(18, m.Instance(), uintptr(Index))
+func (m *TStrings) Delete(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(32, m.Instance(), uintptr(index))
 }
 
 func (m *TStrings) EndUpdate() {
-	stringsImportAPI().SysCallN(21, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(33, m.Instance())
 }
 
-func (m *TStrings) Exchange(Index1, Index2 int32) {
-	stringsImportAPI().SysCallN(23, m.Instance(), uintptr(Index1), uintptr(Index2))
+func (m *TStrings) Exchange(index1 int32, index2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(34, m.Instance(), uintptr(index1), uintptr(index2))
 }
 
-func (m *TStrings) Fill(aValue string, aStart, aEnd int32) {
-	stringsImportAPI().SysCallN(25, m.Instance(), PascalStr(aValue), uintptr(aStart), uintptr(aEnd))
+func (m *TStrings) Fill(value string, start int32, end int32) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(35, m.Instance(), api.PasStr(value), uintptr(start), uintptr(end))
 }
 
-func (m *TStrings) GetNameValue(Index int32, OutName, OutValue *string) {
-	var result1 uintptr
-	var result2 uintptr
-	stringsImportAPI().SysCallN(27, m.Instance(), uintptr(Index), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
-	*OutName = GoStr(result1)
-	*OutValue = GoStr(result2)
+func (m *TStrings) GetNameValue(index int32, outName *string, outValue *string) {
+	if !m.IsValid() {
+		return
+	}
+	var namePtr uintptr
+	var valuePtr uintptr
+	stringsAPI().SysCallN(36, m.Instance(), uintptr(index), uintptr(base.UnsafePointer(&namePtr)), uintptr(base.UnsafePointer(&valuePtr)))
+	*outName = api.GoStr(namePtr)
+	*outValue = api.GoStr(valuePtr)
 }
 
-func (m *TStrings) Insert(Index int32, S string) {
-	stringsImportAPI().SysCallN(33, m.Instance(), uintptr(Index), PascalStr(S))
+func (m *TStrings) Insert(index int32, S string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(37, m.Instance(), uintptr(index), api.PasStr(S))
 }
 
-func (m *TStrings) InsertObject(Index int32, S string, AObject IObject) {
-	stringsImportAPI().SysCallN(34, m.Instance(), uintptr(Index), PascalStr(S), GetObjectUintptr(AObject))
+func (m *TStrings) InsertObject(index int32, S string, object IObject) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(38, m.Instance(), uintptr(index), api.PasStr(S), base.GetObjectUintptr(object))
 }
 
-func (m *TStrings) LoadFromFile(FileName string) {
-	stringsImportAPI().SysCallN(38, m.Instance(), PascalStr(FileName))
+func (m *TStrings) LoadFromFileWithString(fileName string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(39, m.Instance(), api.PasStr(fileName))
 }
 
-func (m *TStrings) LoadFromFile1(FileName string, IgnoreEncoding bool) {
-	stringsImportAPI().SysCallN(39, m.Instance(), PascalStr(FileName), PascalBool(IgnoreEncoding))
+func (m *TStrings) LoadFromFileWithStringBool(fileName string, ignoreEncoding bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(40, m.Instance(), api.PasStr(fileName), api.PasBool(ignoreEncoding))
 }
 
-func (m *TStrings) LoadFromStream(Stream IStream) {
-	stringsImportAPI().SysCallN(40, m.Instance(), GetObjectUintptr(Stream))
+func (m *TStrings) LoadFromStreamWithStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(41, m.Instance(), base.GetObjectUintptr(stream))
 }
 
-func (m *TStrings) LoadFromStream1(Stream IStream, IgnoreEncoding bool) {
-	stringsImportAPI().SysCallN(41, m.Instance(), GetObjectUintptr(Stream), PascalBool(IgnoreEncoding))
+func (m *TStrings) LoadFromStreamWithStreamBool(stream IStream, ignoreEncoding bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(42, m.Instance(), base.GetObjectUintptr(stream), api.PasBool(ignoreEncoding))
 }
 
-func (m *TStrings) Move(CurIndex, NewIndex int32) {
-	stringsImportAPI().SysCallN(43, m.Instance(), uintptr(CurIndex), uintptr(NewIndex))
+func (m *TStrings) Move(curIndex int32, newIndex int32) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(43, m.Instance(), uintptr(curIndex), uintptr(newIndex))
 }
 
-func (m *TStrings) Reverse1(aList IStrings) {
-	stringsImportAPI().SysCallN(51, m.Instance(), GetObjectUintptr(aList))
+func (m *TStrings) ReverseWithStrings(list IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(44, m.Instance(), base.GetObjectUintptr(list))
 }
 
-func (m *TStrings) SaveToFile(FileName string) {
-	stringsImportAPI().SysCallN(52, m.Instance(), PascalStr(FileName))
+func (m *TStrings) SaveToFileWithString(fileName string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(45, m.Instance(), api.PasStr(fileName))
 }
 
-func (m *TStrings) SaveToFile1(FileName string, IgnoreEncoding bool) {
-	stringsImportAPI().SysCallN(53, m.Instance(), PascalStr(FileName), PascalBool(IgnoreEncoding))
+func (m *TStrings) SaveToFileWithStringBool(fileName string, ignoreEncoding bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(46, m.Instance(), api.PasStr(fileName), api.PasBool(ignoreEncoding))
 }
 
-func (m *TStrings) SaveToStream(Stream IStream) {
-	stringsImportAPI().SysCallN(54, m.Instance(), GetObjectUintptr(Stream))
+func (m *TStrings) SaveToStreamWithStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(47, m.Instance(), base.GetObjectUintptr(stream))
 }
 
-func (m *TStrings) SaveToStream1(Stream IStream, IgnoreEncoding bool) {
-	stringsImportAPI().SysCallN(55, m.Instance(), GetObjectUintptr(Stream), PascalBool(IgnoreEncoding))
+func (m *TStrings) SaveToStreamWithStreamBool(stream IStream, ignoreEncoding bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(48, m.Instance(), base.GetObjectUintptr(stream), api.PasBool(ignoreEncoding))
 }
 
-func (m *TStrings) Slice1(fromIndex int32, aList IStrings) {
-	stringsImportAPI().SysCallN(61, m.Instance(), uintptr(fromIndex), GetObjectUintptr(aList))
+func (m *TStrings) SliceWithIntStrings(fromIndex int32, list IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(49, m.Instance(), uintptr(fromIndex), base.GetObjectUintptr(list))
 }
 
-func (m *TStrings) SetText1(TheText string) {
-	stringsImportAPI().SysCallN(57, m.Instance(), PascalStr(TheText))
+func (m *TStrings) SetTextWithString(theText uintptr) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(50, m.Instance(), uintptr(theText))
+}
+
+func (m *TStrings) AlwaysQuote() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := stringsAPI().SysCallN(51, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStrings) SetAlwaysQuote(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(51, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStrings) Capacity() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(52, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TStrings) SetCapacity(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(52, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStrings) CommaText() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(53, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TStrings) SetCommaText(value string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(53, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TStrings) Count() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(54, m.Instance())
+	return int32(r)
+}
+
+func (m *TStrings) DelimitedText() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(55, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TStrings) SetDelimitedText(value string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(55, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TStrings) Delimiter() uint16 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(56, 0, m.Instance())
+	return uint16(r)
+}
+
+func (m *TStrings) SetDelimiter(value uint16) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(56, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStrings) LineBreak() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(57, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TStrings) SetLineBreak(value string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(57, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TStrings) MissingNameValueSeparatorAction() types.TMissingNameValueSeparatorAction {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(58, 0, m.Instance())
+	return types.TMissingNameValueSeparatorAction(r)
+}
+
+func (m *TStrings) SetMissingNameValueSeparatorAction(value types.TMissingNameValueSeparatorAction) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(58, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStrings) Names(index int32) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(59, m.Instance(), uintptr(index))
+	return api.GoStr(r)
+}
+
+func (m *TStrings) NameValueSeparator() uint16 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(60, 0, m.Instance())
+	return uint16(r)
+}
+
+func (m *TStrings) SetNameValueSeparator(value uint16) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(60, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStrings) Objects(index int32) IObject {
+	if !m.IsValid() {
+		return nil
+	}
+	r := stringsAPI().SysCallN(61, 0, m.Instance(), uintptr(index))
+	return AsObject(r)
+}
+
+func (m *TStrings) SetObjects(index int32, value IObject) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(61, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
+}
+
+func (m *TStrings) Options() types.TStringsOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(62, 0, m.Instance())
+	return types.TStringsOptions(r)
+}
+
+func (m *TStrings) SetOptions(value types.TStringsOptions) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(62, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStrings) QuoteChar() uint16 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(63, 0, m.Instance())
+	return uint16(r)
+}
+
+func (m *TStrings) SetQuoteChar(value uint16) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(63, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStrings) SkipLastLineBreak() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := stringsAPI().SysCallN(64, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStrings) SetSkipLastLineBreak(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(64, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStrings) TrailingLineBreak() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := stringsAPI().SysCallN(65, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStrings) SetTrailingLineBreak(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(65, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStrings) StrictDelimiter() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := stringsAPI().SysCallN(66, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStrings) SetStrictDelimiter(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(66, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStrings) Strings(index int32) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(67, 0, m.Instance(), uintptr(index))
+	return api.GoStr(r)
+}
+
+func (m *TStrings) SetStringsWithIntToString(index int32, value string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(67, 1, m.Instance(), uintptr(index), api.PasStr(value))
+}
+
+func (m *TStrings) Text() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(68, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TStrings) SetTextToString(value string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(68, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TStrings) TextLineBreakStyle() types.TTextLineBreakStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringsAPI().SysCallN(69, 0, m.Instance())
+	return types.TTextLineBreakStyle(r)
+}
+
+func (m *TStrings) SetTextLineBreakStyle(value types.TTextLineBreakStyle) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(69, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStrings) UseLocale() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := stringsAPI().SysCallN(70, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStrings) SetUseLocale(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(70, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStrings) ValueFromIndex(index int32) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(71, 0, m.Instance(), uintptr(index))
+	return api.GoStr(r)
+}
+
+func (m *TStrings) SetValueFromIndex(index int32, value string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(71, 1, m.Instance(), uintptr(index), api.PasStr(value))
+}
+
+func (m *TStrings) Values(name string) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := stringsAPI().SysCallN(72, 0, m.Instance(), api.PasStr(name))
+	return api.GoStr(r)
+}
+
+func (m *TStrings) SetValues(name string, value string) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(72, 1, m.Instance(), api.PasStr(name), api.PasStr(value))
+}
+
+func (m *TStrings) WriteBOM() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := stringsAPI().SysCallN(73, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStrings) SetWriteBOM(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringsAPI().SysCallN(73, 1, m.Instance(), api.PasBool(value))
 }
 
 var (
-	stringsImport       *imports.Imports = nil
-	stringsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Strings_Add", 0),
-		/*1*/ imports.NewTable("Strings_AddCommaText", 0),
-		/*2*/ imports.NewTable("Strings_AddDelimitedText", 0),
-		/*3*/ imports.NewTable("Strings_AddDelimitedtext1", 0),
-		/*4*/ imports.NewTable("Strings_AddObject", 0),
-		/*5*/ imports.NewTable("Strings_AddPair", 0),
-		/*6*/ imports.NewTable("Strings_AddPair1", 0),
-		/*7*/ imports.NewTable("Strings_AddStrings", 0),
-		/*8*/ imports.NewTable("Strings_AddStrings1", 0),
-		/*9*/ imports.NewTable("Strings_AddText", 0),
-		/*10*/ imports.NewTable("Strings_AlwaysQuote", 0),
-		/*11*/ imports.NewTable("Strings_Append", 0),
-		/*12*/ imports.NewTable("Strings_BeginUpdate", 0),
-		/*13*/ imports.NewTable("Strings_Capacity", 0),
-		/*14*/ imports.NewTable("Strings_Class", 0),
-		/*15*/ imports.NewTable("Strings_Clear", 0),
-		/*16*/ imports.NewTable("Strings_CommaText", 0),
-		/*17*/ imports.NewTable("Strings_Count", 0),
-		/*18*/ imports.NewTable("Strings_Delete", 0),
-		/*19*/ imports.NewTable("Strings_DelimitedText", 0),
-		/*20*/ imports.NewTable("Strings_Delimiter", 0),
-		/*21*/ imports.NewTable("Strings_EndUpdate", 0),
-		/*22*/ imports.NewTable("Strings_EqualsForBool", 0),
-		/*23*/ imports.NewTable("Strings_Exchange", 0),
-		/*24*/ imports.NewTable("Strings_ExtractName", 0),
-		/*25*/ imports.NewTable("Strings_Fill", 0),
-		/*26*/ imports.NewTable("Strings_GetEnumerator", 0),
-		/*27*/ imports.NewTable("Strings_GetNameValue", 0),
-		/*28*/ imports.NewTable("Strings_GetText1", 0),
-		/*29*/ imports.NewTable("Strings_IndexOf", 0),
-		/*30*/ imports.NewTable("Strings_IndexOf1", 0),
-		/*31*/ imports.NewTable("Strings_IndexOfName", 0),
-		/*32*/ imports.NewTable("Strings_IndexOfObject", 0),
-		/*33*/ imports.NewTable("Strings_Insert", 0),
-		/*34*/ imports.NewTable("Strings_InsertObject", 0),
-		/*35*/ imports.NewTable("Strings_LastIndexOf", 0),
-		/*36*/ imports.NewTable("Strings_LastIndexOf1", 0),
-		/*37*/ imports.NewTable("Strings_LineBreak", 0),
-		/*38*/ imports.NewTable("Strings_LoadFromFile", 0),
-		/*39*/ imports.NewTable("Strings_LoadFromFile1", 0),
-		/*40*/ imports.NewTable("Strings_LoadFromStream", 0),
-		/*41*/ imports.NewTable("Strings_LoadFromStream1", 0),
-		/*42*/ imports.NewTable("Strings_MissingNameValueSeparatorAction", 0),
-		/*43*/ imports.NewTable("Strings_Move", 0),
-		/*44*/ imports.NewTable("Strings_NameValueSeparator", 0),
-		/*45*/ imports.NewTable("Strings_Names", 0),
-		/*46*/ imports.NewTable("Strings_Objects", 0),
-		/*47*/ imports.NewTable("Strings_Options", 0),
-		/*48*/ imports.NewTable("Strings_Pop", 0),
-		/*49*/ imports.NewTable("Strings_QuoteChar", 0),
-		/*50*/ imports.NewTable("Strings_Reverse", 0),
-		/*51*/ imports.NewTable("Strings_Reverse1", 0),
-		/*52*/ imports.NewTable("Strings_SaveToFile", 0),
-		/*53*/ imports.NewTable("Strings_SaveToFile1", 0),
-		/*54*/ imports.NewTable("Strings_SaveToStream", 0),
-		/*55*/ imports.NewTable("Strings_SaveToStream1", 0),
-		/*56*/ imports.NewTable("Strings_SetStrings1", 0),
-		/*57*/ imports.NewTable("Strings_SetText1", 0),
-		/*58*/ imports.NewTable("Strings_Shift", 0),
-		/*59*/ imports.NewTable("Strings_SkipLastLineBreak", 0),
-		/*60*/ imports.NewTable("Strings_Slice", 0),
-		/*61*/ imports.NewTable("Strings_Slice1", 0),
-		/*62*/ imports.NewTable("Strings_StrictDelimiter", 0),
-		/*63*/ imports.NewTable("Strings_Strings", 0),
-		/*64*/ imports.NewTable("Strings_Text", 0),
-		/*65*/ imports.NewTable("Strings_TextLineBreakStyle", 0),
-		/*66*/ imports.NewTable("Strings_ToObjectArray", 0),
-		/*67*/ imports.NewTable("Strings_ToObjectArray1", 0),
-		/*68*/ imports.NewTable("Strings_ToStringArray", 0),
-		/*69*/ imports.NewTable("Strings_ToStringArray1", 0),
-		/*70*/ imports.NewTable("Strings_TrailingLineBreak", 0),
-		/*71*/ imports.NewTable("Strings_UseLocale", 0),
-		/*72*/ imports.NewTable("Strings_ValueFromIndex", 0),
-		/*73*/ imports.NewTable("Strings_Values", 0),
-		/*74*/ imports.NewTable("Strings_WriteBOM", 0),
-	}
+	stringsOnce   base.Once
+	stringsImport *imports.Imports = nil
 )
 
-func stringsImportAPI() *imports.Imports {
-	if stringsImport == nil {
-		stringsImport = NewDefaultImports()
-		stringsImport.SetImportTable(stringsImportTables)
-		stringsImportTables = nil
-	}
+func stringsAPI() *imports.Imports {
+	stringsOnce.Do(func() {
+		stringsImport = api.NewDefaultImports()
+		stringsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TStrings_ToObjectArrayWithIntX2", 0), // function ToObjectArrayWithIntX2
+			/* 1 */ imports.NewTable("TStrings_ToObjectArrayToObjectDynArray", 0), // function ToObjectArrayToObjectDynArray
+			/* 2 */ imports.NewTable("TStrings_ToStringArrayWithIntX2", 0), // function ToStringArrayWithIntX2
+			/* 3 */ imports.NewTable("TStrings_ToStringArrayToStringDynArray", 0), // function ToStringArrayToStringDynArray
+			/* 4 */ imports.NewTable("TStrings_Add", 0), // function Add
+			/* 5 */ imports.NewTable("TStrings_AddObject", 0), // function AddObject
+			/* 6 */ imports.NewTable("TStrings_AddPairWithStringX2", 0), // function AddPairWithStringX2
+			/* 7 */ imports.NewTable("TStrings_AddPairWithStringX2Object", 0), // function AddPairWithStringX2Object
+			/* 8 */ imports.NewTable("TStrings_EqualsWithStrings", 0), // function EqualsWithStrings
+			/* 9 */ imports.NewTable("TStrings_ExtractName", 0), // function ExtractName
+			/* 10 */ imports.NewTable("TStrings_GetEnumerator", 0), // function GetEnumerator
+			/* 11 */ imports.NewTable("TStrings_GetText", 0), // function GetText
+			/* 12 */ imports.NewTable("TStrings_IndexOfWithString", 0), // function IndexOfWithString
+			/* 13 */ imports.NewTable("TStrings_IndexOfWithStringInt", 0), // function IndexOfWithStringInt
+			/* 14 */ imports.NewTable("TStrings_IndexOfName", 0), // function IndexOfName
+			/* 15 */ imports.NewTable("TStrings_IndexOfObject", 0), // function IndexOfObject
+			/* 16 */ imports.NewTable("TStrings_LastIndexOfWithStringInt", 0), // function LastIndexOfWithStringInt
+			/* 17 */ imports.NewTable("TStrings_LastIndexOfWithString", 0), // function LastIndexOfWithString
+			/* 18 */ imports.NewTable("TStrings_Pop", 0), // function Pop
+			/* 19 */ imports.NewTable("TStrings_ReverseToStrings", 0), // function ReverseToStrings
+			/* 20 */ imports.NewTable("TStrings_Shift", 0), // function Shift
+			/* 21 */ imports.NewTable("TStrings_SliceWithInt", 0), // function SliceWithInt
+			/* 22 */ imports.NewTable("TStrings_AddStringsWithStrings", 0), // procedure AddStringsWithStrings
+			/* 23 */ imports.NewTable("TStrings_AddStringsWithStringsBool", 0), // procedure AddStringsWithStringsBool
+			/* 24 */ imports.NewTable("TStrings_SetStringsWithStrings", 0), // procedure SetStringsWithStrings
+			/* 25 */ imports.NewTable("TStrings_AddText", 0), // procedure AddText
+			/* 26 */ imports.NewTable("TStrings_AddCommaText", 0), // procedure AddCommaText
+			/* 27 */ imports.NewTable("TStrings_AddDelimitedTextWithStringCharBool", 0), // procedure AddDelimitedTextWithStringCharBool
+			/* 28 */ imports.NewTable("TStrings_AddDelimitedtextWithString", 0), // procedure AddDelimitedtextWithString
+			/* 29 */ imports.NewTable("TStrings_Append", 0), // procedure Append
+			/* 30 */ imports.NewTable("TStrings_BeginUpdate", 0), // procedure BeginUpdate
+			/* 31 */ imports.NewTable("TStrings_Clear", 0), // procedure Clear
+			/* 32 */ imports.NewTable("TStrings_Delete", 0), // procedure Delete
+			/* 33 */ imports.NewTable("TStrings_EndUpdate", 0), // procedure EndUpdate
+			/* 34 */ imports.NewTable("TStrings_Exchange", 0), // procedure Exchange
+			/* 35 */ imports.NewTable("TStrings_Fill", 0), // procedure Fill
+			/* 36 */ imports.NewTable("TStrings_GetNameValue", 0), // procedure GetNameValue
+			/* 37 */ imports.NewTable("TStrings_Insert", 0), // procedure Insert
+			/* 38 */ imports.NewTable("TStrings_InsertObject", 0), // procedure InsertObject
+			/* 39 */ imports.NewTable("TStrings_LoadFromFileWithString", 0), // procedure LoadFromFileWithString
+			/* 40 */ imports.NewTable("TStrings_LoadFromFileWithStringBool", 0), // procedure LoadFromFileWithStringBool
+			/* 41 */ imports.NewTable("TStrings_LoadFromStreamWithStream", 0), // procedure LoadFromStreamWithStream
+			/* 42 */ imports.NewTable("TStrings_LoadFromStreamWithStreamBool", 0), // procedure LoadFromStreamWithStreamBool
+			/* 43 */ imports.NewTable("TStrings_Move", 0), // procedure Move
+			/* 44 */ imports.NewTable("TStrings_ReverseWithStrings", 0), // procedure ReverseWithStrings
+			/* 45 */ imports.NewTable("TStrings_SaveToFileWithString", 0), // procedure SaveToFileWithString
+			/* 46 */ imports.NewTable("TStrings_SaveToFileWithStringBool", 0), // procedure SaveToFileWithStringBool
+			/* 47 */ imports.NewTable("TStrings_SaveToStreamWithStream", 0), // procedure SaveToStreamWithStream
+			/* 48 */ imports.NewTable("TStrings_SaveToStreamWithStreamBool", 0), // procedure SaveToStreamWithStreamBool
+			/* 49 */ imports.NewTable("TStrings_SliceWithIntStrings", 0), // procedure SliceWithIntStrings
+			/* 50 */ imports.NewTable("TStrings_SetTextWithString", 0), // procedure SetTextWithString
+			/* 51 */ imports.NewTable("TStrings_AlwaysQuote", 0), // property AlwaysQuote
+			/* 52 */ imports.NewTable("TStrings_Capacity", 0), // property Capacity
+			/* 53 */ imports.NewTable("TStrings_CommaText", 0), // property CommaText
+			/* 54 */ imports.NewTable("TStrings_Count", 0), // property Count
+			/* 55 */ imports.NewTable("TStrings_DelimitedText", 0), // property DelimitedText
+			/* 56 */ imports.NewTable("TStrings_Delimiter", 0), // property Delimiter
+			/* 57 */ imports.NewTable("TStrings_LineBreak", 0), // property LineBreak
+			/* 58 */ imports.NewTable("TStrings_MissingNameValueSeparatorAction", 0), // property MissingNameValueSeparatorAction
+			/* 59 */ imports.NewTable("TStrings_Names", 0), // property Names
+			/* 60 */ imports.NewTable("TStrings_NameValueSeparator", 0), // property NameValueSeparator
+			/* 61 */ imports.NewTable("TStrings_Objects", 0), // property Objects
+			/* 62 */ imports.NewTable("TStrings_Options", 0), // property Options
+			/* 63 */ imports.NewTable("TStrings_QuoteChar", 0), // property QuoteChar
+			/* 64 */ imports.NewTable("TStrings_SkipLastLineBreak", 0), // property SkipLastLineBreak
+			/* 65 */ imports.NewTable("TStrings_TrailingLineBreak", 0), // property TrailingLineBreak
+			/* 66 */ imports.NewTable("TStrings_StrictDelimiter", 0), // property StrictDelimiter
+			/* 67 */ imports.NewTable("TStrings_Strings", 0), // property Strings
+			/* 68 */ imports.NewTable("TStrings_Text", 0), // property Text
+			/* 69 */ imports.NewTable("TStrings_TextLineBreakStyle", 0), // property TextLineBreakStyle
+			/* 70 */ imports.NewTable("TStrings_UseLocale", 0), // property UseLocale
+			/* 71 */ imports.NewTable("TStrings_ValueFromIndex", 0), // property ValueFromIndex
+			/* 72 */ imports.NewTable("TStrings_Values", 0), // property Values
+			/* 73 */ imports.NewTable("TStrings_WriteBOM", 0), // property WriteBOM
+		}
+	})
 	return stringsImport
 }

@@ -9,273 +9,378 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IListItem Parent: IPersistent
 type IListItem interface {
 	IPersistent
-	Caption() string                                                        // property
-	SetCaption(AValue string)                                               // property
-	Checked() bool                                                          // property
-	SetChecked(AValue bool)                                                 // property
-	Cut() bool                                                              // property
-	SetCut(AValue bool)                                                     // property
-	Data() uintptr                                                          // property
-	SetData(AValue uintptr)                                                 // property
-	DropTarget() bool                                                       // property
-	SetDropTarget(AValue bool)                                              // property
-	Focused() bool                                                          // property
-	SetFocused(AValue bool)                                                 // property
-	Index() int32                                                           // property
-	ImageIndex() TImageIndex                                                // property
-	SetImageIndex(AValue TImageIndex)                                       // property
-	Left() int32                                                            // property
-	SetLeft(AValue int32)                                                   // property
-	ListView() ICustomListView                                              // property
-	Owner() IListItems                                                      // property
-	Position() (resultPoint TPoint)                                         // property
-	SetPosition(AValue *TPoint)                                             // property
-	Selected() bool                                                         // property
-	SetSelected(AValue bool)                                                // property
-	StateIndex() TImageIndex                                                // property
-	SetStateIndex(AValue TImageIndex)                                       // property
-	SubItems() IStrings                                                     // property
-	SetSubItems(AValue IStrings)                                            // property
-	SubItemImages(AIndex int32) int32                                       // property
-	SetSubItemImages(AIndex int32, AValue int32)                            // property
-	Top() int32                                                             // property
-	SetTop(AValue int32)                                                    // property
-	DisplayRect(Code TDisplayCode) (resultRect TRect)                       // function
-	DisplayRectSubItem(subItem int32, Code TDisplayCode) (resultRect TRect) // function
-	EditCaption() bool                                                      // function
-	GetStates() TListItemStates                                             // function
-	Delete()                                                                // procedure
-	MakeVisible(PartialOK bool)                                             // procedure
+	DisplayRect(code types.TDisplayCode) types.TRect                       // function
+	DisplayRectSubItem(subItem int32, code types.TDisplayCode) types.TRect // function
+	EditCaption() bool                                                     // function
+	GetStates() types.TListItemStates                                      // function
+	Delete()                                                               // procedure
+	MakeVisible(partialOK bool)                                            // procedure
+	Caption() string                                                       // property Caption Getter
+	SetCaption(value string)                                               // property Caption Setter
+	Checked() bool                                                         // property Checked Getter
+	SetChecked(value bool)                                                 // property Checked Setter
+	Cut() bool                                                             // property Cut Getter
+	SetCut(value bool)                                                     // property Cut Setter
+	Data() uintptr                                                         // property Data Getter
+	SetData(value uintptr)                                                 // property Data Setter
+	DropTarget() bool                                                      // property DropTarget Getter
+	SetDropTarget(value bool)                                              // property DropTarget Setter
+	Focused() bool                                                         // property Focused Getter
+	SetFocused(value bool)                                                 // property Focused Setter
+	Index() int32                                                          // property Index Getter
+	ImageIndex() int32                                                     // property ImageIndex Getter
+	SetImageIndex(value int32)                                             // property ImageIndex Setter
+	Left() int32                                                           // property Left Getter
+	SetLeft(value int32)                                                   // property Left Setter
+	ListView() ICustomListView                                             // property ListView Getter
+	Owner() IListItems                                                     // property Owner Getter
+	Position() types.TPoint                                                // property Position Getter
+	SetPosition(value types.TPoint)                                        // property Position Setter
+	Selected() bool                                                        // property Selected Getter
+	SetSelected(value bool)                                                // property Selected Setter
+	StateIndex() int32                                                     // property StateIndex Getter
+	SetStateIndex(value int32)                                             // property StateIndex Setter
+	SubItems() IStrings                                                    // property SubItems Getter
+	SetSubItems(value IStrings)                                            // property SubItems Setter
+	SubItemImages(index int32) int32                                       // property SubItemImages Getter
+	SetSubItemImages(index int32, value int32)                             // property SubItemImages Setter
+	Top() int32                                                            // property Top Getter
+	SetTop(value int32)                                                    // property Top Setter
 }
 
-// TListItem Parent: TPersistent
 type TListItem struct {
 	TPersistent
 }
 
-func NewListItem(AOwner IListItems) IListItem {
-	r1 := listItemImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
-	return AsListItem(r1)
-}
-
-func (m *TListItem) Caption() string {
-	r1 := listItemImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TListItem) SetCaption(AValue string) {
-	listItemImportAPI().SysCallN(0, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TListItem) Checked() bool {
-	r1 := listItemImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TListItem) SetChecked(AValue bool) {
-	listItemImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TListItem) Cut() bool {
-	r1 := listItemImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TListItem) SetCut(AValue bool) {
-	listItemImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TListItem) Data() uintptr {
-	r1 := listItemImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return uintptr(r1)
-}
-
-func (m *TListItem) SetData(AValue uintptr) {
-	listItemImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TListItem) DropTarget() bool {
-	r1 := listItemImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TListItem) SetDropTarget(AValue bool) {
-	listItemImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TListItem) Focused() bool {
-	r1 := listItemImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TListItem) SetFocused(AValue bool) {
-	listItemImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TListItem) Index() int32 {
-	r1 := listItemImportAPI().SysCallN(14, m.Instance())
-	return int32(r1)
-}
-
-func (m *TListItem) ImageIndex() TImageIndex {
-	r1 := listItemImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *TListItem) SetImageIndex(AValue TImageIndex) {
-	listItemImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TListItem) Left() int32 {
-	r1 := listItemImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TListItem) SetLeft(AValue int32) {
-	listItemImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TListItem) ListView() ICustomListView {
-	r1 := listItemImportAPI().SysCallN(16, m.Instance())
-	return AsCustomListView(r1)
-}
-
-func (m *TListItem) Owner() IListItems {
-	r1 := listItemImportAPI().SysCallN(18, m.Instance())
-	return AsListItems(r1)
-}
-
-func (m *TListItem) Position() (resultPoint TPoint) {
-	listItemImportAPI().SysCallN(19, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+func (m *TListItem) DisplayRect(code types.TDisplayCode) (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(1, m.Instance(), uintptr(code), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TListItem) SetPosition(AValue *TPoint) {
-	listItemImportAPI().SysCallN(19, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
-}
-
-func (m *TListItem) Selected() bool {
-	r1 := listItemImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TListItem) SetSelected(AValue bool) {
-	listItemImportAPI().SysCallN(20, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TListItem) StateIndex() TImageIndex {
-	r1 := listItemImportAPI().SysCallN(21, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *TListItem) SetStateIndex(AValue TImageIndex) {
-	listItemImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TListItem) SubItems() IStrings {
-	r1 := listItemImportAPI().SysCallN(23, 0, m.Instance(), 0)
-	return AsStrings(r1)
-}
-
-func (m *TListItem) SetSubItems(AValue IStrings) {
-	listItemImportAPI().SysCallN(23, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TListItem) SubItemImages(AIndex int32) int32 {
-	r1 := listItemImportAPI().SysCallN(22, 0, m.Instance(), uintptr(AIndex))
-	return int32(r1)
-}
-
-func (m *TListItem) SetSubItemImages(AIndex int32, AValue int32) {
-	listItemImportAPI().SysCallN(22, 1, m.Instance(), uintptr(AIndex), uintptr(AValue))
-}
-
-func (m *TListItem) Top() int32 {
-	r1 := listItemImportAPI().SysCallN(24, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TListItem) SetTop(AValue int32) {
-	listItemImportAPI().SysCallN(24, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TListItem) DisplayRect(Code TDisplayCode) (resultRect TRect) {
-	listItemImportAPI().SysCallN(7, m.Instance(), uintptr(Code), uintptr(unsafePointer(&resultRect)))
-	return
-}
-
-func (m *TListItem) DisplayRectSubItem(subItem int32, Code TDisplayCode) (resultRect TRect) {
-	listItemImportAPI().SysCallN(8, m.Instance(), uintptr(subItem), uintptr(Code), uintptr(unsafePointer(&resultRect)))
+func (m *TListItem) DisplayRectSubItem(subItem int32, code types.TDisplayCode) (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(2, m.Instance(), uintptr(subItem), uintptr(code), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
 func (m *TListItem) EditCaption() bool {
-	r1 := listItemImportAPI().SysCallN(10, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listItemAPI().SysCallN(3, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListItem) GetStates() TListItemStates {
-	r1 := listItemImportAPI().SysCallN(12, m.Instance())
-	return TListItemStates(r1)
-}
-
-func ListItemClass() TClass {
-	ret := listItemImportAPI().SysCallN(2)
-	return TClass(ret)
+func (m *TListItem) GetStates() types.TListItemStates {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemAPI().SysCallN(4, m.Instance())
+	return types.TListItemStates(r)
 }
 
 func (m *TListItem) Delete() {
-	listItemImportAPI().SysCallN(6, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(5, m.Instance())
 }
 
-func (m *TListItem) MakeVisible(PartialOK bool) {
-	listItemImportAPI().SysCallN(17, m.Instance(), PascalBool(PartialOK))
+func (m *TListItem) MakeVisible(partialOK bool) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(6, m.Instance(), api.PasBool(partialOK))
+}
+
+func (m *TListItem) Caption() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := listItemAPI().SysCallN(7, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TListItem) SetCaption(value string) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(7, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TListItem) Checked() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := listItemAPI().SysCallN(8, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TListItem) SetChecked(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(8, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TListItem) Cut() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := listItemAPI().SysCallN(9, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TListItem) SetCut(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(9, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TListItem) Data() uintptr {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemAPI().SysCallN(10, 0, m.Instance())
+	return uintptr(r)
+}
+
+func (m *TListItem) SetData(value uintptr) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TListItem) DropTarget() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := listItemAPI().SysCallN(11, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TListItem) SetDropTarget(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(11, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TListItem) Focused() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := listItemAPI().SysCallN(12, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TListItem) SetFocused(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(12, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TListItem) Index() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemAPI().SysCallN(13, m.Instance())
+	return int32(r)
+}
+
+func (m *TListItem) ImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemAPI().SysCallN(14, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TListItem) SetImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TListItem) Left() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemAPI().SysCallN(15, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TListItem) SetLeft(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(15, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TListItem) ListView() ICustomListView {
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemAPI().SysCallN(16, m.Instance())
+	return AsCustomListView(r)
+}
+
+func (m *TListItem) Owner() IListItems {
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemAPI().SysCallN(17, m.Instance())
+	return AsListItems(r)
+}
+
+func (m *TListItem) Position() (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(18, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TListItem) SetPosition(value types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(18, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TListItem) Selected() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := listItemAPI().SysCallN(19, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TListItem) SetSelected(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(19, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TListItem) StateIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemAPI().SysCallN(20, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TListItem) SetStateIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(20, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TListItem) SubItems() IStrings {
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemAPI().SysCallN(21, 0, m.Instance())
+	return AsStrings(r)
+}
+
+func (m *TListItem) SetSubItems(value IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(21, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TListItem) SubItemImages(index int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemAPI().SysCallN(22, 0, m.Instance(), uintptr(index))
+	return int32(r)
+}
+
+func (m *TListItem) SetSubItemImages(index int32, value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(22, 1, m.Instance(), uintptr(index), uintptr(value))
+}
+
+func (m *TListItem) Top() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemAPI().SysCallN(23, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TListItem) SetTop(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listItemAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
+}
+
+// NewListItem class constructor
+func NewListItem(owner IListItems) IListItem {
+	r := listItemAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsListItem(r)
 }
 
 var (
-	listItemImport       *imports.Imports = nil
-	listItemImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ListItem_Caption", 0),
-		/*1*/ imports.NewTable("ListItem_Checked", 0),
-		/*2*/ imports.NewTable("ListItem_Class", 0),
-		/*3*/ imports.NewTable("ListItem_Create", 0),
-		/*4*/ imports.NewTable("ListItem_Cut", 0),
-		/*5*/ imports.NewTable("ListItem_Data", 0),
-		/*6*/ imports.NewTable("ListItem_Delete", 0),
-		/*7*/ imports.NewTable("ListItem_DisplayRect", 0),
-		/*8*/ imports.NewTable("ListItem_DisplayRectSubItem", 0),
-		/*9*/ imports.NewTable("ListItem_DropTarget", 0),
-		/*10*/ imports.NewTable("ListItem_EditCaption", 0),
-		/*11*/ imports.NewTable("ListItem_Focused", 0),
-		/*12*/ imports.NewTable("ListItem_GetStates", 0),
-		/*13*/ imports.NewTable("ListItem_ImageIndex", 0),
-		/*14*/ imports.NewTable("ListItem_Index", 0),
-		/*15*/ imports.NewTable("ListItem_Left", 0),
-		/*16*/ imports.NewTable("ListItem_ListView", 0),
-		/*17*/ imports.NewTable("ListItem_MakeVisible", 0),
-		/*18*/ imports.NewTable("ListItem_Owner", 0),
-		/*19*/ imports.NewTable("ListItem_Position", 0),
-		/*20*/ imports.NewTable("ListItem_Selected", 0),
-		/*21*/ imports.NewTable("ListItem_StateIndex", 0),
-		/*22*/ imports.NewTable("ListItem_SubItemImages", 0),
-		/*23*/ imports.NewTable("ListItem_SubItems", 0),
-		/*24*/ imports.NewTable("ListItem_Top", 0),
-	}
+	listItemOnce   base.Once
+	listItemImport *imports.Imports = nil
 )
 
-func listItemImportAPI() *imports.Imports {
-	if listItemImport == nil {
-		listItemImport = NewDefaultImports()
-		listItemImport.SetImportTable(listItemImportTables)
-		listItemImportTables = nil
-	}
+func listItemAPI() *imports.Imports {
+	listItemOnce.Do(func() {
+		listItemImport = api.NewDefaultImports()
+		listItemImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TListItem_Create", 0), // constructor NewListItem
+			/* 1 */ imports.NewTable("TListItem_DisplayRect", 0), // function DisplayRect
+			/* 2 */ imports.NewTable("TListItem_DisplayRectSubItem", 0), // function DisplayRectSubItem
+			/* 3 */ imports.NewTable("TListItem_EditCaption", 0), // function EditCaption
+			/* 4 */ imports.NewTable("TListItem_GetStates", 0), // function GetStates
+			/* 5 */ imports.NewTable("TListItem_Delete", 0), // procedure Delete
+			/* 6 */ imports.NewTable("TListItem_MakeVisible", 0), // procedure MakeVisible
+			/* 7 */ imports.NewTable("TListItem_Caption", 0), // property Caption
+			/* 8 */ imports.NewTable("TListItem_Checked", 0), // property Checked
+			/* 9 */ imports.NewTable("TListItem_Cut", 0), // property Cut
+			/* 10 */ imports.NewTable("TListItem_Data", 0), // property Data
+			/* 11 */ imports.NewTable("TListItem_DropTarget", 0), // property DropTarget
+			/* 12 */ imports.NewTable("TListItem_Focused", 0), // property Focused
+			/* 13 */ imports.NewTable("TListItem_Index", 0), // property Index
+			/* 14 */ imports.NewTable("TListItem_ImageIndex", 0), // property ImageIndex
+			/* 15 */ imports.NewTable("TListItem_Left", 0), // property Left
+			/* 16 */ imports.NewTable("TListItem_ListView", 0), // property ListView
+			/* 17 */ imports.NewTable("TListItem_Owner", 0), // property Owner
+			/* 18 */ imports.NewTable("TListItem_Position", 0), // property Position
+			/* 19 */ imports.NewTable("TListItem_Selected", 0), // property Selected
+			/* 20 */ imports.NewTable("TListItem_StateIndex", 0), // property StateIndex
+			/* 21 */ imports.NewTable("TListItem_SubItems", 0), // property SubItems
+			/* 22 */ imports.NewTable("TListItem_SubItemImages", 0), // property SubItemImages
+			/* 23 */ imports.NewTable("TListItem_Top", 0), // property Top
+		}
+	})
 	return listItemImport
 }

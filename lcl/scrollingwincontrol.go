@@ -9,80 +9,110 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IScrollingWinControl Parent: ICustomControl
 type IScrollingWinControl interface {
 	ICustomControl
-	HorzScrollBar() IControlScrollBar          // property
-	SetHorzScrollBar(AValue IControlScrollBar) // property
-	VertScrollBar() IControlScrollBar          // property
-	SetVertScrollBar(AValue IControlScrollBar) // property
-	UpdateScrollbars()                         // procedure
-	ScrollInView(AControl IControl)            // procedure
+	UpdateScrollbars()                        // procedure
+	ScrollInView(control IControl)            // procedure
+	HorzScrollBar() IControlScrollBar         // property HorzScrollBar Getter
+	SetHorzScrollBar(value IControlScrollBar) // property HorzScrollBar Setter
+	VertScrollBar() IControlScrollBar         // property VertScrollBar Getter
+	SetVertScrollBar(value IControlScrollBar) // property VertScrollBar Setter
 }
 
-// TScrollingWinControl Parent: TCustomControl
 type TScrollingWinControl struct {
 	TCustomControl
 }
 
-func NewScrollingWinControl(TheOwner IComponent) IScrollingWinControl {
-	r1 := scrollingWinControlImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsScrollingWinControl(r1)
+func (m *TScrollingWinControl) UpdateScrollbars() {
+	if !m.IsValid() {
+		return
+	}
+	scrollingWinControlAPI().SysCallN(2, m.Instance())
+}
+
+func (m *TScrollingWinControl) ScrollInView(control IControl) {
+	if !m.IsValid() {
+		return
+	}
+	scrollingWinControlAPI().SysCallN(3, m.Instance(), base.GetObjectUintptr(control))
 }
 
 func (m *TScrollingWinControl) HorzScrollBar() IControlScrollBar {
-	r1 := scrollingWinControlImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return AsControlScrollBar(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := scrollingWinControlAPI().SysCallN(4, 0, m.Instance())
+	return AsControlScrollBar(r)
 }
 
-func (m *TScrollingWinControl) SetHorzScrollBar(AValue IControlScrollBar) {
-	scrollingWinControlImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TScrollingWinControl) SetHorzScrollBar(value IControlScrollBar) {
+	if !m.IsValid() {
+		return
+	}
+	scrollingWinControlAPI().SysCallN(4, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TScrollingWinControl) VertScrollBar() IControlScrollBar {
-	r1 := scrollingWinControlImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return AsControlScrollBar(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := scrollingWinControlAPI().SysCallN(5, 0, m.Instance())
+	return AsControlScrollBar(r)
 }
 
-func (m *TScrollingWinControl) SetVertScrollBar(AValue IControlScrollBar) {
-	scrollingWinControlImportAPI().SysCallN(5, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TScrollingWinControl) SetVertScrollBar(value IControlScrollBar) {
+	if !m.IsValid() {
+		return
+	}
+	scrollingWinControlAPI().SysCallN(5, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func ScrollingWinControlClass() TClass {
-	ret := scrollingWinControlImportAPI().SysCallN(0)
-	return TClass(ret)
+// ScrollingWinControl  is static instance
+var ScrollingWinControl _ScrollingWinControlClass
+
+// _ScrollingWinControlClass is class type defined by TScrollingWinControl
+type _ScrollingWinControlClass uintptr
+
+func (_ScrollingWinControlClass) GetControlClassDefaultSize() (result types.TSize) {
+	scrollingWinControlAPI().SysCallN(1, uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TScrollingWinControl) UpdateScrollbars() {
-	scrollingWinControlImportAPI().SysCallN(4, m.Instance())
+// NewScrollingWinControl class constructor
+func NewScrollingWinControl(theOwner IComponent) IScrollingWinControl {
+	r := scrollingWinControlAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsScrollingWinControl(r)
 }
 
-func (m *TScrollingWinControl) ScrollInView(AControl IControl) {
-	scrollingWinControlImportAPI().SysCallN(3, m.Instance(), GetObjectUintptr(AControl))
+func TScrollingWinControlClass() types.TClass {
+	r := scrollingWinControlAPI().SysCallN(6)
+	return types.TClass(r)
 }
 
 var (
-	scrollingWinControlImport       *imports.Imports = nil
-	scrollingWinControlImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ScrollingWinControl_Class", 0),
-		/*1*/ imports.NewTable("ScrollingWinControl_Create", 0),
-		/*2*/ imports.NewTable("ScrollingWinControl_HorzScrollBar", 0),
-		/*3*/ imports.NewTable("ScrollingWinControl_ScrollInView", 0),
-		/*4*/ imports.NewTable("ScrollingWinControl_UpdateScrollbars", 0),
-		/*5*/ imports.NewTable("ScrollingWinControl_VertScrollBar", 0),
-	}
+	scrollingWinControlOnce   base.Once
+	scrollingWinControlImport *imports.Imports = nil
 )
 
-func scrollingWinControlImportAPI() *imports.Imports {
-	if scrollingWinControlImport == nil {
-		scrollingWinControlImport = NewDefaultImports()
-		scrollingWinControlImport.SetImportTable(scrollingWinControlImportTables)
-		scrollingWinControlImportTables = nil
-	}
+func scrollingWinControlAPI() *imports.Imports {
+	scrollingWinControlOnce.Do(func() {
+		scrollingWinControlImport = api.NewDefaultImports()
+		scrollingWinControlImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TScrollingWinControl_Create", 0), // constructor NewScrollingWinControl
+			/* 1 */ imports.NewTable("TScrollingWinControl_GetControlClassDefaultSize", 0), // static function GetControlClassDefaultSize
+			/* 2 */ imports.NewTable("TScrollingWinControl_UpdateScrollbars", 0), // procedure UpdateScrollbars
+			/* 3 */ imports.NewTable("TScrollingWinControl_ScrollInView", 0), // procedure ScrollInView
+			/* 4 */ imports.NewTable("TScrollingWinControl_HorzScrollBar", 0), // property HorzScrollBar
+			/* 5 */ imports.NewTable("TScrollingWinControl_VertScrollBar", 0), // property VertScrollBar
+			/* 6 */ imports.NewTable("TScrollingWinControl_TClass", 0), // function TScrollingWinControlClass
+		}
+	})
 	return scrollingWinControlImport
 }

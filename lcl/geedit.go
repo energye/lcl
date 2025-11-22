@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IGEEdit Parent: ICustomMaskEdit
@@ -19,34 +20,33 @@ type IGEEdit interface {
 	ICustomMaskEdit
 }
 
-// TGEEdit Parent: TCustomMaskEdit
 type TGEEdit struct {
 	TCustomMaskEdit
 }
 
-func NewGEEdit(TheOwner IComponent) IGEEdit {
-	r1 := gEEditImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsGEEdit(r1)
+// NewGEEdit class constructor
+func NewGEEdit(theOwner IComponent) IGEEdit {
+	r := gEEditAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsGEEdit(r)
 }
 
-func GEEditClass() TClass {
-	ret := gEEditImportAPI().SysCallN(0)
-	return TClass(ret)
+func TGEEditClass() types.TClass {
+	r := gEEditAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	gEEditImport       *imports.Imports = nil
-	gEEditImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("GEEdit_Class", 0),
-		/*1*/ imports.NewTable("GEEdit_Create", 0),
-	}
+	gEEditOnce   base.Once
+	gEEditImport *imports.Imports = nil
 )
 
-func gEEditImportAPI() *imports.Imports {
-	if gEEditImport == nil {
-		gEEditImport = NewDefaultImports()
-		gEEditImport.SetImportTable(gEEditImportTables)
-		gEEditImportTables = nil
-	}
+func gEEditAPI() *imports.Imports {
+	gEEditOnce.Do(func() {
+		gEEditImport = api.NewDefaultImports()
+		gEEditImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TGEEdit_Create", 0), // constructor NewGEEdit
+			/* 1 */ imports.NewTable("TGEEdit_TClass", 0), // function TGEEditClass
+		}
+	})
 	return gEEditImport
 }

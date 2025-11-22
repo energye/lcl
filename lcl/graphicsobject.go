@@ -9,9 +9,9 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IGraphicsObject Parent: IPersistent
@@ -21,54 +21,45 @@ type IGraphicsObject interface {
 	SetOnChange(fn TNotifyEvent)   // property event
 }
 
-// TGraphicsObject Parent: TPersistent
 type TGraphicsObject struct {
 	TPersistent
-	changingPtr uintptr
-	changePtr   uintptr
-}
-
-func NewGraphicsObject() IGraphicsObject {
-	r1 := graphicsObjectImportAPI().SysCallN(1)
-	return AsGraphicsObject(r1)
-}
-
-func GraphicsObjectClass() TClass {
-	ret := graphicsObjectImportAPI().SysCallN(0)
-	return TClass(ret)
 }
 
 func (m *TGraphicsObject) SetOnChanging(fn TNotifyEvent) {
-	if m.changingPtr != 0 {
-		RemoveEventElement(m.changingPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changingPtr = MakeEventDataPtr(fn)
-	graphicsObjectImportAPI().SysCallN(3, m.Instance(), m.changingPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 1, graphicsObjectAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TGraphicsObject) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	graphicsObjectImportAPI().SysCallN(2, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 2, graphicsObjectAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewGraphicsObject class constructor
+func NewGraphicsObject() IGraphicsObject {
+	r := graphicsObjectAPI().SysCallN(0)
+	return AsGraphicsObject(r)
 }
 
 var (
-	graphicsObjectImport       *imports.Imports = nil
-	graphicsObjectImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("GraphicsObject_Class", 0),
-		/*1*/ imports.NewTable("GraphicsObject_Create", 0),
-		/*2*/ imports.NewTable("GraphicsObject_SetOnChange", 0),
-		/*3*/ imports.NewTable("GraphicsObject_SetOnChanging", 0),
-	}
+	graphicsObjectOnce   base.Once
+	graphicsObjectImport *imports.Imports = nil
 )
 
-func graphicsObjectImportAPI() *imports.Imports {
-	if graphicsObjectImport == nil {
-		graphicsObjectImport = NewDefaultImports()
-		graphicsObjectImport.SetImportTable(graphicsObjectImportTables)
-		graphicsObjectImportTables = nil
-	}
+func graphicsObjectAPI() *imports.Imports {
+	graphicsObjectOnce.Do(func() {
+		graphicsObjectImport = api.NewDefaultImports()
+		graphicsObjectImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TGraphicsObject_Create", 0), // constructor NewGraphicsObject
+			/* 1 */ imports.NewTable("TGraphicsObject_OnChanging", 0), // event OnChanging
+			/* 2 */ imports.NewTable("TGraphicsObject_OnChange", 0), // event OnChange
+		}
+	})
 	return graphicsObjectImport
 }

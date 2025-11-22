@@ -49,15 +49,17 @@ type TOSVersion struct {
 var OSVersion TOSVersion
 
 // CheckMajor
-//  检测系统主版本号
-//  Detection system major version number.
+//
+//	检测系统主版本号
+//	Detection system major version number.
 func (v *TOSVersion) CheckMajor(AMajor int) bool {
 	return v.Major >= AMajor
 }
 
 // CheckMajorMinor
-//  检测系统主版本和子版本号
-//  Detect system major and sub-version numbers.
+//
+//	检测系统主版本和子版本号
+//	Detect system major and sub-version numbers.
 func (v *TOSVersion) CheckMajorMinor(AMajor, AMinor int) bool {
 	return v.Major > AMajor || (v.Major == AMajor && v.Minor >= AMinor)
 }
@@ -68,8 +70,9 @@ func (v *TOSVersion) CheckMajorMinorServicePackMajor(AMajor, AMinor, AServicePac
 }
 
 // ToString
-//  格式化的版本信息
-//  Formatted version information.
+//
+//	格式化的版本信息
+//	Formatted version information.
 func (v *TOSVersion) ToString() string {
 	return v.fmtVerString
 }

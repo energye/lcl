@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ISelectDirectoryDialog Parent: IOpenDialog
@@ -19,34 +20,33 @@ type ISelectDirectoryDialog interface {
 	IOpenDialog
 }
 
-// TSelectDirectoryDialog Parent: TOpenDialog
 type TSelectDirectoryDialog struct {
 	TOpenDialog
 }
 
-func NewSelectDirectoryDialog(AOwner IComponent) ISelectDirectoryDialog {
-	r1 := selectDirectoryDialogImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsSelectDirectoryDialog(r1)
+// NewSelectDirectoryDialog class constructor
+func NewSelectDirectoryDialog(owner IComponent) ISelectDirectoryDialog {
+	r := selectDirectoryDialogAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsSelectDirectoryDialog(r)
 }
 
-func SelectDirectoryDialogClass() TClass {
-	ret := selectDirectoryDialogImportAPI().SysCallN(0)
-	return TClass(ret)
+func TSelectDirectoryDialogClass() types.TClass {
+	r := selectDirectoryDialogAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	selectDirectoryDialogImport       *imports.Imports = nil
-	selectDirectoryDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("SelectDirectoryDialog_Class", 0),
-		/*1*/ imports.NewTable("SelectDirectoryDialog_Create", 0),
-	}
+	selectDirectoryDialogOnce   base.Once
+	selectDirectoryDialogImport *imports.Imports = nil
 )
 
-func selectDirectoryDialogImportAPI() *imports.Imports {
-	if selectDirectoryDialogImport == nil {
-		selectDirectoryDialogImport = NewDefaultImports()
-		selectDirectoryDialogImport.SetImportTable(selectDirectoryDialogImportTables)
-		selectDirectoryDialogImportTables = nil
-	}
+func selectDirectoryDialogAPI() *imports.Imports {
+	selectDirectoryDialogOnce.Do(func() {
+		selectDirectoryDialogImport = api.NewDefaultImports()
+		selectDirectoryDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TSelectDirectoryDialog_Create", 0), // constructor NewSelectDirectoryDialog
+			/* 1 */ imports.NewTable("TSelectDirectoryDialog_TClass", 0), // function TSelectDirectoryDialogClass
+		}
+	})
 	return selectDirectoryDialogImport
 }

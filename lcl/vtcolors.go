@@ -9,271 +9,374 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IVTColors Parent: IPersistent
-// class to collect all switchable colors into one place
 type IVTColors interface {
 	IPersistent
-	BackGroundColor() TColor                        // property
-	HeaderFontColor() TColor                        // property
-	NodeFontColor() TColor                          // property
-	BorderColor() TColor                            // property
-	SetBorderColor(AValue TColor)                   // property
-	DisabledColor() TColor                          // property
-	SetDisabledColor(AValue TColor)                 // property
-	DropMarkColor() TColor                          // property
-	SetDropMarkColor(AValue TColor)                 // property
-	DropTargetColor() TColor                        // property
-	SetDropTargetColor(AValue TColor)               // property
-	DropTargetBorderColor() TColor                  // property
-	SetDropTargetBorderColor(AValue TColor)         // property
-	FocusedSelectionColor() TColor                  // property
-	SetFocusedSelectionColor(AValue TColor)         // property
-	FocusedSelectionBorderColor() TColor            // property
-	SetFocusedSelectionBorderColor(AValue TColor)   // property
-	GridLineColor() TColor                          // property
-	SetGridLineColor(AValue TColor)                 // property
-	HeaderHotColor() TColor                         // property
-	SetHeaderHotColor(AValue TColor)                // property
-	HotColor() TColor                               // property
-	SetHotColor(AValue TColor)                      // property
-	SelectionRectangleBlendColor() TColor           // property
-	SetSelectionRectangleBlendColor(AValue TColor)  // property
-	SelectionRectangleBorderColor() TColor          // property
-	SetSelectionRectangleBorderColor(AValue TColor) // property
-	SelectionTextColor() TColor                     // property
-	SetSelectionTextColor(AValue TColor)            // property
-	TreeLineColor() TColor                          // property
-	SetTreeLineColor(AValue TColor)                 // property
-	UnfocusedColor() TColor                         // property
-	SetUnfocusedColor(AValue TColor)                // property
-	UnfocusedSelectionColor() TColor                // property
-	SetUnfocusedSelectionColor(AValue TColor)       // property
-	UnfocusedSelectionBorderColor() TColor          // property
-	SetUnfocusedSelectionBorderColor(AValue TColor) // property
+	BackGroundColor() types.TColor                       // property BackGroundColor Getter
+	HeaderFontColor() types.TColor                       // property HeaderFontColor Getter
+	NodeFontColor() types.TColor                         // property NodeFontColor Getter
+	BorderColor() types.TColor                           // property BorderColor Getter
+	SetBorderColor(value types.TColor)                   // property BorderColor Setter
+	DisabledColor() types.TColor                         // property DisabledColor Getter
+	SetDisabledColor(value types.TColor)                 // property DisabledColor Setter
+	DropMarkColor() types.TColor                         // property DropMarkColor Getter
+	SetDropMarkColor(value types.TColor)                 // property DropMarkColor Setter
+	DropTargetColor() types.TColor                       // property DropTargetColor Getter
+	SetDropTargetColor(value types.TColor)               // property DropTargetColor Setter
+	DropTargetBorderColor() types.TColor                 // property DropTargetBorderColor Getter
+	SetDropTargetBorderColor(value types.TColor)         // property DropTargetBorderColor Setter
+	FocusedSelectionColor() types.TColor                 // property FocusedSelectionColor Getter
+	SetFocusedSelectionColor(value types.TColor)         // property FocusedSelectionColor Setter
+	FocusedSelectionBorderColor() types.TColor           // property FocusedSelectionBorderColor Getter
+	SetFocusedSelectionBorderColor(value types.TColor)   // property FocusedSelectionBorderColor Setter
+	GridLineColor() types.TColor                         // property GridLineColor Getter
+	SetGridLineColor(value types.TColor)                 // property GridLineColor Setter
+	HeaderHotColor() types.TColor                        // property HeaderHotColor Getter
+	SetHeaderHotColor(value types.TColor)                // property HeaderHotColor Setter
+	HotColor() types.TColor                              // property HotColor Getter
+	SetHotColor(value types.TColor)                      // property HotColor Setter
+	SelectionRectangleBlendColor() types.TColor          // property SelectionRectangleBlendColor Getter
+	SetSelectionRectangleBlendColor(value types.TColor)  // property SelectionRectangleBlendColor Setter
+	SelectionRectangleBorderColor() types.TColor         // property SelectionRectangleBorderColor Getter
+	SetSelectionRectangleBorderColor(value types.TColor) // property SelectionRectangleBorderColor Setter
+	SelectionTextColor() types.TColor                    // property SelectionTextColor Getter
+	SetSelectionTextColor(value types.TColor)            // property SelectionTextColor Setter
+	TreeLineColor() types.TColor                         // property TreeLineColor Getter
+	SetTreeLineColor(value types.TColor)                 // property TreeLineColor Setter
+	UnfocusedColor() types.TColor                        // property UnfocusedColor Getter
+	SetUnfocusedColor(value types.TColor)                // property UnfocusedColor Setter
+	UnfocusedSelectionColor() types.TColor               // property UnfocusedSelectionColor Getter
+	SetUnfocusedSelectionColor(value types.TColor)       // property UnfocusedSelectionColor Setter
+	UnfocusedSelectionBorderColor() types.TColor         // property UnfocusedSelectionBorderColor Getter
+	SetUnfocusedSelectionBorderColor(value types.TColor) // property UnfocusedSelectionBorderColor Setter
 }
 
-// TVTColors Parent: TPersistent
-// class to collect all switchable colors into one place
 type TVTColors struct {
 	TPersistent
 }
 
-func NewVTColors(AOwner IBaseVirtualTree) IVTColors {
-	r1 := vTColorsImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
-	return AsVTColors(r1)
+func (m *TVTColors) BackGroundColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(1, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) BackGroundColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(0, m.Instance())
-	return TColor(r1)
+func (m *TVTColors) HeaderFontColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(2, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) HeaderFontColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(11, m.Instance())
-	return TColor(r1)
+func (m *TVTColors) NodeFontColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(3, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) NodeFontColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(14, m.Instance())
-	return TColor(r1)
+func (m *TVTColors) BorderColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(4, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) BorderColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetBorderColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetBorderColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) DisabledColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(5, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) DisabledColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetDisabledColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetDisabledColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) DropMarkColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(6, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) DropMarkColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetDropMarkColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetDropMarkColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) DropTargetColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(7, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) DropTargetColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetDropTargetColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetDropTargetColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) DropTargetBorderColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(8, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) DropTargetBorderColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetDropTargetBorderColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetDropTargetBorderColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) FocusedSelectionColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(9, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) FocusedSelectionColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetFocusedSelectionColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetFocusedSelectionColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) FocusedSelectionBorderColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(10, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) FocusedSelectionBorderColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetFocusedSelectionBorderColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetFocusedSelectionBorderColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) GridLineColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(11, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) GridLineColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetGridLineColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetGridLineColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) HeaderHotColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(12, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) HeaderHotColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetHeaderHotColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetHeaderHotColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) HotColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(13, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) HotColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetHotColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(13, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetHotColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) SelectionRectangleBlendColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(14, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) SelectionRectangleBlendColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetSelectionRectangleBlendColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetSelectionRectangleBlendColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) SelectionRectangleBorderColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(15, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) SelectionRectangleBorderColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetSelectionRectangleBorderColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(15, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetSelectionRectangleBorderColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(16, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) SelectionTextColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(16, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) SelectionTextColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetSelectionTextColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(16, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetSelectionTextColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) TreeLineColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(17, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) TreeLineColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(18, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetTreeLineColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(17, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetTreeLineColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) UnfocusedColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(18, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) UnfocusedColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(19, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetUnfocusedColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(18, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetUnfocusedColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) UnfocusedSelectionColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(19, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) UnfocusedSelectionColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(21, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetUnfocusedSelectionColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(19, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetUnfocusedSelectionColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
+func (m *TVTColors) UnfocusedSelectionBorderColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTColorsAPI().SysCallN(20, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TVTColors) UnfocusedSelectionBorderColor() TColor {
-	r1 := vTColorsImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TVTColors) SetUnfocusedSelectionBorderColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTColorsAPI().SysCallN(20, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTColors) SetUnfocusedSelectionBorderColor(AValue TColor) {
-	vTColorsImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
-}
-
-func VTColorsClass() TClass {
-	ret := vTColorsImportAPI().SysCallN(2)
-	return TClass(ret)
+// NewVTColors class constructor
+func NewVTColors(owner IBaseVirtualTree) IVTColors {
+	r := vTColorsAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsVTColors(r)
 }
 
 var (
-	vTColorsImport       *imports.Imports = nil
-	vTColorsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("VTColors_BackGroundColor", 0),
-		/*1*/ imports.NewTable("VTColors_BorderColor", 0),
-		/*2*/ imports.NewTable("VTColors_Class", 0),
-		/*3*/ imports.NewTable("VTColors_Create", 0),
-		/*4*/ imports.NewTable("VTColors_DisabledColor", 0),
-		/*5*/ imports.NewTable("VTColors_DropMarkColor", 0),
-		/*6*/ imports.NewTable("VTColors_DropTargetBorderColor", 0),
-		/*7*/ imports.NewTable("VTColors_DropTargetColor", 0),
-		/*8*/ imports.NewTable("VTColors_FocusedSelectionBorderColor", 0),
-		/*9*/ imports.NewTable("VTColors_FocusedSelectionColor", 0),
-		/*10*/ imports.NewTable("VTColors_GridLineColor", 0),
-		/*11*/ imports.NewTable("VTColors_HeaderFontColor", 0),
-		/*12*/ imports.NewTable("VTColors_HeaderHotColor", 0),
-		/*13*/ imports.NewTable("VTColors_HotColor", 0),
-		/*14*/ imports.NewTable("VTColors_NodeFontColor", 0),
-		/*15*/ imports.NewTable("VTColors_SelectionRectangleBlendColor", 0),
-		/*16*/ imports.NewTable("VTColors_SelectionRectangleBorderColor", 0),
-		/*17*/ imports.NewTable("VTColors_SelectionTextColor", 0),
-		/*18*/ imports.NewTable("VTColors_TreeLineColor", 0),
-		/*19*/ imports.NewTable("VTColors_UnfocusedColor", 0),
-		/*20*/ imports.NewTable("VTColors_UnfocusedSelectionBorderColor", 0),
-		/*21*/ imports.NewTable("VTColors_UnfocusedSelectionColor", 0),
-	}
+	vTColorsOnce   base.Once
+	vTColorsImport *imports.Imports = nil
 )
 
-func vTColorsImportAPI() *imports.Imports {
-	if vTColorsImport == nil {
-		vTColorsImport = NewDefaultImports()
-		vTColorsImport.SetImportTable(vTColorsImportTables)
-		vTColorsImportTables = nil
-	}
+func vTColorsAPI() *imports.Imports {
+	vTColorsOnce.Do(func() {
+		vTColorsImport = api.NewDefaultImports()
+		vTColorsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TVTColors_Create", 0), // constructor NewVTColors
+			/* 1 */ imports.NewTable("TVTColors_BackGroundColor", 0), // property BackGroundColor
+			/* 2 */ imports.NewTable("TVTColors_HeaderFontColor", 0), // property HeaderFontColor
+			/* 3 */ imports.NewTable("TVTColors_NodeFontColor", 0), // property NodeFontColor
+			/* 4 */ imports.NewTable("TVTColors_BorderColor", 0), // property BorderColor
+			/* 5 */ imports.NewTable("TVTColors_DisabledColor", 0), // property DisabledColor
+			/* 6 */ imports.NewTable("TVTColors_DropMarkColor", 0), // property DropMarkColor
+			/* 7 */ imports.NewTable("TVTColors_DropTargetColor", 0), // property DropTargetColor
+			/* 8 */ imports.NewTable("TVTColors_DropTargetBorderColor", 0), // property DropTargetBorderColor
+			/* 9 */ imports.NewTable("TVTColors_FocusedSelectionColor", 0), // property FocusedSelectionColor
+			/* 10 */ imports.NewTable("TVTColors_FocusedSelectionBorderColor", 0), // property FocusedSelectionBorderColor
+			/* 11 */ imports.NewTable("TVTColors_GridLineColor", 0), // property GridLineColor
+			/* 12 */ imports.NewTable("TVTColors_HeaderHotColor", 0), // property HeaderHotColor
+			/* 13 */ imports.NewTable("TVTColors_HotColor", 0), // property HotColor
+			/* 14 */ imports.NewTable("TVTColors_SelectionRectangleBlendColor", 0), // property SelectionRectangleBlendColor
+			/* 15 */ imports.NewTable("TVTColors_SelectionRectangleBorderColor", 0), // property SelectionRectangleBorderColor
+			/* 16 */ imports.NewTable("TVTColors_SelectionTextColor", 0), // property SelectionTextColor
+			/* 17 */ imports.NewTable("TVTColors_TreeLineColor", 0), // property TreeLineColor
+			/* 18 */ imports.NewTable("TVTColors_UnfocusedColor", 0), // property UnfocusedColor
+			/* 19 */ imports.NewTable("TVTColors_UnfocusedSelectionColor", 0), // property UnfocusedSelectionColor
+			/* 20 */ imports.NewTable("TVTColors_UnfocusedSelectionBorderColor", 0), // property UnfocusedSelectionBorderColor
+		}
+	})
 	return vTColorsImport
 }

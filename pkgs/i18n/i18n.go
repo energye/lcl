@@ -16,10 +16,11 @@ package i18n
 
 import (
 	"encoding/json"
-	"github.com/energye/lcl/emfs"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
+
+	"github.com/energye/lcl/emfs"
 )
 
 var (

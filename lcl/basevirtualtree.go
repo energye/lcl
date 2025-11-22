@@ -9,1428 +9,2114 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IBaseVirtualTree Parent: ICustomControl
-// ----- TBaseVirtualTree
 type IBaseVirtualTree interface {
 	ICustomControl
-	BottomNode() IVirtualNode                                                                                                             // property
-	SetBottomNode(AValue IVirtualNode)                                                                                                    // property
-	CheckedCount() int32                                                                                                                  // property
-	CheckImages() ICustomImageList                                                                                                        // property
-	CheckState(Node IVirtualNode) TCheckState                                                                                             // property
-	SetCheckState(Node IVirtualNode, AValue TCheckState)                                                                                  // property
-	CheckType(Node IVirtualNode) TCheckType                                                                                               // property
-	SetCheckType(Node IVirtualNode, AValue TCheckType)                                                                                    // property
-	ChildCount(Node IVirtualNode) uint32                                                                                                  // property
-	SetChildCount(Node IVirtualNode, AValue uint32)                                                                                       // property
-	ChildrenInitialized(Node IVirtualNode) bool                                                                                           // property
-	CutCopyCount() int32                                                                                                                  // property
-	DragImage() IVTDragImage                                                                                                              // property
-	DropTargetNode() IVirtualNode                                                                                                         // property
-	SetDropTargetNode(AValue IVirtualNode)                                                                                                // property
-	EmptyListMessage() string                                                                                                             // property
-	SetEmptyListMessage(AValue string)                                                                                                    // property
-	Expanded(Node IVirtualNode) bool                                                                                                      // property
-	SetExpanded(Node IVirtualNode, AValue bool)                                                                                           // property
-	FocusedColumn() TColumnIndex                                                                                                          // property
-	SetFocusedColumn(AValue TColumnIndex)                                                                                                 // property
-	FocusedNode() IVirtualNode                                                                                                            // property
-	SetFocusedNode(AValue IVirtualNode)                                                                                                   // property
-	FullyVisible(Node IVirtualNode) bool                                                                                                  // property
-	SetFullyVisible(Node IVirtualNode, AValue bool)                                                                                       // property
-	HasChildren(Node IVirtualNode) bool                                                                                                   // property
-	SetHasChildren(Node IVirtualNode, AValue bool)                                                                                        // property
-	HotNode() IVirtualNode                                                                                                                // property
-	IsDisabled(Node IVirtualNode) bool                                                                                                    // property
-	SetIsDisabled(Node IVirtualNode, AValue bool)                                                                                         // property
-	IsEffectivelyFiltered(Node IVirtualNode) bool                                                                                         // property
-	IsEffectivelyVisible(Node IVirtualNode) bool                                                                                          // property
-	IsFiltered(Node IVirtualNode) bool                                                                                                    // property
-	SetIsFiltered(Node IVirtualNode, AValue bool)                                                                                         // property
-	NodeIsVisible(Node IVirtualNode) bool                                                                                                 // property
-	SetNodeIsVisible(Node IVirtualNode, AValue bool)                                                                                      // property
-	MultiLine(Node IVirtualNode) bool                                                                                                     // property
-	SetMultiLine(Node IVirtualNode, AValue bool)                                                                                          // property
-	NodeHeight(Node IVirtualNode) uint32                                                                                                  // property
-	SetNodeHeight(Node IVirtualNode, AValue uint32)                                                                                       // property
-	NodeParent(Node IVirtualNode) IVirtualNode                                                                                            // property
-	SetNodeParent(Node IVirtualNode, AValue IVirtualNode)                                                                                 // property
-	OffsetX() int32                                                                                                                       // property
-	SetOffsetX(AValue int32)                                                                                                              // property
-	OffsetXY() (resultPoint TPoint)                                                                                                       // property
-	SetOffsetXY(AValue *TPoint)                                                                                                           // property
-	OffsetY() int32                                                                                                                       // property
-	SetOffsetY(AValue int32)                                                                                                              // property
-	OperationCount() uint32                                                                                                               // property
-	RootNode() IVirtualNode                                                                                                               // property
-	SearchBuffer() string                                                                                                                 // property
-	Selected(Node IVirtualNode) bool                                                                                                      // property
-	SetSelected(Node IVirtualNode, AValue bool)                                                                                           // property
-	SelectionLocked() bool                                                                                                                // property
-	SetSelectionLocked(AValue bool)                                                                                                       // property
-	TotalCount() uint32                                                                                                                   // property
-	TreeStates() TVirtualTreeStates                                                                                                       // property
-	SetTreeStates(AValue TVirtualTreeStates)                                                                                              // property
-	SelectedCount() int32                                                                                                                 // property
-	TopNode() IVirtualNode                                                                                                                // property
-	SetTopNode(AValue IVirtualNode)                                                                                                       // property
-	VerticalAlignment(Node IVirtualNode) Byte                                                                                             // property
-	SetVerticalAlignment(Node IVirtualNode, AValue Byte)                                                                                  // property
-	VisibleCount() uint32                                                                                                                 // property
-	VisiblePath(Node IVirtualNode) bool                                                                                                   // property
-	SetVisiblePath(Node IVirtualNode, AValue bool)                                                                                        // property
-	UpdateCount() uint32                                                                                                                  // property
-	AbsoluteIndex(Node IVirtualNode) uint32                                                                                               // function
-	AddChild(Parent IVirtualNode, UserData uintptr) IVirtualNode                                                                          // function
-	CancelEditNode() bool                                                                                                                 // function
-	CanEdit(Node IVirtualNode, Column TColumnIndex) bool                                                                                  // function
-	CopyTo(Source IVirtualNode, Tree IBaseVirtualTree, Mode TVTNodeAttachMode, ChildrenOnly bool) IVirtualNode                            // function
-	CopyTo1(Source, Target IVirtualNode, Mode TVTNodeAttachMode, ChildrenOnly bool) IVirtualNode                                          // function
-	EditNode(Node IVirtualNode, Column TColumnIndex) bool                                                                                 // function
-	EndEditNode() bool                                                                                                                    // function
-	GetDisplayRect(Node IVirtualNode, Column TColumnIndex, TextOnly bool, Unclipped bool, ApplyCellContentMargin bool) (resultRect TRect) // function
-	GetEffectivelyFiltered(Node IVirtualNode) bool                                                                                        // function
-	GetEffectivelyVisible(Node IVirtualNode) bool                                                                                         // function
-	GetFirst(ConsiderChildrenAbove bool) IVirtualNode                                                                                     // function
-	GetFirstChecked(State TCheckState, ConsiderChildrenAbove bool) IVirtualNode                                                           // function
-	GetFirstChild(Node IVirtualNode) IVirtualNode                                                                                         // function
-	GetFirstChildNoInit(Node IVirtualNode) IVirtualNode                                                                                   // function
-	GetFirstCutCopy(ConsiderChildrenAbove bool) IVirtualNode                                                                              // function
-	GetFirstInitialized(ConsiderChildrenAbove bool) IVirtualNode                                                                          // function
-	GetFirstLeaf() IVirtualNode                                                                                                           // function
-	GetFirstLevel(NodeLevel uint32) IVirtualNode                                                                                          // function
-	GetFirstNoInit(ConsiderChildrenAbove bool) IVirtualNode                                                                               // function
-	GetFirstSelected(ConsiderChildrenAbove bool) IVirtualNode                                                                             // function
-	GetFirstVisible(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVirtualNode                                     // function
-	GetFirstVisibleChild(Node IVirtualNode, IncludeFiltered bool) IVirtualNode                                                            // function
-	GetFirstVisibleChildNoInit(Node IVirtualNode, IncludeFiltered bool) IVirtualNode                                                      // function
-	GetFirstVisibleNoInit(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVirtualNode                               // function
-	GetLast(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                                   // function
-	GetLastInitialized(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                        // function
-	GetLastNoInit(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                             // function
-	GetLastChild(Node IVirtualNode) IVirtualNode                                                                                          // function
-	GetLastChildNoInit(Node IVirtualNode) IVirtualNode                                                                                    // function
-	GetLastVisible(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVirtualNode                                      // function
-	GetLastVisibleChild(Node IVirtualNode, IncludeFiltered bool) IVirtualNode                                                             // function
-	GetLastVisibleChildNoInit(Node IVirtualNode, IncludeFiltered bool) IVirtualNode                                                       // function
-	GetLastVisibleNoInit(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVirtualNode                                // function
-	GetMaxColumnWidth(Column TColumnIndex, UseSmartColumnWidth bool) int32                                                                // function
-	GetNext(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                                   // function
-	GetNextChecked(Node IVirtualNode, State TCheckState, ConsiderChildrenAbove bool) IVirtualNode                                         // function
-	GetNextChecked1(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                           // function
-	GetNextCutCopy(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                            // function
-	GetNextInitialized(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                        // function
-	GetNextLeaf(Node IVirtualNode) IVirtualNode                                                                                           // function
-	GetNextLevel(Node IVirtualNode, NodeLevel uint32) IVirtualNode                                                                        // function
-	GetNextNoInit(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                             // function
-	GetNextSelected(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                           // function
-	GetNextSibling(Node IVirtualNode) IVirtualNode                                                                                        // function
-	GetNextSiblingNoInit(Node IVirtualNode) IVirtualNode                                                                                  // function
-	GetNextVisible(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                            // function
-	GetNextVisibleNoInit(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                      // function
-	GetNextVisibleSibling(Node IVirtualNode, IncludeFiltered bool) IVirtualNode                                                           // function
-	GetNextVisibleSiblingNoInit(Node IVirtualNode, IncludeFiltered bool) IVirtualNode                                                     // function
-	GetNodeAt(P *TPoint) IVirtualNode                                                                                                     // function
-	GetNodeAt1(X, Y int32) IVirtualNode                                                                                                   // function
-	GetNodeAt2(X, Y int32, Relative bool, NodeTop *int32) IVirtualNode                                                                    // function
-	GetNodeData(Node IVirtualNode) uintptr                                                                                                // function
-	GetNodeLevel(Node IVirtualNode) uint32                                                                                                // function
-	GetPrevious(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                               // function
-	GetPreviousChecked(Node IVirtualNode, State TCheckState, ConsiderChildrenAbove bool) IVirtualNode                                     // function
-	GetPreviousCutCopy(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                        // function
-	GetPreviousInitialized(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                    // function
-	GetPreviousLeaf(Node IVirtualNode) IVirtualNode                                                                                       // function
-	GetPreviousLevel(Node IVirtualNode, NodeLevel uint32) IVirtualNode                                                                    // function
-	GetPreviousNoInit(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                         // function
-	GetPreviousSelected(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                       // function
-	GetPreviousSibling(Node IVirtualNode) IVirtualNode                                                                                    // function
-	GetPreviousSiblingNoInit(Node IVirtualNode) IVirtualNode                                                                              // function
-	GetPreviousVisible(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                        // function
-	GetPreviousVisibleNoInit(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode                                                  // function
-	GetPreviousVisibleSibling(Node IVirtualNode, IncludeFiltered bool) IVirtualNode                                                       // function
-	GetPreviousVisibleSiblingNoInit(Node IVirtualNode, IncludeFiltered bool) IVirtualNode                                                 // function
-	GetSortedCutCopySet(Resolve bool) TNodeArray                                                                                          // function
-	GetSortedSelection(Resolve bool) TNodeArray                                                                                           // function
-	GetTreeRect() (resultRect TRect)                                                                                                      // function
-	GetVisibleParent(Node IVirtualNode, IncludeFiltered bool) IVirtualNode                                                                // function
-	HasAsParent(Node, PotentialParent IVirtualNode) bool                                                                                  // function
-	InsertNode(Node IVirtualNode, Mode TVTNodeAttachMode, UserData uintptr) IVirtualNode                                                  // function
-	InvalidateNode(Node IVirtualNode) (resultRect TRect)                                                                                  // function
-	IsEditing() bool                                                                                                                      // function
-	IsMouseSelecting() bool                                                                                                               // function
-	IsEmpty() bool                                                                                                                        // function
-	PasteFromClipboard() bool                                                                                                             // function
-	ScrollIntoView(Node IVirtualNode, Center bool, Horizontally bool) bool                                                                // function
-	ScrollIntoView1(Column TColumnIndex, Center bool) bool                                                                                // function
-	Nodes(ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration                                                                           // function
-	CheckedNodes(State TCheckState, ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration                                                 // function
-	ChildNodes(Node IVirtualNode) IVTVirtualNodeEnumeration                                                                               // function
-	CutCopyNodes(ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration                                                                    // function
-	InitializedNodes(ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration                                                                // function
-	LeafNodes() IVTVirtualNodeEnumeration                                                                                                 // function
-	LevelNodes(NodeLevel uint32) IVTVirtualNodeEnumeration                                                                                // function
-	NoInitNodes(ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration                                                                     // function
-	SelectedNodes(ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration                                                                   // function
-	VisibleNodes(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVTVirtualNodeEnumeration                           // function
-	VisibleChildNodes(Node IVirtualNode, IncludeFiltered bool) IVTVirtualNodeEnumeration                                                  // function
-	VisibleChildNoInitNodes(Node IVirtualNode, IncludeFiltered bool) IVTVirtualNodeEnumeration                                            // function
-	VisibleNoInitNodes(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVTVirtualNodeEnumeration                     // function
-	AddFromStream(Stream IStream, TargetNode IVirtualNode)                                                                                // procedure
-	BeginSynch()                                                                                                                          // procedure
-	BeginUpdate()                                                                                                                         // procedure
-	CancelCutOrCopy()                                                                                                                     // procedure
-	CancelOperation()                                                                                                                     // procedure
-	Clear()                                                                                                                               // procedure
-	ClearChecked()                                                                                                                        // procedure
-	ClearSelection()                                                                                                                      // procedure
-	CopyToClipboard()                                                                                                                     // procedure
-	CutToClipboard()                                                                                                                      // procedure
-	DeleteChildren(Node IVirtualNode, ResetHasChildren bool)                                                                              // procedure
-	DeleteNode(Node IVirtualNode, Reindex bool)                                                                                           // procedure
-	DeleteSelectedNodes()                                                                                                                 // procedure
-	EndSynch()                                                                                                                            // procedure
-	EndUpdate()                                                                                                                           // procedure
-	EnsureNodeSelected()                                                                                                                  // procedure
-	FinishCutOrCopy()                                                                                                                     // procedure
-	FlushClipboard()                                                                                                                      // procedure
-	FullCollapse(Node IVirtualNode)                                                                                                       // procedure
-	FullExpand(Node IVirtualNode)                                                                                                         // procedure
-	GetTextInfo(Node IVirtualNode, Column TColumnIndex, AFont IFont, R *TRect, OutText *string)                                           // procedure
-	InvalidateChildren(Node IVirtualNode, Recursive bool)                                                                                 // procedure
-	InvalidateColumn(Column TColumnIndex)                                                                                                 // procedure
-	InvalidateToBottom(Node IVirtualNode)                                                                                                 // procedure
-	InvertSelection(VisibleOnly bool)                                                                                                     // procedure
-	LoadFromFile(FileName string)                                                                                                         // procedure
-	LoadFromStream(Stream IStream)                                                                                                        // procedure
-	MeasureItemHeight(Canvas ICanvas, Node IVirtualNode)                                                                                  // procedure
-	MoveTo(Source, Target IVirtualNode, Mode TVTNodeAttachMode, ChildrenOnly bool)                                                        // procedure
-	MoveTo1(Node IVirtualNode, Tree IBaseVirtualTree, Mode TVTNodeAttachMode, ChildrenOnly bool)                                          // procedure
-	PaintTree(TargetCanvas ICanvas, Window *TRect, Target *TPoint, PaintOptions TVTInternalPaintOptions, PixelFormat TPixelFormat)        // procedure
-	RepaintNode(Node IVirtualNode)                                                                                                        // procedure
-	ReinitChildren(Node IVirtualNode, Recursive bool)                                                                                     // procedure
-	ReinitNode(Node IVirtualNode, Recursive bool)                                                                                         // procedure
-	ResetNode(Node IVirtualNode)                                                                                                          // procedure
-	SaveToFile(FileName string)                                                                                                           // procedure
-	SaveToStream(Stream IStream, Node IVirtualNode)                                                                                       // procedure
-	SelectAll(VisibleOnly bool)                                                                                                           // procedure
-	Sort(Node IVirtualNode, Column TColumnIndex, Direction TSortDirection, DoInit bool)                                                   // procedure
-	SortTree(Column TColumnIndex, Direction TSortDirection, DoInit bool)                                                                  // procedure
-	ToggleNode(Node IVirtualNode)                                                                                                         // procedure
-	UpdateHorizontalRange()                                                                                                               // procedure
-	UpdateHorizontalScrollBar(DoRepaint bool)                                                                                             // procedure
-	UpdateRanges()                                                                                                                        // procedure
-	UpdateScrollBars(DoRepaint bool)                                                                                                      // procedure
-	UpdateVerticalRange()                                                                                                                 // procedure
-	UpdateVerticalScrollBar(DoRepaint bool)                                                                                               // procedure
-	ValidateChildren(Node IVirtualNode, Recursive bool)                                                                                   // procedure
-	ValidateNode(Node IVirtualNode, Recursive bool)                                                                                       // procedure
+	AbsoluteIndex(node types.PVirtualNode) uint32                                                                                                                                   // function
+	AddChild(parent types.PVirtualNode, userData uintptr) types.PVirtualNode                                                                                                        // function
+	CancelEditNode() bool                                                                                                                                                           // function
+	CanEdit(node types.PVirtualNode, column int32) bool                                                                                                                             // function
+	CopyToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool(source types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode // function
+	CopyToWithPVirtualNodeX2VTNodeAttachModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode          // function
+	DraggingToBool() bool                                                                                                                                                           // function
+	EditNode(node types.PVirtualNode, column int32) bool                                                                                                                            // function
+	EndEditNode() bool                                                                                                                                                              // function
+	GetDisplayRect(node types.PVirtualNode, column int32, textOnly bool, unclipped bool, applyCellContentMargin bool) types.TRect                                                   // function
+	GetEffectivelyFiltered(node types.PVirtualNode) bool                                                                                                                            // function
+	GetEffectivelyVisible(node types.PVirtualNode) bool                                                                                                                             // function
+	GetFirst(considerChildrenAbove bool) types.PVirtualNode                                                                                                                         // function
+	GetFirstChecked(state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode                                                                                         // function
+	GetFirstChild(node types.PVirtualNode) types.PVirtualNode                                                                                                                       // function
+	GetFirstChildNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                                                 // function
+	GetFirstCutCopy(considerChildrenAbove bool) types.PVirtualNode                                                                                                                  // function
+	GetFirstInitialized(considerChildrenAbove bool) types.PVirtualNode                                                                                                              // function
+	GetFirstLeaf() types.PVirtualNode                                                                                                                                               // function
+	GetFirstLevel(nodeLevel uint32) types.PVirtualNode                                                                                                                              // function
+	GetFirstNoInit(considerChildrenAbove bool) types.PVirtualNode                                                                                                                   // function
+	GetFirstSelected(considerChildrenAbove bool) types.PVirtualNode                                                                                                                 // function
+	GetFirstVisible(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                                                   // function
+	GetFirstVisibleChild(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                          // function
+	GetFirstVisibleChildNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                    // function
+	GetFirstVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                                             // function
+	GetLast(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                                 // function
+	GetLastInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                      // function
+	GetLastNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                           // function
+	GetLastChild(node types.PVirtualNode) types.PVirtualNode                                                                                                                        // function
+	GetLastChildNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                                                  // function
+	GetLastVisible(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                                                    // function
+	GetLastVisibleChild(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                           // function
+	GetLastVisibleChildNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                     // function
+	GetLastVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                                              // function
+	GetMaxColumnWidth(column int32, useSmartColumnWidth bool) int32                                                                                                                 // function
+	GetNext(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                                 // function
+	GetNextCheckedWithPVirtualNodeCheckStateBool(node types.PVirtualNode, state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode                                   // function
+	GetNextCheckedWithPVirtualNodeBool(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                      // function
+	GetNextCutCopy(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                          // function
+	GetNextInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                      // function
+	GetNextLeaf(node types.PVirtualNode) types.PVirtualNode                                                                                                                         // function
+	GetNextLevel(node types.PVirtualNode, nodeLevel uint32) types.PVirtualNode                                                                                                      // function
+	GetNextNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                           // function
+	GetNextSelected(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                         // function
+	GetNextSibling(node types.PVirtualNode) types.PVirtualNode                                                                                                                      // function
+	GetNextSiblingNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                                                // function
+	GetNextVisible(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                          // function
+	GetNextVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                    // function
+	GetNextVisibleSibling(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                         // function
+	GetNextVisibleSiblingNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                   // function
+	GetNodeAtWithPoint(P types.TPoint) types.PVirtualNode                                                                                                                           // function
+	GetNodeAtWithIntX2(X int32, Y int32) types.PVirtualNode                                                                                                                         // function
+	GetNodeAtWithIntX3Bool(X int32, Y int32, relative bool, nodeTop *int32) types.PVirtualNode                                                                                      // function
+	GetNodeData(node types.PVirtualNode) uintptr                                                                                                                                    // function
+	GetNodeLevel(node types.PVirtualNode) uint32                                                                                                                                    // function
+	GetPrevious(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                             // function
+	GetPreviousChecked(node types.PVirtualNode, state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode                                                             // function
+	GetPreviousCutCopy(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                      // function
+	GetPreviousInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                  // function
+	GetPreviousLeaf(node types.PVirtualNode) types.PVirtualNode                                                                                                                     // function
+	GetPreviousLevel(node types.PVirtualNode, nodeLevel uint32) types.PVirtualNode                                                                                                  // function
+	GetPreviousNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                       // function
+	GetPreviousSelected(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                     // function
+	GetPreviousSibling(node types.PVirtualNode) types.PVirtualNode                                                                                                                  // function
+	GetPreviousSiblingNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                                            // function
+	GetPreviousVisible(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                      // function
+	GetPreviousVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                // function
+	GetPreviousVisibleSibling(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                     // function
+	GetPreviousVisibleSiblingNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                               // function
+	GetSortedCutCopySet(resolve bool) types.TNodeArray                                                                                                                              // function
+	GetSortedSelection(resolve bool) types.TNodeArray                                                                                                                               // function
+	GetTreeRect() types.TRect                                                                                                                                                       // function
+	GetVisibleParent(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                              // function
+	HasAsParent(node types.PVirtualNode, potentialParent types.PVirtualNode) bool                                                                                                   // function
+	InsertNode(node types.PVirtualNode, mode types.TVTNodeAttachMode, userData uintptr) types.PVirtualNode                                                                          // function
+	InvalidateNode(node types.PVirtualNode) types.TRect                                                                                                                             // function
+	IsEditing() bool                                                                                                                                                                // function
+	IsMouseSelecting() bool                                                                                                                                                         // function
+	IsEmpty() bool                                                                                                                                                                  // function
+	PasteFromClipboard() bool                                                                                                                                                       // function
+	ScrollIntoViewWithPVirtualNodeBoolX2(node types.PVirtualNode, center bool, horizontally bool) bool                                                                              // function
+	ScrollIntoViewWithColumnIndexBool(column int32, center bool) bool                                                                                                               // function
+	// Nodes
+	//  Enumerations
+	Nodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                            // function
+	CheckedNodes(state types.TCheckState, considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                            // function
+	ChildNodes(node types.PVirtualNode) IVTVirtualNodeEnumerationWrap                                                                                          // function
+	CutCopyNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                     // function
+	InitializedNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                 // function
+	LeafNodes() IVTVirtualNodeEnumerationWrap                                                                                                                  // function
+	LevelNodes(nodeLevel uint32) IVTVirtualNodeEnumerationWrap                                                                                                 // function
+	NoInitNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                      // function
+	SelectedNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                    // function
+	VisibleNodes(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                      // function
+	VisibleChildNodes(node types.PVirtualNode, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                                             // function
+	VisibleChildNoInitNodes(node types.PVirtualNode, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                                       // function
+	VisibleNoInitNodes(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                // function
+	AddFromStream(stream IStream, targetNode types.PVirtualNode)                                                                                               // procedure
+	BeginDragWithBoolInt(immediate bool, threshold int32)                                                                                                      // procedure
+	BeginSynch()                                                                                                                                               // procedure
+	BeginUpdate()                                                                                                                                              // procedure
+	CancelCutOrCopy()                                                                                                                                          // procedure
+	CancelOperation()                                                                                                                                          // procedure
+	Clear()                                                                                                                                                    // procedure
+	ClearChecked()                                                                                                                                             // procedure
+	ClearSelection()                                                                                                                                           // procedure
+	CopyToClipboard()                                                                                                                                          // procedure
+	CutToClipboard()                                                                                                                                           // procedure
+	DeleteChildren(node types.PVirtualNode, resetHasChildren bool)                                                                                             // procedure
+	DeleteNode(node types.PVirtualNode, reindex bool)                                                                                                          // procedure
+	DeleteSelectedNodes()                                                                                                                                      // procedure
+	EndSynch()                                                                                                                                                 // procedure
+	EndUpdate()                                                                                                                                                // procedure
+	EnsureNodeSelected()                                                                                                                                       // procedure
+	FinishCutOrCopy()                                                                                                                                          // procedure
+	FlushClipboard()                                                                                                                                           // procedure
+	FullCollapse(node types.PVirtualNode)                                                                                                                      // procedure
+	FullExpand(node types.PVirtualNode)                                                                                                                        // procedure
+	GetHitTestInfoAt(X int32, Y int32, relative bool, hitInfo *THitInfo)                                                                                       // procedure
+	GetTextInfo(node types.PVirtualNode, column int32, font IFont, R *types.TRect, outText *string)                                                            // procedure
+	InvalidateChildren(node types.PVirtualNode, recursive bool)                                                                                                // procedure
+	InvalidateColumn(column int32)                                                                                                                             // procedure
+	InvalidateToBottom(node types.PVirtualNode)                                                                                                                // procedure
+	InvertSelection(visibleOnly bool)                                                                                                                          // procedure
+	LoadFromFile(fileName string)                                                                                                                              // procedure
+	LoadFromStream(stream IStream)                                                                                                                             // procedure
+	MeasureItemHeight(canvas ICanvas, node types.PVirtualNode)                                                                                                 // procedure
+	MoveToWithPVirtualNodeX2VTNodeAttachModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool)        // procedure
+	MoveToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool(node types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) // procedure
+	PaintTree(targetCanvas ICanvas, window types.TRect, target types.TPoint, paintOptions types.TVTInternalPaintOptions, pixelFormat types.TPixelFormat)       // procedure
+	RepaintNode(node types.PVirtualNode)                                                                                                                       // procedure
+	ReinitChildren(node types.PVirtualNode, recursive bool)                                                                                                    // procedure
+	ReinitNode(node types.PVirtualNode, recursive bool)                                                                                                        // procedure
+	ResetNode(node types.PVirtualNode)                                                                                                                         // procedure
+	SaveToFile(fileName string)                                                                                                                                // procedure
+	SaveToStream(stream IStream, node types.PVirtualNode)                                                                                                      // procedure
+	SelectAll(visibleOnly bool)                                                                                                                                // procedure
+	Sort(node types.PVirtualNode, column int32, direction types.TSortDirection, doInit bool)                                                                   // procedure
+	SortTree(column int32, direction types.TSortDirection, doInit bool)                                                                                        // procedure
+	ToggleNode(node types.PVirtualNode)                                                                                                                        // procedure
+	UpdateHorizontalRange()                                                                                                                                    // procedure
+	UpdateHorizontalScrollBar(doRepaint bool)                                                                                                                  // procedure
+	UpdateRanges()                                                                                                                                             // procedure
+	UpdateScrollBars(doRepaint bool)                                                                                                                           // procedure
+	UpdateVerticalRange()                                                                                                                                      // procedure
+	UpdateVerticalScrollBar(doRepaint bool)                                                                                                                    // procedure
+	// ValidateChildren
+	//  lcl: reenable in case TControl implementation change to match Delphi
+	//  function UseRightToLeftReading: Boolean;
+	ValidateChildren(node types.PVirtualNode, recursive bool)        // procedure
+	ValidateNode(node types.PVirtualNode, recursive bool)            // procedure
+	BottomNode() types.PVirtualNode                                  // property BottomNode Getter
+	SetBottomNode(value types.PVirtualNode)                          // property BottomNode Setter
+	CheckedCount() int32                                             // property CheckedCount Getter
+	CheckImages() ICustomImageList                                   // property CheckImages Getter
+	CheckState(node types.PVirtualNode) types.TCheckState            // property CheckState Getter
+	SetCheckState(node types.PVirtualNode, value types.TCheckState)  // property CheckState Setter
+	CheckType(node types.PVirtualNode) types.TCheckType              // property CheckType Getter
+	SetCheckType(node types.PVirtualNode, value types.TCheckType)    // property CheckType Setter
+	ChildCount(node types.PVirtualNode) uint32                       // property ChildCount Getter
+	SetChildCount(node types.PVirtualNode, value uint32)             // property ChildCount Setter
+	ChildrenInitialized(node types.PVirtualNode) bool                // property ChildrenInitialized Getter
+	CutCopyCount() int32                                             // property CutCopyCount Getter
+	DragImage() IVTDragImage                                         // property DragImage Getter
+	VTVDragManager() IVTDragManager                                  // property VTVDragManager Getter
+	DropTargetNode() types.PVirtualNode                              // property DropTargetNode Getter
+	SetDropTargetNode(value types.PVirtualNode)                      // property DropTargetNode Setter
+	EditLink() IVTEditLink                                           // property EditLink Getter
+	EmptyListMessage() string                                        // property EmptyListMessage Getter
+	SetEmptyListMessage(value string)                                // property EmptyListMessage Setter
+	Expanded(node types.PVirtualNode) bool                           // property Expanded Getter
+	SetExpanded(node types.PVirtualNode, value bool)                 // property Expanded Setter
+	FocusedColumn() int32                                            // property FocusedColumn Getter
+	SetFocusedColumn(value int32)                                    // property FocusedColumn Setter
+	FocusedNode() types.PVirtualNode                                 // property FocusedNode Getter
+	SetFocusedNode(value types.PVirtualNode)                         // property FocusedNode Setter
+	FullyVisible(node types.PVirtualNode) bool                       // property FullyVisible Getter
+	SetFullyVisible(node types.PVirtualNode, value bool)             // property FullyVisible Setter
+	HasChildren(node types.PVirtualNode) bool                        // property HasChildren Getter
+	SetHasChildren(node types.PVirtualNode, value bool)              // property HasChildren Setter
+	HotNode() types.PVirtualNode                                     // property HotNode Getter
+	IsDisabled(node types.PVirtualNode) bool                         // property IsDisabled Getter
+	SetIsDisabled(node types.PVirtualNode, value bool)               // property IsDisabled Setter
+	IsEffectivelyFiltered(node types.PVirtualNode) bool              // property IsEffectivelyFiltered Getter
+	IsEffectivelyVisible(node types.PVirtualNode) bool               // property IsEffectivelyVisible Getter
+	IsFiltered(node types.PVirtualNode) bool                         // property IsFiltered Getter
+	SetIsFiltered(node types.PVirtualNode, value bool)               // property IsFiltered Setter
+	IsVisibleWithPVirtualNodeToBool(node types.PVirtualNode) bool    // property IsVisible Getter
+	SetIsVisible(node types.PVirtualNode, value bool)                // property IsVisible Setter
+	MultiLine(node types.PVirtualNode) bool                          // property MultiLine Getter
+	SetMultiLine(node types.PVirtualNode, value bool)                // property MultiLine Setter
+	NodeHeight(node types.PVirtualNode) uint32                       // property NodeHeight Getter
+	SetNodeHeight(node types.PVirtualNode, value uint32)             // property NodeHeight Setter
+	NodeParent(node types.PVirtualNode) types.PVirtualNode           // property NodeParent Getter
+	SetNodeParent(node types.PVirtualNode, value types.PVirtualNode) // property NodeParent Setter
+	OffsetX() int32                                                  // property OffsetX Getter
+	SetOffsetX(value int32)                                          // property OffsetX Setter
+	OffsetXY() types.TPoint                                          // property OffsetXY Getter
+	SetOffsetXY(value types.TPoint)                                  // property OffsetXY Setter
+	OffsetY() int32                                                  // property OffsetY Getter
+	SetOffsetY(value int32)                                          // property OffsetY Setter
+	OperationCount() uint32                                          // property OperationCount Getter
+	RootNode() types.PVirtualNode                                    // property RootNode Getter
+	SearchBuffer() string                                            // property SearchBuffer Getter
+	Selected(node types.PVirtualNode) bool                           // property Selected Getter
+	SetSelected(node types.PVirtualNode, value bool)                 // property Selected Setter
+	SelectionLocked() bool                                           // property SelectionLocked Getter
+	SetSelectionLocked(value bool)                                   // property SelectionLocked Setter
+	TotalCount() uint32                                              // property TotalCount Getter
+	TreeStates() types.TVirtualTreeStates                            // property TreeStates Getter
+	SetTreeStates(value types.TVirtualTreeStates)                    // property TreeStates Setter
+	SelectedCount() int32                                            // property SelectedCount Getter
+	TopNode() types.PVirtualNode                                     // property TopNode Getter
+	SetTopNode(value types.PVirtualNode)                             // property TopNode Setter
+	VerticalAlignment(node types.PVirtualNode) byte                  // property VerticalAlignment Getter
+	SetVerticalAlignment(node types.PVirtualNode, value byte)        // property VerticalAlignment Setter
+	VisibleCount() uint32                                            // property VisibleCount Getter
+	VisiblePath(node types.PVirtualNode) bool                        // property VisiblePath Getter
+	SetVisiblePath(node types.PVirtualNode, value bool)              // property VisiblePath Setter
+	UpdateCount() uint32                                             // property UpdateCount Getter
 }
 
-// TBaseVirtualTree Parent: TCustomControl
-// ----- TBaseVirtualTree
 type TBaseVirtualTree struct {
 	TCustomControl
 }
 
-func NewBaseVirtualTree(AOwner IComponent) IBaseVirtualTree {
-	r1 := baseVirtualTreeImportAPI().SysCallN(25, GetObjectUintptr(AOwner))
-	return AsBaseVirtualTree(r1)
-}
-
-func (m *TBaseVirtualTree) BottomNode() IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return AsVirtualNode(r1)
-}
-
-func (m *TBaseVirtualTree) SetBottomNode(AValue IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(5, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) CheckedCount() int32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(13, m.Instance())
-	return int32(r1)
-}
-
-func (m *TBaseVirtualTree) CheckImages() ICustomImageList {
-	r1 := baseVirtualTreeImportAPI().SysCallN(10, m.Instance())
-	return AsCustomImageList(r1)
-}
-
-func (m *TBaseVirtualTree) CheckState(Node IVirtualNode) TCheckState {
-	r1 := baseVirtualTreeImportAPI().SysCallN(11, 0, m.Instance(), GetObjectUintptr(Node))
-	return TCheckState(r1)
-}
-
-func (m *TBaseVirtualTree) SetCheckState(Node IVirtualNode, AValue TCheckState) {
-	baseVirtualTreeImportAPI().SysCallN(11, 1, m.Instance(), GetObjectUintptr(Node), uintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) CheckType(Node IVirtualNode) TCheckType {
-	r1 := baseVirtualTreeImportAPI().SysCallN(12, 0, m.Instance(), GetObjectUintptr(Node))
-	return TCheckType(r1)
-}
-
-func (m *TBaseVirtualTree) SetCheckType(Node IVirtualNode, AValue TCheckType) {
-	baseVirtualTreeImportAPI().SysCallN(12, 1, m.Instance(), GetObjectUintptr(Node), uintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) ChildCount(Node IVirtualNode) uint32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(15, 0, m.Instance(), GetObjectUintptr(Node))
-	return uint32(r1)
-}
-
-func (m *TBaseVirtualTree) SetChildCount(Node IVirtualNode, AValue uint32) {
-	baseVirtualTreeImportAPI().SysCallN(15, 1, m.Instance(), GetObjectUintptr(Node), uintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) ChildrenInitialized(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(17, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) CutCopyCount() int32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(26, m.Instance())
-	return int32(r1)
-}
-
-func (m *TBaseVirtualTree) DragImage() IVTDragImage {
-	r1 := baseVirtualTreeImportAPI().SysCallN(32, m.Instance())
-	return AsVTDragImage(r1)
-}
-
-func (m *TBaseVirtualTree) DropTargetNode() IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(33, 0, m.Instance(), 0)
-	return AsVirtualNode(r1)
-}
-
-func (m *TBaseVirtualTree) SetDropTargetNode(AValue IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(33, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) EmptyListMessage() string {
-	r1 := baseVirtualTreeImportAPI().SysCallN(35, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TBaseVirtualTree) SetEmptyListMessage(AValue string) {
-	baseVirtualTreeImportAPI().SysCallN(35, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TBaseVirtualTree) Expanded(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(40, 0, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) SetExpanded(Node IVirtualNode, AValue bool) {
-	baseVirtualTreeImportAPI().SysCallN(40, 1, m.Instance(), GetObjectUintptr(Node), PascalBool(AValue))
-}
-
-func (m *TBaseVirtualTree) FocusedColumn() TColumnIndex {
-	r1 := baseVirtualTreeImportAPI().SysCallN(43, 0, m.Instance(), 0)
-	return TColumnIndex(r1)
-}
-
-func (m *TBaseVirtualTree) SetFocusedColumn(AValue TColumnIndex) {
-	baseVirtualTreeImportAPI().SysCallN(43, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) FocusedNode() IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(44, 0, m.Instance(), 0)
-	return AsVirtualNode(r1)
-}
-
-func (m *TBaseVirtualTree) SetFocusedNode(AValue IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(44, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) FullyVisible(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(47, 0, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) SetFullyVisible(Node IVirtualNode, AValue bool) {
-	baseVirtualTreeImportAPI().SysCallN(47, 1, m.Instance(), GetObjectUintptr(Node), PascalBool(AValue))
-}
-
-func (m *TBaseVirtualTree) HasChildren(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(115, 0, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) SetHasChildren(Node IVirtualNode, AValue bool) {
-	baseVirtualTreeImportAPI().SysCallN(115, 1, m.Instance(), GetObjectUintptr(Node), PascalBool(AValue))
-}
-
-func (m *TBaseVirtualTree) HotNode() IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(116, m.Instance())
-	return AsVirtualNode(r1)
-}
-
-func (m *TBaseVirtualTree) IsDisabled(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(124, 0, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) SetIsDisabled(Node IVirtualNode, AValue bool) {
-	baseVirtualTreeImportAPI().SysCallN(124, 1, m.Instance(), GetObjectUintptr(Node), PascalBool(AValue))
-}
-
-func (m *TBaseVirtualTree) IsEffectivelyFiltered(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(126, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) IsEffectivelyVisible(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(127, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) IsFiltered(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(129, 0, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) SetIsFiltered(Node IVirtualNode, AValue bool) {
-	baseVirtualTreeImportAPI().SysCallN(129, 1, m.Instance(), GetObjectUintptr(Node), PascalBool(AValue))
-}
-
-func (m *TBaseVirtualTree) NodeIsVisible(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(141, 0, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) SetNodeIsVisible(Node IVirtualNode, AValue bool) {
-	baseVirtualTreeImportAPI().SysCallN(141, 1, m.Instance(), GetObjectUintptr(Node), PascalBool(AValue))
-}
-
-func (m *TBaseVirtualTree) MultiLine(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(138, 0, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) SetMultiLine(Node IVirtualNode, AValue bool) {
-	baseVirtualTreeImportAPI().SysCallN(138, 1, m.Instance(), GetObjectUintptr(Node), PascalBool(AValue))
-}
-
-func (m *TBaseVirtualTree) NodeHeight(Node IVirtualNode) uint32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(140, 0, m.Instance(), GetObjectUintptr(Node))
-	return uint32(r1)
-}
-
-func (m *TBaseVirtualTree) SetNodeHeight(Node IVirtualNode, AValue uint32) {
-	baseVirtualTreeImportAPI().SysCallN(140, 1, m.Instance(), GetObjectUintptr(Node), uintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) NodeParent(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(142, 0, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
-}
-
-func (m *TBaseVirtualTree) SetNodeParent(Node IVirtualNode, AValue IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(142, 1, m.Instance(), GetObjectUintptr(Node), GetObjectUintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) OffsetX() int32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(144, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TBaseVirtualTree) SetOffsetX(AValue int32) {
-	baseVirtualTreeImportAPI().SysCallN(144, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) OffsetXY() (resultPoint TPoint) {
-	baseVirtualTreeImportAPI().SysCallN(145, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
-	return
-}
-
-func (m *TBaseVirtualTree) SetOffsetXY(AValue *TPoint) {
-	baseVirtualTreeImportAPI().SysCallN(145, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
-}
-
-func (m *TBaseVirtualTree) OffsetY() int32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(146, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TBaseVirtualTree) SetOffsetY(AValue int32) {
-	baseVirtualTreeImportAPI().SysCallN(146, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) OperationCount() uint32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(147, m.Instance())
-	return uint32(r1)
-}
-
-func (m *TBaseVirtualTree) RootNode() IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(154, m.Instance())
-	return AsVirtualNode(r1)
-}
-
-func (m *TBaseVirtualTree) SearchBuffer() string {
-	r1 := baseVirtualTreeImportAPI().SysCallN(159, m.Instance())
-	return GoStr(r1)
-}
-
-func (m *TBaseVirtualTree) Selected(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(161, 0, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) SetSelected(Node IVirtualNode, AValue bool) {
-	baseVirtualTreeImportAPI().SysCallN(161, 1, m.Instance(), GetObjectUintptr(Node), PascalBool(AValue))
-}
-
-func (m *TBaseVirtualTree) SelectionLocked() bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(164, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) SetSelectionLocked(AValue bool) {
-	baseVirtualTreeImportAPI().SysCallN(164, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TBaseVirtualTree) TotalCount() uint32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(169, m.Instance())
-	return uint32(r1)
-}
-
-func (m *TBaseVirtualTree) TreeStates() TVirtualTreeStates {
-	r1 := baseVirtualTreeImportAPI().SysCallN(170, 0, m.Instance(), 0)
-	return TVirtualTreeStates(r1)
-}
-
-func (m *TBaseVirtualTree) SetTreeStates(AValue TVirtualTreeStates) {
-	baseVirtualTreeImportAPI().SysCallN(170, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) SelectedCount() int32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(162, m.Instance())
-	return int32(r1)
-}
-
-func (m *TBaseVirtualTree) TopNode() IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(168, 0, m.Instance(), 0)
-	return AsVirtualNode(r1)
-}
-
-func (m *TBaseVirtualTree) SetTopNode(AValue IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(168, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) VerticalAlignment(Node IVirtualNode) Byte {
-	r1 := baseVirtualTreeImportAPI().SysCallN(180, 0, m.Instance(), GetObjectUintptr(Node))
-	return Byte(r1)
-}
-
-func (m *TBaseVirtualTree) SetVerticalAlignment(Node IVirtualNode, AValue Byte) {
-	baseVirtualTreeImportAPI().SysCallN(180, 1, m.Instance(), GetObjectUintptr(Node), uintptr(AValue))
-}
-
-func (m *TBaseVirtualTree) VisibleCount() uint32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(183, m.Instance())
-	return uint32(r1)
-}
-
-func (m *TBaseVirtualTree) VisiblePath(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(186, 0, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
-}
-
-func (m *TBaseVirtualTree) SetVisiblePath(Node IVirtualNode, AValue bool) {
-	baseVirtualTreeImportAPI().SysCallN(186, 1, m.Instance(), GetObjectUintptr(Node), PascalBool(AValue))
-}
-
-func (m *TBaseVirtualTree) UpdateCount() uint32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(171, m.Instance())
-	return uint32(r1)
-}
-
-func (m *TBaseVirtualTree) AbsoluteIndex(Node IVirtualNode) uint32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(Node))
-	return uint32(r1)
-}
-
-func (m *TBaseVirtualTree) AddChild(Parent IVirtualNode, UserData uintptr) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Parent), uintptr(UserData))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) AbsoluteIndex(node types.PVirtualNode) uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(1, m.Instance(), uintptr(node))
+	return uint32(r)
+}
+
+func (m *TBaseVirtualTree) AddChild(parent types.PVirtualNode, userData uintptr) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(2, m.Instance(), uintptr(parent), uintptr(userData))
+	return types.PVirtualNode(r)
 }
 
 func (m *TBaseVirtualTree) CancelEditNode() bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(8, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(3, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) CanEdit(Node IVirtualNode, Column TColumnIndex) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(Node), uintptr(Column))
-	return GoBool(r1)
+func (m *TBaseVirtualTree) CanEdit(node types.PVirtualNode, column int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(4, m.Instance(), uintptr(node), uintptr(column))
+	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) CopyTo(Source IVirtualNode, Tree IBaseVirtualTree, Mode TVTNodeAttachMode, ChildrenOnly bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(22, m.Instance(), GetObjectUintptr(Source), GetObjectUintptr(Tree), uintptr(Mode), PascalBool(ChildrenOnly))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) CopyToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool(source types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(5, m.Instance(), uintptr(source), base.GetObjectUintptr(tree), uintptr(mode), api.PasBool(childrenOnly))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) CopyTo1(Source, Target IVirtualNode, Mode TVTNodeAttachMode, ChildrenOnly bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(23, m.Instance(), GetObjectUintptr(Source), GetObjectUintptr(Target), uintptr(Mode), PascalBool(ChildrenOnly))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) CopyToWithPVirtualNodeX2VTNodeAttachModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(6, m.Instance(), uintptr(source), uintptr(target), uintptr(mode), api.PasBool(childrenOnly))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) EditNode(Node IVirtualNode, Column TColumnIndex) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(34, m.Instance(), GetObjectUintptr(Node), uintptr(Column))
-	return GoBool(r1)
+func (m *TBaseVirtualTree) DraggingToBool() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(7, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) EditNode(node types.PVirtualNode, column int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(8, m.Instance(), uintptr(node), uintptr(column))
+	return api.GoBool(r)
 }
 
 func (m *TBaseVirtualTree) EndEditNode() bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(36, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(9, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) GetDisplayRect(Node IVirtualNode, Column TColumnIndex, TextOnly bool, Unclipped bool, ApplyCellContentMargin bool) (resultRect TRect) {
-	baseVirtualTreeImportAPI().SysCallN(48, m.Instance(), GetObjectUintptr(Node), uintptr(Column), PascalBool(TextOnly), PascalBool(Unclipped), PascalBool(ApplyCellContentMargin), uintptr(unsafePointer(&resultRect)))
+func (m *TBaseVirtualTree) GetDisplayRect(node types.PVirtualNode, column int32, textOnly bool, unclipped bool, applyCellContentMargin bool) (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(10, m.Instance(), uintptr(node), uintptr(column), api.PasBool(textOnly), api.PasBool(unclipped), api.PasBool(applyCellContentMargin), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TBaseVirtualTree) GetEffectivelyFiltered(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(49, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
+func (m *TBaseVirtualTree) GetEffectivelyFiltered(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(11, m.Instance(), uintptr(node))
+	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) GetEffectivelyVisible(Node IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(50, m.Instance(), GetObjectUintptr(Node))
-	return GoBool(r1)
+func (m *TBaseVirtualTree) GetEffectivelyVisible(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(12, m.Instance(), uintptr(node))
+	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) GetFirst(ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(51, m.Instance(), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirst(considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(13, m.Instance(), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstChecked(State TCheckState, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(52, m.Instance(), uintptr(State), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstChecked(state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(14, m.Instance(), uintptr(state), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstChild(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(53, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstChild(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(15, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstChildNoInit(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(54, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstChildNoInit(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(16, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstCutCopy(ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(55, m.Instance(), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstCutCopy(considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(17, m.Instance(), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstInitialized(ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(56, m.Instance(), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstInitialized(considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(18, m.Instance(), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstLeaf() IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(57, m.Instance())
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstLeaf() types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(19, m.Instance())
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstLevel(NodeLevel uint32) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(58, m.Instance(), uintptr(NodeLevel))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstLevel(nodeLevel uint32) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(20, m.Instance(), uintptr(nodeLevel))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstNoInit(ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(59, m.Instance(), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstNoInit(considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(21, m.Instance(), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstSelected(ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(60, m.Instance(), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstSelected(considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(22, m.Instance(), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstVisible(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(61, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstVisible(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(23, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstVisibleChild(Node IVirtualNode, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(62, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstVisibleChild(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(24, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstVisibleChildNoInit(Node IVirtualNode, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(63, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstVisibleChildNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(25, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetFirstVisibleNoInit(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(64, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetFirstVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(26, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetLast(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(65, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetLast(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(27, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetLastInitialized(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(68, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetLastInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(28, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetLastNoInit(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(69, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetLastNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(29, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetLastChild(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(66, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetLastChild(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(30, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetLastChildNoInit(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(67, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetLastChildNoInit(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(31, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetLastVisible(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(70, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetLastVisible(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(32, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetLastVisibleChild(Node IVirtualNode, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(71, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetLastVisibleChild(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(33, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetLastVisibleChildNoInit(Node IVirtualNode, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(72, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetLastVisibleChildNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(34, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetLastVisibleNoInit(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(73, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetLastVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(35, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetMaxColumnWidth(Column TColumnIndex, UseSmartColumnWidth bool) int32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(74, m.Instance(), uintptr(Column), PascalBool(UseSmartColumnWidth))
-	return int32(r1)
+func (m *TBaseVirtualTree) GetMaxColumnWidth(column int32, useSmartColumnWidth bool) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(36, m.Instance(), uintptr(column), api.PasBool(useSmartColumnWidth))
+	return int32(r)
 }
 
-func (m *TBaseVirtualTree) GetNext(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(75, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNext(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(37, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextChecked(Node IVirtualNode, State TCheckState, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(76, m.Instance(), GetObjectUintptr(Node), uintptr(State), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextCheckedWithPVirtualNodeCheckStateBool(node types.PVirtualNode, state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(38, m.Instance(), uintptr(node), uintptr(state), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextChecked1(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(77, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextCheckedWithPVirtualNodeBool(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(39, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextCutCopy(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(78, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextCutCopy(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(40, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextInitialized(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(79, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(41, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextLeaf(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(80, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextLeaf(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(42, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextLevel(Node IVirtualNode, NodeLevel uint32) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(81, m.Instance(), GetObjectUintptr(Node), uintptr(NodeLevel))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextLevel(node types.PVirtualNode, nodeLevel uint32) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(43, m.Instance(), uintptr(node), uintptr(nodeLevel))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextNoInit(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(82, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(44, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextSelected(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(83, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextSelected(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(45, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextSibling(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(84, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextSibling(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(46, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextSiblingNoInit(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(85, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextSiblingNoInit(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(47, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextVisible(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(86, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextVisible(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(48, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextVisibleNoInit(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(87, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(49, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextVisibleSibling(Node IVirtualNode, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(88, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextVisibleSibling(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(50, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextVisibleSiblingNoInit(Node IVirtualNode, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(89, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNextVisibleSiblingNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(51, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNodeAt(P *TPoint) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(90, m.Instance(), uintptr(unsafePointer(P)))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNodeAtWithPoint(P types.TPoint) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(52, m.Instance(), uintptr(base.UnsafePointer(&P)))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNodeAt1(X, Y int32) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(91, m.Instance(), uintptr(X), uintptr(Y))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNodeAtWithIntX2(X int32, Y int32) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(53, m.Instance(), uintptr(X), uintptr(Y))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNodeAt2(X, Y int32, Relative bool, NodeTop *int32) IVirtualNode {
-	var result2 uintptr
-	r1 := baseVirtualTreeImportAPI().SysCallN(92, m.Instance(), uintptr(X), uintptr(Y), PascalBool(Relative), uintptr(unsafePointer(&result2)))
-	*NodeTop = int32(result2)
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetNodeAtWithIntX3Bool(X int32, Y int32, relative bool, nodeTop *int32) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	nodeTopPtr := uintptr(*nodeTop)
+	r := baseVirtualTreeAPI().SysCallN(54, m.Instance(), uintptr(X), uintptr(Y), api.PasBool(relative), uintptr(base.UnsafePointer(&nodeTopPtr)))
+	*nodeTop = int32(nodeTopPtr)
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNodeData(Node IVirtualNode) uintptr {
-	r1 := baseVirtualTreeImportAPI().SysCallN(93, m.Instance(), GetObjectUintptr(Node))
-	return uintptr(r1)
+func (m *TBaseVirtualTree) GetNodeData(node types.PVirtualNode) uintptr {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(55, m.Instance(), uintptr(node))
+	return uintptr(r)
 }
 
-func (m *TBaseVirtualTree) GetNodeLevel(Node IVirtualNode) uint32 {
-	r1 := baseVirtualTreeImportAPI().SysCallN(94, m.Instance(), GetObjectUintptr(Node))
-	return uint32(r1)
+func (m *TBaseVirtualTree) GetNodeLevel(node types.PVirtualNode) uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(56, m.Instance(), uintptr(node))
+	return uint32(r)
 }
 
-func (m *TBaseVirtualTree) GetPrevious(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(95, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPrevious(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(57, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousChecked(Node IVirtualNode, State TCheckState, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(96, m.Instance(), GetObjectUintptr(Node), uintptr(State), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousChecked(node types.PVirtualNode, state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(58, m.Instance(), uintptr(node), uintptr(state), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousCutCopy(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(97, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousCutCopy(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(59, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousInitialized(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(98, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(60, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousLeaf(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(99, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousLeaf(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(61, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousLevel(Node IVirtualNode, NodeLevel uint32) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(100, m.Instance(), GetObjectUintptr(Node), uintptr(NodeLevel))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousLevel(node types.PVirtualNode, nodeLevel uint32) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(62, m.Instance(), uintptr(node), uintptr(nodeLevel))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousNoInit(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(101, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(63, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousSelected(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(102, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousSelected(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(64, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousSibling(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(103, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousSibling(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(65, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousSiblingNoInit(Node IVirtualNode) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(104, m.Instance(), GetObjectUintptr(Node))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousSiblingNoInit(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(66, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousVisible(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(105, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousVisible(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(67, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousVisibleNoInit(Node IVirtualNode, ConsiderChildrenAbove bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(106, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(68, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousVisibleSibling(Node IVirtualNode, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(107, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousVisibleSibling(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(69, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetPreviousVisibleSiblingNoInit(Node IVirtualNode, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(108, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetPreviousVisibleSiblingNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(70, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetSortedCutCopySet(Resolve bool) TNodeArray {
-	r1 := baseVirtualTreeImportAPI().SysCallN(109, m.Instance(), PascalBool(Resolve))
-	return TNodeArray(r1)
+func (m *TBaseVirtualTree) GetSortedCutCopySet(resolve bool) types.TNodeArray {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(71, m.Instance(), api.PasBool(resolve))
+	return types.TNodeArray(r)
 }
 
-func (m *TBaseVirtualTree) GetSortedSelection(Resolve bool) TNodeArray {
-	r1 := baseVirtualTreeImportAPI().SysCallN(110, m.Instance(), PascalBool(Resolve))
-	return TNodeArray(r1)
+func (m *TBaseVirtualTree) GetSortedSelection(resolve bool) types.TNodeArray {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(72, m.Instance(), api.PasBool(resolve))
+	return types.TNodeArray(r)
 }
 
-func (m *TBaseVirtualTree) GetTreeRect() (resultRect TRect) {
-	baseVirtualTreeImportAPI().SysCallN(112, m.Instance(), uintptr(unsafePointer(&resultRect)))
+func (m *TBaseVirtualTree) GetTreeRect() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(73, m.Instance(), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TBaseVirtualTree) GetVisibleParent(Node IVirtualNode, IncludeFiltered bool) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(113, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) GetVisibleParent(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(74, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) HasAsParent(Node, PotentialParent IVirtualNode) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(114, m.Instance(), GetObjectUintptr(Node), GetObjectUintptr(PotentialParent))
-	return GoBool(r1)
+func (m *TBaseVirtualTree) HasAsParent(node types.PVirtualNode, potentialParent types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(75, m.Instance(), uintptr(node), uintptr(potentialParent))
+	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) InsertNode(Node IVirtualNode, Mode TVTNodeAttachMode, UserData uintptr) IVirtualNode {
-	r1 := baseVirtualTreeImportAPI().SysCallN(118, m.Instance(), GetObjectUintptr(Node), uintptr(Mode), uintptr(UserData))
-	return AsVirtualNode(r1)
+func (m *TBaseVirtualTree) InsertNode(node types.PVirtualNode, mode types.TVTNodeAttachMode, userData uintptr) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(76, m.Instance(), uintptr(node), uintptr(mode), uintptr(userData))
+	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) InvalidateNode(Node IVirtualNode) (resultRect TRect) {
-	baseVirtualTreeImportAPI().SysCallN(121, m.Instance(), GetObjectUintptr(Node), uintptr(unsafePointer(&resultRect)))
+func (m *TBaseVirtualTree) InvalidateNode(node types.PVirtualNode) (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(77, m.Instance(), uintptr(node), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
 func (m *TBaseVirtualTree) IsEditing() bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(125, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(78, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TBaseVirtualTree) IsMouseSelecting() bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(130, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(79, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TBaseVirtualTree) IsEmpty() bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(128, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(80, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TBaseVirtualTree) PasteFromClipboard() bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(149, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(81, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) ScrollIntoView(Node IVirtualNode, Center bool, Horizontally bool) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(157, m.Instance(), GetObjectUintptr(Node), PascalBool(Center), PascalBool(Horizontally))
-	return GoBool(r1)
+func (m *TBaseVirtualTree) ScrollIntoViewWithPVirtualNodeBoolX2(node types.PVirtualNode, center bool, horizontally bool) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(82, m.Instance(), uintptr(node), api.PasBool(center), api.PasBool(horizontally))
+	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) ScrollIntoView1(Column TColumnIndex, Center bool) bool {
-	r1 := baseVirtualTreeImportAPI().SysCallN(158, m.Instance(), uintptr(Column), PascalBool(Center))
-	return GoBool(r1)
+func (m *TBaseVirtualTree) ScrollIntoViewWithColumnIndexBool(column int32, center bool) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(83, m.Instance(), uintptr(column), api.PasBool(center))
+	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) Nodes(ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(143, m.Instance(), PascalBool(ConsiderChildrenAbove))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) Nodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(84, m.Instance(), api.PasBool(considerChildrenAbove))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) CheckedNodes(State TCheckState, ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(14, m.Instance(), uintptr(State), PascalBool(ConsiderChildrenAbove))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) CheckedNodes(state types.TCheckState, considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(85, m.Instance(), uintptr(state), api.PasBool(considerChildrenAbove))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) ChildNodes(Node IVirtualNode) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(16, m.Instance(), GetObjectUintptr(Node))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) ChildNodes(node types.PVirtualNode) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(86, m.Instance(), uintptr(node))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) CutCopyNodes(ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(27, m.Instance(), PascalBool(ConsiderChildrenAbove))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) CutCopyNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(87, m.Instance(), api.PasBool(considerChildrenAbove))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) InitializedNodes(ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(117, m.Instance(), PascalBool(ConsiderChildrenAbove))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) InitializedNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(88, m.Instance(), api.PasBool(considerChildrenAbove))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) LeafNodes() IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(131, m.Instance())
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) LeafNodes() IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(89, m.Instance())
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) LevelNodes(NodeLevel uint32) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(132, m.Instance(), uintptr(NodeLevel))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) LevelNodes(nodeLevel uint32) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(90, m.Instance(), uintptr(nodeLevel))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) NoInitNodes(ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(139, m.Instance(), PascalBool(ConsiderChildrenAbove))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) NoInitNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(91, m.Instance(), api.PasBool(considerChildrenAbove))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) SelectedNodes(ConsiderChildrenAbove bool) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(163, m.Instance(), PascalBool(ConsiderChildrenAbove))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) SelectedNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(92, m.Instance(), api.PasBool(considerChildrenAbove))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) VisibleNodes(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(185, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove), PascalBool(IncludeFiltered))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) VisibleNodes(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(93, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove), api.PasBool(includeFiltered))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) VisibleChildNodes(Node IVirtualNode, IncludeFiltered bool) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(182, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) VisibleChildNodes(node types.PVirtualNode, includeFiltered bool) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(94, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) VisibleChildNoInitNodes(Node IVirtualNode, IncludeFiltered bool) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(181, m.Instance(), GetObjectUintptr(Node), PascalBool(IncludeFiltered))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) VisibleChildNoInitNodes(node types.PVirtualNode, includeFiltered bool) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(95, m.Instance(), uintptr(node), api.PasBool(includeFiltered))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func (m *TBaseVirtualTree) VisibleNoInitNodes(Node IVirtualNode, ConsiderChildrenAbove bool, IncludeFiltered bool) IVTVirtualNodeEnumeration {
-	r1 := baseVirtualTreeImportAPI().SysCallN(184, m.Instance(), GetObjectUintptr(Node), PascalBool(ConsiderChildrenAbove), PascalBool(IncludeFiltered))
-	return AsVTVirtualNodeEnumeration(r1)
+func (m *TBaseVirtualTree) VisibleNoInitNodes(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) IVTVirtualNodeEnumerationWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(96, m.Instance(), uintptr(node), api.PasBool(considerChildrenAbove), api.PasBool(includeFiltered))
+	return AsVTVirtualNodeEnumerationWrap(r)
 }
 
-func BaseVirtualTreeClass() TClass {
-	ret := baseVirtualTreeImportAPI().SysCallN(18)
-	return TClass(ret)
+func (m *TBaseVirtualTree) AddFromStream(stream IStream, targetNode types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(97, m.Instance(), base.GetObjectUintptr(stream), uintptr(targetNode))
 }
 
-func (m *TBaseVirtualTree) AddFromStream(Stream IStream, TargetNode IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(2, m.Instance(), GetObjectUintptr(Stream), GetObjectUintptr(TargetNode))
+func (m *TBaseVirtualTree) BeginDragWithBoolInt(immediate bool, threshold int32) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(98, m.Instance(), api.PasBool(immediate), uintptr(threshold))
 }
 
 func (m *TBaseVirtualTree) BeginSynch() {
-	baseVirtualTreeImportAPI().SysCallN(3, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(99, m.Instance())
 }
 
 func (m *TBaseVirtualTree) BeginUpdate() {
-	baseVirtualTreeImportAPI().SysCallN(4, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(100, m.Instance())
 }
 
 func (m *TBaseVirtualTree) CancelCutOrCopy() {
-	baseVirtualTreeImportAPI().SysCallN(7, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(101, m.Instance())
 }
 
 func (m *TBaseVirtualTree) CancelOperation() {
-	baseVirtualTreeImportAPI().SysCallN(9, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(102, m.Instance())
 }
 
 func (m *TBaseVirtualTree) Clear() {
-	baseVirtualTreeImportAPI().SysCallN(19, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(103, m.Instance())
 }
 
 func (m *TBaseVirtualTree) ClearChecked() {
-	baseVirtualTreeImportAPI().SysCallN(20, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(104, m.Instance())
 }
 
 func (m *TBaseVirtualTree) ClearSelection() {
-	baseVirtualTreeImportAPI().SysCallN(21, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(105, m.Instance())
 }
 
 func (m *TBaseVirtualTree) CopyToClipboard() {
-	baseVirtualTreeImportAPI().SysCallN(24, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(106, m.Instance())
 }
 
 func (m *TBaseVirtualTree) CutToClipboard() {
-	baseVirtualTreeImportAPI().SysCallN(28, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(107, m.Instance())
 }
 
-func (m *TBaseVirtualTree) DeleteChildren(Node IVirtualNode, ResetHasChildren bool) {
-	baseVirtualTreeImportAPI().SysCallN(29, m.Instance(), GetObjectUintptr(Node), PascalBool(ResetHasChildren))
+func (m *TBaseVirtualTree) DeleteChildren(node types.PVirtualNode, resetHasChildren bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(108, m.Instance(), uintptr(node), api.PasBool(resetHasChildren))
 }
 
-func (m *TBaseVirtualTree) DeleteNode(Node IVirtualNode, Reindex bool) {
-	baseVirtualTreeImportAPI().SysCallN(30, m.Instance(), GetObjectUintptr(Node), PascalBool(Reindex))
+func (m *TBaseVirtualTree) DeleteNode(node types.PVirtualNode, reindex bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(109, m.Instance(), uintptr(node), api.PasBool(reindex))
 }
 
 func (m *TBaseVirtualTree) DeleteSelectedNodes() {
-	baseVirtualTreeImportAPI().SysCallN(31, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(110, m.Instance())
 }
 
 func (m *TBaseVirtualTree) EndSynch() {
-	baseVirtualTreeImportAPI().SysCallN(37, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(111, m.Instance())
 }
 
 func (m *TBaseVirtualTree) EndUpdate() {
-	baseVirtualTreeImportAPI().SysCallN(38, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(112, m.Instance())
 }
 
 func (m *TBaseVirtualTree) EnsureNodeSelected() {
-	baseVirtualTreeImportAPI().SysCallN(39, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(113, m.Instance())
 }
 
 func (m *TBaseVirtualTree) FinishCutOrCopy() {
-	baseVirtualTreeImportAPI().SysCallN(41, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(114, m.Instance())
 }
 
 func (m *TBaseVirtualTree) FlushClipboard() {
-	baseVirtualTreeImportAPI().SysCallN(42, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(115, m.Instance())
 }
 
-func (m *TBaseVirtualTree) FullCollapse(Node IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(45, m.Instance(), GetObjectUintptr(Node))
+func (m *TBaseVirtualTree) FullCollapse(node types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(116, m.Instance(), uintptr(node))
 }
 
-func (m *TBaseVirtualTree) FullExpand(Node IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(46, m.Instance(), GetObjectUintptr(Node))
+func (m *TBaseVirtualTree) FullExpand(node types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(117, m.Instance(), uintptr(node))
 }
 
-func (m *TBaseVirtualTree) GetTextInfo(Node IVirtualNode, Column TColumnIndex, AFont IFont, R *TRect, OutText *string) {
-	var result3 uintptr
-	var result4 uintptr
-	baseVirtualTreeImportAPI().SysCallN(111, m.Instance(), GetObjectUintptr(Node), uintptr(Column), GetObjectUintptr(AFont), uintptr(unsafePointer(&result3)), uintptr(unsafePointer(&result4)))
-	*R = *(*TRect)(getPointer(result3))
-	*OutText = GoStr(result4)
+func (m *TBaseVirtualTree) GetHitTestInfoAt(X int32, Y int32, relative bool, hitInfo *THitInfo) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(118, m.Instance(), uintptr(X), uintptr(Y), api.PasBool(relative), uintptr(base.UnsafePointer(hitInfo)))
 }
 
-func (m *TBaseVirtualTree) InvalidateChildren(Node IVirtualNode, Recursive bool) {
-	baseVirtualTreeImportAPI().SysCallN(119, m.Instance(), GetObjectUintptr(Node), PascalBool(Recursive))
+func (m *TBaseVirtualTree) GetTextInfo(node types.PVirtualNode, column int32, font IFont, R *types.TRect, outText *string) {
+	if !m.IsValid() {
+		return
+	}
+	var textPtr uintptr
+	baseVirtualTreeAPI().SysCallN(119, m.Instance(), uintptr(node), uintptr(column), base.GetObjectUintptr(font), uintptr(base.UnsafePointer(R)), uintptr(base.UnsafePointer(&textPtr)))
+	*outText = api.GoStr(textPtr)
 }
 
-func (m *TBaseVirtualTree) InvalidateColumn(Column TColumnIndex) {
-	baseVirtualTreeImportAPI().SysCallN(120, m.Instance(), uintptr(Column))
+func (m *TBaseVirtualTree) InvalidateChildren(node types.PVirtualNode, recursive bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(120, m.Instance(), uintptr(node), api.PasBool(recursive))
 }
 
-func (m *TBaseVirtualTree) InvalidateToBottom(Node IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(122, m.Instance(), GetObjectUintptr(Node))
+func (m *TBaseVirtualTree) InvalidateColumn(column int32) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(121, m.Instance(), uintptr(column))
 }
 
-func (m *TBaseVirtualTree) InvertSelection(VisibleOnly bool) {
-	baseVirtualTreeImportAPI().SysCallN(123, m.Instance(), PascalBool(VisibleOnly))
+func (m *TBaseVirtualTree) InvalidateToBottom(node types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(122, m.Instance(), uintptr(node))
 }
 
-func (m *TBaseVirtualTree) LoadFromFile(FileName string) {
-	baseVirtualTreeImportAPI().SysCallN(133, m.Instance(), PascalStr(FileName))
+func (m *TBaseVirtualTree) InvertSelection(visibleOnly bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(123, m.Instance(), api.PasBool(visibleOnly))
 }
 
-func (m *TBaseVirtualTree) LoadFromStream(Stream IStream) {
-	baseVirtualTreeImportAPI().SysCallN(134, m.Instance(), GetObjectUintptr(Stream))
+func (m *TBaseVirtualTree) LoadFromFile(fileName string) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(124, m.Instance(), api.PasStr(fileName))
 }
 
-func (m *TBaseVirtualTree) MeasureItemHeight(Canvas ICanvas, Node IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(135, m.Instance(), GetObjectUintptr(Canvas), GetObjectUintptr(Node))
+func (m *TBaseVirtualTree) LoadFromStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(125, m.Instance(), base.GetObjectUintptr(stream))
 }
 
-func (m *TBaseVirtualTree) MoveTo(Source, Target IVirtualNode, Mode TVTNodeAttachMode, ChildrenOnly bool) {
-	baseVirtualTreeImportAPI().SysCallN(136, m.Instance(), GetObjectUintptr(Source), GetObjectUintptr(Target), uintptr(Mode), PascalBool(ChildrenOnly))
+func (m *TBaseVirtualTree) MeasureItemHeight(canvas ICanvas, node types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(126, m.Instance(), base.GetObjectUintptr(canvas), uintptr(node))
 }
 
-func (m *TBaseVirtualTree) MoveTo1(Node IVirtualNode, Tree IBaseVirtualTree, Mode TVTNodeAttachMode, ChildrenOnly bool) {
-	baseVirtualTreeImportAPI().SysCallN(137, m.Instance(), GetObjectUintptr(Node), GetObjectUintptr(Tree), uintptr(Mode), PascalBool(ChildrenOnly))
+func (m *TBaseVirtualTree) MoveToWithPVirtualNodeX2VTNodeAttachModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(127, m.Instance(), uintptr(source), uintptr(target), uintptr(mode), api.PasBool(childrenOnly))
 }
 
-func (m *TBaseVirtualTree) PaintTree(TargetCanvas ICanvas, Window *TRect, Target *TPoint, PaintOptions TVTInternalPaintOptions, PixelFormat TPixelFormat) {
-	baseVirtualTreeImportAPI().SysCallN(148, m.Instance(), GetObjectUintptr(TargetCanvas), uintptr(unsafePointer(Window)), uintptr(unsafePointer(Target)), uintptr(PaintOptions), uintptr(PixelFormat))
+func (m *TBaseVirtualTree) MoveToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool(node types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(128, m.Instance(), uintptr(node), base.GetObjectUintptr(tree), uintptr(mode), api.PasBool(childrenOnly))
 }
 
-func (m *TBaseVirtualTree) RepaintNode(Node IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(152, m.Instance(), GetObjectUintptr(Node))
+func (m *TBaseVirtualTree) PaintTree(targetCanvas ICanvas, window types.TRect, target types.TPoint, paintOptions types.TVTInternalPaintOptions, pixelFormat types.TPixelFormat) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(129, m.Instance(), base.GetObjectUintptr(targetCanvas), uintptr(base.UnsafePointer(&window)), uintptr(base.UnsafePointer(&target)), uintptr(paintOptions), uintptr(pixelFormat))
 }
 
-func (m *TBaseVirtualTree) ReinitChildren(Node IVirtualNode, Recursive bool) {
-	baseVirtualTreeImportAPI().SysCallN(150, m.Instance(), GetObjectUintptr(Node), PascalBool(Recursive))
+func (m *TBaseVirtualTree) RepaintNode(node types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(130, m.Instance(), uintptr(node))
 }
 
-func (m *TBaseVirtualTree) ReinitNode(Node IVirtualNode, Recursive bool) {
-	baseVirtualTreeImportAPI().SysCallN(151, m.Instance(), GetObjectUintptr(Node), PascalBool(Recursive))
+func (m *TBaseVirtualTree) ReinitChildren(node types.PVirtualNode, recursive bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(131, m.Instance(), uintptr(node), api.PasBool(recursive))
 }
 
-func (m *TBaseVirtualTree) ResetNode(Node IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(153, m.Instance(), GetObjectUintptr(Node))
+func (m *TBaseVirtualTree) ReinitNode(node types.PVirtualNode, recursive bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(132, m.Instance(), uintptr(node), api.PasBool(recursive))
 }
 
-func (m *TBaseVirtualTree) SaveToFile(FileName string) {
-	baseVirtualTreeImportAPI().SysCallN(155, m.Instance(), PascalStr(FileName))
+func (m *TBaseVirtualTree) ResetNode(node types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(133, m.Instance(), uintptr(node))
 }
 
-func (m *TBaseVirtualTree) SaveToStream(Stream IStream, Node IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(156, m.Instance(), GetObjectUintptr(Stream), GetObjectUintptr(Node))
+func (m *TBaseVirtualTree) SaveToFile(fileName string) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(134, m.Instance(), api.PasStr(fileName))
 }
 
-func (m *TBaseVirtualTree) SelectAll(VisibleOnly bool) {
-	baseVirtualTreeImportAPI().SysCallN(160, m.Instance(), PascalBool(VisibleOnly))
+func (m *TBaseVirtualTree) SaveToStream(stream IStream, node types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(135, m.Instance(), base.GetObjectUintptr(stream), uintptr(node))
 }
 
-func (m *TBaseVirtualTree) Sort(Node IVirtualNode, Column TColumnIndex, Direction TSortDirection, DoInit bool) {
-	baseVirtualTreeImportAPI().SysCallN(165, m.Instance(), GetObjectUintptr(Node), uintptr(Column), uintptr(Direction), PascalBool(DoInit))
+func (m *TBaseVirtualTree) SelectAll(visibleOnly bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(136, m.Instance(), api.PasBool(visibleOnly))
 }
 
-func (m *TBaseVirtualTree) SortTree(Column TColumnIndex, Direction TSortDirection, DoInit bool) {
-	baseVirtualTreeImportAPI().SysCallN(166, m.Instance(), uintptr(Column), uintptr(Direction), PascalBool(DoInit))
+func (m *TBaseVirtualTree) Sort(node types.PVirtualNode, column int32, direction types.TSortDirection, doInit bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(137, m.Instance(), uintptr(node), uintptr(column), uintptr(direction), api.PasBool(doInit))
 }
 
-func (m *TBaseVirtualTree) ToggleNode(Node IVirtualNode) {
-	baseVirtualTreeImportAPI().SysCallN(167, m.Instance(), GetObjectUintptr(Node))
+func (m *TBaseVirtualTree) SortTree(column int32, direction types.TSortDirection, doInit bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(138, m.Instance(), uintptr(column), uintptr(direction), api.PasBool(doInit))
+}
+
+func (m *TBaseVirtualTree) ToggleNode(node types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(139, m.Instance(), uintptr(node))
 }
 
 func (m *TBaseVirtualTree) UpdateHorizontalRange() {
-	baseVirtualTreeImportAPI().SysCallN(172, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(140, m.Instance())
 }
 
-func (m *TBaseVirtualTree) UpdateHorizontalScrollBar(DoRepaint bool) {
-	baseVirtualTreeImportAPI().SysCallN(173, m.Instance(), PascalBool(DoRepaint))
+func (m *TBaseVirtualTree) UpdateHorizontalScrollBar(doRepaint bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(141, m.Instance(), api.PasBool(doRepaint))
 }
 
 func (m *TBaseVirtualTree) UpdateRanges() {
-	baseVirtualTreeImportAPI().SysCallN(174, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(142, m.Instance())
 }
 
-func (m *TBaseVirtualTree) UpdateScrollBars(DoRepaint bool) {
-	baseVirtualTreeImportAPI().SysCallN(175, m.Instance(), PascalBool(DoRepaint))
+func (m *TBaseVirtualTree) UpdateScrollBars(doRepaint bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(143, m.Instance(), api.PasBool(doRepaint))
 }
 
 func (m *TBaseVirtualTree) UpdateVerticalRange() {
-	baseVirtualTreeImportAPI().SysCallN(176, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(144, m.Instance())
 }
 
-func (m *TBaseVirtualTree) UpdateVerticalScrollBar(DoRepaint bool) {
-	baseVirtualTreeImportAPI().SysCallN(177, m.Instance(), PascalBool(DoRepaint))
+func (m *TBaseVirtualTree) UpdateVerticalScrollBar(doRepaint bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(145, m.Instance(), api.PasBool(doRepaint))
 }
 
-func (m *TBaseVirtualTree) ValidateChildren(Node IVirtualNode, Recursive bool) {
-	baseVirtualTreeImportAPI().SysCallN(178, m.Instance(), GetObjectUintptr(Node), PascalBool(Recursive))
+func (m *TBaseVirtualTree) ValidateChildren(node types.PVirtualNode, recursive bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(146, m.Instance(), uintptr(node), api.PasBool(recursive))
 }
 
-func (m *TBaseVirtualTree) ValidateNode(Node IVirtualNode, Recursive bool) {
-	baseVirtualTreeImportAPI().SysCallN(179, m.Instance(), GetObjectUintptr(Node), PascalBool(Recursive))
+func (m *TBaseVirtualTree) ValidateNode(node types.PVirtualNode, recursive bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(147, m.Instance(), uintptr(node), api.PasBool(recursive))
+}
+
+func (m *TBaseVirtualTree) BottomNode() types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(148, 0, m.Instance())
+	return types.PVirtualNode(r)
+}
+
+func (m *TBaseVirtualTree) SetBottomNode(value types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(148, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) CheckedCount() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(149, m.Instance())
+	return int32(r)
+}
+
+func (m *TBaseVirtualTree) CheckImages() ICustomImageList {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(150, m.Instance())
+	return AsCustomImageList(r)
+}
+
+func (m *TBaseVirtualTree) CheckState(node types.PVirtualNode) types.TCheckState {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(151, 0, m.Instance(), uintptr(node))
+	return types.TCheckState(r)
+}
+
+func (m *TBaseVirtualTree) SetCheckState(node types.PVirtualNode, value types.TCheckState) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(151, 1, m.Instance(), uintptr(node), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) CheckType(node types.PVirtualNode) types.TCheckType {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(152, 0, m.Instance(), uintptr(node))
+	return types.TCheckType(r)
+}
+
+func (m *TBaseVirtualTree) SetCheckType(node types.PVirtualNode, value types.TCheckType) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(152, 1, m.Instance(), uintptr(node), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) ChildCount(node types.PVirtualNode) uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(153, 0, m.Instance(), uintptr(node))
+	return uint32(r)
+}
+
+func (m *TBaseVirtualTree) SetChildCount(node types.PVirtualNode, value uint32) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(153, 1, m.Instance(), uintptr(node), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) ChildrenInitialized(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(154, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) CutCopyCount() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(155, m.Instance())
+	return int32(r)
+}
+
+func (m *TBaseVirtualTree) DragImage() IVTDragImage {
+	if !m.IsValid() {
+		return nil
+	}
+	r := baseVirtualTreeAPI().SysCallN(156, m.Instance())
+	return AsVTDragImage(r)
+}
+
+func (m *TBaseVirtualTree) VTVDragManager() (result IVTDragManager) {
+	if !m.IsValid() {
+		return
+	}
+	var resultPtr uintptr
+	baseVirtualTreeAPI().SysCallN(157, m.Instance(), uintptr(base.UnsafePointer(&resultPtr)))
+	result = AsVTDragManager(resultPtr)
+	return
+}
+
+func (m *TBaseVirtualTree) DropTargetNode() types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(158, 0, m.Instance())
+	return types.PVirtualNode(r)
+}
+
+func (m *TBaseVirtualTree) SetDropTargetNode(value types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(158, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) EditLink() (result IVTEditLink) {
+	if !m.IsValid() {
+		return
+	}
+	var resultPtr uintptr
+	baseVirtualTreeAPI().SysCallN(159, m.Instance(), uintptr(base.UnsafePointer(&resultPtr)))
+	result = AsVTEditLink(resultPtr)
+	return
+}
+
+func (m *TBaseVirtualTree) EmptyListMessage() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := baseVirtualTreeAPI().SysCallN(160, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TBaseVirtualTree) SetEmptyListMessage(value string) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(160, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TBaseVirtualTree) Expanded(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(161, 0, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) SetExpanded(node types.PVirtualNode, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(161, 1, m.Instance(), uintptr(node), api.PasBool(value))
+}
+
+func (m *TBaseVirtualTree) FocusedColumn() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(162, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TBaseVirtualTree) SetFocusedColumn(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(162, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) FocusedNode() types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(163, 0, m.Instance())
+	return types.PVirtualNode(r)
+}
+
+func (m *TBaseVirtualTree) SetFocusedNode(value types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(163, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) FullyVisible(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(164, 0, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) SetFullyVisible(node types.PVirtualNode, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(164, 1, m.Instance(), uintptr(node), api.PasBool(value))
+}
+
+func (m *TBaseVirtualTree) HasChildren(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(165, 0, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) SetHasChildren(node types.PVirtualNode, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(165, 1, m.Instance(), uintptr(node), api.PasBool(value))
+}
+
+func (m *TBaseVirtualTree) HotNode() types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(166, m.Instance())
+	return types.PVirtualNode(r)
+}
+
+func (m *TBaseVirtualTree) IsDisabled(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(167, 0, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) SetIsDisabled(node types.PVirtualNode, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(167, 1, m.Instance(), uintptr(node), api.PasBool(value))
+}
+
+func (m *TBaseVirtualTree) IsEffectivelyFiltered(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(168, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) IsEffectivelyVisible(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(169, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) IsFiltered(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(170, 0, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) SetIsFiltered(node types.PVirtualNode, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(170, 1, m.Instance(), uintptr(node), api.PasBool(value))
+}
+
+func (m *TBaseVirtualTree) IsVisibleWithPVirtualNodeToBool(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(171, 0, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) SetIsVisible(node types.PVirtualNode, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(171, 1, m.Instance(), uintptr(node), api.PasBool(value))
+}
+
+func (m *TBaseVirtualTree) MultiLine(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(172, 0, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) SetMultiLine(node types.PVirtualNode, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(172, 1, m.Instance(), uintptr(node), api.PasBool(value))
+}
+
+func (m *TBaseVirtualTree) NodeHeight(node types.PVirtualNode) uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(173, 0, m.Instance(), uintptr(node))
+	return uint32(r)
+}
+
+func (m *TBaseVirtualTree) SetNodeHeight(node types.PVirtualNode, value uint32) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(173, 1, m.Instance(), uintptr(node), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) NodeParent(node types.PVirtualNode) types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(174, 0, m.Instance(), uintptr(node))
+	return types.PVirtualNode(r)
+}
+
+func (m *TBaseVirtualTree) SetNodeParent(node types.PVirtualNode, value types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(174, 1, m.Instance(), uintptr(node), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) OffsetX() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(175, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TBaseVirtualTree) SetOffsetX(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(175, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) OffsetXY() (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(176, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TBaseVirtualTree) SetOffsetXY(value types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(176, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TBaseVirtualTree) OffsetY() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(177, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TBaseVirtualTree) SetOffsetY(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(177, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) OperationCount() uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(178, m.Instance())
+	return uint32(r)
+}
+
+func (m *TBaseVirtualTree) RootNode() types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(179, m.Instance())
+	return types.PVirtualNode(r)
+}
+
+func (m *TBaseVirtualTree) SearchBuffer() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := baseVirtualTreeAPI().SysCallN(180, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TBaseVirtualTree) Selected(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(181, 0, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) SetSelected(node types.PVirtualNode, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(181, 1, m.Instance(), uintptr(node), api.PasBool(value))
+}
+
+func (m *TBaseVirtualTree) SelectionLocked() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(182, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) SetSelectionLocked(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(182, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TBaseVirtualTree) TotalCount() uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(183, m.Instance())
+	return uint32(r)
+}
+
+func (m *TBaseVirtualTree) TreeStates() types.TVirtualTreeStates {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(184, 0, m.Instance())
+	return types.TVirtualTreeStates(r)
+}
+
+func (m *TBaseVirtualTree) SetTreeStates(value types.TVirtualTreeStates) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(184, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) SelectedCount() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(185, m.Instance())
+	return int32(r)
+}
+
+func (m *TBaseVirtualTree) TopNode() types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(186, 0, m.Instance())
+	return types.PVirtualNode(r)
+}
+
+func (m *TBaseVirtualTree) SetTopNode(value types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(186, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) VerticalAlignment(node types.PVirtualNode) byte {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(187, 0, m.Instance(), uintptr(node))
+	return byte(r)
+}
+
+func (m *TBaseVirtualTree) SetVerticalAlignment(node types.PVirtualNode, value byte) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(187, 1, m.Instance(), uintptr(node), uintptr(value))
+}
+
+func (m *TBaseVirtualTree) VisibleCount() uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(188, m.Instance())
+	return uint32(r)
+}
+
+func (m *TBaseVirtualTree) VisiblePath(node types.PVirtualNode) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := baseVirtualTreeAPI().SysCallN(189, 0, m.Instance(), uintptr(node))
+	return api.GoBool(r)
+}
+
+func (m *TBaseVirtualTree) SetVisiblePath(node types.PVirtualNode, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	baseVirtualTreeAPI().SysCallN(189, 1, m.Instance(), uintptr(node), api.PasBool(value))
+}
+
+func (m *TBaseVirtualTree) UpdateCount() uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := baseVirtualTreeAPI().SysCallN(190, m.Instance())
+	return uint32(r)
+}
+
+// NewBaseVirtualTree class constructor
+func NewBaseVirtualTree(owner IComponent) IBaseVirtualTree {
+	r := baseVirtualTreeAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsBaseVirtualTree(r)
+}
+
+func TBaseVirtualTreeClass() types.TClass {
+	r := baseVirtualTreeAPI().SysCallN(191)
+	return types.TClass(r)
 }
 
 var (
-	baseVirtualTreeImport       *imports.Imports = nil
-	baseVirtualTreeImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("BaseVirtualTree_AbsoluteIndex", 0),
-		/*1*/ imports.NewTable("BaseVirtualTree_AddChild", 0),
-		/*2*/ imports.NewTable("BaseVirtualTree_AddFromStream", 0),
-		/*3*/ imports.NewTable("BaseVirtualTree_BeginSynch", 0),
-		/*4*/ imports.NewTable("BaseVirtualTree_BeginUpdate", 0),
-		/*5*/ imports.NewTable("BaseVirtualTree_BottomNode", 0),
-		/*6*/ imports.NewTable("BaseVirtualTree_CanEdit", 0),
-		/*7*/ imports.NewTable("BaseVirtualTree_CancelCutOrCopy", 0),
-		/*8*/ imports.NewTable("BaseVirtualTree_CancelEditNode", 0),
-		/*9*/ imports.NewTable("BaseVirtualTree_CancelOperation", 0),
-		/*10*/ imports.NewTable("BaseVirtualTree_CheckImages", 0),
-		/*11*/ imports.NewTable("BaseVirtualTree_CheckState", 0),
-		/*12*/ imports.NewTable("BaseVirtualTree_CheckType", 0),
-		/*13*/ imports.NewTable("BaseVirtualTree_CheckedCount", 0),
-		/*14*/ imports.NewTable("BaseVirtualTree_CheckedNodes", 0),
-		/*15*/ imports.NewTable("BaseVirtualTree_ChildCount", 0),
-		/*16*/ imports.NewTable("BaseVirtualTree_ChildNodes", 0),
-		/*17*/ imports.NewTable("BaseVirtualTree_ChildrenInitialized", 0),
-		/*18*/ imports.NewTable("BaseVirtualTree_Class", 0),
-		/*19*/ imports.NewTable("BaseVirtualTree_Clear", 0),
-		/*20*/ imports.NewTable("BaseVirtualTree_ClearChecked", 0),
-		/*21*/ imports.NewTable("BaseVirtualTree_ClearSelection", 0),
-		/*22*/ imports.NewTable("BaseVirtualTree_CopyTo", 0),
-		/*23*/ imports.NewTable("BaseVirtualTree_CopyTo1", 0),
-		/*24*/ imports.NewTable("BaseVirtualTree_CopyToClipboard", 0),
-		/*25*/ imports.NewTable("BaseVirtualTree_Create", 0),
-		/*26*/ imports.NewTable("BaseVirtualTree_CutCopyCount", 0),
-		/*27*/ imports.NewTable("BaseVirtualTree_CutCopyNodes", 0),
-		/*28*/ imports.NewTable("BaseVirtualTree_CutToClipboard", 0),
-		/*29*/ imports.NewTable("BaseVirtualTree_DeleteChildren", 0),
-		/*30*/ imports.NewTable("BaseVirtualTree_DeleteNode", 0),
-		/*31*/ imports.NewTable("BaseVirtualTree_DeleteSelectedNodes", 0),
-		/*32*/ imports.NewTable("BaseVirtualTree_DragImage", 0),
-		/*33*/ imports.NewTable("BaseVirtualTree_DropTargetNode", 0),
-		/*34*/ imports.NewTable("BaseVirtualTree_EditNode", 0),
-		/*35*/ imports.NewTable("BaseVirtualTree_EmptyListMessage", 0),
-		/*36*/ imports.NewTable("BaseVirtualTree_EndEditNode", 0),
-		/*37*/ imports.NewTable("BaseVirtualTree_EndSynch", 0),
-		/*38*/ imports.NewTable("BaseVirtualTree_EndUpdate", 0),
-		/*39*/ imports.NewTable("BaseVirtualTree_EnsureNodeSelected", 0),
-		/*40*/ imports.NewTable("BaseVirtualTree_Expanded", 0),
-		/*41*/ imports.NewTable("BaseVirtualTree_FinishCutOrCopy", 0),
-		/*42*/ imports.NewTable("BaseVirtualTree_FlushClipboard", 0),
-		/*43*/ imports.NewTable("BaseVirtualTree_FocusedColumn", 0),
-		/*44*/ imports.NewTable("BaseVirtualTree_FocusedNode", 0),
-		/*45*/ imports.NewTable("BaseVirtualTree_FullCollapse", 0),
-		/*46*/ imports.NewTable("BaseVirtualTree_FullExpand", 0),
-		/*47*/ imports.NewTable("BaseVirtualTree_FullyVisible", 0),
-		/*48*/ imports.NewTable("BaseVirtualTree_GetDisplayRect", 0),
-		/*49*/ imports.NewTable("BaseVirtualTree_GetEffectivelyFiltered", 0),
-		/*50*/ imports.NewTable("BaseVirtualTree_GetEffectivelyVisible", 0),
-		/*51*/ imports.NewTable("BaseVirtualTree_GetFirst", 0),
-		/*52*/ imports.NewTable("BaseVirtualTree_GetFirstChecked", 0),
-		/*53*/ imports.NewTable("BaseVirtualTree_GetFirstChild", 0),
-		/*54*/ imports.NewTable("BaseVirtualTree_GetFirstChildNoInit", 0),
-		/*55*/ imports.NewTable("BaseVirtualTree_GetFirstCutCopy", 0),
-		/*56*/ imports.NewTable("BaseVirtualTree_GetFirstInitialized", 0),
-		/*57*/ imports.NewTable("BaseVirtualTree_GetFirstLeaf", 0),
-		/*58*/ imports.NewTable("BaseVirtualTree_GetFirstLevel", 0),
-		/*59*/ imports.NewTable("BaseVirtualTree_GetFirstNoInit", 0),
-		/*60*/ imports.NewTable("BaseVirtualTree_GetFirstSelected", 0),
-		/*61*/ imports.NewTable("BaseVirtualTree_GetFirstVisible", 0),
-		/*62*/ imports.NewTable("BaseVirtualTree_GetFirstVisibleChild", 0),
-		/*63*/ imports.NewTable("BaseVirtualTree_GetFirstVisibleChildNoInit", 0),
-		/*64*/ imports.NewTable("BaseVirtualTree_GetFirstVisibleNoInit", 0),
-		/*65*/ imports.NewTable("BaseVirtualTree_GetLast", 0),
-		/*66*/ imports.NewTable("BaseVirtualTree_GetLastChild", 0),
-		/*67*/ imports.NewTable("BaseVirtualTree_GetLastChildNoInit", 0),
-		/*68*/ imports.NewTable("BaseVirtualTree_GetLastInitialized", 0),
-		/*69*/ imports.NewTable("BaseVirtualTree_GetLastNoInit", 0),
-		/*70*/ imports.NewTable("BaseVirtualTree_GetLastVisible", 0),
-		/*71*/ imports.NewTable("BaseVirtualTree_GetLastVisibleChild", 0),
-		/*72*/ imports.NewTable("BaseVirtualTree_GetLastVisibleChildNoInit", 0),
-		/*73*/ imports.NewTable("BaseVirtualTree_GetLastVisibleNoInit", 0),
-		/*74*/ imports.NewTable("BaseVirtualTree_GetMaxColumnWidth", 0),
-		/*75*/ imports.NewTable("BaseVirtualTree_GetNext", 0),
-		/*76*/ imports.NewTable("BaseVirtualTree_GetNextChecked", 0),
-		/*77*/ imports.NewTable("BaseVirtualTree_GetNextChecked1", 0),
-		/*78*/ imports.NewTable("BaseVirtualTree_GetNextCutCopy", 0),
-		/*79*/ imports.NewTable("BaseVirtualTree_GetNextInitialized", 0),
-		/*80*/ imports.NewTable("BaseVirtualTree_GetNextLeaf", 0),
-		/*81*/ imports.NewTable("BaseVirtualTree_GetNextLevel", 0),
-		/*82*/ imports.NewTable("BaseVirtualTree_GetNextNoInit", 0),
-		/*83*/ imports.NewTable("BaseVirtualTree_GetNextSelected", 0),
-		/*84*/ imports.NewTable("BaseVirtualTree_GetNextSibling", 0),
-		/*85*/ imports.NewTable("BaseVirtualTree_GetNextSiblingNoInit", 0),
-		/*86*/ imports.NewTable("BaseVirtualTree_GetNextVisible", 0),
-		/*87*/ imports.NewTable("BaseVirtualTree_GetNextVisibleNoInit", 0),
-		/*88*/ imports.NewTable("BaseVirtualTree_GetNextVisibleSibling", 0),
-		/*89*/ imports.NewTable("BaseVirtualTree_GetNextVisibleSiblingNoInit", 0),
-		/*90*/ imports.NewTable("BaseVirtualTree_GetNodeAt", 0),
-		/*91*/ imports.NewTable("BaseVirtualTree_GetNodeAt1", 0),
-		/*92*/ imports.NewTable("BaseVirtualTree_GetNodeAt2", 0),
-		/*93*/ imports.NewTable("BaseVirtualTree_GetNodeData", 0),
-		/*94*/ imports.NewTable("BaseVirtualTree_GetNodeLevel", 0),
-		/*95*/ imports.NewTable("BaseVirtualTree_GetPrevious", 0),
-		/*96*/ imports.NewTable("BaseVirtualTree_GetPreviousChecked", 0),
-		/*97*/ imports.NewTable("BaseVirtualTree_GetPreviousCutCopy", 0),
-		/*98*/ imports.NewTable("BaseVirtualTree_GetPreviousInitialized", 0),
-		/*99*/ imports.NewTable("BaseVirtualTree_GetPreviousLeaf", 0),
-		/*100*/ imports.NewTable("BaseVirtualTree_GetPreviousLevel", 0),
-		/*101*/ imports.NewTable("BaseVirtualTree_GetPreviousNoInit", 0),
-		/*102*/ imports.NewTable("BaseVirtualTree_GetPreviousSelected", 0),
-		/*103*/ imports.NewTable("BaseVirtualTree_GetPreviousSibling", 0),
-		/*104*/ imports.NewTable("BaseVirtualTree_GetPreviousSiblingNoInit", 0),
-		/*105*/ imports.NewTable("BaseVirtualTree_GetPreviousVisible", 0),
-		/*106*/ imports.NewTable("BaseVirtualTree_GetPreviousVisibleNoInit", 0),
-		/*107*/ imports.NewTable("BaseVirtualTree_GetPreviousVisibleSibling", 0),
-		/*108*/ imports.NewTable("BaseVirtualTree_GetPreviousVisibleSiblingNoInit", 0),
-		/*109*/ imports.NewTable("BaseVirtualTree_GetSortedCutCopySet", 0),
-		/*110*/ imports.NewTable("BaseVirtualTree_GetSortedSelection", 0),
-		/*111*/ imports.NewTable("BaseVirtualTree_GetTextInfo", 0),
-		/*112*/ imports.NewTable("BaseVirtualTree_GetTreeRect", 0),
-		/*113*/ imports.NewTable("BaseVirtualTree_GetVisibleParent", 0),
-		/*114*/ imports.NewTable("BaseVirtualTree_HasAsParent", 0),
-		/*115*/ imports.NewTable("BaseVirtualTree_HasChildren", 0),
-		/*116*/ imports.NewTable("BaseVirtualTree_HotNode", 0),
-		/*117*/ imports.NewTable("BaseVirtualTree_InitializedNodes", 0),
-		/*118*/ imports.NewTable("BaseVirtualTree_InsertNode", 0),
-		/*119*/ imports.NewTable("BaseVirtualTree_InvalidateChildren", 0),
-		/*120*/ imports.NewTable("BaseVirtualTree_InvalidateColumn", 0),
-		/*121*/ imports.NewTable("BaseVirtualTree_InvalidateNode", 0),
-		/*122*/ imports.NewTable("BaseVirtualTree_InvalidateToBottom", 0),
-		/*123*/ imports.NewTable("BaseVirtualTree_InvertSelection", 0),
-		/*124*/ imports.NewTable("BaseVirtualTree_IsDisabled", 0),
-		/*125*/ imports.NewTable("BaseVirtualTree_IsEditing", 0),
-		/*126*/ imports.NewTable("BaseVirtualTree_IsEffectivelyFiltered", 0),
-		/*127*/ imports.NewTable("BaseVirtualTree_IsEffectivelyVisible", 0),
-		/*128*/ imports.NewTable("BaseVirtualTree_IsEmpty", 0),
-		/*129*/ imports.NewTable("BaseVirtualTree_IsFiltered", 0),
-		/*130*/ imports.NewTable("BaseVirtualTree_IsMouseSelecting", 0),
-		/*131*/ imports.NewTable("BaseVirtualTree_LeafNodes", 0),
-		/*132*/ imports.NewTable("BaseVirtualTree_LevelNodes", 0),
-		/*133*/ imports.NewTable("BaseVirtualTree_LoadFromFile", 0),
-		/*134*/ imports.NewTable("BaseVirtualTree_LoadFromStream", 0),
-		/*135*/ imports.NewTable("BaseVirtualTree_MeasureItemHeight", 0),
-		/*136*/ imports.NewTable("BaseVirtualTree_MoveTo", 0),
-		/*137*/ imports.NewTable("BaseVirtualTree_MoveTo1", 0),
-		/*138*/ imports.NewTable("BaseVirtualTree_MultiLine", 0),
-		/*139*/ imports.NewTable("BaseVirtualTree_NoInitNodes", 0),
-		/*140*/ imports.NewTable("BaseVirtualTree_NodeHeight", 0),
-		/*141*/ imports.NewTable("BaseVirtualTree_NodeIsVisible", 0),
-		/*142*/ imports.NewTable("BaseVirtualTree_NodeParent", 0),
-		/*143*/ imports.NewTable("BaseVirtualTree_Nodes", 0),
-		/*144*/ imports.NewTable("BaseVirtualTree_OffsetX", 0),
-		/*145*/ imports.NewTable("BaseVirtualTree_OffsetXY", 0),
-		/*146*/ imports.NewTable("BaseVirtualTree_OffsetY", 0),
-		/*147*/ imports.NewTable("BaseVirtualTree_OperationCount", 0),
-		/*148*/ imports.NewTable("BaseVirtualTree_PaintTree", 0),
-		/*149*/ imports.NewTable("BaseVirtualTree_PasteFromClipboard", 0),
-		/*150*/ imports.NewTable("BaseVirtualTree_ReinitChildren", 0),
-		/*151*/ imports.NewTable("BaseVirtualTree_ReinitNode", 0),
-		/*152*/ imports.NewTable("BaseVirtualTree_RepaintNode", 0),
-		/*153*/ imports.NewTable("BaseVirtualTree_ResetNode", 0),
-		/*154*/ imports.NewTable("BaseVirtualTree_RootNode", 0),
-		/*155*/ imports.NewTable("BaseVirtualTree_SaveToFile", 0),
-		/*156*/ imports.NewTable("BaseVirtualTree_SaveToStream", 0),
-		/*157*/ imports.NewTable("BaseVirtualTree_ScrollIntoView", 0),
-		/*158*/ imports.NewTable("BaseVirtualTree_ScrollIntoView1", 0),
-		/*159*/ imports.NewTable("BaseVirtualTree_SearchBuffer", 0),
-		/*160*/ imports.NewTable("BaseVirtualTree_SelectAll", 0),
-		/*161*/ imports.NewTable("BaseVirtualTree_Selected", 0),
-		/*162*/ imports.NewTable("BaseVirtualTree_SelectedCount", 0),
-		/*163*/ imports.NewTable("BaseVirtualTree_SelectedNodes", 0),
-		/*164*/ imports.NewTable("BaseVirtualTree_SelectionLocked", 0),
-		/*165*/ imports.NewTable("BaseVirtualTree_Sort", 0),
-		/*166*/ imports.NewTable("BaseVirtualTree_SortTree", 0),
-		/*167*/ imports.NewTable("BaseVirtualTree_ToggleNode", 0),
-		/*168*/ imports.NewTable("BaseVirtualTree_TopNode", 0),
-		/*169*/ imports.NewTable("BaseVirtualTree_TotalCount", 0),
-		/*170*/ imports.NewTable("BaseVirtualTree_TreeStates", 0),
-		/*171*/ imports.NewTable("BaseVirtualTree_UpdateCount", 0),
-		/*172*/ imports.NewTable("BaseVirtualTree_UpdateHorizontalRange", 0),
-		/*173*/ imports.NewTable("BaseVirtualTree_UpdateHorizontalScrollBar", 0),
-		/*174*/ imports.NewTable("BaseVirtualTree_UpdateRanges", 0),
-		/*175*/ imports.NewTable("BaseVirtualTree_UpdateScrollBars", 0),
-		/*176*/ imports.NewTable("BaseVirtualTree_UpdateVerticalRange", 0),
-		/*177*/ imports.NewTable("BaseVirtualTree_UpdateVerticalScrollBar", 0),
-		/*178*/ imports.NewTable("BaseVirtualTree_ValidateChildren", 0),
-		/*179*/ imports.NewTable("BaseVirtualTree_ValidateNode", 0),
-		/*180*/ imports.NewTable("BaseVirtualTree_VerticalAlignment", 0),
-		/*181*/ imports.NewTable("BaseVirtualTree_VisibleChildNoInitNodes", 0),
-		/*182*/ imports.NewTable("BaseVirtualTree_VisibleChildNodes", 0),
-		/*183*/ imports.NewTable("BaseVirtualTree_VisibleCount", 0),
-		/*184*/ imports.NewTable("BaseVirtualTree_VisibleNoInitNodes", 0),
-		/*185*/ imports.NewTable("BaseVirtualTree_VisibleNodes", 0),
-		/*186*/ imports.NewTable("BaseVirtualTree_VisiblePath", 0),
-	}
+	baseVirtualTreeOnce   base.Once
+	baseVirtualTreeImport *imports.Imports = nil
 )
 
-func baseVirtualTreeImportAPI() *imports.Imports {
-	if baseVirtualTreeImport == nil {
-		baseVirtualTreeImport = NewDefaultImports()
-		baseVirtualTreeImport.SetImportTable(baseVirtualTreeImportTables)
-		baseVirtualTreeImportTables = nil
-	}
+func baseVirtualTreeAPI() *imports.Imports {
+	baseVirtualTreeOnce.Do(func() {
+		baseVirtualTreeImport = api.NewDefaultImports()
+		baseVirtualTreeImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TBaseVirtualTree_Create", 0), // constructor NewBaseVirtualTree
+			/* 1 */ imports.NewTable("TBaseVirtualTree_AbsoluteIndex", 0), // function AbsoluteIndex
+			/* 2 */ imports.NewTable("TBaseVirtualTree_AddChild", 0), // function AddChild
+			/* 3 */ imports.NewTable("TBaseVirtualTree_CancelEditNode", 0), // function CancelEditNode
+			/* 4 */ imports.NewTable("TBaseVirtualTree_CanEdit", 0), // function CanEdit
+			/* 5 */ imports.NewTable("TBaseVirtualTree_CopyToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool", 0), // function CopyToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool
+			/* 6 */ imports.NewTable("TBaseVirtualTree_CopyToWithPVirtualNodeX2VTNodeAttachModeBool", 0), // function CopyToWithPVirtualNodeX2VTNodeAttachModeBool
+			/* 7 */ imports.NewTable("TBaseVirtualTree_DraggingToBool", 0), // function DraggingToBool
+			/* 8 */ imports.NewTable("TBaseVirtualTree_EditNode", 0), // function EditNode
+			/* 9 */ imports.NewTable("TBaseVirtualTree_EndEditNode", 0), // function EndEditNode
+			/* 10 */ imports.NewTable("TBaseVirtualTree_GetDisplayRect", 0), // function GetDisplayRect
+			/* 11 */ imports.NewTable("TBaseVirtualTree_GetEffectivelyFiltered", 0), // function GetEffectivelyFiltered
+			/* 12 */ imports.NewTable("TBaseVirtualTree_GetEffectivelyVisible", 0), // function GetEffectivelyVisible
+			/* 13 */ imports.NewTable("TBaseVirtualTree_GetFirst", 0), // function GetFirst
+			/* 14 */ imports.NewTable("TBaseVirtualTree_GetFirstChecked", 0), // function GetFirstChecked
+			/* 15 */ imports.NewTable("TBaseVirtualTree_GetFirstChild", 0), // function GetFirstChild
+			/* 16 */ imports.NewTable("TBaseVirtualTree_GetFirstChildNoInit", 0), // function GetFirstChildNoInit
+			/* 17 */ imports.NewTable("TBaseVirtualTree_GetFirstCutCopy", 0), // function GetFirstCutCopy
+			/* 18 */ imports.NewTable("TBaseVirtualTree_GetFirstInitialized", 0), // function GetFirstInitialized
+			/* 19 */ imports.NewTable("TBaseVirtualTree_GetFirstLeaf", 0), // function GetFirstLeaf
+			/* 20 */ imports.NewTable("TBaseVirtualTree_GetFirstLevel", 0), // function GetFirstLevel
+			/* 21 */ imports.NewTable("TBaseVirtualTree_GetFirstNoInit", 0), // function GetFirstNoInit
+			/* 22 */ imports.NewTable("TBaseVirtualTree_GetFirstSelected", 0), // function GetFirstSelected
+			/* 23 */ imports.NewTable("TBaseVirtualTree_GetFirstVisible", 0), // function GetFirstVisible
+			/* 24 */ imports.NewTable("TBaseVirtualTree_GetFirstVisibleChild", 0), // function GetFirstVisibleChild
+			/* 25 */ imports.NewTable("TBaseVirtualTree_GetFirstVisibleChildNoInit", 0), // function GetFirstVisibleChildNoInit
+			/* 26 */ imports.NewTable("TBaseVirtualTree_GetFirstVisibleNoInit", 0), // function GetFirstVisibleNoInit
+			/* 27 */ imports.NewTable("TBaseVirtualTree_GetLast", 0), // function GetLast
+			/* 28 */ imports.NewTable("TBaseVirtualTree_GetLastInitialized", 0), // function GetLastInitialized
+			/* 29 */ imports.NewTable("TBaseVirtualTree_GetLastNoInit", 0), // function GetLastNoInit
+			/* 30 */ imports.NewTable("TBaseVirtualTree_GetLastChild", 0), // function GetLastChild
+			/* 31 */ imports.NewTable("TBaseVirtualTree_GetLastChildNoInit", 0), // function GetLastChildNoInit
+			/* 32 */ imports.NewTable("TBaseVirtualTree_GetLastVisible", 0), // function GetLastVisible
+			/* 33 */ imports.NewTable("TBaseVirtualTree_GetLastVisibleChild", 0), // function GetLastVisibleChild
+			/* 34 */ imports.NewTable("TBaseVirtualTree_GetLastVisibleChildNoInit", 0), // function GetLastVisibleChildNoInit
+			/* 35 */ imports.NewTable("TBaseVirtualTree_GetLastVisibleNoInit", 0), // function GetLastVisibleNoInit
+			/* 36 */ imports.NewTable("TBaseVirtualTree_GetMaxColumnWidth", 0), // function GetMaxColumnWidth
+			/* 37 */ imports.NewTable("TBaseVirtualTree_GetNext", 0), // function GetNext
+			/* 38 */ imports.NewTable("TBaseVirtualTree_GetNextCheckedWithPVirtualNodeCheckStateBool", 0), // function GetNextCheckedWithPVirtualNodeCheckStateBool
+			/* 39 */ imports.NewTable("TBaseVirtualTree_GetNextCheckedWithPVirtualNodeBool", 0), // function GetNextCheckedWithPVirtualNodeBool
+			/* 40 */ imports.NewTable("TBaseVirtualTree_GetNextCutCopy", 0), // function GetNextCutCopy
+			/* 41 */ imports.NewTable("TBaseVirtualTree_GetNextInitialized", 0), // function GetNextInitialized
+			/* 42 */ imports.NewTable("TBaseVirtualTree_GetNextLeaf", 0), // function GetNextLeaf
+			/* 43 */ imports.NewTable("TBaseVirtualTree_GetNextLevel", 0), // function GetNextLevel
+			/* 44 */ imports.NewTable("TBaseVirtualTree_GetNextNoInit", 0), // function GetNextNoInit
+			/* 45 */ imports.NewTable("TBaseVirtualTree_GetNextSelected", 0), // function GetNextSelected
+			/* 46 */ imports.NewTable("TBaseVirtualTree_GetNextSibling", 0), // function GetNextSibling
+			/* 47 */ imports.NewTable("TBaseVirtualTree_GetNextSiblingNoInit", 0), // function GetNextSiblingNoInit
+			/* 48 */ imports.NewTable("TBaseVirtualTree_GetNextVisible", 0), // function GetNextVisible
+			/* 49 */ imports.NewTable("TBaseVirtualTree_GetNextVisibleNoInit", 0), // function GetNextVisibleNoInit
+			/* 50 */ imports.NewTable("TBaseVirtualTree_GetNextVisibleSibling", 0), // function GetNextVisibleSibling
+			/* 51 */ imports.NewTable("TBaseVirtualTree_GetNextVisibleSiblingNoInit", 0), // function GetNextVisibleSiblingNoInit
+			/* 52 */ imports.NewTable("TBaseVirtualTree_GetNodeAtWithPoint", 0), // function GetNodeAtWithPoint
+			/* 53 */ imports.NewTable("TBaseVirtualTree_GetNodeAtWithIntX2", 0), // function GetNodeAtWithIntX2
+			/* 54 */ imports.NewTable("TBaseVirtualTree_GetNodeAtWithIntX3Bool", 0), // function GetNodeAtWithIntX3Bool
+			/* 55 */ imports.NewTable("TBaseVirtualTree_GetNodeData", 0), // function GetNodeData
+			/* 56 */ imports.NewTable("TBaseVirtualTree_GetNodeLevel", 0), // function GetNodeLevel
+			/* 57 */ imports.NewTable("TBaseVirtualTree_GetPrevious", 0), // function GetPrevious
+			/* 58 */ imports.NewTable("TBaseVirtualTree_GetPreviousChecked", 0), // function GetPreviousChecked
+			/* 59 */ imports.NewTable("TBaseVirtualTree_GetPreviousCutCopy", 0), // function GetPreviousCutCopy
+			/* 60 */ imports.NewTable("TBaseVirtualTree_GetPreviousInitialized", 0), // function GetPreviousInitialized
+			/* 61 */ imports.NewTable("TBaseVirtualTree_GetPreviousLeaf", 0), // function GetPreviousLeaf
+			/* 62 */ imports.NewTable("TBaseVirtualTree_GetPreviousLevel", 0), // function GetPreviousLevel
+			/* 63 */ imports.NewTable("TBaseVirtualTree_GetPreviousNoInit", 0), // function GetPreviousNoInit
+			/* 64 */ imports.NewTable("TBaseVirtualTree_GetPreviousSelected", 0), // function GetPreviousSelected
+			/* 65 */ imports.NewTable("TBaseVirtualTree_GetPreviousSibling", 0), // function GetPreviousSibling
+			/* 66 */ imports.NewTable("TBaseVirtualTree_GetPreviousSiblingNoInit", 0), // function GetPreviousSiblingNoInit
+			/* 67 */ imports.NewTable("TBaseVirtualTree_GetPreviousVisible", 0), // function GetPreviousVisible
+			/* 68 */ imports.NewTable("TBaseVirtualTree_GetPreviousVisibleNoInit", 0), // function GetPreviousVisibleNoInit
+			/* 69 */ imports.NewTable("TBaseVirtualTree_GetPreviousVisibleSibling", 0), // function GetPreviousVisibleSibling
+			/* 70 */ imports.NewTable("TBaseVirtualTree_GetPreviousVisibleSiblingNoInit", 0), // function GetPreviousVisibleSiblingNoInit
+			/* 71 */ imports.NewTable("TBaseVirtualTree_GetSortedCutCopySet", 0), // function GetSortedCutCopySet
+			/* 72 */ imports.NewTable("TBaseVirtualTree_GetSortedSelection", 0), // function GetSortedSelection
+			/* 73 */ imports.NewTable("TBaseVirtualTree_GetTreeRect", 0), // function GetTreeRect
+			/* 74 */ imports.NewTable("TBaseVirtualTree_GetVisibleParent", 0), // function GetVisibleParent
+			/* 75 */ imports.NewTable("TBaseVirtualTree_HasAsParent", 0), // function HasAsParent
+			/* 76 */ imports.NewTable("TBaseVirtualTree_InsertNode", 0), // function InsertNode
+			/* 77 */ imports.NewTable("TBaseVirtualTree_InvalidateNode", 0), // function InvalidateNode
+			/* 78 */ imports.NewTable("TBaseVirtualTree_IsEditing", 0), // function IsEditing
+			/* 79 */ imports.NewTable("TBaseVirtualTree_IsMouseSelecting", 0), // function IsMouseSelecting
+			/* 80 */ imports.NewTable("TBaseVirtualTree_IsEmpty", 0), // function IsEmpty
+			/* 81 */ imports.NewTable("TBaseVirtualTree_PasteFromClipboard", 0), // function PasteFromClipboard
+			/* 82 */ imports.NewTable("TBaseVirtualTree_ScrollIntoViewWithPVirtualNodeBoolX2", 0), // function ScrollIntoViewWithPVirtualNodeBoolX2
+			/* 83 */ imports.NewTable("TBaseVirtualTree_ScrollIntoViewWithColumnIndexBool", 0), // function ScrollIntoViewWithColumnIndexBool
+			/* 84 */ imports.NewTable("TBaseVirtualTree_Nodes", 0), // function Nodes
+			/* 85 */ imports.NewTable("TBaseVirtualTree_CheckedNodes", 0), // function CheckedNodes
+			/* 86 */ imports.NewTable("TBaseVirtualTree_ChildNodes", 0), // function ChildNodes
+			/* 87 */ imports.NewTable("TBaseVirtualTree_CutCopyNodes", 0), // function CutCopyNodes
+			/* 88 */ imports.NewTable("TBaseVirtualTree_InitializedNodes", 0), // function InitializedNodes
+			/* 89 */ imports.NewTable("TBaseVirtualTree_LeafNodes", 0), // function LeafNodes
+			/* 90 */ imports.NewTable("TBaseVirtualTree_LevelNodes", 0), // function LevelNodes
+			/* 91 */ imports.NewTable("TBaseVirtualTree_NoInitNodes", 0), // function NoInitNodes
+			/* 92 */ imports.NewTable("TBaseVirtualTree_SelectedNodes", 0), // function SelectedNodes
+			/* 93 */ imports.NewTable("TBaseVirtualTree_VisibleNodes", 0), // function VisibleNodes
+			/* 94 */ imports.NewTable("TBaseVirtualTree_VisibleChildNodes", 0), // function VisibleChildNodes
+			/* 95 */ imports.NewTable("TBaseVirtualTree_VisibleChildNoInitNodes", 0), // function VisibleChildNoInitNodes
+			/* 96 */ imports.NewTable("TBaseVirtualTree_VisibleNoInitNodes", 0), // function VisibleNoInitNodes
+			/* 97 */ imports.NewTable("TBaseVirtualTree_AddFromStream", 0), // procedure AddFromStream
+			/* 98 */ imports.NewTable("TBaseVirtualTree_BeginDragWithBoolInt", 0), // procedure BeginDragWithBoolInt
+			/* 99 */ imports.NewTable("TBaseVirtualTree_BeginSynch", 0), // procedure BeginSynch
+			/* 100 */ imports.NewTable("TBaseVirtualTree_BeginUpdate", 0), // procedure BeginUpdate
+			/* 101 */ imports.NewTable("TBaseVirtualTree_CancelCutOrCopy", 0), // procedure CancelCutOrCopy
+			/* 102 */ imports.NewTable("TBaseVirtualTree_CancelOperation", 0), // procedure CancelOperation
+			/* 103 */ imports.NewTable("TBaseVirtualTree_Clear", 0), // procedure Clear
+			/* 104 */ imports.NewTable("TBaseVirtualTree_ClearChecked", 0), // procedure ClearChecked
+			/* 105 */ imports.NewTable("TBaseVirtualTree_ClearSelection", 0), // procedure ClearSelection
+			/* 106 */ imports.NewTable("TBaseVirtualTree_CopyToClipboard", 0), // procedure CopyToClipboard
+			/* 107 */ imports.NewTable("TBaseVirtualTree_CutToClipboard", 0), // procedure CutToClipboard
+			/* 108 */ imports.NewTable("TBaseVirtualTree_DeleteChildren", 0), // procedure DeleteChildren
+			/* 109 */ imports.NewTable("TBaseVirtualTree_DeleteNode", 0), // procedure DeleteNode
+			/* 110 */ imports.NewTable("TBaseVirtualTree_DeleteSelectedNodes", 0), // procedure DeleteSelectedNodes
+			/* 111 */ imports.NewTable("TBaseVirtualTree_EndSynch", 0), // procedure EndSynch
+			/* 112 */ imports.NewTable("TBaseVirtualTree_EndUpdate", 0), // procedure EndUpdate
+			/* 113 */ imports.NewTable("TBaseVirtualTree_EnsureNodeSelected", 0), // procedure EnsureNodeSelected
+			/* 114 */ imports.NewTable("TBaseVirtualTree_FinishCutOrCopy", 0), // procedure FinishCutOrCopy
+			/* 115 */ imports.NewTable("TBaseVirtualTree_FlushClipboard", 0), // procedure FlushClipboard
+			/* 116 */ imports.NewTable("TBaseVirtualTree_FullCollapse", 0), // procedure FullCollapse
+			/* 117 */ imports.NewTable("TBaseVirtualTree_FullExpand", 0), // procedure FullExpand
+			/* 118 */ imports.NewTable("TBaseVirtualTree_GetHitTestInfoAt", 0), // procedure GetHitTestInfoAt
+			/* 119 */ imports.NewTable("TBaseVirtualTree_GetTextInfo", 0), // procedure GetTextInfo
+			/* 120 */ imports.NewTable("TBaseVirtualTree_InvalidateChildren", 0), // procedure InvalidateChildren
+			/* 121 */ imports.NewTable("TBaseVirtualTree_InvalidateColumn", 0), // procedure InvalidateColumn
+			/* 122 */ imports.NewTable("TBaseVirtualTree_InvalidateToBottom", 0), // procedure InvalidateToBottom
+			/* 123 */ imports.NewTable("TBaseVirtualTree_InvertSelection", 0), // procedure InvertSelection
+			/* 124 */ imports.NewTable("TBaseVirtualTree_LoadFromFile", 0), // procedure LoadFromFile
+			/* 125 */ imports.NewTable("TBaseVirtualTree_LoadFromStream", 0), // procedure LoadFromStream
+			/* 126 */ imports.NewTable("TBaseVirtualTree_MeasureItemHeight", 0), // procedure MeasureItemHeight
+			/* 127 */ imports.NewTable("TBaseVirtualTree_MoveToWithPVirtualNodeX2VTNodeAttachModeBool", 0), // procedure MoveToWithPVirtualNodeX2VTNodeAttachModeBool
+			/* 128 */ imports.NewTable("TBaseVirtualTree_MoveToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool", 0), // procedure MoveToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool
+			/* 129 */ imports.NewTable("TBaseVirtualTree_PaintTree", 0), // procedure PaintTree
+			/* 130 */ imports.NewTable("TBaseVirtualTree_RepaintNode", 0), // procedure RepaintNode
+			/* 131 */ imports.NewTable("TBaseVirtualTree_ReinitChildren", 0), // procedure ReinitChildren
+			/* 132 */ imports.NewTable("TBaseVirtualTree_ReinitNode", 0), // procedure ReinitNode
+			/* 133 */ imports.NewTable("TBaseVirtualTree_ResetNode", 0), // procedure ResetNode
+			/* 134 */ imports.NewTable("TBaseVirtualTree_SaveToFile", 0), // procedure SaveToFile
+			/* 135 */ imports.NewTable("TBaseVirtualTree_SaveToStream", 0), // procedure SaveToStream
+			/* 136 */ imports.NewTable("TBaseVirtualTree_SelectAll", 0), // procedure SelectAll
+			/* 137 */ imports.NewTable("TBaseVirtualTree_Sort", 0), // procedure Sort
+			/* 138 */ imports.NewTable("TBaseVirtualTree_SortTree", 0), // procedure SortTree
+			/* 139 */ imports.NewTable("TBaseVirtualTree_ToggleNode", 0), // procedure ToggleNode
+			/* 140 */ imports.NewTable("TBaseVirtualTree_UpdateHorizontalRange", 0), // procedure UpdateHorizontalRange
+			/* 141 */ imports.NewTable("TBaseVirtualTree_UpdateHorizontalScrollBar", 0), // procedure UpdateHorizontalScrollBar
+			/* 142 */ imports.NewTable("TBaseVirtualTree_UpdateRanges", 0), // procedure UpdateRanges
+			/* 143 */ imports.NewTable("TBaseVirtualTree_UpdateScrollBars", 0), // procedure UpdateScrollBars
+			/* 144 */ imports.NewTable("TBaseVirtualTree_UpdateVerticalRange", 0), // procedure UpdateVerticalRange
+			/* 145 */ imports.NewTable("TBaseVirtualTree_UpdateVerticalScrollBar", 0), // procedure UpdateVerticalScrollBar
+			/* 146 */ imports.NewTable("TBaseVirtualTree_ValidateChildren", 0), // procedure ValidateChildren
+			/* 147 */ imports.NewTable("TBaseVirtualTree_ValidateNode", 0), // procedure ValidateNode
+			/* 148 */ imports.NewTable("TBaseVirtualTree_BottomNode", 0), // property BottomNode
+			/* 149 */ imports.NewTable("TBaseVirtualTree_CheckedCount", 0), // property CheckedCount
+			/* 150 */ imports.NewTable("TBaseVirtualTree_CheckImages", 0), // property CheckImages
+			/* 151 */ imports.NewTable("TBaseVirtualTree_CheckState", 0), // property CheckState
+			/* 152 */ imports.NewTable("TBaseVirtualTree_CheckType", 0), // property CheckType
+			/* 153 */ imports.NewTable("TBaseVirtualTree_ChildCount", 0), // property ChildCount
+			/* 154 */ imports.NewTable("TBaseVirtualTree_ChildrenInitialized", 0), // property ChildrenInitialized
+			/* 155 */ imports.NewTable("TBaseVirtualTree_CutCopyCount", 0), // property CutCopyCount
+			/* 156 */ imports.NewTable("TBaseVirtualTree_DragImage", 0), // property DragImage
+			/* 157 */ imports.NewTable("TBaseVirtualTree_VTVDragManager", 0), // property VTVDragManager
+			/* 158 */ imports.NewTable("TBaseVirtualTree_DropTargetNode", 0), // property DropTargetNode
+			/* 159 */ imports.NewTable("TBaseVirtualTree_EditLink", 0), // property EditLink
+			/* 160 */ imports.NewTable("TBaseVirtualTree_EmptyListMessage", 0), // property EmptyListMessage
+			/* 161 */ imports.NewTable("TBaseVirtualTree_Expanded", 0), // property Expanded
+			/* 162 */ imports.NewTable("TBaseVirtualTree_FocusedColumn", 0), // property FocusedColumn
+			/* 163 */ imports.NewTable("TBaseVirtualTree_FocusedNode", 0), // property FocusedNode
+			/* 164 */ imports.NewTable("TBaseVirtualTree_FullyVisible", 0), // property FullyVisible
+			/* 165 */ imports.NewTable("TBaseVirtualTree_HasChildren", 0), // property HasChildren
+			/* 166 */ imports.NewTable("TBaseVirtualTree_HotNode", 0), // property HotNode
+			/* 167 */ imports.NewTable("TBaseVirtualTree_IsDisabled", 0), // property IsDisabled
+			/* 168 */ imports.NewTable("TBaseVirtualTree_IsEffectivelyFiltered", 0), // property IsEffectivelyFiltered
+			/* 169 */ imports.NewTable("TBaseVirtualTree_IsEffectivelyVisible", 0), // property IsEffectivelyVisible
+			/* 170 */ imports.NewTable("TBaseVirtualTree_IsFiltered", 0), // property IsFiltered
+			/* 171 */ imports.NewTable("TBaseVirtualTree_IsVisibleWithPVirtualNodeToBool", 0), // property IsVisibleWithPVirtualNodeToBool
+			/* 172 */ imports.NewTable("TBaseVirtualTree_MultiLine", 0), // property MultiLine
+			/* 173 */ imports.NewTable("TBaseVirtualTree_NodeHeight", 0), // property NodeHeight
+			/* 174 */ imports.NewTable("TBaseVirtualTree_NodeParent", 0), // property NodeParent
+			/* 175 */ imports.NewTable("TBaseVirtualTree_OffsetX", 0), // property OffsetX
+			/* 176 */ imports.NewTable("TBaseVirtualTree_OffsetXY", 0), // property OffsetXY
+			/* 177 */ imports.NewTable("TBaseVirtualTree_OffsetY", 0), // property OffsetY
+			/* 178 */ imports.NewTable("TBaseVirtualTree_OperationCount", 0), // property OperationCount
+			/* 179 */ imports.NewTable("TBaseVirtualTree_RootNode", 0), // property RootNode
+			/* 180 */ imports.NewTable("TBaseVirtualTree_SearchBuffer", 0), // property SearchBuffer
+			/* 181 */ imports.NewTable("TBaseVirtualTree_Selected", 0), // property Selected
+			/* 182 */ imports.NewTable("TBaseVirtualTree_SelectionLocked", 0), // property SelectionLocked
+			/* 183 */ imports.NewTable("TBaseVirtualTree_TotalCount", 0), // property TotalCount
+			/* 184 */ imports.NewTable("TBaseVirtualTree_TreeStates", 0), // property TreeStates
+			/* 185 */ imports.NewTable("TBaseVirtualTree_SelectedCount", 0), // property SelectedCount
+			/* 186 */ imports.NewTable("TBaseVirtualTree_TopNode", 0), // property TopNode
+			/* 187 */ imports.NewTable("TBaseVirtualTree_VerticalAlignment", 0), // property VerticalAlignment
+			/* 188 */ imports.NewTable("TBaseVirtualTree_VisibleCount", 0), // property VisibleCount
+			/* 189 */ imports.NewTable("TBaseVirtualTree_VisiblePath", 0), // property VisiblePath
+			/* 190 */ imports.NewTable("TBaseVirtualTree_UpdateCount", 0), // property UpdateCount
+			/* 191 */ imports.NewTable("TBaseVirtualTree_TClass", 0), // function TBaseVirtualTreeClass
+		}
+	})
 	return baseVirtualTreeImport
 }

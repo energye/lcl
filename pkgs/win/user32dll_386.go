@@ -12,25 +12,27 @@
 package win
 
 import (
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/types"
 )
 
 var (
 	_GetWindowLongPtr = user32dll.NewProc("GetWindowLongW")
 	_SetWindowLongPtr = user32dll.NewProc("SetWindowLongW")
+	_SetClassLongPtr  = user32dll.NewProc("SetClassLongW")
+	_GetClassLongPtr  = user32dll.NewProc("GetClassLongW")
 )
 
-func WindowFromPoint(point TPoint) HWND {
+func WindowFromPoint(point types.TPoint) types.HWND {
 	r, _, _ := _WindowFromPoint.Call(uintptr(point.X), uintptr(point.Y))
-	return HWND(r)
+	return types.HWND(r)
 }
 
-func WindowFromPhysicalPoint(point TPoint) HWND {
+func WindowFromPhysicalPoint(point types.TPoint) types.HWND {
 	r, _, _ := _WindowFromPhysicalPoint.Call(uintptr(point.Y), uintptr(point.Y))
-	return HWND(r)
+	return types.HWND(r)
 }
 
-func ChildWindowFromPoint(hWndParent HWND, point TPoint) HWND {
+func ChildWindowFromPoint(hWndParent types.HWND, point types.TPoint) types.HWND {
 	r, _, _ := _ChildWindowFromPoint.Call(uintptr(hWndParent), uintptr(point.Y), uintptr(point.Y))
-	return HWND(r)
+	return types.HWND(r)
 }

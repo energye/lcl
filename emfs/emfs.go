@@ -1,7 +1,15 @@
+//----------------------------------------
+//
+// Copyright © yanghy. All Rights Reserved.
+//
+// Licensed under Apache License 2.0
+//
+//----------------------------------------
+
 package emfs
 
 import (
-	"io/ioutil"
+	"os"
 )
 
 var (
@@ -33,7 +41,7 @@ func GetResources(file string) ([]byte, error) {
 	if GetResourcesFS() != nil {
 		return GetResourcesFS().ReadFile(file)
 	} else {
-		return ioutil.ReadFile(file)
+		return os.ReadFile(file)
 	}
 }
 
@@ -41,7 +49,7 @@ func GetLibs(fileName string) ([]byte, error) {
 	if GetLibsFS() != nil {
 		return GetLibsFS().ReadFile(fileName)
 	} else {
-		return ioutil.ReadFile(fileName)
+		return os.ReadFile(fileName)
 	}
 }
 

@@ -9,75 +9,90 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomLabeledEdit Parent: ICustomEdit
 type ICustomLabeledEdit interface {
 	ICustomEdit
-	EditLabel() IBoundLabel                 // property
-	LabelPosition() TLabelPosition          // property
-	SetLabelPosition(AValue TLabelPosition) // property
-	LabelSpacing() int32                    // property
-	SetLabelSpacing(AValue int32)           // property
+	EditLabel() IBoundLabel                      // property EditLabel Getter
+	LabelPosition() types.TLabelPosition         // property LabelPosition Getter
+	SetLabelPosition(value types.TLabelPosition) // property LabelPosition Setter
+	LabelSpacing() int32                         // property LabelSpacing Getter
+	SetLabelSpacing(value int32)                 // property LabelSpacing Setter
 }
 
-// TCustomLabeledEdit Parent: TCustomEdit
 type TCustomLabeledEdit struct {
 	TCustomEdit
 }
 
-func NewCustomLabeledEdit(TheOwner IComponent) ICustomLabeledEdit {
-	r1 := customLabeledEditImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsCustomLabeledEdit(r1)
-}
-
 func (m *TCustomLabeledEdit) EditLabel() IBoundLabel {
-	r1 := customLabeledEditImportAPI().SysCallN(2, m.Instance())
-	return AsBoundLabel(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := customLabeledEditAPI().SysCallN(1, m.Instance())
+	return AsBoundLabel(r)
 }
 
-func (m *TCustomLabeledEdit) LabelPosition() TLabelPosition {
-	r1 := customLabeledEditImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TLabelPosition(r1)
+func (m *TCustomLabeledEdit) LabelPosition() types.TLabelPosition {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customLabeledEditAPI().SysCallN(2, 0, m.Instance())
+	return types.TLabelPosition(r)
 }
 
-func (m *TCustomLabeledEdit) SetLabelPosition(AValue TLabelPosition) {
-	customLabeledEditImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomLabeledEdit) SetLabelPosition(value types.TLabelPosition) {
+	if !m.IsValid() {
+		return
+	}
+	customLabeledEditAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomLabeledEdit) LabelSpacing() int32 {
-	r1 := customLabeledEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customLabeledEditAPI().SysCallN(3, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomLabeledEdit) SetLabelSpacing(AValue int32) {
-	customLabeledEditImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomLabeledEdit) SetLabelSpacing(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customLabeledEditAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func CustomLabeledEditClass() TClass {
-	ret := customLabeledEditImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewCustomLabeledEdit class constructor
+func NewCustomLabeledEdit(theOwner IComponent) ICustomLabeledEdit {
+	r := customLabeledEditAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsCustomLabeledEdit(r)
+}
+
+func TCustomLabeledEditClass() types.TClass {
+	r := customLabeledEditAPI().SysCallN(4)
+	return types.TClass(r)
 }
 
 var (
-	customLabeledEditImport       *imports.Imports = nil
-	customLabeledEditImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomLabeledEdit_Class", 0),
-		/*1*/ imports.NewTable("CustomLabeledEdit_Create", 0),
-		/*2*/ imports.NewTable("CustomLabeledEdit_EditLabel", 0),
-		/*3*/ imports.NewTable("CustomLabeledEdit_LabelPosition", 0),
-		/*4*/ imports.NewTable("CustomLabeledEdit_LabelSpacing", 0),
-	}
+	customLabeledEditOnce   base.Once
+	customLabeledEditImport *imports.Imports = nil
 )
 
-func customLabeledEditImportAPI() *imports.Imports {
-	if customLabeledEditImport == nil {
-		customLabeledEditImport = NewDefaultImports()
-		customLabeledEditImport.SetImportTable(customLabeledEditImportTables)
-		customLabeledEditImportTables = nil
-	}
+func customLabeledEditAPI() *imports.Imports {
+	customLabeledEditOnce.Do(func() {
+		customLabeledEditImport = api.NewDefaultImports()
+		customLabeledEditImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomLabeledEdit_Create", 0), // constructor NewCustomLabeledEdit
+			/* 1 */ imports.NewTable("TCustomLabeledEdit_EditLabel", 0), // property EditLabel
+			/* 2 */ imports.NewTable("TCustomLabeledEdit_LabelPosition", 0), // property LabelPosition
+			/* 3 */ imports.NewTable("TCustomLabeledEdit_LabelSpacing", 0), // property LabelSpacing
+			/* 4 */ imports.NewTable("TCustomLabeledEdit_TClass", 0), // function TCustomLabeledEditClass
+		}
+	})
 	return customLabeledEditImport
 }

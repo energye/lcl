@@ -9,179 +9,236 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IListItems Parent: IPersistent
 type IListItems interface {
 	IPersistent
-	Flags() TListItemsFlags                                                                              // property
-	Count() int32                                                                                        // property
-	SetCount(AValue int32)                                                                               // property
-	Item(AIndex int32) IListItem                                                                         // property
-	SetItem(AIndex int32, AValue IListItem)                                                              // property
-	Owner() ICustomListView                                                                              // property
-	Add() IListItem                                                                                      // function
-	FindCaption(StartIndex int32, Value string, Partial, Inclusive, Wrap bool, PartStart bool) IListItem // function
-	FindData(AData uintptr) IListItem                                                                    // function
-	FindData1(StartIndex int32, Value uintptr, Inclusive, Wrap bool) IListItem                           // function
-	GetEnumerator() IListItemsEnumerator                                                                 // function
-	IndexOf(AItem IListItem) int32                                                                       // function
-	Insert(AIndex int32) IListItem                                                                       // function
-	AddItem(AItem IListItem)                                                                             // procedure
-	BeginUpdate()                                                                                        // procedure
-	Clear()                                                                                              // procedure
-	Delete(AIndex int32)                                                                                 // procedure
-	EndUpdate()                                                                                          // procedure
-	Exchange(AIndex1, AIndex2 int32)                                                                     // procedure
-	Move(AFromIndex, AToIndex int32)                                                                     // procedure
-	InsertItem(AItem IListItem, AIndex int32)                                                            // procedure
+	Add() IListItem                                                                                                // function
+	FindCaption(startIndex int32, value string, partial bool, inclusive bool, wrap bool, partStart bool) IListItem // function
+	FindDataWithPointer(data uintptr) IListItem                                                                    // function
+	FindDataWithIntPointerBoolX2(startIndex int32, value uintptr, inclusive bool, wrap bool) IListItem             // function
+	GetEnumerator() IListItemsEnumerator                                                                           // function
+	IndexOf(item IListItem) int32                                                                                  // function
+	Insert(index int32) IListItem                                                                                  // function
+	AddItem(item IListItem)                                                                                        // procedure
+	BeginUpdate()                                                                                                  // procedure
+	Clear()                                                                                                        // procedure
+	Delete(index int32)                                                                                            // procedure
+	EndUpdate()                                                                                                    // procedure
+	Exchange(index1 int32, index2 int32)                                                                           // procedure
+	Move(fromIndex int32, toIndex int32)                                                                           // procedure
+	InsertItem(item IListItem, index int32)                                                                        // procedure
+	Flags() types.TListItemsFlags                                                                                  // property Flags Getter
+	Count() int32                                                                                                  // property Count Getter
+	SetCount(value int32)                                                                                          // property Count Setter
+	Item(index int32) IListItem                                                                                    // property Item Getter
+	SetItem(index int32, value IListItem)                                                                          // property Item Setter
+	Owner() ICustomListView                                                                                        // property Owner Getter
 }
 
-// TListItems Parent: TPersistent
 type TListItems struct {
 	TPersistent
 }
 
-func NewListItems(AOwner ICustomListView) IListItems {
-	r1 := listItemsImportAPI().SysCallN(6, GetObjectUintptr(AOwner))
-	return AsListItems(r1)
-}
-
-func (m *TListItems) Flags() TListItemsFlags {
-	r1 := listItemsImportAPI().SysCallN(13, m.Instance())
-	return TListItemsFlags(r1)
-}
-
-func (m *TListItems) Count() int32 {
-	r1 := listItemsImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TListItems) SetCount(AValue int32) {
-	listItemsImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TListItems) Item(AIndex int32) IListItem {
-	r1 := listItemsImportAPI().SysCallN(18, 0, m.Instance(), uintptr(AIndex))
-	return AsListItem(r1)
-}
-
-func (m *TListItems) SetItem(AIndex int32, AValue IListItem) {
-	listItemsImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AIndex), GetObjectUintptr(AValue))
-}
-
-func (m *TListItems) Owner() ICustomListView {
-	r1 := listItemsImportAPI().SysCallN(20, m.Instance())
-	return AsCustomListView(r1)
-}
-
 func (m *TListItems) Add() IListItem {
-	r1 := listItemsImportAPI().SysCallN(0, m.Instance())
-	return AsListItem(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemsAPI().SysCallN(1, m.Instance())
+	return AsListItem(r)
 }
 
-func (m *TListItems) FindCaption(StartIndex int32, Value string, Partial, Inclusive, Wrap bool, PartStart bool) IListItem {
-	r1 := listItemsImportAPI().SysCallN(10, m.Instance(), uintptr(StartIndex), PascalStr(Value), PascalBool(Partial), PascalBool(Inclusive), PascalBool(Wrap), PascalBool(PartStart))
-	return AsListItem(r1)
+func (m *TListItems) FindCaption(startIndex int32, value string, partial bool, inclusive bool, wrap bool, partStart bool) IListItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemsAPI().SysCallN(2, m.Instance(), uintptr(startIndex), api.PasStr(value), api.PasBool(partial), api.PasBool(inclusive), api.PasBool(wrap), api.PasBool(partStart))
+	return AsListItem(r)
 }
 
-func (m *TListItems) FindData(AData uintptr) IListItem {
-	r1 := listItemsImportAPI().SysCallN(11, m.Instance(), uintptr(AData))
-	return AsListItem(r1)
+func (m *TListItems) FindDataWithPointer(data uintptr) IListItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemsAPI().SysCallN(3, m.Instance(), uintptr(data))
+	return AsListItem(r)
 }
 
-func (m *TListItems) FindData1(StartIndex int32, Value uintptr, Inclusive, Wrap bool) IListItem {
-	r1 := listItemsImportAPI().SysCallN(12, m.Instance(), uintptr(StartIndex), uintptr(Value), PascalBool(Inclusive), PascalBool(Wrap))
-	return AsListItem(r1)
+func (m *TListItems) FindDataWithIntPointerBoolX2(startIndex int32, value uintptr, inclusive bool, wrap bool) IListItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemsAPI().SysCallN(4, m.Instance(), uintptr(startIndex), uintptr(value), api.PasBool(inclusive), api.PasBool(wrap))
+	return AsListItem(r)
 }
 
 func (m *TListItems) GetEnumerator() IListItemsEnumerator {
-	r1 := listItemsImportAPI().SysCallN(14, m.Instance())
-	return AsListItemsEnumerator(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemsAPI().SysCallN(5, m.Instance())
+	return AsListItemsEnumerator(r)
 }
 
-func (m *TListItems) IndexOf(AItem IListItem) int32 {
-	r1 := listItemsImportAPI().SysCallN(15, m.Instance(), GetObjectUintptr(AItem))
-	return int32(r1)
+func (m *TListItems) IndexOf(item IListItem) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemsAPI().SysCallN(6, m.Instance(), base.GetObjectUintptr(item))
+	return int32(r)
 }
 
-func (m *TListItems) Insert(AIndex int32) IListItem {
-	r1 := listItemsImportAPI().SysCallN(16, m.Instance(), uintptr(AIndex))
-	return AsListItem(r1)
+func (m *TListItems) Insert(index int32) IListItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemsAPI().SysCallN(7, m.Instance(), uintptr(index))
+	return AsListItem(r)
 }
 
-func ListItemsClass() TClass {
-	ret := listItemsImportAPI().SysCallN(3)
-	return TClass(ret)
-}
-
-func (m *TListItems) AddItem(AItem IListItem) {
-	listItemsImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(AItem))
+func (m *TListItems) AddItem(item IListItem) {
+	if !m.IsValid() {
+		return
+	}
+	listItemsAPI().SysCallN(8, m.Instance(), base.GetObjectUintptr(item))
 }
 
 func (m *TListItems) BeginUpdate() {
-	listItemsImportAPI().SysCallN(2, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	listItemsAPI().SysCallN(9, m.Instance())
 }
 
 func (m *TListItems) Clear() {
-	listItemsImportAPI().SysCallN(4, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	listItemsAPI().SysCallN(10, m.Instance())
 }
 
-func (m *TListItems) Delete(AIndex int32) {
-	listItemsImportAPI().SysCallN(7, m.Instance(), uintptr(AIndex))
+func (m *TListItems) Delete(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	listItemsAPI().SysCallN(11, m.Instance(), uintptr(index))
 }
 
 func (m *TListItems) EndUpdate() {
-	listItemsImportAPI().SysCallN(8, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	listItemsAPI().SysCallN(12, m.Instance())
 }
 
-func (m *TListItems) Exchange(AIndex1, AIndex2 int32) {
-	listItemsImportAPI().SysCallN(9, m.Instance(), uintptr(AIndex1), uintptr(AIndex2))
+func (m *TListItems) Exchange(index1 int32, index2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	listItemsAPI().SysCallN(13, m.Instance(), uintptr(index1), uintptr(index2))
 }
 
-func (m *TListItems) Move(AFromIndex, AToIndex int32) {
-	listItemsImportAPI().SysCallN(19, m.Instance(), uintptr(AFromIndex), uintptr(AToIndex))
+func (m *TListItems) Move(fromIndex int32, toIndex int32) {
+	if !m.IsValid() {
+		return
+	}
+	listItemsAPI().SysCallN(14, m.Instance(), uintptr(fromIndex), uintptr(toIndex))
 }
 
-func (m *TListItems) InsertItem(AItem IListItem, AIndex int32) {
-	listItemsImportAPI().SysCallN(17, m.Instance(), GetObjectUintptr(AItem), uintptr(AIndex))
+func (m *TListItems) InsertItem(item IListItem, index int32) {
+	if !m.IsValid() {
+		return
+	}
+	listItemsAPI().SysCallN(15, m.Instance(), base.GetObjectUintptr(item), uintptr(index))
+}
+
+func (m *TListItems) Flags() types.TListItemsFlags {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemsAPI().SysCallN(16, m.Instance())
+	return types.TListItemsFlags(r)
+}
+
+func (m *TListItems) Count() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listItemsAPI().SysCallN(17, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TListItems) SetCount(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listItemsAPI().SysCallN(17, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TListItems) Item(index int32) IListItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemsAPI().SysCallN(18, 0, m.Instance(), uintptr(index))
+	return AsListItem(r)
+}
+
+func (m *TListItems) SetItem(index int32, value IListItem) {
+	if !m.IsValid() {
+		return
+	}
+	listItemsAPI().SysCallN(18, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
+}
+
+func (m *TListItems) Owner() ICustomListView {
+	if !m.IsValid() {
+		return nil
+	}
+	r := listItemsAPI().SysCallN(19, m.Instance())
+	return AsCustomListView(r)
+}
+
+// NewListItems class constructor
+func NewListItems(owner ICustomListView) IListItems {
+	r := listItemsAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsListItems(r)
 }
 
 var (
-	listItemsImport       *imports.Imports = nil
-	listItemsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ListItems_Add", 0),
-		/*1*/ imports.NewTable("ListItems_AddItem", 0),
-		/*2*/ imports.NewTable("ListItems_BeginUpdate", 0),
-		/*3*/ imports.NewTable("ListItems_Class", 0),
-		/*4*/ imports.NewTable("ListItems_Clear", 0),
-		/*5*/ imports.NewTable("ListItems_Count", 0),
-		/*6*/ imports.NewTable("ListItems_Create", 0),
-		/*7*/ imports.NewTable("ListItems_Delete", 0),
-		/*8*/ imports.NewTable("ListItems_EndUpdate", 0),
-		/*9*/ imports.NewTable("ListItems_Exchange", 0),
-		/*10*/ imports.NewTable("ListItems_FindCaption", 0),
-		/*11*/ imports.NewTable("ListItems_FindData", 0),
-		/*12*/ imports.NewTable("ListItems_FindData1", 0),
-		/*13*/ imports.NewTable("ListItems_Flags", 0),
-		/*14*/ imports.NewTable("ListItems_GetEnumerator", 0),
-		/*15*/ imports.NewTable("ListItems_IndexOf", 0),
-		/*16*/ imports.NewTable("ListItems_Insert", 0),
-		/*17*/ imports.NewTable("ListItems_InsertItem", 0),
-		/*18*/ imports.NewTable("ListItems_Item", 0),
-		/*19*/ imports.NewTable("ListItems_Move", 0),
-		/*20*/ imports.NewTable("ListItems_Owner", 0),
-	}
+	listItemsOnce   base.Once
+	listItemsImport *imports.Imports = nil
 )
 
-func listItemsImportAPI() *imports.Imports {
-	if listItemsImport == nil {
-		listItemsImport = NewDefaultImports()
-		listItemsImport.SetImportTable(listItemsImportTables)
-		listItemsImportTables = nil
-	}
+func listItemsAPI() *imports.Imports {
+	listItemsOnce.Do(func() {
+		listItemsImport = api.NewDefaultImports()
+		listItemsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TListItems_Create", 0), // constructor NewListItems
+			/* 1 */ imports.NewTable("TListItems_Add", 0), // function Add
+			/* 2 */ imports.NewTable("TListItems_FindCaption", 0), // function FindCaption
+			/* 3 */ imports.NewTable("TListItems_FindDataWithPointer", 0), // function FindDataWithPointer
+			/* 4 */ imports.NewTable("TListItems_FindDataWithIntPointerBoolX2", 0), // function FindDataWithIntPointerBoolX2
+			/* 5 */ imports.NewTable("TListItems_GetEnumerator", 0), // function GetEnumerator
+			/* 6 */ imports.NewTable("TListItems_IndexOf", 0), // function IndexOf
+			/* 7 */ imports.NewTable("TListItems_Insert", 0), // function Insert
+			/* 8 */ imports.NewTable("TListItems_AddItem", 0), // procedure AddItem
+			/* 9 */ imports.NewTable("TListItems_BeginUpdate", 0), // procedure BeginUpdate
+			/* 10 */ imports.NewTable("TListItems_Clear", 0), // procedure Clear
+			/* 11 */ imports.NewTable("TListItems_Delete", 0), // procedure Delete
+			/* 12 */ imports.NewTable("TListItems_EndUpdate", 0), // procedure EndUpdate
+			/* 13 */ imports.NewTable("TListItems_Exchange", 0), // procedure Exchange
+			/* 14 */ imports.NewTable("TListItems_Move", 0), // procedure Move
+			/* 15 */ imports.NewTable("TListItems_InsertItem", 0), // procedure InsertItem
+			/* 16 */ imports.NewTable("TListItems_Flags", 0), // property Flags
+			/* 17 */ imports.NewTable("TListItems_Count", 0), // property Count
+			/* 18 */ imports.NewTable("TListItems_Item", 0), // property Item
+			/* 19 */ imports.NewTable("TListItems_Owner", 0), // property Owner
+		}
+	})
 	return listItemsImport
 }

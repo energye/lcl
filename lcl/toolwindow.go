@@ -9,92 +9,116 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IToolWindow Parent: ICustomControl
 type IToolWindow interface {
 	ICustomControl
-	EdgeBorders() TEdgeBorders          // property
-	SetEdgeBorders(AValue TEdgeBorders) // property
-	EdgeInner() TEdgeStyle              // property
-	SetEdgeInner(AValue TEdgeStyle)     // property
-	EdgeOuter() TEdgeStyle              // property
-	SetEdgeOuter(AValue TEdgeStyle)     // property
-	BeginUpdate()                       // procedure
-	EndUpdate()                         // procedure
+	BeginUpdate()                            // procedure
+	EndUpdate()                              // procedure
+	EdgeBorders() types.TEdgeBorders         // property EdgeBorders Getter
+	SetEdgeBorders(value types.TEdgeBorders) // property EdgeBorders Setter
+	EdgeInner() types.TEdgeStyle             // property EdgeInner Getter
+	SetEdgeInner(value types.TEdgeStyle)     // property EdgeInner Setter
+	EdgeOuter() types.TEdgeStyle             // property EdgeOuter Getter
+	SetEdgeOuter(value types.TEdgeStyle)     // property EdgeOuter Setter
 }
 
-// TToolWindow Parent: TCustomControl
 type TToolWindow struct {
 	TCustomControl
 }
 
-func NewToolWindow(TheOwner IComponent) IToolWindow {
-	r1 := oolWindowImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsToolWindow(r1)
-}
-
-func (m *TToolWindow) EdgeBorders() TEdgeBorders {
-	r1 := oolWindowImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TEdgeBorders(r1)
-}
-
-func (m *TToolWindow) SetEdgeBorders(AValue TEdgeBorders) {
-	oolWindowImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TToolWindow) EdgeInner() TEdgeStyle {
-	r1 := oolWindowImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TEdgeStyle(r1)
-}
-
-func (m *TToolWindow) SetEdgeInner(AValue TEdgeStyle) {
-	oolWindowImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TToolWindow) EdgeOuter() TEdgeStyle {
-	r1 := oolWindowImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TEdgeStyle(r1)
-}
-
-func (m *TToolWindow) SetEdgeOuter(AValue TEdgeStyle) {
-	oolWindowImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
-}
-
-func ToolWindowClass() TClass {
-	ret := oolWindowImportAPI().SysCallN(1)
-	return TClass(ret)
-}
-
 func (m *TToolWindow) BeginUpdate() {
-	oolWindowImportAPI().SysCallN(0, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	toolWindowAPI().SysCallN(1, m.Instance())
 }
 
 func (m *TToolWindow) EndUpdate() {
-	oolWindowImportAPI().SysCallN(6, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	toolWindowAPI().SysCallN(2, m.Instance())
+}
+
+func (m *TToolWindow) EdgeBorders() types.TEdgeBorders {
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolWindowAPI().SysCallN(3, 0, m.Instance())
+	return types.TEdgeBorders(r)
+}
+
+func (m *TToolWindow) SetEdgeBorders(value types.TEdgeBorders) {
+	if !m.IsValid() {
+		return
+	}
+	toolWindowAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TToolWindow) EdgeInner() types.TEdgeStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolWindowAPI().SysCallN(4, 0, m.Instance())
+	return types.TEdgeStyle(r)
+}
+
+func (m *TToolWindow) SetEdgeInner(value types.TEdgeStyle) {
+	if !m.IsValid() {
+		return
+	}
+	toolWindowAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TToolWindow) EdgeOuter() types.TEdgeStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolWindowAPI().SysCallN(5, 0, m.Instance())
+	return types.TEdgeStyle(r)
+}
+
+func (m *TToolWindow) SetEdgeOuter(value types.TEdgeStyle) {
+	if !m.IsValid() {
+		return
+	}
+	toolWindowAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
+}
+
+// NewToolWindow class constructor
+func NewToolWindow(theOwner IComponent) IToolWindow {
+	r := toolWindowAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsToolWindow(r)
+}
+
+func TToolWindowClass() types.TClass {
+	r := toolWindowAPI().SysCallN(6)
+	return types.TClass(r)
 }
 
 var (
-	oolWindowImport       *imports.Imports = nil
-	oolWindowImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ToolWindow_BeginUpdate", 0),
-		/*1*/ imports.NewTable("ToolWindow_Class", 0),
-		/*2*/ imports.NewTable("ToolWindow_Create", 0),
-		/*3*/ imports.NewTable("ToolWindow_EdgeBorders", 0),
-		/*4*/ imports.NewTable("ToolWindow_EdgeInner", 0),
-		/*5*/ imports.NewTable("ToolWindow_EdgeOuter", 0),
-		/*6*/ imports.NewTable("ToolWindow_EndUpdate", 0),
-	}
+	toolWindowOnce   base.Once
+	toolWindowImport *imports.Imports = nil
 )
 
-func oolWindowImportAPI() *imports.Imports {
-	if oolWindowImport == nil {
-		oolWindowImport = NewDefaultImports()
-		oolWindowImport.SetImportTable(oolWindowImportTables)
-		oolWindowImportTables = nil
-	}
-	return oolWindowImport
+func toolWindowAPI() *imports.Imports {
+	toolWindowOnce.Do(func() {
+		toolWindowImport = api.NewDefaultImports()
+		toolWindowImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TToolWindow_Create", 0), // constructor NewToolWindow
+			/* 1 */ imports.NewTable("TToolWindow_BeginUpdate", 0), // procedure BeginUpdate
+			/* 2 */ imports.NewTable("TToolWindow_EndUpdate", 0), // procedure EndUpdate
+			/* 3 */ imports.NewTable("TToolWindow_EdgeBorders", 0), // property EdgeBorders
+			/* 4 */ imports.NewTable("TToolWindow_EdgeInner", 0), // property EdgeInner
+			/* 5 */ imports.NewTable("TToolWindow_EdgeOuter", 0), // property EdgeOuter
+			/* 6 */ imports.NewTable("TToolWindow_TClass", 0), // function TToolWindowClass
+		}
+	})
+	return toolWindowImport
 }

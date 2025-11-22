@@ -9,485 +9,605 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IToolBar Parent: IToolWindow
 type IToolBar interface {
 	IToolWindow
-	ButtonCount() int32                                    // property
-	Buttons(Index int32) IToolButton                       // property
-	ButtonList() IList                                     // property
-	RowCount() int32                                       // property
-	ButtonDropWidth() int32                                // property
-	ButtonHeight() int32                                   // property
-	SetButtonHeight(AValue int32)                          // property
-	ButtonWidth() int32                                    // property
-	SetButtonWidth(AValue int32)                           // property
-	DisabledImages() ICustomImageList                      // property
-	SetDisabledImages(AValue ICustomImageList)             // property
-	DragCursor() TCursor                                   // property
-	SetDragCursor(AValue TCursor)                          // property
-	DragKind() TDragKind                                   // property
-	SetDragKind(AValue TDragKind)                          // property
-	DragMode() TDragMode                                   // property
-	SetDragMode(AValue TDragMode)                          // property
-	DropDownWidth() int32                                  // property
-	SetDropDownWidth(AValue int32)                         // property
-	Flat() bool                                            // property
-	SetFlat(AValue bool)                                   // property
-	HotImages() ICustomImageList                           // property
-	SetHotImages(AValue ICustomImageList)                  // property
-	Images() ICustomImageList                              // property
-	SetImages(AValue ICustomImageList)                     // property
-	ImagesWidth() int32                                    // property
-	SetImagesWidth(AValue int32)                           // property
-	Indent() int32                                         // property
-	SetIndent(AValue int32)                                // property
-	List() bool                                            // property
-	SetList(AValue bool)                                   // property
-	ParentColor() bool                                     // property
-	SetParentColor(AValue bool)                            // property
-	ParentFont() bool                                      // property
-	SetParentFont(AValue bool)                             // property
-	ParentShowHint() bool                                  // property
-	SetParentShowHint(AValue bool)                         // property
-	ShowCaptions() bool                                    // property
-	SetShowCaptions(AValue bool)                           // property
-	Transparent() bool                                     // property
-	SetTransparent(AValue bool)                            // property
-	Wrapable() bool                                        // property
-	SetWrapable(AValue bool)                               // property
-	GetEnumeratorForToolBarEnumerator() IToolBarEnumerator // function
-	SetButtonSize(NewButtonWidth, NewButtonHeight int32)   // procedure
-	SetOnContextPopup(fn TContextPopupEvent)               // property event
-	SetOnDblClick(fn TNotifyEvent)                         // property event
-	SetOnDragDrop(fn TDragDropEvent)                       // property event
-	SetOnDragOver(fn TDragOverEvent)                       // property event
-	SetOnPaintButton(fn TToolBarOnPaintButton)             // property event
-	SetOnEndDrag(fn TEndDragEvent)                         // property event
-	SetOnMouseDown(fn TMouseEvent)                         // property event
-	SetOnMouseEnter(fn TNotifyEvent)                       // property event
-	SetOnMouseLeave(fn TNotifyEvent)                       // property event
-	SetOnMouseMove(fn TMouseMoveEvent)                     // property event
-	SetOnMouseUp(fn TMouseEvent)                           // property event
-	SetOnMouseWheel(fn TMouseWheelEvent)                   // property event
-	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent)         // property event
-	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)           // property event
-	SetOnStartDrag(fn TStartDragEvent)                     // property event
+	GetEnumeratorToToolBarEnumerator() IToolBarEnumerator      // function
+	SetButtonSize(newButtonWidth int32, newButtonHeight int32) // procedure
+	ButtonCount() int32                                        // property ButtonCount Getter
+	Buttons(index int32) IToolButton                           // property Buttons Getter
+	ButtonList() IList                                         // property ButtonList Getter
+	RowCount() int32                                           // property RowCount Getter
+	ButtonDropWidth() int32                                    // property ButtonDropWidth Getter
+	ButtonHeight() int32                                       // property ButtonHeight Getter
+	SetButtonHeight(value int32)                               // property ButtonHeight Setter
+	ButtonWidth() int32                                        // property ButtonWidth Getter
+	SetButtonWidth(value int32)                                // property ButtonWidth Setter
+	DisabledImages() ICustomImageList                          // property DisabledImages Getter
+	SetDisabledImages(value ICustomImageList)                  // property DisabledImages Setter
+	DragCursor() types.TCursor                                 // property DragCursor Getter
+	SetDragCursor(value types.TCursor)                         // property DragCursor Setter
+	DragKind() types.TDragKind                                 // property DragKind Getter
+	SetDragKind(value types.TDragKind)                         // property DragKind Setter
+	DragMode() types.TDragMode                                 // property DragMode Getter
+	SetDragMode(value types.TDragMode)                         // property DragMode Setter
+	DropDownWidth() int32                                      // property DropDownWidth Getter
+	SetDropDownWidth(value int32)                              // property DropDownWidth Setter
+	Flat() bool                                                // property Flat Getter
+	SetFlat(value bool)                                        // property Flat Setter
+	HotImages() ICustomImageList                               // property HotImages Getter
+	SetHotImages(value ICustomImageList)                       // property HotImages Setter
+	Images() ICustomImageList                                  // property Images Getter
+	SetImages(value ICustomImageList)                          // property Images Setter
+	ImagesWidth() int32                                        // property ImagesWidth Getter
+	SetImagesWidth(value int32)                                // property ImagesWidth Setter
+	Indent() int32                                             // property Indent Getter
+	SetIndent(value int32)                                     // property Indent Setter
+	List() bool                                                // property List Getter
+	SetList(value bool)                                        // property List Setter
+	ParentColor() bool                                         // property ParentColor Getter
+	SetParentColor(value bool)                                 // property ParentColor Setter
+	ParentFont() bool                                          // property ParentFont Getter
+	SetParentFont(value bool)                                  // property ParentFont Setter
+	ParentShowHint() bool                                      // property ParentShowHint Getter
+	SetParentShowHint(value bool)                              // property ParentShowHint Setter
+	ShowCaptions() bool                                        // property ShowCaptions Getter
+	SetShowCaptions(value bool)                                // property ShowCaptions Setter
+	Transparent() bool                                         // property Transparent Getter
+	SetTransparent(value bool)                                 // property Transparent Setter
+	Wrapable() bool                                            // property Wrapable Getter
+	SetWrapable(value bool)                                    // property Wrapable Setter
+	SetOnContextPopup(fn TContextPopupEvent)                   // property event
+	SetOnDblClick(fn TNotifyEvent)                             // property event
+	SetOnDragDrop(fn TDragDropEvent)                           // property event
+	SetOnDragOver(fn TDragOverEvent)                           // property event
+	SetOnPaintButton(fn TToolBarOnPaintButton)                 // property event
+	SetOnEndDrag(fn TEndDragEvent)                             // property event
+	SetOnMouseDown(fn TMouseEvent)                             // property event
+	SetOnMouseEnter(fn TNotifyEvent)                           // property event
+	SetOnMouseLeave(fn TNotifyEvent)                           // property event
+	SetOnMouseMove(fn TMouseMoveEvent)                         // property event
+	SetOnMouseUp(fn TMouseEvent)                               // property event
+	SetOnMouseWheel(fn TMouseWheelEvent)                       // property event
+	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent)             // property event
+	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)               // property event
+	SetOnStartDrag(fn TStartDragEvent)                         // property event
 }
 
-// TToolBar Parent: TToolWindow
 type TToolBar struct {
 	TToolWindow
-	contextPopupPtr   uintptr
-	dblClickPtr       uintptr
-	dragDropPtr       uintptr
-	dragOverPtr       uintptr
-	paintButtonPtr    uintptr
-	endDragPtr        uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	startDragPtr      uintptr
 }
 
-func NewToolBar(TheOwner IComponent) IToolBar {
-	r1 := oolBarImportAPI().SysCallN(7, GetObjectUintptr(TheOwner))
-	return AsToolBar(r1)
+func (m *TToolBar) GetEnumeratorToToolBarEnumerator() IToolBarEnumerator {
+	if !m.IsValid() {
+		return nil
+	}
+	r := toolBarAPI().SysCallN(1, m.Instance())
+	return AsToolBarEnumerator(r)
+}
+
+func (m *TToolBar) SetButtonSize(newButtonWidth int32, newButtonHeight int32) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(2, m.Instance(), uintptr(newButtonWidth), uintptr(newButtonHeight))
 }
 
 func (m *TToolBar) ButtonCount() int32 {
-	r1 := oolBarImportAPI().SysCallN(0, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(3, m.Instance())
+	return int32(r)
 }
 
-func (m *TToolBar) Buttons(Index int32) IToolButton {
-	r1 := oolBarImportAPI().SysCallN(5, m.Instance(), uintptr(Index))
-	return AsToolButton(r1)
+func (m *TToolBar) Buttons(index int32) IToolButton {
+	if !m.IsValid() {
+		return nil
+	}
+	r := toolBarAPI().SysCallN(4, m.Instance(), uintptr(index))
+	return AsToolButton(r)
 }
 
 func (m *TToolBar) ButtonList() IList {
-	r1 := oolBarImportAPI().SysCallN(3, m.Instance())
-	return AsList(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := toolBarAPI().SysCallN(5, m.Instance())
+	return AsList(r)
 }
 
 func (m *TToolBar) RowCount() int32 {
-	r1 := oolBarImportAPI().SysCallN(23, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(6, m.Instance())
+	return int32(r)
 }
 
 func (m *TToolBar) ButtonDropWidth() int32 {
-	r1 := oolBarImportAPI().SysCallN(1, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(7, m.Instance())
+	return int32(r)
 }
 
 func (m *TToolBar) ButtonHeight() int32 {
-	r1 := oolBarImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(8, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TToolBar) SetButtonHeight(AValue int32) {
-	oolBarImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TToolBar) SetButtonHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TToolBar) ButtonWidth() int32 {
-	r1 := oolBarImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(9, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TToolBar) SetButtonWidth(AValue int32) {
-	oolBarImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TToolBar) SetButtonWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TToolBar) DisabledImages() ICustomImageList {
-	r1 := oolBarImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := toolBarAPI().SysCallN(10, 0, m.Instance())
+	return AsCustomImageList(r)
 }
 
-func (m *TToolBar) SetDisabledImages(AValue ICustomImageList) {
-	oolBarImportAPI().SysCallN(8, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TToolBar) SetDisabledImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(10, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TToolBar) DragCursor() TCursor {
-	r1 := oolBarImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TToolBar) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(11, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TToolBar) SetDragCursor(AValue TCursor) {
-	oolBarImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TToolBar) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TToolBar) DragKind() TDragKind {
-	r1 := oolBarImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TToolBar) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(12, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TToolBar) SetDragKind(AValue TDragKind) {
-	oolBarImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
+func (m *TToolBar) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TToolBar) DragMode() TDragMode {
-	r1 := oolBarImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return TDragMode(r1)
+func (m *TToolBar) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(13, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TToolBar) SetDragMode(AValue TDragMode) {
-	oolBarImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
+func (m *TToolBar) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(13, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TToolBar) DropDownWidth() int32 {
-	r1 := oolBarImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(14, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TToolBar) SetDropDownWidth(AValue int32) {
-	oolBarImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
+func (m *TToolBar) SetDropDownWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TToolBar) Flat() bool {
-	r1 := oolBarImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := toolBarAPI().SysCallN(15, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TToolBar) SetFlat(AValue bool) {
-	oolBarImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
+func (m *TToolBar) SetFlat(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(15, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TToolBar) HotImages() ICustomImageList {
-	r1 := oolBarImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := toolBarAPI().SysCallN(16, 0, m.Instance())
+	return AsCustomImageList(r)
 }
 
-func (m *TToolBar) SetHotImages(AValue ICustomImageList) {
-	oolBarImportAPI().SysCallN(15, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TToolBar) SetHotImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(16, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TToolBar) Images() ICustomImageList {
-	r1 := oolBarImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := toolBarAPI().SysCallN(17, 0, m.Instance())
+	return AsCustomImageList(r)
 }
 
-func (m *TToolBar) SetImages(AValue ICustomImageList) {
-	oolBarImportAPI().SysCallN(16, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TToolBar) SetImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(17, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TToolBar) ImagesWidth() int32 {
-	r1 := oolBarImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(18, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TToolBar) SetImagesWidth(AValue int32) {
-	oolBarImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
+func (m *TToolBar) SetImagesWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(18, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TToolBar) Indent() int32 {
-	r1 := oolBarImportAPI().SysCallN(18, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := toolBarAPI().SysCallN(19, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TToolBar) SetIndent(AValue int32) {
-	oolBarImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
+func (m *TToolBar) SetIndent(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(19, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TToolBar) List() bool {
-	r1 := oolBarImportAPI().SysCallN(19, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := toolBarAPI().SysCallN(20, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TToolBar) SetList(AValue bool) {
-	oolBarImportAPI().SysCallN(19, 1, m.Instance(), PascalBool(AValue))
+func (m *TToolBar) SetList(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(20, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TToolBar) ParentColor() bool {
-	r1 := oolBarImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := toolBarAPI().SysCallN(21, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TToolBar) SetParentColor(AValue bool) {
-	oolBarImportAPI().SysCallN(20, 1, m.Instance(), PascalBool(AValue))
+func (m *TToolBar) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(21, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TToolBar) ParentFont() bool {
-	r1 := oolBarImportAPI().SysCallN(21, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := toolBarAPI().SysCallN(22, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TToolBar) SetParentFont(AValue bool) {
-	oolBarImportAPI().SysCallN(21, 1, m.Instance(), PascalBool(AValue))
+func (m *TToolBar) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(22, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TToolBar) ParentShowHint() bool {
-	r1 := oolBarImportAPI().SysCallN(22, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := toolBarAPI().SysCallN(23, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TToolBar) SetParentShowHint(AValue bool) {
-	oolBarImportAPI().SysCallN(22, 1, m.Instance(), PascalBool(AValue))
+func (m *TToolBar) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(23, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TToolBar) ShowCaptions() bool {
-	r1 := oolBarImportAPI().SysCallN(40, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := toolBarAPI().SysCallN(24, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TToolBar) SetShowCaptions(AValue bool) {
-	oolBarImportAPI().SysCallN(40, 1, m.Instance(), PascalBool(AValue))
+func (m *TToolBar) SetShowCaptions(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(24, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TToolBar) Transparent() bool {
-	r1 := oolBarImportAPI().SysCallN(41, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := toolBarAPI().SysCallN(25, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TToolBar) SetTransparent(AValue bool) {
-	oolBarImportAPI().SysCallN(41, 1, m.Instance(), PascalBool(AValue))
+func (m *TToolBar) SetTransparent(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(25, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TToolBar) Wrapable() bool {
-	r1 := oolBarImportAPI().SysCallN(42, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := toolBarAPI().SysCallN(26, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TToolBar) SetWrapable(AValue bool) {
-	oolBarImportAPI().SysCallN(42, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TToolBar) GetEnumeratorForToolBarEnumerator() IToolBarEnumerator {
-	r1 := oolBarImportAPI().SysCallN(14, m.Instance())
-	return AsToolBarEnumerator(r1)
-}
-
-func ToolBarClass() TClass {
-	ret := oolBarImportAPI().SysCallN(6)
-	return TClass(ret)
-}
-
-func (m *TToolBar) SetButtonSize(NewButtonWidth, NewButtonHeight int32) {
-	oolBarImportAPI().SysCallN(24, m.Instance(), uintptr(NewButtonWidth), uintptr(NewButtonHeight))
+func (m *TToolBar) SetWrapable(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	toolBarAPI().SysCallN(26, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TToolBar) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(25, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 27, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(26, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 28, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(27, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 29, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(28, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 30, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnPaintButton(fn TToolBarOnPaintButton) {
-	if m.paintButtonPtr != 0 {
-		RemoveEventElement(m.paintButtonPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.paintButtonPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(38, m.Instance(), m.paintButtonPtr)
+	cb := makeTToolBarOnPaintButton(fn)
+	base.SetEvent(m, 31, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(29, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 32, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(30, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 33, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(31, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 34, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(32, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 35, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(33, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 36, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(34, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 37, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(35, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 38, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(36, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 39, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(37, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 40, toolBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TToolBar) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	oolBarImportAPI().SysCallN(39, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 41, toolBarAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewToolBar class constructor
+func NewToolBar(theOwner IComponent) IToolBar {
+	r := toolBarAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsToolBar(r)
+}
+
+func TToolBarClass() types.TClass {
+	r := toolBarAPI().SysCallN(42)
+	return types.TClass(r)
 }
 
 var (
-	oolBarImport       *imports.Imports = nil
-	oolBarImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ToolBar_ButtonCount", 0),
-		/*1*/ imports.NewTable("ToolBar_ButtonDropWidth", 0),
-		/*2*/ imports.NewTable("ToolBar_ButtonHeight", 0),
-		/*3*/ imports.NewTable("ToolBar_ButtonList", 0),
-		/*4*/ imports.NewTable("ToolBar_ButtonWidth", 0),
-		/*5*/ imports.NewTable("ToolBar_Buttons", 0),
-		/*6*/ imports.NewTable("ToolBar_Class", 0),
-		/*7*/ imports.NewTable("ToolBar_Create", 0),
-		/*8*/ imports.NewTable("ToolBar_DisabledImages", 0),
-		/*9*/ imports.NewTable("ToolBar_DragCursor", 0),
-		/*10*/ imports.NewTable("ToolBar_DragKind", 0),
-		/*11*/ imports.NewTable("ToolBar_DragMode", 0),
-		/*12*/ imports.NewTable("ToolBar_DropDownWidth", 0),
-		/*13*/ imports.NewTable("ToolBar_Flat", 0),
-		/*14*/ imports.NewTable("ToolBar_GetEnumeratorForToolBarEnumerator", 0),
-		/*15*/ imports.NewTable("ToolBar_HotImages", 0),
-		/*16*/ imports.NewTable("ToolBar_Images", 0),
-		/*17*/ imports.NewTable("ToolBar_ImagesWidth", 0),
-		/*18*/ imports.NewTable("ToolBar_Indent", 0),
-		/*19*/ imports.NewTable("ToolBar_List", 0),
-		/*20*/ imports.NewTable("ToolBar_ParentColor", 0),
-		/*21*/ imports.NewTable("ToolBar_ParentFont", 0),
-		/*22*/ imports.NewTable("ToolBar_ParentShowHint", 0),
-		/*23*/ imports.NewTable("ToolBar_RowCount", 0),
-		/*24*/ imports.NewTable("ToolBar_SetButtonSize", 0),
-		/*25*/ imports.NewTable("ToolBar_SetOnContextPopup", 0),
-		/*26*/ imports.NewTable("ToolBar_SetOnDblClick", 0),
-		/*27*/ imports.NewTable("ToolBar_SetOnDragDrop", 0),
-		/*28*/ imports.NewTable("ToolBar_SetOnDragOver", 0),
-		/*29*/ imports.NewTable("ToolBar_SetOnEndDrag", 0),
-		/*30*/ imports.NewTable("ToolBar_SetOnMouseDown", 0),
-		/*31*/ imports.NewTable("ToolBar_SetOnMouseEnter", 0),
-		/*32*/ imports.NewTable("ToolBar_SetOnMouseLeave", 0),
-		/*33*/ imports.NewTable("ToolBar_SetOnMouseMove", 0),
-		/*34*/ imports.NewTable("ToolBar_SetOnMouseUp", 0),
-		/*35*/ imports.NewTable("ToolBar_SetOnMouseWheel", 0),
-		/*36*/ imports.NewTable("ToolBar_SetOnMouseWheelDown", 0),
-		/*37*/ imports.NewTable("ToolBar_SetOnMouseWheelUp", 0),
-		/*38*/ imports.NewTable("ToolBar_SetOnPaintButton", 0),
-		/*39*/ imports.NewTable("ToolBar_SetOnStartDrag", 0),
-		/*40*/ imports.NewTable("ToolBar_ShowCaptions", 0),
-		/*41*/ imports.NewTable("ToolBar_Transparent", 0),
-		/*42*/ imports.NewTable("ToolBar_Wrapable", 0),
-	}
+	toolBarOnce   base.Once
+	toolBarImport *imports.Imports = nil
 )
 
-func oolBarImportAPI() *imports.Imports {
-	if oolBarImport == nil {
-		oolBarImport = NewDefaultImports()
-		oolBarImport.SetImportTable(oolBarImportTables)
-		oolBarImportTables = nil
-	}
-	return oolBarImport
+func toolBarAPI() *imports.Imports {
+	toolBarOnce.Do(func() {
+		toolBarImport = api.NewDefaultImports()
+		toolBarImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TToolBar_Create", 0), // constructor NewToolBar
+			/* 1 */ imports.NewTable("TToolBar_GetEnumeratorToToolBarEnumerator", 0), // function GetEnumeratorToToolBarEnumerator
+			/* 2 */ imports.NewTable("TToolBar_SetButtonSize", 0), // procedure SetButtonSize
+			/* 3 */ imports.NewTable("TToolBar_ButtonCount", 0), // property ButtonCount
+			/* 4 */ imports.NewTable("TToolBar_Buttons", 0), // property Buttons
+			/* 5 */ imports.NewTable("TToolBar_ButtonList", 0), // property ButtonList
+			/* 6 */ imports.NewTable("TToolBar_RowCount", 0), // property RowCount
+			/* 7 */ imports.NewTable("TToolBar_ButtonDropWidth", 0), // property ButtonDropWidth
+			/* 8 */ imports.NewTable("TToolBar_ButtonHeight", 0), // property ButtonHeight
+			/* 9 */ imports.NewTable("TToolBar_ButtonWidth", 0), // property ButtonWidth
+			/* 10 */ imports.NewTable("TToolBar_DisabledImages", 0), // property DisabledImages
+			/* 11 */ imports.NewTable("TToolBar_DragCursor", 0), // property DragCursor
+			/* 12 */ imports.NewTable("TToolBar_DragKind", 0), // property DragKind
+			/* 13 */ imports.NewTable("TToolBar_DragMode", 0), // property DragMode
+			/* 14 */ imports.NewTable("TToolBar_DropDownWidth", 0), // property DropDownWidth
+			/* 15 */ imports.NewTable("TToolBar_Flat", 0), // property Flat
+			/* 16 */ imports.NewTable("TToolBar_HotImages", 0), // property HotImages
+			/* 17 */ imports.NewTable("TToolBar_Images", 0), // property Images
+			/* 18 */ imports.NewTable("TToolBar_ImagesWidth", 0), // property ImagesWidth
+			/* 19 */ imports.NewTable("TToolBar_Indent", 0), // property Indent
+			/* 20 */ imports.NewTable("TToolBar_List", 0), // property List
+			/* 21 */ imports.NewTable("TToolBar_ParentColor", 0), // property ParentColor
+			/* 22 */ imports.NewTable("TToolBar_ParentFont", 0), // property ParentFont
+			/* 23 */ imports.NewTable("TToolBar_ParentShowHint", 0), // property ParentShowHint
+			/* 24 */ imports.NewTable("TToolBar_ShowCaptions", 0), // property ShowCaptions
+			/* 25 */ imports.NewTable("TToolBar_Transparent", 0), // property Transparent
+			/* 26 */ imports.NewTable("TToolBar_Wrapable", 0), // property Wrapable
+			/* 27 */ imports.NewTable("TToolBar_OnContextPopup", 0), // event OnContextPopup
+			/* 28 */ imports.NewTable("TToolBar_OnDblClick", 0), // event OnDblClick
+			/* 29 */ imports.NewTable("TToolBar_OnDragDrop", 0), // event OnDragDrop
+			/* 30 */ imports.NewTable("TToolBar_OnDragOver", 0), // event OnDragOver
+			/* 31 */ imports.NewTable("TToolBar_OnPaintButton", 0), // event OnPaintButton
+			/* 32 */ imports.NewTable("TToolBar_OnEndDrag", 0), // event OnEndDrag
+			/* 33 */ imports.NewTable("TToolBar_OnMouseDown", 0), // event OnMouseDown
+			/* 34 */ imports.NewTable("TToolBar_OnMouseEnter", 0), // event OnMouseEnter
+			/* 35 */ imports.NewTable("TToolBar_OnMouseLeave", 0), // event OnMouseLeave
+			/* 36 */ imports.NewTable("TToolBar_OnMouseMove", 0), // event OnMouseMove
+			/* 37 */ imports.NewTable("TToolBar_OnMouseUp", 0), // event OnMouseUp
+			/* 38 */ imports.NewTable("TToolBar_OnMouseWheel", 0), // event OnMouseWheel
+			/* 39 */ imports.NewTable("TToolBar_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 40 */ imports.NewTable("TToolBar_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 41 */ imports.NewTable("TToolBar_OnStartDrag", 0), // event OnStartDrag
+			/* 42 */ imports.NewTable("TToolBar_TClass", 0), // function TToolBarClass
+		}
+	})
+	return toolBarImport
 }

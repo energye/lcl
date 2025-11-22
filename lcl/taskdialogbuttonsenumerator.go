@@ -9,65 +9,67 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // ITaskDialogButtonsEnumerator Parent: IObject
 type ITaskDialogButtonsEnumerator interface {
 	IObject
-	Current() ITaskDialogBaseButtonItem    // property
 	GetCurrent() ITaskDialogBaseButtonItem // function
 	MoveNext() bool                        // function
+	Current() ITaskDialogBaseButtonItem    // property Current Getter
 }
 
-// TTaskDialogButtonsEnumerator Parent: TObject
 type TTaskDialogButtonsEnumerator struct {
 	TObject
 }
 
-func NewTaskDialogButtonsEnumerator(ACollection ITaskDialogButtons) ITaskDialogButtonsEnumerator {
-	r1 := askDialogButtonsEnumeratorImportAPI().SysCallN(1, GetObjectUintptr(ACollection))
-	return AsTaskDialogButtonsEnumerator(r1)
-}
-
-func (m *TTaskDialogButtonsEnumerator) Current() ITaskDialogBaseButtonItem {
-	r1 := askDialogButtonsEnumeratorImportAPI().SysCallN(2, m.Instance())
-	return AsTaskDialogBaseButtonItem(r1)
-}
-
 func (m *TTaskDialogButtonsEnumerator) GetCurrent() ITaskDialogBaseButtonItem {
-	r1 := askDialogButtonsEnumeratorImportAPI().SysCallN(3, m.Instance())
-	return AsTaskDialogBaseButtonItem(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := taskDialogButtonsEnumeratorAPI().SysCallN(1, m.Instance())
+	return AsTaskDialogBaseButtonItem(r)
 }
 
 func (m *TTaskDialogButtonsEnumerator) MoveNext() bool {
-	r1 := askDialogButtonsEnumeratorImportAPI().SysCallN(4, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := taskDialogButtonsEnumeratorAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func TaskDialogButtonsEnumeratorClass() TClass {
-	ret := askDialogButtonsEnumeratorImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TTaskDialogButtonsEnumerator) Current() ITaskDialogBaseButtonItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := taskDialogButtonsEnumeratorAPI().SysCallN(3, m.Instance())
+	return AsTaskDialogBaseButtonItem(r)
+}
+
+// NewTaskDialogButtonsEnumerator class constructor
+func NewTaskDialogButtonsEnumerator(collection ITaskDialogButtons) ITaskDialogButtonsEnumerator {
+	r := taskDialogButtonsEnumeratorAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsTaskDialogButtonsEnumerator(r)
 }
 
 var (
-	askDialogButtonsEnumeratorImport       *imports.Imports = nil
-	askDialogButtonsEnumeratorImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("TaskDialogButtonsEnumerator_Class", 0),
-		/*1*/ imports.NewTable("TaskDialogButtonsEnumerator_Create", 0),
-		/*2*/ imports.NewTable("TaskDialogButtonsEnumerator_Current", 0),
-		/*3*/ imports.NewTable("TaskDialogButtonsEnumerator_GetCurrent", 0),
-		/*4*/ imports.NewTable("TaskDialogButtonsEnumerator_MoveNext", 0),
-	}
+	taskDialogButtonsEnumeratorOnce   base.Once
+	taskDialogButtonsEnumeratorImport *imports.Imports = nil
 )
 
-func askDialogButtonsEnumeratorImportAPI() *imports.Imports {
-	if askDialogButtonsEnumeratorImport == nil {
-		askDialogButtonsEnumeratorImport = NewDefaultImports()
-		askDialogButtonsEnumeratorImport.SetImportTable(askDialogButtonsEnumeratorImportTables)
-		askDialogButtonsEnumeratorImportTables = nil
-	}
-	return askDialogButtonsEnumeratorImport
+func taskDialogButtonsEnumeratorAPI() *imports.Imports {
+	taskDialogButtonsEnumeratorOnce.Do(func() {
+		taskDialogButtonsEnumeratorImport = api.NewDefaultImports()
+		taskDialogButtonsEnumeratorImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TTaskDialogButtonsEnumerator_Create", 0), // constructor NewTaskDialogButtonsEnumerator
+			/* 1 */ imports.NewTable("TTaskDialogButtonsEnumerator_GetCurrent", 0), // function GetCurrent
+			/* 2 */ imports.NewTable("TTaskDialogButtonsEnumerator_MoveNext", 0), // function MoveNext
+			/* 3 */ imports.NewTable("TTaskDialogButtonsEnumerator_Current", 0), // property Current
+		}
+	})
+	return taskDialogButtonsEnumeratorImport
 }

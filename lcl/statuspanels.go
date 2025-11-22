@@ -9,70 +9,75 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IStatusPanels Parent: ICollection
 type IStatusPanels interface {
 	ICollection
-	ItemsForStatusPanel(Index int32) IStatusPanel            // property
-	SetItemsForStatusPanel(Index int32, AValue IStatusPanel) // property
-	StatusBar() IStatusBar                                   // property
-	AddForStatusPanel() IStatusPanel                         // function
+	AddToStatusPanel() IStatusPanel                               // function
+	ItemsWithIntToStatusPanel(index int32) IStatusPanel           // property Items Getter
+	SetItemsWithIntToStatusPanel(index int32, value IStatusPanel) // property Items Setter
+	StatusBar() IStatusBar                                        // property StatusBar Getter
 }
 
-// TStatusPanels Parent: TCollection
 type TStatusPanels struct {
 	TCollection
 }
 
-func NewStatusPanels(AStatusBar IStatusBar) IStatusPanels {
-	r1 := statusPanelsImportAPI().SysCallN(2, GetObjectUintptr(AStatusBar))
-	return AsStatusPanels(r1)
+func (m *TStatusPanels) AddToStatusPanel() IStatusPanel {
+	if !m.IsValid() {
+		return nil
+	}
+	r := statusPanelsAPI().SysCallN(1, m.Instance())
+	return AsStatusPanel(r)
 }
 
-func (m *TStatusPanels) ItemsForStatusPanel(Index int32) IStatusPanel {
-	r1 := statusPanelsImportAPI().SysCallN(3, 0, m.Instance(), uintptr(Index))
-	return AsStatusPanel(r1)
+func (m *TStatusPanels) ItemsWithIntToStatusPanel(index int32) IStatusPanel {
+	if !m.IsValid() {
+		return nil
+	}
+	r := statusPanelsAPI().SysCallN(2, 0, m.Instance(), uintptr(index))
+	return AsStatusPanel(r)
 }
 
-func (m *TStatusPanels) SetItemsForStatusPanel(Index int32, AValue IStatusPanel) {
-	statusPanelsImportAPI().SysCallN(3, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
+func (m *TStatusPanels) SetItemsWithIntToStatusPanel(index int32, value IStatusPanel) {
+	if !m.IsValid() {
+		return
+	}
+	statusPanelsAPI().SysCallN(2, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
 }
 
 func (m *TStatusPanels) StatusBar() IStatusBar {
-	r1 := statusPanelsImportAPI().SysCallN(4, m.Instance())
-	return AsStatusBar(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := statusPanelsAPI().SysCallN(3, m.Instance())
+	return AsStatusBar(r)
 }
 
-func (m *TStatusPanels) AddForStatusPanel() IStatusPanel {
-	r1 := statusPanelsImportAPI().SysCallN(0, m.Instance())
-	return AsStatusPanel(r1)
-}
-
-func StatusPanelsClass() TClass {
-	ret := statusPanelsImportAPI().SysCallN(1)
-	return TClass(ret)
+// NewStatusPanels class constructor
+func NewStatusPanels(statusBar IStatusBar) IStatusPanels {
+	r := statusPanelsAPI().SysCallN(0, base.GetObjectUintptr(statusBar))
+	return AsStatusPanels(r)
 }
 
 var (
-	statusPanelsImport       *imports.Imports = nil
-	statusPanelsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("StatusPanels_AddForStatusPanel", 0),
-		/*1*/ imports.NewTable("StatusPanels_Class", 0),
-		/*2*/ imports.NewTable("StatusPanels_Create", 0),
-		/*3*/ imports.NewTable("StatusPanels_ItemsForStatusPanel", 0),
-		/*4*/ imports.NewTable("StatusPanels_StatusBar", 0),
-	}
+	statusPanelsOnce   base.Once
+	statusPanelsImport *imports.Imports = nil
 )
 
-func statusPanelsImportAPI() *imports.Imports {
-	if statusPanelsImport == nil {
-		statusPanelsImport = NewDefaultImports()
-		statusPanelsImport.SetImportTable(statusPanelsImportTables)
-		statusPanelsImportTables = nil
-	}
+func statusPanelsAPI() *imports.Imports {
+	statusPanelsOnce.Do(func() {
+		statusPanelsImport = api.NewDefaultImports()
+		statusPanelsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TStatusPanels_Create", 0), // constructor NewStatusPanels
+			/* 1 */ imports.NewTable("TStatusPanels_AddToStatusPanel", 0), // function AddToStatusPanel
+			/* 2 */ imports.NewTable("TStatusPanels_ItemsWithIntToStatusPanel", 0), // property ItemsWithIntToStatusPanel
+			/* 3 */ imports.NewTable("TStatusPanels_StatusBar", 0), // property StatusBar
+		}
+	})
 	return statusPanelsImport
 }

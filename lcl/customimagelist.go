@@ -9,598 +9,886 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomImageList Parent: ILCLComponent
 type ICustomImageList interface {
 	ILCLComponent
-	HasOverlays() bool                                                                                                                                          // property
-	AllocBy() int32                                                                                                                                             // property
-	SetAllocBy(AValue int32)                                                                                                                                    // property
-	BlendColor() TColor                                                                                                                                         // property
-	SetBlendColor(AValue TColor)                                                                                                                                // property
-	BkColor() TColor                                                                                                                                            // property
-	SetBkColor(AValue TColor)                                                                                                                                   // property
-	Count() int32                                                                                                                                               // property
-	DrawingStyle() TDrawingStyle                                                                                                                                // property
-	SetDrawingStyle(AValue TDrawingStyle)                                                                                                                       // property
-	Height() int32                                                                                                                                              // property
-	SetHeight(AValue int32)                                                                                                                                     // property
-	HeightForPPI(AImageWidth, APPI int32) int32                                                                                                                 // property
-	HeightForWidth(AWidth int32) int32                                                                                                                          // property
-	Width() int32                                                                                                                                               // property
-	SetWidth(AValue int32)                                                                                                                                      // property
-	WidthForPPI(AImageWidth, APPI int32) int32                                                                                                                  // property
-	SizeForPPI(AImageWidth, APPI int32) (resultSize TSize)                                                                                                      // property
-	Masked() bool                                                                                                                                               // property
-	SetMasked(AValue bool)                                                                                                                                      // property
-	Resolution(AImageWidth int32) ICustomImageListResolution                                                                                                    // property
-	ResolutionByIndex(AIndex int32) ICustomImageListResolution                                                                                                  // property
-	ResolutionForPPI(AImageWidth, APPI int32, ACanvasScaleFactor float64) (resultScaledImageListResolution TScaledImageListResolution)                          // property
-	ResolutionCount() int32                                                                                                                                     // property
-	Scaled() bool                                                                                                                                               // property
-	SetScaled(AValue bool)                                                                                                                                      // property
-	ShareImages() bool                                                                                                                                          // property
-	SetShareImages(AValue bool)                                                                                                                                 // property
-	ImageType() TImageType                                                                                                                                      // property
-	SetImageType(AValue TImageType)                                                                                                                             // property
-	Add(Image, Mask ICustomBitmap) int32                                                                                                                        // function
-	AddSliced(Image ICustomBitmap, AHorizontalCount, AVerticalCount int32) int32                                                                                // function
-	AddSlice(Image ICustomBitmap, AImageRect *TRect) int32                                                                                                      // function
-	AddSliceCentered(Image ICustomBitmap) int32                                                                                                                 // function
-	AddIcon(Image ICustomIcon) int32                                                                                                                            // function
-	AddMasked(Image IBitmap, MaskColor TColor) int32                                                                                                            // function
-	AddLazarusResource(ResourceName string, MaskColor TColor) int32                                                                                             // function
-	AddResourceName(Instance THandle, ResourceName string, MaskColor TColor) int32                                                                              // function
-	GetHotSpot() (resultPoint TPoint)                                                                                                                           // function
-	FindResolution(AImageWidth int32, OutResolution *ICustomImageListResolution) bool                                                                           // function
-	Resolutions() ICustomImageListResolutionEnumerator                                                                                                          // function
-	ResolutionsDesc() ICustomImageListResolutionEnumerator                                                                                                      // function
-	AssignTo(Dest IPersistent)                                                                                                                                  // procedure
-	WriteData(AStream IStream)                                                                                                                                  // procedure
-	ReadData(AStream IStream)                                                                                                                                   // procedure
-	WriteAdvData(AStream IStream)                                                                                                                               // procedure
-	ReadAdvData(AStream IStream)                                                                                                                                // procedure
-	BeginUpdate()                                                                                                                                               // procedure
-	EndUpdate()                                                                                                                                                 // procedure
-	AddImages(AValue ICustomImageList)                                                                                                                          // procedure
-	Change()                                                                                                                                                    // procedure
-	Clear()                                                                                                                                                     // procedure
-	Delete(AIndex int32)                                                                                                                                        // procedure
-	Draw(ACanvas ICanvas, AX, AY, AIndex int32, AEnabled bool)                                                                                                  // procedure
-	Draw1(ACanvas ICanvas, AX, AY, AIndex int32, ADrawEffect TGraphicsDrawEffect)                                                                               // procedure
-	Draw2(ACanvas ICanvas, AX, AY, AIndex int32, ADrawingStyle TDrawingStyle, AImageType TImageType, AEnabled bool)                                             // procedure
-	Draw3(ACanvas ICanvas, AX, AY, AIndex int32, ADrawingStyle TDrawingStyle, AImageType TImageType, ADrawEffect TGraphicsDrawEffect)                           // procedure
-	DrawForPPI(ACanvas ICanvas, AX, AY, AIndex int32, AImageWidthAt96PPI, ATargetPPI int32, ACanvasFactor float64, AEnabled bool)                               // procedure
-	DrawForPPI1(ACanvas ICanvas, AX, AY, AIndex int32, AImageWidthAt96PPI, ATargetPPI int32, ACanvasFactor float64, ADrawEffect TGraphicsDrawEffect)            // procedure
-	DrawOverlay(ACanvas ICanvas, AX, AY, AIndex int32, AOverlay TOverlay, AEnabled bool)                                                                        // procedure
-	DrawOverlay1(ACanvas ICanvas, AX, AY, AIndex int32, AOverlay TOverlay, ADrawEffect TGraphicsDrawEffect)                                                     // procedure
-	DrawOverlay2(ACanvas ICanvas, AX, AY, AIndex int32, AOverlay TOverlay, ADrawingStyle TDrawingStyle, AImageType TImageType, ADrawEffect TGraphicsDrawEffect) // procedure
-	GetBitmap(Index int32, Image ICustomBitmap)                                                                                                                 // procedure
-	GetBitmap1(Index int32, Image ICustomBitmap, AEffect TGraphicsDrawEffect)                                                                                   // procedure
-	GetFullBitmap(Image ICustomBitmap, AEffect TGraphicsDrawEffect)                                                                                             // procedure
-	GetFullRawImage(OutImage *TRawImage)                                                                                                                        // procedure
-	GetIcon(Index int32, Image IIcon, AEffect TGraphicsDrawEffect)                                                                                              // procedure
-	GetIcon1(Index int32, Image IIcon)                                                                                                                          // procedure
-	GetRawImage(Index int32, OutImage *TRawImage)                                                                                                               // procedure
-	Insert(AIndex int32, AImage, AMask ICustomBitmap)                                                                                                           // procedure
-	InsertIcon(AIndex int32, AIcon ICustomIcon)                                                                                                                 // procedure
-	InsertMasked(Index int32, AImage ICustomBitmap, MaskColor TColor)                                                                                           // procedure
-	Move(ACurIndex, ANewIndex int32)                                                                                                                            // procedure
-	Overlay(AIndex int32, Overlay TOverlay)                                                                                                                     // procedure
-	Replace(AIndex int32, AImage, AMask ICustomBitmap, AllResolutions bool)                                                                                     // procedure
-	ReplaceSlice(AIndex int32, Image ICustomBitmap, AImageRect *TRect, AllResolutions bool)                                                                     // procedure
-	ReplaceSliceCentered(AIndex, AImageWidth int32, Image ICustomBitmap, AllResolutions bool)                                                                   // procedure
-	ReplaceIcon(AIndex int32, AIcon ICustomIcon)                                                                                                                // procedure
-	ReplaceMasked(Index int32, NewImage ICustomBitmap, MaskColor TColor, AllResolutions bool)                                                                   // procedure
-	RegisterChanges(Value IChangeLink)                                                                                                                          // procedure
-	StretchDraw(Canvas ICanvas, Index int32, ARect *TRect, Enabled bool)                                                                                        // procedure
-	UnRegisterChanges(Value IChangeLink)                                                                                                                        // procedure
-	DeleteResolution(AWidth int32)                                                                                                                              // procedure
-	SetOnChange(fn TNotifyEvent)                                                                                                                                // property event
-	SetOnGetWidthForPPI(fn TCustomImageListGetWidthForPPI)                                                                                                      // property event
+	Add(image ICustomBitmap, mask ICustomBitmap) int32                                                                                                                                                                                                  // function
+	AddSliced(image ICustomBitmap, horizontalCount int32, verticalCount int32) int32                                                                                                                                                                    // function
+	AddSlice(image ICustomBitmap, imageRect types.TRect) int32                                                                                                                                                                                          // function
+	AddSliceCentered(image ICustomBitmap) int32                                                                                                                                                                                                         // function
+	AddIcon(image ICustomIcon) int32                                                                                                                                                                                                                    // function
+	AddMasked(image IBitmap, maskColor types.TColor) int32                                                                                                                                                                                              // function
+	AddLazarusResource(resourceName string, maskColor types.TColor) int32                                                                                                                                                                               // function
+	AddResourceName(instance types.TLCLHandle, resourceName string, maskColor types.TColor) int32                                                                                                                                                       // function
+	GetHotSpot() types.TPoint                                                                                                                                                                                                                           // function
+	FindResolution(imageWidth int32, outResolution *ICustomImageListResolution) bool                                                                                                                                                                    // function
+	Resolutions() ICustomImageListResolutionEnumerator                                                                                                                                                                                                  // function
+	ResolutionsDesc() ICustomImageListResolutionEnumerator                                                                                                                                                                                              // function
+	AssignTo(dest IPersistent)                                                                                                                                                                                                                          // procedure
+	WriteData(stream IStream)                                                                                                                                                                                                                           // procedure
+	ReadData(stream IStream)                                                                                                                                                                                                                            // procedure
+	WriteAdvData(stream IStream)                                                                                                                                                                                                                        // procedure
+	ReadAdvData(stream IStream)                                                                                                                                                                                                                         // procedure
+	BeginUpdate()                                                                                                                                                                                                                                       // procedure
+	EndUpdate()                                                                                                                                                                                                                                         // procedure
+	AddImages(value ICustomImageList)                                                                                                                                                                                                                   // procedure
+	Change()                                                                                                                                                                                                                                            // procedure
+	Clear()                                                                                                                                                                                                                                             // procedure
+	Delete(index int32)                                                                                                                                                                                                                                 // procedure
+	DrawWithCanvasIntX3Bool(canvas ICanvas, X int32, Y int32, index int32, enabled bool)                                                                                                                                                                // procedure
+	DrawWithCanvasIntX3GraphicsDrawEffect(canvas ICanvas, X int32, Y int32, index int32, drawEffect types.TGraphicsDrawEffect)                                                                                                                          // procedure
+	DrawWithCanvasIntX3DrawingStyleImageTypeBool(canvas ICanvas, X int32, Y int32, index int32, drawingStyle types.TDrawingStyle, imageType types.TImageType, enabled bool)                                                                             // procedure
+	DrawWithCanvasIntX3DrawingStyleImageTypeGraphicsDrawEffect(canvas ICanvas, X int32, Y int32, index int32, drawingStyle types.TDrawingStyle, imageType types.TImageType, drawEffect types.TGraphicsDrawEffect)                                       // procedure
+	DrawForPPIWithCanvasIntX5DoubleBool(canvas ICanvas, X int32, Y int32, index int32, imageWidthAt96PPI int32, targetPPI int32, canvasFactor float64, enabled bool)                                                                                    // procedure
+	DrawForPPIWithCanvasIntX5DoubleGraphicsDrawEffect(canvas ICanvas, X int32, Y int32, index int32, imageWidthAt96PPI int32, targetPPI int32, canvasFactor float64, drawEffect types.TGraphicsDrawEffect)                                              // procedure
+	DrawOverlayWithCanvasIntX3OverlayBool(canvas ICanvas, X int32, Y int32, index int32, overlay types.TOverlay, enabled bool)                                                                                                                          // procedure
+	DrawOverlayWithCanvasIntX3OverlayGraphicsDrawEffect(canvas ICanvas, X int32, Y int32, index int32, overlay types.TOverlay, drawEffect types.TGraphicsDrawEffect)                                                                                    // procedure
+	DrawOverlayWithCanvasIntX3OverlayDrawingStyleImageTypeGraphicsDrawEffect(canvas ICanvas, X int32, Y int32, index int32, overlay types.TOverlay, drawingStyle types.TDrawingStyle, imageType types.TImageType, drawEffect types.TGraphicsDrawEffect) // procedure
+	GetBitmapWithIntCustomBitmap(index int32, image ICustomBitmap)                                                                                                                                                                                      // procedure
+	GetBitmapWithIntCustomBitmapGraphicsDrawEffect(index int32, image ICustomBitmap, effect types.TGraphicsDrawEffect)                                                                                                                                  // procedure
+	GetFullBitmap(image ICustomBitmap, effect types.TGraphicsDrawEffect)                                                                                                                                                                                // procedure
+	GetFullRawImage(outImage *IRawImageWrap)                                                                                                                                                                                                            // procedure
+	GetIconWithIntIconGraphicsDrawEffect(index int32, image IIcon, effect types.TGraphicsDrawEffect)                                                                                                                                                    // procedure
+	GetIconWithIntIcon(index int32, image IIcon)                                                                                                                                                                                                        // procedure
+	GetRawImage(index int32, outImage *IRawImageWrap)                                                                                                                                                                                                   // procedure
+	Insert(index int32, image ICustomBitmap, mask ICustomBitmap)                                                                                                                                                                                        // procedure
+	InsertIcon(index int32, icon ICustomIcon)                                                                                                                                                                                                           // procedure
+	InsertMasked(index int32, image ICustomBitmap, maskColor types.TColor)                                                                                                                                                                              // procedure
+	Move(curIndex int32, newIndex int32)                                                                                                                                                                                                                // procedure
+	Overlay(index int32, overlay types.TOverlay)                                                                                                                                                                                                        // procedure
+	Replace(index int32, image ICustomBitmap, mask ICustomBitmap, allResolutions bool)                                                                                                                                                                  // procedure
+	ReplaceSlice(index int32, image ICustomBitmap, imageRect types.TRect, allResolutions bool)                                                                                                                                                          // procedure
+	ReplaceSliceCentered(index int32, imageWidth int32, image ICustomBitmap, allResolutions bool)                                                                                                                                                       // procedure
+	ReplaceIcon(index int32, icon ICustomIcon)                                                                                                                                                                                                          // procedure
+	ReplaceMasked(index int32, newImage ICustomBitmap, maskColor types.TColor, allResolutions bool)                                                                                                                                                     // procedure
+	RegisterChanges(value IChangeLink)                                                                                                                                                                                                                  // procedure
+	StretchDraw(canvas ICanvas, index int32, rect types.TRect, enabled bool)                                                                                                                                                                            // procedure
+	UnRegisterChanges(value IChangeLink)                                                                                                                                                                                                                // procedure
+	DeleteResolution(width int32)                                                                                                                                                                                                                       // procedure
+	HasOverlays() bool                                                                                                                                                                                                                                  // property HasOverlays Getter
+	AllocBy() int32                                                                                                                                                                                                                                     // property AllocBy Getter
+	SetAllocBy(value int32)                                                                                                                                                                                                                             // property AllocBy Setter
+	BlendColor() types.TColor                                                                                                                                                                                                                           // property BlendColor Getter
+	SetBlendColor(value types.TColor)                                                                                                                                                                                                                   // property BlendColor Setter
+	BkColor() types.TColor                                                                                                                                                                                                                              // property BkColor Getter
+	SetBkColor(value types.TColor)                                                                                                                                                                                                                      // property BkColor Setter
+	Count() int32                                                                                                                                                                                                                                       // property Count Getter
+	DrawingStyle() types.TDrawingStyle                                                                                                                                                                                                                  // property DrawingStyle Getter
+	SetDrawingStyle(value types.TDrawingStyle)                                                                                                                                                                                                          // property DrawingStyle Setter
+	Handle() types.TLCLHandle                                                                                                                                                                                                                           // property Handle Getter
+	Height() int32                                                                                                                                                                                                                                      // property Height Getter
+	SetHeight(value int32)                                                                                                                                                                                                                              // property Height Setter
+	HeightForPPI(imageWidth int32, pPI int32) int32                                                                                                                                                                                                     // property HeightForPPI Getter
+	HeightForWidth(width int32) int32                                                                                                                                                                                                                   // property HeightForWidth Getter
+	Width() int32                                                                                                                                                                                                                                       // property Width Getter
+	SetWidth(value int32)                                                                                                                                                                                                                               // property Width Setter
+	WidthForPPI(imageWidth int32, pPI int32) int32                                                                                                                                                                                                      // property WidthForPPI Getter
+	SizeForPPI(imageWidth int32, pPI int32) types.TSize                                                                                                                                                                                                 // property SizeForPPI Getter
+	Masked() bool                                                                                                                                                                                                                                       // property Masked Getter
+	SetMasked(value bool)                                                                                                                                                                                                                               // property Masked Setter
+	ResolutionWithIntToCustomImageListResolution(imageWidth int32) ICustomImageListResolution                                                                                                                                                           // property Resolution Getter
+	ResolutionByIndex(index int32) ICustomImageListResolution                                                                                                                                                                                           // property ResolutionByIndex Getter
+	ResolutionForPPI(imageWidth int32, pPI int32, canvasScaleFactor float64) IScaledImageListResolutionWrap                                                                                                                                             // property ResolutionForPPI Getter
+	ResolutionCount() int32                                                                                                                                                                                                                             // property ResolutionCount Getter
+	Scaled() bool                                                                                                                                                                                                                                       // property Scaled Getter
+	SetScaled(value bool)                                                                                                                                                                                                                               // property Scaled Setter
+	ShareImages() bool                                                                                                                                                                                                                                  // property ShareImages Getter
+	SetShareImages(value bool)                                                                                                                                                                                                                          // property ShareImages Setter
+	ImageType() types.TImageType                                                                                                                                                                                                                        // property ImageType Getter
+	SetImageType(value types.TImageType)                                                                                                                                                                                                                // property ImageType Setter
+	SetOnChange(fn TNotifyEvent)                                                                                                                                                                                                                        // property event
+	SetOnGetWidthForPPI(fn TCustomImageListGetWidthForPPI)                                                                                                                                                                                              // property event
 }
 
-// TCustomImageList Parent: TLCLComponent
 type TCustomImageList struct {
 	TLCLComponent
-	changePtr         uintptr
-	getWidthForPPIPtr uintptr
 }
 
-func NewCustomImageList(AOwner IComponent) ICustomImageList {
-	r1 := customImageListImportAPI().SysCallN(18, GetObjectUintptr(AOwner))
-	return AsCustomImageList(r1)
+func (m *TCustomImageList) Add(image ICustomBitmap, mask ICustomBitmap) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(image), base.GetObjectUintptr(mask))
+	return int32(r)
 }
 
-func NewCustomImageListSize(AWidth, AHeight int32) ICustomImageList {
-	r1 := customImageListImportAPI().SysCallN(19, uintptr(AWidth), uintptr(AHeight))
-	return AsCustomImageList(r1)
+func (m *TCustomImageList) AddSliced(image ICustomBitmap, horizontalCount int32, verticalCount int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(3, m.Instance(), base.GetObjectUintptr(image), uintptr(horizontalCount), uintptr(verticalCount))
+	return int32(r)
+}
+
+func (m *TCustomImageList) AddSlice(image ICustomBitmap, imageRect types.TRect) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(4, m.Instance(), base.GetObjectUintptr(image), uintptr(base.UnsafePointer(&imageRect)))
+	return int32(r)
+}
+
+func (m *TCustomImageList) AddSliceCentered(image ICustomBitmap) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(5, m.Instance(), base.GetObjectUintptr(image))
+	return int32(r)
+}
+
+func (m *TCustomImageList) AddIcon(image ICustomIcon) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(6, m.Instance(), base.GetObjectUintptr(image))
+	return int32(r)
+}
+
+func (m *TCustomImageList) AddMasked(image IBitmap, maskColor types.TColor) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(7, m.Instance(), base.GetObjectUintptr(image), uintptr(maskColor))
+	return int32(r)
+}
+
+func (m *TCustomImageList) AddLazarusResource(resourceName string, maskColor types.TColor) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(8, m.Instance(), api.PasStr(resourceName), uintptr(maskColor))
+	return int32(r)
+}
+
+func (m *TCustomImageList) AddResourceName(instance types.TLCLHandle, resourceName string, maskColor types.TColor) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(9, m.Instance(), uintptr(instance), api.PasStr(resourceName), uintptr(maskColor))
+	return int32(r)
+}
+
+func (m *TCustomImageList) GetHotSpot() (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(10, m.Instance(), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TCustomImageList) FindResolution(imageWidth int32, outResolution *ICustomImageListResolution) bool {
+	if !m.IsValid() {
+		return false
+	}
+	var resolutionPtr uintptr
+	r := customImageListAPI().SysCallN(11, m.Instance(), uintptr(imageWidth), uintptr(base.UnsafePointer(&resolutionPtr)))
+	*outResolution = AsCustomImageListResolution(resolutionPtr)
+	return api.GoBool(r)
+}
+
+func (m *TCustomImageList) Resolutions() ICustomImageListResolutionEnumerator {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customImageListAPI().SysCallN(12, m.Instance())
+	return AsCustomImageListResolutionEnumerator(r)
+}
+
+func (m *TCustomImageList) ResolutionsDesc() ICustomImageListResolutionEnumerator {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customImageListAPI().SysCallN(13, m.Instance())
+	return AsCustomImageListResolutionEnumerator(r)
+}
+
+func (m *TCustomImageList) AssignTo(dest IPersistent) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(17, m.Instance(), base.GetObjectUintptr(dest))
+}
+
+func (m *TCustomImageList) WriteData(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(18, m.Instance(), base.GetObjectUintptr(stream))
+}
+
+func (m *TCustomImageList) ReadData(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(19, m.Instance(), base.GetObjectUintptr(stream))
+}
+
+func (m *TCustomImageList) WriteAdvData(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(20, m.Instance(), base.GetObjectUintptr(stream))
+}
+
+func (m *TCustomImageList) ReadAdvData(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(21, m.Instance(), base.GetObjectUintptr(stream))
+}
+
+func (m *TCustomImageList) BeginUpdate() {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(22, m.Instance())
+}
+
+func (m *TCustomImageList) EndUpdate() {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(23, m.Instance())
+}
+
+func (m *TCustomImageList) AddImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(24, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCustomImageList) Change() {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(25, m.Instance())
+}
+
+func (m *TCustomImageList) Clear() {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(26, m.Instance())
+}
+
+func (m *TCustomImageList) Delete(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(27, m.Instance(), uintptr(index))
+}
+
+func (m *TCustomImageList) DrawWithCanvasIntX3Bool(canvas ICanvas, X int32, Y int32, index int32, enabled bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(28, m.Instance(), base.GetObjectUintptr(canvas), uintptr(X), uintptr(Y), uintptr(index), api.PasBool(enabled))
+}
+
+func (m *TCustomImageList) DrawWithCanvasIntX3GraphicsDrawEffect(canvas ICanvas, X int32, Y int32, index int32, drawEffect types.TGraphicsDrawEffect) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(29, m.Instance(), base.GetObjectUintptr(canvas), uintptr(X), uintptr(Y), uintptr(index), uintptr(drawEffect))
+}
+
+func (m *TCustomImageList) DrawWithCanvasIntX3DrawingStyleImageTypeBool(canvas ICanvas, X int32, Y int32, index int32, drawingStyle types.TDrawingStyle, imageType types.TImageType, enabled bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(30, m.Instance(), base.GetObjectUintptr(canvas), uintptr(X), uintptr(Y), uintptr(index), uintptr(drawingStyle), uintptr(imageType), api.PasBool(enabled))
+}
+
+func (m *TCustomImageList) DrawWithCanvasIntX3DrawingStyleImageTypeGraphicsDrawEffect(canvas ICanvas, X int32, Y int32, index int32, drawingStyle types.TDrawingStyle, imageType types.TImageType, drawEffect types.TGraphicsDrawEffect) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(31, m.Instance(), base.GetObjectUintptr(canvas), uintptr(X), uintptr(Y), uintptr(index), uintptr(drawingStyle), uintptr(imageType), uintptr(drawEffect))
+}
+
+func (m *TCustomImageList) DrawForPPIWithCanvasIntX5DoubleBool(canvas ICanvas, X int32, Y int32, index int32, imageWidthAt96PPI int32, targetPPI int32, canvasFactor float64, enabled bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(32, m.Instance(), base.GetObjectUintptr(canvas), uintptr(X), uintptr(Y), uintptr(index), uintptr(imageWidthAt96PPI), uintptr(targetPPI), uintptr(base.UnsafePointer(&canvasFactor)), api.PasBool(enabled))
+}
+
+func (m *TCustomImageList) DrawForPPIWithCanvasIntX5DoubleGraphicsDrawEffect(canvas ICanvas, X int32, Y int32, index int32, imageWidthAt96PPI int32, targetPPI int32, canvasFactor float64, drawEffect types.TGraphicsDrawEffect) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(33, m.Instance(), base.GetObjectUintptr(canvas), uintptr(X), uintptr(Y), uintptr(index), uintptr(imageWidthAt96PPI), uintptr(targetPPI), uintptr(base.UnsafePointer(&canvasFactor)), uintptr(drawEffect))
+}
+
+func (m *TCustomImageList) DrawOverlayWithCanvasIntX3OverlayBool(canvas ICanvas, X int32, Y int32, index int32, overlay types.TOverlay, enabled bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(34, m.Instance(), base.GetObjectUintptr(canvas), uintptr(X), uintptr(Y), uintptr(index), uintptr(overlay), api.PasBool(enabled))
+}
+
+func (m *TCustomImageList) DrawOverlayWithCanvasIntX3OverlayGraphicsDrawEffect(canvas ICanvas, X int32, Y int32, index int32, overlay types.TOverlay, drawEffect types.TGraphicsDrawEffect) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(35, m.Instance(), base.GetObjectUintptr(canvas), uintptr(X), uintptr(Y), uintptr(index), uintptr(overlay), uintptr(drawEffect))
+}
+
+func (m *TCustomImageList) DrawOverlayWithCanvasIntX3OverlayDrawingStyleImageTypeGraphicsDrawEffect(canvas ICanvas, X int32, Y int32, index int32, overlay types.TOverlay, drawingStyle types.TDrawingStyle, imageType types.TImageType, drawEffect types.TGraphicsDrawEffect) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(36, m.Instance(), base.GetObjectUintptr(canvas), uintptr(X), uintptr(Y), uintptr(index), uintptr(overlay), uintptr(drawingStyle), uintptr(imageType), uintptr(drawEffect))
+}
+
+func (m *TCustomImageList) GetBitmapWithIntCustomBitmap(index int32, image ICustomBitmap) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(37, m.Instance(), uintptr(index), base.GetObjectUintptr(image))
+}
+
+func (m *TCustomImageList) GetBitmapWithIntCustomBitmapGraphicsDrawEffect(index int32, image ICustomBitmap, effect types.TGraphicsDrawEffect) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(38, m.Instance(), uintptr(index), base.GetObjectUintptr(image), uintptr(effect))
+}
+
+func (m *TCustomImageList) GetFullBitmap(image ICustomBitmap, effect types.TGraphicsDrawEffect) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(39, m.Instance(), base.GetObjectUintptr(image), uintptr(effect))
+}
+
+func (m *TCustomImageList) GetFullRawImage(outImage *IRawImageWrap) {
+	if !m.IsValid() {
+		return
+	}
+	var imagePtr uintptr
+	customImageListAPI().SysCallN(40, m.Instance(), uintptr(base.UnsafePointer(&imagePtr)))
+	*outImage = AsRawImageWrap(imagePtr)
+}
+
+func (m *TCustomImageList) GetIconWithIntIconGraphicsDrawEffect(index int32, image IIcon, effect types.TGraphicsDrawEffect) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(41, m.Instance(), uintptr(index), base.GetObjectUintptr(image), uintptr(effect))
+}
+
+func (m *TCustomImageList) GetIconWithIntIcon(index int32, image IIcon) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(42, m.Instance(), uintptr(index), base.GetObjectUintptr(image))
+}
+
+func (m *TCustomImageList) GetRawImage(index int32, outImage *IRawImageWrap) {
+	if !m.IsValid() {
+		return
+	}
+	var imagePtr uintptr
+	customImageListAPI().SysCallN(43, m.Instance(), uintptr(index), uintptr(base.UnsafePointer(&imagePtr)))
+	*outImage = AsRawImageWrap(imagePtr)
+}
+
+func (m *TCustomImageList) Insert(index int32, image ICustomBitmap, mask ICustomBitmap) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(44, m.Instance(), uintptr(index), base.GetObjectUintptr(image), base.GetObjectUintptr(mask))
+}
+
+func (m *TCustomImageList) InsertIcon(index int32, icon ICustomIcon) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(45, m.Instance(), uintptr(index), base.GetObjectUintptr(icon))
+}
+
+func (m *TCustomImageList) InsertMasked(index int32, image ICustomBitmap, maskColor types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(46, m.Instance(), uintptr(index), base.GetObjectUintptr(image), uintptr(maskColor))
+}
+
+func (m *TCustomImageList) Move(curIndex int32, newIndex int32) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(47, m.Instance(), uintptr(curIndex), uintptr(newIndex))
+}
+
+func (m *TCustomImageList) Overlay(index int32, overlay types.TOverlay) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(48, m.Instance(), uintptr(index), uintptr(overlay))
+}
+
+func (m *TCustomImageList) Replace(index int32, image ICustomBitmap, mask ICustomBitmap, allResolutions bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(49, m.Instance(), uintptr(index), base.GetObjectUintptr(image), base.GetObjectUintptr(mask), api.PasBool(allResolutions))
+}
+
+func (m *TCustomImageList) ReplaceSlice(index int32, image ICustomBitmap, imageRect types.TRect, allResolutions bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(50, m.Instance(), uintptr(index), base.GetObjectUintptr(image), uintptr(base.UnsafePointer(&imageRect)), api.PasBool(allResolutions))
+}
+
+func (m *TCustomImageList) ReplaceSliceCentered(index int32, imageWidth int32, image ICustomBitmap, allResolutions bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(51, m.Instance(), uintptr(index), uintptr(imageWidth), base.GetObjectUintptr(image), api.PasBool(allResolutions))
+}
+
+func (m *TCustomImageList) ReplaceIcon(index int32, icon ICustomIcon) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(52, m.Instance(), uintptr(index), base.GetObjectUintptr(icon))
+}
+
+func (m *TCustomImageList) ReplaceMasked(index int32, newImage ICustomBitmap, maskColor types.TColor, allResolutions bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(53, m.Instance(), uintptr(index), base.GetObjectUintptr(newImage), uintptr(maskColor), api.PasBool(allResolutions))
+}
+
+func (m *TCustomImageList) RegisterChanges(value IChangeLink) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(54, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCustomImageList) StretchDraw(canvas ICanvas, index int32, rect types.TRect, enabled bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(55, m.Instance(), base.GetObjectUintptr(canvas), uintptr(index), uintptr(base.UnsafePointer(&rect)), api.PasBool(enabled))
+}
+
+func (m *TCustomImageList) UnRegisterChanges(value IChangeLink) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(56, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCustomImageList) DeleteResolution(width int32) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(57, m.Instance(), uintptr(width))
 }
 
 func (m *TCustomImageList) HasOverlays() bool {
-	r1 := customImageListImportAPI().SysCallN(42, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customImageListAPI().SysCallN(58, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TCustomImageList) AllocBy() int32 {
-	r1 := customImageListImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(59, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomImageList) SetAllocBy(AValue int32) {
-	customImageListImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomImageList) SetAllocBy(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(59, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomImageList) BlendColor() TColor {
-	r1 := customImageListImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomImageList) BlendColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(60, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomImageList) SetBlendColor(AValue TColor) {
-	customImageListImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomImageList) SetBlendColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(60, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomImageList) BkColor() TColor {
-	r1 := customImageListImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomImageList) BkColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(61, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomImageList) SetBkColor(AValue TColor) {
-	customImageListImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomImageList) SetBkColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(61, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomImageList) Count() int32 {
-	r1 := customImageListImportAPI().SysCallN(17, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(62, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomImageList) DrawingStyle() TDrawingStyle {
-	r1 := customImageListImportAPI().SysCallN(31, 0, m.Instance(), 0)
-	return TDrawingStyle(r1)
+func (m *TCustomImageList) DrawingStyle() types.TDrawingStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(63, 0, m.Instance())
+	return types.TDrawingStyle(r)
 }
 
-func (m *TCustomImageList) SetDrawingStyle(AValue TDrawingStyle) {
-	customImageListImportAPI().SysCallN(31, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomImageList) SetDrawingStyle(value types.TDrawingStyle) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(63, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomImageList) Handle() types.TLCLHandle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(64, m.Instance())
+	return types.TLCLHandle(r)
 }
 
 func (m *TCustomImageList) Height() int32 {
-	r1 := customImageListImportAPI().SysCallN(43, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(65, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomImageList) SetHeight(AValue int32) {
-	customImageListImportAPI().SysCallN(43, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomImageList) SetHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(65, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomImageList) HeightForPPI(AImageWidth, APPI int32) int32 {
-	r1 := customImageListImportAPI().SysCallN(44, m.Instance(), uintptr(AImageWidth), uintptr(APPI))
-	return int32(r1)
+func (m *TCustomImageList) HeightForPPI(imageWidth int32, pPI int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(66, m.Instance(), uintptr(imageWidth), uintptr(pPI))
+	return int32(r)
 }
 
-func (m *TCustomImageList) HeightForWidth(AWidth int32) int32 {
-	r1 := customImageListImportAPI().SysCallN(45, m.Instance(), uintptr(AWidth))
-	return int32(r1)
+func (m *TCustomImageList) HeightForWidth(width int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(67, m.Instance(), uintptr(width))
+	return int32(r)
 }
 
 func (m *TCustomImageList) Width() int32 {
-	r1 := customImageListImportAPI().SysCallN(74, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(68, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomImageList) SetWidth(AValue int32) {
-	customImageListImportAPI().SysCallN(74, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomImageList) SetWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(68, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomImageList) WidthForPPI(AImageWidth, APPI int32) int32 {
-	r1 := customImageListImportAPI().SysCallN(75, m.Instance(), uintptr(AImageWidth), uintptr(APPI))
-	return int32(r1)
+func (m *TCustomImageList) WidthForPPI(imageWidth int32, pPI int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(69, m.Instance(), uintptr(imageWidth), uintptr(pPI))
+	return int32(r)
 }
 
-func (m *TCustomImageList) SizeForPPI(AImageWidth, APPI int32) (resultSize TSize) {
-	customImageListImportAPI().SysCallN(71, m.Instance(), uintptr(AImageWidth), uintptr(APPI), uintptr(unsafePointer(&resultSize)))
+func (m *TCustomImageList) SizeForPPI(imageWidth int32, pPI int32) (result types.TSize) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(70, m.Instance(), uintptr(imageWidth), uintptr(pPI), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
 func (m *TCustomImageList) Masked() bool {
-	r1 := customImageListImportAPI().SysCallN(50, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customImageListAPI().SysCallN(71, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomImageList) SetMasked(AValue bool) {
-	customImageListImportAPI().SysCallN(50, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomImageList) SetMasked(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(71, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomImageList) Resolution(AImageWidth int32) ICustomImageListResolution {
-	r1 := customImageListImportAPI().SysCallN(61, m.Instance(), uintptr(AImageWidth))
-	return AsCustomImageListResolution(r1)
+func (m *TCustomImageList) ResolutionWithIntToCustomImageListResolution(imageWidth int32) ICustomImageListResolution {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customImageListAPI().SysCallN(72, m.Instance(), uintptr(imageWidth))
+	return AsCustomImageListResolution(r)
 }
 
-func (m *TCustomImageList) ResolutionByIndex(AIndex int32) ICustomImageListResolution {
-	r1 := customImageListImportAPI().SysCallN(62, m.Instance(), uintptr(AIndex))
-	return AsCustomImageListResolution(r1)
+func (m *TCustomImageList) ResolutionByIndex(index int32) ICustomImageListResolution {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customImageListAPI().SysCallN(73, m.Instance(), uintptr(index))
+	return AsCustomImageListResolution(r)
 }
 
-func (m *TCustomImageList) ResolutionForPPI(AImageWidth, APPI int32, ACanvasScaleFactor float64) (resultScaledImageListResolution TScaledImageListResolution) {
-	r1 := customImageListImportAPI().SysCallN(64, m.Instance(), uintptr(AImageWidth), uintptr(APPI), uintptr(unsafePointer(&ACanvasScaleFactor)))
-	return *(*TScaledImageListResolution)(getPointer(r1))
+func (m *TCustomImageList) ResolutionForPPI(imageWidth int32, pPI int32, canvasScaleFactor float64) IScaledImageListResolutionWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customImageListAPI().SysCallN(74, m.Instance(), uintptr(imageWidth), uintptr(pPI), uintptr(base.UnsafePointer(&canvasScaleFactor)))
+	return AsScaledImageListResolutionWrap(r)
 }
 
 func (m *TCustomImageList) ResolutionCount() int32 {
-	r1 := customImageListImportAPI().SysCallN(63, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(75, m.Instance())
+	return int32(r)
 }
 
 func (m *TCustomImageList) Scaled() bool {
-	r1 := customImageListImportAPI().SysCallN(67, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customImageListAPI().SysCallN(76, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomImageList) SetScaled(AValue bool) {
-	customImageListImportAPI().SysCallN(67, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomImageList) SetScaled(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(76, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomImageList) ShareImages() bool {
-	r1 := customImageListImportAPI().SysCallN(70, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customImageListAPI().SysCallN(77, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomImageList) SetShareImages(AValue bool) {
-	customImageListImportAPI().SysCallN(70, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomImageList) SetShareImages(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(77, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomImageList) ImageType() TImageType {
-	r1 := customImageListImportAPI().SysCallN(46, 0, m.Instance(), 0)
-	return TImageType(r1)
+func (m *TCustomImageList) ImageType() types.TImageType {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customImageListAPI().SysCallN(78, 0, m.Instance())
+	return types.TImageType(r)
 }
 
-func (m *TCustomImageList) SetImageType(AValue TImageType) {
-	customImageListImportAPI().SysCallN(46, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomImageList) Add(Image, Mask ICustomBitmap) int32 {
-	r1 := customImageListImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(Image), GetObjectUintptr(Mask))
-	return int32(r1)
-}
-
-func (m *TCustomImageList) AddSliced(Image ICustomBitmap, AHorizontalCount, AVerticalCount int32) int32 {
-	r1 := customImageListImportAPI().SysCallN(8, m.Instance(), GetObjectUintptr(Image), uintptr(AHorizontalCount), uintptr(AVerticalCount))
-	return int32(r1)
-}
-
-func (m *TCustomImageList) AddSlice(Image ICustomBitmap, AImageRect *TRect) int32 {
-	r1 := customImageListImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(Image), uintptr(unsafePointer(AImageRect)))
-	return int32(r1)
-}
-
-func (m *TCustomImageList) AddSliceCentered(Image ICustomBitmap) int32 {
-	r1 := customImageListImportAPI().SysCallN(7, m.Instance(), GetObjectUintptr(Image))
-	return int32(r1)
-}
-
-func (m *TCustomImageList) AddIcon(Image ICustomIcon) int32 {
-	r1 := customImageListImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Image))
-	return int32(r1)
-}
-
-func (m *TCustomImageList) AddMasked(Image IBitmap, MaskColor TColor) int32 {
-	r1 := customImageListImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(Image), uintptr(MaskColor))
-	return int32(r1)
-}
-
-func (m *TCustomImageList) AddLazarusResource(ResourceName string, MaskColor TColor) int32 {
-	r1 := customImageListImportAPI().SysCallN(3, m.Instance(), PascalStr(ResourceName), uintptr(MaskColor))
-	return int32(r1)
-}
-
-func (m *TCustomImageList) AddResourceName(Instance THandle, ResourceName string, MaskColor TColor) int32 {
-	r1 := customImageListImportAPI().SysCallN(5, m.Instance(), uintptr(Instance), PascalStr(ResourceName), uintptr(MaskColor))
-	return int32(r1)
-}
-
-func (m *TCustomImageList) GetHotSpot() (resultPoint TPoint) {
-	customImageListImportAPI().SysCallN(38, m.Instance(), uintptr(unsafePointer(&resultPoint)))
-	return
-}
-
-func (m *TCustomImageList) FindResolution(AImageWidth int32, OutResolution *ICustomImageListResolution) bool {
-	var result1 uintptr
-	r1 := customImageListImportAPI().SysCallN(33, m.Instance(), uintptr(AImageWidth), uintptr(unsafePointer(&result1)))
-	*OutResolution = AsCustomImageListResolution(result1)
-	return GoBool(r1)
-}
-
-func (m *TCustomImageList) Resolutions() ICustomImageListResolutionEnumerator {
-	r1 := customImageListImportAPI().SysCallN(65, m.Instance())
-	return AsCustomImageListResolutionEnumerator(r1)
-}
-
-func (m *TCustomImageList) ResolutionsDesc() ICustomImageListResolutionEnumerator {
-	r1 := customImageListImportAPI().SysCallN(66, m.Instance())
-	return AsCustomImageListResolutionEnumerator(r1)
-}
-
-func CustomImageListClass() TClass {
-	ret := customImageListImportAPI().SysCallN(15)
-	return TClass(ret)
-}
-
-func (m *TCustomImageList) AssignTo(Dest IPersistent) {
-	customImageListImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(Dest))
-}
-
-func (m *TCustomImageList) WriteData(AStream IStream) {
-	customImageListImportAPI().SysCallN(77, m.Instance(), GetObjectUintptr(AStream))
-}
-
-func (m *TCustomImageList) ReadData(AStream IStream) {
-	customImageListImportAPI().SysCallN(54, m.Instance(), GetObjectUintptr(AStream))
-}
-
-func (m *TCustomImageList) WriteAdvData(AStream IStream) {
-	customImageListImportAPI().SysCallN(76, m.Instance(), GetObjectUintptr(AStream))
-}
-
-func (m *TCustomImageList) ReadAdvData(AStream IStream) {
-	customImageListImportAPI().SysCallN(53, m.Instance(), GetObjectUintptr(AStream))
-}
-
-func (m *TCustomImageList) BeginUpdate() {
-	customImageListImportAPI().SysCallN(11, m.Instance())
-}
-
-func (m *TCustomImageList) EndUpdate() {
-	customImageListImportAPI().SysCallN(32, m.Instance())
-}
-
-func (m *TCustomImageList) AddImages(AValue ICustomImageList) {
-	customImageListImportAPI().SysCallN(2, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCustomImageList) Change() {
-	customImageListImportAPI().SysCallN(14, m.Instance())
-}
-
-func (m *TCustomImageList) Clear() {
-	customImageListImportAPI().SysCallN(16, m.Instance())
-}
-
-func (m *TCustomImageList) Delete(AIndex int32) {
-	customImageListImportAPI().SysCallN(20, m.Instance(), uintptr(AIndex))
-}
-
-func (m *TCustomImageList) Draw(ACanvas ICanvas, AX, AY, AIndex int32, AEnabled bool) {
-	customImageListImportAPI().SysCallN(22, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), PascalBool(AEnabled))
-}
-
-func (m *TCustomImageList) Draw1(ACanvas ICanvas, AX, AY, AIndex int32, ADrawEffect TGraphicsDrawEffect) {
-	customImageListImportAPI().SysCallN(23, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(ADrawEffect))
-}
-
-func (m *TCustomImageList) Draw2(ACanvas ICanvas, AX, AY, AIndex int32, ADrawingStyle TDrawingStyle, AImageType TImageType, AEnabled bool) {
-	customImageListImportAPI().SysCallN(24, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(ADrawingStyle), uintptr(AImageType), PascalBool(AEnabled))
-}
-
-func (m *TCustomImageList) Draw3(ACanvas ICanvas, AX, AY, AIndex int32, ADrawingStyle TDrawingStyle, AImageType TImageType, ADrawEffect TGraphicsDrawEffect) {
-	customImageListImportAPI().SysCallN(25, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(ADrawingStyle), uintptr(AImageType), uintptr(ADrawEffect))
-}
-
-func (m *TCustomImageList) DrawForPPI(ACanvas ICanvas, AX, AY, AIndex int32, AImageWidthAt96PPI, ATargetPPI int32, ACanvasFactor float64, AEnabled bool) {
-	customImageListImportAPI().SysCallN(26, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AImageWidthAt96PPI), uintptr(ATargetPPI), uintptr(unsafePointer(&ACanvasFactor)), PascalBool(AEnabled))
-}
-
-func (m *TCustomImageList) DrawForPPI1(ACanvas ICanvas, AX, AY, AIndex int32, AImageWidthAt96PPI, ATargetPPI int32, ACanvasFactor float64, ADrawEffect TGraphicsDrawEffect) {
-	customImageListImportAPI().SysCallN(27, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AImageWidthAt96PPI), uintptr(ATargetPPI), uintptr(unsafePointer(&ACanvasFactor)), uintptr(ADrawEffect))
-}
-
-func (m *TCustomImageList) DrawOverlay(ACanvas ICanvas, AX, AY, AIndex int32, AOverlay TOverlay, AEnabled bool) {
-	customImageListImportAPI().SysCallN(28, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AOverlay), PascalBool(AEnabled))
-}
-
-func (m *TCustomImageList) DrawOverlay1(ACanvas ICanvas, AX, AY, AIndex int32, AOverlay TOverlay, ADrawEffect TGraphicsDrawEffect) {
-	customImageListImportAPI().SysCallN(29, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AOverlay), uintptr(ADrawEffect))
-}
-
-func (m *TCustomImageList) DrawOverlay2(ACanvas ICanvas, AX, AY, AIndex int32, AOverlay TOverlay, ADrawingStyle TDrawingStyle, AImageType TImageType, ADrawEffect TGraphicsDrawEffect) {
-	customImageListImportAPI().SysCallN(30, m.Instance(), GetObjectUintptr(ACanvas), uintptr(AX), uintptr(AY), uintptr(AIndex), uintptr(AOverlay), uintptr(ADrawingStyle), uintptr(AImageType), uintptr(ADrawEffect))
-}
-
-func (m *TCustomImageList) GetBitmap(Index int32, Image ICustomBitmap) {
-	customImageListImportAPI().SysCallN(34, m.Instance(), uintptr(Index), GetObjectUintptr(Image))
-}
-
-func (m *TCustomImageList) GetBitmap1(Index int32, Image ICustomBitmap, AEffect TGraphicsDrawEffect) {
-	customImageListImportAPI().SysCallN(35, m.Instance(), uintptr(Index), GetObjectUintptr(Image), uintptr(AEffect))
-}
-
-func (m *TCustomImageList) GetFullBitmap(Image ICustomBitmap, AEffect TGraphicsDrawEffect) {
-	customImageListImportAPI().SysCallN(36, m.Instance(), GetObjectUintptr(Image), uintptr(AEffect))
-}
-
-func (m *TCustomImageList) GetFullRawImage(OutImage *TRawImage) {
-	var result0 uintptr
-	customImageListImportAPI().SysCallN(37, m.Instance(), uintptr(unsafePointer(&result0)))
-	*OutImage = *(*TRawImage)(getPointer(result0))
-}
-
-func (m *TCustomImageList) GetIcon(Index int32, Image IIcon, AEffect TGraphicsDrawEffect) {
-	customImageListImportAPI().SysCallN(39, m.Instance(), uintptr(Index), GetObjectUintptr(Image), uintptr(AEffect))
-}
-
-func (m *TCustomImageList) GetIcon1(Index int32, Image IIcon) {
-	customImageListImportAPI().SysCallN(40, m.Instance(), uintptr(Index), GetObjectUintptr(Image))
-}
-
-func (m *TCustomImageList) GetRawImage(Index int32, OutImage *TRawImage) {
-	var result1 uintptr
-	customImageListImportAPI().SysCallN(41, m.Instance(), uintptr(Index), uintptr(unsafePointer(&result1)))
-	*OutImage = *(*TRawImage)(getPointer(result1))
-}
-
-func (m *TCustomImageList) Insert(AIndex int32, AImage, AMask ICustomBitmap) {
-	customImageListImportAPI().SysCallN(47, m.Instance(), uintptr(AIndex), GetObjectUintptr(AImage), GetObjectUintptr(AMask))
-}
-
-func (m *TCustomImageList) InsertIcon(AIndex int32, AIcon ICustomIcon) {
-	customImageListImportAPI().SysCallN(48, m.Instance(), uintptr(AIndex), GetObjectUintptr(AIcon))
-}
-
-func (m *TCustomImageList) InsertMasked(Index int32, AImage ICustomBitmap, MaskColor TColor) {
-	customImageListImportAPI().SysCallN(49, m.Instance(), uintptr(Index), GetObjectUintptr(AImage), uintptr(MaskColor))
-}
-
-func (m *TCustomImageList) Move(ACurIndex, ANewIndex int32) {
-	customImageListImportAPI().SysCallN(51, m.Instance(), uintptr(ACurIndex), uintptr(ANewIndex))
-}
-
-func (m *TCustomImageList) Overlay(AIndex int32, Overlay TOverlay) {
-	customImageListImportAPI().SysCallN(52, m.Instance(), uintptr(AIndex), uintptr(Overlay))
-}
-
-func (m *TCustomImageList) Replace(AIndex int32, AImage, AMask ICustomBitmap, AllResolutions bool) {
-	customImageListImportAPI().SysCallN(56, m.Instance(), uintptr(AIndex), GetObjectUintptr(AImage), GetObjectUintptr(AMask), PascalBool(AllResolutions))
-}
-
-func (m *TCustomImageList) ReplaceSlice(AIndex int32, Image ICustomBitmap, AImageRect *TRect, AllResolutions bool) {
-	customImageListImportAPI().SysCallN(59, m.Instance(), uintptr(AIndex), GetObjectUintptr(Image), uintptr(unsafePointer(AImageRect)), PascalBool(AllResolutions))
-}
-
-func (m *TCustomImageList) ReplaceSliceCentered(AIndex, AImageWidth int32, Image ICustomBitmap, AllResolutions bool) {
-	customImageListImportAPI().SysCallN(60, m.Instance(), uintptr(AIndex), uintptr(AImageWidth), GetObjectUintptr(Image), PascalBool(AllResolutions))
-}
-
-func (m *TCustomImageList) ReplaceIcon(AIndex int32, AIcon ICustomIcon) {
-	customImageListImportAPI().SysCallN(57, m.Instance(), uintptr(AIndex), GetObjectUintptr(AIcon))
-}
-
-func (m *TCustomImageList) ReplaceMasked(Index int32, NewImage ICustomBitmap, MaskColor TColor, AllResolutions bool) {
-	customImageListImportAPI().SysCallN(58, m.Instance(), uintptr(Index), GetObjectUintptr(NewImage), uintptr(MaskColor), PascalBool(AllResolutions))
-}
-
-func (m *TCustomImageList) RegisterChanges(Value IChangeLink) {
-	customImageListImportAPI().SysCallN(55, m.Instance(), GetObjectUintptr(Value))
-}
-
-func (m *TCustomImageList) StretchDraw(Canvas ICanvas, Index int32, ARect *TRect, Enabled bool) {
-	customImageListImportAPI().SysCallN(72, m.Instance(), GetObjectUintptr(Canvas), uintptr(Index), uintptr(unsafePointer(ARect)), PascalBool(Enabled))
-}
-
-func (m *TCustomImageList) UnRegisterChanges(Value IChangeLink) {
-	customImageListImportAPI().SysCallN(73, m.Instance(), GetObjectUintptr(Value))
-}
-
-func (m *TCustomImageList) DeleteResolution(AWidth int32) {
-	customImageListImportAPI().SysCallN(21, m.Instance(), uintptr(AWidth))
+func (m *TCustomImageList) SetImageType(value types.TImageType) {
+	if !m.IsValid() {
+		return
+	}
+	customImageListAPI().SysCallN(78, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomImageList) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	customImageListImportAPI().SysCallN(68, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 79, customImageListAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomImageList) SetOnGetWidthForPPI(fn TCustomImageListGetWidthForPPI) {
-	if m.getWidthForPPIPtr != 0 {
-		RemoveEventElement(m.getWidthForPPIPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getWidthForPPIPtr = MakeEventDataPtr(fn)
-	customImageListImportAPI().SysCallN(69, m.Instance(), m.getWidthForPPIPtr)
+	cb := makeTCustomImageListGetWidthForPPI(fn)
+	base.SetEvent(m, 80, customImageListAPI(), api.MakeEventDataPtr(cb))
+}
+
+// CustomImageList  is static instance
+var CustomImageList _CustomImageListClass
+
+// _CustomImageListClass is class type defined by TCustomImageList
+type _CustomImageListClass uintptr
+
+func (_CustomImageListClass) ScaleImageWithCustomBitmapX2IntX2RGBAQuadArray(bitmap ICustomBitmap, mask ICustomBitmap, targetWidth int32, targetHeight int32, data *IRGBAQuadArray) {
+	var dataPtr uintptr
+	var dataCountPtr uintptr
+	customImageListAPI().SysCallN(14, base.GetObjectUintptr(bitmap), base.GetObjectUintptr(mask), uintptr(targetWidth), uintptr(targetHeight), uintptr(base.UnsafePointer(&dataPtr)), uintptr(base.UnsafePointer(&dataCountPtr)))
+	*data = NewRGBAQuadArray(int(dataCountPtr), dataPtr)
+}
+
+func (_CustomImageListClass) ScaleImageWithCustomBitmapX2RectIntX2RGBAQuadArray(bitmap ICustomBitmap, mask ICustomBitmap, sourceRect types.TRect, targetWidth int32, targetHeight int32, data *IRGBAQuadArray) {
+	var dataPtr uintptr
+	var dataCountPtr uintptr
+	customImageListAPI().SysCallN(15, base.GetObjectUintptr(bitmap), base.GetObjectUintptr(mask), uintptr(base.UnsafePointer(&sourceRect)), uintptr(targetWidth), uintptr(targetHeight), uintptr(base.UnsafePointer(&dataPtr)), uintptr(base.UnsafePointer(&dataCountPtr)))
+	*data = NewRGBAQuadArray(int(dataCountPtr), dataPtr)
+}
+
+func (_CustomImageListClass) ScaleImageWithHBITMAPX2RectIntX2RGBAQuadArray(bitmap types.HBitmap, mask types.HBitmap, sourceRect types.TRect, targetWidth int32, targetHeight int32, data *IRGBAQuadArray) {
+	var dataPtr uintptr
+	var dataCountPtr uintptr
+	customImageListAPI().SysCallN(16, uintptr(bitmap), uintptr(mask), uintptr(base.UnsafePointer(&sourceRect)), uintptr(targetWidth), uintptr(targetHeight), uintptr(base.UnsafePointer(&dataPtr)), uintptr(base.UnsafePointer(&dataCountPtr)))
+	*data = NewRGBAQuadArray(int(dataCountPtr), dataPtr)
+}
+
+// NewCustomImageList class constructor
+func NewCustomImageList(owner IComponent) ICustomImageList {
+	r := customImageListAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomImageList(r)
+}
+
+// NewCustomImageListSize class constructor
+func NewCustomImageListSize(width int32, height int32) ICustomImageList {
+	r := customImageListAPI().SysCallN(1, uintptr(width), uintptr(height))
+	return AsCustomImageList(r)
+}
+
+func TCustomImageListClass() types.TClass {
+	r := customImageListAPI().SysCallN(81)
+	return types.TClass(r)
 }
 
 var (
-	customImageListImport       *imports.Imports = nil
-	customImageListImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomImageList_Add", 0),
-		/*1*/ imports.NewTable("CustomImageList_AddIcon", 0),
-		/*2*/ imports.NewTable("CustomImageList_AddImages", 0),
-		/*3*/ imports.NewTable("CustomImageList_AddLazarusResource", 0),
-		/*4*/ imports.NewTable("CustomImageList_AddMasked", 0),
-		/*5*/ imports.NewTable("CustomImageList_AddResourceName", 0),
-		/*6*/ imports.NewTable("CustomImageList_AddSlice", 0),
-		/*7*/ imports.NewTable("CustomImageList_AddSliceCentered", 0),
-		/*8*/ imports.NewTable("CustomImageList_AddSliced", 0),
-		/*9*/ imports.NewTable("CustomImageList_AllocBy", 0),
-		/*10*/ imports.NewTable("CustomImageList_AssignTo", 0),
-		/*11*/ imports.NewTable("CustomImageList_BeginUpdate", 0),
-		/*12*/ imports.NewTable("CustomImageList_BkColor", 0),
-		/*13*/ imports.NewTable("CustomImageList_BlendColor", 0),
-		/*14*/ imports.NewTable("CustomImageList_Change", 0),
-		/*15*/ imports.NewTable("CustomImageList_Class", 0),
-		/*16*/ imports.NewTable("CustomImageList_Clear", 0),
-		/*17*/ imports.NewTable("CustomImageList_Count", 0),
-		/*18*/ imports.NewTable("CustomImageList_Create", 0),
-		/*19*/ imports.NewTable("CustomImageList_CreateSize", 0),
-		/*20*/ imports.NewTable("CustomImageList_Delete", 0),
-		/*21*/ imports.NewTable("CustomImageList_DeleteResolution", 0),
-		/*22*/ imports.NewTable("CustomImageList_Draw", 0),
-		/*23*/ imports.NewTable("CustomImageList_Draw1", 0),
-		/*24*/ imports.NewTable("CustomImageList_Draw2", 0),
-		/*25*/ imports.NewTable("CustomImageList_Draw3", 0),
-		/*26*/ imports.NewTable("CustomImageList_DrawForPPI", 0),
-		/*27*/ imports.NewTable("CustomImageList_DrawForPPI1", 0),
-		/*28*/ imports.NewTable("CustomImageList_DrawOverlay", 0),
-		/*29*/ imports.NewTable("CustomImageList_DrawOverlay1", 0),
-		/*30*/ imports.NewTable("CustomImageList_DrawOverlay2", 0),
-		/*31*/ imports.NewTable("CustomImageList_DrawingStyle", 0),
-		/*32*/ imports.NewTable("CustomImageList_EndUpdate", 0),
-		/*33*/ imports.NewTable("CustomImageList_FindResolution", 0),
-		/*34*/ imports.NewTable("CustomImageList_GetBitmap", 0),
-		/*35*/ imports.NewTable("CustomImageList_GetBitmap1", 0),
-		/*36*/ imports.NewTable("CustomImageList_GetFullBitmap", 0),
-		/*37*/ imports.NewTable("CustomImageList_GetFullRawImage", 0),
-		/*38*/ imports.NewTable("CustomImageList_GetHotSpot", 0),
-		/*39*/ imports.NewTable("CustomImageList_GetIcon", 0),
-		/*40*/ imports.NewTable("CustomImageList_GetIcon1", 0),
-		/*41*/ imports.NewTable("CustomImageList_GetRawImage", 0),
-		/*42*/ imports.NewTable("CustomImageList_HasOverlays", 0),
-		/*43*/ imports.NewTable("CustomImageList_Height", 0),
-		/*44*/ imports.NewTable("CustomImageList_HeightForPPI", 0),
-		/*45*/ imports.NewTable("CustomImageList_HeightForWidth", 0),
-		/*46*/ imports.NewTable("CustomImageList_ImageType", 0),
-		/*47*/ imports.NewTable("CustomImageList_Insert", 0),
-		/*48*/ imports.NewTable("CustomImageList_InsertIcon", 0),
-		/*49*/ imports.NewTable("CustomImageList_InsertMasked", 0),
-		/*50*/ imports.NewTable("CustomImageList_Masked", 0),
-		/*51*/ imports.NewTable("CustomImageList_Move", 0),
-		/*52*/ imports.NewTable("CustomImageList_Overlay", 0),
-		/*53*/ imports.NewTable("CustomImageList_ReadAdvData", 0),
-		/*54*/ imports.NewTable("CustomImageList_ReadData", 0),
-		/*55*/ imports.NewTable("CustomImageList_RegisterChanges", 0),
-		/*56*/ imports.NewTable("CustomImageList_Replace", 0),
-		/*57*/ imports.NewTable("CustomImageList_ReplaceIcon", 0),
-		/*58*/ imports.NewTable("CustomImageList_ReplaceMasked", 0),
-		/*59*/ imports.NewTable("CustomImageList_ReplaceSlice", 0),
-		/*60*/ imports.NewTable("CustomImageList_ReplaceSliceCentered", 0),
-		/*61*/ imports.NewTable("CustomImageList_Resolution", 0),
-		/*62*/ imports.NewTable("CustomImageList_ResolutionByIndex", 0),
-		/*63*/ imports.NewTable("CustomImageList_ResolutionCount", 0),
-		/*64*/ imports.NewTable("CustomImageList_ResolutionForPPI", 0),
-		/*65*/ imports.NewTable("CustomImageList_Resolutions", 0),
-		/*66*/ imports.NewTable("CustomImageList_ResolutionsDesc", 0),
-		/*67*/ imports.NewTable("CustomImageList_Scaled", 0),
-		/*68*/ imports.NewTable("CustomImageList_SetOnChange", 0),
-		/*69*/ imports.NewTable("CustomImageList_SetOnGetWidthForPPI", 0),
-		/*70*/ imports.NewTable("CustomImageList_ShareImages", 0),
-		/*71*/ imports.NewTable("CustomImageList_SizeForPPI", 0),
-		/*72*/ imports.NewTable("CustomImageList_StretchDraw", 0),
-		/*73*/ imports.NewTable("CustomImageList_UnRegisterChanges", 0),
-		/*74*/ imports.NewTable("CustomImageList_Width", 0),
-		/*75*/ imports.NewTable("CustomImageList_WidthForPPI", 0),
-		/*76*/ imports.NewTable("CustomImageList_WriteAdvData", 0),
-		/*77*/ imports.NewTable("CustomImageList_WriteData", 0),
-	}
+	customImageListOnce   base.Once
+	customImageListImport *imports.Imports = nil
 )
 
-func customImageListImportAPI() *imports.Imports {
-	if customImageListImport == nil {
-		customImageListImport = NewDefaultImports()
-		customImageListImport.SetImportTable(customImageListImportTables)
-		customImageListImportTables = nil
-	}
+func customImageListAPI() *imports.Imports {
+	customImageListOnce.Do(func() {
+		customImageListImport = api.NewDefaultImports()
+		customImageListImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomImageList_Create", 0), // constructor NewCustomImageList
+			/* 1 */ imports.NewTable("TCustomImageList_CreateSize", 0), // constructor NewCustomImageListSize
+			/* 2 */ imports.NewTable("TCustomImageList_Add", 0), // function Add
+			/* 3 */ imports.NewTable("TCustomImageList_AddSliced", 0), // function AddSliced
+			/* 4 */ imports.NewTable("TCustomImageList_AddSlice", 0), // function AddSlice
+			/* 5 */ imports.NewTable("TCustomImageList_AddSliceCentered", 0), // function AddSliceCentered
+			/* 6 */ imports.NewTable("TCustomImageList_AddIcon", 0), // function AddIcon
+			/* 7 */ imports.NewTable("TCustomImageList_AddMasked", 0), // function AddMasked
+			/* 8 */ imports.NewTable("TCustomImageList_AddLazarusResource", 0), // function AddLazarusResource
+			/* 9 */ imports.NewTable("TCustomImageList_AddResourceName", 0), // function AddResourceName
+			/* 10 */ imports.NewTable("TCustomImageList_GetHotSpot", 0), // function GetHotSpot
+			/* 11 */ imports.NewTable("TCustomImageList_FindResolution", 0), // function FindResolution
+			/* 12 */ imports.NewTable("TCustomImageList_Resolutions", 0), // function Resolutions
+			/* 13 */ imports.NewTable("TCustomImageList_ResolutionsDesc", 0), // function ResolutionsDesc
+			/* 14 */ imports.NewTable("TCustomImageList_ScaleImageWithCustomBitmapX2IntX2RGBAQuadArray", 0), // static procedure ScaleImageWithCustomBitmapX2IntX2RGBAQuadArray
+			/* 15 */ imports.NewTable("TCustomImageList_ScaleImageWithCustomBitmapX2RectIntX2RGBAQuadArray", 0), // static procedure ScaleImageWithCustomBitmapX2RectIntX2RGBAQuadArray
+			/* 16 */ imports.NewTable("TCustomImageList_ScaleImageWithHBITMAPX2RectIntX2RGBAQuadArray", 0), // static procedure ScaleImageWithHBITMAPX2RectIntX2RGBAQuadArray
+			/* 17 */ imports.NewTable("TCustomImageList_AssignTo", 0), // procedure AssignTo
+			/* 18 */ imports.NewTable("TCustomImageList_WriteData", 0), // procedure WriteData
+			/* 19 */ imports.NewTable("TCustomImageList_ReadData", 0), // procedure ReadData
+			/* 20 */ imports.NewTable("TCustomImageList_WriteAdvData", 0), // procedure WriteAdvData
+			/* 21 */ imports.NewTable("TCustomImageList_ReadAdvData", 0), // procedure ReadAdvData
+			/* 22 */ imports.NewTable("TCustomImageList_BeginUpdate", 0), // procedure BeginUpdate
+			/* 23 */ imports.NewTable("TCustomImageList_EndUpdate", 0), // procedure EndUpdate
+			/* 24 */ imports.NewTable("TCustomImageList_AddImages", 0), // procedure AddImages
+			/* 25 */ imports.NewTable("TCustomImageList_Change", 0), // procedure Change
+			/* 26 */ imports.NewTable("TCustomImageList_Clear", 0), // procedure Clear
+			/* 27 */ imports.NewTable("TCustomImageList_Delete", 0), // procedure Delete
+			/* 28 */ imports.NewTable("TCustomImageList_DrawWithCanvasIntX3Bool", 0), // procedure DrawWithCanvasIntX3Bool
+			/* 29 */ imports.NewTable("TCustomImageList_DrawWithCanvasIntX3GraphicsDrawEffect", 0), // procedure DrawWithCanvasIntX3GraphicsDrawEffect
+			/* 30 */ imports.NewTable("TCustomImageList_DrawWithCanvasIntX3DrawingStyleImageTypeBool", 0), // procedure DrawWithCanvasIntX3DrawingStyleImageTypeBool
+			/* 31 */ imports.NewTable("TCustomImageList_DrawWithCanvasIntX3DrawingStyleImageTypeGraphicsDrawEffect", 0), // procedure DrawWithCanvasIntX3DrawingStyleImageTypeGraphicsDrawEffect
+			/* 32 */ imports.NewTable("TCustomImageList_DrawForPPIWithCanvasIntX5DoubleBool", 0), // procedure DrawForPPIWithCanvasIntX5DoubleBool
+			/* 33 */ imports.NewTable("TCustomImageList_DrawForPPIWithCanvasIntX5DoubleGraphicsDrawEffect", 0), // procedure DrawForPPIWithCanvasIntX5DoubleGraphicsDrawEffect
+			/* 34 */ imports.NewTable("TCustomImageList_DrawOverlayWithCanvasIntX3OverlayBool", 0), // procedure DrawOverlayWithCanvasIntX3OverlayBool
+			/* 35 */ imports.NewTable("TCustomImageList_DrawOverlayWithCanvasIntX3OverlayGraphicsDrawEffect", 0), // procedure DrawOverlayWithCanvasIntX3OverlayGraphicsDrawEffect
+			/* 36 */ imports.NewTable("TCustomImageList_DrawOverlayWithCanvasIntX3OverlayDrawingStyleImageTypeGraphicsDrawEffect", 0), // procedure DrawOverlayWithCanvasIntX3OverlayDrawingStyleImageTypeGraphicsDrawEffect
+			/* 37 */ imports.NewTable("TCustomImageList_GetBitmapWithIntCustomBitmap", 0), // procedure GetBitmapWithIntCustomBitmap
+			/* 38 */ imports.NewTable("TCustomImageList_GetBitmapWithIntCustomBitmapGraphicsDrawEffect", 0), // procedure GetBitmapWithIntCustomBitmapGraphicsDrawEffect
+			/* 39 */ imports.NewTable("TCustomImageList_GetFullBitmap", 0), // procedure GetFullBitmap
+			/* 40 */ imports.NewTable("TCustomImageList_GetFullRawImage", 0), // procedure GetFullRawImage
+			/* 41 */ imports.NewTable("TCustomImageList_GetIconWithIntIconGraphicsDrawEffect", 0), // procedure GetIconWithIntIconGraphicsDrawEffect
+			/* 42 */ imports.NewTable("TCustomImageList_GetIconWithIntIcon", 0), // procedure GetIconWithIntIcon
+			/* 43 */ imports.NewTable("TCustomImageList_GetRawImage", 0), // procedure GetRawImage
+			/* 44 */ imports.NewTable("TCustomImageList_Insert", 0), // procedure Insert
+			/* 45 */ imports.NewTable("TCustomImageList_InsertIcon", 0), // procedure InsertIcon
+			/* 46 */ imports.NewTable("TCustomImageList_InsertMasked", 0), // procedure InsertMasked
+			/* 47 */ imports.NewTable("TCustomImageList_Move", 0), // procedure Move
+			/* 48 */ imports.NewTable("TCustomImageList_Overlay", 0), // procedure Overlay
+			/* 49 */ imports.NewTable("TCustomImageList_Replace", 0), // procedure Replace
+			/* 50 */ imports.NewTable("TCustomImageList_ReplaceSlice", 0), // procedure ReplaceSlice
+			/* 51 */ imports.NewTable("TCustomImageList_ReplaceSliceCentered", 0), // procedure ReplaceSliceCentered
+			/* 52 */ imports.NewTable("TCustomImageList_ReplaceIcon", 0), // procedure ReplaceIcon
+			/* 53 */ imports.NewTable("TCustomImageList_ReplaceMasked", 0), // procedure ReplaceMasked
+			/* 54 */ imports.NewTable("TCustomImageList_RegisterChanges", 0), // procedure RegisterChanges
+			/* 55 */ imports.NewTable("TCustomImageList_StretchDraw", 0), // procedure StretchDraw
+			/* 56 */ imports.NewTable("TCustomImageList_UnRegisterChanges", 0), // procedure UnRegisterChanges
+			/* 57 */ imports.NewTable("TCustomImageList_DeleteResolution", 0), // procedure DeleteResolution
+			/* 58 */ imports.NewTable("TCustomImageList_HasOverlays", 0), // property HasOverlays
+			/* 59 */ imports.NewTable("TCustomImageList_AllocBy", 0), // property AllocBy
+			/* 60 */ imports.NewTable("TCustomImageList_BlendColor", 0), // property BlendColor
+			/* 61 */ imports.NewTable("TCustomImageList_BkColor", 0), // property BkColor
+			/* 62 */ imports.NewTable("TCustomImageList_Count", 0), // property Count
+			/* 63 */ imports.NewTable("TCustomImageList_DrawingStyle", 0), // property DrawingStyle
+			/* 64 */ imports.NewTable("TCustomImageList_Handle", 0), // property Handle
+			/* 65 */ imports.NewTable("TCustomImageList_Height", 0), // property Height
+			/* 66 */ imports.NewTable("TCustomImageList_HeightForPPI", 0), // property HeightForPPI
+			/* 67 */ imports.NewTable("TCustomImageList_HeightForWidth", 0), // property HeightForWidth
+			/* 68 */ imports.NewTable("TCustomImageList_Width", 0), // property Width
+			/* 69 */ imports.NewTable("TCustomImageList_WidthForPPI", 0), // property WidthForPPI
+			/* 70 */ imports.NewTable("TCustomImageList_SizeForPPI", 0), // property SizeForPPI
+			/* 71 */ imports.NewTable("TCustomImageList_Masked", 0), // property Masked
+			/* 72 */ imports.NewTable("TCustomImageList_ResolutionWithIntToCustomImageListResolution", 0), // property ResolutionWithIntToCustomImageListResolution
+			/* 73 */ imports.NewTable("TCustomImageList_ResolutionByIndex", 0), // property ResolutionByIndex
+			/* 74 */ imports.NewTable("TCustomImageList_ResolutionForPPI", 0), // property ResolutionForPPI
+			/* 75 */ imports.NewTable("TCustomImageList_ResolutionCount", 0), // property ResolutionCount
+			/* 76 */ imports.NewTable("TCustomImageList_Scaled", 0), // property Scaled
+			/* 77 */ imports.NewTable("TCustomImageList_ShareImages", 0), // property ShareImages
+			/* 78 */ imports.NewTable("TCustomImageList_ImageType", 0), // property ImageType
+			/* 79 */ imports.NewTable("TCustomImageList_OnChange", 0), // event OnChange
+			/* 80 */ imports.NewTable("TCustomImageList_OnGetWidthForPPI", 0), // event OnGetWidthForPPI
+			/* 81 */ imports.NewTable("TCustomImageList_TClass", 0), // function TCustomImageListClass
+		}
+	})
 	return customImageListImport
 }

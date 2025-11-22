@@ -9,117 +9,148 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomActionList Parent: ILCLComponent
 type ICustomActionList interface {
 	ILCLComponent
-	Actions(Index int32) IContainedAction                        // property
-	SetActions(Index int32, AValue IContainedAction)             // property
-	ActionCount() int32                                          // property
-	Images() ICustomImageList                                    // property
-	SetImages(AValue ICustomImageList)                           // property
-	State() TActionListState                                     // property
-	SetState(AValue TActionListState)                            // property
-	ActionByName(ActionName string) IContainedAction             // function
-	GetEnumeratorForActionListEnumerator() IActionListEnumerator // function
-	IndexOfName(ActionName string) int32                         // function
-	IsShortCut(Message *TLMKey) bool                             // function
+	ActionByName(actionName string) IContainedAction            // function
+	GetEnumeratorToActionListEnumerator() IActionListEnumerator // function
+	IndexOfName(actionName string) int32                        // function
+	IsShortCut(message *types.TLMKey) bool                      // function
+	Actions(index int32) IContainedAction                       // property Actions Getter
+	SetActions(index int32, value IContainedAction)             // property Actions Setter
+	ActionCount() int32                                         // property ActionCount Getter
+	Images() ICustomImageList                                   // property Images Getter
+	SetImages(value ICustomImageList)                           // property Images Setter
+	State() types.TActionListState                              // property State Getter
+	SetState(value types.TActionListState)                      // property State Setter
 }
 
-// TCustomActionList Parent: TLCLComponent
 type TCustomActionList struct {
 	TLCLComponent
 }
 
-func NewCustomActionList(AOwner IComponent) ICustomActionList {
-	r1 := customActionListImportAPI().SysCallN(4, GetObjectUintptr(AOwner))
-	return AsCustomActionList(r1)
+func (m *TCustomActionList) ActionByName(actionName string) IContainedAction {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customActionListAPI().SysCallN(1, m.Instance(), api.PasStr(actionName))
+	return AsContainedAction(r)
 }
 
-func (m *TCustomActionList) Actions(Index int32) IContainedAction {
-	r1 := customActionListImportAPI().SysCallN(2, 0, m.Instance(), uintptr(Index))
-	return AsContainedAction(r1)
+func (m *TCustomActionList) GetEnumeratorToActionListEnumerator() IActionListEnumerator {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customActionListAPI().SysCallN(2, m.Instance())
+	return AsActionListEnumerator(r)
 }
 
-func (m *TCustomActionList) SetActions(Index int32, AValue IContainedAction) {
-	customActionListImportAPI().SysCallN(2, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
+func (m *TCustomActionList) IndexOfName(actionName string) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customActionListAPI().SysCallN(3, m.Instance(), api.PasStr(actionName))
+	return int32(r)
+}
+
+func (m *TCustomActionList) IsShortCut(message *types.TLMKey) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customActionListAPI().SysCallN(4, m.Instance(), uintptr(base.UnsafePointer(message)))
+	return api.GoBool(r)
+}
+
+func (m *TCustomActionList) Actions(index int32) IContainedAction {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customActionListAPI().SysCallN(5, 0, m.Instance(), uintptr(index))
+	return AsContainedAction(r)
+}
+
+func (m *TCustomActionList) SetActions(index int32, value IContainedAction) {
+	if !m.IsValid() {
+		return
+	}
+	customActionListAPI().SysCallN(5, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
 }
 
 func (m *TCustomActionList) ActionCount() int32 {
-	r1 := customActionListImportAPI().SysCallN(1, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customActionListAPI().SysCallN(6, m.Instance())
+	return int32(r)
 }
 
 func (m *TCustomActionList) Images() ICustomImageList {
-	r1 := customActionListImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := customActionListAPI().SysCallN(7, 0, m.Instance())
+	return AsCustomImageList(r)
 }
 
-func (m *TCustomActionList) SetImages(AValue ICustomImageList) {
-	customActionListImportAPI().SysCallN(6, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TCustomActionList) SetImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	customActionListAPI().SysCallN(7, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TCustomActionList) State() TActionListState {
-	r1 := customActionListImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TActionListState(r1)
+func (m *TCustomActionList) State() types.TActionListState {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customActionListAPI().SysCallN(8, 0, m.Instance())
+	return types.TActionListState(r)
 }
 
-func (m *TCustomActionList) SetState(AValue TActionListState) {
-	customActionListImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomActionList) SetState(value types.TActionListState) {
+	if !m.IsValid() {
+		return
+	}
+	customActionListAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomActionList) ActionByName(ActionName string) IContainedAction {
-	r1 := customActionListImportAPI().SysCallN(0, m.Instance(), PascalStr(ActionName))
-	return AsContainedAction(r1)
+// NewCustomActionList class constructor
+func NewCustomActionList(owner IComponent) ICustomActionList {
+	r := customActionListAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomActionList(r)
 }
 
-func (m *TCustomActionList) GetEnumeratorForActionListEnumerator() IActionListEnumerator {
-	r1 := customActionListImportAPI().SysCallN(5, m.Instance())
-	return AsActionListEnumerator(r1)
-}
-
-func (m *TCustomActionList) IndexOfName(ActionName string) int32 {
-	r1 := customActionListImportAPI().SysCallN(7, m.Instance(), PascalStr(ActionName))
-	return int32(r1)
-}
-
-func (m *TCustomActionList) IsShortCut(Message *TLMKey) bool {
-	var result0 uintptr
-	r1 := customActionListImportAPI().SysCallN(8, m.Instance(), uintptr(unsafePointer(&result0)))
-	*Message = *(*TLMKey)(getPointer(result0))
-	return GoBool(r1)
-}
-
-func CustomActionListClass() TClass {
-	ret := customActionListImportAPI().SysCallN(3)
-	return TClass(ret)
+func TCustomActionListClass() types.TClass {
+	r := customActionListAPI().SysCallN(9)
+	return types.TClass(r)
 }
 
 var (
-	customActionListImport       *imports.Imports = nil
-	customActionListImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomActionList_ActionByName", 0),
-		/*1*/ imports.NewTable("CustomActionList_ActionCount", 0),
-		/*2*/ imports.NewTable("CustomActionList_Actions", 0),
-		/*3*/ imports.NewTable("CustomActionList_Class", 0),
-		/*4*/ imports.NewTable("CustomActionList_Create", 0),
-		/*5*/ imports.NewTable("CustomActionList_GetEnumeratorForActionListEnumerator", 0),
-		/*6*/ imports.NewTable("CustomActionList_Images", 0),
-		/*7*/ imports.NewTable("CustomActionList_IndexOfName", 0),
-		/*8*/ imports.NewTable("CustomActionList_IsShortCut", 0),
-		/*9*/ imports.NewTable("CustomActionList_State", 0),
-	}
+	customActionListOnce   base.Once
+	customActionListImport *imports.Imports = nil
 )
 
-func customActionListImportAPI() *imports.Imports {
-	if customActionListImport == nil {
-		customActionListImport = NewDefaultImports()
-		customActionListImport.SetImportTable(customActionListImportTables)
-		customActionListImportTables = nil
-	}
+func customActionListAPI() *imports.Imports {
+	customActionListOnce.Do(func() {
+		customActionListImport = api.NewDefaultImports()
+		customActionListImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomActionList_Create", 0), // constructor NewCustomActionList
+			/* 1 */ imports.NewTable("TCustomActionList_ActionByName", 0), // function ActionByName
+			/* 2 */ imports.NewTable("TCustomActionList_GetEnumeratorToActionListEnumerator", 0), // function GetEnumeratorToActionListEnumerator
+			/* 3 */ imports.NewTable("TCustomActionList_IndexOfName", 0), // function IndexOfName
+			/* 4 */ imports.NewTable("TCustomActionList_IsShortCut", 0), // function IsShortCut
+			/* 5 */ imports.NewTable("TCustomActionList_Actions", 0), // property Actions
+			/* 6 */ imports.NewTable("TCustomActionList_ActionCount", 0), // property ActionCount
+			/* 7 */ imports.NewTable("TCustomActionList_Images", 0), // property Images
+			/* 8 */ imports.NewTable("TCustomActionList_State", 0), // property State
+			/* 9 */ imports.NewTable("TCustomActionList_TClass", 0), // function TCustomActionListClass
+		}
+	})
 	return customActionListImport
 }

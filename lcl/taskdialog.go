@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ITaskDialog Parent: ICustomTaskDialog
@@ -19,34 +20,33 @@ type ITaskDialog interface {
 	ICustomTaskDialog
 }
 
-// TTaskDialog Parent: TCustomTaskDialog
 type TTaskDialog struct {
 	TCustomTaskDialog
 }
 
-func NewTaskDialog(AOwner IComponent) ITaskDialog {
-	r1 := askDialogImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsTaskDialog(r1)
+// NewTaskDialog class constructor
+func NewTaskDialog(owner IComponent) ITaskDialog {
+	r := taskDialogAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsTaskDialog(r)
 }
 
-func TaskDialogClass() TClass {
-	ret := askDialogImportAPI().SysCallN(0)
-	return TClass(ret)
+func TTaskDialogClass() types.TClass {
+	r := taskDialogAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	askDialogImport       *imports.Imports = nil
-	askDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("TaskDialog_Class", 0),
-		/*1*/ imports.NewTable("TaskDialog_Create", 0),
-	}
+	taskDialogOnce   base.Once
+	taskDialogImport *imports.Imports = nil
 )
 
-func askDialogImportAPI() *imports.Imports {
-	if askDialogImport == nil {
-		askDialogImport = NewDefaultImports()
-		askDialogImport.SetImportTable(askDialogImportTables)
-		askDialogImportTables = nil
-	}
-	return askDialogImport
+func taskDialogAPI() *imports.Imports {
+	taskDialogOnce.Do(func() {
+		taskDialogImport = api.NewDefaultImports()
+		taskDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TTaskDialog_Create", 0), // constructor NewTaskDialog
+			/* 1 */ imports.NewTable("TTaskDialog_TClass", 0), // function TTaskDialogClass
+		}
+	})
+	return taskDialogImport
 }

@@ -9,314 +9,434 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomGrid Parent: ICustomControl
 type ICustomGrid interface {
 	ICustomControl
-	CursorState() TGridCursorState                              // property
-	SelectedRange(AIndex int32) (resultGridRect TGridRect)      // property
-	SelectedRangeCount() int32                                  // property
-	SortOrder() TSortOrder                                      // property
-	SetSortOrder(AValue TSortOrder)                             // property
-	SortColumn() int32                                          // property
-	CellRect(ACol, ARow int32) (resultRect TRect)               // function
-	CellToGridZone(aCol, aRow int32) TGridZone                  // function
-	ClearCols() bool                                            // function
-	ClearRows() bool                                            // function
-	EditorByStyle(Style TColumnButtonStyle) IWinControl         // function
-	HasMultiSelection() bool                                    // function
-	IsCellVisible(aCol, aRow int32) bool                        // function
-	IsFixedCellVisible(aCol, aRow int32) bool                   // function
-	MouseCoord(X, Y int32) (resultGridCoord TGridCoord)         // function
-	MouseToCell(Mouse *TPoint) (resultPoint TPoint)             // function
-	MouseToLogcell(Mouse *TPoint) (resultPoint TPoint)          // function
-	MouseToGridZone(X, Y int32) TGridZone                       // function
-	AdjustInnerCellRect(ARect *TRect)                           // procedure
-	AutoAdjustColumns()                                         // procedure
-	BeginUpdate()                                               // procedure
-	CheckPosition()                                             // procedure
-	Clear()                                                     // procedure
-	ClearSelections()                                           // procedure
-	EditorKeyDown(Sender IObject, Key *Word, Shift TShiftState) // procedure
-	EditorKeyPress(Sender IObject, Key *Char)                   // procedure
-	EditorUTF8KeyPress(Sender IObject, UTF8Key *TUTF8Char)      // procedure
-	EditorKeyUp(Sender IObject, key *Word, shift TShiftState)   // procedure
-	EditorTextChanged(aCol, aRow int32, aText string)           // procedure
-	EndUpdate(aRefresh bool)                                    // procedure
-	HideSortArrow()                                             // procedure
-	InvalidateCell(aCol, aRow int32)                            // procedure
-	InvalidateCol(ACol int32)                                   // procedure
-	InvalidateRange(aRange *TRect)                              // procedure
-	InvalidateRow(ARow int32)                                   // procedure
-	LoadFromFile(FileName string)                               // procedure
-	LoadFromStream(AStream IStream)                             // procedure
-	MouseToCell1(X, Y int32, OutCol, OutRow *int32)             // procedure
-	SaveToFile(FileName string)                                 // procedure
-	SaveToStream(AStream IStream)                               // procedure
+	CellRect(col int32, row int32) types.TRect                // function
+	CellToGridZone(col int32, row int32) types.TGridZone      // function
+	ClearCols() bool                                          // function
+	ClearRows() bool                                          // function
+	EditorByStyle(style types.TColumnButtonStyle) IWinControl // function
+	HasMultiSelection() bool                                  // function
+	IsCellVisible(col int32, row int32) bool                  // function
+	IsFixedCellVisible(col int32, row int32) bool             // function
+	MouseCoord(X int32, Y int32) types.TGridCoord             // function
+	MouseToCellWithPoint(mouse types.TPoint) types.TPoint     // function
+	MouseToLogcell(mouse types.TPoint) types.TPoint           // function
+	MouseToGridZone(X int32, Y int32) types.TGridZone         // function
+	// AdjustInnerCellRect
+	//  Exposed procs
+	AdjustInnerCellRect(rect *types.TRect)                               // procedure
+	AutoAdjustColumns()                                                  // procedure
+	BeginUpdate()                                                        // procedure
+	CheckPosition()                                                      // procedure
+	Clear()                                                              // procedure
+	ClearSelections()                                                    // procedure
+	EditorKeyDown(sender IObject, key *uint16, shift types.TShiftState)  // procedure
+	EditorKeyPress(sender IObject, key *uint16)                          // procedure
+	EditorUTF8KeyPress(sender IObject, uTF8Key *string)                  // procedure
+	EditorKeyUp(sender IObject, key *uint16, shift types.TShiftState)    // procedure
+	EditorTextChanged(col int32, row int32, text string)                 // procedure
+	EndUpdate(refresh bool)                                              // procedure
+	HideSortArrow()                                                      // procedure
+	InvalidateCell(col int32, row int32)                                 // procedure
+	InvalidateCol(col int32)                                             // procedure
+	InvalidateRange(range_ types.TRect)                                  // procedure
+	InvalidateRow(row int32)                                             // procedure
+	LoadFromFile(fileName string)                                        // procedure
+	LoadFromStream(stream IStream)                                       // procedure
+	MouseToCellWithIntX4(X int32, Y int32, outCol *int32, outRow *int32) // procedure
+	SaveToFile(fileName string)                                          // procedure
+	SaveToStream(stream IStream)                                         // procedure
+	CursorState() types.TGridCursorState                                 // property CursorState Getter
+	SelectedRange(index int32) types.TGridRect                           // property SelectedRange Getter
+	SelectedRangeCount() int32                                           // property SelectedRangeCount Getter
+	SortOrder() types.TSortOrder                                         // property SortOrder Getter
+	SetSortOrder(value types.TSortOrder)                                 // property SortOrder Setter
+	SortColumn() int32                                                   // property SortColumn Getter
 }
 
-// TCustomGrid Parent: TCustomControl
 type TCustomGrid struct {
 	TCustomControl
 }
 
-func NewCustomGrid(AOwner IComponent) ICustomGrid {
-	r1 := customGridImportAPI().SysCallN(11, GetObjectUintptr(AOwner))
-	return AsCustomGrid(r1)
+func (m *TCustomGrid) CellRect(col int32, row int32) (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(1, m.Instance(), uintptr(col), uintptr(row), uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TCustomGrid) CursorState() TGridCursorState {
-	r1 := customGridImportAPI().SysCallN(12, m.Instance())
-	return TGridCursorState(r1)
+func (m *TCustomGrid) CellToGridZone(col int32, row int32) types.TGridZone {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customGridAPI().SysCallN(2, m.Instance(), uintptr(col), uintptr(row))
+	return types.TGridZone(r)
 }
 
-func (m *TCustomGrid) SelectedRange(AIndex int32) (resultGridRect TGridRect) {
-	customGridImportAPI().SysCallN(37, m.Instance(), uintptr(AIndex), uintptr(unsafePointer(&resultGridRect)))
+func (m *TCustomGrid) ClearCols() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customGridAPI().SysCallN(3, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomGrid) ClearRows() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customGridAPI().SysCallN(4, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomGrid) EditorByStyle(style types.TColumnButtonStyle) IWinControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customGridAPI().SysCallN(5, m.Instance(), uintptr(style))
+	return AsWinControl(r)
+}
+
+func (m *TCustomGrid) HasMultiSelection() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customGridAPI().SysCallN(6, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomGrid) IsCellVisible(col int32, row int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customGridAPI().SysCallN(7, m.Instance(), uintptr(col), uintptr(row))
+	return api.GoBool(r)
+}
+
+func (m *TCustomGrid) IsFixedCellVisible(col int32, row int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customGridAPI().SysCallN(8, m.Instance(), uintptr(col), uintptr(row))
+	return api.GoBool(r)
+}
+
+func (m *TCustomGrid) MouseCoord(X int32, Y int32) (result types.TGridCoord) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(9, m.Instance(), uintptr(X), uintptr(Y), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TCustomGrid) MouseToCellWithPoint(mouse types.TPoint) (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(10, m.Instance(), uintptr(base.UnsafePointer(&mouse)), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TCustomGrid) MouseToLogcell(mouse types.TPoint) (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(11, m.Instance(), uintptr(base.UnsafePointer(&mouse)), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TCustomGrid) MouseToGridZone(X int32, Y int32) types.TGridZone {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customGridAPI().SysCallN(12, m.Instance(), uintptr(X), uintptr(Y))
+	return types.TGridZone(r)
+}
+
+func (m *TCustomGrid) AdjustInnerCellRect(rect *types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(13, m.Instance(), uintptr(base.UnsafePointer(rect)))
+}
+
+func (m *TCustomGrid) AutoAdjustColumns() {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(14, m.Instance())
+}
+
+func (m *TCustomGrid) BeginUpdate() {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(15, m.Instance())
+}
+
+func (m *TCustomGrid) CheckPosition() {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(16, m.Instance())
+}
+
+func (m *TCustomGrid) Clear() {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(17, m.Instance())
+}
+
+func (m *TCustomGrid) ClearSelections() {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(18, m.Instance())
+}
+
+func (m *TCustomGrid) EditorKeyDown(sender IObject, key *uint16, shift types.TShiftState) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	customGridAPI().SysCallN(19, m.Instance(), base.GetObjectUintptr(sender), uintptr(base.UnsafePointer(&keyPtr)), uintptr(shift))
+	*key = uint16(keyPtr)
+}
+
+func (m *TCustomGrid) EditorKeyPress(sender IObject, key *uint16) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	customGridAPI().SysCallN(20, m.Instance(), base.GetObjectUintptr(sender), uintptr(base.UnsafePointer(&keyPtr)))
+	*key = uint16(keyPtr)
+}
+
+func (m *TCustomGrid) EditorUTF8KeyPress(sender IObject, uTF8Key *string) {
+	if !m.IsValid() {
+		return
+	}
+	uTF8KeyPtr := api.PasStr(*uTF8Key)
+	customGridAPI().SysCallN(21, m.Instance(), base.GetObjectUintptr(sender), uintptr(base.UnsafePointer(&uTF8KeyPtr)))
+	*uTF8Key = api.GoStr(uTF8KeyPtr)
+}
+
+func (m *TCustomGrid) EditorKeyUp(sender IObject, key *uint16, shift types.TShiftState) {
+	if !m.IsValid() {
+		return
+	}
+	keyPtr := uintptr(*key)
+	customGridAPI().SysCallN(22, m.Instance(), base.GetObjectUintptr(sender), uintptr(base.UnsafePointer(&keyPtr)), uintptr(shift))
+	*key = uint16(keyPtr)
+}
+
+func (m *TCustomGrid) EditorTextChanged(col int32, row int32, text string) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(23, m.Instance(), uintptr(col), uintptr(row), api.PasStr(text))
+}
+
+func (m *TCustomGrid) EndUpdate(refresh bool) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(24, m.Instance(), api.PasBool(refresh))
+}
+
+func (m *TCustomGrid) HideSortArrow() {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(25, m.Instance())
+}
+
+func (m *TCustomGrid) InvalidateCell(col int32, row int32) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(26, m.Instance(), uintptr(col), uintptr(row))
+}
+
+func (m *TCustomGrid) InvalidateCol(col int32) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(27, m.Instance(), uintptr(col))
+}
+
+func (m *TCustomGrid) InvalidateRange(range_ types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(28, m.Instance(), uintptr(base.UnsafePointer(&range_)))
+}
+
+func (m *TCustomGrid) InvalidateRow(row int32) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(29, m.Instance(), uintptr(row))
+}
+
+func (m *TCustomGrid) LoadFromFile(fileName string) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(30, m.Instance(), api.PasStr(fileName))
+}
+
+func (m *TCustomGrid) LoadFromStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(31, m.Instance(), base.GetObjectUintptr(stream))
+}
+
+func (m *TCustomGrid) MouseToCellWithIntX4(X int32, Y int32, outCol *int32, outRow *int32) {
+	if !m.IsValid() {
+		return
+	}
+	var colPtr uintptr
+	var rowPtr uintptr
+	customGridAPI().SysCallN(32, m.Instance(), uintptr(X), uintptr(Y), uintptr(base.UnsafePointer(&colPtr)), uintptr(base.UnsafePointer(&rowPtr)))
+	*outCol = int32(colPtr)
+	*outRow = int32(rowPtr)
+}
+
+func (m *TCustomGrid) SaveToFile(fileName string) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(33, m.Instance(), api.PasStr(fileName))
+}
+
+func (m *TCustomGrid) SaveToStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(34, m.Instance(), base.GetObjectUintptr(stream))
+}
+
+func (m *TCustomGrid) CursorState() types.TGridCursorState {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customGridAPI().SysCallN(35, m.Instance())
+	return types.TGridCursorState(r)
+}
+
+func (m *TCustomGrid) SelectedRange(index int32) (result types.TGridRect) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(36, m.Instance(), uintptr(index), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
 func (m *TCustomGrid) SelectedRangeCount() int32 {
-	r1 := customGridImportAPI().SysCallN(38, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customGridAPI().SysCallN(37, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomGrid) SortOrder() TSortOrder {
-	r1 := customGridImportAPI().SysCallN(40, 0, m.Instance(), 0)
-	return TSortOrder(r1)
+func (m *TCustomGrid) SortOrder() types.TSortOrder {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customGridAPI().SysCallN(38, 0, m.Instance())
+	return types.TSortOrder(r)
 }
 
-func (m *TCustomGrid) SetSortOrder(AValue TSortOrder) {
-	customGridImportAPI().SysCallN(40, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomGrid) SetSortOrder(value types.TSortOrder) {
+	if !m.IsValid() {
+		return
+	}
+	customGridAPI().SysCallN(38, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomGrid) SortColumn() int32 {
-	r1 := customGridImportAPI().SysCallN(39, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customGridAPI().SysCallN(39, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomGrid) CellRect(ACol, ARow int32) (resultRect TRect) {
-	customGridImportAPI().SysCallN(3, m.Instance(), uintptr(ACol), uintptr(ARow), uintptr(unsafePointer(&resultRect)))
-	return
+// NewCustomGrid class constructor
+func NewCustomGrid(owner IComponent) ICustomGrid {
+	r := customGridAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomGrid(r)
 }
 
-func (m *TCustomGrid) CellToGridZone(aCol, aRow int32) TGridZone {
-	r1 := customGridImportAPI().SysCallN(4, m.Instance(), uintptr(aCol), uintptr(aRow))
-	return TGridZone(r1)
-}
-
-func (m *TCustomGrid) ClearCols() bool {
-	r1 := customGridImportAPI().SysCallN(8, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TCustomGrid) ClearRows() bool {
-	r1 := customGridImportAPI().SysCallN(9, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TCustomGrid) EditorByStyle(Style TColumnButtonStyle) IWinControl {
-	r1 := customGridImportAPI().SysCallN(13, m.Instance(), uintptr(Style))
-	return AsWinControl(r1)
-}
-
-func (m *TCustomGrid) HasMultiSelection() bool {
-	r1 := customGridImportAPI().SysCallN(20, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TCustomGrid) IsCellVisible(aCol, aRow int32) bool {
-	r1 := customGridImportAPI().SysCallN(26, m.Instance(), uintptr(aCol), uintptr(aRow))
-	return GoBool(r1)
-}
-
-func (m *TCustomGrid) IsFixedCellVisible(aCol, aRow int32) bool {
-	r1 := customGridImportAPI().SysCallN(27, m.Instance(), uintptr(aCol), uintptr(aRow))
-	return GoBool(r1)
-}
-
-func (m *TCustomGrid) MouseCoord(X, Y int32) (resultGridCoord TGridCoord) {
-	customGridImportAPI().SysCallN(30, m.Instance(), uintptr(X), uintptr(Y), uintptr(unsafePointer(&resultGridCoord)))
-	return
-}
-
-func (m *TCustomGrid) MouseToCell(Mouse *TPoint) (resultPoint TPoint) {
-	customGridImportAPI().SysCallN(31, m.Instance(), uintptr(unsafePointer(Mouse)), uintptr(unsafePointer(&resultPoint)))
-	return
-}
-
-func (m *TCustomGrid) MouseToLogcell(Mouse *TPoint) (resultPoint TPoint) {
-	customGridImportAPI().SysCallN(34, m.Instance(), uintptr(unsafePointer(Mouse)), uintptr(unsafePointer(&resultPoint)))
-	return
-}
-
-func (m *TCustomGrid) MouseToGridZone(X, Y int32) TGridZone {
-	r1 := customGridImportAPI().SysCallN(33, m.Instance(), uintptr(X), uintptr(Y))
-	return TGridZone(r1)
-}
-
-func CustomGridClass() TClass {
-	ret := customGridImportAPI().SysCallN(6)
-	return TClass(ret)
-}
-
-func (m *TCustomGrid) AdjustInnerCellRect(ARect *TRect) {
-	var result0 uintptr
-	customGridImportAPI().SysCallN(0, m.Instance(), uintptr(unsafePointer(&result0)))
-	*ARect = *(*TRect)(getPointer(result0))
-}
-
-func (m *TCustomGrid) AutoAdjustColumns() {
-	customGridImportAPI().SysCallN(1, m.Instance())
-}
-
-func (m *TCustomGrid) BeginUpdate() {
-	customGridImportAPI().SysCallN(2, m.Instance())
-}
-
-func (m *TCustomGrid) CheckPosition() {
-	customGridImportAPI().SysCallN(5, m.Instance())
-}
-
-func (m *TCustomGrid) Clear() {
-	customGridImportAPI().SysCallN(7, m.Instance())
-}
-
-func (m *TCustomGrid) ClearSelections() {
-	customGridImportAPI().SysCallN(10, m.Instance())
-}
-
-func (m *TCustomGrid) EditorKeyDown(Sender IObject, Key *Word, Shift TShiftState) {
-	var result1 uintptr
-	customGridImportAPI().SysCallN(14, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)), uintptr(Shift))
-	*Key = Word(result1)
-}
-
-func (m *TCustomGrid) EditorKeyPress(Sender IObject, Key *Char) {
-	var result1 uintptr
-	customGridImportAPI().SysCallN(15, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)))
-	*Key = Char(result1)
-}
-
-func (m *TCustomGrid) EditorUTF8KeyPress(Sender IObject, UTF8Key *TUTF8Char) {
-	var result1 uintptr
-	customGridImportAPI().SysCallN(18, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)))
-	*UTF8Key = *(*TUTF8Char)(getPointer(result1))
-}
-
-func (m *TCustomGrid) EditorKeyUp(Sender IObject, key *Word, shift TShiftState) {
-	var result1 uintptr
-	customGridImportAPI().SysCallN(16, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)), uintptr(shift))
-	*key = Word(result1)
-}
-
-func (m *TCustomGrid) EditorTextChanged(aCol, aRow int32, aText string) {
-	customGridImportAPI().SysCallN(17, m.Instance(), uintptr(aCol), uintptr(aRow), PascalStr(aText))
-}
-
-func (m *TCustomGrid) EndUpdate(aRefresh bool) {
-	customGridImportAPI().SysCallN(19, m.Instance(), PascalBool(aRefresh))
-}
-
-func (m *TCustomGrid) HideSortArrow() {
-	customGridImportAPI().SysCallN(21, m.Instance())
-}
-
-func (m *TCustomGrid) InvalidateCell(aCol, aRow int32) {
-	customGridImportAPI().SysCallN(22, m.Instance(), uintptr(aCol), uintptr(aRow))
-}
-
-func (m *TCustomGrid) InvalidateCol(ACol int32) {
-	customGridImportAPI().SysCallN(23, m.Instance(), uintptr(ACol))
-}
-
-func (m *TCustomGrid) InvalidateRange(aRange *TRect) {
-	customGridImportAPI().SysCallN(24, m.Instance(), uintptr(unsafePointer(aRange)))
-}
-
-func (m *TCustomGrid) InvalidateRow(ARow int32) {
-	customGridImportAPI().SysCallN(25, m.Instance(), uintptr(ARow))
-}
-
-func (m *TCustomGrid) LoadFromFile(FileName string) {
-	customGridImportAPI().SysCallN(28, m.Instance(), PascalStr(FileName))
-}
-
-func (m *TCustomGrid) LoadFromStream(AStream IStream) {
-	customGridImportAPI().SysCallN(29, m.Instance(), GetObjectUintptr(AStream))
-}
-
-func (m *TCustomGrid) MouseToCell1(X, Y int32, OutCol, OutRow *int32) {
-	var result1 uintptr
-	var result2 uintptr
-	customGridImportAPI().SysCallN(32, m.Instance(), uintptr(X), uintptr(Y), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
-	*OutCol = int32(result1)
-	*OutRow = int32(result2)
-}
-
-func (m *TCustomGrid) SaveToFile(FileName string) {
-	customGridImportAPI().SysCallN(35, m.Instance(), PascalStr(FileName))
-}
-
-func (m *TCustomGrid) SaveToStream(AStream IStream) {
-	customGridImportAPI().SysCallN(36, m.Instance(), GetObjectUintptr(AStream))
+func TCustomGridClass() types.TClass {
+	r := customGridAPI().SysCallN(40)
+	return types.TClass(r)
 }
 
 var (
-	customGridImport       *imports.Imports = nil
-	customGridImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomGrid_AdjustInnerCellRect", 0),
-		/*1*/ imports.NewTable("CustomGrid_AutoAdjustColumns", 0),
-		/*2*/ imports.NewTable("CustomGrid_BeginUpdate", 0),
-		/*3*/ imports.NewTable("CustomGrid_CellRect", 0),
-		/*4*/ imports.NewTable("CustomGrid_CellToGridZone", 0),
-		/*5*/ imports.NewTable("CustomGrid_CheckPosition", 0),
-		/*6*/ imports.NewTable("CustomGrid_Class", 0),
-		/*7*/ imports.NewTable("CustomGrid_Clear", 0),
-		/*8*/ imports.NewTable("CustomGrid_ClearCols", 0),
-		/*9*/ imports.NewTable("CustomGrid_ClearRows", 0),
-		/*10*/ imports.NewTable("CustomGrid_ClearSelections", 0),
-		/*11*/ imports.NewTable("CustomGrid_Create", 0),
-		/*12*/ imports.NewTable("CustomGrid_CursorState", 0),
-		/*13*/ imports.NewTable("CustomGrid_EditorByStyle", 0),
-		/*14*/ imports.NewTable("CustomGrid_EditorKeyDown", 0),
-		/*15*/ imports.NewTable("CustomGrid_EditorKeyPress", 0),
-		/*16*/ imports.NewTable("CustomGrid_EditorKeyUp", 0),
-		/*17*/ imports.NewTable("CustomGrid_EditorTextChanged", 0),
-		/*18*/ imports.NewTable("CustomGrid_EditorUTF8KeyPress", 0),
-		/*19*/ imports.NewTable("CustomGrid_EndUpdate", 0),
-		/*20*/ imports.NewTable("CustomGrid_HasMultiSelection", 0),
-		/*21*/ imports.NewTable("CustomGrid_HideSortArrow", 0),
-		/*22*/ imports.NewTable("CustomGrid_InvalidateCell", 0),
-		/*23*/ imports.NewTable("CustomGrid_InvalidateCol", 0),
-		/*24*/ imports.NewTable("CustomGrid_InvalidateRange", 0),
-		/*25*/ imports.NewTable("CustomGrid_InvalidateRow", 0),
-		/*26*/ imports.NewTable("CustomGrid_IsCellVisible", 0),
-		/*27*/ imports.NewTable("CustomGrid_IsFixedCellVisible", 0),
-		/*28*/ imports.NewTable("CustomGrid_LoadFromFile", 0),
-		/*29*/ imports.NewTable("CustomGrid_LoadFromStream", 0),
-		/*30*/ imports.NewTable("CustomGrid_MouseCoord", 0),
-		/*31*/ imports.NewTable("CustomGrid_MouseToCell", 0),
-		/*32*/ imports.NewTable("CustomGrid_MouseToCell1", 0),
-		/*33*/ imports.NewTable("CustomGrid_MouseToGridZone", 0),
-		/*34*/ imports.NewTable("CustomGrid_MouseToLogcell", 0),
-		/*35*/ imports.NewTable("CustomGrid_SaveToFile", 0),
-		/*36*/ imports.NewTable("CustomGrid_SaveToStream", 0),
-		/*37*/ imports.NewTable("CustomGrid_SelectedRange", 0),
-		/*38*/ imports.NewTable("CustomGrid_SelectedRangeCount", 0),
-		/*39*/ imports.NewTable("CustomGrid_SortColumn", 0),
-		/*40*/ imports.NewTable("CustomGrid_SortOrder", 0),
-	}
+	customGridOnce   base.Once
+	customGridImport *imports.Imports = nil
 )
 
-func customGridImportAPI() *imports.Imports {
-	if customGridImport == nil {
-		customGridImport = NewDefaultImports()
-		customGridImport.SetImportTable(customGridImportTables)
-		customGridImportTables = nil
-	}
+func customGridAPI() *imports.Imports {
+	customGridOnce.Do(func() {
+		customGridImport = api.NewDefaultImports()
+		customGridImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomGrid_Create", 0), // constructor NewCustomGrid
+			/* 1 */ imports.NewTable("TCustomGrid_CellRect", 0), // function CellRect
+			/* 2 */ imports.NewTable("TCustomGrid_CellToGridZone", 0), // function CellToGridZone
+			/* 3 */ imports.NewTable("TCustomGrid_ClearCols", 0), // function ClearCols
+			/* 4 */ imports.NewTable("TCustomGrid_ClearRows", 0), // function ClearRows
+			/* 5 */ imports.NewTable("TCustomGrid_EditorByStyle", 0), // function EditorByStyle
+			/* 6 */ imports.NewTable("TCustomGrid_HasMultiSelection", 0), // function HasMultiSelection
+			/* 7 */ imports.NewTable("TCustomGrid_IsCellVisible", 0), // function IsCellVisible
+			/* 8 */ imports.NewTable("TCustomGrid_IsFixedCellVisible", 0), // function IsFixedCellVisible
+			/* 9 */ imports.NewTable("TCustomGrid_MouseCoord", 0), // function MouseCoord
+			/* 10 */ imports.NewTable("TCustomGrid_MouseToCellWithPoint", 0), // function MouseToCellWithPoint
+			/* 11 */ imports.NewTable("TCustomGrid_MouseToLogcell", 0), // function MouseToLogcell
+			/* 12 */ imports.NewTable("TCustomGrid_MouseToGridZone", 0), // function MouseToGridZone
+			/* 13 */ imports.NewTable("TCustomGrid_AdjustInnerCellRect", 0), // procedure AdjustInnerCellRect
+			/* 14 */ imports.NewTable("TCustomGrid_AutoAdjustColumns", 0), // procedure AutoAdjustColumns
+			/* 15 */ imports.NewTable("TCustomGrid_BeginUpdate", 0), // procedure BeginUpdate
+			/* 16 */ imports.NewTable("TCustomGrid_CheckPosition", 0), // procedure CheckPosition
+			/* 17 */ imports.NewTable("TCustomGrid_Clear", 0), // procedure Clear
+			/* 18 */ imports.NewTable("TCustomGrid_ClearSelections", 0), // procedure ClearSelections
+			/* 19 */ imports.NewTable("TCustomGrid_EditorKeyDown", 0), // procedure EditorKeyDown
+			/* 20 */ imports.NewTable("TCustomGrid_EditorKeyPress", 0), // procedure EditorKeyPress
+			/* 21 */ imports.NewTable("TCustomGrid_EditorUTF8KeyPress", 0), // procedure EditorUTF8KeyPress
+			/* 22 */ imports.NewTable("TCustomGrid_EditorKeyUp", 0), // procedure EditorKeyUp
+			/* 23 */ imports.NewTable("TCustomGrid_EditorTextChanged", 0), // procedure EditorTextChanged
+			/* 24 */ imports.NewTable("TCustomGrid_EndUpdate", 0), // procedure EndUpdate
+			/* 25 */ imports.NewTable("TCustomGrid_HideSortArrow", 0), // procedure HideSortArrow
+			/* 26 */ imports.NewTable("TCustomGrid_InvalidateCell", 0), // procedure InvalidateCell
+			/* 27 */ imports.NewTable("TCustomGrid_InvalidateCol", 0), // procedure InvalidateCol
+			/* 28 */ imports.NewTable("TCustomGrid_InvalidateRange", 0), // procedure InvalidateRange
+			/* 29 */ imports.NewTable("TCustomGrid_InvalidateRow", 0), // procedure InvalidateRow
+			/* 30 */ imports.NewTable("TCustomGrid_LoadFromFile", 0), // procedure LoadFromFile
+			/* 31 */ imports.NewTable("TCustomGrid_LoadFromStream", 0), // procedure LoadFromStream
+			/* 32 */ imports.NewTable("TCustomGrid_MouseToCellWithIntX4", 0), // procedure MouseToCellWithIntX4
+			/* 33 */ imports.NewTable("TCustomGrid_SaveToFile", 0), // procedure SaveToFile
+			/* 34 */ imports.NewTable("TCustomGrid_SaveToStream", 0), // procedure SaveToStream
+			/* 35 */ imports.NewTable("TCustomGrid_CursorState", 0), // property CursorState
+			/* 36 */ imports.NewTable("TCustomGrid_SelectedRange", 0), // property SelectedRange
+			/* 37 */ imports.NewTable("TCustomGrid_SelectedRangeCount", 0), // property SelectedRangeCount
+			/* 38 */ imports.NewTable("TCustomGrid_SortOrder", 0), // property SortOrder
+			/* 39 */ imports.NewTable("TCustomGrid_SortColumn", 0), // property SortColumn
+			/* 40 */ imports.NewTable("TCustomGrid_TClass", 0), // function TCustomGridClass
+		}
+	})
 	return customGridImport
 }

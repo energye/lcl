@@ -9,84 +9,94 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IDockTree Parent: IDockManager
 type IDockTree interface {
 	IDockManager
-	DockZoneClass() TDockZoneClass                  // property
-	DockSite() IWinControl                          // property
-	SetDockSite(AValue IWinControl)                 // property
-	RootZone() IDockZone                            // property
-	AdjustDockRect(AControl IControl, ARect *TRect) // procedure
-	DumpLayout(FileName string)                     // procedure
+	AdjustDockRect(control IControl, rect *types.TRect) // procedure
+	DumpLayout(fileName string)                         // procedure
+	DockZoneClass() types.TDockZoneClass                // property DockZoneClass Getter
+	DockSite() IWinControl                              // property DockSite Getter
+	SetDockSite(value IWinControl)                      // property DockSite Setter
+	RootZone() IDockZone                                // property RootZone Getter
 }
 
-// TDockTree Parent: TDockManager
 type TDockTree struct {
 	TDockManager
 }
 
-func NewDockTree(TheDockSite IWinControl) IDockTree {
-	r1 := dockTreeImportAPI().SysCallN(2, GetObjectUintptr(TheDockSite))
-	return AsDockTree(r1)
+func (m *TDockTree) AdjustDockRect(control IControl, rect *types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	dockTreeAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(control), uintptr(base.UnsafePointer(rect)))
 }
 
-func (m *TDockTree) DockZoneClass() TDockZoneClass {
-	r1 := dockTreeImportAPI().SysCallN(4, m.Instance())
-	return TDockZoneClass(r1)
+func (m *TDockTree) DumpLayout(fileName string) {
+	if !m.IsValid() {
+		return
+	}
+	dockTreeAPI().SysCallN(2, m.Instance(), api.PasStr(fileName))
+}
+
+func (m *TDockTree) DockZoneClass() types.TDockZoneClass {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dockTreeAPI().SysCallN(3, m.Instance())
+	return types.TDockZoneClass(r)
 }
 
 func (m *TDockTree) DockSite() IWinControl {
-	r1 := dockTreeImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return AsWinControl(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := dockTreeAPI().SysCallN(4, 0, m.Instance())
+	return AsWinControl(r)
 }
 
-func (m *TDockTree) SetDockSite(AValue IWinControl) {
-	dockTreeImportAPI().SysCallN(3, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TDockTree) SetDockSite(value IWinControl) {
+	if !m.IsValid() {
+		return
+	}
+	dockTreeAPI().SysCallN(4, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TDockTree) RootZone() IDockZone {
-	r1 := dockTreeImportAPI().SysCallN(6, m.Instance())
-	return AsDockZone(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := dockTreeAPI().SysCallN(5, m.Instance())
+	return AsDockZone(r)
 }
 
-func DockTreeClass() TClass {
-	ret := dockTreeImportAPI().SysCallN(1)
-	return TClass(ret)
-}
-
-func (m *TDockTree) AdjustDockRect(AControl IControl, ARect *TRect) {
-	var result1 uintptr
-	dockTreeImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(AControl), uintptr(unsafePointer(&result1)))
-	*ARect = *(*TRect)(getPointer(result1))
-}
-
-func (m *TDockTree) DumpLayout(FileName string) {
-	dockTreeImportAPI().SysCallN(5, m.Instance(), PascalStr(FileName))
+// NewDockTree class constructor
+func NewDockTree(theDockSite IWinControl) IDockTree {
+	r := dockTreeAPI().SysCallN(0, base.GetObjectUintptr(theDockSite))
+	return AsDockTree(r)
 }
 
 var (
-	dockTreeImport       *imports.Imports = nil
-	dockTreeImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("DockTree_AdjustDockRect", 0),
-		/*1*/ imports.NewTable("DockTree_Class", 0),
-		/*2*/ imports.NewTable("DockTree_Create", 0),
-		/*3*/ imports.NewTable("DockTree_DockSite", 0),
-		/*4*/ imports.NewTable("DockTree_DockZoneClass", 0),
-		/*5*/ imports.NewTable("DockTree_DumpLayout", 0),
-		/*6*/ imports.NewTable("DockTree_RootZone", 0),
-	}
+	dockTreeOnce   base.Once
+	dockTreeImport *imports.Imports = nil
 )
 
-func dockTreeImportAPI() *imports.Imports {
-	if dockTreeImport == nil {
-		dockTreeImport = NewDefaultImports()
-		dockTreeImport.SetImportTable(dockTreeImportTables)
-		dockTreeImportTables = nil
-	}
+func dockTreeAPI() *imports.Imports {
+	dockTreeOnce.Do(func() {
+		dockTreeImport = api.NewDefaultImports()
+		dockTreeImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TDockTree_Create", 0), // constructor NewDockTree
+			/* 1 */ imports.NewTable("TDockTree_AdjustDockRect", 0), // procedure AdjustDockRect
+			/* 2 */ imports.NewTable("TDockTree_DumpLayout", 0), // procedure DumpLayout
+			/* 3 */ imports.NewTable("TDockTree_DockZoneClass", 0), // property DockZoneClass
+			/* 4 */ imports.NewTable("TDockTree_DockSite", 0), // property DockSite
+			/* 5 */ imports.NewTable("TDockTree_RootZone", 0), // property RootZone
+		}
+	})
 	return dockTreeImport
 }

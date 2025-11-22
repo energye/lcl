@@ -9,443 +9,517 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IStatusBar Parent: IWinControl
 type IStatusBar interface {
 	IWinControl
-	Canvas() ICanvas                                          // property
-	AutoHint() bool                                           // property
-	SetAutoHint(AValue bool)                                  // property
-	DragCursor() TCursor                                      // property
-	SetDragCursor(AValue TCursor)                             // property
-	DragKind() TDragKind                                      // property
-	SetDragKind(AValue TDragKind)                             // property
-	DragMode() TDragMode                                      // property
-	SetDragMode(AValue TDragMode)                             // property
-	Panels() IStatusPanels                                    // property
-	SetPanels(AValue IStatusPanels)                           // property
-	ParentColor() bool                                        // property
-	SetParentColor(AValue bool)                               // property
-	ParentFont() bool                                         // property
-	SetParentFont(AValue bool)                                // property
-	ParentShowHint() bool                                     // property
-	SetParentShowHint(AValue bool)                            // property
-	SimpleText() string                                       // property
-	SetSimpleText(AValue string)                              // property
-	SimplePanel() bool                                        // property
-	SetSimplePanel(AValue bool)                               // property
-	SizeGrip() bool                                           // property
-	SetSizeGrip(AValue bool)                                  // property
-	UseSystemFont() bool                                      // property
-	SetUseSystemFont(AValue bool)                             // property
-	GetPanelIndexAt(X, Y int32) int32                         // function
-	SizeGripEnabled() bool                                    // function
-	UpdatingStatusBar() bool                                  // function
-	InvalidatePanel(PanelIndex int32, PanelParts TPanelParts) // procedure
-	BeginUpdate()                                             // procedure
-	EndUpdate()                                               // procedure
-	SetOnContextPopup(fn TContextPopupEvent)                  // property event
-	SetOnCreatePanelClass(fn TSBCreatePanelClassEvent)        // property event
-	SetOnDblClick(fn TNotifyEvent)                            // property event
-	SetOnDragDrop(fn TDragDropEvent)                          // property event
-	SetOnDragOver(fn TDragOverEvent)                          // property event
-	SetOnDrawPanel(fn TDrawPanelEvent)                        // property event
-	SetOnEndDock(fn TEndDragEvent)                            // property event
-	SetOnEndDrag(fn TEndDragEvent)                            // property event
-	SetOnHint(fn TNotifyEvent)                                // property event
-	SetOnMouseDown(fn TMouseEvent)                            // property event
-	SetOnMouseEnter(fn TNotifyEvent)                          // property event
-	SetOnMouseLeave(fn TNotifyEvent)                          // property event
-	SetOnMouseMove(fn TMouseMoveEvent)                        // property event
-	SetOnMouseUp(fn TMouseEvent)                              // property event
-	SetOnMouseWheel(fn TMouseWheelEvent)                      // property event
-	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent)            // property event
-	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)              // property event
-	SetOnStartDock(fn TStartDockEvent)                        // property event
-	SetOnStartDrag(fn TStartDragEvent)                        // property event
+	GetPanelIndexAt(X int32, Y int32) int32                         // function
+	SizeGripEnabled() bool                                          // function
+	UpdatingStatusBar() bool                                        // function
+	InvalidatePanel(panelIndex int32, panelParts types.TPanelParts) // procedure
+	BeginUpdate()                                                   // procedure
+	EndUpdate()                                                     // procedure
+	Canvas() ICanvas                                                // property Canvas Getter
+	AutoHint() bool                                                 // property AutoHint Getter
+	SetAutoHint(value bool)                                         // property AutoHint Setter
+	DragCursor() types.TCursor                                      // property DragCursor Getter
+	SetDragCursor(value types.TCursor)                              // property DragCursor Setter
+	DragKind() types.TDragKind                                      // property DragKind Getter
+	SetDragKind(value types.TDragKind)                              // property DragKind Setter
+	DragMode() types.TDragMode                                      // property DragMode Getter
+	SetDragMode(value types.TDragMode)                              // property DragMode Setter
+	Panels() IStatusPanels                                          // property Panels Getter
+	SetPanels(value IStatusPanels)                                  // property Panels Setter
+	ParentColor() bool                                              // property ParentColor Getter
+	SetParentColor(value bool)                                      // property ParentColor Setter
+	ParentFont() bool                                               // property ParentFont Getter
+	SetParentFont(value bool)                                       // property ParentFont Setter
+	ParentShowHint() bool                                           // property ParentShowHint Getter
+	SetParentShowHint(value bool)                                   // property ParentShowHint Setter
+	SimpleText() string                                             // property SimpleText Getter
+	SetSimpleText(value string)                                     // property SimpleText Setter
+	SimplePanel() bool                                              // property SimplePanel Getter
+	SetSimplePanel(value bool)                                      // property SimplePanel Setter
+	SizeGrip() bool                                                 // property SizeGrip Getter
+	SetSizeGrip(value bool)                                         // property SizeGrip Setter
+	UseSystemFont() bool                                            // property UseSystemFont Getter
+	SetUseSystemFont(value bool)                                    // property UseSystemFont Setter
+	SetOnContextPopup(fn TContextPopupEvent)                        // property event
+	SetOnCreatePanelClass(fn TSBCreatePanelClassEvent)              // property event
+	SetOnDblClick(fn TNotifyEvent)                                  // property event
+	SetOnDragDrop(fn TDragDropEvent)                                // property event
+	SetOnDragOver(fn TDragOverEvent)                                // property event
+	SetOnDrawPanel(fn TDrawPanelEvent)                              // property event
+	SetOnEndDock(fn TEndDragEvent)                                  // property event
+	SetOnEndDrag(fn TEndDragEvent)                                  // property event
+	SetOnHint(fn TNotifyEvent)                                      // property event
+	SetOnMouseDown(fn TMouseEvent)                                  // property event
+	SetOnMouseEnter(fn TNotifyEvent)                                // property event
+	SetOnMouseLeave(fn TNotifyEvent)                                // property event
+	SetOnMouseMove(fn TMouseMoveEvent)                              // property event
+	SetOnMouseUp(fn TMouseEvent)                                    // property event
+	SetOnMouseWheel(fn TMouseWheelEvent)                            // property event
+	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent)                  // property event
+	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)                    // property event
+	SetOnStartDock(fn TStartDockEvent)                              // property event
+	SetOnStartDrag(fn TStartDragEvent)                              // property event
 }
 
-// TStatusBar Parent: TWinControl
 type TStatusBar struct {
 	TWinControl
-	contextPopupPtr     uintptr
-	createPanelClassPtr uintptr
-	dblClickPtr         uintptr
-	dragDropPtr         uintptr
-	dragOverPtr         uintptr
-	drawPanelPtr        uintptr
-	endDockPtr          uintptr
-	endDragPtr          uintptr
-	hintPtr             uintptr
-	mouseDownPtr        uintptr
-	mouseEnterPtr       uintptr
-	mouseLeavePtr       uintptr
-	mouseMovePtr        uintptr
-	mouseUpPtr          uintptr
-	mouseWheelPtr       uintptr
-	mouseWheelDownPtr   uintptr
-	mouseWheelUpPtr     uintptr
-	startDockPtr        uintptr
-	startDragPtr        uintptr
 }
 
-func NewStatusBar(TheOwner IComponent) IStatusBar {
-	r1 := statusBarImportAPI().SysCallN(4, GetObjectUintptr(TheOwner))
-	return AsStatusBar(r1)
-}
-
-func (m *TStatusBar) Canvas() ICanvas {
-	r1 := statusBarImportAPI().SysCallN(2, m.Instance())
-	return AsCanvas(r1)
-}
-
-func (m *TStatusBar) AutoHint() bool {
-	r1 := statusBarImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStatusBar) SetAutoHint(AValue bool) {
-	statusBarImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStatusBar) DragCursor() TCursor {
-	r1 := statusBarImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TCursor(r1)
-}
-
-func (m *TStatusBar) SetDragCursor(AValue TCursor) {
-	statusBarImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStatusBar) DragKind() TDragKind {
-	r1 := statusBarImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return TDragKind(r1)
-}
-
-func (m *TStatusBar) SetDragKind(AValue TDragKind) {
-	statusBarImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStatusBar) DragMode() TDragMode {
-	r1 := statusBarImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TStatusBar) SetDragMode(AValue TDragMode) {
-	statusBarImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStatusBar) Panels() IStatusPanels {
-	r1 := statusBarImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return AsStatusPanels(r1)
-}
-
-func (m *TStatusBar) SetPanels(AValue IStatusPanels) {
-	statusBarImportAPI().SysCallN(11, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TStatusBar) ParentColor() bool {
-	r1 := statusBarImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStatusBar) SetParentColor(AValue bool) {
-	statusBarImportAPI().SysCallN(12, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStatusBar) ParentFont() bool {
-	r1 := statusBarImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStatusBar) SetParentFont(AValue bool) {
-	statusBarImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStatusBar) ParentShowHint() bool {
-	r1 := statusBarImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStatusBar) SetParentShowHint(AValue bool) {
-	statusBarImportAPI().SysCallN(14, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStatusBar) SimpleText() string {
-	r1 := statusBarImportAPI().SysCallN(35, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TStatusBar) SetSimpleText(AValue string) {
-	statusBarImportAPI().SysCallN(35, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TStatusBar) SimplePanel() bool {
-	r1 := statusBarImportAPI().SysCallN(34, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStatusBar) SetSimplePanel(AValue bool) {
-	statusBarImportAPI().SysCallN(34, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStatusBar) SizeGrip() bool {
-	r1 := statusBarImportAPI().SysCallN(36, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStatusBar) SetSizeGrip(AValue bool) {
-	statusBarImportAPI().SysCallN(36, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStatusBar) UseSystemFont() bool {
-	r1 := statusBarImportAPI().SysCallN(39, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStatusBar) SetUseSystemFont(AValue bool) {
-	statusBarImportAPI().SysCallN(39, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStatusBar) GetPanelIndexAt(X, Y int32) int32 {
-	r1 := statusBarImportAPI().SysCallN(9, m.Instance(), uintptr(X), uintptr(Y))
-	return int32(r1)
+func (m *TStatusBar) GetPanelIndexAt(X int32, Y int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := statusBarAPI().SysCallN(1, m.Instance(), uintptr(X), uintptr(Y))
+	return int32(r)
 }
 
 func (m *TStatusBar) SizeGripEnabled() bool {
-	r1 := statusBarImportAPI().SysCallN(37, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := statusBarAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TStatusBar) UpdatingStatusBar() bool {
-	r1 := statusBarImportAPI().SysCallN(38, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := statusBarAPI().SysCallN(3, m.Instance())
+	return api.GoBool(r)
 }
 
-func StatusBarClass() TClass {
-	ret := statusBarImportAPI().SysCallN(3)
-	return TClass(ret)
-}
-
-func (m *TStatusBar) InvalidatePanel(PanelIndex int32, PanelParts TPanelParts) {
-	statusBarImportAPI().SysCallN(10, m.Instance(), uintptr(PanelIndex), uintptr(PanelParts))
+func (m *TStatusBar) InvalidatePanel(panelIndex int32, panelParts types.TPanelParts) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(4, m.Instance(), uintptr(panelIndex), uintptr(panelParts))
 }
 
 func (m *TStatusBar) BeginUpdate() {
-	statusBarImportAPI().SysCallN(1, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(5, m.Instance())
 }
 
 func (m *TStatusBar) EndUpdate() {
-	statusBarImportAPI().SysCallN(8, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(6, m.Instance())
+}
+
+func (m *TStatusBar) Canvas() ICanvas {
+	if !m.IsValid() {
+		return nil
+	}
+	r := statusBarAPI().SysCallN(7, m.Instance())
+	return AsCanvas(r)
+}
+
+func (m *TStatusBar) AutoHint() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := statusBarAPI().SysCallN(8, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStatusBar) SetAutoHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(8, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStatusBar) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := statusBarAPI().SysCallN(9, 0, m.Instance())
+	return types.TCursor(r)
+}
+
+func (m *TStatusBar) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStatusBar) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := statusBarAPI().SysCallN(10, 0, m.Instance())
+	return types.TDragKind(r)
+}
+
+func (m *TStatusBar) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStatusBar) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := statusBarAPI().SysCallN(11, 0, m.Instance())
+	return types.TDragMode(r)
+}
+
+func (m *TStatusBar) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStatusBar) Panels() IStatusPanels {
+	if !m.IsValid() {
+		return nil
+	}
+	r := statusBarAPI().SysCallN(12, 0, m.Instance())
+	return AsStatusPanels(r)
+}
+
+func (m *TStatusBar) SetPanels(value IStatusPanels) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(12, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TStatusBar) ParentColor() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := statusBarAPI().SysCallN(13, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStatusBar) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(13, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStatusBar) ParentFont() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := statusBarAPI().SysCallN(14, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStatusBar) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(14, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStatusBar) ParentShowHint() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := statusBarAPI().SysCallN(15, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStatusBar) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(15, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStatusBar) SimpleText() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := statusBarAPI().SysCallN(16, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TStatusBar) SetSimpleText(value string) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(16, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TStatusBar) SimplePanel() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := statusBarAPI().SysCallN(17, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStatusBar) SetSimplePanel(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(17, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStatusBar) SizeGrip() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := statusBarAPI().SysCallN(18, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStatusBar) SetSizeGrip(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(18, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStatusBar) UseSystemFont() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := statusBarAPI().SysCallN(19, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStatusBar) SetUseSystemFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	statusBarAPI().SysCallN(19, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TStatusBar) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(15, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 20, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnCreatePanelClass(fn TSBCreatePanelClassEvent) {
-	if m.createPanelClassPtr != 0 {
-		RemoveEventElement(m.createPanelClassPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.createPanelClassPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(16, m.Instance(), m.createPanelClassPtr)
+	cb := makeTSBCreatePanelClassEvent(fn)
+	base.SetEvent(m, 21, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(17, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 22, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(18, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 23, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(19, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 24, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnDrawPanel(fn TDrawPanelEvent) {
-	if m.drawPanelPtr != 0 {
-		RemoveEventElement(m.drawPanelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.drawPanelPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(20, m.Instance(), m.drawPanelPtr)
+	cb := makeTDrawPanelEvent(fn)
+	base.SetEvent(m, 25, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnEndDock(fn TEndDragEvent) {
-	if m.endDockPtr != 0 {
-		RemoveEventElement(m.endDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDockPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(21, m.Instance(), m.endDockPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 26, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(22, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 27, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnHint(fn TNotifyEvent) {
-	if m.hintPtr != 0 {
-		RemoveEventElement(m.hintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.hintPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(23, m.Instance(), m.hintPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 28, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(24, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 29, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(25, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 30, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(26, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 31, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(27, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 32, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(28, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 33, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(29, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 34, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(30, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 35, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(31, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 36, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnStartDock(fn TStartDockEvent) {
-	if m.startDockPtr != 0 {
-		RemoveEventElement(m.startDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDockPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(32, m.Instance(), m.startDockPtr)
+	cb := makeTStartDockEvent(fn)
+	base.SetEvent(m, 37, statusBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStatusBar) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	statusBarImportAPI().SysCallN(33, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 38, statusBarAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewStatusBar class constructor
+func NewStatusBar(theOwner IComponent) IStatusBar {
+	r := statusBarAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsStatusBar(r)
+}
+
+func TStatusBarClass() types.TClass {
+	r := statusBarAPI().SysCallN(39)
+	return types.TClass(r)
 }
 
 var (
-	statusBarImport       *imports.Imports = nil
-	statusBarImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("StatusBar_AutoHint", 0),
-		/*1*/ imports.NewTable("StatusBar_BeginUpdate", 0),
-		/*2*/ imports.NewTable("StatusBar_Canvas", 0),
-		/*3*/ imports.NewTable("StatusBar_Class", 0),
-		/*4*/ imports.NewTable("StatusBar_Create", 0),
-		/*5*/ imports.NewTable("StatusBar_DragCursor", 0),
-		/*6*/ imports.NewTable("StatusBar_DragKind", 0),
-		/*7*/ imports.NewTable("StatusBar_DragMode", 0),
-		/*8*/ imports.NewTable("StatusBar_EndUpdate", 0),
-		/*9*/ imports.NewTable("StatusBar_GetPanelIndexAt", 0),
-		/*10*/ imports.NewTable("StatusBar_InvalidatePanel", 0),
-		/*11*/ imports.NewTable("StatusBar_Panels", 0),
-		/*12*/ imports.NewTable("StatusBar_ParentColor", 0),
-		/*13*/ imports.NewTable("StatusBar_ParentFont", 0),
-		/*14*/ imports.NewTable("StatusBar_ParentShowHint", 0),
-		/*15*/ imports.NewTable("StatusBar_SetOnContextPopup", 0),
-		/*16*/ imports.NewTable("StatusBar_SetOnCreatePanelClass", 0),
-		/*17*/ imports.NewTable("StatusBar_SetOnDblClick", 0),
-		/*18*/ imports.NewTable("StatusBar_SetOnDragDrop", 0),
-		/*19*/ imports.NewTable("StatusBar_SetOnDragOver", 0),
-		/*20*/ imports.NewTable("StatusBar_SetOnDrawPanel", 0),
-		/*21*/ imports.NewTable("StatusBar_SetOnEndDock", 0),
-		/*22*/ imports.NewTable("StatusBar_SetOnEndDrag", 0),
-		/*23*/ imports.NewTable("StatusBar_SetOnHint", 0),
-		/*24*/ imports.NewTable("StatusBar_SetOnMouseDown", 0),
-		/*25*/ imports.NewTable("StatusBar_SetOnMouseEnter", 0),
-		/*26*/ imports.NewTable("StatusBar_SetOnMouseLeave", 0),
-		/*27*/ imports.NewTable("StatusBar_SetOnMouseMove", 0),
-		/*28*/ imports.NewTable("StatusBar_SetOnMouseUp", 0),
-		/*29*/ imports.NewTable("StatusBar_SetOnMouseWheel", 0),
-		/*30*/ imports.NewTable("StatusBar_SetOnMouseWheelDown", 0),
-		/*31*/ imports.NewTable("StatusBar_SetOnMouseWheelUp", 0),
-		/*32*/ imports.NewTable("StatusBar_SetOnStartDock", 0),
-		/*33*/ imports.NewTable("StatusBar_SetOnStartDrag", 0),
-		/*34*/ imports.NewTable("StatusBar_SimplePanel", 0),
-		/*35*/ imports.NewTable("StatusBar_SimpleText", 0),
-		/*36*/ imports.NewTable("StatusBar_SizeGrip", 0),
-		/*37*/ imports.NewTable("StatusBar_SizeGripEnabled", 0),
-		/*38*/ imports.NewTable("StatusBar_UpdatingStatusBar", 0),
-		/*39*/ imports.NewTable("StatusBar_UseSystemFont", 0),
-	}
+	statusBarOnce   base.Once
+	statusBarImport *imports.Imports = nil
 )
 
-func statusBarImportAPI() *imports.Imports {
-	if statusBarImport == nil {
-		statusBarImport = NewDefaultImports()
-		statusBarImport.SetImportTable(statusBarImportTables)
-		statusBarImportTables = nil
-	}
+func statusBarAPI() *imports.Imports {
+	statusBarOnce.Do(func() {
+		statusBarImport = api.NewDefaultImports()
+		statusBarImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TStatusBar_Create", 0), // constructor NewStatusBar
+			/* 1 */ imports.NewTable("TStatusBar_GetPanelIndexAt", 0), // function GetPanelIndexAt
+			/* 2 */ imports.NewTable("TStatusBar_SizeGripEnabled", 0), // function SizeGripEnabled
+			/* 3 */ imports.NewTable("TStatusBar_UpdatingStatusBar", 0), // function UpdatingStatusBar
+			/* 4 */ imports.NewTable("TStatusBar_InvalidatePanel", 0), // procedure InvalidatePanel
+			/* 5 */ imports.NewTable("TStatusBar_BeginUpdate", 0), // procedure BeginUpdate
+			/* 6 */ imports.NewTable("TStatusBar_EndUpdate", 0), // procedure EndUpdate
+			/* 7 */ imports.NewTable("TStatusBar_Canvas", 0), // property Canvas
+			/* 8 */ imports.NewTable("TStatusBar_AutoHint", 0), // property AutoHint
+			/* 9 */ imports.NewTable("TStatusBar_DragCursor", 0), // property DragCursor
+			/* 10 */ imports.NewTable("TStatusBar_DragKind", 0), // property DragKind
+			/* 11 */ imports.NewTable("TStatusBar_DragMode", 0), // property DragMode
+			/* 12 */ imports.NewTable("TStatusBar_Panels", 0), // property Panels
+			/* 13 */ imports.NewTable("TStatusBar_ParentColor", 0), // property ParentColor
+			/* 14 */ imports.NewTable("TStatusBar_ParentFont", 0), // property ParentFont
+			/* 15 */ imports.NewTable("TStatusBar_ParentShowHint", 0), // property ParentShowHint
+			/* 16 */ imports.NewTable("TStatusBar_SimpleText", 0), // property SimpleText
+			/* 17 */ imports.NewTable("TStatusBar_SimplePanel", 0), // property SimplePanel
+			/* 18 */ imports.NewTable("TStatusBar_SizeGrip", 0), // property SizeGrip
+			/* 19 */ imports.NewTable("TStatusBar_UseSystemFont", 0), // property UseSystemFont
+			/* 20 */ imports.NewTable("TStatusBar_OnContextPopup", 0), // event OnContextPopup
+			/* 21 */ imports.NewTable("TStatusBar_OnCreatePanelClass", 0), // event OnCreatePanelClass
+			/* 22 */ imports.NewTable("TStatusBar_OnDblClick", 0), // event OnDblClick
+			/* 23 */ imports.NewTable("TStatusBar_OnDragDrop", 0), // event OnDragDrop
+			/* 24 */ imports.NewTable("TStatusBar_OnDragOver", 0), // event OnDragOver
+			/* 25 */ imports.NewTable("TStatusBar_OnDrawPanel", 0), // event OnDrawPanel
+			/* 26 */ imports.NewTable("TStatusBar_OnEndDock", 0), // event OnEndDock
+			/* 27 */ imports.NewTable("TStatusBar_OnEndDrag", 0), // event OnEndDrag
+			/* 28 */ imports.NewTable("TStatusBar_OnHint", 0), // event OnHint
+			/* 29 */ imports.NewTable("TStatusBar_OnMouseDown", 0), // event OnMouseDown
+			/* 30 */ imports.NewTable("TStatusBar_OnMouseEnter", 0), // event OnMouseEnter
+			/* 31 */ imports.NewTable("TStatusBar_OnMouseLeave", 0), // event OnMouseLeave
+			/* 32 */ imports.NewTable("TStatusBar_OnMouseMove", 0), // event OnMouseMove
+			/* 33 */ imports.NewTable("TStatusBar_OnMouseUp", 0), // event OnMouseUp
+			/* 34 */ imports.NewTable("TStatusBar_OnMouseWheel", 0), // event OnMouseWheel
+			/* 35 */ imports.NewTable("TStatusBar_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 36 */ imports.NewTable("TStatusBar_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 37 */ imports.NewTable("TStatusBar_OnStartDock", 0), // event OnStartDock
+			/* 38 */ imports.NewTable("TStatusBar_OnStartDrag", 0), // event OnStartDrag
+			/* 39 */ imports.NewTable("TStatusBar_TClass", 0), // function TStatusBarClass
+		}
+	})
 	return statusBarImport
 }

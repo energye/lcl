@@ -1,6 +1,6 @@
 //----------------------------------------
 //
-// Copyright © ying32. All Rights Reserved.
+// Copyright © yanghy. All Rights Reserved.
 //
 // Licensed under Apache License 2.0
 //
@@ -26,18 +26,18 @@ func HiByte(W uint8) uint8 {
 	return W >> 8
 }
 
-func MakeWParam(l, h uint16) WPARAM {
-	return WPARAM(MakeLong(l, h))
+func MakeWParam(l, h uint16) WParam {
+	return WParam(MakeLong(l, h))
 }
 
-func MakeLParam(l, h uint16) LPARAM {
-	return LPARAM(MakeLong(l, h))
+func MakeLParam(l, h uint16) LParam {
+	return LParam(MakeLong(l, h))
 }
 
 func MakeLResult(l, h uint16) LRESULT {
 	return LRESULT(MakeLong(l, h))
 }
 
-func PointToLParam(P TPoint) LPARAM {
-	return LPARAM((P.X & 0x0000FFFF) | (P.Y << 16))
+func PointToLParam(P TPoint) LParam {
+	return LParam((P.X & 0x0000FFFF) | (P.Y << 16))
 }

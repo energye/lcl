@@ -1,0 +1,95 @@
+//----------------------------------------
+// Copyright © yanghy. All Rights Reserved.
+//
+// Licensed under Apache License 2.0
+//
+//----------------------------------------
+
+package api
+
+const (
+	_DSysLocale = iota
+	_AddLazarusResources
+	_AddLazarusResources2
+	_GetLCLVersion
+	_GetLCLWidget
+	_Application_Instance
+	_Application_CreateForm
+	_Application_Run
+	_Application_Initialize
+	_Application_SetRunLoopReceived
+	_Mouse_Instance
+	_Screen_Instance
+	_DSendMessage
+	_DPostMessage
+	_DIsIconic
+	_DIsWindow
+	_DIsZoomed
+	_DIsWindowVisible
+	_DGetDC
+	_DReleaseDC
+	_DSetForegroundWindow
+	_DRegisterClipboardFormat
+	_DWindowFromPoint
+	_SetEventCallback
+	_DRunMainAsyncCall
+	_DRunMainSyncCall
+	_DGetStringArrOf
+	_DStrLen
+	_DMove
+	_DShowMessage
+	_DGetMainInstance
+	_DSysOpen
+	_DTextToShortCut
+	_DShortCutToText
+	_DMessageDlg
+	_DExtractFilePath
+	_DFileExists
+	_DMainThreadId
+	_DCurrentThreadId
+	_DSelectDirectory1
+	_DSelectDirectory2
+	_DInputBox
+	_DInputQuery
+	_DPasswordBox
+	_DInputCombo
+	_DInputComboEx
+	_DSetPropertyValue
+	_DSetPropertySecValue
+	_Clipboard_Instance
+	_DPredefinedClipboardFormat
+	_DSetClipboard
+	_DGUIDToString
+	_DStringToGUID
+	_DCreateGUID
+	_Printer_Instance
+	_DGetLibResourceCount
+	_DGetLibResourceItem
+	_DModifyLibResource
+	_DLibAbout
+	_DInitGoDll
+	_DFindControl
+	_DFindLCLControl
+	_DFindOwnerControl
+	_DFindControlAtPosition
+	_DFindLCLWindow
+	_DFindDragTarget
+	_DFreeAndNil
+	_DSetNil
+	_DFreePointer
+	_DToUnixTime
+	_DUnixToTime
+	_SetComponentDesignMode
+	_SetComponentDesignInstanceMode
+	_SetComponentInlineMode
+	_SetComponentAncestorMode
+	_SetWidgetSetDesigning
+	_GetComponentProperties
+	_SetOnGetDesignerFormEvent
+	_Control_WindowProc
+	_LocalesLCLResourceStrings
+	_LocalesUnitResourceStringsEx
+	_LocalesSetDefaultLang
+	_LocalesUnitResourceStringsFormStream
+	_LocalesSetDefaultLangFormStream
+)

@@ -9,520 +9,722 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IScreen Parent: ILCLComponent
 type IScreen interface {
 	ILCLComponent
-	ActiveControl() IWinControl                                                  // property
-	ActiveCustomForm() ICustomForm                                               // property
-	ActiveForm() IForm                                                           // property
-	Cursor() TCursor                                                             // property
-	SetCursor(AValue TCursor)                                                    // property
-	RealCursor() TCursor                                                         // property
-	Cursors(Index int32) HCURSOR                                                 // property
-	SetCursors(Index int32, AValue HCURSOR)                                      // property
-	CustomFormCount() int32                                                      // property
-	CustomForms(Index int32) ICustomForm                                         // property
-	CustomFormZOrderCount() int32                                                // property
-	CustomFormsZOrdered(Index int32) ICustomForm                                 // property
-	DesktopLeft() int32                                                          // property
-	DesktopTop() int32                                                           // property
-	DesktopHeight() int32                                                        // property
-	DesktopWidth() int32                                                         // property
-	DesktopRect() (resultRect TRect)                                             // property
-	FocusedForm() ICustomForm                                                    // property
-	FormCount() int32                                                            // property
-	Forms(Index int32) IForm                                                     // property
-	DataModuleCount() int32                                                      // property
-	DataModules(Index int32) IDataModule                                         // property
-	HintFont() IFont                                                             // property
-	SetHintFont(AValue IFont)                                                    // property
-	IconFont() IFont                                                             // property
-	SetIconFont(AValue IFont)                                                    // property
-	MenuFont() IFont                                                             // property
-	SetMenuFont(AValue IFont)                                                    // property
-	SystemFont() IFont                                                           // property
-	SetSystemFont(AValue IFont)                                                  // property
-	Fonts() IStrings                                                             // property
-	Height() int32                                                               // property
-	MonitorCount() int32                                                         // property
-	Monitors(Index int32) IMonitor                                               // property
-	PixelsPerInch() int32                                                        // property
-	PrimaryMonitor() IMonitor                                                    // property
-	Width() int32                                                                // property
-	WorkAreaRect() (resultRect TRect)                                            // property
-	WorkAreaHeight() int32                                                       // property
-	WorkAreaLeft() int32                                                         // property
-	WorkAreaTop() int32                                                          // property
-	WorkAreaWidth() int32                                                        // property
-	CustomFormIndex(AForm ICustomForm) int32                                     // function
-	FormIndex(AForm IForm) int32                                                 // function
-	CustomFormZIndex(AForm ICustomForm) int32                                    // function
-	GetCurrentModalForm() ICustomForm                                            // function
-	GetCurrentModalFormZIndex() int32                                            // function
-	CustomFormBelongsToActiveGroup(AForm ICustomForm) bool                       // function
-	FindNonDesignerForm(FormName string) ICustomForm                             // function
-	FindForm(FormName string) ICustomForm                                        // function
-	FindNonDesignerDataModule(DataModuleName string) IDataModule                 // function
-	FindDataModule(DataModuleName string) IDataModule                            // function
-	DisableForms(SkipForm ICustomForm, DisabledList IList) IList                 // function
-	MonitorFromPoint(Point *TPoint, MonitorDefault TMonitorDefaultTo) IMonitor   // function
-	MonitorFromRect(Rect *TRect, MonitorDefault TMonitorDefaultTo) IMonitor      // function
-	MonitorFromWindow(Handle THandle, MonitorDefault TMonitorDefaultTo) IMonitor // function
-	MoveFormToFocusFront(ACustomForm ICustomForm)                                // procedure
-	MoveFormToZFront(ACustomForm ICustomForm)                                    // procedure
-	NewFormWasCreated(AForm ICustomForm)                                         // procedure
-	UpdateMonitors()                                                             // procedure
-	UpdateScreen()                                                               // procedure
-	EnableForms(AFormList *IList)                                                // procedure
-	BeginTempCursor(aCursor TCursor)                                             // procedure
-	EndTempCursor(aCursor TCursor)                                               // procedure
-	BeginWaitCursor()                                                            // procedure
-	EndWaitCursor()                                                              // procedure
-	BeginScreenCursor()                                                          // procedure
-	EndScreenCursor()                                                            // procedure
-	SetOnActiveControlChange(fn TNotifyEvent)                                    // property event
-	SetOnActiveFormChange(fn TNotifyEvent)                                       // property event
+	CustomFormIndex(form ICustomForm) int32                                                     // function
+	FormIndex(form IForm) int32                                                                 // function
+	CustomFormZIndex(form ICustomForm) int32                                                    // function
+	GetCurrentModalForm() ICustomForm                                                           // function
+	GetCurrentModalFormZIndex() int32                                                           // function
+	CustomFormBelongsToActiveGroup(form ICustomForm) bool                                       // function
+	FindNonDesignerForm(formName string) ICustomForm                                            // function
+	FindForm(formName string) ICustomForm                                                       // function
+	FindNonDesignerDataModule(dataModuleName string) IDataModule                                // function
+	FindDataModule(dataModuleName string) IDataModule                                           // function
+	DisableForms(skipForm ICustomForm, disabledList IList) IList                                // function
+	MonitorFromPoint(point types.TPoint, monitorDefault types.TMonitorDefaultTo) IMonitor       // function
+	MonitorFromRect(rect types.TRect, monitorDefault types.TMonitorDefaultTo) IMonitor          // function
+	MonitorFromWindow(handle types.TLCLHandle, monitorDefault types.TMonitorDefaultTo) IMonitor // function
+	MoveFormToFocusFront(customForm ICustomForm)                                                // procedure
+	MoveFormToZFront(customForm ICustomForm)                                                    // procedure
+	NewFormWasCreated(form ICustomForm)                                                         // procedure
+	UpdateMonitors()                                                                            // procedure
+	UpdateScreen()                                                                              // procedure
+	EnableForms(formList *IList)                                                                // procedure
+	BeginTempCursor(cursor types.TCursor)                                                       // procedure
+	EndTempCursor(cursor types.TCursor)                                                         // procedure
+	BeginWaitCursor()                                                                           // procedure
+	EndWaitCursor()                                                                             // procedure
+	BeginScreenCursor()                                                                         // procedure
+	EndScreenCursor()                                                                           // procedure
+	ActiveControl() IWinControl                                                                 // property ActiveControl Getter
+	ActiveCustomForm() ICustomForm                                                              // property ActiveCustomForm Getter
+	ActiveForm() IForm                                                                          // property ActiveForm Getter
+	Cursor() types.TCursor                                                                      // property Cursor Getter
+	SetCursor(value types.TCursor)                                                              // property Cursor Setter
+	RealCursor() types.TCursor                                                                  // property RealCursor Getter
+	Cursors(index int32) types.HCURSOR                                                          // property Cursors Getter
+	SetCursors(index int32, value types.HCURSOR)                                                // property Cursors Setter
+	CustomFormCount() int32                                                                     // property CustomFormCount Getter
+	CustomForms(index int32) ICustomForm                                                        // property CustomForms Getter
+	CustomFormZOrderCount() int32                                                               // property CustomFormZOrderCount Getter
+	CustomFormsZOrdered(index int32) ICustomForm                                                // property CustomFormsZOrdered Getter
+	DesktopLeft() int32                                                                         // property DesktopLeft Getter
+	DesktopTop() int32                                                                          // property DesktopTop Getter
+	DesktopHeight() int32                                                                       // property DesktopHeight Getter
+	DesktopWidth() int32                                                                        // property DesktopWidth Getter
+	DesktopRect() types.TRect                                                                   // property DesktopRect Getter
+	FocusedForm() ICustomForm                                                                   // property FocusedForm Getter
+	FormCount() int32                                                                           // property FormCount Getter
+	Forms(index int32) IForm                                                                    // property Forms Getter
+	DataModuleCount() int32                                                                     // property DataModuleCount Getter
+	DataModules(index int32) IDataModule                                                        // property DataModules Getter
+	HintFont() IFont                                                                            // property HintFont Getter
+	SetHintFont(value IFont)                                                                    // property HintFont Setter
+	IconFont() IFont                                                                            // property IconFont Getter
+	SetIconFont(value IFont)                                                                    // property IconFont Setter
+	MenuFont() IFont                                                                            // property MenuFont Getter
+	SetMenuFont(value IFont)                                                                    // property MenuFont Setter
+	SystemFont() IFont                                                                          // property SystemFont Getter
+	SetSystemFont(value IFont)                                                                  // property SystemFont Setter
+	Fonts() IStrings                                                                            // property Fonts Getter
+	Height() int32                                                                              // property Height Getter
+	MonitorCount() int32                                                                        // property MonitorCount Getter
+	Monitors(index int32) IMonitor                                                              // property Monitors Getter
+	PixelsPerInch() int32                                                                       // property PixelsPerInch Getter
+	PrimaryMonitor() IMonitor                                                                   // property PrimaryMonitor Getter
+	Width() int32                                                                               // property Width Getter
+	WorkAreaRect() types.TRect                                                                  // property WorkAreaRect Getter
+	WorkAreaHeight() int32                                                                      // property WorkAreaHeight Getter
+	WorkAreaLeft() int32                                                                        // property WorkAreaLeft Getter
+	WorkAreaTop() int32                                                                         // property WorkAreaTop Getter
+	WorkAreaWidth() int32                                                                       // property WorkAreaWidth Getter
+	SetOnActiveControlChange(fn TNotifyEvent)                                                   // property event
+	SetOnActiveFormChange(fn TNotifyEvent)                                                      // property event
 }
 
-// TScreen Parent: TLCLComponent
 type TScreen struct {
 	TLCLComponent
-	activeControlChangePtr uintptr
-	activeFormChangePtr    uintptr
 }
 
-func NewScreen(AOwner IComponent) IScreen {
-	r1 := screenImportAPI().SysCallN(7, GetObjectUintptr(AOwner))
-	return AsScreen(r1)
+func (m *TScreen) CustomFormIndex(form ICustomForm) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(form))
+	return int32(r)
+}
+
+func (m *TScreen) FormIndex(form IForm) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(form))
+	return int32(r)
+}
+
+func (m *TScreen) CustomFormZIndex(form ICustomForm) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(3, m.Instance(), base.GetObjectUintptr(form))
+	return int32(r)
+}
+
+func (m *TScreen) GetCurrentModalForm() ICustomForm {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(4, m.Instance())
+	return AsCustomForm(r)
+}
+
+func (m *TScreen) GetCurrentModalFormZIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(5, m.Instance())
+	return int32(r)
+}
+
+func (m *TScreen) CustomFormBelongsToActiveGroup(form ICustomForm) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := screenAPI().SysCallN(6, m.Instance(), base.GetObjectUintptr(form))
+	return api.GoBool(r)
+}
+
+func (m *TScreen) FindNonDesignerForm(formName string) ICustomForm {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(7, m.Instance(), api.PasStr(formName))
+	return AsCustomForm(r)
+}
+
+func (m *TScreen) FindForm(formName string) ICustomForm {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(8, m.Instance(), api.PasStr(formName))
+	return AsCustomForm(r)
+}
+
+func (m *TScreen) FindNonDesignerDataModule(dataModuleName string) IDataModule {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(9, m.Instance(), api.PasStr(dataModuleName))
+	return AsDataModule(r)
+}
+
+func (m *TScreen) FindDataModule(dataModuleName string) IDataModule {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(10, m.Instance(), api.PasStr(dataModuleName))
+	return AsDataModule(r)
+}
+
+func (m *TScreen) DisableForms(skipForm ICustomForm, disabledList IList) IList {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(11, m.Instance(), base.GetObjectUintptr(skipForm), base.GetObjectUintptr(disabledList))
+	return AsList(r)
+}
+
+func (m *TScreen) MonitorFromPoint(point types.TPoint, monitorDefault types.TMonitorDefaultTo) IMonitor {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(12, m.Instance(), uintptr(base.UnsafePointer(&point)), uintptr(monitorDefault))
+	return AsMonitor(r)
+}
+
+func (m *TScreen) MonitorFromRect(rect types.TRect, monitorDefault types.TMonitorDefaultTo) IMonitor {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(13, m.Instance(), uintptr(base.UnsafePointer(&rect)), uintptr(monitorDefault))
+	return AsMonitor(r)
+}
+
+func (m *TScreen) MonitorFromWindow(handle types.TLCLHandle, monitorDefault types.TMonitorDefaultTo) IMonitor {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(14, m.Instance(), uintptr(handle), uintptr(monitorDefault))
+	return AsMonitor(r)
+}
+
+func (m *TScreen) MoveFormToFocusFront(customForm ICustomForm) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(15, m.Instance(), base.GetObjectUintptr(customForm))
+}
+
+func (m *TScreen) MoveFormToZFront(customForm ICustomForm) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(16, m.Instance(), base.GetObjectUintptr(customForm))
+}
+
+func (m *TScreen) NewFormWasCreated(form ICustomForm) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(17, m.Instance(), base.GetObjectUintptr(form))
+}
+
+func (m *TScreen) UpdateMonitors() {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(18, m.Instance())
+}
+
+func (m *TScreen) UpdateScreen() {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(19, m.Instance())
+}
+
+func (m *TScreen) EnableForms(formList *IList) {
+	if !m.IsValid() {
+		return
+	}
+	formListPtr := base.GetObjectUintptr(*formList)
+	screenAPI().SysCallN(20, m.Instance(), uintptr(base.UnsafePointer(&formListPtr)))
+	*formList = AsList(formListPtr)
+}
+
+func (m *TScreen) BeginTempCursor(cursor types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(21, m.Instance(), uintptr(cursor))
+}
+
+func (m *TScreen) EndTempCursor(cursor types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(22, m.Instance(), uintptr(cursor))
+}
+
+func (m *TScreen) BeginWaitCursor() {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(23, m.Instance())
+}
+
+func (m *TScreen) EndWaitCursor() {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(24, m.Instance())
+}
+
+func (m *TScreen) BeginScreenCursor() {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(25, m.Instance())
+}
+
+func (m *TScreen) EndScreenCursor() {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(26, m.Instance())
 }
 
 func (m *TScreen) ActiveControl() IWinControl {
-	r1 := screenImportAPI().SysCallN(0, m.Instance())
-	return AsWinControl(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(27, m.Instance())
+	return AsWinControl(r)
 }
 
 func (m *TScreen) ActiveCustomForm() ICustomForm {
-	r1 := screenImportAPI().SysCallN(1, m.Instance())
-	return AsCustomForm(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(28, m.Instance())
+	return AsCustomForm(r)
 }
 
 func (m *TScreen) ActiveForm() IForm {
-	r1 := screenImportAPI().SysCallN(2, m.Instance())
-	return AsForm(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(29, m.Instance())
+	return AsForm(r)
 }
 
-func (m *TScreen) Cursor() TCursor {
-	r1 := screenImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TScreen) Cursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(30, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TScreen) SetCursor(AValue TCursor) {
-	screenImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TScreen) SetCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(30, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TScreen) RealCursor() TCursor {
-	r1 := screenImportAPI().SysCallN(54, m.Instance())
-	return TCursor(r1)
+func (m *TScreen) RealCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(31, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TScreen) Cursors(Index int32) HCURSOR {
-	r1 := screenImportAPI().SysCallN(9, 0, m.Instance(), uintptr(Index))
-	return HCURSOR(r1)
+func (m *TScreen) Cursors(index int32) types.HCURSOR {
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(32, 0, m.Instance(), uintptr(index))
+	return types.HCURSOR(r)
 }
 
-func (m *TScreen) SetCursors(Index int32, AValue HCURSOR) {
-	screenImportAPI().SysCallN(9, 1, m.Instance(), uintptr(Index), uintptr(AValue))
+func (m *TScreen) SetCursors(index int32, value types.HCURSOR) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(32, 1, m.Instance(), uintptr(index), uintptr(value))
 }
 
 func (m *TScreen) CustomFormCount() int32 {
-	r1 := screenImportAPI().SysCallN(11, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(33, m.Instance())
+	return int32(r)
 }
 
-func (m *TScreen) CustomForms(Index int32) ICustomForm {
-	r1 := screenImportAPI().SysCallN(15, m.Instance(), uintptr(Index))
-	return AsCustomForm(r1)
+func (m *TScreen) CustomForms(index int32) ICustomForm {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(34, m.Instance(), uintptr(index))
+	return AsCustomForm(r)
 }
 
 func (m *TScreen) CustomFormZOrderCount() int32 {
-	r1 := screenImportAPI().SysCallN(14, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(35, m.Instance())
+	return int32(r)
 }
 
-func (m *TScreen) CustomFormsZOrdered(Index int32) ICustomForm {
-	r1 := screenImportAPI().SysCallN(16, m.Instance(), uintptr(Index))
-	return AsCustomForm(r1)
+func (m *TScreen) CustomFormsZOrdered(index int32) ICustomForm {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(36, m.Instance(), uintptr(index))
+	return AsCustomForm(r)
 }
 
 func (m *TScreen) DesktopLeft() int32 {
-	r1 := screenImportAPI().SysCallN(20, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(37, m.Instance())
+	return int32(r)
 }
 
 func (m *TScreen) DesktopTop() int32 {
-	r1 := screenImportAPI().SysCallN(22, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(38, m.Instance())
+	return int32(r)
 }
 
 func (m *TScreen) DesktopHeight() int32 {
-	r1 := screenImportAPI().SysCallN(19, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(39, m.Instance())
+	return int32(r)
 }
 
 func (m *TScreen) DesktopWidth() int32 {
-	r1 := screenImportAPI().SysCallN(23, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(40, m.Instance())
+	return int32(r)
 }
 
-func (m *TScreen) DesktopRect() (resultRect TRect) {
-	screenImportAPI().SysCallN(21, m.Instance(), uintptr(unsafePointer(&resultRect)))
+func (m *TScreen) DesktopRect() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(41, m.Instance(), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
 func (m *TScreen) FocusedForm() ICustomForm {
-	r1 := screenImportAPI().SysCallN(33, m.Instance())
-	return AsCustomForm(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(42, m.Instance())
+	return AsCustomForm(r)
 }
 
 func (m *TScreen) FormCount() int32 {
-	r1 := screenImportAPI().SysCallN(35, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(43, m.Instance())
+	return int32(r)
 }
 
-func (m *TScreen) Forms(Index int32) IForm {
-	r1 := screenImportAPI().SysCallN(37, m.Instance(), uintptr(Index))
-	return AsForm(r1)
+func (m *TScreen) Forms(index int32) IForm {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(44, m.Instance(), uintptr(index))
+	return AsForm(r)
 }
 
 func (m *TScreen) DataModuleCount() int32 {
-	r1 := screenImportAPI().SysCallN(17, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(45, m.Instance())
+	return int32(r)
 }
 
-func (m *TScreen) DataModules(Index int32) IDataModule {
-	r1 := screenImportAPI().SysCallN(18, m.Instance(), uintptr(Index))
-	return AsDataModule(r1)
+func (m *TScreen) DataModules(index int32) IDataModule {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(46, m.Instance(), uintptr(index))
+	return AsDataModule(r)
 }
 
 func (m *TScreen) HintFont() IFont {
-	r1 := screenImportAPI().SysCallN(41, 0, m.Instance(), 0)
-	return AsFont(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(47, 0, m.Instance())
+	return AsFont(r)
 }
 
-func (m *TScreen) SetHintFont(AValue IFont) {
-	screenImportAPI().SysCallN(41, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TScreen) SetHintFont(value IFont) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(47, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TScreen) IconFont() IFont {
-	r1 := screenImportAPI().SysCallN(42, 0, m.Instance(), 0)
-	return AsFont(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(48, 0, m.Instance())
+	return AsFont(r)
 }
 
-func (m *TScreen) SetIconFont(AValue IFont) {
-	screenImportAPI().SysCallN(42, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TScreen) SetIconFont(value IFont) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(48, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TScreen) MenuFont() IFont {
-	r1 := screenImportAPI().SysCallN(43, 0, m.Instance(), 0)
-	return AsFont(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(49, 0, m.Instance())
+	return AsFont(r)
 }
 
-func (m *TScreen) SetMenuFont(AValue IFont) {
-	screenImportAPI().SysCallN(43, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TScreen) SetMenuFont(value IFont) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(49, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TScreen) SystemFont() IFont {
-	r1 := screenImportAPI().SysCallN(57, 0, m.Instance(), 0)
-	return AsFont(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(50, 0, m.Instance())
+	return AsFont(r)
 }
 
-func (m *TScreen) SetSystemFont(AValue IFont) {
-	screenImportAPI().SysCallN(57, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TScreen) SetSystemFont(value IFont) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(50, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TScreen) Fonts() IStrings {
-	r1 := screenImportAPI().SysCallN(34, m.Instance())
-	return AsStrings(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(51, m.Instance())
+	return AsStrings(r)
 }
 
 func (m *TScreen) Height() int32 {
-	r1 := screenImportAPI().SysCallN(40, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(52, m.Instance())
+	return int32(r)
 }
 
 func (m *TScreen) MonitorCount() int32 {
-	r1 := screenImportAPI().SysCallN(44, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(53, m.Instance())
+	return int32(r)
 }
 
-func (m *TScreen) Monitors(Index int32) IMonitor {
-	r1 := screenImportAPI().SysCallN(48, m.Instance(), uintptr(Index))
-	return AsMonitor(r1)
+func (m *TScreen) Monitors(index int32) IMonitor {
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(54, m.Instance(), uintptr(index))
+	return AsMonitor(r)
 }
 
 func (m *TScreen) PixelsPerInch() int32 {
-	r1 := screenImportAPI().SysCallN(52, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(55, m.Instance())
+	return int32(r)
 }
 
 func (m *TScreen) PrimaryMonitor() IMonitor {
-	r1 := screenImportAPI().SysCallN(53, m.Instance())
-	return AsMonitor(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := screenAPI().SysCallN(56, m.Instance())
+	return AsMonitor(r)
 }
 
 func (m *TScreen) Width() int32 {
-	r1 := screenImportAPI().SysCallN(60, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(57, m.Instance())
+	return int32(r)
 }
 
-func (m *TScreen) WorkAreaRect() (resultRect TRect) {
-	screenImportAPI().SysCallN(63, m.Instance(), uintptr(unsafePointer(&resultRect)))
+func (m *TScreen) WorkAreaRect() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	screenAPI().SysCallN(58, m.Instance(), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
 func (m *TScreen) WorkAreaHeight() int32 {
-	r1 := screenImportAPI().SysCallN(61, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(59, m.Instance())
+	return int32(r)
 }
 
 func (m *TScreen) WorkAreaLeft() int32 {
-	r1 := screenImportAPI().SysCallN(62, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(60, m.Instance())
+	return int32(r)
 }
 
 func (m *TScreen) WorkAreaTop() int32 {
-	r1 := screenImportAPI().SysCallN(64, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(61, m.Instance())
+	return int32(r)
 }
 
 func (m *TScreen) WorkAreaWidth() int32 {
-	r1 := screenImportAPI().SysCallN(65, m.Instance())
-	return int32(r1)
-}
-
-func (m *TScreen) CustomFormIndex(AForm ICustomForm) int32 {
-	r1 := screenImportAPI().SysCallN(12, m.Instance(), GetObjectUintptr(AForm))
-	return int32(r1)
-}
-
-func (m *TScreen) FormIndex(AForm IForm) int32 {
-	r1 := screenImportAPI().SysCallN(36, m.Instance(), GetObjectUintptr(AForm))
-	return int32(r1)
-}
-
-func (m *TScreen) CustomFormZIndex(AForm ICustomForm) int32 {
-	r1 := screenImportAPI().SysCallN(13, m.Instance(), GetObjectUintptr(AForm))
-	return int32(r1)
-}
-
-func (m *TScreen) GetCurrentModalForm() ICustomForm {
-	r1 := screenImportAPI().SysCallN(38, m.Instance())
-	return AsCustomForm(r1)
-}
-
-func (m *TScreen) GetCurrentModalFormZIndex() int32 {
-	r1 := screenImportAPI().SysCallN(39, m.Instance())
-	return int32(r1)
-}
-
-func (m *TScreen) CustomFormBelongsToActiveGroup(AForm ICustomForm) bool {
-	r1 := screenImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(AForm))
-	return GoBool(r1)
-}
-
-func (m *TScreen) FindNonDesignerForm(FormName string) ICustomForm {
-	r1 := screenImportAPI().SysCallN(32, m.Instance(), PascalStr(FormName))
-	return AsCustomForm(r1)
-}
-
-func (m *TScreen) FindForm(FormName string) ICustomForm {
-	r1 := screenImportAPI().SysCallN(30, m.Instance(), PascalStr(FormName))
-	return AsCustomForm(r1)
-}
-
-func (m *TScreen) FindNonDesignerDataModule(DataModuleName string) IDataModule {
-	r1 := screenImportAPI().SysCallN(31, m.Instance(), PascalStr(DataModuleName))
-	return AsDataModule(r1)
-}
-
-func (m *TScreen) FindDataModule(DataModuleName string) IDataModule {
-	r1 := screenImportAPI().SysCallN(29, m.Instance(), PascalStr(DataModuleName))
-	return AsDataModule(r1)
-}
-
-func (m *TScreen) DisableForms(SkipForm ICustomForm, DisabledList IList) IList {
-	r1 := screenImportAPI().SysCallN(24, m.Instance(), GetObjectUintptr(SkipForm), GetObjectUintptr(DisabledList))
-	return AsList(r1)
-}
-
-func (m *TScreen) MonitorFromPoint(Point *TPoint, MonitorDefault TMonitorDefaultTo) IMonitor {
-	r1 := screenImportAPI().SysCallN(45, m.Instance(), uintptr(unsafePointer(Point)), uintptr(MonitorDefault))
-	return AsMonitor(r1)
-}
-
-func (m *TScreen) MonitorFromRect(Rect *TRect, MonitorDefault TMonitorDefaultTo) IMonitor {
-	r1 := screenImportAPI().SysCallN(46, m.Instance(), uintptr(unsafePointer(Rect)), uintptr(MonitorDefault))
-	return AsMonitor(r1)
-}
-
-func (m *TScreen) MonitorFromWindow(Handle THandle, MonitorDefault TMonitorDefaultTo) IMonitor {
-	r1 := screenImportAPI().SysCallN(47, m.Instance(), uintptr(Handle), uintptr(MonitorDefault))
-	return AsMonitor(r1)
-}
-
-func ScreenClass() TClass {
-	ret := screenImportAPI().SysCallN(6)
-	return TClass(ret)
-}
-
-func (m *TScreen) MoveFormToFocusFront(ACustomForm ICustomForm) {
-	screenImportAPI().SysCallN(49, m.Instance(), GetObjectUintptr(ACustomForm))
-}
-
-func (m *TScreen) MoveFormToZFront(ACustomForm ICustomForm) {
-	screenImportAPI().SysCallN(50, m.Instance(), GetObjectUintptr(ACustomForm))
-}
-
-func (m *TScreen) NewFormWasCreated(AForm ICustomForm) {
-	screenImportAPI().SysCallN(51, m.Instance(), GetObjectUintptr(AForm))
-}
-
-func (m *TScreen) UpdateMonitors() {
-	screenImportAPI().SysCallN(58, m.Instance())
-}
-
-func (m *TScreen) UpdateScreen() {
-	screenImportAPI().SysCallN(59, m.Instance())
-}
-
-func (m *TScreen) EnableForms(AFormList *IList) {
-	var result0 uintptr
-	screenImportAPI().SysCallN(25, m.Instance(), uintptr(unsafePointer(&result0)))
-	*AFormList = AsList(result0)
-}
-
-func (m *TScreen) BeginTempCursor(aCursor TCursor) {
-	screenImportAPI().SysCallN(4, m.Instance(), uintptr(aCursor))
-}
-
-func (m *TScreen) EndTempCursor(aCursor TCursor) {
-	screenImportAPI().SysCallN(27, m.Instance(), uintptr(aCursor))
-}
-
-func (m *TScreen) BeginWaitCursor() {
-	screenImportAPI().SysCallN(5, m.Instance())
-}
-
-func (m *TScreen) EndWaitCursor() {
-	screenImportAPI().SysCallN(28, m.Instance())
-}
-
-func (m *TScreen) BeginScreenCursor() {
-	screenImportAPI().SysCallN(3, m.Instance())
-}
-
-func (m *TScreen) EndScreenCursor() {
-	screenImportAPI().SysCallN(26, m.Instance())
+	if !m.IsValid() {
+		return 0
+	}
+	r := screenAPI().SysCallN(62, m.Instance())
+	return int32(r)
 }
 
 func (m *TScreen) SetOnActiveControlChange(fn TNotifyEvent) {
-	if m.activeControlChangePtr != 0 {
-		RemoveEventElement(m.activeControlChangePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.activeControlChangePtr = MakeEventDataPtr(fn)
-	screenImportAPI().SysCallN(55, m.Instance(), m.activeControlChangePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 63, screenAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TScreen) SetOnActiveFormChange(fn TNotifyEvent) {
-	if m.activeFormChangePtr != 0 {
-		RemoveEventElement(m.activeFormChangePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.activeFormChangePtr = MakeEventDataPtr(fn)
-	screenImportAPI().SysCallN(56, m.Instance(), m.activeFormChangePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 64, screenAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewScreen class constructor
+func NewScreen(owner IComponent) IScreen {
+	r := screenAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsScreen(r)
+}
+
+func TScreenClass() types.TClass {
+	r := screenAPI().SysCallN(65)
+	return types.TClass(r)
 }
 
 var (
-	screenImport       *imports.Imports = nil
-	screenImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Screen_ActiveControl", 0),
-		/*1*/ imports.NewTable("Screen_ActiveCustomForm", 0),
-		/*2*/ imports.NewTable("Screen_ActiveForm", 0),
-		/*3*/ imports.NewTable("Screen_BeginScreenCursor", 0),
-		/*4*/ imports.NewTable("Screen_BeginTempCursor", 0),
-		/*5*/ imports.NewTable("Screen_BeginWaitCursor", 0),
-		/*6*/ imports.NewTable("Screen_Class", 0),
-		/*7*/ imports.NewTable("Screen_Create", 0),
-		/*8*/ imports.NewTable("Screen_Cursor", 0),
-		/*9*/ imports.NewTable("Screen_Cursors", 0),
-		/*10*/ imports.NewTable("Screen_CustomFormBelongsToActiveGroup", 0),
-		/*11*/ imports.NewTable("Screen_CustomFormCount", 0),
-		/*12*/ imports.NewTable("Screen_CustomFormIndex", 0),
-		/*13*/ imports.NewTable("Screen_CustomFormZIndex", 0),
-		/*14*/ imports.NewTable("Screen_CustomFormZOrderCount", 0),
-		/*15*/ imports.NewTable("Screen_CustomForms", 0),
-		/*16*/ imports.NewTable("Screen_CustomFormsZOrdered", 0),
-		/*17*/ imports.NewTable("Screen_DataModuleCount", 0),
-		/*18*/ imports.NewTable("Screen_DataModules", 0),
-		/*19*/ imports.NewTable("Screen_DesktopHeight", 0),
-		/*20*/ imports.NewTable("Screen_DesktopLeft", 0),
-		/*21*/ imports.NewTable("Screen_DesktopRect", 0),
-		/*22*/ imports.NewTable("Screen_DesktopTop", 0),
-		/*23*/ imports.NewTable("Screen_DesktopWidth", 0),
-		/*24*/ imports.NewTable("Screen_DisableForms", 0),
-		/*25*/ imports.NewTable("Screen_EnableForms", 0),
-		/*26*/ imports.NewTable("Screen_EndScreenCursor", 0),
-		/*27*/ imports.NewTable("Screen_EndTempCursor", 0),
-		/*28*/ imports.NewTable("Screen_EndWaitCursor", 0),
-		/*29*/ imports.NewTable("Screen_FindDataModule", 0),
-		/*30*/ imports.NewTable("Screen_FindForm", 0),
-		/*31*/ imports.NewTable("Screen_FindNonDesignerDataModule", 0),
-		/*32*/ imports.NewTable("Screen_FindNonDesignerForm", 0),
-		/*33*/ imports.NewTable("Screen_FocusedForm", 0),
-		/*34*/ imports.NewTable("Screen_Fonts", 0),
-		/*35*/ imports.NewTable("Screen_FormCount", 0),
-		/*36*/ imports.NewTable("Screen_FormIndex", 0),
-		/*37*/ imports.NewTable("Screen_Forms", 0),
-		/*38*/ imports.NewTable("Screen_GetCurrentModalForm", 0),
-		/*39*/ imports.NewTable("Screen_GetCurrentModalFormZIndex", 0),
-		/*40*/ imports.NewTable("Screen_Height", 0),
-		/*41*/ imports.NewTable("Screen_HintFont", 0),
-		/*42*/ imports.NewTable("Screen_IconFont", 0),
-		/*43*/ imports.NewTable("Screen_MenuFont", 0),
-		/*44*/ imports.NewTable("Screen_MonitorCount", 0),
-		/*45*/ imports.NewTable("Screen_MonitorFromPoint", 0),
-		/*46*/ imports.NewTable("Screen_MonitorFromRect", 0),
-		/*47*/ imports.NewTable("Screen_MonitorFromWindow", 0),
-		/*48*/ imports.NewTable("Screen_Monitors", 0),
-		/*49*/ imports.NewTable("Screen_MoveFormToFocusFront", 0),
-		/*50*/ imports.NewTable("Screen_MoveFormToZFront", 0),
-		/*51*/ imports.NewTable("Screen_NewFormWasCreated", 0),
-		/*52*/ imports.NewTable("Screen_PixelsPerInch", 0),
-		/*53*/ imports.NewTable("Screen_PrimaryMonitor", 0),
-		/*54*/ imports.NewTable("Screen_RealCursor", 0),
-		/*55*/ imports.NewTable("Screen_SetOnActiveControlChange", 0),
-		/*56*/ imports.NewTable("Screen_SetOnActiveFormChange", 0),
-		/*57*/ imports.NewTable("Screen_SystemFont", 0),
-		/*58*/ imports.NewTable("Screen_UpdateMonitors", 0),
-		/*59*/ imports.NewTable("Screen_UpdateScreen", 0),
-		/*60*/ imports.NewTable("Screen_Width", 0),
-		/*61*/ imports.NewTable("Screen_WorkAreaHeight", 0),
-		/*62*/ imports.NewTable("Screen_WorkAreaLeft", 0),
-		/*63*/ imports.NewTable("Screen_WorkAreaRect", 0),
-		/*64*/ imports.NewTable("Screen_WorkAreaTop", 0),
-		/*65*/ imports.NewTable("Screen_WorkAreaWidth", 0),
-	}
+	screenOnce   base.Once
+	screenImport *imports.Imports = nil
 )
 
-func screenImportAPI() *imports.Imports {
-	if screenImport == nil {
-		screenImport = NewDefaultImports()
-		screenImport.SetImportTable(screenImportTables)
-		screenImportTables = nil
-	}
+func screenAPI() *imports.Imports {
+	screenOnce.Do(func() {
+		screenImport = api.NewDefaultImports()
+		screenImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TScreen_Create", 0), // constructor NewScreen
+			/* 1 */ imports.NewTable("TScreen_CustomFormIndex", 0), // function CustomFormIndex
+			/* 2 */ imports.NewTable("TScreen_FormIndex", 0), // function FormIndex
+			/* 3 */ imports.NewTable("TScreen_CustomFormZIndex", 0), // function CustomFormZIndex
+			/* 4 */ imports.NewTable("TScreen_GetCurrentModalForm", 0), // function GetCurrentModalForm
+			/* 5 */ imports.NewTable("TScreen_GetCurrentModalFormZIndex", 0), // function GetCurrentModalFormZIndex
+			/* 6 */ imports.NewTable("TScreen_CustomFormBelongsToActiveGroup", 0), // function CustomFormBelongsToActiveGroup
+			/* 7 */ imports.NewTable("TScreen_FindNonDesignerForm", 0), // function FindNonDesignerForm
+			/* 8 */ imports.NewTable("TScreen_FindForm", 0), // function FindForm
+			/* 9 */ imports.NewTable("TScreen_FindNonDesignerDataModule", 0), // function FindNonDesignerDataModule
+			/* 10 */ imports.NewTable("TScreen_FindDataModule", 0), // function FindDataModule
+			/* 11 */ imports.NewTable("TScreen_DisableForms", 0), // function DisableForms
+			/* 12 */ imports.NewTable("TScreen_MonitorFromPoint", 0), // function MonitorFromPoint
+			/* 13 */ imports.NewTable("TScreen_MonitorFromRect", 0), // function MonitorFromRect
+			/* 14 */ imports.NewTable("TScreen_MonitorFromWindow", 0), // function MonitorFromWindow
+			/* 15 */ imports.NewTable("TScreen_MoveFormToFocusFront", 0), // procedure MoveFormToFocusFront
+			/* 16 */ imports.NewTable("TScreen_MoveFormToZFront", 0), // procedure MoveFormToZFront
+			/* 17 */ imports.NewTable("TScreen_NewFormWasCreated", 0), // procedure NewFormWasCreated
+			/* 18 */ imports.NewTable("TScreen_UpdateMonitors", 0), // procedure UpdateMonitors
+			/* 19 */ imports.NewTable("TScreen_UpdateScreen", 0), // procedure UpdateScreen
+			/* 20 */ imports.NewTable("TScreen_EnableForms", 0), // procedure EnableForms
+			/* 21 */ imports.NewTable("TScreen_BeginTempCursor", 0), // procedure BeginTempCursor
+			/* 22 */ imports.NewTable("TScreen_EndTempCursor", 0), // procedure EndTempCursor
+			/* 23 */ imports.NewTable("TScreen_BeginWaitCursor", 0), // procedure BeginWaitCursor
+			/* 24 */ imports.NewTable("TScreen_EndWaitCursor", 0), // procedure EndWaitCursor
+			/* 25 */ imports.NewTable("TScreen_BeginScreenCursor", 0), // procedure BeginScreenCursor
+			/* 26 */ imports.NewTable("TScreen_EndScreenCursor", 0), // procedure EndScreenCursor
+			/* 27 */ imports.NewTable("TScreen_ActiveControl", 0), // property ActiveControl
+			/* 28 */ imports.NewTable("TScreen_ActiveCustomForm", 0), // property ActiveCustomForm
+			/* 29 */ imports.NewTable("TScreen_ActiveForm", 0), // property ActiveForm
+			/* 30 */ imports.NewTable("TScreen_Cursor", 0), // property Cursor
+			/* 31 */ imports.NewTable("TScreen_RealCursor", 0), // property RealCursor
+			/* 32 */ imports.NewTable("TScreen_Cursors", 0), // property Cursors
+			/* 33 */ imports.NewTable("TScreen_CustomFormCount", 0), // property CustomFormCount
+			/* 34 */ imports.NewTable("TScreen_CustomForms", 0), // property CustomForms
+			/* 35 */ imports.NewTable("TScreen_CustomFormZOrderCount", 0), // property CustomFormZOrderCount
+			/* 36 */ imports.NewTable("TScreen_CustomFormsZOrdered", 0), // property CustomFormsZOrdered
+			/* 37 */ imports.NewTable("TScreen_DesktopLeft", 0), // property DesktopLeft
+			/* 38 */ imports.NewTable("TScreen_DesktopTop", 0), // property DesktopTop
+			/* 39 */ imports.NewTable("TScreen_DesktopHeight", 0), // property DesktopHeight
+			/* 40 */ imports.NewTable("TScreen_DesktopWidth", 0), // property DesktopWidth
+			/* 41 */ imports.NewTable("TScreen_DesktopRect", 0), // property DesktopRect
+			/* 42 */ imports.NewTable("TScreen_FocusedForm", 0), // property FocusedForm
+			/* 43 */ imports.NewTable("TScreen_FormCount", 0), // property FormCount
+			/* 44 */ imports.NewTable("TScreen_Forms", 0), // property Forms
+			/* 45 */ imports.NewTable("TScreen_DataModuleCount", 0), // property DataModuleCount
+			/* 46 */ imports.NewTable("TScreen_DataModules", 0), // property DataModules
+			/* 47 */ imports.NewTable("TScreen_HintFont", 0), // property HintFont
+			/* 48 */ imports.NewTable("TScreen_IconFont", 0), // property IconFont
+			/* 49 */ imports.NewTable("TScreen_MenuFont", 0), // property MenuFont
+			/* 50 */ imports.NewTable("TScreen_SystemFont", 0), // property SystemFont
+			/* 51 */ imports.NewTable("TScreen_Fonts", 0), // property Fonts
+			/* 52 */ imports.NewTable("TScreen_Height", 0), // property Height
+			/* 53 */ imports.NewTable("TScreen_MonitorCount", 0), // property MonitorCount
+			/* 54 */ imports.NewTable("TScreen_Monitors", 0), // property Monitors
+			/* 55 */ imports.NewTable("TScreen_PixelsPerInch", 0), // property PixelsPerInch
+			/* 56 */ imports.NewTable("TScreen_PrimaryMonitor", 0), // property PrimaryMonitor
+			/* 57 */ imports.NewTable("TScreen_Width", 0), // property Width
+			/* 58 */ imports.NewTable("TScreen_WorkAreaRect", 0), // property WorkAreaRect
+			/* 59 */ imports.NewTable("TScreen_WorkAreaHeight", 0), // property WorkAreaHeight
+			/* 60 */ imports.NewTable("TScreen_WorkAreaLeft", 0), // property WorkAreaLeft
+			/* 61 */ imports.NewTable("TScreen_WorkAreaTop", 0), // property WorkAreaTop
+			/* 62 */ imports.NewTable("TScreen_WorkAreaWidth", 0), // property WorkAreaWidth
+			/* 63 */ imports.NewTable("TScreen_OnActiveControlChange", 0), // event OnActiveControlChange
+			/* 64 */ imports.NewTable("TScreen_OnActiveFormChange", 0), // event OnActiveFormChange
+			/* 65 */ imports.NewTable("TScreen_TClass", 0), // function TScreenClass
+		}
+	})
 	return screenImport
 }

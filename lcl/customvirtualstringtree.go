@@ -9,165 +9,219 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomVirtualStringTree Parent: IBaseVirtualTree
 type ICustomVirtualStringTree interface {
 	IBaseVirtualTree
-	ImageText(Node IVirtualNode, Kind TVTImageKind, Column TColumnIndex) string                // property
-	StaticText(Node IVirtualNode, Column TColumnIndex) string                                  // property
-	Text(Node IVirtualNode, Column TColumnIndex) string                                        // property
-	SetText(Node IVirtualNode, Column TColumnIndex, AValue string)                             // property
-	ComputeNodeHeight(Canvas ICanvas, Node IVirtualNode, Column TColumnIndex, S string) int32  // function
-	ContentToClipboard(Format TClipboardFormat, Source TVSTTextSourceType) HGLOBAL             // function
-	ContentToHTML(Source TVSTTextSourceType, Caption string) string                            // function
-	ContentToRTF(Source TVSTTextSourceType) string                                             // function
-	ContentToAnsi(Source TVSTTextSourceType, Separator string) string                          // function
-	ContentToText(Source TVSTTextSourceType, Separator string) string                          // function
-	ContentToUnicode(Source TVSTTextSourceType, Separator string) string                       // function
-	ContentToUTF16(Source TVSTTextSourceType, Separator string) string                         // function
-	ContentToUTF8(Source TVSTTextSourceType, Separator string) string                          // function
-	Path(Node IVirtualNode, Column TColumnIndex, TextType TVSTTextType, Delimiter Char) string // function
-	SaveToCSVFile(FileNameWithPath string, IncludeHeading bool) bool                           // function
-	ContentToCustom(Source TVSTTextSourceType)                                                 // procedure
-	AddToSelection(Node IVirtualNode)                                                          // procedure
-	RemoveFromSelection(Node IVirtualNode)                                                     // procedure
+	ComputeNodeHeight(canvas ICanvas, node types.PVirtualNode, column int32, S string) int32          // function
+	ContentToClipboard(format types.TClipboardFormat, source types.TVSTTextSourceType) types.HGLOBAL  // function
+	ContentToHTML(source types.TVSTTextSourceType, caption string) string                             // function
+	ContentToRTF(source types.TVSTTextSourceType) string                                              // function
+	ContentToAnsi(source types.TVSTTextSourceType, separator string) string                           // function
+	ContentToText(source types.TVSTTextSourceType, separator string) string                           // function
+	ContentToUnicode(source types.TVSTTextSourceType, separator string) string                        // function
+	ContentToUTF16(source types.TVSTTextSourceType, separator string) string                          // function
+	ContentToUTF8(source types.TVSTTextSourceType, separator string) string                           // function
+	Path(node types.PVirtualNode, column int32, textType types.TVSTTextType, delimiter uint16) string // function
+	SaveToCSVFile(fileNameWithPath string, includeHeading bool) bool                                  // function
+	ContentToCustom(source types.TVSTTextSourceType)                                                  // procedure
+	AddToSelection(node types.PVirtualNode)                                                           // procedure
+	RemoveFromSelection(node types.PVirtualNode)                                                      // procedure
+	ImageText(node types.PVirtualNode, kind types.TVTImageKind, column int32) string                  // property ImageText Getter
+	StaticText(node types.PVirtualNode, column int32) string                                          // property StaticText Getter
+	Text(node types.PVirtualNode, column int32) string                                                // property Text Getter
+	SetText(node types.PVirtualNode, column int32, value string)                                      // property Text Setter
 }
 
-// TCustomVirtualStringTree Parent: TBaseVirtualTree
 type TCustomVirtualStringTree struct {
 	TBaseVirtualTree
 }
 
-func NewCustomVirtualStringTree(AOwner IComponent) ICustomVirtualStringTree {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(12, GetObjectUintptr(AOwner))
-	return AsCustomVirtualStringTree(r1)
+func (m *TCustomVirtualStringTree) ComputeNodeHeight(canvas ICanvas, node types.PVirtualNode, column int32, S string) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customVirtualStringTreeAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(canvas), uintptr(node), uintptr(column), api.PasStr(S))
+	return int32(r)
 }
 
-func (m *TCustomVirtualStringTree) ImageText(Node IVirtualNode, Kind TVTImageKind, Column TColumnIndex) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(13, m.Instance(), GetObjectUintptr(Node), uintptr(Kind), uintptr(Column))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) ContentToClipboard(format types.TClipboardFormat, source types.TVSTTextSourceType) types.HGLOBAL {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customVirtualStringTreeAPI().SysCallN(2, m.Instance(), uintptr(format), uintptr(source))
+	return types.HGLOBAL(r)
 }
 
-func (m *TCustomVirtualStringTree) StaticText(Node IVirtualNode, Column TColumnIndex) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(17, m.Instance(), GetObjectUintptr(Node), uintptr(Column))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) ContentToHTML(source types.TVSTTextSourceType, caption string) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(3, m.Instance(), uintptr(source), api.PasStr(caption))
+	return api.GoStr(r)
 }
 
-func (m *TCustomVirtualStringTree) Text(Node IVirtualNode, Column TColumnIndex) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(18, 0, m.Instance(), GetObjectUintptr(Node), uintptr(Column))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) ContentToRTF(source types.TVSTTextSourceType) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(4, m.Instance(), uintptr(source))
+	return api.GoStr(r)
 }
 
-func (m *TCustomVirtualStringTree) SetText(Node IVirtualNode, Column TColumnIndex, AValue string) {
-	customVirtualStringTreeImportAPI().SysCallN(18, 1, m.Instance(), GetObjectUintptr(Node), uintptr(Column), PascalStr(AValue))
+func (m *TCustomVirtualStringTree) ContentToAnsi(source types.TVSTTextSourceType, separator string) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(5, m.Instance(), uintptr(source), api.PasStr(separator))
+	return api.GoStr(r)
 }
 
-func (m *TCustomVirtualStringTree) ComputeNodeHeight(Canvas ICanvas, Node IVirtualNode, Column TColumnIndex, S string) int32 {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(2, m.Instance(), GetObjectUintptr(Canvas), GetObjectUintptr(Node), uintptr(Column), PascalStr(S))
-	return int32(r1)
+func (m *TCustomVirtualStringTree) ContentToText(source types.TVSTTextSourceType, separator string) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(6, m.Instance(), uintptr(source), api.PasStr(separator))
+	return api.GoStr(r)
 }
 
-func (m *TCustomVirtualStringTree) ContentToClipboard(Format TClipboardFormat, Source TVSTTextSourceType) HGLOBAL {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(4, m.Instance(), uintptr(Format), uintptr(Source))
-	return HGLOBAL(r1)
+func (m *TCustomVirtualStringTree) ContentToUnicode(source types.TVSTTextSourceType, separator string) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(7, m.Instance(), uintptr(source), api.PasStr(separator))
+	return api.GoStr(r)
 }
 
-func (m *TCustomVirtualStringTree) ContentToHTML(Source TVSTTextSourceType, Caption string) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(6, m.Instance(), uintptr(Source), PascalStr(Caption))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) ContentToUTF16(source types.TVSTTextSourceType, separator string) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(8, m.Instance(), uintptr(source), api.PasStr(separator))
+	return api.GoStr(r)
 }
 
-func (m *TCustomVirtualStringTree) ContentToRTF(Source TVSTTextSourceType) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(7, m.Instance(), uintptr(Source))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) ContentToUTF8(source types.TVSTTextSourceType, separator string) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(9, m.Instance(), uintptr(source), api.PasStr(separator))
+	return api.GoStr(r)
 }
 
-func (m *TCustomVirtualStringTree) ContentToAnsi(Source TVSTTextSourceType, Separator string) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(3, m.Instance(), uintptr(Source), PascalStr(Separator))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) Path(node types.PVirtualNode, column int32, textType types.TVSTTextType, delimiter uint16) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(10, m.Instance(), uintptr(node), uintptr(column), uintptr(textType), uintptr(delimiter))
+	return api.GoStr(r)
 }
 
-func (m *TCustomVirtualStringTree) ContentToText(Source TVSTTextSourceType, Separator string) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(8, m.Instance(), uintptr(Source), PascalStr(Separator))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) SaveToCSVFile(fileNameWithPath string, includeHeading bool) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customVirtualStringTreeAPI().SysCallN(11, m.Instance(), api.PasStr(fileNameWithPath), api.PasBool(includeHeading))
+	return api.GoBool(r)
 }
 
-func (m *TCustomVirtualStringTree) ContentToUnicode(Source TVSTTextSourceType, Separator string) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(11, m.Instance(), uintptr(Source), PascalStr(Separator))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) ContentToCustom(source types.TVSTTextSourceType) {
+	if !m.IsValid() {
+		return
+	}
+	customVirtualStringTreeAPI().SysCallN(12, m.Instance(), uintptr(source))
 }
 
-func (m *TCustomVirtualStringTree) ContentToUTF16(Source TVSTTextSourceType, Separator string) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(9, m.Instance(), uintptr(Source), PascalStr(Separator))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) AddToSelection(node types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	customVirtualStringTreeAPI().SysCallN(13, m.Instance(), uintptr(node))
 }
 
-func (m *TCustomVirtualStringTree) ContentToUTF8(Source TVSTTextSourceType, Separator string) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(10, m.Instance(), uintptr(Source), PascalStr(Separator))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) RemoveFromSelection(node types.PVirtualNode) {
+	if !m.IsValid() {
+		return
+	}
+	customVirtualStringTreeAPI().SysCallN(14, m.Instance(), uintptr(node))
 }
 
-func (m *TCustomVirtualStringTree) Path(Node IVirtualNode, Column TColumnIndex, TextType TVSTTextType, Delimiter Char) string {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(14, m.Instance(), GetObjectUintptr(Node), uintptr(Column), uintptr(TextType), uintptr(Delimiter))
-	return GoStr(r1)
+func (m *TCustomVirtualStringTree) ImageText(node types.PVirtualNode, kind types.TVTImageKind, column int32) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(15, m.Instance(), uintptr(node), uintptr(kind), uintptr(column))
+	return api.GoStr(r)
 }
 
-func (m *TCustomVirtualStringTree) SaveToCSVFile(FileNameWithPath string, IncludeHeading bool) bool {
-	r1 := customVirtualStringTreeImportAPI().SysCallN(16, m.Instance(), PascalStr(FileNameWithPath), PascalBool(IncludeHeading))
-	return GoBool(r1)
+func (m *TCustomVirtualStringTree) StaticText(node types.PVirtualNode, column int32) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(16, m.Instance(), uintptr(node), uintptr(column))
+	return api.GoStr(r)
 }
 
-func CustomVirtualStringTreeClass() TClass {
-	ret := customVirtualStringTreeImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TCustomVirtualStringTree) Text(node types.PVirtualNode, column int32) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customVirtualStringTreeAPI().SysCallN(17, 0, m.Instance(), uintptr(node), uintptr(column))
+	return api.GoStr(r)
 }
 
-func (m *TCustomVirtualStringTree) ContentToCustom(Source TVSTTextSourceType) {
-	customVirtualStringTreeImportAPI().SysCallN(5, m.Instance(), uintptr(Source))
+func (m *TCustomVirtualStringTree) SetText(node types.PVirtualNode, column int32, value string) {
+	if !m.IsValid() {
+		return
+	}
+	customVirtualStringTreeAPI().SysCallN(17, 1, m.Instance(), uintptr(node), uintptr(column), api.PasStr(value))
 }
 
-func (m *TCustomVirtualStringTree) AddToSelection(Node IVirtualNode) {
-	customVirtualStringTreeImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(Node))
+// NewCustomVirtualStringTree class constructor
+func NewCustomVirtualStringTree(owner IComponent) ICustomVirtualStringTree {
+	r := customVirtualStringTreeAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomVirtualStringTree(r)
 }
 
-func (m *TCustomVirtualStringTree) RemoveFromSelection(Node IVirtualNode) {
-	customVirtualStringTreeImportAPI().SysCallN(15, m.Instance(), GetObjectUintptr(Node))
+func TCustomVirtualStringTreeClass() types.TClass {
+	r := customVirtualStringTreeAPI().SysCallN(18)
+	return types.TClass(r)
 }
 
 var (
-	customVirtualStringTreeImport       *imports.Imports = nil
-	customVirtualStringTreeImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomVirtualStringTree_AddToSelection", 0),
-		/*1*/ imports.NewTable("CustomVirtualStringTree_Class", 0),
-		/*2*/ imports.NewTable("CustomVirtualStringTree_ComputeNodeHeight", 0),
-		/*3*/ imports.NewTable("CustomVirtualStringTree_ContentToAnsi", 0),
-		/*4*/ imports.NewTable("CustomVirtualStringTree_ContentToClipboard", 0),
-		/*5*/ imports.NewTable("CustomVirtualStringTree_ContentToCustom", 0),
-		/*6*/ imports.NewTable("CustomVirtualStringTree_ContentToHTML", 0),
-		/*7*/ imports.NewTable("CustomVirtualStringTree_ContentToRTF", 0),
-		/*8*/ imports.NewTable("CustomVirtualStringTree_ContentToText", 0),
-		/*9*/ imports.NewTable("CustomVirtualStringTree_ContentToUTF16", 0),
-		/*10*/ imports.NewTable("CustomVirtualStringTree_ContentToUTF8", 0),
-		/*11*/ imports.NewTable("CustomVirtualStringTree_ContentToUnicode", 0),
-		/*12*/ imports.NewTable("CustomVirtualStringTree_Create", 0),
-		/*13*/ imports.NewTable("CustomVirtualStringTree_ImageText", 0),
-		/*14*/ imports.NewTable("CustomVirtualStringTree_Path", 0),
-		/*15*/ imports.NewTable("CustomVirtualStringTree_RemoveFromSelection", 0),
-		/*16*/ imports.NewTable("CustomVirtualStringTree_SaveToCSVFile", 0),
-		/*17*/ imports.NewTable("CustomVirtualStringTree_StaticText", 0),
-		/*18*/ imports.NewTable("CustomVirtualStringTree_Text", 0),
-	}
+	customVirtualStringTreeOnce   base.Once
+	customVirtualStringTreeImport *imports.Imports = nil
 )
 
-func customVirtualStringTreeImportAPI() *imports.Imports {
-	if customVirtualStringTreeImport == nil {
-		customVirtualStringTreeImport = NewDefaultImports()
-		customVirtualStringTreeImport.SetImportTable(customVirtualStringTreeImportTables)
-		customVirtualStringTreeImportTables = nil
-	}
+func customVirtualStringTreeAPI() *imports.Imports {
+	customVirtualStringTreeOnce.Do(func() {
+		customVirtualStringTreeImport = api.NewDefaultImports()
+		customVirtualStringTreeImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomVirtualStringTree_Create", 0), // constructor NewCustomVirtualStringTree
+			/* 1 */ imports.NewTable("TCustomVirtualStringTree_ComputeNodeHeight", 0), // function ComputeNodeHeight
+			/* 2 */ imports.NewTable("TCustomVirtualStringTree_ContentToClipboard", 0), // function ContentToClipboard
+			/* 3 */ imports.NewTable("TCustomVirtualStringTree_ContentToHTML", 0), // function ContentToHTML
+			/* 4 */ imports.NewTable("TCustomVirtualStringTree_ContentToRTF", 0), // function ContentToRTF
+			/* 5 */ imports.NewTable("TCustomVirtualStringTree_ContentToAnsi", 0), // function ContentToAnsi
+			/* 6 */ imports.NewTable("TCustomVirtualStringTree_ContentToText", 0), // function ContentToText
+			/* 7 */ imports.NewTable("TCustomVirtualStringTree_ContentToUnicode", 0), // function ContentToUnicode
+			/* 8 */ imports.NewTable("TCustomVirtualStringTree_ContentToUTF16", 0), // function ContentToUTF16
+			/* 9 */ imports.NewTable("TCustomVirtualStringTree_ContentToUTF8", 0), // function ContentToUTF8
+			/* 10 */ imports.NewTable("TCustomVirtualStringTree_Path", 0), // function Path
+			/* 11 */ imports.NewTable("TCustomVirtualStringTree_SaveToCSVFile", 0), // function SaveToCSVFile
+			/* 12 */ imports.NewTable("TCustomVirtualStringTree_ContentToCustom", 0), // procedure ContentToCustom
+			/* 13 */ imports.NewTable("TCustomVirtualStringTree_AddToSelection", 0), // procedure AddToSelection
+			/* 14 */ imports.NewTable("TCustomVirtualStringTree_RemoveFromSelection", 0), // procedure RemoveFromSelection
+			/* 15 */ imports.NewTable("TCustomVirtualStringTree_ImageText", 0), // property ImageText
+			/* 16 */ imports.NewTable("TCustomVirtualStringTree_StaticText", 0), // property StaticText
+			/* 17 */ imports.NewTable("TCustomVirtualStringTree_Text", 0), // property Text
+			/* 18 */ imports.NewTable("TCustomVirtualStringTree_TClass", 0), // function TCustomVirtualStringTreeClass
+		}
+	})
 	return customVirtualStringTreeImport
 }

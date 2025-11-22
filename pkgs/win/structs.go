@@ -11,33 +11,7 @@
 
 package win
 
-import . "github.com/energye/lcl/types"
-
-type TRGBQuad struct {
-	RgbBlue     uint8
-	RgbGreen    uint8
-	RgbRed      uint8
-	RgbReserved uint8
-}
-
-type TBitmapInfoHeader struct {
-	BiSize          uint32
-	BiWidth         uint32
-	BiHeight        uint32
-	BiPlanes        uint16
-	BiBitCount      uint16
-	BiCompression   uint32
-	BiSizeImage     uint32
-	BiXPelsPerMeter uint32
-	BiYPelsPerMeter uint32
-	BiClrUsed       uint32
-	BiClrImportant  uint32
-}
-
-type TBitmapInfo struct {
-	BmiHeader TBitmapInfoHeader
-	BmiColors [1]TRGBQuad
-}
+import "github.com/energye/lcl/types"
 
 type TBlendFunction struct {
 	BlendOp             uint8
@@ -84,17 +58,17 @@ type TItemIDList struct {
 type TShellExecuteInfo struct {
 	CbSize       uint32
 	FMask        uint32
-	Wnd          HWND
-	LpVerb       LPCWSTR
-	LpFile       LPCWSTR
-	LpParameters LPCWSTR
-	LpDirectory  LPCWSTR
+	Wnd          types.HWND
+	LpVerb       types.LPCWSTR
+	LpFile       types.LPCWSTR
+	LpParameters types.LPCWSTR
+	LpDirectory  types.LPCWSTR
 	NShow        int32
-	HInstApp     HINST
+	HInstApp     types.HINST
 	// Optional fields
 	LpIDList  uintptr
-	LpClass   LPCWSTR
-	HkeyClass HKEY
+	LpClass   types.LPCWSTR
+	HkeyClass types.HKEY
 	DwHotKey  uint32
 
 	//	0: (
@@ -109,16 +83,16 @@ type TMemoryBasicInformation struct {
 	BaseAddress       uintptr
 	AllocationBase    uintptr
 	AllocationProtect uint32
-	RegionSize        SIZE_T
+	RegionSize        types.SIZE_T
 	State             uint32
 	Protect           uint32
 	Type_9            uint32
 }
 
 type TSHFileInfo struct {
-	HIcon         HICON            /* out: icon */
-	IIcon         Integer          /* out: icon index */
-	DwAttributes  DWORD            /* out: SFGAO_ flags */
+	HIcon         types.HICON      /* out: icon */
+	IIcon         types.Integer    /* out: icon index */
+	DwAttributes  types.DWORD      /* out: SFGAO_ flags */
 	SzDisplayName [MAX_PATH]uint16 /* out: display name (or path) */
 	SzTypeName    [80]uint16       /* out: type name */
 }
@@ -127,7 +101,21 @@ type WINDOWPLACEMENT struct {
 	Length           uint32
 	Flags            uint32
 	ShowCmd          uint32
-	PtMinPosition    TPoint
-	PtMaxPosition    TPoint
-	RcNormalPosition TRect
+	PtMinPosition    types.TPoint
+	PtMaxPosition    types.TPoint
+	RcNormalPosition types.TRect
+}
+
+type WINDOWPOS struct {
+	_hwnd           types.HWND
+	hwndInsertAfter types.HWND
+	x               types.LongInt
+	y               types.LongInt
+	cx              types.LongInt
+	cy              types.LongInt
+	flags           types.UINT
+}
+type NCCALCSIZE_PARAMS struct {
+	Rgrc  [3]types.TRect // 三个矩形区域
+	Lppos *WINDOWPOS     // 指向WINDOWPOS结构的指针
 }

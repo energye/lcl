@@ -9,116 +9,148 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IItemProp Parent: IPersistent
 type IItemProp interface {
 	IPersistent
-	EditMask() string               // property
-	SetEditMask(AValue string)      // property
-	EditStyle() TEditStyle          // property
-	SetEditStyle(AValue TEditStyle) // property
-	KeyDesc() string                // property
-	SetKeyDesc(AValue string)       // property
-	PickList() IStrings             // property
-	SetPickList(AValue IStrings)    // property
-	MaxLength() int32               // property
-	SetMaxLength(AValue int32)      // property
-	ReadOnly() bool                 // property
-	SetReadOnly(AValue bool)        // property
+	// EditMask
+	//  function HasPickList: Boolean;
+	EditMask() string                    // property EditMask Getter
+	SetEditMask(value string)            // property EditMask Setter
+	EditStyle() types.TEditStyle         // property EditStyle Getter
+	SetEditStyle(value types.TEditStyle) // property EditStyle Setter
+	KeyDesc() string                     // property KeyDesc Getter
+	SetKeyDesc(value string)             // property KeyDesc Setter
+	PickList() IStrings                  // property PickList Getter
+	SetPickList(value IStrings)          // property PickList Setter
+	MaxLength() int32                    // property MaxLength Getter
+	SetMaxLength(value int32)            // property MaxLength Setter
+	ReadOnly() bool                      // property ReadOnly Getter
+	SetReadOnly(value bool)              // property ReadOnly Setter
 }
 
-// TItemProp Parent: TPersistent
 type TItemProp struct {
 	TPersistent
 }
 
-func NewItemProp(AOwner IValueListEditor) IItemProp {
-	r1 := temPropImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsItemProp(r1)
-}
-
 func (m *TItemProp) EditMask() string {
-	r1 := temPropImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := itemPropAPI().SysCallN(1, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TItemProp) SetEditMask(AValue string) {
-	temPropImportAPI().SysCallN(2, 1, m.Instance(), PascalStr(AValue))
+func (m *TItemProp) SetEditMask(value string) {
+	if !m.IsValid() {
+		return
+	}
+	itemPropAPI().SysCallN(1, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TItemProp) EditStyle() TEditStyle {
-	r1 := temPropImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TEditStyle(r1)
+func (m *TItemProp) EditStyle() types.TEditStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := itemPropAPI().SysCallN(2, 0, m.Instance())
+	return types.TEditStyle(r)
 }
 
-func (m *TItemProp) SetEditStyle(AValue TEditStyle) {
-	temPropImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TItemProp) SetEditStyle(value types.TEditStyle) {
+	if !m.IsValid() {
+		return
+	}
+	itemPropAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TItemProp) KeyDesc() string {
-	r1 := temPropImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := itemPropAPI().SysCallN(3, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TItemProp) SetKeyDesc(AValue string) {
-	temPropImportAPI().SysCallN(4, 1, m.Instance(), PascalStr(AValue))
+func (m *TItemProp) SetKeyDesc(value string) {
+	if !m.IsValid() {
+		return
+	}
+	itemPropAPI().SysCallN(3, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TItemProp) PickList() IStrings {
-	r1 := temPropImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return AsStrings(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := itemPropAPI().SysCallN(4, 0, m.Instance())
+	return AsStrings(r)
 }
 
-func (m *TItemProp) SetPickList(AValue IStrings) {
-	temPropImportAPI().SysCallN(6, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TItemProp) SetPickList(value IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	itemPropAPI().SysCallN(4, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TItemProp) MaxLength() int32 {
-	r1 := temPropImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := itemPropAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TItemProp) SetMaxLength(AValue int32) {
-	temPropImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TItemProp) SetMaxLength(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	itemPropAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TItemProp) ReadOnly() bool {
-	r1 := temPropImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := itemPropAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TItemProp) SetReadOnly(AValue bool) {
-	temPropImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
+func (m *TItemProp) SetReadOnly(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	itemPropAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
-func ItemPropClass() TClass {
-	ret := temPropImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewItemProp class constructor
+func NewItemProp(owner IValueListEditor) IItemProp {
+	r := itemPropAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsItemProp(r)
 }
 
 var (
-	temPropImport       *imports.Imports = nil
-	temPropImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ItemProp_Class", 0),
-		/*1*/ imports.NewTable("ItemProp_Create", 0),
-		/*2*/ imports.NewTable("ItemProp_EditMask", 0),
-		/*3*/ imports.NewTable("ItemProp_EditStyle", 0),
-		/*4*/ imports.NewTable("ItemProp_KeyDesc", 0),
-		/*5*/ imports.NewTable("ItemProp_MaxLength", 0),
-		/*6*/ imports.NewTable("ItemProp_PickList", 0),
-		/*7*/ imports.NewTable("ItemProp_ReadOnly", 0),
-	}
+	itemPropOnce   base.Once
+	itemPropImport *imports.Imports = nil
 )
 
-func temPropImportAPI() *imports.Imports {
-	if temPropImport == nil {
-		temPropImport = NewDefaultImports()
-		temPropImport.SetImportTable(temPropImportTables)
-		temPropImportTables = nil
-	}
-	return temPropImport
+func itemPropAPI() *imports.Imports {
+	itemPropOnce.Do(func() {
+		itemPropImport = api.NewDefaultImports()
+		itemPropImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TItemProp_Create", 0), // constructor NewItemProp
+			/* 1 */ imports.NewTable("TItemProp_EditMask", 0), // property EditMask
+			/* 2 */ imports.NewTable("TItemProp_EditStyle", 0), // property EditStyle
+			/* 3 */ imports.NewTable("TItemProp_KeyDesc", 0), // property KeyDesc
+			/* 4 */ imports.NewTable("TItemProp_PickList", 0), // property PickList
+			/* 5 */ imports.NewTable("TItemProp_MaxLength", 0), // property MaxLength
+			/* 6 */ imports.NewTable("TItemProp_ReadOnly", 0), // property ReadOnly
+		}
+	})
+	return itemPropImport
 }

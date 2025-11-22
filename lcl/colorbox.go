@@ -9,28 +9,29 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IColorBox Parent: ICustomColorBox
 type IColorBox interface {
 	ICustomColorBox
-	DragCursor() TCursor                           // property
-	SetDragCursor(AValue TCursor)                  // property
-	DragMode() TDragMode                           // property
-	SetDragMode(AValue TDragMode)                  // property
-	ItemHeight() int32                             // property
-	SetItemHeight(AValue int32)                    // property
-	ItemWidth() int32                              // property
-	SetItemWidth(AValue int32)                     // property
-	ParentColor() bool                             // property
-	SetParentColor(AValue bool)                    // property
-	ParentFont() bool                              // property
-	SetParentFont(AValue bool)                     // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
+	DragCursor() types.TCursor                     // property DragCursor Getter
+	SetDragCursor(value types.TCursor)             // property DragCursor Setter
+	DragMode() types.TDragMode                     // property DragMode Getter
+	SetDragMode(value types.TDragMode)             // property DragMode Setter
+	ItemHeight() int32                             // property ItemHeight Getter
+	SetItemHeight(value int32)                     // property ItemHeight Setter
+	ItemWidth() int32                              // property ItemWidth Getter
+	SetItemWidth(value int32)                      // property ItemWidth Setter
+	ParentColor() bool                             // property ParentColor Getter
+	SetParentColor(value bool)                     // property ParentColor Setter
+	ParentFont() bool                              // property ParentFont Getter
+	SetParentFont(value bool)                      // property ParentFont Setter
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
 	SetOnChange(fn TNotifyEvent)                   // property event
 	SetOnCloseUp(fn TNotifyEvent)                  // property event
 	SetOnContextPopup(fn TContextPopupEvent)       // property event
@@ -52,294 +53,316 @@ type IColorBox interface {
 	SetOnSelect(fn TNotifyEvent)                   // property event
 }
 
-// TColorBox Parent: TCustomColorBox
 type TColorBox struct {
 	TCustomColorBox
-	changePtr         uintptr
-	closeUpPtr        uintptr
-	contextPopupPtr   uintptr
-	dblClickPtr       uintptr
-	dragDropPtr       uintptr
-	dragOverPtr       uintptr
-	endDragPtr        uintptr
-	dropDownPtr       uintptr
-	editingDonePtr    uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	startDragPtr      uintptr
-	selectPtr         uintptr
 }
 
-func NewColorBox(AOwner IComponent) IColorBox {
-	r1 := colorBoxImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsColorBox(r1)
+func (m *TColorBox) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := colorBoxAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TColorBox) DragCursor() TCursor {
-	r1 := colorBoxImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TColorBox) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	colorBoxAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TColorBox) SetDragCursor(AValue TCursor) {
-	colorBoxImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TColorBox) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := colorBoxAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TColorBox) DragMode() TDragMode {
-	r1 := colorBoxImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TColorBox) SetDragMode(AValue TDragMode) {
-	colorBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TColorBox) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	colorBoxAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TColorBox) ItemHeight() int32 {
-	r1 := colorBoxImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := colorBoxAPI().SysCallN(3, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TColorBox) SetItemHeight(AValue int32) {
-	colorBoxImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TColorBox) SetItemHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	colorBoxAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TColorBox) ItemWidth() int32 {
-	r1 := colorBoxImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := colorBoxAPI().SysCallN(4, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TColorBox) SetItemWidth(AValue int32) {
-	colorBoxImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TColorBox) SetItemWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	colorBoxAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TColorBox) ParentColor() bool {
-	r1 := colorBoxImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := colorBoxAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TColorBox) SetParentColor(AValue bool) {
-	colorBoxImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
+func (m *TColorBox) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	colorBoxAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TColorBox) ParentFont() bool {
-	r1 := colorBoxImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := colorBoxAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TColorBox) SetParentFont(AValue bool) {
-	colorBoxImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
+func (m *TColorBox) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	colorBoxAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TColorBox) ParentShowHint() bool {
-	r1 := colorBoxImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := colorBoxAPI().SysCallN(7, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TColorBox) SetParentShowHint(AValue bool) {
-	colorBoxImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
-}
-
-func ColorBoxClass() TClass {
-	ret := colorBoxImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TColorBox) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	colorBoxAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TColorBox) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(9, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 8, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnCloseUp(fn TNotifyEvent) {
-	if m.closeUpPtr != 0 {
-		RemoveEventElement(m.closeUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.closeUpPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(10, m.Instance(), m.closeUpPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 9, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(11, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 10, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(12, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 11, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(13, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 12, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(14, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 13, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(17, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 14, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnDropDown(fn TNotifyEvent) {
-	if m.dropDownPtr != 0 {
-		RemoveEventElement(m.dropDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dropDownPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(15, m.Instance(), m.dropDownPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 15, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnEditingDone(fn TNotifyEvent) {
-	if m.editingDonePtr != 0 {
-		RemoveEventElement(m.editingDonePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.editingDonePtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(16, m.Instance(), m.editingDonePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 16, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(18, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 17, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(19, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 18, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(20, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 19, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(21, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 20, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(22, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 21, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(23, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 22, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(24, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 23, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(25, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 24, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(27, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 25, colorBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TColorBox) SetOnSelect(fn TNotifyEvent) {
-	if m.selectPtr != 0 {
-		RemoveEventElement(m.selectPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.selectPtr = MakeEventDataPtr(fn)
-	colorBoxImportAPI().SysCallN(26, m.Instance(), m.selectPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 26, colorBoxAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewColorBox class constructor
+func NewColorBox(owner IComponent) IColorBox {
+	r := colorBoxAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsColorBox(r)
+}
+
+func TColorBoxClass() types.TClass {
+	r := colorBoxAPI().SysCallN(27)
+	return types.TClass(r)
 }
 
 var (
-	colorBoxImport       *imports.Imports = nil
-	colorBoxImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ColorBox_Class", 0),
-		/*1*/ imports.NewTable("ColorBox_Create", 0),
-		/*2*/ imports.NewTable("ColorBox_DragCursor", 0),
-		/*3*/ imports.NewTable("ColorBox_DragMode", 0),
-		/*4*/ imports.NewTable("ColorBox_ItemHeight", 0),
-		/*5*/ imports.NewTable("ColorBox_ItemWidth", 0),
-		/*6*/ imports.NewTable("ColorBox_ParentColor", 0),
-		/*7*/ imports.NewTable("ColorBox_ParentFont", 0),
-		/*8*/ imports.NewTable("ColorBox_ParentShowHint", 0),
-		/*9*/ imports.NewTable("ColorBox_SetOnChange", 0),
-		/*10*/ imports.NewTable("ColorBox_SetOnCloseUp", 0),
-		/*11*/ imports.NewTable("ColorBox_SetOnContextPopup", 0),
-		/*12*/ imports.NewTable("ColorBox_SetOnDblClick", 0),
-		/*13*/ imports.NewTable("ColorBox_SetOnDragDrop", 0),
-		/*14*/ imports.NewTable("ColorBox_SetOnDragOver", 0),
-		/*15*/ imports.NewTable("ColorBox_SetOnDropDown", 0),
-		/*16*/ imports.NewTable("ColorBox_SetOnEditingDone", 0),
-		/*17*/ imports.NewTable("ColorBox_SetOnEndDrag", 0),
-		/*18*/ imports.NewTable("ColorBox_SetOnMouseDown", 0),
-		/*19*/ imports.NewTable("ColorBox_SetOnMouseEnter", 0),
-		/*20*/ imports.NewTable("ColorBox_SetOnMouseLeave", 0),
-		/*21*/ imports.NewTable("ColorBox_SetOnMouseMove", 0),
-		/*22*/ imports.NewTable("ColorBox_SetOnMouseUp", 0),
-		/*23*/ imports.NewTable("ColorBox_SetOnMouseWheel", 0),
-		/*24*/ imports.NewTable("ColorBox_SetOnMouseWheelDown", 0),
-		/*25*/ imports.NewTable("ColorBox_SetOnMouseWheelUp", 0),
-		/*26*/ imports.NewTable("ColorBox_SetOnSelect", 0),
-		/*27*/ imports.NewTable("ColorBox_SetOnStartDrag", 0),
-	}
+	colorBoxOnce   base.Once
+	colorBoxImport *imports.Imports = nil
 )
 
-func colorBoxImportAPI() *imports.Imports {
-	if colorBoxImport == nil {
-		colorBoxImport = NewDefaultImports()
-		colorBoxImport.SetImportTable(colorBoxImportTables)
-		colorBoxImportTables = nil
-	}
+func colorBoxAPI() *imports.Imports {
+	colorBoxOnce.Do(func() {
+		colorBoxImport = api.NewDefaultImports()
+		colorBoxImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TColorBox_Create", 0), // constructor NewColorBox
+			/* 1 */ imports.NewTable("TColorBox_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TColorBox_DragMode", 0), // property DragMode
+			/* 3 */ imports.NewTable("TColorBox_ItemHeight", 0), // property ItemHeight
+			/* 4 */ imports.NewTable("TColorBox_ItemWidth", 0), // property ItemWidth
+			/* 5 */ imports.NewTable("TColorBox_ParentColor", 0), // property ParentColor
+			/* 6 */ imports.NewTable("TColorBox_ParentFont", 0), // property ParentFont
+			/* 7 */ imports.NewTable("TColorBox_ParentShowHint", 0), // property ParentShowHint
+			/* 8 */ imports.NewTable("TColorBox_OnChange", 0), // event OnChange
+			/* 9 */ imports.NewTable("TColorBox_OnCloseUp", 0), // event OnCloseUp
+			/* 10 */ imports.NewTable("TColorBox_OnContextPopup", 0), // event OnContextPopup
+			/* 11 */ imports.NewTable("TColorBox_OnDblClick", 0), // event OnDblClick
+			/* 12 */ imports.NewTable("TColorBox_OnDragDrop", 0), // event OnDragDrop
+			/* 13 */ imports.NewTable("TColorBox_OnDragOver", 0), // event OnDragOver
+			/* 14 */ imports.NewTable("TColorBox_OnEndDrag", 0), // event OnEndDrag
+			/* 15 */ imports.NewTable("TColorBox_OnDropDown", 0), // event OnDropDown
+			/* 16 */ imports.NewTable("TColorBox_OnEditingDone", 0), // event OnEditingDone
+			/* 17 */ imports.NewTable("TColorBox_OnMouseDown", 0), // event OnMouseDown
+			/* 18 */ imports.NewTable("TColorBox_OnMouseEnter", 0), // event OnMouseEnter
+			/* 19 */ imports.NewTable("TColorBox_OnMouseLeave", 0), // event OnMouseLeave
+			/* 20 */ imports.NewTable("TColorBox_OnMouseMove", 0), // event OnMouseMove
+			/* 21 */ imports.NewTable("TColorBox_OnMouseUp", 0), // event OnMouseUp
+			/* 22 */ imports.NewTable("TColorBox_OnMouseWheel", 0), // event OnMouseWheel
+			/* 23 */ imports.NewTable("TColorBox_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 24 */ imports.NewTable("TColorBox_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 25 */ imports.NewTable("TColorBox_OnStartDrag", 0), // event OnStartDrag
+			/* 26 */ imports.NewTable("TColorBox_OnSelect", 0), // event OnSelect
+			/* 27 */ imports.NewTable("TColorBox_TClass", 0), // function TColorBoxClass
+		}
+	})
 	return colorBoxImport
 }

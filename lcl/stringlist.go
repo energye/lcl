@@ -9,153 +9,169 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IStringList Parent: IStrings
 type IStringList interface {
 	IStrings
-	LoadFromFSFile(Filename string) error
-	Duplicates() TDuplicates               // property
-	SetDuplicates(AValue TDuplicates)      // property
-	Sorted() bool                          // property
-	SetSorted(AValue bool)                 // property
-	CaseSensitive() bool                   // property
-	SetCaseSensitive(AValue bool)          // property
-	OwnsObjects() bool                     // property
-	SetOwnsObjects(AValue bool)            // property
-	SortStyle() TStringsSortStyle          // property
-	SetSortStyle(AValue TStringsSortStyle) // property
-	Find(S string, OutIndex *int32) bool   // function
-	Sort()                                 // procedure
-	CustomSort(fn TStringListSortCompare)  // procedure
-	SetOnChange(fn TNotifyEvent)           // property event
-	SetOnChanging(fn TNotifyEvent)         // property event
+	Find(S string, outIndex *int32) bool        // function
+	Sort()                                      // procedure
+	Duplicates() types.TDuplicates              // property Duplicates Getter
+	SetDuplicates(value types.TDuplicates)      // property Duplicates Setter
+	Sorted() bool                               // property Sorted Getter
+	SetSorted(value bool)                       // property Sorted Setter
+	CaseSensitive() bool                        // property CaseSensitive Getter
+	SetCaseSensitive(value bool)                // property CaseSensitive Setter
+	OwnsObjects() bool                          // property OwnsObjects Getter
+	SetOwnsObjects(value bool)                  // property OwnsObjects Setter
+	SortStyle() types.TStringsSortStyle         // property SortStyle Getter
+	SetSortStyle(value types.TStringsSortStyle) // property SortStyle Setter
+	SetOnChange(fn TNotifyEvent)                // property event
+	SetOnChanging(fn TNotifyEvent)              // property event
 }
 
-// TStringList Parent: TStrings
 type TStringList struct {
 	TStrings
-	customSortPtr uintptr
-	changePtr     uintptr
-	changingPtr   uintptr
 }
 
-func NewStringList() IStringList {
-	r1 := stringListImportAPI().SysCallN(2)
-	return AsStringList(r1)
-}
-
-func (m *TStringList) Duplicates() TDuplicates {
-	r1 := stringListImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDuplicates(r1)
-}
-
-func (m *TStringList) SetDuplicates(AValue TDuplicates) {
-	stringListImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStringList) Sorted() bool {
-	r1 := stringListImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStringList) SetSorted(AValue bool) {
-	stringListImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStringList) CaseSensitive() bool {
-	r1 := stringListImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStringList) SetCaseSensitive(AValue bool) {
-	stringListImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStringList) OwnsObjects() bool {
-	r1 := stringListImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TStringList) SetOwnsObjects(AValue bool) {
-	stringListImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TStringList) SortStyle() TStringsSortStyle {
-	r1 := stringListImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return TStringsSortStyle(r1)
-}
-
-func (m *TStringList) SetSortStyle(AValue TStringsSortStyle) {
-	stringListImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TStringList) Find(S string, OutIndex *int32) bool {
-	var result1 uintptr
-	r1 := stringListImportAPI().SysCallN(5, m.Instance(), PascalStr(S), uintptr(unsafePointer(&result1)))
-	*OutIndex = int32(result1)
-	return GoBool(r1)
-}
-
-func StringListClass() TClass {
-	ret := stringListImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TStringList) Find(S string, outIndex *int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	var indexPtr uintptr
+	r := stringListAPI().SysCallN(1, m.Instance(), api.PasStr(S), uintptr(base.UnsafePointer(&indexPtr)))
+	*outIndex = int32(indexPtr)
+	return api.GoBool(r)
 }
 
 func (m *TStringList) Sort() {
-	stringListImportAPI().SysCallN(9, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	stringListAPI().SysCallN(2, m.Instance())
 }
 
-func (m *TStringList) CustomSort(fn TStringListSortCompare) {
-	if m.customSortPtr != 0 {
-		RemoveEventElement(m.customSortPtr)
+func (m *TStringList) Duplicates() types.TDuplicates {
+	if !m.IsValid() {
+		return 0
 	}
-	m.customSortPtr = MakeEventDataPtr(fn)
-	stringListImportAPI().SysCallN(3, m.Instance(), m.customSortPtr)
+	r := stringListAPI().SysCallN(3, 0, m.Instance())
+	return types.TDuplicates(r)
+}
+
+func (m *TStringList) SetDuplicates(value types.TDuplicates) {
+	if !m.IsValid() {
+		return
+	}
+	stringListAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TStringList) Sorted() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := stringListAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStringList) SetSorted(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringListAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStringList) CaseSensitive() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := stringListAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStringList) SetCaseSensitive(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringListAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStringList) OwnsObjects() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := stringListAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TStringList) SetOwnsObjects(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	stringListAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TStringList) SortStyle() types.TStringsSortStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := stringListAPI().SysCallN(7, 0, m.Instance())
+	return types.TStringsSortStyle(r)
+}
+
+func (m *TStringList) SetSortStyle(value types.TStringsSortStyle) {
+	if !m.IsValid() {
+		return
+	}
+	stringListAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TStringList) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	stringListImportAPI().SysCallN(7, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 8, stringListAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TStringList) SetOnChanging(fn TNotifyEvent) {
-	if m.changingPtr != 0 {
-		RemoveEventElement(m.changingPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changingPtr = MakeEventDataPtr(fn)
-	stringListImportAPI().SysCallN(8, m.Instance(), m.changingPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 9, stringListAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewStringList class constructor
+func NewStringList() IStringList {
+	r := stringListAPI().SysCallN(0)
+	return AsStringList(r)
 }
 
 var (
-	stringListImport       *imports.Imports = nil
-	stringListImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("StringList_CaseSensitive", 0),
-		/*1*/ imports.NewTable("StringList_Class", 0),
-		/*2*/ imports.NewTable("StringList_Create", 0),
-		/*3*/ imports.NewTable("StringList_CustomSort", 0),
-		/*4*/ imports.NewTable("StringList_Duplicates", 0),
-		/*5*/ imports.NewTable("StringList_Find", 0),
-		/*6*/ imports.NewTable("StringList_OwnsObjects", 0),
-		/*7*/ imports.NewTable("StringList_SetOnChange", 0),
-		/*8*/ imports.NewTable("StringList_SetOnChanging", 0),
-		/*9*/ imports.NewTable("StringList_Sort", 0),
-		/*10*/ imports.NewTable("StringList_SortStyle", 0),
-		/*11*/ imports.NewTable("StringList_Sorted", 0),
-	}
+	stringListOnce   base.Once
+	stringListImport *imports.Imports = nil
 )
 
-func stringListImportAPI() *imports.Imports {
-	if stringListImport == nil {
-		stringListImport = NewDefaultImports()
-		stringListImport.SetImportTable(stringListImportTables)
-		stringListImportTables = nil
-	}
+func stringListAPI() *imports.Imports {
+	stringListOnce.Do(func() {
+		stringListImport = api.NewDefaultImports()
+		stringListImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TStringList_Create", 0), // constructor NewStringList
+			/* 1 */ imports.NewTable("TStringList_Find", 0), // function Find
+			/* 2 */ imports.NewTable("TStringList_Sort", 0), // procedure Sort
+			/* 3 */ imports.NewTable("TStringList_Duplicates", 0), // property Duplicates
+			/* 4 */ imports.NewTable("TStringList_Sorted", 0), // property Sorted
+			/* 5 */ imports.NewTable("TStringList_CaseSensitive", 0), // property CaseSensitive
+			/* 6 */ imports.NewTable("TStringList_OwnsObjects", 0), // property OwnsObjects
+			/* 7 */ imports.NewTable("TStringList_SortStyle", 0), // property SortStyle
+			/* 8 */ imports.NewTable("TStringList_OnChange", 0), // event OnChange
+			/* 9 */ imports.NewTable("TStringList_OnChanging", 0), // event OnChanging
+		}
+	})
 	return stringListImport
 }

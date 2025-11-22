@@ -18,14 +18,14 @@ import "unsafe"
 // process.
 //
 // NOTE that all of the snapshots are global except for the heap and module
-//  lists which are process specific. To enumerate the heap or module
-//  state for all WIN32 processes call with TH32CS_SNAPALL and the
-//  current process. Then for each process in the TH32CS_SNAPPROCESS
-//  list that isn't the current process, do a call with just
-//  TH32CS_SNAPHEAPLIST and/or TH32CS_SNAPMODULE.
+//
+//	lists which are process specific. To enumerate the heap or module
+//	state for all WIN32 processes call with TH32CS_SNAPALL and the
+//	current process. Then for each process in the TH32CS_SNAPPROCESS
+//	list that isn't the current process, do a call with just
+//	TH32CS_SNAPHEAPLIST and/or TH32CS_SNAPMODULE.
 //
 // dwFlags
-//
 const (
 	TH32CS_SNAPHEAPLIST = 0x00000001
 	TH32CS_SNAPPROCESS  = 0x00000002

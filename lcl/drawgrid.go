@@ -9,61 +9,62 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IDrawGrid Parent: ICustomDrawGrid
 type IDrawGrid interface {
 	ICustomDrawGrid
-	InplaceEditor() IWinControl                          // property
-	AlternateColor() TColor                              // property
-	SetAlternateColor(AValue TColor)                     // property
-	AutoEdit() bool                                      // property
-	SetAutoEdit(AValue bool)                             // property
-	ColRowDraggingCursor() TCursor                       // property
-	SetColRowDraggingCursor(AValue TCursor)              // property
-	ColRowDragIndicatorColor() TColor                    // property
-	SetColRowDragIndicatorColor(AValue TColor)           // property
-	ColSizingCursor() TCursor                            // property
-	SetColSizingCursor(AValue TCursor)                   // property
-	ColumnClickSorts() bool                              // property
-	SetColumnClickSorts(AValue bool)                     // property
-	DragCursor() TCursor                                 // property
-	SetDragCursor(AValue TCursor)                        // property
-	DragKind() TDragKind                                 // property
-	SetDragKind(AValue TDragKind)                        // property
-	DragMode() TDragMode                                 // property
-	SetDragMode(AValue TDragMode)                        // property
-	ExtendedSelect() bool                                // property
-	SetExtendedSelect(AValue bool)                       // property
-	HeaderHotZones() TGridZoneSet                        // property
-	SetHeaderHotZones(AValue TGridZoneSet)               // property
-	HeaderPushZones() TGridZoneSet                       // property
-	SetHeaderPushZones(AValue TGridZoneSet)              // property
-	ImageIndexSortAsc() TImageIndex                      // property
-	SetImageIndexSortAsc(AValue TImageIndex)             // property
-	ImageIndexSortDesc() TImageIndex                     // property
-	SetImageIndexSortDesc(AValue TImageIndex)            // property
-	MouseWheelOption() TMouseWheelOption                 // property
-	SetMouseWheelOption(AValue TMouseWheelOption)        // property
-	ParentColor() bool                                   // property
-	SetParentColor(AValue bool)                          // property
-	ParentFont() bool                                    // property
-	SetParentFont(AValue bool)                           // property
-	RangeSelectMode() TRangeSelectMode                   // property
-	SetRangeSelectMode(AValue TRangeSelectMode)          // property
-	RowSizingCursor() TCursor                            // property
-	SetRowSizingCursor(AValue TCursor)                   // property
-	TitleFont() IFont                                    // property
-	SetTitleFont(AValue IFont)                           // property
-	TitleImageList() IImageList                          // property
-	SetTitleImageList(AValue IImageList)                 // property
-	TitleImageListWidth() int32                          // property
-	SetTitleImageListWidth(AValue int32)                 // property
-	TitleStyle() TTitleStyle                             // property
-	SetTitleStyle(AValue TTitleStyle)                    // property
+	InplaceEditor() IWinControl                          // property InplaceEditor Getter
+	AlternateColor() types.TColor                        // property AlternateColor Getter
+	SetAlternateColor(value types.TColor)                // property AlternateColor Setter
+	AutoEdit() bool                                      // property AutoEdit Getter
+	SetAutoEdit(value bool)                              // property AutoEdit Setter
+	ColRowDraggingCursor() types.TCursor                 // property ColRowDraggingCursor Getter
+	SetColRowDraggingCursor(value types.TCursor)         // property ColRowDraggingCursor Setter
+	ColRowDragIndicatorColor() types.TColor              // property ColRowDragIndicatorColor Getter
+	SetColRowDragIndicatorColor(value types.TColor)      // property ColRowDragIndicatorColor Setter
+	ColSizingCursor() types.TCursor                      // property ColSizingCursor Getter
+	SetColSizingCursor(value types.TCursor)              // property ColSizingCursor Setter
+	ColumnClickSorts() bool                              // property ColumnClickSorts Getter
+	SetColumnClickSorts(value bool)                      // property ColumnClickSorts Setter
+	DragCursor() types.TCursor                           // property DragCursor Getter
+	SetDragCursor(value types.TCursor)                   // property DragCursor Setter
+	DragKind() types.TDragKind                           // property DragKind Getter
+	SetDragKind(value types.TDragKind)                   // property DragKind Setter
+	DragMode() types.TDragMode                           // property DragMode Getter
+	SetDragMode(value types.TDragMode)                   // property DragMode Setter
+	ExtendedSelect() bool                                // property ExtendedSelect Getter
+	SetExtendedSelect(value bool)                        // property ExtendedSelect Setter
+	HeaderHotZones() types.TGridZoneSet                  // property HeaderHotZones Getter
+	SetHeaderHotZones(value types.TGridZoneSet)          // property HeaderHotZones Setter
+	HeaderPushZones() types.TGridZoneSet                 // property HeaderPushZones Getter
+	SetHeaderPushZones(value types.TGridZoneSet)         // property HeaderPushZones Setter
+	ImageIndexSortAsc() int32                            // property ImageIndexSortAsc Getter
+	SetImageIndexSortAsc(value int32)                    // property ImageIndexSortAsc Setter
+	ImageIndexSortDesc() int32                           // property ImageIndexSortDesc Getter
+	SetImageIndexSortDesc(value int32)                   // property ImageIndexSortDesc Setter
+	MouseWheelOption() types.TMouseWheelOption           // property MouseWheelOption Getter
+	SetMouseWheelOption(value types.TMouseWheelOption)   // property MouseWheelOption Setter
+	ParentColor() bool                                   // property ParentColor Getter
+	SetParentColor(value bool)                           // property ParentColor Setter
+	ParentFont() bool                                    // property ParentFont Getter
+	SetParentFont(value bool)                            // property ParentFont Setter
+	RangeSelectMode() types.TRangeSelectMode             // property RangeSelectMode Getter
+	SetRangeSelectMode(value types.TRangeSelectMode)     // property RangeSelectMode Setter
+	RowSizingCursor() types.TCursor                      // property RowSizingCursor Getter
+	SetRowSizingCursor(value types.TCursor)              // property RowSizingCursor Setter
+	TitleFont() IFont                                    // property TitleFont Getter
+	SetTitleFont(value IFont)                            // property TitleFont Setter
+	TitleImageList() ICustomImageList                    // property TitleImageList Getter
+	SetTitleImageList(value ICustomImageList)            // property TitleImageList Setter
+	TitleImageListWidth() int32                          // property TitleImageListWidth Getter
+	SetTitleImageListWidth(value int32)                  // property TitleImageListWidth Setter
+	TitleStyle() types.TTitleStyle                       // property TitleStyle Getter
+	SetTitleStyle(value types.TTitleStyle)               // property TitleStyle Setter
 	SetOnCheckboxToggled(fn TToggledCheckboxEvent)       // property event
 	SetOnEditingDone(fn TNotifyEvent)                    // property event
 	SetOnGetCellHint(fn TGetCellHintEvent)               // property event
@@ -72,374 +73,504 @@ type IDrawGrid interface {
 	SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent)       // property event
 	SetOnMouseWheelRight(fn TMouseWheelUpDownEvent)      // property event
 	SetOnSetCheckboxState(fn TSetCheckboxStateEvent)     // property event
-	SetOnUserCheckboxBitmap(fn TUserCheckBoxBitmapEvent) // property event
+	SetOnUserCheckboxBitmap(fn TUserCheckboxBitmapEvent) // property event
 	SetOnUserCheckboxImage(fn TUserCheckBoxImageEvent)   // property event
 }
 
-// TDrawGrid Parent: TCustomDrawGrid
 type TDrawGrid struct {
 	TCustomDrawGrid
-	checkboxToggledPtr    uintptr
-	editingDonePtr        uintptr
-	getCellHintPtr        uintptr
-	getCheckboxStatePtr   uintptr
-	mouseWheelHorzPtr     uintptr
-	mouseWheelLeftPtr     uintptr
-	mouseWheelRightPtr    uintptr
-	setCheckboxStatePtr   uintptr
-	userCheckboxBitmapPtr uintptr
-	userCheckboxImagePtr  uintptr
-}
-
-func NewDrawGrid(AOwner IComponent) IDrawGrid {
-	r1 := drawGridImportAPI().SysCallN(7, GetObjectUintptr(AOwner))
-	return AsDrawGrid(r1)
 }
 
 func (m *TDrawGrid) InplaceEditor() IWinControl {
-	r1 := drawGridImportAPI().SysCallN(16, m.Instance())
-	return AsWinControl(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := drawGridAPI().SysCallN(1, m.Instance())
+	return AsWinControl(r)
 }
 
-func (m *TDrawGrid) AlternateColor() TColor {
-	r1 := drawGridImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TDrawGrid) AlternateColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(2, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TDrawGrid) SetAlternateColor(AValue TColor) {
-	drawGridImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetAlternateColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDrawGrid) AutoEdit() bool {
-	r1 := drawGridImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := drawGridAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDrawGrid) SetAutoEdit(AValue bool) {
-	drawGridImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
+func (m *TDrawGrid) SetAutoEdit(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDrawGrid) ColRowDraggingCursor() TCursor {
-	r1 := drawGridImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TDrawGrid) ColRowDraggingCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(4, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TDrawGrid) SetColRowDraggingCursor(AValue TCursor) {
-	drawGridImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetColRowDraggingCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDrawGrid) ColRowDragIndicatorColor() TColor {
-	r1 := drawGridImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TDrawGrid) ColRowDragIndicatorColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(5, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TDrawGrid) SetColRowDragIndicatorColor(AValue TColor) {
-	drawGridImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetColRowDragIndicatorColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDrawGrid) ColSizingCursor() TCursor {
-	r1 := drawGridImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TDrawGrid) ColSizingCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(6, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TDrawGrid) SetColSizingCursor(AValue TCursor) {
-	drawGridImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetColSizingCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDrawGrid) ColumnClickSorts() bool {
-	r1 := drawGridImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := drawGridAPI().SysCallN(7, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDrawGrid) SetColumnClickSorts(AValue bool) {
-	drawGridImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
+func (m *TDrawGrid) SetColumnClickSorts(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDrawGrid) DragCursor() TCursor {
-	r1 := drawGridImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TDrawGrid) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(8, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TDrawGrid) SetDragCursor(AValue TCursor) {
-	drawGridImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDrawGrid) DragKind() TDragKind {
-	r1 := drawGridImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TDrawGrid) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(9, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TDrawGrid) SetDragKind(AValue TDragKind) {
-	drawGridImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDrawGrid) DragMode() TDragMode {
-	r1 := drawGridImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return TDragMode(r1)
+func (m *TDrawGrid) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(10, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TDrawGrid) SetDragMode(AValue TDragMode) {
-	drawGridImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDrawGrid) ExtendedSelect() bool {
-	r1 := drawGridImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := drawGridAPI().SysCallN(11, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDrawGrid) SetExtendedSelect(AValue bool) {
-	drawGridImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
+func (m *TDrawGrid) SetExtendedSelect(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(11, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDrawGrid) HeaderHotZones() TGridZoneSet {
-	r1 := drawGridImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return TGridZoneSet(r1)
+func (m *TDrawGrid) HeaderHotZones() types.TGridZoneSet {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(12, 0, m.Instance())
+	return types.TGridZoneSet(r)
 }
 
-func (m *TDrawGrid) SetHeaderHotZones(AValue TGridZoneSet) {
-	drawGridImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetHeaderHotZones(value types.TGridZoneSet) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDrawGrid) HeaderPushZones() TGridZoneSet {
-	r1 := drawGridImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return TGridZoneSet(r1)
+func (m *TDrawGrid) HeaderPushZones() types.TGridZoneSet {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(13, 0, m.Instance())
+	return types.TGridZoneSet(r)
 }
 
-func (m *TDrawGrid) SetHeaderPushZones(AValue TGridZoneSet) {
-	drawGridImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetHeaderPushZones(value types.TGridZoneSet) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(13, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDrawGrid) ImageIndexSortAsc() TImageIndex {
-	r1 := drawGridImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return TImageIndex(r1)
+func (m *TDrawGrid) ImageIndexSortAsc() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(14, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TDrawGrid) SetImageIndexSortAsc(AValue TImageIndex) {
-	drawGridImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetImageIndexSortAsc(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDrawGrid) ImageIndexSortDesc() TImageIndex {
-	r1 := drawGridImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return TImageIndex(r1)
+func (m *TDrawGrid) ImageIndexSortDesc() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(15, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TDrawGrid) SetImageIndexSortDesc(AValue TImageIndex) {
-	drawGridImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetImageIndexSortDesc(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(15, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDrawGrid) MouseWheelOption() TMouseWheelOption {
-	r1 := drawGridImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return TMouseWheelOption(r1)
+func (m *TDrawGrid) MouseWheelOption() types.TMouseWheelOption {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(16, 0, m.Instance())
+	return types.TMouseWheelOption(r)
 }
 
-func (m *TDrawGrid) SetMouseWheelOption(AValue TMouseWheelOption) {
-	drawGridImportAPI().SysCallN(17, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetMouseWheelOption(value types.TMouseWheelOption) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(16, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDrawGrid) ParentColor() bool {
-	r1 := drawGridImportAPI().SysCallN(18, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := drawGridAPI().SysCallN(17, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDrawGrid) SetParentColor(AValue bool) {
-	drawGridImportAPI().SysCallN(18, 1, m.Instance(), PascalBool(AValue))
+func (m *TDrawGrid) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(17, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDrawGrid) ParentFont() bool {
-	r1 := drawGridImportAPI().SysCallN(19, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := drawGridAPI().SysCallN(18, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDrawGrid) SetParentFont(AValue bool) {
-	drawGridImportAPI().SysCallN(19, 1, m.Instance(), PascalBool(AValue))
+func (m *TDrawGrid) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(18, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDrawGrid) RangeSelectMode() TRangeSelectMode {
-	r1 := drawGridImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return TRangeSelectMode(r1)
+func (m *TDrawGrid) RangeSelectMode() types.TRangeSelectMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(19, 0, m.Instance())
+	return types.TRangeSelectMode(r)
 }
 
-func (m *TDrawGrid) SetRangeSelectMode(AValue TRangeSelectMode) {
-	drawGridImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetRangeSelectMode(value types.TRangeSelectMode) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(19, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDrawGrid) RowSizingCursor() TCursor {
-	r1 := drawGridImportAPI().SysCallN(21, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TDrawGrid) RowSizingCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(20, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TDrawGrid) SetRowSizingCursor(AValue TCursor) {
-	drawGridImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetRowSizingCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(20, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDrawGrid) TitleFont() IFont {
-	r1 := drawGridImportAPI().SysCallN(32, 0, m.Instance(), 0)
-	return AsFont(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := drawGridAPI().SysCallN(21, 0, m.Instance())
+	return AsFont(r)
 }
 
-func (m *TDrawGrid) SetTitleFont(AValue IFont) {
-	drawGridImportAPI().SysCallN(32, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TDrawGrid) SetTitleFont(value IFont) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(21, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TDrawGrid) TitleImageList() IImageList {
-	r1 := drawGridImportAPI().SysCallN(33, 0, m.Instance(), 0)
-	return AsImageList(r1)
+func (m *TDrawGrid) TitleImageList() ICustomImageList {
+	if !m.IsValid() {
+		return nil
+	}
+	r := drawGridAPI().SysCallN(22, 0, m.Instance())
+	return AsCustomImageList(r)
 }
 
-func (m *TDrawGrid) SetTitleImageList(AValue IImageList) {
-	drawGridImportAPI().SysCallN(33, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TDrawGrid) SetTitleImageList(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(22, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TDrawGrid) TitleImageListWidth() int32 {
-	r1 := drawGridImportAPI().SysCallN(34, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(23, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TDrawGrid) SetTitleImageListWidth(AValue int32) {
-	drawGridImportAPI().SysCallN(34, 1, m.Instance(), uintptr(AValue))
+func (m *TDrawGrid) SetTitleImageListWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDrawGrid) TitleStyle() TTitleStyle {
-	r1 := drawGridImportAPI().SysCallN(35, 0, m.Instance(), 0)
-	return TTitleStyle(r1)
+func (m *TDrawGrid) TitleStyle() types.TTitleStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := drawGridAPI().SysCallN(24, 0, m.Instance())
+	return types.TTitleStyle(r)
 }
 
-func (m *TDrawGrid) SetTitleStyle(AValue TTitleStyle) {
-	drawGridImportAPI().SysCallN(35, 1, m.Instance(), uintptr(AValue))
-}
-
-func DrawGridClass() TClass {
-	ret := drawGridImportAPI().SysCallN(2)
-	return TClass(ret)
+func (m *TDrawGrid) SetTitleStyle(value types.TTitleStyle) {
+	if !m.IsValid() {
+		return
+	}
+	drawGridAPI().SysCallN(24, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDrawGrid) SetOnCheckboxToggled(fn TToggledCheckboxEvent) {
-	if m.checkboxToggledPtr != 0 {
-		RemoveEventElement(m.checkboxToggledPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.checkboxToggledPtr = MakeEventDataPtr(fn)
-	drawGridImportAPI().SysCallN(22, m.Instance(), m.checkboxToggledPtr)
+	cb := makeTToggledCheckboxEvent(fn)
+	base.SetEvent(m, 25, drawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDrawGrid) SetOnEditingDone(fn TNotifyEvent) {
-	if m.editingDonePtr != 0 {
-		RemoveEventElement(m.editingDonePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.editingDonePtr = MakeEventDataPtr(fn)
-	drawGridImportAPI().SysCallN(23, m.Instance(), m.editingDonePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 26, drawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDrawGrid) SetOnGetCellHint(fn TGetCellHintEvent) {
-	if m.getCellHintPtr != 0 {
-		RemoveEventElement(m.getCellHintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getCellHintPtr = MakeEventDataPtr(fn)
-	drawGridImportAPI().SysCallN(24, m.Instance(), m.getCellHintPtr)
+	cb := makeTGetCellHintEvent(fn)
+	base.SetEvent(m, 27, drawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDrawGrid) SetOnGetCheckboxState(fn TGetCheckboxStateEvent) {
-	if m.getCheckboxStatePtr != 0 {
-		RemoveEventElement(m.getCheckboxStatePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getCheckboxStatePtr = MakeEventDataPtr(fn)
-	drawGridImportAPI().SysCallN(25, m.Instance(), m.getCheckboxStatePtr)
+	cb := makeTGetCheckboxStateEvent(fn)
+	base.SetEvent(m, 28, drawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDrawGrid) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	drawGridImportAPI().SysCallN(26, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 29, drawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDrawGrid) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	drawGridImportAPI().SysCallN(27, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 30, drawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDrawGrid) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	drawGridImportAPI().SysCallN(28, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 31, drawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDrawGrid) SetOnSetCheckboxState(fn TSetCheckboxStateEvent) {
-	if m.setCheckboxStatePtr != 0 {
-		RemoveEventElement(m.setCheckboxStatePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.setCheckboxStatePtr = MakeEventDataPtr(fn)
-	drawGridImportAPI().SysCallN(29, m.Instance(), m.setCheckboxStatePtr)
+	cb := makeTSetCheckboxStateEvent(fn)
+	base.SetEvent(m, 32, drawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
-func (m *TDrawGrid) SetOnUserCheckboxBitmap(fn TUserCheckBoxBitmapEvent) {
-	if m.userCheckboxBitmapPtr != 0 {
-		RemoveEventElement(m.userCheckboxBitmapPtr)
+func (m *TDrawGrid) SetOnUserCheckboxBitmap(fn TUserCheckboxBitmapEvent) {
+	if !m.IsValid() {
+		return
 	}
-	m.userCheckboxBitmapPtr = MakeEventDataPtr(fn)
-	drawGridImportAPI().SysCallN(30, m.Instance(), m.userCheckboxBitmapPtr)
+	cb := makeTUserCheckboxBitmapEvent(fn)
+	base.SetEvent(m, 33, drawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDrawGrid) SetOnUserCheckboxImage(fn TUserCheckBoxImageEvent) {
-	if m.userCheckboxImagePtr != 0 {
-		RemoveEventElement(m.userCheckboxImagePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.userCheckboxImagePtr = MakeEventDataPtr(fn)
-	drawGridImportAPI().SysCallN(31, m.Instance(), m.userCheckboxImagePtr)
+	cb := makeTUserCheckBoxImageEvent(fn)
+	base.SetEvent(m, 34, drawGridAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewDrawGrid class constructor
+func NewDrawGrid(owner IComponent) IDrawGrid {
+	r := drawGridAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsDrawGrid(r)
+}
+
+func TDrawGridClass() types.TClass {
+	r := drawGridAPI().SysCallN(35)
+	return types.TClass(r)
 }
 
 var (
-	drawGridImport       *imports.Imports = nil
-	drawGridImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("DrawGrid_AlternateColor", 0),
-		/*1*/ imports.NewTable("DrawGrid_AutoEdit", 0),
-		/*2*/ imports.NewTable("DrawGrid_Class", 0),
-		/*3*/ imports.NewTable("DrawGrid_ColRowDragIndicatorColor", 0),
-		/*4*/ imports.NewTable("DrawGrid_ColRowDraggingCursor", 0),
-		/*5*/ imports.NewTable("DrawGrid_ColSizingCursor", 0),
-		/*6*/ imports.NewTable("DrawGrid_ColumnClickSorts", 0),
-		/*7*/ imports.NewTable("DrawGrid_Create", 0),
-		/*8*/ imports.NewTable("DrawGrid_DragCursor", 0),
-		/*9*/ imports.NewTable("DrawGrid_DragKind", 0),
-		/*10*/ imports.NewTable("DrawGrid_DragMode", 0),
-		/*11*/ imports.NewTable("DrawGrid_ExtendedSelect", 0),
-		/*12*/ imports.NewTable("DrawGrid_HeaderHotZones", 0),
-		/*13*/ imports.NewTable("DrawGrid_HeaderPushZones", 0),
-		/*14*/ imports.NewTable("DrawGrid_ImageIndexSortAsc", 0),
-		/*15*/ imports.NewTable("DrawGrid_ImageIndexSortDesc", 0),
-		/*16*/ imports.NewTable("DrawGrid_InplaceEditor", 0),
-		/*17*/ imports.NewTable("DrawGrid_MouseWheelOption", 0),
-		/*18*/ imports.NewTable("DrawGrid_ParentColor", 0),
-		/*19*/ imports.NewTable("DrawGrid_ParentFont", 0),
-		/*20*/ imports.NewTable("DrawGrid_RangeSelectMode", 0),
-		/*21*/ imports.NewTable("DrawGrid_RowSizingCursor", 0),
-		/*22*/ imports.NewTable("DrawGrid_SetOnCheckboxToggled", 0),
-		/*23*/ imports.NewTable("DrawGrid_SetOnEditingDone", 0),
-		/*24*/ imports.NewTable("DrawGrid_SetOnGetCellHint", 0),
-		/*25*/ imports.NewTable("DrawGrid_SetOnGetCheckboxState", 0),
-		/*26*/ imports.NewTable("DrawGrid_SetOnMouseWheelHorz", 0),
-		/*27*/ imports.NewTable("DrawGrid_SetOnMouseWheelLeft", 0),
-		/*28*/ imports.NewTable("DrawGrid_SetOnMouseWheelRight", 0),
-		/*29*/ imports.NewTable("DrawGrid_SetOnSetCheckboxState", 0),
-		/*30*/ imports.NewTable("DrawGrid_SetOnUserCheckboxBitmap", 0),
-		/*31*/ imports.NewTable("DrawGrid_SetOnUserCheckboxImage", 0),
-		/*32*/ imports.NewTable("DrawGrid_TitleFont", 0),
-		/*33*/ imports.NewTable("DrawGrid_TitleImageList", 0),
-		/*34*/ imports.NewTable("DrawGrid_TitleImageListWidth", 0),
-		/*35*/ imports.NewTable("DrawGrid_TitleStyle", 0),
-	}
+	drawGridOnce   base.Once
+	drawGridImport *imports.Imports = nil
 )
 
-func drawGridImportAPI() *imports.Imports {
-	if drawGridImport == nil {
-		drawGridImport = NewDefaultImports()
-		drawGridImport.SetImportTable(drawGridImportTables)
-		drawGridImportTables = nil
-	}
+func drawGridAPI() *imports.Imports {
+	drawGridOnce.Do(func() {
+		drawGridImport = api.NewDefaultImports()
+		drawGridImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TDrawGrid_Create", 0), // constructor NewDrawGrid
+			/* 1 */ imports.NewTable("TDrawGrid_InplaceEditor", 0), // property InplaceEditor
+			/* 2 */ imports.NewTable("TDrawGrid_AlternateColor", 0), // property AlternateColor
+			/* 3 */ imports.NewTable("TDrawGrid_AutoEdit", 0), // property AutoEdit
+			/* 4 */ imports.NewTable("TDrawGrid_ColRowDraggingCursor", 0), // property ColRowDraggingCursor
+			/* 5 */ imports.NewTable("TDrawGrid_ColRowDragIndicatorColor", 0), // property ColRowDragIndicatorColor
+			/* 6 */ imports.NewTable("TDrawGrid_ColSizingCursor", 0), // property ColSizingCursor
+			/* 7 */ imports.NewTable("TDrawGrid_ColumnClickSorts", 0), // property ColumnClickSorts
+			/* 8 */ imports.NewTable("TDrawGrid_DragCursor", 0), // property DragCursor
+			/* 9 */ imports.NewTable("TDrawGrid_DragKind", 0), // property DragKind
+			/* 10 */ imports.NewTable("TDrawGrid_DragMode", 0), // property DragMode
+			/* 11 */ imports.NewTable("TDrawGrid_ExtendedSelect", 0), // property ExtendedSelect
+			/* 12 */ imports.NewTable("TDrawGrid_HeaderHotZones", 0), // property HeaderHotZones
+			/* 13 */ imports.NewTable("TDrawGrid_HeaderPushZones", 0), // property HeaderPushZones
+			/* 14 */ imports.NewTable("TDrawGrid_ImageIndexSortAsc", 0), // property ImageIndexSortAsc
+			/* 15 */ imports.NewTable("TDrawGrid_ImageIndexSortDesc", 0), // property ImageIndexSortDesc
+			/* 16 */ imports.NewTable("TDrawGrid_MouseWheelOption", 0), // property MouseWheelOption
+			/* 17 */ imports.NewTable("TDrawGrid_ParentColor", 0), // property ParentColor
+			/* 18 */ imports.NewTable("TDrawGrid_ParentFont", 0), // property ParentFont
+			/* 19 */ imports.NewTable("TDrawGrid_RangeSelectMode", 0), // property RangeSelectMode
+			/* 20 */ imports.NewTable("TDrawGrid_RowSizingCursor", 0), // property RowSizingCursor
+			/* 21 */ imports.NewTable("TDrawGrid_TitleFont", 0), // property TitleFont
+			/* 22 */ imports.NewTable("TDrawGrid_TitleImageList", 0), // property TitleImageList
+			/* 23 */ imports.NewTable("TDrawGrid_TitleImageListWidth", 0), // property TitleImageListWidth
+			/* 24 */ imports.NewTable("TDrawGrid_TitleStyle", 0), // property TitleStyle
+			/* 25 */ imports.NewTable("TDrawGrid_OnCheckboxToggled", 0), // event OnCheckboxToggled
+			/* 26 */ imports.NewTable("TDrawGrid_OnEditingDone", 0), // event OnEditingDone
+			/* 27 */ imports.NewTable("TDrawGrid_OnGetCellHint", 0), // event OnGetCellHint
+			/* 28 */ imports.NewTable("TDrawGrid_OnGetCheckboxState", 0), // event OnGetCheckboxState
+			/* 29 */ imports.NewTable("TDrawGrid_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 30 */ imports.NewTable("TDrawGrid_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 31 */ imports.NewTable("TDrawGrid_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 32 */ imports.NewTable("TDrawGrid_OnSetCheckboxState", 0), // event OnSetCheckboxState
+			/* 33 */ imports.NewTable("TDrawGrid_OnUserCheckboxBitmap", 0), // event OnUserCheckboxBitmap
+			/* 34 */ imports.NewTable("TDrawGrid_OnUserCheckboxImage", 0), // event OnUserCheckboxImage
+			/* 35 */ imports.NewTable("TDrawGrid_TClass", 0), // function TDrawGridClass
+		}
+	})
 	return drawGridImport
 }

@@ -9,58 +9,57 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // ITreeNodesEnumerator Parent: IObject
 type ITreeNodesEnumerator interface {
 	IObject
-	Current() ITreeNode // property
 	MoveNext() bool     // function
+	Current() ITreeNode // property Current Getter
 }
 
-// TTreeNodesEnumerator Parent: TObject
 type TTreeNodesEnumerator struct {
 	TObject
 }
 
-func NewTreeNodesEnumerator(ANodes ITreeNodes) ITreeNodesEnumerator {
-	r1 := reeNodesEnumeratorImportAPI().SysCallN(1, GetObjectUintptr(ANodes))
-	return AsTreeNodesEnumerator(r1)
+func (m *TTreeNodesEnumerator) MoveNext() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := treeNodesEnumeratorAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TTreeNodesEnumerator) Current() ITreeNode {
-	r1 := reeNodesEnumeratorImportAPI().SysCallN(2, m.Instance())
-	return AsTreeNode(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := treeNodesEnumeratorAPI().SysCallN(2, m.Instance())
+	return AsTreeNode(r)
 }
 
-func (m *TTreeNodesEnumerator) MoveNext() bool {
-	r1 := reeNodesEnumeratorImportAPI().SysCallN(3, m.Instance())
-	return GoBool(r1)
-}
-
-func TreeNodesEnumeratorClass() TClass {
-	ret := reeNodesEnumeratorImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewTreeNodesEnumerator class constructor
+func NewTreeNodesEnumerator(nodes ITreeNodes) ITreeNodesEnumerator {
+	r := treeNodesEnumeratorAPI().SysCallN(0, base.GetObjectUintptr(nodes))
+	return AsTreeNodesEnumerator(r)
 }
 
 var (
-	reeNodesEnumeratorImport       *imports.Imports = nil
-	reeNodesEnumeratorImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("TreeNodesEnumerator_Class", 0),
-		/*1*/ imports.NewTable("TreeNodesEnumerator_Create", 0),
-		/*2*/ imports.NewTable("TreeNodesEnumerator_Current", 0),
-		/*3*/ imports.NewTable("TreeNodesEnumerator_MoveNext", 0),
-	}
+	treeNodesEnumeratorOnce   base.Once
+	treeNodesEnumeratorImport *imports.Imports = nil
 )
 
-func reeNodesEnumeratorImportAPI() *imports.Imports {
-	if reeNodesEnumeratorImport == nil {
-		reeNodesEnumeratorImport = NewDefaultImports()
-		reeNodesEnumeratorImport.SetImportTable(reeNodesEnumeratorImportTables)
-		reeNodesEnumeratorImportTables = nil
-	}
-	return reeNodesEnumeratorImport
+func treeNodesEnumeratorAPI() *imports.Imports {
+	treeNodesEnumeratorOnce.Do(func() {
+		treeNodesEnumeratorImport = api.NewDefaultImports()
+		treeNodesEnumeratorImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TTreeNodesEnumerator_Create", 0), // constructor NewTreeNodesEnumerator
+			/* 1 */ imports.NewTable("TTreeNodesEnumerator_MoveNext", 0), // function MoveNext
+			/* 2 */ imports.NewTable("TTreeNodesEnumerator_Current", 0), // property Current
+		}
+	})
+	return treeNodesEnumeratorImport
 }

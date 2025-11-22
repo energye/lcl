@@ -9,290 +9,374 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IXButton Parent: IGraphicControl
 type IXButton interface {
 	IGraphicControl
-	Caption() string                   // property
-	SetCaption(AValue string)          // property
-	ShowCaption() bool                 // property
-	SetShowCaption(AValue bool)        // property
-	BackColor() TColor                 // property
-	SetBackColor(AValue TColor)        // property
-	HoverColor() TColor                // property
-	SetHoverColor(AValue TColor)       // property
-	DownColor() TColor                 // property
-	SetDownColor(AValue TColor)        // property
-	BorderWidth() int32                // property
-	SetBorderWidth(AValue int32)       // property
-	BorderColor() TColor               // property
-	SetBorderColor(AValue TColor)      // property
-	Picture() IPicture                 // property
-	SetPicture(AValue IPicture)        // property
-	DrawMode() TDrawImageMode          // property
-	SetDrawMode(AValue TDrawImageMode) // property
-	NormalFontColor() TColor           // property
-	SetNormalFontColor(AValue TColor)  // property
-	DownFontColor() TColor             // property
-	SetDownFontColor(AValue TColor)    // property
-	HoverFontColor() TColor            // property
-	SetHoverFontColor(AValue TColor)   // property
-	ParentFont() bool                  // property
-	SetParentFont(AValue bool)         // property
-	ParentShowHint() bool              // property
-	SetParentShowHint(AValue bool)     // property
-	Paint()                            // procedure
-	Resize()                           // procedure
-	SetOnDblClick(fn TNotifyEvent)     // property event
-	SetOnMouseDown(fn TMouseEvent)     // property event
-	SetOnMouseEnter(fn TNotifyEvent)   // property event
-	SetOnMouseLeave(fn TNotifyEvent)   // property event
-	SetOnMouseMove(fn TMouseMoveEvent) // property event
-	SetOnMouseUp(fn TMouseEvent)       // property event
+	Paint()                                 // procedure
+	Resize()                                // procedure
+	CaptionToString() string                // property Caption Getter
+	SetCaptionToString(value string)        // property Caption Setter
+	ShowCaption() bool                      // property ShowCaption Getter
+	SetShowCaption(value bool)              // property ShowCaption Setter
+	BackColor() types.TColor                // property BackColor Getter
+	SetBackColor(value types.TColor)        // property BackColor Setter
+	HoverColor() types.TColor               // property HoverColor Getter
+	SetHoverColor(value types.TColor)       // property HoverColor Setter
+	DownColor() types.TColor                // property DownColor Getter
+	SetDownColor(value types.TColor)        // property DownColor Setter
+	BorderWidth() int32                     // property BorderWidth Getter
+	SetBorderWidth(value int32)             // property BorderWidth Setter
+	BorderColor() types.TColor              // property BorderColor Getter
+	SetBorderColor(value types.TColor)      // property BorderColor Setter
+	Picture() IPicture                      // property Picture Getter
+	SetPicture(value IPicture)              // property Picture Setter
+	DrawMode() types.TDrawImageMode         // property DrawMode Getter
+	SetDrawMode(value types.TDrawImageMode) // property DrawMode Setter
+	NormalFontColor() types.TColor          // property NormalFontColor Getter
+	SetNormalFontColor(value types.TColor)  // property NormalFontColor Setter
+	DownFontColor() types.TColor            // property DownFontColor Getter
+	SetDownFontColor(value types.TColor)    // property DownFontColor Setter
+	HoverFontColor() types.TColor           // property HoverFontColor Getter
+	SetHoverFontColor(value types.TColor)   // property HoverFontColor Setter
+	ParentFont() bool                       // property ParentFont Getter
+	SetParentFont(value bool)               // property ParentFont Setter
+	ParentShowHint() bool                   // property ParentShowHint Getter
+	SetParentShowHint(value bool)           // property ParentShowHint Setter
+	SetOnDblClick(fn TNotifyEvent)          // property event
+	SetOnMouseDown(fn TMouseEvent)          // property event
+	SetOnMouseEnter(fn TNotifyEvent)        // property event
+	SetOnMouseLeave(fn TNotifyEvent)        // property event
+	SetOnMouseMove(fn TMouseMoveEvent)      // property event
+	SetOnMouseUp(fn TMouseEvent)            // property event
 }
 
-// TXButton Parent: TGraphicControl
 type TXButton struct {
 	TGraphicControl
-	dblClickPtr   uintptr
-	mouseDownPtr  uintptr
-	mouseEnterPtr uintptr
-	mouseLeavePtr uintptr
-	mouseMovePtr  uintptr
-	mouseUpPtr    uintptr
-}
-
-func NewXButton(AOwner IComponent) IXButton {
-	r1 := xButtonImportAPI().SysCallN(5, GetObjectUintptr(AOwner))
-	return AsXButton(r1)
-}
-
-func (m *TXButton) Caption() string {
-	r1 := xButtonImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TXButton) SetCaption(AValue string) {
-	xButtonImportAPI().SysCallN(3, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TXButton) ShowCaption() bool {
-	r1 := xButtonImportAPI().SysCallN(23, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TXButton) SetShowCaption(AValue bool) {
-	xButtonImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TXButton) BackColor() TColor {
-	r1 := xButtonImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TXButton) SetBackColor(AValue TColor) {
-	xButtonImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TXButton) HoverColor() TColor {
-	r1 := xButtonImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TXButton) SetHoverColor(AValue TColor) {
-	xButtonImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TXButton) DownColor() TColor {
-	r1 := xButtonImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TXButton) SetDownColor(AValue TColor) {
-	xButtonImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TXButton) BorderWidth() int32 {
-	r1 := xButtonImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TXButton) SetBorderWidth(AValue int32) {
-	xButtonImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TXButton) BorderColor() TColor {
-	r1 := xButtonImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TXButton) SetBorderColor(AValue TColor) {
-	xButtonImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TXButton) Picture() IPicture {
-	r1 := xButtonImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return AsPicture(r1)
-}
-
-func (m *TXButton) SetPicture(AValue IPicture) {
-	xButtonImportAPI().SysCallN(15, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TXButton) DrawMode() TDrawImageMode {
-	r1 := xButtonImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TDrawImageMode(r1)
-}
-
-func (m *TXButton) SetDrawMode(AValue TDrawImageMode) {
-	xButtonImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TXButton) NormalFontColor() TColor {
-	r1 := xButtonImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TXButton) SetNormalFontColor(AValue TColor) {
-	xButtonImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TXButton) DownFontColor() TColor {
-	r1 := xButtonImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TXButton) SetDownFontColor(AValue TColor) {
-	xButtonImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TXButton) HoverFontColor() TColor {
-	r1 := xButtonImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TXButton) SetHoverFontColor(AValue TColor) {
-	xButtonImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TXButton) ParentFont() bool {
-	r1 := xButtonImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TXButton) SetParentFont(AValue bool) {
-	xButtonImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TXButton) ParentShowHint() bool {
-	r1 := xButtonImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TXButton) SetParentShowHint(AValue bool) {
-	xButtonImportAPI().SysCallN(14, 1, m.Instance(), PascalBool(AValue))
-}
-
-func XButtonClass() TClass {
-	ret := xButtonImportAPI().SysCallN(4)
-	return TClass(ret)
 }
 
 func (m *TXButton) Paint() {
-	xButtonImportAPI().SysCallN(12, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(1, m.Instance())
 }
 
 func (m *TXButton) Resize() {
-	xButtonImportAPI().SysCallN(16, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(2, m.Instance())
+}
+
+func (m *TXButton) CaptionToString() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := xButtonAPI().SysCallN(3, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TXButton) SetCaptionToString(value string) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(3, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TXButton) ShowCaption() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := xButtonAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TXButton) SetShowCaption(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TXButton) BackColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := xButtonAPI().SysCallN(5, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TXButton) SetBackColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TXButton) HoverColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := xButtonAPI().SysCallN(6, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TXButton) SetHoverColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TXButton) DownColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := xButtonAPI().SysCallN(7, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TXButton) SetDownColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TXButton) BorderWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := xButtonAPI().SysCallN(8, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TXButton) SetBorderWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TXButton) BorderColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := xButtonAPI().SysCallN(9, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TXButton) SetBorderColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TXButton) Picture() IPicture {
+	if !m.IsValid() {
+		return nil
+	}
+	r := xButtonAPI().SysCallN(10, 0, m.Instance())
+	return AsPicture(r)
+}
+
+func (m *TXButton) SetPicture(value IPicture) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(10, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TXButton) DrawMode() types.TDrawImageMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := xButtonAPI().SysCallN(11, 0, m.Instance())
+	return types.TDrawImageMode(r)
+}
+
+func (m *TXButton) SetDrawMode(value types.TDrawImageMode) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TXButton) NormalFontColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := xButtonAPI().SysCallN(12, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TXButton) SetNormalFontColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TXButton) DownFontColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := xButtonAPI().SysCallN(13, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TXButton) SetDownFontColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(13, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TXButton) HoverFontColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := xButtonAPI().SysCallN(14, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TXButton) SetHoverFontColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TXButton) ParentFont() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := xButtonAPI().SysCallN(15, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TXButton) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(15, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TXButton) ParentShowHint() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := xButtonAPI().SysCallN(16, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TXButton) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	xButtonAPI().SysCallN(16, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TXButton) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	xButtonImportAPI().SysCallN(17, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 17, xButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TXButton) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	xButtonImportAPI().SysCallN(18, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 18, xButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TXButton) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	xButtonImportAPI().SysCallN(19, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 19, xButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TXButton) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	xButtonImportAPI().SysCallN(20, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 20, xButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TXButton) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	xButtonImportAPI().SysCallN(21, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 21, xButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TXButton) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	xButtonImportAPI().SysCallN(22, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 22, xButtonAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewXButton class constructor
+func NewXButton(owner IComponent) IXButton {
+	r := xButtonAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsXButton(r)
+}
+
+func TXButtonClass() types.TClass {
+	r := xButtonAPI().SysCallN(23)
+	return types.TClass(r)
 }
 
 var (
-	xButtonImport       *imports.Imports = nil
-	xButtonImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("XButton_BackColor", 0),
-		/*1*/ imports.NewTable("XButton_BorderColor", 0),
-		/*2*/ imports.NewTable("XButton_BorderWidth", 0),
-		/*3*/ imports.NewTable("XButton_Caption", 0),
-		/*4*/ imports.NewTable("XButton_Class", 0),
-		/*5*/ imports.NewTable("XButton_Create", 0),
-		/*6*/ imports.NewTable("XButton_DownColor", 0),
-		/*7*/ imports.NewTable("XButton_DownFontColor", 0),
-		/*8*/ imports.NewTable("XButton_DrawMode", 0),
-		/*9*/ imports.NewTable("XButton_HoverColor", 0),
-		/*10*/ imports.NewTable("XButton_HoverFontColor", 0),
-		/*11*/ imports.NewTable("XButton_NormalFontColor", 0),
-		/*12*/ imports.NewTable("XButton_Paint", 0),
-		/*13*/ imports.NewTable("XButton_ParentFont", 0),
-		/*14*/ imports.NewTable("XButton_ParentShowHint", 0),
-		/*15*/ imports.NewTable("XButton_Picture", 0),
-		/*16*/ imports.NewTable("XButton_Resize", 0),
-		/*17*/ imports.NewTable("XButton_SetOnDblClick", 0),
-		/*18*/ imports.NewTable("XButton_SetOnMouseDown", 0),
-		/*19*/ imports.NewTable("XButton_SetOnMouseEnter", 0),
-		/*20*/ imports.NewTable("XButton_SetOnMouseLeave", 0),
-		/*21*/ imports.NewTable("XButton_SetOnMouseMove", 0),
-		/*22*/ imports.NewTable("XButton_SetOnMouseUp", 0),
-		/*23*/ imports.NewTable("XButton_ShowCaption", 0),
-	}
+	xButtonOnce   base.Once
+	xButtonImport *imports.Imports = nil
 )
 
-func xButtonImportAPI() *imports.Imports {
-	if xButtonImport == nil {
-		xButtonImport = NewDefaultImports()
-		xButtonImport.SetImportTable(xButtonImportTables)
-		xButtonImportTables = nil
-	}
+func xButtonAPI() *imports.Imports {
+	xButtonOnce.Do(func() {
+		xButtonImport = api.NewDefaultImports()
+		xButtonImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TXButton_Create", 0), // constructor NewXButton
+			/* 1 */ imports.NewTable("TXButton_Paint", 0), // procedure Paint
+			/* 2 */ imports.NewTable("TXButton_Resize", 0), // procedure Resize
+			/* 3 */ imports.NewTable("TXButton_CaptionToString", 0), // property CaptionToString
+			/* 4 */ imports.NewTable("TXButton_ShowCaption", 0), // property ShowCaption
+			/* 5 */ imports.NewTable("TXButton_BackColor", 0), // property BackColor
+			/* 6 */ imports.NewTable("TXButton_HoverColor", 0), // property HoverColor
+			/* 7 */ imports.NewTable("TXButton_DownColor", 0), // property DownColor
+			/* 8 */ imports.NewTable("TXButton_BorderWidth", 0), // property BorderWidth
+			/* 9 */ imports.NewTable("TXButton_BorderColor", 0), // property BorderColor
+			/* 10 */ imports.NewTable("TXButton_Picture", 0), // property Picture
+			/* 11 */ imports.NewTable("TXButton_DrawMode", 0), // property DrawMode
+			/* 12 */ imports.NewTable("TXButton_NormalFontColor", 0), // property NormalFontColor
+			/* 13 */ imports.NewTable("TXButton_DownFontColor", 0), // property DownFontColor
+			/* 14 */ imports.NewTable("TXButton_HoverFontColor", 0), // property HoverFontColor
+			/* 15 */ imports.NewTable("TXButton_ParentFont", 0), // property ParentFont
+			/* 16 */ imports.NewTable("TXButton_ParentShowHint", 0), // property ParentShowHint
+			/* 17 */ imports.NewTable("TXButton_OnDblClick", 0), // event OnDblClick
+			/* 18 */ imports.NewTable("TXButton_OnMouseDown", 0), // event OnMouseDown
+			/* 19 */ imports.NewTable("TXButton_OnMouseEnter", 0), // event OnMouseEnter
+			/* 20 */ imports.NewTable("TXButton_OnMouseLeave", 0), // event OnMouseLeave
+			/* 21 */ imports.NewTable("TXButton_OnMouseMove", 0), // event OnMouseMove
+			/* 22 */ imports.NewTable("TXButton_OnMouseUp", 0), // event OnMouseUp
+			/* 23 */ imports.NewTable("TXButton_TClass", 0), // function TXButtonClass
+		}
+	})
 	return xButtonImport
 }

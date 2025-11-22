@@ -9,114 +9,138 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IMonitor Parent: IObject
 type IMonitor interface {
 	IObject
-	Handle() HMONITOR                 // property
-	MonitorNum() int32                // property
-	Left() int32                      // property
-	Height() int32                    // property
-	Top() int32                       // property
-	Width() int32                     // property
-	BoundsRect() (resultRect TRect)   // property
-	WorkareaRect() (resultRect TRect) // property
-	Primary() bool                    // property
-	PixelsPerInch() int32             // property
+	Handle() types.HMONITOR    // property Handle Getter
+	MonitorNum() int32         // property MonitorNum Getter
+	Left() int32               // property Left Getter
+	Height() int32             // property Height Getter
+	Top() int32                // property Top Getter
+	Width() int32              // property Width Getter
+	BoundsRect() types.TRect   // property BoundsRect Getter
+	WorkareaRect() types.TRect // property WorkareaRect Getter
+	Primary() bool             // property Primary Getter
+	PixelsPerInch() int32      // property PixelsPerInch Getter
 }
 
-// TMonitor Parent: TObject
 type TMonitor struct {
 	TObject
 }
 
-func NewMonitor() IMonitor {
-	r1 := monitorImportAPI().SysCallN(2)
-	return AsMonitor(r1)
-}
-
-func (m *TMonitor) Handle() HMONITOR {
-	r1 := monitorImportAPI().SysCallN(3, m.Instance())
-	return HMONITOR(r1)
+func (m *TMonitor) Handle() types.HMONITOR {
+	if !m.IsValid() {
+		return 0
+	}
+	r := monitorAPI().SysCallN(1, m.Instance())
+	return types.HMONITOR(r)
 }
 
 func (m *TMonitor) MonitorNum() int32 {
-	r1 := monitorImportAPI().SysCallN(6, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := monitorAPI().SysCallN(2, m.Instance())
+	return int32(r)
 }
 
 func (m *TMonitor) Left() int32 {
-	r1 := monitorImportAPI().SysCallN(5, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := monitorAPI().SysCallN(3, m.Instance())
+	return int32(r)
 }
 
 func (m *TMonitor) Height() int32 {
-	r1 := monitorImportAPI().SysCallN(4, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := monitorAPI().SysCallN(4, m.Instance())
+	return int32(r)
 }
 
 func (m *TMonitor) Top() int32 {
-	r1 := monitorImportAPI().SysCallN(9, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := monitorAPI().SysCallN(5, m.Instance())
+	return int32(r)
 }
 
 func (m *TMonitor) Width() int32 {
-	r1 := monitorImportAPI().SysCallN(10, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := monitorAPI().SysCallN(6, m.Instance())
+	return int32(r)
 }
 
-func (m *TMonitor) BoundsRect() (resultRect TRect) {
-	monitorImportAPI().SysCallN(0, m.Instance(), uintptr(unsafePointer(&resultRect)))
+func (m *TMonitor) BoundsRect() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	monitorAPI().SysCallN(7, m.Instance(), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TMonitor) WorkareaRect() (resultRect TRect) {
-	monitorImportAPI().SysCallN(11, m.Instance(), uintptr(unsafePointer(&resultRect)))
+func (m *TMonitor) WorkareaRect() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	monitorAPI().SysCallN(8, m.Instance(), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
 func (m *TMonitor) Primary() bool {
-	r1 := monitorImportAPI().SysCallN(8, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := monitorAPI().SysCallN(9, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TMonitor) PixelsPerInch() int32 {
-	r1 := monitorImportAPI().SysCallN(7, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := monitorAPI().SysCallN(10, m.Instance())
+	return int32(r)
 }
 
-func MonitorClass() TClass {
-	ret := monitorImportAPI().SysCallN(1)
-	return TClass(ret)
+// NewMonitor class constructor
+func NewMonitor() IMonitor {
+	r := monitorAPI().SysCallN(0)
+	return AsMonitor(r)
 }
 
 var (
-	monitorImport       *imports.Imports = nil
-	monitorImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Monitor_BoundsRect", 0),
-		/*1*/ imports.NewTable("Monitor_Class", 0),
-		/*2*/ imports.NewTable("Monitor_Create", 0),
-		/*3*/ imports.NewTable("Monitor_Handle", 0),
-		/*4*/ imports.NewTable("Monitor_Height", 0),
-		/*5*/ imports.NewTable("Monitor_Left", 0),
-		/*6*/ imports.NewTable("Monitor_MonitorNum", 0),
-		/*7*/ imports.NewTable("Monitor_PixelsPerInch", 0),
-		/*8*/ imports.NewTable("Monitor_Primary", 0),
-		/*9*/ imports.NewTable("Monitor_Top", 0),
-		/*10*/ imports.NewTable("Monitor_Width", 0),
-		/*11*/ imports.NewTable("Monitor_WorkareaRect", 0),
-	}
+	monitorOnce   base.Once
+	monitorImport *imports.Imports = nil
 )
 
-func monitorImportAPI() *imports.Imports {
-	if monitorImport == nil {
-		monitorImport = NewDefaultImports()
-		monitorImport.SetImportTable(monitorImportTables)
-		monitorImportTables = nil
-	}
+func monitorAPI() *imports.Imports {
+	monitorOnce.Do(func() {
+		monitorImport = api.NewDefaultImports()
+		monitorImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TMonitor_Create", 0), // constructor NewMonitor
+			/* 1 */ imports.NewTable("TMonitor_Handle", 0), // property Handle
+			/* 2 */ imports.NewTable("TMonitor_MonitorNum", 0), // property MonitorNum
+			/* 3 */ imports.NewTable("TMonitor_Left", 0), // property Left
+			/* 4 */ imports.NewTable("TMonitor_Height", 0), // property Height
+			/* 5 */ imports.NewTable("TMonitor_Top", 0), // property Top
+			/* 6 */ imports.NewTable("TMonitor_Width", 0), // property Width
+			/* 7 */ imports.NewTable("TMonitor_BoundsRect", 0), // property BoundsRect
+			/* 8 */ imports.NewTable("TMonitor_WorkareaRect", 0), // property WorkareaRect
+			/* 9 */ imports.NewTable("TMonitor_Primary", 0), // property Primary
+			/* 10 */ imports.NewTable("TMonitor_PixelsPerInch", 0), // property PixelsPerInch
+		}
+	})
 	return monitorImport
 }

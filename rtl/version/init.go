@@ -10,7 +10,7 @@ package version
 
 import "runtime"
 
-func VersionInit() {
+func Init() {
 	switch runtime.GOARCH {
 	case "386":
 		OSVersion.Architecture = ArIntelX86

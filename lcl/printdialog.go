@@ -9,67 +9,72 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IPrintDialog Parent: ICustomPrintDialog
 type IPrintDialog interface {
 	ICustomPrintDialog
-	AttachTo() ICustomForm                   // property
-	SetAttachTo(AValue ICustomForm)          // property
+	AttachTo() ICustomForm                   // property AttachTo Getter
+	SetAttachTo(value ICustomForm)           // property AttachTo Setter
 	SetOnDialogResult(fn TDialogResultEvent) // property event
 }
 
-// TPrintDialog Parent: TCustomPrintDialog
 type TPrintDialog struct {
 	TCustomPrintDialog
-	dialogResultPtr uintptr
-}
-
-func NewPrintDialog(TheOwner IComponent) IPrintDialog {
-	r1 := printDialogImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsPrintDialog(r1)
 }
 
 func (m *TPrintDialog) AttachTo() ICustomForm {
-	r1 := printDialogImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return AsCustomForm(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := printDialogAPI().SysCallN(1, 0, m.Instance())
+	return AsCustomForm(r)
 }
 
-func (m *TPrintDialog) SetAttachTo(AValue ICustomForm) {
-	printDialogImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func PrintDialogClass() TClass {
-	ret := printDialogImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TPrintDialog) SetAttachTo(value ICustomForm) {
+	if !m.IsValid() {
+		return
+	}
+	printDialogAPI().SysCallN(1, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TPrintDialog) SetOnDialogResult(fn TDialogResultEvent) {
-	if m.dialogResultPtr != 0 {
-		RemoveEventElement(m.dialogResultPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dialogResultPtr = MakeEventDataPtr(fn)
-	printDialogImportAPI().SysCallN(3, m.Instance(), m.dialogResultPtr)
+	cb := makeTDialogResultEvent(fn)
+	base.SetEvent(m, 2, printDialogAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewPrintDialog class constructor
+func NewPrintDialog(theOwner IComponent) IPrintDialog {
+	r := printDialogAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsPrintDialog(r)
+}
+
+func TPrintDialogClass() types.TClass {
+	r := printDialogAPI().SysCallN(3)
+	return types.TClass(r)
 }
 
 var (
-	printDialogImport       *imports.Imports = nil
-	printDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("PrintDialog_AttachTo", 0),
-		/*1*/ imports.NewTable("PrintDialog_Class", 0),
-		/*2*/ imports.NewTable("PrintDialog_Create", 0),
-		/*3*/ imports.NewTable("PrintDialog_SetOnDialogResult", 0),
-	}
+	printDialogOnce   base.Once
+	printDialogImport *imports.Imports = nil
 )
 
-func printDialogImportAPI() *imports.Imports {
-	if printDialogImport == nil {
-		printDialogImport = NewDefaultImports()
-		printDialogImport.SetImportTable(printDialogImportTables)
-		printDialogImportTables = nil
-	}
+func printDialogAPI() *imports.Imports {
+	printDialogOnce.Do(func() {
+		printDialogImport = api.NewDefaultImports()
+		printDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPrintDialog_Create", 0), // constructor NewPrintDialog
+			/* 1 */ imports.NewTable("TPrintDialog_AttachTo", 0), // property AttachTo
+			/* 2 */ imports.NewTable("TPrintDialog_OnDialogResult", 0), // event OnDialogResult
+			/* 3 */ imports.NewTable("TPrintDialog_TClass", 0), // function TPrintDialogClass
+		}
+	})
 	return printDialogImport
 }

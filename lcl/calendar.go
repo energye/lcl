@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICalendar Parent: ICustomCalendar
@@ -31,154 +32,141 @@ type ICalendar interface {
 	SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) // property event
 }
 
-// TCalendar Parent: TCustomCalendar
 type TCalendar struct {
 	TCustomCalendar
-	dblClickPtr        uintptr
-	mouseDownPtr       uintptr
-	mouseEnterPtr      uintptr
-	mouseLeavePtr      uintptr
-	mouseMovePtr       uintptr
-	mouseUpPtr         uintptr
-	mouseWheelPtr      uintptr
-	mouseWheelDownPtr  uintptr
-	mouseWheelUpPtr    uintptr
-	mouseWheelHorzPtr  uintptr
-	mouseWheelLeftPtr  uintptr
-	mouseWheelRightPtr uintptr
-}
-
-func NewCalendar(AOwner IComponent) ICalendar {
-	r1 := calendarImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsCalendar(r1)
-}
-
-func CalendarClass() TClass {
-	ret := calendarImportAPI().SysCallN(0)
-	return TClass(ret)
 }
 
 func (m *TCalendar) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(2, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 1, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(3, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 2, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(4, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 3, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(5, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 4, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(6, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 5, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(7, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 6, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(8, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 7, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(9, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 8, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(13, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 9, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(10, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 10, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(11, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 11, calendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCalendar) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	calendarImportAPI().SysCallN(12, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 12, calendarAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCalendar class constructor
+func NewCalendar(owner IComponent) ICalendar {
+	r := calendarAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCalendar(r)
+}
+
+func TCalendarClass() types.TClass {
+	r := calendarAPI().SysCallN(13)
+	return types.TClass(r)
 }
 
 var (
-	calendarImport       *imports.Imports = nil
-	calendarImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Calendar_Class", 0),
-		/*1*/ imports.NewTable("Calendar_Create", 0),
-		/*2*/ imports.NewTable("Calendar_SetOnDblClick", 0),
-		/*3*/ imports.NewTable("Calendar_SetOnMouseDown", 0),
-		/*4*/ imports.NewTable("Calendar_SetOnMouseEnter", 0),
-		/*5*/ imports.NewTable("Calendar_SetOnMouseLeave", 0),
-		/*6*/ imports.NewTable("Calendar_SetOnMouseMove", 0),
-		/*7*/ imports.NewTable("Calendar_SetOnMouseUp", 0),
-		/*8*/ imports.NewTable("Calendar_SetOnMouseWheel", 0),
-		/*9*/ imports.NewTable("Calendar_SetOnMouseWheelDown", 0),
-		/*10*/ imports.NewTable("Calendar_SetOnMouseWheelHorz", 0),
-		/*11*/ imports.NewTable("Calendar_SetOnMouseWheelLeft", 0),
-		/*12*/ imports.NewTable("Calendar_SetOnMouseWheelRight", 0),
-		/*13*/ imports.NewTable("Calendar_SetOnMouseWheelUp", 0),
-	}
+	calendarOnce   base.Once
+	calendarImport *imports.Imports = nil
 )
 
-func calendarImportAPI() *imports.Imports {
-	if calendarImport == nil {
-		calendarImport = NewDefaultImports()
-		calendarImport.SetImportTable(calendarImportTables)
-		calendarImportTables = nil
-	}
+func calendarAPI() *imports.Imports {
+	calendarOnce.Do(func() {
+		calendarImport = api.NewDefaultImports()
+		calendarImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCalendar_Create", 0), // constructor NewCalendar
+			/* 1 */ imports.NewTable("TCalendar_OnDblClick", 0), // event OnDblClick
+			/* 2 */ imports.NewTable("TCalendar_OnMouseDown", 0), // event OnMouseDown
+			/* 3 */ imports.NewTable("TCalendar_OnMouseEnter", 0), // event OnMouseEnter
+			/* 4 */ imports.NewTable("TCalendar_OnMouseLeave", 0), // event OnMouseLeave
+			/* 5 */ imports.NewTable("TCalendar_OnMouseMove", 0), // event OnMouseMove
+			/* 6 */ imports.NewTable("TCalendar_OnMouseUp", 0), // event OnMouseUp
+			/* 7 */ imports.NewTable("TCalendar_OnMouseWheel", 0), // event OnMouseWheel
+			/* 8 */ imports.NewTable("TCalendar_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 9 */ imports.NewTable("TCalendar_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 10 */ imports.NewTable("TCalendar_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 11 */ imports.NewTable("TCalendar_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 12 */ imports.NewTable("TCalendar_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 13 */ imports.NewTable("TCalendar_TClass", 0), // function TCalendarClass
+		}
+	})
 	return calendarImport
 }

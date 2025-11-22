@@ -9,93 +9,111 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomBitmap Parent: IRasterImage
 type ICustomBitmap interface {
 	IRasterImage
-	Handle() HBITMAP                        // property
-	SetHandle(AValue HBITMAP)               // property
-	HandleType() TBitmapHandleType          // property
-	SetHandleType(AValue TBitmapHandleType) // property
-	Monochrome() bool                       // property
-	SetMonochrome(AValue bool)              // property
-	ReleaseHandle() HBITMAP                 // function
-	SetSize(AWidth, AHeight int32)          // procedure
+	ReleaseHandle() types.HBitmap                // function
+	SetSize(width int32, height int32)           // procedure
+	Handle() types.HBitmap                       // property Handle Getter
+	SetHandle(value types.HBitmap)               // property Handle Setter
+	HandleType() types.TBitmapHandleType         // property HandleType Getter
+	SetHandleType(value types.TBitmapHandleType) // property HandleType Setter
+	Monochrome() bool                            // property Monochrome Getter
+	SetMonochrome(value bool)                    // property Monochrome Setter
 }
 
-// TCustomBitmap Parent: TRasterImage
 type TCustomBitmap struct {
 	TRasterImage
 }
 
-func NewCustomBitmap() ICustomBitmap {
-	r1 := customBitmapImportAPI().SysCallN(1)
-	return AsCustomBitmap(r1)
+func (m *TCustomBitmap) ReleaseHandle() types.HBitmap {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customBitmapAPI().SysCallN(1, m.Instance())
+	return types.HBitmap(r)
 }
 
-func (m *TCustomBitmap) Handle() HBITMAP {
-	r1 := customBitmapImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return HBITMAP(r1)
+func (m *TCustomBitmap) SetSize(width int32, height int32) {
+	if !m.IsValid() {
+		return
+	}
+	customBitmapAPI().SysCallN(2, m.Instance(), uintptr(width), uintptr(height))
 }
 
-func (m *TCustomBitmap) SetHandle(AValue HBITMAP) {
-	customBitmapImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomBitmap) Handle() types.HBitmap {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customBitmapAPI().SysCallN(3, 0, m.Instance())
+	return types.HBitmap(r)
 }
 
-func (m *TCustomBitmap) HandleType() TBitmapHandleType {
-	r1 := customBitmapImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TBitmapHandleType(r1)
+func (m *TCustomBitmap) SetHandle(value types.HBitmap) {
+	if !m.IsValid() {
+		return
+	}
+	customBitmapAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomBitmap) SetHandleType(AValue TBitmapHandleType) {
-	customBitmapImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomBitmap) HandleType() types.TBitmapHandleType {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customBitmapAPI().SysCallN(4, 0, m.Instance())
+	return types.TBitmapHandleType(r)
+}
+
+func (m *TCustomBitmap) SetHandleType(value types.TBitmapHandleType) {
+	if !m.IsValid() {
+		return
+	}
+	customBitmapAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomBitmap) Monochrome() bool {
-	r1 := customBitmapImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customBitmapAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomBitmap) SetMonochrome(AValue bool) {
-	customBitmapImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomBitmap) SetMonochrome(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customBitmapAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomBitmap) ReleaseHandle() HBITMAP {
-	r1 := customBitmapImportAPI().SysCallN(5, m.Instance())
-	return HBITMAP(r1)
-}
-
-func CustomBitmapClass() TClass {
-	ret := customBitmapImportAPI().SysCallN(0)
-	return TClass(ret)
-}
-
-func (m *TCustomBitmap) SetSize(AWidth, AHeight int32) {
-	customBitmapImportAPI().SysCallN(6, m.Instance(), uintptr(AWidth), uintptr(AHeight))
+// NewCustomBitmap class constructor
+func NewCustomBitmap() ICustomBitmap {
+	r := customBitmapAPI().SysCallN(0)
+	return AsCustomBitmap(r)
 }
 
 var (
-	customBitmapImport       *imports.Imports = nil
-	customBitmapImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomBitmap_Class", 0),
-		/*1*/ imports.NewTable("CustomBitmap_Create", 0),
-		/*2*/ imports.NewTable("CustomBitmap_Handle", 0),
-		/*3*/ imports.NewTable("CustomBitmap_HandleType", 0),
-		/*4*/ imports.NewTable("CustomBitmap_Monochrome", 0),
-		/*5*/ imports.NewTable("CustomBitmap_ReleaseHandle", 0),
-		/*6*/ imports.NewTable("CustomBitmap_SetSize", 0),
-	}
+	customBitmapOnce   base.Once
+	customBitmapImport *imports.Imports = nil
 )
 
-func customBitmapImportAPI() *imports.Imports {
-	if customBitmapImport == nil {
-		customBitmapImport = NewDefaultImports()
-		customBitmapImport.SetImportTable(customBitmapImportTables)
-		customBitmapImportTables = nil
-	}
+func customBitmapAPI() *imports.Imports {
+	customBitmapOnce.Do(func() {
+		customBitmapImport = api.NewDefaultImports()
+		customBitmapImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomBitmap_Create", 0), // constructor NewCustomBitmap
+			/* 1 */ imports.NewTable("TCustomBitmap_ReleaseHandle", 0), // function ReleaseHandle
+			/* 2 */ imports.NewTable("TCustomBitmap_SetSize", 0), // procedure SetSize
+			/* 3 */ imports.NewTable("TCustomBitmap_Handle", 0), // property Handle
+			/* 4 */ imports.NewTable("TCustomBitmap_HandleType", 0), // property HandleType
+			/* 5 */ imports.NewTable("TCustomBitmap_Monochrome", 0), // property Monochrome
+		}
+	})
 	return customBitmapImport
 }

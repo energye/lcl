@@ -9,29 +9,30 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomHeaderControl Parent: ICustomControl
 type ICustomHeaderControl interface {
 	ICustomControl
-	SectionFromOriginalIndex(OriginalIndex int32) IHeaderSection // property
-	DragReorder() bool                                           // property
-	SetDragReorder(AValue bool)                                  // property
-	Images() ICustomImageList                                    // property
-	SetImages(AValue ICustomImageList)                           // property
-	ImagesWidth() int32                                          // property
-	SetImagesWidth(AValue int32)                                 // property
-	Sections() IHeaderSections                                   // property
-	SetSections(AValue IHeaderSections)                          // property
-	GetSectionAt(P *TPoint) int32                                // function
+	GetSectionAt(P types.TPoint) int32                           // function
 	Click()                                                      // procedure
 	DblClick()                                                   // procedure
 	Paint()                                                      // procedure
-	PaintSection(Index int32)                                    // procedure
-	ChangeScale(M, D int32)                                      // procedure
+	PaintSection(index int32)                                    // procedure
+	ChangeScale(M int32, D int32)                                // procedure
+	SectionFromOriginalIndex(originalIndex int32) IHeaderSection // property SectionFromOriginalIndex Getter
+	DragReorder() bool                                           // property DragReorder Getter
+	SetDragReorder(value bool)                                   // property DragReorder Setter
+	Images() ICustomImageList                                    // property Images Getter
+	SetImages(value ICustomImageList)                            // property Images Setter
+	ImagesWidth() int32                                          // property ImagesWidth Getter
+	SetImagesWidth(value int32)                                  // property ImagesWidth Setter
+	Sections() IHeaderSections                                   // property Sections Getter
+	SetSections(value IHeaderSections)                           // property Sections Setter
 	SetOnSectionDrag(fn TSectionDragEvent)                       // property event
 	SetOnSectionEndDrag(fn TNotifyEvent)                         // property event
 	SetOnSectionClick(fn TCustomSectionNotifyEvent)              // property event
@@ -41,181 +42,218 @@ type ICustomHeaderControl interface {
 	SetOnCreateSectionClass(fn TCustomHCCreateSectionClassEvent) // property event
 }
 
-// TCustomHeaderControl Parent: TCustomControl
 type TCustomHeaderControl struct {
 	TCustomControl
-	sectionDragPtr              uintptr
-	sectionEndDragPtr           uintptr
-	sectionClickPtr             uintptr
-	sectionResizePtr            uintptr
-	sectionTrackPtr             uintptr
-	sectionSeparatorDblClickPtr uintptr
-	createSectionClassPtr       uintptr
 }
 
-func NewCustomHeaderControl(AOwner IComponent) ICustomHeaderControl {
-	r1 := customHeaderControlImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
-	return AsCustomHeaderControl(r1)
-}
-
-func (m *TCustomHeaderControl) SectionFromOriginalIndex(OriginalIndex int32) IHeaderSection {
-	r1 := customHeaderControlImportAPI().SysCallN(11, m.Instance(), uintptr(OriginalIndex))
-	return AsHeaderSection(r1)
-}
-
-func (m *TCustomHeaderControl) DragReorder() bool {
-	r1 := customHeaderControlImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomHeaderControl) SetDragReorder(AValue bool) {
-	customHeaderControlImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomHeaderControl) Images() ICustomImageList {
-	r1 := customHeaderControlImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
-}
-
-func (m *TCustomHeaderControl) SetImages(AValue ICustomImageList) {
-	customHeaderControlImportAPI().SysCallN(7, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCustomHeaderControl) ImagesWidth() int32 {
-	r1 := customHeaderControlImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomHeaderControl) SetImagesWidth(AValue int32) {
-	customHeaderControlImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomHeaderControl) Sections() IHeaderSections {
-	r1 := customHeaderControlImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return AsHeaderSections(r1)
-}
-
-func (m *TCustomHeaderControl) SetSections(AValue IHeaderSections) {
-	customHeaderControlImportAPI().SysCallN(12, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCustomHeaderControl) GetSectionAt(P *TPoint) int32 {
-	r1 := customHeaderControlImportAPI().SysCallN(6, m.Instance(), uintptr(unsafePointer(P)))
-	return int32(r1)
-}
-
-func CustomHeaderControlClass() TClass {
-	ret := customHeaderControlImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TCustomHeaderControl) GetSectionAt(P types.TPoint) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customHeaderControlAPI().SysCallN(1, m.Instance(), uintptr(base.UnsafePointer(&P)))
+	return int32(r)
 }
 
 func (m *TCustomHeaderControl) Click() {
-	customHeaderControlImportAPI().SysCallN(2, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customHeaderControlAPI().SysCallN(2, m.Instance())
 }
 
 func (m *TCustomHeaderControl) DblClick() {
-	customHeaderControlImportAPI().SysCallN(4, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customHeaderControlAPI().SysCallN(3, m.Instance())
 }
 
 func (m *TCustomHeaderControl) Paint() {
-	customHeaderControlImportAPI().SysCallN(9, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customHeaderControlAPI().SysCallN(4, m.Instance())
 }
 
-func (m *TCustomHeaderControl) PaintSection(Index int32) {
-	customHeaderControlImportAPI().SysCallN(10, m.Instance(), uintptr(Index))
+func (m *TCustomHeaderControl) PaintSection(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	customHeaderControlAPI().SysCallN(5, m.Instance(), uintptr(index))
 }
 
-func (m *TCustomHeaderControl) ChangeScale(M, D int32) {
-	customHeaderControlImportAPI().SysCallN(0, m.Instance(), uintptr(M), uintptr(D))
+func (m *TCustomHeaderControl) ChangeScale(M int32, D int32) {
+	if !m.IsValid() {
+		return
+	}
+	customHeaderControlAPI().SysCallN(6, m.Instance(), uintptr(M), uintptr(D))
+}
+
+func (m *TCustomHeaderControl) SectionFromOriginalIndex(originalIndex int32) IHeaderSection {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customHeaderControlAPI().SysCallN(7, m.Instance(), uintptr(originalIndex))
+	return AsHeaderSection(r)
+}
+
+func (m *TCustomHeaderControl) DragReorder() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customHeaderControlAPI().SysCallN(8, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomHeaderControl) SetDragReorder(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customHeaderControlAPI().SysCallN(8, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomHeaderControl) Images() ICustomImageList {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customHeaderControlAPI().SysCallN(9, 0, m.Instance())
+	return AsCustomImageList(r)
+}
+
+func (m *TCustomHeaderControl) SetImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	customHeaderControlAPI().SysCallN(9, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCustomHeaderControl) ImagesWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customHeaderControlAPI().SysCallN(10, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomHeaderControl) SetImagesWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customHeaderControlAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomHeaderControl) Sections() IHeaderSections {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customHeaderControlAPI().SysCallN(11, 0, m.Instance())
+	return AsHeaderSections(r)
+}
+
+func (m *TCustomHeaderControl) SetSections(value IHeaderSections) {
+	if !m.IsValid() {
+		return
+	}
+	customHeaderControlAPI().SysCallN(11, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TCustomHeaderControl) SetOnSectionDrag(fn TSectionDragEvent) {
-	if m.sectionDragPtr != 0 {
-		RemoveEventElement(m.sectionDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.sectionDragPtr = MakeEventDataPtr(fn)
-	customHeaderControlImportAPI().SysCallN(15, m.Instance(), m.sectionDragPtr)
+	cb := makeTSectionDragEvent(fn)
+	base.SetEvent(m, 12, customHeaderControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomHeaderControl) SetOnSectionEndDrag(fn TNotifyEvent) {
-	if m.sectionEndDragPtr != 0 {
-		RemoveEventElement(m.sectionEndDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.sectionEndDragPtr = MakeEventDataPtr(fn)
-	customHeaderControlImportAPI().SysCallN(16, m.Instance(), m.sectionEndDragPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 13, customHeaderControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomHeaderControl) SetOnSectionClick(fn TCustomSectionNotifyEvent) {
-	if m.sectionClickPtr != 0 {
-		RemoveEventElement(m.sectionClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.sectionClickPtr = MakeEventDataPtr(fn)
-	customHeaderControlImportAPI().SysCallN(14, m.Instance(), m.sectionClickPtr)
+	cb := makeTCustomSectionNotifyEvent(fn)
+	base.SetEvent(m, 14, customHeaderControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomHeaderControl) SetOnSectionResize(fn TCustomSectionNotifyEvent) {
-	if m.sectionResizePtr != 0 {
-		RemoveEventElement(m.sectionResizePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.sectionResizePtr = MakeEventDataPtr(fn)
-	customHeaderControlImportAPI().SysCallN(17, m.Instance(), m.sectionResizePtr)
+	cb := makeTCustomSectionNotifyEvent(fn)
+	base.SetEvent(m, 15, customHeaderControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomHeaderControl) SetOnSectionTrack(fn TCustomSectionTrackEvent) {
-	if m.sectionTrackPtr != 0 {
-		RemoveEventElement(m.sectionTrackPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.sectionTrackPtr = MakeEventDataPtr(fn)
-	customHeaderControlImportAPI().SysCallN(19, m.Instance(), m.sectionTrackPtr)
+	cb := makeTCustomSectionTrackEvent(fn)
+	base.SetEvent(m, 16, customHeaderControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomHeaderControl) SetOnSectionSeparatorDblClick(fn TCustomSectionNotifyEvent) {
-	if m.sectionSeparatorDblClickPtr != 0 {
-		RemoveEventElement(m.sectionSeparatorDblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.sectionSeparatorDblClickPtr = MakeEventDataPtr(fn)
-	customHeaderControlImportAPI().SysCallN(18, m.Instance(), m.sectionSeparatorDblClickPtr)
+	cb := makeTCustomSectionNotifyEvent(fn)
+	base.SetEvent(m, 17, customHeaderControlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomHeaderControl) SetOnCreateSectionClass(fn TCustomHCCreateSectionClassEvent) {
-	if m.createSectionClassPtr != 0 {
-		RemoveEventElement(m.createSectionClassPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.createSectionClassPtr = MakeEventDataPtr(fn)
-	customHeaderControlImportAPI().SysCallN(13, m.Instance(), m.createSectionClassPtr)
+	cb := makeTCustomHCCreateSectionClassEvent(fn)
+	base.SetEvent(m, 18, customHeaderControlAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomHeaderControl class constructor
+func NewCustomHeaderControl(owner IComponent) ICustomHeaderControl {
+	r := customHeaderControlAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomHeaderControl(r)
+}
+
+func TCustomHeaderControlClass() types.TClass {
+	r := customHeaderControlAPI().SysCallN(19)
+	return types.TClass(r)
 }
 
 var (
-	customHeaderControlImport       *imports.Imports = nil
-	customHeaderControlImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomHeaderControl_ChangeScale", 0),
-		/*1*/ imports.NewTable("CustomHeaderControl_Class", 0),
-		/*2*/ imports.NewTable("CustomHeaderControl_Click", 0),
-		/*3*/ imports.NewTable("CustomHeaderControl_Create", 0),
-		/*4*/ imports.NewTable("CustomHeaderControl_DblClick", 0),
-		/*5*/ imports.NewTable("CustomHeaderControl_DragReorder", 0),
-		/*6*/ imports.NewTable("CustomHeaderControl_GetSectionAt", 0),
-		/*7*/ imports.NewTable("CustomHeaderControl_Images", 0),
-		/*8*/ imports.NewTable("CustomHeaderControl_ImagesWidth", 0),
-		/*9*/ imports.NewTable("CustomHeaderControl_Paint", 0),
-		/*10*/ imports.NewTable("CustomHeaderControl_PaintSection", 0),
-		/*11*/ imports.NewTable("CustomHeaderControl_SectionFromOriginalIndex", 0),
-		/*12*/ imports.NewTable("CustomHeaderControl_Sections", 0),
-		/*13*/ imports.NewTable("CustomHeaderControl_SetOnCreateSectionClass", 0),
-		/*14*/ imports.NewTable("CustomHeaderControl_SetOnSectionClick", 0),
-		/*15*/ imports.NewTable("CustomHeaderControl_SetOnSectionDrag", 0),
-		/*16*/ imports.NewTable("CustomHeaderControl_SetOnSectionEndDrag", 0),
-		/*17*/ imports.NewTable("CustomHeaderControl_SetOnSectionResize", 0),
-		/*18*/ imports.NewTable("CustomHeaderControl_SetOnSectionSeparatorDblClick", 0),
-		/*19*/ imports.NewTable("CustomHeaderControl_SetOnSectionTrack", 0),
-	}
+	customHeaderControlOnce   base.Once
+	customHeaderControlImport *imports.Imports = nil
 )
 
-func customHeaderControlImportAPI() *imports.Imports {
-	if customHeaderControlImport == nil {
-		customHeaderControlImport = NewDefaultImports()
-		customHeaderControlImport.SetImportTable(customHeaderControlImportTables)
-		customHeaderControlImportTables = nil
-	}
+func customHeaderControlAPI() *imports.Imports {
+	customHeaderControlOnce.Do(func() {
+		customHeaderControlImport = api.NewDefaultImports()
+		customHeaderControlImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomHeaderControl_Create", 0), // constructor NewCustomHeaderControl
+			/* 1 */ imports.NewTable("TCustomHeaderControl_GetSectionAt", 0), // function GetSectionAt
+			/* 2 */ imports.NewTable("TCustomHeaderControl_Click", 0), // procedure Click
+			/* 3 */ imports.NewTable("TCustomHeaderControl_DblClick", 0), // procedure DblClick
+			/* 4 */ imports.NewTable("TCustomHeaderControl_Paint", 0), // procedure Paint
+			/* 5 */ imports.NewTable("TCustomHeaderControl_PaintSection", 0), // procedure PaintSection
+			/* 6 */ imports.NewTable("TCustomHeaderControl_ChangeScale", 0), // procedure ChangeScale
+			/* 7 */ imports.NewTable("TCustomHeaderControl_SectionFromOriginalIndex", 0), // property SectionFromOriginalIndex
+			/* 8 */ imports.NewTable("TCustomHeaderControl_DragReorder", 0), // property DragReorder
+			/* 9 */ imports.NewTable("TCustomHeaderControl_Images", 0), // property Images
+			/* 10 */ imports.NewTable("TCustomHeaderControl_ImagesWidth", 0), // property ImagesWidth
+			/* 11 */ imports.NewTable("TCustomHeaderControl_Sections", 0), // property Sections
+			/* 12 */ imports.NewTable("TCustomHeaderControl_OnSectionDrag", 0), // event OnSectionDrag
+			/* 13 */ imports.NewTable("TCustomHeaderControl_OnSectionEndDrag", 0), // event OnSectionEndDrag
+			/* 14 */ imports.NewTable("TCustomHeaderControl_OnSectionClick", 0), // event OnSectionClick
+			/* 15 */ imports.NewTable("TCustomHeaderControl_OnSectionResize", 0), // event OnSectionResize
+			/* 16 */ imports.NewTable("TCustomHeaderControl_OnSectionTrack", 0), // event OnSectionTrack
+			/* 17 */ imports.NewTable("TCustomHeaderControl_OnSectionSeparatorDblClick", 0), // event OnSectionSeparatorDblClick
+			/* 18 */ imports.NewTable("TCustomHeaderControl_OnCreateSectionClass", 0), // event OnCreateSectionClass
+			/* 19 */ imports.NewTable("TCustomHeaderControl_TClass", 0), // function TCustomHeaderControlClass
+		}
+	})
 	return customHeaderControlImport
 }

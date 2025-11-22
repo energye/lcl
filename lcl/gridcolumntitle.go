@@ -9,184 +9,247 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IGridColumnTitle Parent: IPersistent
 type IGridColumnTitle interface {
 	IPersistent
-	Column() IGridColumn                             // property
-	Alignment() TAlignment                           // property
-	SetAlignment(AValue TAlignment)                  // property
-	Caption() string                                 // property
-	SetCaption(AValue string)                        // property
-	Color() TColor                                   // property
-	SetColor(AValue TColor)                          // property
-	Font() IFont                                     // property
-	SetFont(AValue IFont)                            // property
-	ImageIndex() TImageIndex                         // property
-	SetImageIndex(AValue TImageIndex)                // property
-	ImageLayout() TButtonLayout                      // property
-	SetImageLayout(AValue TButtonLayout)             // property
-	Layout() TTextLayout                             // property
-	SetLayout(AValue TTextLayout)                    // property
-	MultiLine() bool                                 // property
-	SetMultiLine(AValue bool)                        // property
-	PrefixOption() TPrefixOption                     // property
-	SetPrefixOption(AValue TPrefixOption)            // property
-	IsDefault() bool                                 // function
-	FillTitleDefaultFont()                           // procedure
-	FixDesignFontsPPI(ADesignTimePPI int32)          // procedure
-	ScaleFontsPPI(AToPPI int32, AProportion float64) // procedure
+	IsDefault() bool                               // function
+	FillTitleDefaultFont()                         // procedure
+	FixDesignFontsPPI(designTimePPI int32)         // procedure
+	ScaleFontsPPI(toPPI int32, proportion float64) // procedure
+	Column() IGridColumn                           // property Column Getter
+	Alignment() types.TAlignment                   // property Alignment Getter
+	SetAlignment(value types.TAlignment)           // property Alignment Setter
+	Caption() string                               // property Caption Getter
+	SetCaption(value string)                       // property Caption Setter
+	Color() types.TColor                           // property Color Getter
+	SetColor(value types.TColor)                   // property Color Setter
+	Font() IFont                                   // property Font Getter
+	SetFont(value IFont)                           // property Font Setter
+	ImageIndex() int32                             // property ImageIndex Getter
+	SetImageIndex(value int32)                     // property ImageIndex Setter
+	ImageLayout() types.TButtonLayout              // property ImageLayout Getter
+	SetImageLayout(value types.TButtonLayout)      // property ImageLayout Setter
+	Layout() types.TTextLayout                     // property Layout Getter
+	SetLayout(value types.TTextLayout)             // property Layout Setter
+	MultiLine() bool                               // property MultiLine Getter
+	SetMultiLine(value bool)                       // property MultiLine Setter
+	PrefixOption() types.TPrefixOption             // property PrefixOption Getter
+	SetPrefixOption(value types.TPrefixOption)     // property PrefixOption Setter
 }
 
-// TGridColumnTitle Parent: TPersistent
 type TGridColumnTitle struct {
 	TPersistent
 }
 
-func NewGridColumnTitle(TheColumn IGridColumn) IGridColumnTitle {
-	r1 := gridColumnTitleImportAPI().SysCallN(5, GetObjectUintptr(TheColumn))
-	return AsGridColumnTitle(r1)
-}
-
-func (m *TGridColumnTitle) Column() IGridColumn {
-	r1 := gridColumnTitleImportAPI().SysCallN(4, m.Instance())
-	return AsGridColumn(r1)
-}
-
-func (m *TGridColumnTitle) Alignment() TAlignment {
-	r1 := gridColumnTitleImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TAlignment(r1)
-}
-
-func (m *TGridColumnTitle) SetAlignment(AValue TAlignment) {
-	gridColumnTitleImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TGridColumnTitle) Caption() string {
-	r1 := gridColumnTitleImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TGridColumnTitle) SetCaption(AValue string) {
-	gridColumnTitleImportAPI().SysCallN(1, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TGridColumnTitle) Color() TColor {
-	r1 := gridColumnTitleImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TGridColumnTitle) SetColor(AValue TColor) {
-	gridColumnTitleImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TGridColumnTitle) Font() IFont {
-	r1 := gridColumnTitleImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return AsFont(r1)
-}
-
-func (m *TGridColumnTitle) SetFont(AValue IFont) {
-	gridColumnTitleImportAPI().SysCallN(8, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TGridColumnTitle) ImageIndex() TImageIndex {
-	r1 := gridColumnTitleImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *TGridColumnTitle) SetImageIndex(AValue TImageIndex) {
-	gridColumnTitleImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TGridColumnTitle) ImageLayout() TButtonLayout {
-	r1 := gridColumnTitleImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return TButtonLayout(r1)
-}
-
-func (m *TGridColumnTitle) SetImageLayout(AValue TButtonLayout) {
-	gridColumnTitleImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TGridColumnTitle) Layout() TTextLayout {
-	r1 := gridColumnTitleImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return TTextLayout(r1)
-}
-
-func (m *TGridColumnTitle) SetLayout(AValue TTextLayout) {
-	gridColumnTitleImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TGridColumnTitle) MultiLine() bool {
-	r1 := gridColumnTitleImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TGridColumnTitle) SetMultiLine(AValue bool) {
-	gridColumnTitleImportAPI().SysCallN(13, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TGridColumnTitle) PrefixOption() TPrefixOption {
-	r1 := gridColumnTitleImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return TPrefixOption(r1)
-}
-
-func (m *TGridColumnTitle) SetPrefixOption(AValue TPrefixOption) {
-	gridColumnTitleImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
-}
-
 func (m *TGridColumnTitle) IsDefault() bool {
-	r1 := gridColumnTitleImportAPI().SysCallN(11, m.Instance())
-	return GoBool(r1)
-}
-
-func GridColumnTitleClass() TClass {
-	ret := gridColumnTitleImportAPI().SysCallN(2)
-	return TClass(ret)
+	if !m.IsValid() {
+		return false
+	}
+	r := gridColumnTitleAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TGridColumnTitle) FillTitleDefaultFont() {
-	gridColumnTitleImportAPI().SysCallN(6, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(2, m.Instance())
 }
 
-func (m *TGridColumnTitle) FixDesignFontsPPI(ADesignTimePPI int32) {
-	gridColumnTitleImportAPI().SysCallN(7, m.Instance(), uintptr(ADesignTimePPI))
+func (m *TGridColumnTitle) FixDesignFontsPPI(designTimePPI int32) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(3, m.Instance(), uintptr(designTimePPI))
 }
 
-func (m *TGridColumnTitle) ScaleFontsPPI(AToPPI int32, AProportion float64) {
-	gridColumnTitleImportAPI().SysCallN(15, m.Instance(), uintptr(AToPPI), uintptr(unsafePointer(&AProportion)))
+func (m *TGridColumnTitle) ScaleFontsPPI(toPPI int32, proportion float64) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(4, m.Instance(), uintptr(toPPI), uintptr(base.UnsafePointer(&proportion)))
+}
+
+func (m *TGridColumnTitle) Column() IGridColumn {
+	if !m.IsValid() {
+		return nil
+	}
+	r := gridColumnTitleAPI().SysCallN(5, m.Instance())
+	return AsGridColumn(r)
+}
+
+func (m *TGridColumnTitle) Alignment() types.TAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := gridColumnTitleAPI().SysCallN(6, 0, m.Instance())
+	return types.TAlignment(r)
+}
+
+func (m *TGridColumnTitle) SetAlignment(value types.TAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TGridColumnTitle) Caption() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := gridColumnTitleAPI().SysCallN(7, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TGridColumnTitle) SetCaption(value string) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(7, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TGridColumnTitle) Color() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := gridColumnTitleAPI().SysCallN(8, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TGridColumnTitle) SetColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TGridColumnTitle) Font() IFont {
+	if !m.IsValid() {
+		return nil
+	}
+	r := gridColumnTitleAPI().SysCallN(9, 0, m.Instance())
+	return AsFont(r)
+}
+
+func (m *TGridColumnTitle) SetFont(value IFont) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(9, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TGridColumnTitle) ImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := gridColumnTitleAPI().SysCallN(10, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TGridColumnTitle) SetImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TGridColumnTitle) ImageLayout() types.TButtonLayout {
+	if !m.IsValid() {
+		return 0
+	}
+	r := gridColumnTitleAPI().SysCallN(11, 0, m.Instance())
+	return types.TButtonLayout(r)
+}
+
+func (m *TGridColumnTitle) SetImageLayout(value types.TButtonLayout) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TGridColumnTitle) Layout() types.TTextLayout {
+	if !m.IsValid() {
+		return 0
+	}
+	r := gridColumnTitleAPI().SysCallN(12, 0, m.Instance())
+	return types.TTextLayout(r)
+}
+
+func (m *TGridColumnTitle) SetLayout(value types.TTextLayout) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TGridColumnTitle) MultiLine() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := gridColumnTitleAPI().SysCallN(13, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TGridColumnTitle) SetMultiLine(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(13, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TGridColumnTitle) PrefixOption() types.TPrefixOption {
+	if !m.IsValid() {
+		return 0
+	}
+	r := gridColumnTitleAPI().SysCallN(14, 0, m.Instance())
+	return types.TPrefixOption(r)
+}
+
+func (m *TGridColumnTitle) SetPrefixOption(value types.TPrefixOption) {
+	if !m.IsValid() {
+		return
+	}
+	gridColumnTitleAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
+}
+
+// NewGridColumnTitle class constructor
+func NewGridColumnTitle(theColumn IGridColumn) IGridColumnTitle {
+	r := gridColumnTitleAPI().SysCallN(0, base.GetObjectUintptr(theColumn))
+	return AsGridColumnTitle(r)
 }
 
 var (
-	gridColumnTitleImport       *imports.Imports = nil
-	gridColumnTitleImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("GridColumnTitle_Alignment", 0),
-		/*1*/ imports.NewTable("GridColumnTitle_Caption", 0),
-		/*2*/ imports.NewTable("GridColumnTitle_Class", 0),
-		/*3*/ imports.NewTable("GridColumnTitle_Color", 0),
-		/*4*/ imports.NewTable("GridColumnTitle_Column", 0),
-		/*5*/ imports.NewTable("GridColumnTitle_Create", 0),
-		/*6*/ imports.NewTable("GridColumnTitle_FillTitleDefaultFont", 0),
-		/*7*/ imports.NewTable("GridColumnTitle_FixDesignFontsPPI", 0),
-		/*8*/ imports.NewTable("GridColumnTitle_Font", 0),
-		/*9*/ imports.NewTable("GridColumnTitle_ImageIndex", 0),
-		/*10*/ imports.NewTable("GridColumnTitle_ImageLayout", 0),
-		/*11*/ imports.NewTable("GridColumnTitle_IsDefault", 0),
-		/*12*/ imports.NewTable("GridColumnTitle_Layout", 0),
-		/*13*/ imports.NewTable("GridColumnTitle_MultiLine", 0),
-		/*14*/ imports.NewTable("GridColumnTitle_PrefixOption", 0),
-		/*15*/ imports.NewTable("GridColumnTitle_ScaleFontsPPI", 0),
-	}
+	gridColumnTitleOnce   base.Once
+	gridColumnTitleImport *imports.Imports = nil
 )
 
-func gridColumnTitleImportAPI() *imports.Imports {
-	if gridColumnTitleImport == nil {
-		gridColumnTitleImport = NewDefaultImports()
-		gridColumnTitleImport.SetImportTable(gridColumnTitleImportTables)
-		gridColumnTitleImportTables = nil
-	}
+func gridColumnTitleAPI() *imports.Imports {
+	gridColumnTitleOnce.Do(func() {
+		gridColumnTitleImport = api.NewDefaultImports()
+		gridColumnTitleImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TGridColumnTitle_Create", 0), // constructor NewGridColumnTitle
+			/* 1 */ imports.NewTable("TGridColumnTitle_IsDefault", 0), // function IsDefault
+			/* 2 */ imports.NewTable("TGridColumnTitle_FillTitleDefaultFont", 0), // procedure FillTitleDefaultFont
+			/* 3 */ imports.NewTable("TGridColumnTitle_FixDesignFontsPPI", 0), // procedure FixDesignFontsPPI
+			/* 4 */ imports.NewTable("TGridColumnTitle_ScaleFontsPPI", 0), // procedure ScaleFontsPPI
+			/* 5 */ imports.NewTable("TGridColumnTitle_Column", 0), // property Column
+			/* 6 */ imports.NewTable("TGridColumnTitle_Alignment", 0), // property Alignment
+			/* 7 */ imports.NewTable("TGridColumnTitle_Caption", 0), // property Caption
+			/* 8 */ imports.NewTable("TGridColumnTitle_Color", 0), // property Color
+			/* 9 */ imports.NewTable("TGridColumnTitle_Font", 0), // property Font
+			/* 10 */ imports.NewTable("TGridColumnTitle_ImageIndex", 0), // property ImageIndex
+			/* 11 */ imports.NewTable("TGridColumnTitle_ImageLayout", 0), // property ImageLayout
+			/* 12 */ imports.NewTable("TGridColumnTitle_Layout", 0), // property Layout
+			/* 13 */ imports.NewTable("TGridColumnTitle_MultiLine", 0), // property MultiLine
+			/* 14 */ imports.NewTable("TGridColumnTitle_PrefixOption", 0), // property PrefixOption
+		}
+	})
 	return gridColumnTitleImport
 }

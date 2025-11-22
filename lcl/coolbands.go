@@ -9,77 +9,85 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // ICoolBands Parent: ICollection
 type ICoolBands interface {
 	ICollection
-	ItemsForCoolBand(Index int32) ICoolBand            // property
-	SetItemsForCoolBand(Index int32, AValue ICoolBand) // property
-	AddForCoolBand() ICoolBand                         // function
-	FindBand(AControl IControl) ICoolBand              // function
-	FindBandIndex(AControl IControl) int32             // function
+	AddToCoolBand() ICoolBand                               // function
+	FindBand(control IControl) ICoolBand                    // function
+	FindBandIndex(control IControl) int32                   // function
+	ItemsWithIntToCoolBand(index int32) ICoolBand           // property Items Getter
+	SetItemsWithIntToCoolBand(index int32, value ICoolBand) // property Items Setter
 }
 
-// TCoolBands Parent: TCollection
 type TCoolBands struct {
 	TCollection
 }
 
-func NewCoolBands(ACoolBar ICustomCoolBar) ICoolBands {
-	r1 := coolBandsImportAPI().SysCallN(2, GetObjectUintptr(ACoolBar))
-	return AsCoolBands(r1)
+func (m *TCoolBands) AddToCoolBand() ICoolBand {
+	if !m.IsValid() {
+		return nil
+	}
+	r := coolBandsAPI().SysCallN(1, m.Instance())
+	return AsCoolBand(r)
 }
 
-func (m *TCoolBands) ItemsForCoolBand(Index int32) ICoolBand {
-	r1 := coolBandsImportAPI().SysCallN(5, 0, m.Instance(), uintptr(Index))
-	return AsCoolBand(r1)
+func (m *TCoolBands) FindBand(control IControl) ICoolBand {
+	if !m.IsValid() {
+		return nil
+	}
+	r := coolBandsAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(control))
+	return AsCoolBand(r)
 }
 
-func (m *TCoolBands) SetItemsForCoolBand(Index int32, AValue ICoolBand) {
-	coolBandsImportAPI().SysCallN(5, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
+func (m *TCoolBands) FindBandIndex(control IControl) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := coolBandsAPI().SysCallN(3, m.Instance(), base.GetObjectUintptr(control))
+	return int32(r)
 }
 
-func (m *TCoolBands) AddForCoolBand() ICoolBand {
-	r1 := coolBandsImportAPI().SysCallN(0, m.Instance())
-	return AsCoolBand(r1)
+func (m *TCoolBands) ItemsWithIntToCoolBand(index int32) ICoolBand {
+	if !m.IsValid() {
+		return nil
+	}
+	r := coolBandsAPI().SysCallN(4, 0, m.Instance(), uintptr(index))
+	return AsCoolBand(r)
 }
 
-func (m *TCoolBands) FindBand(AControl IControl) ICoolBand {
-	r1 := coolBandsImportAPI().SysCallN(3, m.Instance(), GetObjectUintptr(AControl))
-	return AsCoolBand(r1)
+func (m *TCoolBands) SetItemsWithIntToCoolBand(index int32, value ICoolBand) {
+	if !m.IsValid() {
+		return
+	}
+	coolBandsAPI().SysCallN(4, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
 }
 
-func (m *TCoolBands) FindBandIndex(AControl IControl) int32 {
-	r1 := coolBandsImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(AControl))
-	return int32(r1)
-}
-
-func CoolBandsClass() TClass {
-	ret := coolBandsImportAPI().SysCallN(1)
-	return TClass(ret)
+// NewCoolBands class constructor
+func NewCoolBands(coolBar ICustomCoolBar) ICoolBands {
+	r := coolBandsAPI().SysCallN(0, base.GetObjectUintptr(coolBar))
+	return AsCoolBands(r)
 }
 
 var (
-	coolBandsImport       *imports.Imports = nil
-	coolBandsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CoolBands_AddForCoolBand", 0),
-		/*1*/ imports.NewTable("CoolBands_Class", 0),
-		/*2*/ imports.NewTable("CoolBands_Create", 0),
-		/*3*/ imports.NewTable("CoolBands_FindBand", 0),
-		/*4*/ imports.NewTable("CoolBands_FindBandIndex", 0),
-		/*5*/ imports.NewTable("CoolBands_ItemsForCoolBand", 0),
-	}
+	coolBandsOnce   base.Once
+	coolBandsImport *imports.Imports = nil
 )
 
-func coolBandsImportAPI() *imports.Imports {
-	if coolBandsImport == nil {
-		coolBandsImport = NewDefaultImports()
-		coolBandsImport.SetImportTable(coolBandsImportTables)
-		coolBandsImportTables = nil
-	}
+func coolBandsAPI() *imports.Imports {
+	coolBandsOnce.Do(func() {
+		coolBandsImport = api.NewDefaultImports()
+		coolBandsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCoolBands_Create", 0), // constructor NewCoolBands
+			/* 1 */ imports.NewTable("TCoolBands_AddToCoolBand", 0), // function AddToCoolBand
+			/* 2 */ imports.NewTable("TCoolBands_FindBand", 0), // function FindBand
+			/* 3 */ imports.NewTable("TCoolBands_FindBandIndex", 0), // function FindBandIndex
+			/* 4 */ imports.NewTable("TCoolBands_ItemsWithIntToCoolBand", 0), // property ItemsWithIntToCoolBand
+		}
+	})
 	return coolBandsImport
 }

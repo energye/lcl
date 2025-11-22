@@ -9,65 +9,67 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IWinControlEnumerator Parent: IObject
 type IWinControlEnumerator interface {
 	IObject
-	Current() IControl                    // property
 	GetEnumerator() IWinControlEnumerator // function
 	MoveNext() bool                       // function
+	Current() IControl                    // property Current Getter
 }
 
-// TWinControlEnumerator Parent: TObject
 type TWinControlEnumerator struct {
 	TObject
 }
 
-func NewWinControlEnumerator(Parent IWinControl, aLowToHigh bool) IWinControlEnumerator {
-	r1 := winControlEnumeratorImportAPI().SysCallN(1, GetObjectUintptr(Parent), PascalBool(aLowToHigh))
-	return AsWinControlEnumerator(r1)
-}
-
-func (m *TWinControlEnumerator) Current() IControl {
-	r1 := winControlEnumeratorImportAPI().SysCallN(2, m.Instance())
-	return AsControl(r1)
-}
-
 func (m *TWinControlEnumerator) GetEnumerator() IWinControlEnumerator {
-	r1 := winControlEnumeratorImportAPI().SysCallN(3, m.Instance())
-	return AsWinControlEnumerator(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := winControlEnumeratorAPI().SysCallN(1, m.Instance())
+	return AsWinControlEnumerator(r)
 }
 
 func (m *TWinControlEnumerator) MoveNext() bool {
-	r1 := winControlEnumeratorImportAPI().SysCallN(4, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := winControlEnumeratorAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func WinControlEnumeratorClass() TClass {
-	ret := winControlEnumeratorImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TWinControlEnumerator) Current() IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := winControlEnumeratorAPI().SysCallN(3, m.Instance())
+	return AsControl(r)
+}
+
+// NewWinControlEnumerator class constructor
+func NewWinControlEnumerator(parent IWinControl, lowToHigh bool) IWinControlEnumerator {
+	r := winControlEnumeratorAPI().SysCallN(0, base.GetObjectUintptr(parent), api.PasBool(lowToHigh))
+	return AsWinControlEnumerator(r)
 }
 
 var (
-	winControlEnumeratorImport       *imports.Imports = nil
-	winControlEnumeratorImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("WinControlEnumerator_Class", 0),
-		/*1*/ imports.NewTable("WinControlEnumerator_Create", 0),
-		/*2*/ imports.NewTable("WinControlEnumerator_Current", 0),
-		/*3*/ imports.NewTable("WinControlEnumerator_GetEnumerator", 0),
-		/*4*/ imports.NewTable("WinControlEnumerator_MoveNext", 0),
-	}
+	winControlEnumeratorOnce   base.Once
+	winControlEnumeratorImport *imports.Imports = nil
 )
 
-func winControlEnumeratorImportAPI() *imports.Imports {
-	if winControlEnumeratorImport == nil {
-		winControlEnumeratorImport = NewDefaultImports()
-		winControlEnumeratorImport.SetImportTable(winControlEnumeratorImportTables)
-		winControlEnumeratorImportTables = nil
-	}
+func winControlEnumeratorAPI() *imports.Imports {
+	winControlEnumeratorOnce.Do(func() {
+		winControlEnumeratorImport = api.NewDefaultImports()
+		winControlEnumeratorImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TWinControlEnumerator_Create", 0), // constructor NewWinControlEnumerator
+			/* 1 */ imports.NewTable("TWinControlEnumerator_GetEnumerator", 0), // function GetEnumerator
+			/* 2 */ imports.NewTable("TWinControlEnumerator_MoveNext", 0), // function MoveNext
+			/* 3 */ imports.NewTable("TWinControlEnumerator_Current", 0), // property Current
+		}
+	})
 	return winControlEnumeratorImport
 }

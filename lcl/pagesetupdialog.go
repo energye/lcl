@@ -9,211 +9,288 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IPageSetupDialog Parent: ICustomPrinterSetupDialog
 type IPageSetupDialog interface {
 	ICustomPrinterSetupDialog
-	AttachTo() ICustomForm                     // property
-	SetAttachTo(AValue ICustomForm)            // property
-	PageWidth() int32                          // property
-	SetPageWidth(AValue int32)                 // property
-	PageHeight() int32                         // property
-	SetPageHeight(AValue int32)                // property
-	MarginLeft() int32                         // property
-	SetMarginLeft(AValue int32)                // property
-	MarginTop() int32                          // property
-	SetMarginTop(AValue int32)                 // property
-	MarginRight() int32                        // property
-	SetMarginRight(AValue int32)               // property
-	MarginBottom() int32                       // property
-	SetMarginBottom(AValue int32)              // property
-	MinMarginLeft() int32                      // property
-	SetMinMarginLeft(AValue int32)             // property
-	MinMarginTop() int32                       // property
-	SetMinMarginTop(AValue int32)              // property
-	MinMarginRight() int32                     // property
-	SetMinMarginRight(AValue int32)            // property
-	MinMarginBottom() int32                    // property
-	SetMinMarginBottom(AValue int32)           // property
-	Options() TPageSetupDialogOptions          // property
-	SetOptions(AValue TPageSetupDialogOptions) // property
-	Units() TPageMeasureUnits                  // property
-	SetUnits(AValue TPageMeasureUnits)         // property
-	SetOnDialogResult(fn TDialogResultEvent)   // property event
+	AttachTo() ICustomForm                          // property AttachTo Getter
+	SetAttachTo(value ICustomForm)                  // property AttachTo Setter
+	PageWidth() int32                               // property PageWidth Getter
+	SetPageWidth(value int32)                       // property PageWidth Setter
+	PageHeight() int32                              // property PageHeight Getter
+	SetPageHeight(value int32)                      // property PageHeight Setter
+	MarginLeft() int32                              // property MarginLeft Getter
+	SetMarginLeft(value int32)                      // property MarginLeft Setter
+	MarginTop() int32                               // property MarginTop Getter
+	SetMarginTop(value int32)                       // property MarginTop Setter
+	MarginRight() int32                             // property MarginRight Getter
+	SetMarginRight(value int32)                     // property MarginRight Setter
+	MarginBottom() int32                            // property MarginBottom Getter
+	SetMarginBottom(value int32)                    // property MarginBottom Setter
+	MinMarginLeft() int32                           // property MinMarginLeft Getter
+	SetMinMarginLeft(value int32)                   // property MinMarginLeft Setter
+	MinMarginTop() int32                            // property MinMarginTop Getter
+	SetMinMarginTop(value int32)                    // property MinMarginTop Setter
+	MinMarginRight() int32                          // property MinMarginRight Getter
+	SetMinMarginRight(value int32)                  // property MinMarginRight Setter
+	MinMarginBottom() int32                         // property MinMarginBottom Getter
+	SetMinMarginBottom(value int32)                 // property MinMarginBottom Setter
+	Options() types.TPageSetupDialogOptions         // property Options Getter
+	SetOptions(value types.TPageSetupDialogOptions) // property Options Setter
+	Units() types.TPageMeasureUnits                 // property Units Getter
+	SetUnits(value types.TPageMeasureUnits)         // property Units Setter
+	SetOnDialogResult(fn TDialogResultEvent)        // property event
 }
 
-// TPageSetupDialog Parent: TCustomPrinterSetupDialog
 type TPageSetupDialog struct {
 	TCustomPrinterSetupDialog
-	dialogResultPtr uintptr
-}
-
-func NewPageSetupDialog(TheOwner IComponent) IPageSetupDialog {
-	r1 := pageSetupDialogImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsPageSetupDialog(r1)
 }
 
 func (m *TPageSetupDialog) AttachTo() ICustomForm {
-	r1 := pageSetupDialogImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return AsCustomForm(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := pageSetupDialogAPI().SysCallN(1, 0, m.Instance())
+	return AsCustomForm(r)
 }
 
-func (m *TPageSetupDialog) SetAttachTo(AValue ICustomForm) {
-	pageSetupDialogImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TPageSetupDialog) SetAttachTo(value ICustomForm) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(1, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TPageSetupDialog) PageWidth() int32 {
-	r1 := pageSetupDialogImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(2, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TPageSetupDialog) SetPageWidth(AValue int32) {
-	pageSetupDialogImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetPageWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPageSetupDialog) PageHeight() int32 {
-	r1 := pageSetupDialogImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(3, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TPageSetupDialog) SetPageHeight(AValue int32) {
-	pageSetupDialogImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetPageHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPageSetupDialog) MarginLeft() int32 {
-	r1 := pageSetupDialogImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(4, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TPageSetupDialog) SetMarginLeft(AValue int32) {
-	pageSetupDialogImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetMarginLeft(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPageSetupDialog) MarginTop() int32 {
-	r1 := pageSetupDialogImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TPageSetupDialog) SetMarginTop(AValue int32) {
-	pageSetupDialogImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetMarginTop(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPageSetupDialog) MarginRight() int32 {
-	r1 := pageSetupDialogImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(6, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TPageSetupDialog) SetMarginRight(AValue int32) {
-	pageSetupDialogImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetMarginRight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPageSetupDialog) MarginBottom() int32 {
-	r1 := pageSetupDialogImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(7, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TPageSetupDialog) SetMarginBottom(AValue int32) {
-	pageSetupDialogImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetMarginBottom(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPageSetupDialog) MinMarginLeft() int32 {
-	r1 := pageSetupDialogImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(8, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TPageSetupDialog) SetMinMarginLeft(AValue int32) {
-	pageSetupDialogImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetMinMarginLeft(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPageSetupDialog) MinMarginTop() int32 {
-	r1 := pageSetupDialogImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(9, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TPageSetupDialog) SetMinMarginTop(AValue int32) {
-	pageSetupDialogImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetMinMarginTop(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPageSetupDialog) MinMarginRight() int32 {
-	r1 := pageSetupDialogImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(10, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TPageSetupDialog) SetMinMarginRight(AValue int32) {
-	pageSetupDialogImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetMinMarginRight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPageSetupDialog) MinMarginBottom() int32 {
-	r1 := pageSetupDialogImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(11, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TPageSetupDialog) SetMinMarginBottom(AValue int32) {
-	pageSetupDialogImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetMinMarginBottom(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TPageSetupDialog) Options() TPageSetupDialogOptions {
-	r1 := pageSetupDialogImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return TPageSetupDialogOptions(r1)
+func (m *TPageSetupDialog) Options() types.TPageSetupDialogOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(12, 0, m.Instance())
+	return types.TPageSetupDialogOptions(r)
 }
 
-func (m *TPageSetupDialog) SetOptions(AValue TPageSetupDialogOptions) {
-	pageSetupDialogImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
+func (m *TPageSetupDialog) SetOptions(value types.TPageSetupDialogOptions) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TPageSetupDialog) Units() TPageMeasureUnits {
-	r1 := pageSetupDialogImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return TPageMeasureUnits(r1)
+func (m *TPageSetupDialog) Units() types.TPageMeasureUnits {
+	if !m.IsValid() {
+		return 0
+	}
+	r := pageSetupDialogAPI().SysCallN(13, 0, m.Instance())
+	return types.TPageMeasureUnits(r)
 }
 
-func (m *TPageSetupDialog) SetUnits(AValue TPageMeasureUnits) {
-	pageSetupDialogImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
-}
-
-func PageSetupDialogClass() TClass {
-	ret := pageSetupDialogImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TPageSetupDialog) SetUnits(value types.TPageMeasureUnits) {
+	if !m.IsValid() {
+		return
+	}
+	pageSetupDialogAPI().SysCallN(13, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPageSetupDialog) SetOnDialogResult(fn TDialogResultEvent) {
-	if m.dialogResultPtr != 0 {
-		RemoveEventElement(m.dialogResultPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dialogResultPtr = MakeEventDataPtr(fn)
-	pageSetupDialogImportAPI().SysCallN(14, m.Instance(), m.dialogResultPtr)
+	cb := makeTDialogResultEvent(fn)
+	base.SetEvent(m, 14, pageSetupDialogAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewPageSetupDialog class constructor
+func NewPageSetupDialog(theOwner IComponent) IPageSetupDialog {
+	r := pageSetupDialogAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsPageSetupDialog(r)
+}
+
+func TPageSetupDialogClass() types.TClass {
+	r := pageSetupDialogAPI().SysCallN(15)
+	return types.TClass(r)
 }
 
 var (
-	pageSetupDialogImport       *imports.Imports = nil
-	pageSetupDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("PageSetupDialog_AttachTo", 0),
-		/*1*/ imports.NewTable("PageSetupDialog_Class", 0),
-		/*2*/ imports.NewTable("PageSetupDialog_Create", 0),
-		/*3*/ imports.NewTable("PageSetupDialog_MarginBottom", 0),
-		/*4*/ imports.NewTable("PageSetupDialog_MarginLeft", 0),
-		/*5*/ imports.NewTable("PageSetupDialog_MarginRight", 0),
-		/*6*/ imports.NewTable("PageSetupDialog_MarginTop", 0),
-		/*7*/ imports.NewTable("PageSetupDialog_MinMarginBottom", 0),
-		/*8*/ imports.NewTable("PageSetupDialog_MinMarginLeft", 0),
-		/*9*/ imports.NewTable("PageSetupDialog_MinMarginRight", 0),
-		/*10*/ imports.NewTable("PageSetupDialog_MinMarginTop", 0),
-		/*11*/ imports.NewTable("PageSetupDialog_Options", 0),
-		/*12*/ imports.NewTable("PageSetupDialog_PageHeight", 0),
-		/*13*/ imports.NewTable("PageSetupDialog_PageWidth", 0),
-		/*14*/ imports.NewTable("PageSetupDialog_SetOnDialogResult", 0),
-		/*15*/ imports.NewTable("PageSetupDialog_Units", 0),
-	}
+	pageSetupDialogOnce   base.Once
+	pageSetupDialogImport *imports.Imports = nil
 )
 
-func pageSetupDialogImportAPI() *imports.Imports {
-	if pageSetupDialogImport == nil {
-		pageSetupDialogImport = NewDefaultImports()
-		pageSetupDialogImport.SetImportTable(pageSetupDialogImportTables)
-		pageSetupDialogImportTables = nil
-	}
+func pageSetupDialogAPI() *imports.Imports {
+	pageSetupDialogOnce.Do(func() {
+		pageSetupDialogImport = api.NewDefaultImports()
+		pageSetupDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPageSetupDialog_Create", 0), // constructor NewPageSetupDialog
+			/* 1 */ imports.NewTable("TPageSetupDialog_AttachTo", 0), // property AttachTo
+			/* 2 */ imports.NewTable("TPageSetupDialog_PageWidth", 0), // property PageWidth
+			/* 3 */ imports.NewTable("TPageSetupDialog_PageHeight", 0), // property PageHeight
+			/* 4 */ imports.NewTable("TPageSetupDialog_MarginLeft", 0), // property MarginLeft
+			/* 5 */ imports.NewTable("TPageSetupDialog_MarginTop", 0), // property MarginTop
+			/* 6 */ imports.NewTable("TPageSetupDialog_MarginRight", 0), // property MarginRight
+			/* 7 */ imports.NewTable("TPageSetupDialog_MarginBottom", 0), // property MarginBottom
+			/* 8 */ imports.NewTable("TPageSetupDialog_MinMarginLeft", 0), // property MinMarginLeft
+			/* 9 */ imports.NewTable("TPageSetupDialog_MinMarginTop", 0), // property MinMarginTop
+			/* 10 */ imports.NewTable("TPageSetupDialog_MinMarginRight", 0), // property MinMarginRight
+			/* 11 */ imports.NewTable("TPageSetupDialog_MinMarginBottom", 0), // property MinMarginBottom
+			/* 12 */ imports.NewTable("TPageSetupDialog_Options", 0), // property Options
+			/* 13 */ imports.NewTable("TPageSetupDialog_Units", 0), // property Units
+			/* 14 */ imports.NewTable("TPageSetupDialog_OnDialogResult", 0), // event OnDialogResult
+			/* 15 */ imports.NewTable("TPageSetupDialog_TClass", 0), // function TPageSetupDialogClass
+		}
+	})
 	return pageSetupDialogImport
 }

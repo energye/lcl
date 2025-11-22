@@ -9,24 +9,25 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ISpinEdit Parent: ICustomSpinEdit
 type ISpinEdit interface {
 	ICustomSpinEdit
-	AutoSelected() bool                             // property
-	SetAutoSelected(AValue bool)                    // property
-	AutoSelect() bool                               // property
-	SetAutoSelect(AValue bool)                      // property
-	ParentColor() bool                              // property
-	SetParentColor(AValue bool)                     // property
-	ParentFont() bool                               // property
-	SetParentFont(AValue bool)                      // property
-	ParentShowHint() bool                           // property
-	SetParentShowHint(AValue bool)                  // property
+	AutoSelected() bool                             // property AutoSelected Getter
+	SetAutoSelected(value bool)                     // property AutoSelected Setter
+	AutoSelect() bool                               // property AutoSelect Getter
+	SetAutoSelect(value bool)                       // property AutoSelect Setter
+	ParentColor() bool                              // property ParentColor Getter
+	SetParentColor(value bool)                      // property ParentColor Setter
+	ParentFont() bool                               // property ParentFont Getter
+	SetParentFont(value bool)                       // property ParentFont Setter
+	ParentShowHint() bool                           // property ParentShowHint Getter
+	SetParentShowHint(value bool)                   // property ParentShowHint Setter
 	SetOnEditingDone(fn TNotifyEvent)               // property event
 	SetOnMouseDown(fn TMouseEvent)                  // property event
 	SetOnMouseEnter(fn TNotifyEvent)                // property event
@@ -41,204 +42,221 @@ type ISpinEdit interface {
 	SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) // property event
 }
 
-// TSpinEdit Parent: TCustomSpinEdit
 type TSpinEdit struct {
 	TCustomSpinEdit
-	editingDonePtr     uintptr
-	mouseDownPtr       uintptr
-	mouseEnterPtr      uintptr
-	mouseLeavePtr      uintptr
-	mouseMovePtr       uintptr
-	mouseUpPtr         uintptr
-	mouseWheelPtr      uintptr
-	mouseWheelDownPtr  uintptr
-	mouseWheelUpPtr    uintptr
-	mouseWheelHorzPtr  uintptr
-	mouseWheelLeftPtr  uintptr
-	mouseWheelRightPtr uintptr
-}
-
-func NewSpinEdit(TheOwner IComponent) ISpinEdit {
-	r1 := spinEditImportAPI().SysCallN(3, GetObjectUintptr(TheOwner))
-	return AsSpinEdit(r1)
 }
 
 func (m *TSpinEdit) AutoSelected() bool {
-	r1 := spinEditImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := spinEditAPI().SysCallN(1, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TSpinEdit) SetAutoSelected(AValue bool) {
-	spinEditImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
+func (m *TSpinEdit) SetAutoSelected(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	spinEditAPI().SysCallN(1, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TSpinEdit) AutoSelect() bool {
-	r1 := spinEditImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := spinEditAPI().SysCallN(2, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TSpinEdit) SetAutoSelect(AValue bool) {
-	spinEditImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
+func (m *TSpinEdit) SetAutoSelect(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	spinEditAPI().SysCallN(2, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TSpinEdit) ParentColor() bool {
-	r1 := spinEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := spinEditAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TSpinEdit) SetParentColor(AValue bool) {
-	spinEditImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
+func (m *TSpinEdit) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	spinEditAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TSpinEdit) ParentFont() bool {
-	r1 := spinEditImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := spinEditAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TSpinEdit) SetParentFont(AValue bool) {
-	spinEditImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TSpinEdit) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	spinEditAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TSpinEdit) ParentShowHint() bool {
-	r1 := spinEditImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := spinEditAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TSpinEdit) SetParentShowHint(AValue bool) {
-	spinEditImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
-}
-
-func SpinEditClass() TClass {
-	ret := spinEditImportAPI().SysCallN(2)
-	return TClass(ret)
+func (m *TSpinEdit) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	spinEditAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TSpinEdit) SetOnEditingDone(fn TNotifyEvent) {
-	if m.editingDonePtr != 0 {
-		RemoveEventElement(m.editingDonePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.editingDonePtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(7, m.Instance(), m.editingDonePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 6, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(8, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 7, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(9, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 8, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(10, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 9, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(11, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 10, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(12, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 11, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(13, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 12, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(14, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 13, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(18, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 14, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(15, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 15, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(16, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 16, spinEditAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpinEdit) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	spinEditImportAPI().SysCallN(17, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 17, spinEditAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewSpinEdit class constructor
+func NewSpinEdit(theOwner IComponent) ISpinEdit {
+	r := spinEditAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsSpinEdit(r)
+}
+
+func TSpinEditClass() types.TClass {
+	r := spinEditAPI().SysCallN(18)
+	return types.TClass(r)
 }
 
 var (
-	spinEditImport       *imports.Imports = nil
-	spinEditImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("SpinEdit_AutoSelect", 0),
-		/*1*/ imports.NewTable("SpinEdit_AutoSelected", 0),
-		/*2*/ imports.NewTable("SpinEdit_Class", 0),
-		/*3*/ imports.NewTable("SpinEdit_Create", 0),
-		/*4*/ imports.NewTable("SpinEdit_ParentColor", 0),
-		/*5*/ imports.NewTable("SpinEdit_ParentFont", 0),
-		/*6*/ imports.NewTable("SpinEdit_ParentShowHint", 0),
-		/*7*/ imports.NewTable("SpinEdit_SetOnEditingDone", 0),
-		/*8*/ imports.NewTable("SpinEdit_SetOnMouseDown", 0),
-		/*9*/ imports.NewTable("SpinEdit_SetOnMouseEnter", 0),
-		/*10*/ imports.NewTable("SpinEdit_SetOnMouseLeave", 0),
-		/*11*/ imports.NewTable("SpinEdit_SetOnMouseMove", 0),
-		/*12*/ imports.NewTable("SpinEdit_SetOnMouseUp", 0),
-		/*13*/ imports.NewTable("SpinEdit_SetOnMouseWheel", 0),
-		/*14*/ imports.NewTable("SpinEdit_SetOnMouseWheelDown", 0),
-		/*15*/ imports.NewTable("SpinEdit_SetOnMouseWheelHorz", 0),
-		/*16*/ imports.NewTable("SpinEdit_SetOnMouseWheelLeft", 0),
-		/*17*/ imports.NewTable("SpinEdit_SetOnMouseWheelRight", 0),
-		/*18*/ imports.NewTable("SpinEdit_SetOnMouseWheelUp", 0),
-	}
+	spinEditOnce   base.Once
+	spinEditImport *imports.Imports = nil
 )
 
-func spinEditImportAPI() *imports.Imports {
-	if spinEditImport == nil {
-		spinEditImport = NewDefaultImports()
-		spinEditImport.SetImportTable(spinEditImportTables)
-		spinEditImportTables = nil
-	}
+func spinEditAPI() *imports.Imports {
+	spinEditOnce.Do(func() {
+		spinEditImport = api.NewDefaultImports()
+		spinEditImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TSpinEdit_Create", 0), // constructor NewSpinEdit
+			/* 1 */ imports.NewTable("TSpinEdit_AutoSelected", 0), // property AutoSelected
+			/* 2 */ imports.NewTable("TSpinEdit_AutoSelect", 0), // property AutoSelect
+			/* 3 */ imports.NewTable("TSpinEdit_ParentColor", 0), // property ParentColor
+			/* 4 */ imports.NewTable("TSpinEdit_ParentFont", 0), // property ParentFont
+			/* 5 */ imports.NewTable("TSpinEdit_ParentShowHint", 0), // property ParentShowHint
+			/* 6 */ imports.NewTable("TSpinEdit_OnEditingDone", 0), // event OnEditingDone
+			/* 7 */ imports.NewTable("TSpinEdit_OnMouseDown", 0), // event OnMouseDown
+			/* 8 */ imports.NewTable("TSpinEdit_OnMouseEnter", 0), // event OnMouseEnter
+			/* 9 */ imports.NewTable("TSpinEdit_OnMouseLeave", 0), // event OnMouseLeave
+			/* 10 */ imports.NewTable("TSpinEdit_OnMouseMove", 0), // event OnMouseMove
+			/* 11 */ imports.NewTable("TSpinEdit_OnMouseUp", 0), // event OnMouseUp
+			/* 12 */ imports.NewTable("TSpinEdit_OnMouseWheel", 0), // event OnMouseWheel
+			/* 13 */ imports.NewTable("TSpinEdit_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 14 */ imports.NewTable("TSpinEdit_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 15 */ imports.NewTable("TSpinEdit_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 16 */ imports.NewTable("TSpinEdit_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 17 */ imports.NewTable("TSpinEdit_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 18 */ imports.NewTable("TSpinEdit_TClass", 0), // function TSpinEditClass
+		}
+	})
 	return spinEditImport
 }

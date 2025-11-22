@@ -9,87 +9,101 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // ICollectionItem Parent: IPersistent
 type ICollectionItem interface {
 	IPersistent
-	Collection() ICollection          // property
-	SetCollection(AValue ICollection) // property
-	ID() int32                        // property
-	Index() int32                     // property
-	SetIndex(AValue int32)            // property
-	DisplayName() string              // property
-	SetDisplayName(AValue string)     // property
+	Collection() ICollection         // property Collection Getter
+	SetCollection(value ICollection) // property Collection Setter
+	ID() int32                       // property ID Getter
+	Index() int32                    // property Index Getter
+	SetIndex(value int32)            // property Index Setter
+	DisplayName() string             // property DisplayName Getter
+	SetDisplayName(value string)     // property DisplayName Setter
 }
 
-// TCollectionItem Parent: TPersistent
 type TCollectionItem struct {
 	TPersistent
 }
 
-func NewCollectionItem(ACollection ICollection) ICollectionItem {
-	r1 := collectionItemImportAPI().SysCallN(2, GetObjectUintptr(ACollection))
-	return AsCollectionItem(r1)
-}
-
 func (m *TCollectionItem) Collection() ICollection {
-	r1 := collectionItemImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return AsCollection(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := collectionItemAPI().SysCallN(1, 0, m.Instance())
+	return AsCollection(r)
 }
 
-func (m *TCollectionItem) SetCollection(AValue ICollection) {
-	collectionItemImportAPI().SysCallN(1, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TCollectionItem) SetCollection(value ICollection) {
+	if !m.IsValid() {
+		return
+	}
+	collectionItemAPI().SysCallN(1, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TCollectionItem) ID() int32 {
-	r1 := collectionItemImportAPI().SysCallN(4, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := collectionItemAPI().SysCallN(2, m.Instance())
+	return int32(r)
 }
 
 func (m *TCollectionItem) Index() int32 {
-	r1 := collectionItemImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := collectionItemAPI().SysCallN(3, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCollectionItem) SetIndex(AValue int32) {
-	collectionItemImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TCollectionItem) SetIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	collectionItemAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCollectionItem) DisplayName() string {
-	r1 := collectionItemImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := collectionItemAPI().SysCallN(4, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TCollectionItem) SetDisplayName(AValue string) {
-	collectionItemImportAPI().SysCallN(3, 1, m.Instance(), PascalStr(AValue))
+func (m *TCollectionItem) SetDisplayName(value string) {
+	if !m.IsValid() {
+		return
+	}
+	collectionItemAPI().SysCallN(4, 1, m.Instance(), api.PasStr(value))
 }
 
-func CollectionItemClass() TClass {
-	ret := collectionItemImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewCollectionItem class constructor
+func NewCollectionItem(collection ICollection) ICollectionItem {
+	r := collectionItemAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsCollectionItem(r)
 }
 
 var (
-	collectionItemImport       *imports.Imports = nil
-	collectionItemImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CollectionItem_Class", 0),
-		/*1*/ imports.NewTable("CollectionItem_Collection", 0),
-		/*2*/ imports.NewTable("CollectionItem_Create", 0),
-		/*3*/ imports.NewTable("CollectionItem_DisplayName", 0),
-		/*4*/ imports.NewTable("CollectionItem_ID", 0),
-		/*5*/ imports.NewTable("CollectionItem_Index", 0),
-	}
+	collectionItemOnce   base.Once
+	collectionItemImport *imports.Imports = nil
 )
 
-func collectionItemImportAPI() *imports.Imports {
-	if collectionItemImport == nil {
-		collectionItemImport = NewDefaultImports()
-		collectionItemImport.SetImportTable(collectionItemImportTables)
-		collectionItemImportTables = nil
-	}
+func collectionItemAPI() *imports.Imports {
+	collectionItemOnce.Do(func() {
+		collectionItemImport = api.NewDefaultImports()
+		collectionItemImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCollectionItem_Create", 0), // constructor NewCollectionItem
+			/* 1 */ imports.NewTable("TCollectionItem_Collection", 0), // property Collection
+			/* 2 */ imports.NewTable("TCollectionItem_ID", 0), // property ID
+			/* 3 */ imports.NewTable("TCollectionItem_Index", 0), // property Index
+			/* 4 */ imports.NewTable("TCollectionItem_DisplayName", 0), // property DisplayName
+		}
+	})
 	return collectionItemImport
 }

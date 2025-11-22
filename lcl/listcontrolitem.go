@@ -9,80 +9,92 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IListControlItem Parent: ICollectionItem
 type IListControlItem interface {
 	ICollectionItem
-	Data() TCustomData                // property
-	SetData(AValue TCustomData)       // property
-	Caption() string                  // property
-	SetCaption(AValue string)         // property
-	ImageIndex() TImageIndex          // property
-	SetImageIndex(AValue TImageIndex) // property
+	Data() types.TCustomData         // property Data Getter
+	SetData(value types.TCustomData) // property Data Setter
+	Caption() string                 // property Caption Getter
+	SetCaption(value string)         // property Caption Setter
+	ImageIndex() int32               // property ImageIndex Getter
+	SetImageIndex(value int32)       // property ImageIndex Setter
 }
 
-// TListControlItem Parent: TCollectionItem
 type TListControlItem struct {
 	TCollectionItem
 }
 
-func NewListControlItem(ACollection ICollection) IListControlItem {
-	r1 := listControlItemImportAPI().SysCallN(2, GetObjectUintptr(ACollection))
-	return AsListControlItem(r1)
+func (m *TListControlItem) Data() types.TCustomData {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listControlItemAPI().SysCallN(1, 0, m.Instance())
+	return types.TCustomData(r)
 }
 
-func (m *TListControlItem) Data() TCustomData {
-	r1 := listControlItemImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TCustomData(r1)
-}
-
-func (m *TListControlItem) SetData(AValue TCustomData) {
-	listControlItemImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TListControlItem) SetData(value types.TCustomData) {
+	if !m.IsValid() {
+		return
+	}
+	listControlItemAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListControlItem) Caption() string {
-	r1 := listControlItemImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := listControlItemAPI().SysCallN(2, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TListControlItem) SetCaption(AValue string) {
-	listControlItemImportAPI().SysCallN(0, 1, m.Instance(), PascalStr(AValue))
+func (m *TListControlItem) SetCaption(value string) {
+	if !m.IsValid() {
+		return
+	}
+	listControlItemAPI().SysCallN(2, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TListControlItem) ImageIndex() TImageIndex {
-	r1 := listControlItemImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TImageIndex(r1)
+func (m *TListControlItem) ImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listControlItemAPI().SysCallN(3, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TListControlItem) SetImageIndex(AValue TImageIndex) {
-	listControlItemImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TListControlItem) SetImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listControlItemAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func ListControlItemClass() TClass {
-	ret := listControlItemImportAPI().SysCallN(1)
-	return TClass(ret)
+// NewListControlItem class constructor
+func NewListControlItem(collection ICollection) IListControlItem {
+	r := listControlItemAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsListControlItem(r)
 }
 
 var (
-	listControlItemImport       *imports.Imports = nil
-	listControlItemImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ListControlItem_Caption", 0),
-		/*1*/ imports.NewTable("ListControlItem_Class", 0),
-		/*2*/ imports.NewTable("ListControlItem_Create", 0),
-		/*3*/ imports.NewTable("ListControlItem_Data", 0),
-		/*4*/ imports.NewTable("ListControlItem_ImageIndex", 0),
-	}
+	listControlItemOnce   base.Once
+	listControlItemImport *imports.Imports = nil
 )
 
-func listControlItemImportAPI() *imports.Imports {
-	if listControlItemImport == nil {
-		listControlItemImport = NewDefaultImports()
-		listControlItemImport.SetImportTable(listControlItemImportTables)
-		listControlItemImportTables = nil
-	}
+func listControlItemAPI() *imports.Imports {
+	listControlItemOnce.Do(func() {
+		listControlItemImport = api.NewDefaultImports()
+		listControlItemImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TListControlItem_Create", 0), // constructor NewListControlItem
+			/* 1 */ imports.NewTable("TListControlItem_Data", 0), // property Data
+			/* 2 */ imports.NewTable("TListControlItem_Caption", 0), // property Caption
+			/* 3 */ imports.NewTable("TListControlItem_ImageIndex", 0), // property ImageIndex
+		}
+	})
 	return listControlItemImport
 }

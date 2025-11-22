@@ -9,101 +9,110 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomTimer Parent: IComponent
 type ICustomTimer interface {
 	IComponent
-	Enabled() bool                   // property
-	SetEnabled(AValue bool)          // property
-	Interval() uint32                // property
-	SetInterval(AValue uint32)       // property
+	Enabled() bool                   // property Enabled Getter
+	SetEnabled(value bool)           // property Enabled Setter
+	Interval() uint32                // property Interval Getter
+	SetInterval(value uint32)        // property Interval Setter
 	SetOnTimer(fn TNotifyEvent)      // property event
 	SetOnStartTimer(fn TNotifyEvent) // property event
 	SetOnStopTimer(fn TNotifyEvent)  // property event
 }
 
-// TCustomTimer Parent: TComponent
 type TCustomTimer struct {
 	TComponent
-	timerPtr      uintptr
-	startTimerPtr uintptr
-	stopTimerPtr  uintptr
-}
-
-func NewCustomTimer(AOwner IComponent) ICustomTimer {
-	r1 := customTimerImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsCustomTimer(r1)
 }
 
 func (m *TCustomTimer) Enabled() bool {
-	r1 := customTimerImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customTimerAPI().SysCallN(1, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomTimer) SetEnabled(AValue bool) {
-	customTimerImportAPI().SysCallN(2, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomTimer) SetEnabled(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customTimerAPI().SysCallN(1, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomTimer) Interval() uint32 {
-	r1 := customTimerImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return uint32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customTimerAPI().SysCallN(2, 0, m.Instance())
+	return uint32(r)
 }
 
-func (m *TCustomTimer) SetInterval(AValue uint32) {
-	customTimerImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
-}
-
-func CustomTimerClass() TClass {
-	ret := customTimerImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TCustomTimer) SetInterval(value uint32) {
+	if !m.IsValid() {
+		return
+	}
+	customTimerAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomTimer) SetOnTimer(fn TNotifyEvent) {
-	if m.timerPtr != 0 {
-		RemoveEventElement(m.timerPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.timerPtr = MakeEventDataPtr(fn)
-	customTimerImportAPI().SysCallN(6, m.Instance(), m.timerPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 3, customTimerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomTimer) SetOnStartTimer(fn TNotifyEvent) {
-	if m.startTimerPtr != 0 {
-		RemoveEventElement(m.startTimerPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startTimerPtr = MakeEventDataPtr(fn)
-	customTimerImportAPI().SysCallN(4, m.Instance(), m.startTimerPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 4, customTimerAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomTimer) SetOnStopTimer(fn TNotifyEvent) {
-	if m.stopTimerPtr != 0 {
-		RemoveEventElement(m.stopTimerPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.stopTimerPtr = MakeEventDataPtr(fn)
-	customTimerImportAPI().SysCallN(5, m.Instance(), m.stopTimerPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 5, customTimerAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomTimer class constructor
+func NewCustomTimer(owner IComponent) ICustomTimer {
+	r := customTimerAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomTimer(r)
+}
+
+func TCustomTimerClass() types.TClass {
+	r := customTimerAPI().SysCallN(6)
+	return types.TClass(r)
 }
 
 var (
-	customTimerImport       *imports.Imports = nil
-	customTimerImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomTimer_Class", 0),
-		/*1*/ imports.NewTable("CustomTimer_Create", 0),
-		/*2*/ imports.NewTable("CustomTimer_Enabled", 0),
-		/*3*/ imports.NewTable("CustomTimer_Interval", 0),
-		/*4*/ imports.NewTable("CustomTimer_SetOnStartTimer", 0),
-		/*5*/ imports.NewTable("CustomTimer_SetOnStopTimer", 0),
-		/*6*/ imports.NewTable("CustomTimer_SetOnTimer", 0),
-	}
+	customTimerOnce   base.Once
+	customTimerImport *imports.Imports = nil
 )
 
-func customTimerImportAPI() *imports.Imports {
-	if customTimerImport == nil {
-		customTimerImport = NewDefaultImports()
-		customTimerImport.SetImportTable(customTimerImportTables)
-		customTimerImportTables = nil
-	}
+func customTimerAPI() *imports.Imports {
+	customTimerOnce.Do(func() {
+		customTimerImport = api.NewDefaultImports()
+		customTimerImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomTimer_Create", 0), // constructor NewCustomTimer
+			/* 1 */ imports.NewTable("TCustomTimer_Enabled", 0), // property Enabled
+			/* 2 */ imports.NewTable("TCustomTimer_Interval", 0), // property Interval
+			/* 3 */ imports.NewTable("TCustomTimer_OnTimer", 0), // event OnTimer
+			/* 4 */ imports.NewTable("TCustomTimer_OnStartTimer", 0), // event OnStartTimer
+			/* 5 */ imports.NewTable("TCustomTimer_OnStopTimer", 0), // event OnStopTimer
+			/* 6 */ imports.NewTable("TCustomTimer_TClass", 0), // function TCustomTimerClass
+		}
+	})
 	return customTimerImport
 }

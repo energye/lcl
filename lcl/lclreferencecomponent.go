@@ -9,54 +9,50 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
-// ILCLReferenceComponent Is Abstract Class Parent: ILCLComponent
-// A base class for all components having a handle
+// ILCLReferenceComponent Parent: ILCLComponent
 type ILCLReferenceComponent interface {
 	ILCLComponent
-	HandleAllocated() bool    // property
-	ReferenceAllocated() bool // property
+	HandleAllocated() bool    // property HandleAllocated Getter
+	ReferenceAllocated() bool // property ReferenceAllocated Getter
 }
 
-// TLCLReferenceComponent Is Abstract Class Parent: TLCLComponent
-// A base class for all components having a handle
 type TLCLReferenceComponent struct {
 	TLCLComponent
 }
 
 func (m *TLCLReferenceComponent) HandleAllocated() bool {
-	r1 := lCLReferenceComponentImportAPI().SysCallN(1, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := lCLReferenceComponentAPI().SysCallN(0, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TLCLReferenceComponent) ReferenceAllocated() bool {
-	r1 := lCLReferenceComponentImportAPI().SysCallN(2, m.Instance())
-	return GoBool(r1)
-}
-
-func LCLReferenceComponentClass() TClass {
-	ret := lCLReferenceComponentImportAPI().SysCallN(0)
-	return TClass(ret)
+	if !m.IsValid() {
+		return false
+	}
+	r := lCLReferenceComponentAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 var (
-	lCLReferenceComponentImport       *imports.Imports = nil
-	lCLReferenceComponentImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("LCLReferenceComponent_Class", 0),
-		/*1*/ imports.NewTable("LCLReferenceComponent_HandleAllocated", 0),
-		/*2*/ imports.NewTable("LCLReferenceComponent_ReferenceAllocated", 0),
-	}
+	lCLReferenceComponentOnce   base.Once
+	lCLReferenceComponentImport *imports.Imports = nil
 )
 
-func lCLReferenceComponentImportAPI() *imports.Imports {
-	if lCLReferenceComponentImport == nil {
-		lCLReferenceComponentImport = NewDefaultImports()
-		lCLReferenceComponentImport.SetImportTable(lCLReferenceComponentImportTables)
-		lCLReferenceComponentImportTables = nil
-	}
+func lCLReferenceComponentAPI() *imports.Imports {
+	lCLReferenceComponentOnce.Do(func() {
+		lCLReferenceComponentImport = api.NewDefaultImports()
+		lCLReferenceComponentImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TLCLReferenceComponent_HandleAllocated", 0), // property HandleAllocated
+			/* 1 */ imports.NewTable("TLCLReferenceComponent_ReferenceAllocated", 0), // property ReferenceAllocated
+		}
+	})
 	return lCLReferenceComponentImport
 }

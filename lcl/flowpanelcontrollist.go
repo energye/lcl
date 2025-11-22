@@ -9,77 +9,98 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IFlowPanelControlList Parent: IOwnedCollection
 type IFlowPanelControlList interface {
 	IOwnedCollection
-	ItemsForFlowPanelControl(Index int32) IFlowPanelControl            // property
-	SetItemsForFlowPanelControl(Index int32, AValue IFlowPanelControl) // property
-	IndexOf(AControl IControl) int32                                   // function
-	AllowAdd() bool                                                    // function
-	AllowDelete() bool                                                 // function
+	IndexOf(control IControl) int32 // function
+	// AllowAdd
+	//  These methods are used by the Object Inspector only
+	AllowAdd() bool                                                         // function
+	AllowDelete() bool                                                      // function
+	ItemsWithIntToFlowPanelControl(index int32) IFlowPanelControl           // property Items Getter
+	SetItemsWithIntToFlowPanelControl(index int32, value IFlowPanelControl) // property Items Setter
+	AsIntfObjInspInterface() uintptr
 }
 
-// TFlowPanelControlList Parent: TOwnedCollection
 type TFlowPanelControlList struct {
 	TOwnedCollection
 }
 
-func NewFlowPanelControlList(AOwner IPersistent) IFlowPanelControlList {
-	r1 := flowPanelControlListImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
-	return AsFlowPanelControlList(r1)
-}
-
-func (m *TFlowPanelControlList) ItemsForFlowPanelControl(Index int32) IFlowPanelControl {
-	r1 := flowPanelControlListImportAPI().SysCallN(5, 0, m.Instance(), uintptr(Index))
-	return AsFlowPanelControl(r1)
-}
-
-func (m *TFlowPanelControlList) SetItemsForFlowPanelControl(Index int32, AValue IFlowPanelControl) {
-	flowPanelControlListImportAPI().SysCallN(5, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
-}
-
-func (m *TFlowPanelControlList) IndexOf(AControl IControl) int32 {
-	r1 := flowPanelControlListImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(AControl))
-	return int32(r1)
+func (m *TFlowPanelControlList) IndexOf(control IControl) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := flowPanelControlListAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(control))
+	return int32(r)
 }
 
 func (m *TFlowPanelControlList) AllowAdd() bool {
-	r1 := flowPanelControlListImportAPI().SysCallN(0, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := flowPanelControlListAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TFlowPanelControlList) AllowDelete() bool {
-	r1 := flowPanelControlListImportAPI().SysCallN(1, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := flowPanelControlListAPI().SysCallN(3, m.Instance())
+	return api.GoBool(r)
 }
 
-func FlowPanelControlListClass() TClass {
-	ret := flowPanelControlListImportAPI().SysCallN(2)
-	return TClass(ret)
+func (m *TFlowPanelControlList) ItemsWithIntToFlowPanelControl(index int32) IFlowPanelControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := flowPanelControlListAPI().SysCallN(4, 0, m.Instance(), uintptr(index))
+	return AsFlowPanelControl(r)
+}
+
+func (m *TFlowPanelControlList) SetItemsWithIntToFlowPanelControl(index int32, value IFlowPanelControl) {
+	if !m.IsValid() {
+		return
+	}
+	flowPanelControlListAPI().SysCallN(4, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
+}
+
+func (m *TFlowPanelControlList) AsIntfObjInspInterface() uintptr {
+	return m.GetIntfPointer(0)
+}
+
+// NewFlowPanelControlList class constructor
+func NewFlowPanelControlList(owner IPersistent) IFlowPanelControlList {
+	var objInspInterfacePtr uintptr // IObjInspInterface
+	r := flowPanelControlListAPI().SysCallN(0, base.GetObjectUintptr(owner), uintptr(base.UnsafePointer(&objInspInterfacePtr)))
+	ret := AsFlowPanelControlList(r)
+	if intf, ok := ret.(base.IIntfs); ok {
+		intf.Create(1)
+		intf.SetIntfPointer(0, objInspInterfacePtr)
+	}
+	return ret
 }
 
 var (
-	flowPanelControlListImport       *imports.Imports = nil
-	flowPanelControlListImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FlowPanelControlList_AllowAdd", 0),
-		/*1*/ imports.NewTable("FlowPanelControlList_AllowDelete", 0),
-		/*2*/ imports.NewTable("FlowPanelControlList_Class", 0),
-		/*3*/ imports.NewTable("FlowPanelControlList_Create", 0),
-		/*4*/ imports.NewTable("FlowPanelControlList_IndexOf", 0),
-		/*5*/ imports.NewTable("FlowPanelControlList_ItemsForFlowPanelControl", 0),
-	}
+	flowPanelControlListOnce   base.Once
+	flowPanelControlListImport *imports.Imports = nil
 )
 
-func flowPanelControlListImportAPI() *imports.Imports {
-	if flowPanelControlListImport == nil {
-		flowPanelControlListImport = NewDefaultImports()
-		flowPanelControlListImport.SetImportTable(flowPanelControlListImportTables)
-		flowPanelControlListImportTables = nil
-	}
+func flowPanelControlListAPI() *imports.Imports {
+	flowPanelControlListOnce.Do(func() {
+		flowPanelControlListImport = api.NewDefaultImports()
+		flowPanelControlListImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFlowPanelControlList_Create", 0), // constructor NewFlowPanelControlList
+			/* 1 */ imports.NewTable("TFlowPanelControlList_IndexOf", 0), // function IndexOf
+			/* 2 */ imports.NewTable("TFlowPanelControlList_AllowAdd", 0), // function AllowAdd
+			/* 3 */ imports.NewTable("TFlowPanelControlList_AllowDelete", 0), // function AllowDelete
+			/* 4 */ imports.NewTable("TFlowPanelControlList_ItemsWithIntToFlowPanelControl", 0), // property ItemsWithIntToFlowPanelControl
+		}
+	})
 	return flowPanelControlListImport
 }

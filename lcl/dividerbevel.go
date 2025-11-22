@@ -9,321 +9,388 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IDividerBevel Parent: IGraphicControl
 type IDividerBevel interface {
 	IGraphicControl
-	BevelStyle() TBevelStyle                    // property
-	SetBevelStyle(AValue TBevelStyle)           // property
-	BevelWidth() int32                          // property
-	SetBevelWidth(AValue int32)                 // property
-	CaptionSpacing() int32                      // property
-	SetCaptionSpacing(AValue int32)             // property
-	DragCursor() TCursor                        // property
-	SetDragCursor(AValue TCursor)               // property
-	DragKind() TDragKind                        // property
-	SetDragKind(AValue TDragKind)               // property
-	DragMode() TDragMode                        // property
-	SetDragMode(AValue TDragMode)               // property
-	LeftIndent() int32                          // property
-	SetLeftIndent(AValue int32)                 // property
-	Orientation() TTrackBarOrientation          // property
-	SetOrientation(AValue TTrackBarOrientation) // property
-	ParentColor() bool                          // property
-	SetParentColor(AValue bool)                 // property
-	ParentFont() bool                           // property
-	SetParentFont(AValue bool)                  // property
-	ParentShowHint() bool                       // property
-	SetParentShowHint(AValue bool)              // property
-	Style() TGrabStyle                          // property
-	SetStyle(AValue TGrabStyle)                 // property
-	Transparent() bool                          // property
-	SetTransparent(AValue bool)                 // property
-	SetOnContextPopup(fn TContextPopupEvent)    // property event
-	SetOnDblClick(fn TNotifyEvent)              // property event
-	SetOnDragDrop(fn TDragDropEvent)            // property event
-	SetOnDragOver(fn TDragOverEvent)            // property event
-	SetOnEndDrag(fn TEndDragEvent)              // property event
-	SetOnMouseDown(fn TMouseEvent)              // property event
-	SetOnMouseEnter(fn TNotifyEvent)            // property event
-	SetOnMouseLeave(fn TNotifyEvent)            // property event
-	SetOnMouseMove(fn TMouseMoveEvent)          // property event
-	SetOnMouseUp(fn TMouseEvent)                // property event
-	SetOnStartDrag(fn TStartDragEvent)          // property event
+	BevelStyle() types.TBevelStyle                   // property BevelStyle Getter
+	SetBevelStyle(value types.TBevelStyle)           // property BevelStyle Setter
+	BevelWidth() int32                               // property BevelWidth Getter
+	SetBevelWidth(value int32)                       // property BevelWidth Setter
+	CaptionSpacing() int32                           // property CaptionSpacing Getter
+	SetCaptionSpacing(value int32)                   // property CaptionSpacing Setter
+	DragCursor() types.TCursor                       // property DragCursor Getter
+	SetDragCursor(value types.TCursor)               // property DragCursor Setter
+	DragKind() types.TDragKind                       // property DragKind Getter
+	SetDragKind(value types.TDragKind)               // property DragKind Setter
+	DragMode() types.TDragMode                       // property DragMode Getter
+	SetDragMode(value types.TDragMode)               // property DragMode Setter
+	LeftIndent() int32                               // property LeftIndent Getter
+	SetLeftIndent(value int32)                       // property LeftIndent Setter
+	Orientation() types.TTrackBarOrientation         // property Orientation Getter
+	SetOrientation(value types.TTrackBarOrientation) // property Orientation Setter
+	ParentColor() bool                               // property ParentColor Getter
+	SetParentColor(value bool)                       // property ParentColor Setter
+	ParentFont() bool                                // property ParentFont Getter
+	SetParentFont(value bool)                        // property ParentFont Setter
+	ParentShowHint() bool                            // property ParentShowHint Getter
+	SetParentShowHint(value bool)                    // property ParentShowHint Setter
+	Style() types.TGrabStyle                         // property Style Getter
+	SetStyle(value types.TGrabStyle)                 // property Style Setter
+	Transparent() bool                               // property Transparent Getter
+	SetTransparent(value bool)                       // property Transparent Setter
+	SetOnContextPopup(fn TContextPopupEvent)         // property event
+	SetOnDblClick(fn TNotifyEvent)                   // property event
+	SetOnDragDrop(fn TDragDropEvent)                 // property event
+	SetOnDragOver(fn TDragOverEvent)                 // property event
+	SetOnEndDrag(fn TEndDragEvent)                   // property event
+	SetOnMouseDown(fn TMouseEvent)                   // property event
+	SetOnMouseEnter(fn TNotifyEvent)                 // property event
+	SetOnMouseLeave(fn TNotifyEvent)                 // property event
+	SetOnMouseMove(fn TMouseMoveEvent)               // property event
+	SetOnMouseUp(fn TMouseEvent)                     // property event
+	SetOnStartDrag(fn TStartDragEvent)               // property event
 }
 
-// TDividerBevel Parent: TGraphicControl
 type TDividerBevel struct {
 	TGraphicControl
-	contextPopupPtr uintptr
-	dblClickPtr     uintptr
-	dragDropPtr     uintptr
-	dragOverPtr     uintptr
-	endDragPtr      uintptr
-	mouseDownPtr    uintptr
-	mouseEnterPtr   uintptr
-	mouseLeavePtr   uintptr
-	mouseMovePtr    uintptr
-	mouseUpPtr      uintptr
-	startDragPtr    uintptr
 }
 
-func NewDividerBevel(AOwner IComponent) IDividerBevel {
-	r1 := dividerBevelImportAPI().SysCallN(4, GetObjectUintptr(AOwner))
-	return AsDividerBevel(r1)
+func (m *TDividerBevel) BevelStyle() types.TBevelStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dividerBevelAPI().SysCallN(1, 0, m.Instance())
+	return types.TBevelStyle(r)
 }
 
-func (m *TDividerBevel) BevelStyle() TBevelStyle {
-	r1 := dividerBevelImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TBevelStyle(r1)
-}
-
-func (m *TDividerBevel) SetBevelStyle(AValue TBevelStyle) {
-	dividerBevelImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TDividerBevel) SetBevelStyle(value types.TBevelStyle) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDividerBevel) BevelWidth() int32 {
-	r1 := dividerBevelImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := dividerBevelAPI().SysCallN(2, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TDividerBevel) SetBevelWidth(AValue int32) {
-	dividerBevelImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
+func (m *TDividerBevel) SetBevelWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDividerBevel) CaptionSpacing() int32 {
-	r1 := dividerBevelImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := dividerBevelAPI().SysCallN(3, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TDividerBevel) SetCaptionSpacing(AValue int32) {
-	dividerBevelImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TDividerBevel) SetCaptionSpacing(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDividerBevel) DragCursor() TCursor {
-	r1 := dividerBevelImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TDividerBevel) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dividerBevelAPI().SysCallN(4, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TDividerBevel) SetDragCursor(AValue TCursor) {
-	dividerBevelImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TDividerBevel) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDividerBevel) DragKind() TDragKind {
-	r1 := dividerBevelImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TDividerBevel) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dividerBevelAPI().SysCallN(5, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TDividerBevel) SetDragKind(AValue TDragKind) {
-	dividerBevelImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TDividerBevel) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDividerBevel) DragMode() TDragMode {
-	r1 := dividerBevelImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return TDragMode(r1)
+func (m *TDividerBevel) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dividerBevelAPI().SysCallN(6, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TDividerBevel) SetDragMode(AValue TDragMode) {
-	dividerBevelImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TDividerBevel) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDividerBevel) LeftIndent() int32 {
-	r1 := dividerBevelImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := dividerBevelAPI().SysCallN(7, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TDividerBevel) SetLeftIndent(AValue int32) {
-	dividerBevelImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TDividerBevel) SetLeftIndent(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDividerBevel) Orientation() TTrackBarOrientation {
-	r1 := dividerBevelImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TTrackBarOrientation(r1)
+func (m *TDividerBevel) Orientation() types.TTrackBarOrientation {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dividerBevelAPI().SysCallN(8, 0, m.Instance())
+	return types.TTrackBarOrientation(r)
 }
 
-func (m *TDividerBevel) SetOrientation(AValue TTrackBarOrientation) {
-	dividerBevelImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TDividerBevel) SetOrientation(value types.TTrackBarOrientation) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDividerBevel) ParentColor() bool {
-	r1 := dividerBevelImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dividerBevelAPI().SysCallN(9, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDividerBevel) SetParentColor(AValue bool) {
-	dividerBevelImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
+func (m *TDividerBevel) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(9, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDividerBevel) ParentFont() bool {
-	r1 := dividerBevelImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dividerBevelAPI().SysCallN(10, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDividerBevel) SetParentFont(AValue bool) {
-	dividerBevelImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
+func (m *TDividerBevel) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(10, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDividerBevel) ParentShowHint() bool {
-	r1 := dividerBevelImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dividerBevelAPI().SysCallN(11, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDividerBevel) SetParentShowHint(AValue bool) {
-	dividerBevelImportAPI().SysCallN(12, 1, m.Instance(), PascalBool(AValue))
+func (m *TDividerBevel) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(11, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDividerBevel) Style() TGrabStyle {
-	r1 := dividerBevelImportAPI().SysCallN(24, 0, m.Instance(), 0)
-	return TGrabStyle(r1)
+func (m *TDividerBevel) Style() types.TGrabStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := dividerBevelAPI().SysCallN(12, 0, m.Instance())
+	return types.TGrabStyle(r)
 }
 
-func (m *TDividerBevel) SetStyle(AValue TGrabStyle) {
-	dividerBevelImportAPI().SysCallN(24, 1, m.Instance(), uintptr(AValue))
+func (m *TDividerBevel) SetStyle(value types.TGrabStyle) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TDividerBevel) Transparent() bool {
-	r1 := dividerBevelImportAPI().SysCallN(25, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dividerBevelAPI().SysCallN(13, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDividerBevel) SetTransparent(AValue bool) {
-	dividerBevelImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
-}
-
-func DividerBevelClass() TClass {
-	ret := dividerBevelImportAPI().SysCallN(3)
-	return TClass(ret)
+func (m *TDividerBevel) SetTransparent(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	dividerBevelAPI().SysCallN(13, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TDividerBevel) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(13, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 14, dividerBevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDividerBevel) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(14, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 15, dividerBevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDividerBevel) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(15, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 16, dividerBevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDividerBevel) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(16, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 17, dividerBevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDividerBevel) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(17, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 18, dividerBevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDividerBevel) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(18, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 19, dividerBevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDividerBevel) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(19, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 20, dividerBevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDividerBevel) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(20, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 21, dividerBevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDividerBevel) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(21, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 22, dividerBevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDividerBevel) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(22, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 23, dividerBevelAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TDividerBevel) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	dividerBevelImportAPI().SysCallN(23, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 24, dividerBevelAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewDividerBevel class constructor
+func NewDividerBevel(owner IComponent) IDividerBevel {
+	r := dividerBevelAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsDividerBevel(r)
+}
+
+func TDividerBevelClass() types.TClass {
+	r := dividerBevelAPI().SysCallN(25)
+	return types.TClass(r)
 }
 
 var (
-	dividerBevelImport       *imports.Imports = nil
-	dividerBevelImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("DividerBevel_BevelStyle", 0),
-		/*1*/ imports.NewTable("DividerBevel_BevelWidth", 0),
-		/*2*/ imports.NewTable("DividerBevel_CaptionSpacing", 0),
-		/*3*/ imports.NewTable("DividerBevel_Class", 0),
-		/*4*/ imports.NewTable("DividerBevel_Create", 0),
-		/*5*/ imports.NewTable("DividerBevel_DragCursor", 0),
-		/*6*/ imports.NewTable("DividerBevel_DragKind", 0),
-		/*7*/ imports.NewTable("DividerBevel_DragMode", 0),
-		/*8*/ imports.NewTable("DividerBevel_LeftIndent", 0),
-		/*9*/ imports.NewTable("DividerBevel_Orientation", 0),
-		/*10*/ imports.NewTable("DividerBevel_ParentColor", 0),
-		/*11*/ imports.NewTable("DividerBevel_ParentFont", 0),
-		/*12*/ imports.NewTable("DividerBevel_ParentShowHint", 0),
-		/*13*/ imports.NewTable("DividerBevel_SetOnContextPopup", 0),
-		/*14*/ imports.NewTable("DividerBevel_SetOnDblClick", 0),
-		/*15*/ imports.NewTable("DividerBevel_SetOnDragDrop", 0),
-		/*16*/ imports.NewTable("DividerBevel_SetOnDragOver", 0),
-		/*17*/ imports.NewTable("DividerBevel_SetOnEndDrag", 0),
-		/*18*/ imports.NewTable("DividerBevel_SetOnMouseDown", 0),
-		/*19*/ imports.NewTable("DividerBevel_SetOnMouseEnter", 0),
-		/*20*/ imports.NewTable("DividerBevel_SetOnMouseLeave", 0),
-		/*21*/ imports.NewTable("DividerBevel_SetOnMouseMove", 0),
-		/*22*/ imports.NewTable("DividerBevel_SetOnMouseUp", 0),
-		/*23*/ imports.NewTable("DividerBevel_SetOnStartDrag", 0),
-		/*24*/ imports.NewTable("DividerBevel_Style", 0),
-		/*25*/ imports.NewTable("DividerBevel_Transparent", 0),
-	}
+	dividerBevelOnce   base.Once
+	dividerBevelImport *imports.Imports = nil
 )
 
-func dividerBevelImportAPI() *imports.Imports {
-	if dividerBevelImport == nil {
-		dividerBevelImport = NewDefaultImports()
-		dividerBevelImport.SetImportTable(dividerBevelImportTables)
-		dividerBevelImportTables = nil
-	}
+func dividerBevelAPI() *imports.Imports {
+	dividerBevelOnce.Do(func() {
+		dividerBevelImport = api.NewDefaultImports()
+		dividerBevelImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TDividerBevel_Create", 0), // constructor NewDividerBevel
+			/* 1 */ imports.NewTable("TDividerBevel_BevelStyle", 0), // property BevelStyle
+			/* 2 */ imports.NewTable("TDividerBevel_BevelWidth", 0), // property BevelWidth
+			/* 3 */ imports.NewTable("TDividerBevel_CaptionSpacing", 0), // property CaptionSpacing
+			/* 4 */ imports.NewTable("TDividerBevel_DragCursor", 0), // property DragCursor
+			/* 5 */ imports.NewTable("TDividerBevel_DragKind", 0), // property DragKind
+			/* 6 */ imports.NewTable("TDividerBevel_DragMode", 0), // property DragMode
+			/* 7 */ imports.NewTable("TDividerBevel_LeftIndent", 0), // property LeftIndent
+			/* 8 */ imports.NewTable("TDividerBevel_Orientation", 0), // property Orientation
+			/* 9 */ imports.NewTable("TDividerBevel_ParentColor", 0), // property ParentColor
+			/* 10 */ imports.NewTable("TDividerBevel_ParentFont", 0), // property ParentFont
+			/* 11 */ imports.NewTable("TDividerBevel_ParentShowHint", 0), // property ParentShowHint
+			/* 12 */ imports.NewTable("TDividerBevel_Style", 0), // property Style
+			/* 13 */ imports.NewTable("TDividerBevel_Transparent", 0), // property Transparent
+			/* 14 */ imports.NewTable("TDividerBevel_OnContextPopup", 0), // event OnContextPopup
+			/* 15 */ imports.NewTable("TDividerBevel_OnDblClick", 0), // event OnDblClick
+			/* 16 */ imports.NewTable("TDividerBevel_OnDragDrop", 0), // event OnDragDrop
+			/* 17 */ imports.NewTable("TDividerBevel_OnDragOver", 0), // event OnDragOver
+			/* 18 */ imports.NewTable("TDividerBevel_OnEndDrag", 0), // event OnEndDrag
+			/* 19 */ imports.NewTable("TDividerBevel_OnMouseDown", 0), // event OnMouseDown
+			/* 20 */ imports.NewTable("TDividerBevel_OnMouseEnter", 0), // event OnMouseEnter
+			/* 21 */ imports.NewTable("TDividerBevel_OnMouseLeave", 0), // event OnMouseLeave
+			/* 22 */ imports.NewTable("TDividerBevel_OnMouseMove", 0), // event OnMouseMove
+			/* 23 */ imports.NewTable("TDividerBevel_OnMouseUp", 0), // event OnMouseUp
+			/* 24 */ imports.NewTable("TDividerBevel_OnStartDrag", 0), // event OnStartDrag
+			/* 25 */ imports.NewTable("TDividerBevel_TClass", 0), // function TDividerBevelClass
+		}
+	})
 	return dividerBevelImport
 }

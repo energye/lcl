@@ -9,58 +9,51 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IVTVirtualNodeEnumerator Parent: IObject
 type IVTVirtualNodeEnumerator interface {
 	IObject
-	Current() IVirtualNode // property
-	MoveNext() bool        // function
+	MoveNext() bool              // function
+	Current() types.PVirtualNode // property Current Getter
 }
 
-// TVTVirtualNodeEnumerator Parent: TObject
 type TVTVirtualNodeEnumerator struct {
 	TObject
 }
 
-func NewVTVirtualNodeEnumerator() IVTVirtualNodeEnumerator {
-	r1 := vTVirtualNodeEnumeratorImportAPI().SysCallN(1)
-	return AsVTVirtualNodeEnumerator(r1)
-}
-
-func (m *TVTVirtualNodeEnumerator) Current() IVirtualNode {
-	r1 := vTVirtualNodeEnumeratorImportAPI().SysCallN(2, m.Instance())
-	return AsVirtualNode(r1)
-}
-
 func (m *TVTVirtualNodeEnumerator) MoveNext() bool {
-	r1 := vTVirtualNodeEnumeratorImportAPI().SysCallN(3, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := vTVirtualNodeEnumeratorAPI().SysCallN(0, m.Instance())
+	return api.GoBool(r)
 }
 
-func VTVirtualNodeEnumeratorClass() TClass {
-	ret := vTVirtualNodeEnumeratorImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TVTVirtualNodeEnumerator) Current() types.PVirtualNode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTVirtualNodeEnumeratorAPI().SysCallN(1, m.Instance())
+	return types.PVirtualNode(r)
 }
 
 var (
-	vTVirtualNodeEnumeratorImport       *imports.Imports = nil
-	vTVirtualNodeEnumeratorImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("VTVirtualNodeEnumerator_Class", 0),
-		/*1*/ imports.NewTable("VTVirtualNodeEnumerator_Create", 0),
-		/*2*/ imports.NewTable("VTVirtualNodeEnumerator_Current", 0),
-		/*3*/ imports.NewTable("VTVirtualNodeEnumerator_MoveNext", 0),
-	}
+	vTVirtualNodeEnumeratorOnce   base.Once
+	vTVirtualNodeEnumeratorImport *imports.Imports = nil
 )
 
-func vTVirtualNodeEnumeratorImportAPI() *imports.Imports {
-	if vTVirtualNodeEnumeratorImport == nil {
-		vTVirtualNodeEnumeratorImport = NewDefaultImports()
-		vTVirtualNodeEnumeratorImport.SetImportTable(vTVirtualNodeEnumeratorImportTables)
-		vTVirtualNodeEnumeratorImportTables = nil
-	}
+func vTVirtualNodeEnumeratorAPI() *imports.Imports {
+	vTVirtualNodeEnumeratorOnce.Do(func() {
+		vTVirtualNodeEnumeratorImport = api.NewDefaultImports()
+		vTVirtualNodeEnumeratorImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TVTVirtualNodeEnumerator_MoveNext", 0), // function MoveNext
+			/* 1 */ imports.NewTable("TVTVirtualNodeEnumerator_Current", 0), // property Current
+		}
+	})
 	return vTVirtualNodeEnumeratorImport
 }

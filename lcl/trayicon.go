@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ITrayIcon Parent: ICustomTrayIcon
@@ -19,34 +20,33 @@ type ITrayIcon interface {
 	ICustomTrayIcon
 }
 
-// TTrayIcon Parent: TCustomTrayIcon
 type TTrayIcon struct {
 	TCustomTrayIcon
 }
 
-func NewTrayIcon(TheOwner IComponent) ITrayIcon {
-	r1 := rayIconImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsTrayIcon(r1)
+// NewTrayIcon class constructor
+func NewTrayIcon(theOwner IComponent) ITrayIcon {
+	r := trayIconAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsTrayIcon(r)
 }
 
-func TrayIconClass() TClass {
-	ret := rayIconImportAPI().SysCallN(0)
-	return TClass(ret)
+func TTrayIconClass() types.TClass {
+	r := trayIconAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	rayIconImport       *imports.Imports = nil
-	rayIconImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("TrayIcon_Class", 0),
-		/*1*/ imports.NewTable("TrayIcon_Create", 0),
-	}
+	trayIconOnce   base.Once
+	trayIconImport *imports.Imports = nil
 )
 
-func rayIconImportAPI() *imports.Imports {
-	if rayIconImport == nil {
-		rayIconImport = NewDefaultImports()
-		rayIconImport.SetImportTable(rayIconImportTables)
-		rayIconImportTables = nil
-	}
-	return rayIconImport
+func trayIconAPI() *imports.Imports {
+	trayIconOnce.Do(func() {
+		trayIconImport = api.NewDefaultImports()
+		trayIconImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TTrayIcon_Create", 0), // constructor NewTrayIcon
+			/* 1 */ imports.NewTable("TTrayIcon_TClass", 0), // function TTrayIconClass
+		}
+	})
+	return trayIconImport
 }

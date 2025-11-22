@@ -9,9 +9,9 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IFPMemoryImage Parent: IFPCustomImage
@@ -19,34 +19,27 @@ type IFPMemoryImage interface {
 	IFPCustomImage
 }
 
-// TFPMemoryImage Parent: TFPCustomImage
 type TFPMemoryImage struct {
 	TFPCustomImage
 }
 
-func NewFPMemoryImage(AWidth, AHeight int32) IFPMemoryImage {
-	r1 := fPMemoryImageImportAPI().SysCallN(1, uintptr(AWidth), uintptr(AHeight))
-	return AsFPMemoryImage(r1)
-}
-
-func FPMemoryImageClass() TClass {
-	ret := fPMemoryImageImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewFPMemoryImage class constructor
+func NewFPMemoryImage(width int32, height int32) IFPMemoryImage {
+	r := fPMemoryImageAPI().SysCallN(0, uintptr(width), uintptr(height))
+	return AsFPMemoryImage(r)
 }
 
 var (
-	fPMemoryImageImport       *imports.Imports = nil
-	fPMemoryImageImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FPMemoryImage_Class", 0),
-		/*1*/ imports.NewTable("FPMemoryImage_Create", 0),
-	}
+	fPMemoryImageOnce   base.Once
+	fPMemoryImageImport *imports.Imports = nil
 )
 
-func fPMemoryImageImportAPI() *imports.Imports {
-	if fPMemoryImageImport == nil {
-		fPMemoryImageImport = NewDefaultImports()
-		fPMemoryImageImport.SetImportTable(fPMemoryImageImportTables)
-		fPMemoryImageImportTables = nil
-	}
+func fPMemoryImageAPI() *imports.Imports {
+	fPMemoryImageOnce.Do(func() {
+		fPMemoryImageImport = api.NewDefaultImports()
+		fPMemoryImageImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFPMemoryImage_Create", 0), // constructor NewFPMemoryImage
+		}
+	})
 	return fPMemoryImageImport
 }

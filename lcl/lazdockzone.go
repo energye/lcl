@@ -9,100 +9,120 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // ILazDockZone Parent: IDockZone
 type ILazDockZone interface {
 	IDockZone
-	Splitter() ILazDockSplitter          // property
-	SetSplitter(AValue ILazDockSplitter) // property
-	Pages() ILazDockPages                // property
-	SetPages(AValue ILazDockPages)       // property
-	Page() ILazDockPage                  // property
-	SetPage(AValue ILazDockPage)         // property
-	GetCaption() string                  // function
-	GetParentControl() IWinControl       // function
-	FreeSubComponents()                  // procedure
+	GetCaption() string                 // function
+	GetParentControl() IWinControl      // function
+	FreeSubComponents()                 // procedure
+	Splitter() ILazDockSplitter         // property Splitter Getter
+	SetSplitter(value ILazDockSplitter) // property Splitter Setter
+	Pages() ILazDockPages               // property Pages Getter
+	SetPages(value ILazDockPages)       // property Pages Setter
+	Page() ILazDockPage                 // property Page Getter
+	SetPage(value ILazDockPage)         // property Page Setter
 }
 
-// TLazDockZone Parent: TDockZone
 type TLazDockZone struct {
 	TDockZone
 }
 
-func NewLazDockZone(TheTree IDockTree, TheChildControl IControl) ILazDockZone {
-	r1 := lazDockZoneImportAPI().SysCallN(1, GetObjectUintptr(TheTree), GetObjectUintptr(TheChildControl))
-	return AsLazDockZone(r1)
-}
-
-func (m *TLazDockZone) Splitter() ILazDockSplitter {
-	r1 := lazDockZoneImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return AsLazDockSplitter(r1)
-}
-
-func (m *TLazDockZone) SetSplitter(AValue ILazDockSplitter) {
-	lazDockZoneImportAPI().SysCallN(7, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TLazDockZone) Pages() ILazDockPages {
-	r1 := lazDockZoneImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return AsLazDockPages(r1)
-}
-
-func (m *TLazDockZone) SetPages(AValue ILazDockPages) {
-	lazDockZoneImportAPI().SysCallN(6, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TLazDockZone) Page() ILazDockPage {
-	r1 := lazDockZoneImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return AsLazDockPage(r1)
-}
-
-func (m *TLazDockZone) SetPage(AValue ILazDockPage) {
-	lazDockZoneImportAPI().SysCallN(5, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
 func (m *TLazDockZone) GetCaption() string {
-	r1 := lazDockZoneImportAPI().SysCallN(3, m.Instance())
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := lazDockZoneAPI().SysCallN(1, m.Instance())
+	return api.GoStr(r)
 }
 
 func (m *TLazDockZone) GetParentControl() IWinControl {
-	r1 := lazDockZoneImportAPI().SysCallN(4, m.Instance())
-	return AsWinControl(r1)
-}
-
-func LazDockZoneClass() TClass {
-	ret := lazDockZoneImportAPI().SysCallN(0)
-	return TClass(ret)
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazDockZoneAPI().SysCallN(2, m.Instance())
+	return AsWinControl(r)
 }
 
 func (m *TLazDockZone) FreeSubComponents() {
-	lazDockZoneImportAPI().SysCallN(2, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	lazDockZoneAPI().SysCallN(3, m.Instance())
+}
+
+func (m *TLazDockZone) Splitter() ILazDockSplitter {
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazDockZoneAPI().SysCallN(4, 0, m.Instance())
+	return AsLazDockSplitter(r)
+}
+
+func (m *TLazDockZone) SetSplitter(value ILazDockSplitter) {
+	if !m.IsValid() {
+		return
+	}
+	lazDockZoneAPI().SysCallN(4, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TLazDockZone) Pages() ILazDockPages {
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazDockZoneAPI().SysCallN(5, 0, m.Instance())
+	return AsLazDockPages(r)
+}
+
+func (m *TLazDockZone) SetPages(value ILazDockPages) {
+	if !m.IsValid() {
+		return
+	}
+	lazDockZoneAPI().SysCallN(5, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TLazDockZone) Page() ILazDockPage {
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazDockZoneAPI().SysCallN(6, 0, m.Instance())
+	return AsLazDockPage(r)
+}
+
+func (m *TLazDockZone) SetPage(value ILazDockPage) {
+	if !m.IsValid() {
+		return
+	}
+	lazDockZoneAPI().SysCallN(6, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+// NewLazDockZone class constructor
+func NewLazDockZone(theTree IDockTree, theChildControl IControl) ILazDockZone {
+	r := lazDockZoneAPI().SysCallN(0, base.GetObjectUintptr(theTree), base.GetObjectUintptr(theChildControl))
+	return AsLazDockZone(r)
 }
 
 var (
-	lazDockZoneImport       *imports.Imports = nil
-	lazDockZoneImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("LazDockZone_Class", 0),
-		/*1*/ imports.NewTable("LazDockZone_Create", 0),
-		/*2*/ imports.NewTable("LazDockZone_FreeSubComponents", 0),
-		/*3*/ imports.NewTable("LazDockZone_GetCaption", 0),
-		/*4*/ imports.NewTable("LazDockZone_GetParentControl", 0),
-		/*5*/ imports.NewTable("LazDockZone_Page", 0),
-		/*6*/ imports.NewTable("LazDockZone_Pages", 0),
-		/*7*/ imports.NewTable("LazDockZone_Splitter", 0),
-	}
+	lazDockZoneOnce   base.Once
+	lazDockZoneImport *imports.Imports = nil
 )
 
-func lazDockZoneImportAPI() *imports.Imports {
-	if lazDockZoneImport == nil {
-		lazDockZoneImport = NewDefaultImports()
-		lazDockZoneImport.SetImportTable(lazDockZoneImportTables)
-		lazDockZoneImportTables = nil
-	}
+func lazDockZoneAPI() *imports.Imports {
+	lazDockZoneOnce.Do(func() {
+		lazDockZoneImport = api.NewDefaultImports()
+		lazDockZoneImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TLazDockZone_Create", 0), // constructor NewLazDockZone
+			/* 1 */ imports.NewTable("TLazDockZone_GetCaption", 0), // function GetCaption
+			/* 2 */ imports.NewTable("TLazDockZone_GetParentControl", 0), // function GetParentControl
+			/* 3 */ imports.NewTable("TLazDockZone_FreeSubComponents", 0), // procedure FreeSubComponents
+			/* 4 */ imports.NewTable("TLazDockZone_Splitter", 0), // property Splitter
+			/* 5 */ imports.NewTable("TLazDockZone_Pages", 0), // property Pages
+			/* 6 */ imports.NewTable("TLazDockZone_Page", 0), // property Page
+		}
+	})
 	return lazDockZoneImport
 }

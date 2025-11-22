@@ -21,43 +21,43 @@ func MainInstance() uintptr {
 }
 
 func SendMessage(hWd types.HWND, msg uint32, wParam, lParam uintptr) uintptr {
-	return api.DSendMessage(hWd, msg, wParam, lParam)
+	return api.SendMessage(hWd, msg, wParam, lParam)
 }
 
 func PostMessage(hWd types.HWND, msg uint32, wParam, lParam uintptr) bool {
-	return api.DPostMessage(hWd, msg, wParam, lParam)
+	return api.PostMessage(hWd, msg, wParam, lParam)
 }
 
 func IsIconic(hWnd types.HWND) bool {
-	return api.DIsIconic(hWnd)
+	return api.IsIconic(hWnd)
 }
 
 func IsWindow(hWnd types.HWND) bool {
-	return api.DIsWindow(hWnd)
+	return api.IsWindow(hWnd)
 }
 
 func IsZoomed(hWnd types.HWND) bool {
-	return api.DIsZoomed(hWnd)
+	return api.IsZoomed(hWnd)
 }
 
 func IsWindowVisible(hWnd types.HWND) bool {
-	return api.DIsWindowVisible(hWnd)
+	return api.IsWindowVisible(hWnd)
 }
 
 func GetDC(hWnd types.HWND) types.HDC {
-	return api.DGetDC(hWnd)
+	return api.GetDC(hWnd)
 }
 
 func ReleaseDC(hWnd types.HWND, dc types.HDC) int {
-	return api.DReleaseDC(hWnd, dc)
+	return api.ReleaseDC(hWnd, dc)
 }
 
 func SetForegroundWindow(hWnd types.HWND) bool {
-	return api.DSetForegroundWindow(hWnd)
+	return api.SetForegroundWindow(hWnd)
 }
 
 func WindowFromPoint(point types.TPoint) types.HWND {
-	return api.DWindowFromPoint(point)
+	return api.WindowFromPoint(point)
 }
 
 /*

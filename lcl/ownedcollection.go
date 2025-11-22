@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IOwnedCollection Parent: ICollection
@@ -19,34 +20,27 @@ type IOwnedCollection interface {
 	ICollection
 }
 
-// TOwnedCollection Parent: TCollection
 type TOwnedCollection struct {
 	TCollection
 }
 
-func NewOwnedCollection(AOwner IPersistent, AItemClass TCollectionItemClass) IOwnedCollection {
-	r1 := ownedCollectionImportAPI().SysCallN(1, GetObjectUintptr(AOwner), uintptr(AItemClass))
-	return AsOwnedCollection(r1)
-}
-
-func OwnedCollectionClass() TClass {
-	ret := ownedCollectionImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewOwnedCollection class constructor
+func NewOwnedCollection(owner IPersistent, itemClass types.TCollectionItemClass) IOwnedCollection {
+	r := ownedCollectionAPI().SysCallN(0, base.GetObjectUintptr(owner), uintptr(itemClass))
+	return AsOwnedCollection(r)
 }
 
 var (
-	ownedCollectionImport       *imports.Imports = nil
-	ownedCollectionImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("OwnedCollection_Class", 0),
-		/*1*/ imports.NewTable("OwnedCollection_Create", 0),
-	}
+	ownedCollectionOnce   base.Once
+	ownedCollectionImport *imports.Imports = nil
 )
 
-func ownedCollectionImportAPI() *imports.Imports {
-	if ownedCollectionImport == nil {
-		ownedCollectionImport = NewDefaultImports()
-		ownedCollectionImport.SetImportTable(ownedCollectionImportTables)
-		ownedCollectionImportTables = nil
-	}
+func ownedCollectionAPI() *imports.Imports {
+	ownedCollectionOnce.Do(func() {
+		ownedCollectionImport = api.NewDefaultImports()
+		ownedCollectionImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TOwnedCollection_Create", 0), // constructor NewOwnedCollection
+		}
+	})
 	return ownedCollectionImport
 }

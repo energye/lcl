@@ -8,1258 +8,6 @@
 
 package types
 
-/*
-  注意：Free Pascal中所有集合这里全部使用TSet(uint32)表示，也就是说最多32个元素
-*/
-
-// TAlign ENUM
-type TAlign = int32
-
-const (
-	AlNone TAlign = iota
-	AlTop
-	AlBottom
-	AlLeft
-	AlRight
-	AlClient
-	AlCustom
-)
-
-// TAlignSet SET
-type TAlignSet = TSet
-
-// TBorderStyle ENUM
-type TBorderStyle = int32
-
-const (
-	BsNone TBorderStyle = iota
-	BsSingle
-	BsSizeable
-	BsDialog
-	BsToolWindow
-	BsSizeToolWin
-)
-
-// TFormBorderStyle ENUM
-type TFormBorderStyle = TBorderStyle
-
-// TFormStyle ENUM
-type TFormStyle = int32
-
-const (
-	FsNormal TFormStyle = iota
-	FsMDIChild
-	FsMDIForm
-	FsStayOnTop
-	FsSplash
-	FsSystemStayOnTop
-)
-
-// TPosition ENUM
-type TPosition = int32
-
-const (
-	PoDesigned        TPosition = iota // use bounds from the designer (read from stream)
-	PoDefault                          // LCL decision (normally window manager decides)
-	PoDefaultPosOnly                   // designed size and LCL position
-	PoDefaultSizeOnly                  // designed position and LCL size
-	PoScreenCenter                     // center form on screen (depends on DefaultMonitor)
-	PoDesktopCenter                    // center form on desktop (total of all screens)
-	PoMainFormCenter                   // center form on main form (depends on DefaultMonitor)
-	PoOwnerFormCenter                  // center form on owner form (depends on DefaultMonitor)
-	PoWorkAreaCenter                   // center form on working area (depends on DefaultMonitor)
-)
-
-// TSeekOrigin ENUM
-type TSeekOrigin = int32
-
-const (
-	SoBeginning TSeekOrigin = iota
-	SoCurrent
-	SoEnd
-)
-
-// TPixelFormat ENUM
-type TPixelFormat = int32
-
-const (
-	PfDevice TPixelFormat = iota
-	Pf1bit
-	Pf4bit
-	Pf8bit
-	Pf15bit
-	Pf16bit
-	Pf24bit
-	Pf32bit
-	PfCustom
-)
-
-// TAlignment ENUM
-type TAlignment = int32
-
-const (
-	TaLeftJustify TAlignment = iota
-	TaRightJustify
-	TaCenter
-)
-
-// TLinkAlignment ENUM
-type TLinkAlignment = TAlignment
-
-// TLeftRight = TAlignment.taLeftJustify..TAlignment.taRightJustify;
-type TLeftRight = int32
-
-// TBiDiMode ENUM
-type TBiDiMode = int32
-
-const (
-	BdLeftToRight TBiDiMode = iota
-	BdRightToLeft
-	BdRightToLeftNoAlign
-	BdRightToLeftReadingOnly
-)
-
-// TVerticalAlignment ENUM
-type TVerticalAlignment = int32
-
-const (
-	TaAlignTop TVerticalAlignment = iota
-	TaAlignBottom
-	TaVerticalCenter
-)
-
-// TComboBoxStyle ENUM
-type TComboBoxStyle = int32
-
-const (
-	CsDropDown                  TComboBoxStyle = iota // like an TEdit plus a button to drop down the list, default
-	CsSimple                                          // like an TEdit plus a TListBox
-	CsDropDownList                                    // like TLabel plus a button to drop down the list
-	CsOwnerDrawFixed                                  // like csDropDownList, but custom drawn
-	CsOwnerDrawVariable                               // like csDropDownList, but custom drawn and with each item can have another height
-	CsOwnerDrawEditableFixed                          // like csOwnerDrawFixed, but with TEdit
-	CsOwnerDrawEditableVariable                       // like csOwnerDrawVariable, but with TEdit
-)
-
-type TColorBoxStyle = TComboBoxStyle
-
-// TWindowState ENUM
-type TWindowState = int32
-
-const (
-	WsNormal TWindowState = iota
-	WsMinimized
-	WsMaximized
-	WsFullScreen
-)
-
-// TTextLayout ENUM
-type TTextLayout = int32
-
-const (
-	TlTop TTextLayout = iota
-	TlCenter
-	TlBottom
-)
-
-// TEllipsisPosition ENUM
-type TEllipsisPosition = int32
-
-const (
-	EpNone TEllipsisPosition = iota
-	EpPathEllipsis
-	EpEndEllipsis
-	EpWordEllipsis
-)
-
-// TListBoxStyle ENUM
-type TListBoxStyle = int32
-
-const (
-	LbStandard TListBoxStyle = iota
-	LbOwnerDrawFixed
-	LbOwnerDrawVariable
-	LbVirtual
-	//LbVirtualOwnerDraw
-)
-
-// TPopupAlignment ENUM
-type TPopupAlignment = int32
-
-const (
-	PaLeft TPopupAlignment = iota
-	PaRight
-	PaCenter
-)
-
-// TTrackButton ENUM
-type TTrackButton = int32
-
-const (
-	TbRightButton TTrackButton = iota
-	TbLeftButton
-)
-
-// TProgressBarOrientation ENUM
-type TProgressBarOrientation = int32
-
-const (
-	PbHorizontal TProgressBarOrientation = iota
-	PbVertical
-	PbRightToLeft
-	PbTopDown
-)
-
-// TProgressBarStyle ENUM
-type TProgressBarStyle = int32
-
-const (
-	PbstNormal TProgressBarStyle = iota
-	PbstMarquee
-)
-
-// TProgressBarState ENUM
-type TProgressBarState = int32
-
-const (
-	PbsNormal TProgressBarState = iota
-	PbsError
-	PbsPaused
-)
-
-// TButtonLayout ENUM
-type TButtonLayout = int32
-
-const (
-	BlGlyphLeft TButtonLayout = iota
-	BlGlyphRight
-	BlGlyphTop
-	BlGlyphBottom
-)
-
-// TButtonState ENUM
-type TButtonState = int32
-
-const (
-	BsUp        TButtonState = iota // button is up
-	BsDisabled                      // button disabled (grayed)
-	BsDown                          // button is down
-	BsExclusive                     // button is the only down in his group
-	BsHot                           // button is under mouse
-)
-
-// TButtonStyle ENUM
-type TButtonStyle = int32
-
-const (
-	BsAutoDetect TButtonStyle = iota
-	BsWin31
-	BsNew
-)
-
-// TNumGlyphs = 1..4;
-type TNumGlyphs = int32
-
-// TStaticBorderStyle ENUM
-type TStaticBorderStyle = int32
-
-const (
-	SbsNone TStaticBorderStyle = iota
-	SbsSingle
-	SbsSunken
-)
-
-// TFontStyle ENUM
-type TFontStyle = int32
-
-const (
-	FsBold TFontStyle = iota
-	FsItalic
-	FsUnderline
-	FsStrikeOut
-)
-
-// TFontStyles SET TFontStyle
-type TFontStyles = TSet
-
-// TFontStylesBase SET TFontStyle
-type TFontStylesBase = TSet
-
-// TScrollStyle ENUM
-type TScrollStyle = int32
-
-const (
-	SsNone TScrollStyle = iota
-	SsHorizontal
-	SsVertical
-	SsBoth
-	SsAutoHorizontal
-	SsAutoVertical
-	SsAutoBoth
-)
-
-// TSortType ENUM
-type TSortType = int32
-
-const (
-	StNone TSortType = iota
-	StData
-	StText
-	StBoth
-)
-
-// TListItemsSortType ENUM
-type TListItemsSortType = TSortType
-
-// TListArrangement ENUM
-type TListArrangement = int32
-
-const (
-	ArAlignBottom TListArrangement = iota
-	ArAlignLeft
-	ArAlignRight
-	ArAlignTop
-	ArDefault
-	ArSnapToGrid
-)
-
-// TViewStyle ENUM
-type TViewStyle = int32
-
-const (
-	VsIcon TViewStyle = iota
-	VsSmallIcon
-	VsList
-	VsReport
-)
-
-// TItemState ENUM
-type TItemState = int32
-
-const (
-	IsNone TItemState = iota
-	IsCut
-	IsDropHilited
-	IsFocused
-	IsSelected
-	IsActivating
-)
-
-// TItemStates SET
-type TItemStates = TSet
-
-// TItemChange ENUM
-type TItemChange = int32
-
-const (
-	CtText TItemChange = iota
-	CtImage
-	CtState
-)
-
-// TItemFind ENUM
-type TItemFind = int32
-
-const (
-	IfData TItemFind = iota
-	IfPartialString
-	IfExactString
-	IfNearest
-)
-
-// TSearchDirection ENUM
-type TSearchDirection = int32
-
-const (
-	SdLeft TSearchDirection = iota
-	SdRight
-	SdAbove
-	SdBelow
-	SdAll
-)
-
-// TListHotTrackStyle ENUM
-type TListHotTrackStyle = int32
-
-const (
-	HtHandPoint TListHotTrackStyle = iota
-	HtUnderlineCold
-	HtUnderlineHot
-)
-
-// TListHotTrackStyles SET TListHotTrackStyle
-type TListHotTrackStyles = TSet
-
-// TItemRequests ENUM
-type TItemRequests = int32
-
-const (
-	IrText TItemRequests = iota
-	IrImage
-	IrParam
-	IrState
-	IrIndent
-)
-
-// TBrushStyle ENUM
-type TBrushStyle = int32
-
-const (
-	BsSolid TBrushStyle = iota
-	BsClear
-	BsHorizontal
-	BsVertical
-	BsFDiagonal
-	BsBDiagonal
-	BsCross
-	BsDiagCross
-	BsImage
-	BsPattern
-)
-
-// TFPBrushStyle ENUM
-type TFPBrushStyle = TBrushStyle
-
-// TPenStyle ENUM
-type TPenStyle = int32
-
-const (
-	PsSolid TPenStyle = iota
-	PsDash
-	PsDot
-	PsDashDot
-	PsDashDotDot
-	PsinsideFrame
-	PsPattern
-	PsClear
-)
-
-// TFPPenStyle ENUM
-type TFPPenStyle TPenStyle
-
-// TFPPenStyleSet SET TFPPenStyle
-type TFPPenStyleSet = TSet
-
-// TUDBtnType ENUM
-type TUDBtnType = int32
-
-const (
-	BtNext TUDBtnType = iota
-	BtPrev
-)
-
-// TTabPosition ENUM
-type TTabPosition = int32
-
-const (
-	TpTop TTabPosition = iota
-	TpBottom
-	TpLeft
-	TpRight
-)
-
-// TTabStyle ENUM
-type TTabStyle = int32
-
-const (
-	TsTabs TTabStyle = iota
-	TsButtons
-	TsFlatButtons
-)
-
-// TFontPitch ENUM
-type TFontPitch = int32
-
-const (
-	FpDefault TFontPitch = iota
-	FpVariable
-	FpFixed
-)
-
-// TPenMode ENUM
-type TPenMode = int32
-
-const (
-	PmBlack TPenMode = iota
-	PmWhite
-	PmNop
-	PmNot
-	PmCopy
-	PmNotCopy
-	PmMergePenNot
-	PmMaskPenNot
-	PmMergeNotPen
-	PmMaskNotPen
-	PmMerge
-	PmNotMerge
-	PmMask
-	PmNotMask
-	PmXor
-	PmNotXor
-)
-
-// TFPPenMode ENUM
-type TFPPenMode TPenMode
-
-// TTrackBarOrientation ENUM
-type TTrackBarOrientation = int32
-
-const (
-	TrHorizontal TTrackBarOrientation = iota
-	TrVertical
-)
-
-// TUDOrientation ENUM
-type TUDOrientation = int32
-
-const (
-	UdHorizontal TUDOrientation = iota
-	UdVertical
-)
-
-// TFontQuality ENUM
-type TFontQuality = int32
-
-const (
-	FqDefault TFontQuality = iota
-	FqDraft
-	FqProof
-	FqNonAntialiased
-	FqAntialiased
-	FqClearType
-	FqClearTypeNatural
-)
-
-// TCloseAction ENUM
-type TCloseAction = int32
-
-const (
-	CaNone TCloseAction = iota
-	CaHide
-	CaFree
-	CaMinimize
-)
-
-// TBalloonFlags ENUM
-type TBalloonFlags = int32
-
-const (
-	BfNone TBalloonFlags = iota
-	BfInfo
-	BfWarning
-	BfError
-)
-
-// TMsgDlgType ENUM
-type TMsgDlgType = int32
-
-const (
-	MtWarning TMsgDlgType = iota
-	MtError
-	MtInformation
-	MtConfirmation
-	MtCustom
-)
-
-// TMsgDlgBtn ENUM
-type TMsgDlgBtn = int32
-
-const (
-	MbYes TMsgDlgBtn = iota
-	MbNo
-	MbOK
-	MbCancel
-	MbAbort
-	MbRetry
-	MbIgnore
-	MbAll
-	MbNoToAll
-	MbYesToAll
-	MbHelp
-	MbClose
-)
-
-// TMsgDlgButtons TMsgDlgBtn SET
-type TMsgDlgButtons = TSet
-
-// TSysLinkType ENUM
-type TSysLinkType = int32
-
-const (
-	SltURL TSysLinkType = iota
-	SltID
-)
-
-// TStatusPanelStyle ENUM
-type TStatusPanelStyle = int32
-
-const (
-	PsText TStatusPanelStyle = iota
-	PsOwnerDraw
-)
-
-// TJPEGPerformance ENUM
-type TJPEGPerformance = int32
-
-const (
-	JpBestQuality TJPEGPerformance = iota
-	JpBestSpeed
-)
-
-type TJPEGPixelFormat = TPixelFormat
-
-//const (
-//	Jf24Bit = iota
-//	Jf8Bit
-//)
-
-type TShortCut uint16
-
-// TNodeState ENUM
-type TNodeState = int32
-
-const (
-	NsCut              TNodeState = iota // = Node.Cut
-	NsDropHilite                         // = Node.DropTarget
-	NsFocused                            // = Node.Focused
-	NsSelected                           // = Node.Selected
-	NsMultiSelected                      // = Node.MultiSelected
-	NsExpanded                           // = Node.Expanded
-	NsHasChildren                        // = Node.HasChildren
-	NsDeleting                           // = Node.Deleting, set on Destroy
-	NsVisible                            // = Node.Visible
-	NsBound                              // bound to a tree, e.g. has Parent or is top lvl node
-	NsValidHasChildren                   // Node.HasChildren has been assigned
-)
-
-// TNodeStates SET TNodeState
-type TNodeStates = TSet
-
-// TNodeAttachMode ENUM
-type TNodeAttachMode = int32
-
-const (
-	NaAdd           TNodeAttachMode = iota // add as last sibling of Destination
-	NaAddFirst                             // add as first sibling of Destination
-	NaAddChild                             // add as last child of Destination
-	NaAddChildFirst                        // add as first child of Destination
-	NaInsert                               // insert in front of Destination
-	NaInsertBehind                         // insert behind Destination
-)
-
-// TAddMode ENUM
-type TAddMode = int32
-
-const (
-	TaAddFirst TAddMode = iota
-	TaAdd
-	TaInsert
-)
-
-// TMultiSelectStyle ENUM
-type TMultiSelectStyle = int32
-
-const (
-	MsControlSelect TMultiSelectStyle = iota
-	MsShiftSelect
-	MsVisibleOnly
-	MsSiblingOnly
-)
-
-// TMultiSelectStyles SET
-type TMultiSelectStyles = TSet
-
-// TActionListState ENUM
-type TActionListState = int32
-
-const (
-	AsNormal TActionListState = iota
-	AsSuspended
-	AsSuspendedEnabled
-)
-
-// TGradientDirection ENUM
-type TGradientDirection = int32
-
-const (
-	GdHorizontal TGradientDirection = iota
-	GdVertical
-)
-
-// TDrawingStyle ENUM
-type TDrawingStyle = int32
-
-const (
-	DSFocus TDrawingStyle = iota
-	DSSelected
-	DSNormal
-	DSTransparent
-)
-
-// TImageType ENUM
-type TImageType = int32
-
-const (
-	ItImage TImageType = iota
-	ItMask
-)
-
-// TResType ENUM
-type TResType = int32
-
-const (
-	RtBitmap TResType = iota
-	RtCursor
-	RtIcon
-)
-
-// TLoadResource ENUM
-type TLoadResource = int32
-
-const (
-	LrDefaultColor TLoadResource = iota
-	LrDefaultSize
-	LrFromFile
-	LrMap3DColors
-	LrTransparent
-	LrMonoChrome
-)
-
-// TLoadResources SET
-type TLoadResources = TSet
-
-// TColorDepth ENUM
-type TColorDepth = int32
-
-const (
-	CdDefault TColorDepth = iota
-	CdDeviceDependent
-	Cd4Bit
-	Cd8Bit
-	Cd16Bit
-	Cd24Bit
-	Cd32Bit
-)
-
-// TCheckBoxState ENUM
-type TCheckBoxState = int32
-
-const (
-	CbUnchecked TCheckBoxState = iota
-	CbChecked
-	CbGrayed
-)
-
-// TToolButtonStyle ENUM
-type TToolButtonStyle = int32
-
-const (
-	TbsButton     TToolButtonStyle = iota // button (can be clicked)
-	TbsCheck                              // check item (click to toggle state, can be grouped)
-	TbsDropDown                           // button with dropdown button to show a popup menu
-	TbsSeparator                          // space holder
-	TbsDivider                            // space holder with line
-	TbsButtonDrop                         // button with arrow (not separated from each other)
-)
-
-// TTBGradientDrawingOption ENUM
-type TTBGradientDrawingOption = int32
-
-const (
-	GdoHotTrack TTBGradientDrawingOption = iota
-	GdoGradient
-)
-
-// TTBGradientDrawingOptions SET
-type TTBGradientDrawingOptions = TSet
-
-// ENUM
-type TColorDialogOption = int32
-
-const (
-	CdFullOpen TColorDialogOption = iota
-	CdPreventFullOpen
-	CdShowHelp
-	CdSolidColor
-	CdAnyColor
-)
-
-// TColorDialogOptions SET
-type TColorDialogOptions = TSet
-
-// TBorderIcon ENUM
-type TBorderIcon = int32
-
-const (
-	BiSystemMenu TBorderIcon = iota
-	BiMinimize
-	BiMaximize
-	BiHelp
-)
-
-// TBorderIcons SET
-type TBorderIcons = TSet
-
-// TFontDialogOption ENUM
-type TFontDialogOption = int32
-
-const (
-	FdAnsiOnly TFontDialogOption = iota
-	FdTrueTypeOnly
-	FdEffects
-	FdFixedPitchOnly
-	FdForceFontExist
-	FdNoFaceSel
-	FdNoOEMFonts
-	FdNoSimulations
-	FdNoSizeSel
-	FdNoStyleSel
-	FdNoVectorFonts
-	FdShowHelp
-	FdWysiwyg
-	FdLimitSize
-	FdScalableOnly
-	FdApplyButton
-)
-
-// TFontDialogOptions SET
-type TFontDialogOptions = TSet
-
-// TOpenOption ENUM
-type TOpenOption = int32
-
-const (
-	OfReadOnly        TOpenOption = iota
-	OfOverwritePrompt             // if selected file exists shows a message, that file
-	// will be overwritten
-	OfHideReadOnly // hide read only file
-	OfNoChangeDir  // do not change current directory
-	OfShowHelp     // show a help button
-	OfNoValidate
-	OfAllowMultiSelect // allow multiselection
-	OfExtensionDifferent
-	OfPathMustExist // shows an error message if selected path does not exist
-	OfFileMustExist // shows an error message if selected file does not exist
-	OfCreatePrompt
-	OfShareAware
-	OfNoReadOnlyReturn // do not return filenames that are readonly
-	OfNoTestFileCreate
-	OfNoNetworkButton
-	OfNoLongNames
-	OfOldStyleDialog
-	OfNoDereferenceLinks // do not resolve links while dialog is shown (only on Windows, see OFN_NODEREFERENCELINKS)
-	OfNoResolveLinks     // do not resolve links after Execute
-	OfEnableIncludeNotify
-	OfEnableSizing    // dialog can be resized, e.g. via the mouse
-	OfDontAddToRecent // do not add the path to the history list
-	OfForceShowHidden // show hidden files
-	OfViewDetail      // details are OS and interface dependent
-	OfAutoPreview     // details are OS and interface dependent
-)
-
-// TOpenOptions SET:TOpenOption
-type TOpenOptions = TSet
-
-// TOpenOptionEx ENUM
-type TOpenOptionEx = int32
-
-const (
-	OfExNoPlacesBar TOpenOptionEx = iota
-)
-
-// TOpenOptionsEx SET:TOpenOptionEx
-type TOpenOptionsEx = TSet
-
-// TPrintRange ENUM
-type TPrintRange = int32
-
-const (
-	PrAllPages TPrintRange = iota
-	PrSelection
-	PrPageNums
-	PrCurrentPage
-)
-
-// TPrintDialogOption ENUM
-type TPrintDialogOption = int32
-
-const (
-	PoPrintToFile TPrintDialogOption = iota
-	PoPageNums
-	PoSelection
-	PoWarning
-	PoHelp
-	PoDisablePrintToFile
-	PoBeforeBeginDoc
-)
-
-// TPrintDialogOptions SET:TPrintDialogOption
-type TPrintDialogOptions = TSet
-
-// TPageSetupDialogOption ENUM
-type TPageSetupDialogOption = int32
-
-const (
-	PsoDefaultMinMargins TPageSetupDialogOption = iota
-	PsoDisableMargins
-	PsoDisableOrientation
-	PsoDisablePagePainting
-	PsoDisablePaper
-	PsoDisablePrinter
-	PsoMargins
-	PsoMinMargins
-	PsoShowHelp
-	PsoWarning
-	PsoNoNetworkButton
-)
-
-// TPageSetupDialogOptions SET:TPageSetupDialogOption
-type TPageSetupDialogOptions = TSet
-
-// TPrinterKind ENUM
-type TPrinterKind = int32
-
-const (
-	PkDotMatrix TPrinterKind = iota
-	PkHPPCL
-)
-
-// TPageType ENUM
-type TPageType = int32
-
-const (
-	PtEnvelope TPageType = iota
-	PtPaper
-)
-
-// TPageMeasureUnits ENUM
-type TPageMeasureUnits = int32
-
-const (
-	PmDefault TPageMeasureUnits = iota
-	PmMillimeters
-	PmInches
-)
-
-// TStringsOption ENUM
-type TStringsOption = int32
-
-const (
-	SoStrictDelimiter TStringsOption = iota
-	SoWriteBOM
-	SoTrailingLineBreak
-	SoUseLocale
-)
-
-// TStringsOptions SET:TStringsOption
-type TStringsOptions = TSet
-
-// TShiftStateEnum ENUM
-type TShiftStateEnum = int32
-
-const (
-	SsShift TShiftStateEnum = iota
-	SsAlt
-	SsCtrl
-	SsLeft
-	SsRight
-	SsMiddle
-	SsDouble
-	// Extra additions
-	SsMeta
-	SsSuper
-	SsHyper
-	SsAltGr
-	SsCaps
-	SsNum
-	SsScroll
-	SsTriple
-	SsQuad
-	SsExtra1
-	SsExtra2
-)
-
-// TShiftState SET:TShiftStateEnum
-type TShiftState = TSet
-
-// TMouseButton ENUM
-type TMouseButton = int32
-
-const (
-	MbLeft TMouseButton = iota
-	MbRight
-	MbMiddle
-	MbExtra1
-	MbExtra2
-)
-
-// TCaptureMouseButtons SET TMouseButton
-type TCaptureMouseButtons = TSet
-
-// TFillStyle ENUM
-type TFillStyle = int32
-
-const (
-	FsSurface TFillStyle = iota
-	FsBorder
-)
-
-// TFillMode ENUM
-type TFillMode = int32
-
-const (
-	FmAlternate TFillMode = iota
-	FmWinding
-)
-
-// TCanvasStates ENUM
-type TCanvasStates = int32
-
-const (
-	CsHandleValid TCanvasStates = iota
-	CsFontValid
-	CsPenValid
-	CsBrushValid
-	CsRegionValid
-)
-
-// TCanvasState SET:TCanvasStates
-type TCanvasState = TSet
-
-// TCanvasOrientation ENUM
-type TCanvasOrientation = int32
-
-const (
-	CoLeftToRight TCanvasOrientation = iota
-	CoRightToLeft
-)
-
-// TTextFormats ENUM
-type TTextFormats = int32
-
-const (
-	TfBottom TTextFormats = iota
-	TfCalcRect
-	TfCenter
-	TfEditControl
-	TfEndEllipsis
-	TfPathEllipsis
-	TfExpandTabs
-	TfExternalLeading
-	TfLeft
-	TfModifyString
-	TfNoClip
-	TfNoPrefix
-	TfRight
-	TfRtlReading
-	TfSingleLine
-	TfTop
-	TfVerticalCenter
-	TfWordBreak
-	TfHidePrefix
-	TfNoFullWidthCharBreak
-	TfPrefixOnly
-	TfTabStop
-	TfWordEllipsis
-	TfComposited
-)
-
-// TTextFormat SET:TTextFormats
-type TTextFormat = TSet
-
-// TBevelCut ENUM
-type TBevelCut = int32
-
-const (
-	BvNone TBevelCut = iota
-	BvLowered
-	BvRaised
-	BvSpace
-)
-
-// TGraphicsBevelCut ENUM
-type TGraphicsBevelCut = TBevelCut
-
-// TPanelBevel ENUM
-type TPanelBevel = TBevelCut
-
-// TBevelWidth ENUM
-type TBevelWidth = int32
-
-// ENUM
-type TBevelEdge = int32
-
-const (
-	BeLeft TBevelEdge = iota
-	BeTop
-	BeRight
-	BeBottom
-)
-
-// TBevelEdges SET:TBevelEdge
-type TBevelEdges = TSet
-
-// TBevelKind ENUM
-type TBevelKind = int32
-
-const (
-	BkNone TBevelKind = iota
-	BkTile
-	BkSoft
-	BkFlat
-)
-
-// TTickMark ENUM
-type TTickMark = int32
-
-const (
-	TmBottomRight TTickMark = iota
-	TmTopLeft
-	TmBoth
-)
-
-// TTickStyle ENUM
-type TTickStyle = int32
-
-const (
-	TsNone TTickStyle = iota
-	TsAuto
-	TsManual
-)
-
-// TPositionToolTip ENUM
-type TPositionToolTip = int32
-
-const (
-	PtNone TPositionToolTip = iota
-	PtTop
-	PtLeft
-	PtBottom
-	PtRight
-)
-
-// TDateTimeKind ENUM
-type TDateTimeKind = int32
-
-const (
-	DtkDate TDateTimeKind = iota
-	DtkTime
-	DtkDateTime
-)
-
-// TDTDateMode ENUM
-type TDTDateMode = int32
-
-const (
-	DmComboBox TDTDateMode = iota
-	DmUpDown
-	DmNone
-)
-
-// TDTDateFormat ENUM
-type TDTDateFormat = int32
-
-const (
-	DfShort TDTDateFormat = iota
-	DfLong
-)
-
-// TDTCalAlignment ENUM
-type TDTCalAlignment = int32
-
-const (
-	DtaLeft TDTCalAlignment = iota
-	DtaRight
-	DtaDefault
-)
-
-// TCalDayOfWeek ENUM
-type TCalDayOfWeek = int32
-
-const (
-	DowMonday TCalDayOfWeek = iota
-	DowTuesday
-	DowWednesday
-	DowThursday
-	DowFriday
-	DowSaturday
-	DowSunday
-	DowLocaleDefault
-)
-
-// TSearchType ENUM
-type TSearchType = int32
-
-const (
-	StWholeWord TSearchType = iota
-	StMatchCase
-)
-
-// TSearchTypes SET: TSearchType
-type TSearchTypes = TSet
-
-// TNumberingStyle ENUM
-type TNumberingStyle = int32
-
-const (
-	NsNone TNumberingStyle = iota
-	NsBullte
-)
-
-// TAttributeType ENUM
-type TAttributeType = int32
-
-const (
-	AtSelected TAttributeType = iota
-	AtDefaultText
-)
-
-// TConsistentAttribute ENUM
-type TConsistentAttribute = int32
-
-const (
-	CaBold TConsistentAttribute = iota
-	CaColor
-	CaFace
-	CaItalic
-	CaSize
-	CaStrikeOut
-	CaUnderline
-	CaProtected
-)
-
-// TConsistentAttributes SET: TConsistentAttribute
-type TConsistentAttributes = TSet
-
-// TIconArrangement ENUM
-type TIconArrangement = int32
-
-const (
-	IaTop TIconArrangement = iota
-	IaLeft
-)
-
-// THeaderStyle ENUM
-type THeaderStyle = int32
-
-const (
-	HsGradient THeaderStyle = iota
-	HsImage
-	HsThemed
-)
-
-// TImageAlignment ENUM
-type TImageAlignment = int32
-
-// IaTop有冲突，所以增加一个i
-const (
-	IiaLeft TImageAlignment = iota
-	IiaRight
-	IiaTop
-	IiaBottom
-	IiaCenter
-)
-
 // TAnchorKind ENUM
 type TAnchorKind = int32
 
@@ -1273,142 +21,320 @@ const (
 // TAnchors SET: TAnchorKind
 type TAnchors = TSet
 
-// TOwnerDrawStateType ENUM
-type TOwnerDrawStateType = int32
+// TApplicationFlag ENUM
+type TApplicationFlag = int32
 
 const (
-	OdSelected TOwnerDrawStateType = iota
-	OdGrayed
-	OdDisabled
-	OdChecked
-	OdFocused
-	OdDefault
-	OdHotLight
-	OdInactive
-	OdNoAccel
-	OdNoFocusRect
-	OdReserved1
-	OdReserved2
-	OdComboBoxEdit
-	OdBackgroundPainted // item background already painted
+	AppWaiting TApplicationFlag = iota
+	AppIdleEndSent
+	AppNoExceptionMessages
+	AppActive
+	AppDestroying
+	AppDoNotCallAsyncQueue
+	AppInitialized
 )
 
-// TOwnerDrawState SET: TOwnerDrawStateType
-type TOwnerDrawState = TSet
+// TApplicationFlags SET: TApplicationFlag
+type TApplicationFlags = TSet
 
-// TBitBtnKind ENUM
-type TBitBtnKind = int32
+// TApplicationNavigationOption ENUM
+type TApplicationNavigationOption = int32
 
 const (
-	BkCustom TBitBtnKind = iota
-	BkOK
-	BkCancel
-	BkHelp
-	BkYes
-	BkNo
-	BkClose
-	BkAbort
-	BkRetry
-	BkIgnore
-	BkAll
-	BkNoToAll
-	BkYesToAll
+	AnoTabToSelectNext TApplicationNavigationOption = iota
+	AnoReturnForDefaultControl
+	AnoEscapeForCancelControl
+	AnoF1ForHelp
+	AnoArrowToSelectNextInParent
 )
 
-// TScrollBarKind ENUM
-type TScrollBarKind = int32
+// TApplicationNavigationOptions SET: TApplicationNavigationOption
+type TApplicationNavigationOptions = TSet
+
+// TAutoCompleteOption ENUM
+type TAutoCompleteOption = int32
 
 const (
-	SbHorizontal TScrollBarKind = iota
-	SbVertical
+	AcoAutoSuggest TAutoCompleteOption = iota
+	AcoAutoAppend
+	AcoSearch
+	AcoFilterPrefixes
+	AcoUseTab
+	AcoUpDownKeyDropsList
+	AcoRtlReading
 )
 
-// TScrollBarInc = 1..32767;
-type TScrollBarInc int32
+// TAutoCompleteOptions SET: TAutoCompleteOption
+type TAutoCompleteOptions = TSet
 
-// TScrollBarStyle ENUM
-type TScrollBarStyle = int32
+// TBandPaintOption ENUM
+type TBandPaintOption = int32
 
 const (
-	SsRegular TScrollBarStyle = iota
-	SsFlat
-	SsHotTrack
+	BpoGrabber TBandPaintOption = iota
+	BpoFrame
+	BpoGradient
+	BpoRoundRect
 )
 
-// TShapeType ENUM
-type TShapeType = int32
+// TBandPaintOptions SET: TBandPaintOption
+type TBandPaintOptions = TSet
+
+// TBorderIcon ENUM
+//
+//	TCustomForm
+type TBorderIcon = int32
 
 const (
-	StRectangle TShapeType = iota
-	StSquare
-	StRoundRect
-	StRoundSquare
-	StEllipse
-	StCircle
-	StSquaredDiamond
-	StDiamond
-	StTriangle
-	StTriangleLeft
-	StTriangleRight
-	StTriangleDown
-	StStar
-	StStarDown
+	BiSystemMenu TBorderIcon = iota
+	BiMinimize
+	BiMaximize
+	BiHelp
 )
 
-// TBevelStyle = (bsLowered, bsRaised);
-type TBevelStyle = int32
+// TBorderIcons SET: TBorderIcon
+type TBorderIcons = TSet
+
+// TCanvasStates ENUM
+type TCanvasStates = int32
 
 const (
-	BsLowered TBevelStyle = iota
-	BsRaised
+	CsHandleValid TCanvasStates = iota
+	CsFontValid
+	CsPenvalid
+	CsBrushValid
+	CsRegionValid
 )
 
-// TBevelShape ENUM
-type TBevelShape = int32
+// TCanvasState SET: TCanvasStates
+type TCanvasState = TSet
+
+// TColorBoxStyles ENUM
+type TColorBoxStyles = int32
 
 const (
-	BsBox TBevelShape = iota
-	BsFrame
-	BsTopLine
-	BsBottomLine
-	BsLeftLine
-	BsRightLine
-	BsSpacer
+	CbStandardColors TColorBoxStyles = iota
+	CbExtendedColors
+	CbSystemColors
+	CbIncludeNone
+	CbIncludeDefault
+	CbCustomColor
+	CbPrettyNames
+	CbCustomColors
 )
 
-// TGaugeKind ENUM
-type TGaugeKind = int32
+// TColorBoxStyle SET: TColorBoxStyles
+type TColorBoxStyle = TSet
+
+// TColorDialogOption ENUM
+type TColorDialogOption = int32
 
 const (
-	GkText TGaugeKind = iota
-	GkHorizontalBar
-	GkVerticalBar
-	GkPie
-	GkNeedle
-	GkHalfPie
+	CdFullOpen TColorDialogOption = iota
+	CdPreventFullOpen
+	CdShowHelp
+	CdSolidColor
+	CdAnyColor
 )
 
-// TATGaugeKind ENUM
-type TATGaugeKind = TGaugeKind
+// TColorDialogOptions SET: TColorDialogOption
+type TColorDialogOptions = TSet
 
-// TCustomDrawTarget ENUM
-type TCustomDrawTarget = int32
+// TComboBoxAutoCompleteTextOption ENUM
+//
+//	TCustomComboBox
+type TComboBoxAutoCompleteTextOption = int32
 
 const (
-	DtControl TCustomDrawTarget = iota
-	DtItem
-	DtSubItem
+	CbactEnabled TComboBoxAutoCompleteTextOption = iota
+	CbactEndOfLineComplete
+	CbactRetainPrefixCase
+	CbactSearchCaseSensitive
+	CbactSearchAscending
 )
 
-// TCustomDrawStage ENUM
-type TCustomDrawStage = int32
+// TComboBoxAutoCompleteText SET: TComboBoxAutoCompleteTextOption
+type TComboBoxAutoCompleteText = TSet
+
+// TComboBoxExStyleEx ENUM
+type TComboBoxExStyleEx = int32
 
 const (
-	CdPrePaint TCustomDrawStage = iota
-	CdPostPaint
-	CdPreErase
-	CdPostErase
+	CsExCaseSensitive TComboBoxExStyleEx = iota
+	CsExNoEditImage
+	CsExNoEditImageIndent
+	CsExNoSizeLimit
+	CsExPathWordBreak
 )
+
+// TComboBoxExStyles SET: TComboBoxExStyleEx
+type TComboBoxExStyles = TSet
+
+// TComponentStatee ENUM
+type TComponentStatee = int32
+
+const (
+	CsLoading TComponentStatee = iota
+	CsReading
+	CsWriting
+	CsDestroying
+	CsDesigning
+	CsAncestor
+	CsUpdating
+	CsFixups
+	CsFreeNotification
+	CsInline
+	CsDesignInstance
+)
+
+// TComponentState SET: TComponentStatee
+type TComponentState = TSet
+
+// TComponentStylee ENUM
+type TComponentStylee = int32
+
+const (
+	CsInheritable TComponentStylee = iota
+	CsCheckPropAvail
+	CsSubComponent
+	CsTransient
+)
+
+// TComponentStyle SET: TComponentStylee
+type TComponentStyle = TSet
+
+// TControlAtPosFlag ENUM
+type TControlAtPosFlag = int32
+
+const (
+	CapfAllowDisabled TControlAtPosFlag = iota
+	CapfAllowWinControls
+	CapfOnlyClientAreas
+	CapfRecursive
+	CapfHasScrollOffset
+	CapfOnlyWinControls
+)
+
+// TControlAtPosFlags SET: TControlAtPosFlag
+type TControlAtPosFlags = TSet
+
+// TControlAutoSizePhase ENUM
+type TControlAutoSizePhase = int32
+
+const (
+	CaspNone TControlAutoSizePhase = iota
+	CaspChangingProperties
+	CaspCreatingHandles
+	CaspComputingBounds
+	CaspRealizingBounds
+	CaspShowing
+)
+
+// TControlAutoSizePhases SET: TControlAutoSizePhase
+type TControlAutoSizePhases = TSet
+
+// TControlRoleForForm ENUM
+type TControlRoleForForm = int32
+
+const (
+	CrffDefault TControlRoleForForm = iota
+	CrffCancel
+)
+
+// TControlRolesForForm SET: TControlRoleForForm
+type TControlRolesForForm = TSet
+
+// TControlStateType ENUM
+type TControlStateType = int32
+
+const (
+	CsLButtonDown TControlStateType = iota
+	CsClicked
+	CsPalette
+	CsReadingState
+	CsFocusing
+	CsCreating
+	CsPaintCopy
+	CsCustomPaint
+	CsDestroyingHandle
+	CsDocking
+	CsVisibleSetInLoading
+)
+
+// TControlState SET: TControlStateType
+type TControlState = TSet
+
+// TControlStyleType ENUM
+type TControlStyleType = int32
+
+const (
+	CsAcceptsControls TControlStyleType = iota
+	CsCaptureMouse
+	CsDesignInteractive
+	CsClickEvents
+	CsFramed
+	CsSetCaption
+	CsOpaque
+	CsDoubleClicks
+	CsTripleClicks
+	CsQuadClicks
+	CsFixedWidth
+	CsFixedHeight
+	CsNoDesignVisible
+	CsReplicatable
+	CsNoStdEvents
+	CsDisplayDragImage
+	CsReflector
+	CsActionClient
+	CsMenuEvents
+	CsNoFocus
+	CsNeedsBorderPaint
+	CsParentBackground
+	CsDesignNoSmoothResize
+	CsDesignFixedBounds
+	CsHasDefaultAction
+	CsHasCancelAction
+	CsNoDesignSelectable
+	CsOwnedChildrenNotSelectable
+	CsAutoSize0x0
+	CsAutoSizeKeepChildLeft
+	CsAutoSizeKeepChildTop
+	CsRequiresKeyboardInput
+)
+
+// TControlStyle SET: TControlStyleType
+type TControlStyle = TSet
+
+// TCTabControlCapability ENUM
+type TCTabControlCapability = int32
+
+const (
+	NbcShowCloseButtons TCTabControlCapability = iota
+	NbcMultiLine
+	NbcPageListPopup
+	NbcShowAddTabButton
+	NbcTabsSizeable
+)
+
+// TCTabControlCapabilities SET: TCTabControlCapability
+type TCTabControlCapabilities = TSet
+
+// TCTabControlOption ENUM
+//
+//	These are LCL additions
+type TCTabControlOption = int32
+
+const (
+	NboShowCloseButtons TCTabControlOption = iota
+	NboMultiLine
+	NboHidePageListPopup
+	NboKeyboardTabSwitch
+	NboShowAddTabButton
+	NboDoChangeOnSetIndex
+)
+
+// TCTabControlOptions SET: TCTabControlOption
+type TCTabControlOptions = TSet
 
 // TCustomDrawStateFlag ENUM
 type TCustomDrawStateFlag = int32
@@ -1428,29 +354,88 @@ const (
 // TCustomDrawState SET: TCustomDrawStateFlag
 type TCustomDrawState = TSet
 
-// TDisplayCode ENUM
-type TDisplayCode = int32
+// TDateTimePickerOption ENUM
+type TDateTimePickerOption = int32
 
 const (
-	DrBounds TDisplayCode = iota
-	DrIcon
-	DrLabel
-	DrSelectBounds
+	DtpoDoChangeOnSetDateTime TDateTimePickerOption = iota
+	DtpoEnabledIfUnchecked
+	DtpoAutoCheck
+	DtpoFlatButton
+	DtpoResetSelection
 )
 
-// TSelectDirOpt ENUM
-type TSelectDirOpt = int32
+// TDateTimePickerOptions SET: TDateTimePickerOption
+type TDateTimePickerOptions = TSet
+
+// TDisplayOption ENUM
+type TDisplayOption = int32
 
 const (
-	SdAllowCreate TSelectDirOpt = iota
-	SdPerformCreate
-	SdPrompt
+	DoColumnTitles TDisplayOption = iota
+	DoAutoColResize
+	DoKeyColFixed
 )
 
-// TSelectDirOpts SET: TSelectDirOpt
-type TSelectDirOpts = TSet
+// TDisplayOptions SET: TDisplayOption
+type TDisplayOptions = TSet
+
+// TDisplaySetting ENUM
+type TDisplaySetting = int32
+
+const (
+	DsShowHeadings TDisplaySetting = iota
+	DsShowDayNames
+	DsNoMonthChange
+	DsShowWeekNumbers
+)
+
+// TDisplaySettings SET: TDisplaySetting
+type TDisplaySettings = TSet
+
+// TDragOperation ENUM
+//
+//	operations basically allowed during drag'n drop
+type TDragOperation = int32
+
+const (
+	DoCopy TDragOperation = iota
+	DoMove
+	DoLink
+)
+
+// TDragOperations SET: TDragOperation
+type TDragOperations = TSet
+
+// TEdgeBorder ENUM
+//
+//	TToolWindow
+type TEdgeBorder = int32
+
+const (
+	EbLeft TEdgeBorder = iota
+	EbTop
+	EbRight
+	EbBottom
+)
+
+// TEdgeBorders SET: TEdgeBorder
+type TEdgeBorders = TSet
+
+// TFilterStringOption ENUM
+type TFilterStringOption = int32
+
+const (
+	FsoCaseSensitive TFilterStringOption = iota
+	FsoMatchOnlyAtStart
+)
+
+// TFilterStringOptions SET: TFilterStringOption
+type TFilterStringOptions = TSet
 
 // TFindOption ENUM
+//
+//	TFindDialog
 type TFindOption = int32
 
 const (
@@ -1477,70 +462,81 @@ const (
 // TFindOptions SET: TFindOption
 type TFindOptions = TSet
 
-// TDragMode ENUM
-type TDragMode = int32
+// TFontDialogOption ENUM
+//
+//	TFontDialog
+type TFontDialogOption = int32
 
 const (
-	DmManual TDragMode = iota
-	DmAutomatic
+	FdAnsiOnly TFontDialogOption = iota
+	FdTrueTypeOnly
+	FdEffects
+	FdFixedPitchOnly
+	FdForceFontExist
+	FdNoFaceSel
+	FdNoOEMFonts
+	FdNoSimulations
+	FdNoSizeSel
+	FdNoStyleSel
+	FdNoVectorFonts
+	FdShowHelp
+	FdWysiwyg
+	FdLimitSize
+	FdScalableOnly
+	FdApplyButton
 )
 
-// TDragState ENUM
-type TDragState = int32
+// TFontDialogOptions SET: TFontDialogOption
+type TFontDialogOptions = TSet
+
+// TFontStyle ENUM
+type TFontStyle = int32
 
 const (
-	DsDragEnter TDragState = iota
-	DsDragLeave
-	DsDragMove
+	FsBold TFontStyle = iota
+	FsItalic
+	FsUnderline
+	FsStrikeOut
 )
 
-// TDragKind ENUM
-type TDragKind = int32
+// TFontStylesBase SET: TFontStyle
+type TFontStylesBase = TSet
+
+// TFontStyles SET: TFontStyle
+type TFontStyles = TSet
+
+// TFormStateType ENUM
+type TFormStateType = int32
 
 const (
-	DkDrag TDragKind = iota
-	DkDock
+	FsCreating TFormStateType = iota
+	FsVisible
+	FsShowing
+	FsModal
+	FsCreatedMDIChild
+	FsBorderStyleChanged
+	FsFormStyleChanged
+	FsFirstShow
+	FsDisableAutoSize
 )
 
-// TEditCharCase ENUM
-type TEditCharCase = int32
+// TFormState SET: TFormStateType
+type TFormState = TSet
+
+// TGridDrawStatee ENUM
+type TGridDrawStatee = int32
 
 const (
-	EcNormal TEditCharCase = iota
-	EcUpperCase
-	EcLowerCase
+	GdSelected TGridDrawStatee = iota
+	GdFocused
+	GdFixed
+	GdHot
+	GdPushed
+	GdRowHighlight
 )
 
-// TEdgeBorder ENUM
-type TEdgeBorder = int32
-
-const (
-	EbLeft TEdgeBorder = iota
-	EbTop
-	EbRight
-	EbBottom
-)
-
-// TEdgeBorders SET: TEdgeBorder
-type TEdgeBorders = TSet
-
-// TEdgeStyle ENUM
-type TEdgeStyle = int32
-
-const (
-	EsNone TEdgeStyle = iota
-	EsRaised
-	EsLowered
-)
-
-// TGridDrawingStyle ENUM
-type TGridDrawingStyle = int32
-
-const (
-	GdsClassic TGridDrawingStyle = iota
-	GdsThemed
-	GdsGradient
-)
+// TGridDrawState SET: TGridDrawStatee
+type TGridDrawState = TSet
 
 // TGridOption ENUM
 type TGridOption = int32
@@ -1562,262 +558,505 @@ const (
 	GoRowSelect
 	GoAlwaysShowEditor
 	GoThumbTracking
-	// Additional Options
-	GoColSpanning                 // Enable cellextent calcs
-	GoRelaxedRowSelect            // User can see focused cell on goRowSelect
-	GoDblClickAutoSize            // dblclicking columns borders (on hdrs) resize col.
-	GoSmoothScroll                // Switch scrolling mode (pixel scroll is by default)
-	GoFixedRowNumbering           // Ya
-	GoScrollKeepVisible           // keeps focused cell visible while scrolling
-	GoHeaderHotTracking           // Header cells change look when mouse is over them
-	GoHeaderPushedLook            // Header cells looks pushed when clicked
-	GoSelectionActive             // Setting grid.Selection moves also cell cursor
-	GoFixedColSizing              // Allow to resize fixed columns
-	GoDontScrollPartCell          // clicking partially visible cells will not scroll
-	GoCellHints                   // show individual cell hints
-	GoTruncCellHints              // show cell hints if cell text is too long
-	GoCellEllipsis                // show "..." if cell text is too long
-	GoAutoAddRowsSkipContentCheck //BB Also add a row (if AutoAddRows in Options) if last row is empty
-	GoRowHighlight                // Highlight the current Row
+	GoColSpanning
+	GoRelaxedRowSelect
+	GoDblClickAutoSize
+	GoSmoothScroll
+	GoFixedRowNumbering
+	GoScrollKeepVisible
+	GoHeaderHotTracking
+	GoHeaderPushedLook
+	GoSelectionActive
+	GoFixedColSizing
+	GoDontScrollPartCell
+	GoCellHints
+	GoTruncCellHints
+	GoCellEllipsis
+	GoAutoAddRowsSkipContentCheck
+	GoRowHighlight
 )
 
 // TGridOptions SET: TGridOption
 type TGridOptions = TSet
 
-// TGridDrawStates ENUM
-type TGridDrawStates = int32
+// TGridOption2 ENUM
+type TGridOption2 = int32
 
 const (
-	GdSelected TGridDrawStates = iota
-	GdFocused
-	GdFixed
-	GdHot
-	GdPushed
-	GdRowHighlight
+	GoScrollToLastCol TGridOption2 = iota
+	GoScrollToLastRow
+	GoEditorParentColor
+	GoEditorParentFont
+	GoCopyWithoutTrailingLinebreak
 )
 
-// TGridDrawState SET: TGridDrawStates
-type TGridDrawState = TSet
+// TGridOptions2 SET: TGridOption2
+type TGridOptions2 = TSet
 
-// THeaderSectionStyle ENUM
-type THeaderSectionStyle = int32
+// TGridSaveOptions ENUM
+type TGridSaveOptions = int32
 
 const (
-	HsText THeaderSectionStyle = iota
-	HsOwnerDraw
+	SoDesign TGridSaveOptions = iota
+	SoAttributes
+	SoContent
+	SoPosition
 )
 
-// TLabelPosition ENUM
-type TLabelPosition = int32
+// TSaveOptions SET: TGridSaveOptions
+type TSaveOptions = TSet
+
+// TGridZone ENUM
+type TGridZone = int32
 
 const (
-	LpAbove TLabelPosition = iota
-	LpBelow
-	LpLeft
-	LpRight
+	GzNormal TGridZone = iota
+	GzFixedCols
+	GzFixedRows
+	GzFixedCells
+	GzInvalid
 )
 
-// TFlowStyle ENUM
-type TFlowStyle = int32
+// TGridZoneSet SET: TGridZone
+type TGridZoneSet = TSet
+
+// THeaderPaintElement ENUM
+type THeaderPaintElement = int32
 
 const (
-	FsLeftRightTopBottom TFlowStyle = iota
-	FsRightLeftTopBottom
-	FsLeftRightBottomTop
-	FsRightLeftBottomTop
-	FsTopBottomLeftRight
-	FsBottomTopLeftRight
-	FsTopBottomRightLeft
-	FsBottomTopRightLeft
+	HpeBackground THeaderPaintElement = iota
+	HpeDropMark
+	HpeHeaderGlyph
+	HpeSortGlyph
+	HpeText
 )
 
-// TCoolBandMaximize ENUM
-type TCoolBandMaximize = int32
+// THeaderPaintElements SET: THeaderPaintElement
+type THeaderPaintElements = TSet
+
+// THeaderState ENUM
+type THeaderState = int32
 
 const (
-	BmNone TCoolBandMaximize = iota
-	BmClick
-	BmDblClick
+	HsAutoSizing THeaderState = iota
+	HsDragging
+	HsDragPending
+	HsLoading
+	HsColumnWidthTracking
+	HsColumnWidthTrackPending
+	HsHeightTracking
+	HsHeightTrackPending
+	HsResizing
+	HsScaling
+	HsNeedScaling
 )
 
-// TMenuBreak ENUM
-type TMenuBreak = int32
+// THeaderStates SET: THeaderState
+type THeaderStates = TSet
+
+// THitPosition ENUM
+//
+//	These flags are returned by the hit test method.
+type THitPosition = int32
 
 const (
-	MbNone TMenuBreak = iota
-	MbBreak
-	MbBarBreak
+	HiAbove THitPosition = iota
+	HiBelow
+	HiNowhere
+	HiOnItem
+	HiOnItemButton
+	HiOnItemButtonExact
+	HiOnItemCheckbox
+	HiOnItemIndent
+	HiOnItemLabel
+	HiOnItemLeft
+	HiOnItemRight
+	HiOnNormalIcon
+	HiOnStateIcon
+	HiToLeft
+	HiToRight
+	HiUpperSplitter
+	HiLowerSplitter
 )
 
-// TSectionTrackState ENUM
-type TSectionTrackState = int32
+// THitPositions SET: THitPosition
+type THitPositions = TSet
+
+// THitTest ENUM
+type THitTest = int32
 
 const (
-	TsTrackBegin TSectionTrackState = iota
-	TsTrackMove
-	TsTrackEnd
+	HtAbove THitTest = iota
+	HtBelow
+	HtNowhere
+	HtOnItem
+	HtOnButton
+	HtOnIcon
+	HtOnIndent
+	HtOnLabel
+	HtOnRight
+	HtOnStateIcon
+	HtToLeft
+	HtToRight
 )
 
-// TControlStateType ENUM
-type TControlStateType = int32
+// THitTests SET: THitTest
+type THitTests = TSet
+
+// TKeyOption ENUM
+type TKeyOption = int32
 
 const (
-	CsLButtonDown TControlStateType = iota
-	CsClicked
-	CsPalette
-	CsReadingState
-	CsFocusing
-	CsCreating // not used, exists for Delphi compatibility
-	CsPaintCopy
-	CsCustomPaint
-	CsDestroyingHandle
-	CsDocking
-	CsVisibleSetInLoading
+	KeyEdit TKeyOption = iota
+	KeyAdd
+	KeyDelete
+	KeyUnique
 )
 
-// TControlState SET: TControlStateType
-type TControlState = TSet
+// TKeyOptions SET: TKeyOption
+type TKeyOptions = TSet
 
-// TControlStyleType ENUM
-type TControlStyleType = int32
+// TListBoxOption ENUM
+type TListBoxOption = int32
 
 const (
-	CsAcceptsControls            TControlStyleType = iota // can have children in the designer
-	CsCaptureMouse                                        // auto capture mouse when clicked
-	CsDesignInteractive                                   // wants mouse events in design mode
-	CsClickEvents                                         // handles mouse events
-	CsFramed                                              // not implemented, has 3d frame
-	CsSetCaption                                          // if Name=Caption, changing the Name changes the Caption
-	CsOpaque                                              // the control paints its area completely
-	CsDoubleClicks                                        // understands mouse double clicks
-	CsTripleClicks                                        // understands mouse triple clicks
-	CsQuadClicks                                          // understands mouse quad clicks
-	CsFixedWidth                                          // cannot change its width
-	CsFixedHeight                                         // cannot change its height (for example combobox)
-	CsNoDesignVisible                                     // is invisible in the designer
-	CsReplicatable                                        // PaintTo works
-	CsNoStdEvents                                         // standard events such as mouse, key, and click events are ignored.
-	CsDisplayDragImage                                    // display images from dragimagelist during drag operation over control
-	CsReflector                                           // not implemented, the controls respond to size, focus and dlg messages - it can be used as ActiveX control under Windows
-	CsActionClient                                        // Action is set
-	CsMenuEvents                                          // not implemented
-	CsNoFocus                                             // control will not take focus when clicked with mouse.
-	CsNeedsBorderPaint                                    // not implemented
-	CsParentBackground                                    // tells WinXP to paint the theme background of parent on controls background
-	CsDesignNoSmoothResize                                // when resizing control in the designer do not SetBounds while dragging
-	CsDesignFixedBounds                                   // can not be moved nor resized in designer
-	CsHasDefaultAction                                    // implements useful ExecuteDefaultAction
-	CsHasCancelAction                                     // implements useful ExecuteCancelAction
-	CsNoDesignSelectable                                  // can not be selected at design time
-	CsOwnedChildrenNotSelectable                          // child controls owned by this control are NOT selectable in the designer
-	CsAutoSize0x0                                         // if the preferred size is 0x0 then control is shrinked ot 0x0
-	CsAutoSizeKeepChildLeft                               // when AutoSize=true do not move children horizontally
-	CsAutoSizeKeepChildTop                                // when AutoSize=true do not move children vertically
-	CsRequiresKeyboardInput                               // If the device has no physical keyboard then show the virtual keyboard when this control gets focus (therefore available only to TWinControl descendents)
+	LboDrawFocusRect TListBoxOption = iota
 )
 
-// TControlStyle SET: TControlStyleType
-type TControlStyle = TSet
+// TListBoxOptions SET: TListBoxOption
+type TListBoxOptions = TSet
 
-// TMouseActivate ENUM
-type TMouseActivate = int32
+// TListHotTrackStyle ENUM
+type TListHotTrackStyle = int32
 
 const (
-	MaDefault TMouseActivate = iota
-	MaActivate
-	MaActivateAndEat
-	MaNoActivate
-	MaNoActivateAndEat
+	HtHandPoint TListHotTrackStyle = iota
+	HtUnderlineCold
+	HtUnderlineHot
 )
 
-// TTaskBarProgressState ENUM
-type TTaskBarProgressState = int32
+// TListHotTrackStyles SET: TListHotTrackStyle
+type TListHotTrackStyles = TSet
+
+// TListItemsFlag ENUM
+type TListItemsFlag = int32
 
 const (
-	None TTaskBarProgressState = iota
-	Indeterminate
-	Normal
-	Error
-	Paused
+	LisfWSItemsCreated TListItemsFlag = iota
 )
 
-// TBitmapHandleType ENUM
-type TBitmapHandleType = int32
+// TListItemsFlags SET: TListItemsFlag
+type TListItemsFlags = TSet
+
+// TListItemState ENUM
+type TListItemState = int32
 
 const (
-	BmDIB TBitmapHandleType = iota
-	BmDDB
+	LisCut TListItemState = iota
+	LisDropTarget
+	LisFocused
+	LisSelected
 )
 
-// TPrinterState ENUM
-type TPrinterState = int32
+// TListItemStates SET: TListItemState
+type TListItemStates = TSet
+
+// TMouseButton ENUM
+type TMouseButton = int32
 
 const (
-	PsNoDefine TPrinterState = iota
-	PsReady
-	PsPrinting
-	PsStopped
+	MbLeft TMouseButton = iota
+	MbRight
+	MbMiddle
+	MbExtra1
+	MbExtra2
 )
 
-// TPrinterOrientation ENUM
-type TPrinterOrientation = int32
+// TCaptureMouseButtons SET: TMouseButton
+type TCaptureMouseButtons = TSet
+
+// TMultiSelectStyles ENUM
+type TMultiSelectStyles = int32
 
 const (
-	PoPortrait TPrinterOrientation = iota
-	PoLandscape
-	PoReverseLandscape
-	PoReversePortrait
+	MsControlSelect TMultiSelectStyles = iota
+	MsShiftSelect
+	MsVisibleOnly
+	MsSiblingOnly
 )
 
-// TPrinterCapability ENUM
-type TPrinterCapability = int32
+// TMultiSelectStyle SET: TMultiSelectStyles
+type TMultiSelectStyle = TSet
+
+// TNodeState ENUM
+type TNodeState = int32
 
 const (
-	PcCopies TPrinterCapability = iota
-	PcOrientation
-	PcCollation
+	NsCut TNodeState = iota
+	NsDropHilited
+	NsFocused
+	NsSelected
+	NsMultiSelected
+	NsExpanded
+	NsHasChildren
+	NsDeleting
+	NsVisible
+	NsEnabled
+	NsBound
+	NsValidHasChildren
 )
 
-// TPrinterCapabilities SET: TPrinterCapability
-type TPrinterCapabilities = TSet
+// TNodeStates SET: TNodeState
+type TNodeStates = TSet
 
-// TPrinterType ENUM
-type TPrinterType = int32
+// TOpenGLControlOption ENUM
+type TOpenGLControlOption = int32
 
 const (
-	PtLocal TPrinterType = iota
-	PtNetWork
+	OcoMacRetinaMode TOpenGLControlOption = iota
+	OcoRenderAtDesignTime
 )
 
-// TReadyState ENUM
-type TReadyState = int32
+// TOpenGLControlOptions SET: TOpenGLControlOption
+type TOpenGLControlOptions = TSet
+
+// TOpenOption ENUM
+//
+//	TOpenDialog
+type TOpenOption = int32
 
 const (
-	RsUninitialized TReadyState = iota
-	RsLoading
-	RsLoaded
-	RsInterActive
-	RsComplete
+	OfReadOnly TOpenOption = iota
+	OfOverwritePrompt
+	OfHideReadOnly
+	OfNoChangeDir
+	OfShowHelp
+	OfNoValidate
+	OfAllowMultiSelect
+	OfExtensionDifferent
+	OfPathMustExist
+	OfFileMustExist
+	OfCreatePrompt
+	OfShareAware
+	OfNoReadOnlyReturn
+	OfNoTestFileCreate
+	OfNoNetworkButton
+	OfNoLongNames
+	OfOldStyleDialog
+	OfNoDereferenceLinks
+	OfNoResolveLinks
+	OfEnableIncludeNotify
+	OfEnableSizing
+	OfDontAddToRecent
+	OfForceShowHidden
+	OfViewDetail
+	OfAutoPreview
 )
 
-// TStringEncoding ENUM
-type TStringEncoding = int32
+// TOpenOptions SET: TOpenOption
+type TOpenOptions = TSet
+
+// TOpenOptionEx ENUM
+//
+//	WS specific options that cannot be (more or less) mapped to the standard TOpenOptions
+//	Currently just Windows Vista+ (IFileDialog) options
+type TOpenOptionEx = int32
 
 const (
-	SeUnknown TStringEncoding = iota
-	SeANSI
-	SeUnicode
-	SeUTF8
+	OfHidePinnedPlaces TOpenOptionEx = iota
+	OfStrictFileTypes
+	OfPickFolders
+	OfOkButtonNeedsInteraction
+	OfForceFileSystem
+	OfAllNonStorageItems
 )
 
-// TShowInTaskBar ENUM
-type TShowInTaskBar = int32
+// TOpenOptionsEx SET: TOpenOptionEx
+type TOpenOptionsEx = TSet
+
+// TOwnerDrawStateType ENUM
+//
+//	ToDo: move this to StdCtrls
+type TOwnerDrawStateType = int32
 
 const (
-	StDefault TShowInTaskBar = iota // use default rules for showing taskbar item
-	StAlways                        // always show taskbar item for the form
-	StNever                         // never show taskbar item for the form
+	OdSelected TOwnerDrawStateType = iota
+	OdGrayed
+	OdDisabled
+	OdChecked
+	OdFocused
+	OdDefault
+	OdHotLight
+	OdInactive
+	OdNoAccel
+	OdNoFocusRect
+	OdReserved1
+	OdReserved2
+	OdComboBoxEdit
+	OdBackgroundPainted
 )
+
+// TOwnerDrawState SET: TOwnerDrawStateType
+type TOwnerDrawState = TSet
+
+// TPageSetupDialogOption ENUM
+type TPageSetupDialogOption = int32
+
+const (
+	PsoDefaultMinMargins TPageSetupDialogOption = iota
+	PsoDisableMargins
+	PsoDisableOrientation
+	PsoDisablePagePainting
+	PsoDisablePaper
+	PsoDisablePrinter
+	PsoMargins
+	PsoMinMargins
+	PsoShowHelp
+	PsoWarning
+	PsoNoNetworkButton
+)
+
+// TPageSetupDialogOptions SET: TPageSetupDialogOption
+type TPageSetupDialogOptions = TSet
+
+// TPanelPart ENUM
+type TPanelPart = int32
+
+const (
+	PpText TPanelPart = iota
+	PpBorder
+	PpWidth
+)
+
+// TPanelParts SET: TPanelPart
+type TPanelParts = TSet
+
+// TParaModifyMaske ENUM
+type TParaModifyMaske = int32
+
+const (
+	Pmm_FirstLine TParaModifyMaske = iota
+	Pmm_HeadIndent
+	Pmm_TailIndent
+	Pmm_SpaceBefore
+	Pmm_SpaceAfter
+	Pmm_LineSpacing
+)
+
+// TParaModifyMask SET: TParaModifyMaske
+type TParaModifyMask = TSet
+
+// TPrintDialogOption ENUM
+type TPrintDialogOption = int32
+
+const (
+	PoPrintToFile TPrintDialogOption = iota
+	PoPageNums
+	PoSelection
+	PoWarning
+	PoHelp
+	PoDisablePrintToFile
+	PoBeforeBeginDoc
+)
+
+// TPrintDialogOptions SET: TPrintDialogOption
+type TPrintDialogOptions = TSet
+
+// TRawImageQueryFlag ENUM
+type TRawImageQueryFlag = int32
+
+const (
+	RiqfMono TRawImageQueryFlag = iota
+	RiqfGrey
+	RiqfRGB
+	RiqfAlpha
+	RiqfMask
+	RiqfPalette
+	RiqfUpdate
+)
+
+// TRawImageQueryFlags SET: TRawImageQueryFlag
+type TRawImageQueryFlags = TSet
+
+// TSearchOption ENUM
+type TSearchOption = int32
+
+const (
+	SoMatchCase TSearchOption = iota
+	SoWholeWord
+	SoBackward
+)
+
+// TSearchOptions SET: TSearchOption
+type TSearchOptions = TSet
+
+// TSectionValuesOption ENUM
+type TSectionValuesOption = int32
+
+const (
+	SvoIncludeComments TSectionValuesOption = iota
+	SvoIncludeInvalid
+	SvoIncludeQuotes
+)
+
+// TSectionValuesOptions SET: TSectionValuesOption
+type TSectionValuesOptions = TSet
+
+// TShiftStateEnum ENUM
+//
+//	Types used by standard events
+type TShiftStateEnum = int32
+
+const (
+	SsShift TShiftStateEnum = iota
+	SsAlt
+	SsCtrl
+	SsLeft
+	SsRight
+	SsMiddle
+	SsDouble
+	SsMeta
+	SsSuper
+	SsHyper
+	SsAltGr
+	SsCaps
+	SsNum
+	SsScroll
+	SsTriple
+	SsQuad
+	SsExtra1
+	SsExtra2
+)
+
+// TShiftState SET: TShiftStateEnum
+type TShiftState = TSet
+
+// TSizeConstraintsOption ENUM
+type TSizeConstraintsOption = int32
+
+const (
+	ScoAdviceWidthAsMin TSizeConstraintsOption = iota
+	ScoAdviceWidthAsMax
+	ScoAdviceHeightAsMin
+	ScoAdviceHeightAsMax
+)
+
+// TSizeConstraintsOptions SET: TSizeConstraintsOption
+type TSizeConstraintsOptions = TSet
+
+// TStringsOption ENUM
+type TStringsOption = int32
+
+const (
+	SoStrictDelimiter TStringsOption = iota
+	SoWriteBOM
+	SoTrailingLineBreak
+	SoUseLocale
+	SoPreserveBOM
+)
+
+// TStringsOptions SET: TStringsOption
+type TStringsOptions = TSet
 
 // TTaskDialogCommonButton ENUM
 type TTaskDialogCommonButton = int32
@@ -1835,144 +1074,57 @@ const (
 type TTaskDialogCommonButtons = TSet
 
 // TTaskDialogFlag ENUM
+//
+//	the available configuration flags for the Task Dialog
+//	- most are standard TDF_* flags used for Vista/Seven native API
+//	(see http://msdn.microsoft.com/en-us/library/bb787473(v=vs.85).aspx
+//	for TASKDIALOG_FLAGS)
+//	- tdfQuery and tdfQueryMasked are custom flags, implemented in pure Delphi
+//	code to handle input query
+//	- our emulation code will handle only tdfUseCommandLinks,
+//	tdfUseCommandLinksNoIcon, and tdfQuery options
 type TTaskDialogFlag = int32
 
 const (
-	TfEnableHyperlinks TTaskDialogFlag = iota
-	TfUseHiconMain
-	TfUseHiconFooter
-	TfAllowDialogCancellation
-	TfUseCommandLinks
-	TfUseCommandLinksNoIcon
-	TfExpandFooterArea
-	TfExpandedByDefault
-	TfVerificationFlagChecked
-	TfShowProgressBar
-	TfShowMarqueeProgressBar
-	TfCallbackTimer
-	TfPositionRelativeToWindow
-	TfRtlLayout
-	TfNoDefaultRadioButton
-	TfCanBeMinimized
+	TdfEnableHyperLinks TTaskDialogFlag = iota
+	TdfUseHIconMain
+	TdfUseHIconFooter
+	TdfAllowDialogCancellation
+	TdfUseCommandLinks
+	TdfUseCommandLinksNoIcon
+	TdfExpandFooterArea
+	TdfExpandByDefault
+	TdfVerificationFlagChecked
+	TdfShowProgressBar
+	TdfShowMarqueeProgressBar
+	TdfCallbackTimer
+	TdfPositionRelativeToWindow
+	TdfRtlLayout
+	TdfNoDefaultRadioButton
+	TdfCanBeMinimized
+	TdfNoSetForeGround
+	TdfSizeToContent
+	TdfQuery
+	TdfQueryMasked
+	TdfQueryFieldFocused
 )
 
 // TTaskDialogFlags SET: TTaskDialogFlag
 type TTaskDialogFlags = TSet
 
-// TTaskDialogIcon ENUM
-type TTaskDialogIcon = int32
+// TTextModifyMaske ENUM
+type TTextModifyMaske = int32
 
 const (
-	TdiNone TTaskDialogIcon = iota
-	TdiWarning
-	TdiError
-	TdiInformation
-	TdiShield
-	TdiQuestion
+	Tmm_Color TTextModifyMaske = iota
+	Tmm_Name
+	Tmm_Size
+	Tmm_Styles
+	Tmm_BackColor
 )
 
-// TComboBoxExStyle ENUM
-type TComboBoxExStyle = int32
-
-const (
-	CsExDropDown TComboBoxExStyle = iota
-	CsExSimple
-	CsExDropDownList
-)
-
-// TComboBoxExStyleEx ENUM
-type TComboBoxExStyleEx = int32
-
-const (
-	CsExCaseSensitive TComboBoxExStyleEx = iota
-	CsExNoEditImage
-	CsExNoEditImageIndent
-	CsExNoSizeLimit
-	CsExPathWordBreak
-)
-
-// TComboBoxExStyles SET: TComboBoxExStyleEx
-type TComboBoxExStyles = TSet
-
-// TAutoCompleteOption ENUM
-type TAutoCompleteOption = int32
-
-const (
-	AcoAutoSuggest TAutoCompleteOption = iota
-	AcoAutoAppend
-	AcoSearch
-	AcoFilterPrefixes
-	AcoUseTab
-	AcoUpDownKeyDropsList
-	AcoRtlReading
-)
-
-// TAutoCompleteOptions SET: TAutoCompleteOption
-type TAutoCompleteOptions = TSet
-
-// TDefaultMonitor ENUM
-type TDefaultMonitor = int32
-
-const (
-	DmDesktop TDefaultMonitor = iota
-	DmPrimary
-	DmMainForm
-	DmActiveForm
-)
-
-// TTransparentMode ENUM
-type TTransparentMode = int32
-
-const (
-	TmAuto TTransparentMode = iota
-	TmFixed
-)
-
-// TDrawImageMode ENUM
-type TDrawImageMode = int32
-
-const (
-	DimNormal TDrawImageMode = iota
-	DimCenter
-	DimStretch
-)
-
-// TListBoxOption ENUM
-type TListBoxOption = int32
-
-const (
-	LboDrawFocusRect TListBoxOption = iota // draw focus rect in case of owner drawing
-)
-
-// TListBoxOptions SET: TListBoxOption
-type TListBoxOptions = TSet
-
-// TAntialiasingMode ENUM
-type TAntialiasingMode = int32
-
-const (
-	AmDontCare TAntialiasingMode = iota // default antialiasing
-	AmOn                                // enabled
-	AmOff                               // disabled
-)
-
-// TSortDirection ENUM
-type TSortDirection = int32
-
-const (
-	SdAscending TSortDirection = iota
-	SdDescending
-)
-
-// TTreeViewExpandSignType ENUM
-type TTreeViewExpandSignType = int32
-
-const (
-	TvestTheme     TTreeViewExpandSignType = iota // use themed sign
-	TvestPlusMinus                                // use +/- sign
-	TvestArrow                                    // use blank arrow
-	TvestArrowFill                                // use filled arrow
-)
+// TTextModifyMask SET: TTextModifyMaske
+type TTextModifyMask = TSet
 
 // TTreeViewOption ENUM
 type TTreeViewOption = int32
@@ -1995,35 +1147,730 @@ const (
 	TvoToolTips
 	TvoNoDoubleClickExpand
 	TvoThemedDraw
+	TvoEmptySpaceUnselect
 )
 
 // TTreeViewOptions SET: TTreeViewOption
 type TTreeViewOptions = TSet
 
-// TGlyphShowMode ENUM
-type TGlyphShowMode = int32
+// TVirtualNodeInitState ENUM
+//
+//	States used in InitNode to indicate states a node shall initially have.
+type TVirtualNodeInitState = int32
 
 const (
-	GsmAlways      TGlyphShowMode = iota // always show
-	GsmNever                             // never show
-	GsmApplication                       // depends on application settings
-	GsmSystem                            // depends on system settings
+	IvsDisabled TVirtualNodeInitState = iota
+	IvsExpanded
+	IvsHasChildren
+	IvsMultiline
+	IvsSelected
+	IvsFiltered
+	IvsReInit
 )
 
-// TCTabControlOption ENUM
-type TCTabControlOption = int32
+// TVirtualNodeInitStates SET: TVirtualNodeInitState
+type TVirtualNodeInitStates = TSet
+
+// TVirtualNodeState ENUM
+//
+//	Be careful when adding new states as this might change the size of the type which in turn
+//	changes the alignment in the node record as well as the stream chunks.
+//	Do not reorder the states and always add new states at the end of this enumeration in order to avoid
+//	breaking existing code.
+type TVirtualNodeState = int32
 
 const (
-	NboShowCloseButtons TCTabControlOption = iota
-	NboMultiLine
-	NboHidePageListPopup
-	NboKeyboardTabSwitch
-	NboShowAddTabButton
-	NboDoChangeOnSetIndex
+	VsInitialized TVirtualNodeState = iota
+	VsChecking
+	VsCutOrCopy
+	VsDisabled
+	VsDeleting
+	VsExpanded
+	VsHasChildren
+	VsVisible
+	VsSelected
+	VsOnFreeNodeCallRequired
+	VsAllChildrenHidden
+	VsClearing
+	VsMultiline
+	VsHeightMeasured
+	VsToggling
+	VsFiltered
 )
 
-// TCTabControlOptions SET: TCTabControlOption
-type TCTabControlOptions = TSet
+// TVirtualNodeStates SET: TVirtualNodeState
+type TVirtualNodeStates = TSet
+
+// TVirtualTreeState ENUM
+type TVirtualTreeState = int32
+
+const (
+	TsCancelHintAnimation TVirtualTreeState = iota
+	TsChangePending
+	TsCheckPropagation
+	TsCollapsing
+	TsToggleFocusedSelection
+	TsClearPending
+	TsClipboardFlushing
+	TsCopyPending
+	TsCutPending
+	TsDrawSelPending
+	TsDrawSelecting
+	TsEditing
+	TsEditPending
+	TsExpanding
+	TsNodeHeightTracking
+	TsNodeHeightTrackPending
+	TsHint
+	TsInAnimation
+	TsIncrementalSearching
+	TsIncrementalSearchPending
+	TsIterating
+	TsKeyCheckPending
+	TsLeftButtonDown
+	TsLeftDblClick
+	TsMouseCheckPending
+	TsMiddleButtonDown
+	TsMiddleDblClick
+	TsNeedRootCountUpdate
+	TsOLEDragging
+	TsOLEDragPending
+	TsPainting
+	TsRightButtonDown
+	TsRightDblClick
+	TsPopupMenuShown
+	TsScrolling
+	TsScrollPending
+	TsSizing
+	TsStopValidation
+	TsStructureChangePending
+	TsSynchMode
+	TsThumbTracking
+	TsToggling
+	TsUpdateHiddenChildrenNeeded
+	TsUpdating
+	TsUseCache
+	TsUserDragObject
+	TsUseThemes
+	TsValidating
+	TsPreviouslySelectedLocked
+	TsValidationNeeded
+	TsVCLDragging
+	TsVCLDragPending
+	TsVCLDragFinished
+	TsWheelPanning
+	TsWheelScrolling
+	TsWindowCreating
+	TsUseExplorerTheme
+)
+
+// TVirtualTreeStates SET: TVirtualTreeState
+type TVirtualTreeStates = TSet
+
+// TVTAnimationOption ENUM
+//
+//	Options to toggle animation support:
+type TVTAnimationOption = int32
+
+const (
+	ToAnimatedToggle TVTAnimationOption = iota
+	ToAdvancedAnimatedToggle
+)
+
+// TVTAnimationOptions SET: TVTAnimationOption
+type TVTAnimationOptions = TSet
+
+// TVTAutoOption ENUM
+//
+//	Options which toggle automatic handling of certain situations:
+type TVTAutoOption = int32
+
+const (
+	ToAutoDropExpand TVTAutoOption = iota
+	ToAutoExpand
+	ToAutoScroll
+	ToAutoScrollOnExpand
+	ToAutoSort
+	ToAutoSpanColumns
+	ToAutoTristateTracking
+	ToAutoHideButtons
+	ToAutoDeleteMovedNodes
+	ToDisableAutoscrollOnFocus
+	ToAutoChangeScale
+	ToAutoFreeOnCollapse
+	ToDisableAutoscrollOnEdit
+	ToAutoBidiColumnOrdering
+)
+
+// TVTAutoOptions SET: TVTAutoOption
+type TVTAutoOptions = TSet
+
+// TVTColumnOption ENUM
+//
+//	Options per column.
+type TVTColumnOption = int32
+
+const (
+	CoAllowClick TVTColumnOption = iota
+	CoDraggable
+	CoEnabled
+	CoParentBidiMode
+	CoParentColor
+	CoResizable
+	CoShowDropMark
+	CoVisible
+	CoAutoSpring
+	CoFixed
+	CoSmartResize
+	CoAllowFocus
+	CoDisableAnimatedResize
+	CoWrapCaption
+	CoUseCaptionAlignment
+	CoEditable
+)
+
+// TVTColumnOptions SET: TVTColumnOption
+type TVTColumnOptions = TSet
+
+// TVTHeaderHitPosition ENUM
+//
+//	These flags are used to indicate where a click in the header happened.
+type TVTHeaderHitPosition = int32
+
+const (
+	HhiNoWhere TVTHeaderHitPosition = iota
+	HhiOnColumn
+	HhiOnIcon
+	HhiOnCheckbox
+)
+
+// TVTHeaderHitPositions SET: TVTHeaderHitPosition
+type TVTHeaderHitPositions = TSet
+
+// TVTHeaderOption ENUM
+type TVTHeaderOption = int32
+
+const (
+	HoAutoResize TVTHeaderOption = iota
+	HoColumnResize
+	HoDblClickResize
+	HoDrag
+	HoHotTrack
+	HoOwnerDraw
+	HoRestrictDrag
+	HoShowHint
+	HoShowImages
+	HoShowSortGlyphs
+	HoVisible
+	HoAutoSpring
+	HoFullRepaintOnResize
+	HoDisableAnimatedResize
+	HoHeightResize
+	HoHeightDblClickResize
+	HoHeaderClickAutoSort
+)
+
+// TVTHeaderOptions SET: TVTHeaderOption
+type TVTHeaderOptions = TSet
+
+// TVTHeaderPopupOption ENUM
+type TVTHeaderPopupOption = int32
+
+const (
+	PoOriginalOrder TVTHeaderPopupOption = iota
+	PoAllowHideAll
+	PoResizeToFitItem
+)
+
+// TVTHeaderPopupOptions SET: TVTHeaderPopupOption
+type TVTHeaderPopupOptions = TSet
+
+// TVTInternalPaintOption ENUM
+//
+//	options which determine what to draw in PaintTree
+type TVTInternalPaintOption = int32
+
+const (
+	PoBackground TVTInternalPaintOption = iota
+	PoColumnColor
+	PoDrawFocusRect
+	PoDrawSelection
+	PoDrawDropMark
+	PoGridLines
+	PoMainOnly
+	PoSelectedOnly
+	PoUnbuffered
+)
+
+// TVTInternalPaintOptions SET: TVTInternalPaintOption
+type TVTInternalPaintOptions = TSet
+
+// TVTMiscOption ENUM
+//
+//	Options which do not fit into any of the other groups:
+type TVTMiscOption = int32
+
+const (
+	ToAcceptOLEDrop TVTMiscOption = iota
+	ToCheckSupport
+	ToEditable
+	ToFullRepaintOnResize
+	ToGridExtensions
+	ToInitOnSave
+	ToReportMode
+	ToToggleOnDblClick
+	ToWheelPanning
+	ToReadOnly
+	ToVariableNodeHeight
+	ToFullRowDrag
+	ToNodeHeightResize
+	ToNodeHeightDblClickResize
+	ToEditOnClick
+	ToEditOnDblClick
+	ToReverseFullExpandHotKey
+)
+
+// TVTMiscOptions SET: TVTMiscOption
+type TVTMiscOptions = TSet
+
+// TVTPaintOption ENUM
+//
+//	There is a heap of switchable behavior in the tree. Since published properties may never exceed 4 bytes,
+//	which limits sets to at most 32 members, and because for better overview tree options are splitted
+//	in various sub-options and are held in a commom options class.
+//
+//	Options to customize tree appearance:
+type TVTPaintOption = int32
+
+const (
+	ToHideFocusRect TVTPaintOption = iota
+	ToHideSelection
+	ToHotTrack
+	ToPopupMode
+	ToShowBackground
+	ToShowButtons
+	ToShowDropmark
+	ToShowHorzGridLines
+	ToShowRoot
+	ToShowTreeLines
+	ToShowVertGridLines
+	ToThemeAware
+	ToUseBlendedImages
+	ToGhostedIfUnfocused
+	ToFullVertGridLines
+	ToAlwaysHideSelection
+	ToUseBlendedSelection
+	ToStaticBackground
+	ToChildrenAbove
+	ToFixedIndent
+	ToUseExplorerTheme
+	ToHideTreeLinesIfThemed
+	ToShowFilteredNodes
+)
+
+// TVTPaintOptions SET: TVTPaintOption
+type TVTPaintOptions = TSet
+
+// TVTSelectionOption ENUM
+//
+//	Options which determine the tree's behavior when selecting nodes:
+type TVTSelectionOption = int32
+
+const (
+	ToDisableDrawSelection TVTSelectionOption = iota
+	ToExtendedFocus
+	ToFullRowSelect
+	ToLevelSelectConstraint
+	ToMiddleClickSelect
+	ToMultiSelect
+	ToRightClickSelect
+	ToSiblingSelectConstraint
+	ToCenterScrollIntoView
+	ToSimpleDrawSelection
+	ToAlwaysSelectNode
+	ToRestoreSelection
+)
+
+// TVTSelectionOptions SET: TVTSelectionOption
+type TVTSelectionOptions = TSet
+
+// TVTStringOption ENUM
+//
+//	--------- TCustomVirtualStringTree
+//	Options regarding strings (useful only for the string tree and descendants):
+type TVTStringOption = int32
+
+const (
+	ToSaveCaptions TVTStringOption = iota
+	ToShowStaticText
+	ToAutoAcceptEditChange
+)
+
+// TVTStringOptions SET: TVTStringOption
+type TVTStringOptions = TSet
+
+// CGLContextEnable ENUM
+//
+//	** Enable names for CGLEnable, CGLDisable, and CGLIsEnabled.
+type CGLContextEnable = int32
+
+const (
+	KCGLCESwapRectangle           = 201
+	KCGLCESwapLimit               = 203
+	KCGLCERasterization           = 221
+	KCGLCEStateValidation         = 301
+	KCGLCESurfaceBackingSize      = 305
+	KCGLCEDisplayListOptimization = 307
+	KCGLCEMPEngine                = 313
+)
+
+// CGLContextParameter ENUM
+//
+//	** Parameter names for CGLSetParameter and CGLGetParameter.
+type CGLContextParameter = int32
+
+const (
+	KCGLCPSwapRectangle          = 200
+	KCGLCPSwapInterval           = 222
+	KCGLCPDispatchTableSize      = 224
+	KCGLCPClientStorage          = 226
+	KCGLCPSurfaceTexture         = 228
+	KCGLCPSurfaceOrder           = 235
+	KCGLCPSurfaceOpacity         = 236
+	KCGLCPSurfaceBackingSize     = 304
+	KCGLCPSurfaceSurfaceVolatile = 306
+	KCGLCPReclaimResources       = 308
+	KCGLCPCurrentRendererID      = 309
+	KCGLCPGPUVertexProcessing    = 310
+	KCGLCPGPUFragmentProcessing  = 311
+)
+
+// CGLError ENUM
+//
+//	** Error return values from CGLGetError.
+type CGLError = int32
+
+const (
+	KCGLNoError         CGLError = iota
+	KCGLBadAttribute             = 10000
+	KCGLBadProperty              = 10001
+	KCGLBadPixelFormat           = 10002
+	KCGLBadRendererInfo          = 10003
+	KCGLBadContext               = 10004
+	KCGLBadDrawable              = 10005
+	KCGLBadDisplay               = 10006
+	KCGLBadState                 = 10007
+	KCGLBadValue                 = 10008
+	KCGLBadMatch                 = 10009
+	KCGLBadEnumeration           = 10010
+	KCGLBadOffScreen             = 10011
+	KCGLBadFullScreen            = 10012
+	KCGLBadWindow                = 10013
+	KCGLBadAddress               = 10014
+	KCGLBadCodeModule            = 10015
+	KCGLBadAlloc                 = 10016
+	KCGLBadConnection            = 10017
+)
+
+// CGLGlobalOption ENUM
+//
+//	** Option names for CGLSetOption and CGLGetOption.
+type CGLGlobalOption = int32
+
+const (
+	KCGLGOFormatCacheSize  = 501
+	KCGLGOClearFormatCache = 502
+	KCGLGORetainRenderers  = 503
+	KCGLGOResetLibrary     = 504
+	KCGLGOUseErrorHandler  = 505
+)
+
+// CGLPixelFormatAttribute ENUM
+//
+//	** Attribute names for CGLChoosePixelFormat and CGLDescribePixelFormat.
+type CGLPixelFormatAttribute = int32
+
+const (
+	KCGLPFAAllRenderers       = 1
+	KCGLPFADoubleBuffer       = 5
+	KCGLPFAStereo             = 6
+	KCGLPFAAuxBuffers         = 7
+	KCGLPFAColorSize          = 8
+	KCGLPFAAlphaSize          = 11
+	KCGLPFADepthSize          = 12
+	KCGLPFAStencilSize        = 13
+	KCGLPFAAccumSize          = 14
+	KCGLPFAMinimumPolicy      = 51
+	KCGLPFAMaximumPolicy      = 52
+	KCGLPFAOffScreen          = 53
+	KCGLPFAFullScreen         = 54
+	KCGLPFASampleBuffers      = 55
+	KCGLPFASamples            = 56
+	KCGLPFAAuxDepthStencil    = 57
+	KCGLPFAColorFloat         = 58
+	KCGLPFAMultisample        = 59
+	KCGLPFASupersample        = 60
+	KCGLPFASampleAlpha        = 61
+	KCGLPFARendererID         = 70
+	KCGLPFASingleRenderer     = 71
+	KCGLPFANoRecovery         = 72
+	KCGLPFAAccelerated        = 73
+	KCGLPFAClosestPolicy      = 74
+	KCGLPFARobust             = 75
+	KCGLPFABackingStore       = 76
+	KCGLPFAMPSafe             = 78
+	KCGLPFAWindow             = 80
+	KCGLPFAMultiScreen        = 81
+	KCGLPFACompliant          = 83
+	KCGLPFADisplayMask        = 84
+	KCGLPFAPBuffer            = 90
+	KCGLPFARemotePBuffer      = 91
+	KCGLPFAVirtualScreenCount = 128
+)
+
+// CGLRendererProperty ENUM
+//
+//	** Property names for CGLDescribeRenderer.
+type CGLRendererProperty = int32
+
+const (
+	KCGLRPOffScreen          = 53
+	KCGLRPFullScreen         = 54
+	KCGLRPRendererID         = 70
+	KCGLRPAccelerated        = 73
+	KCGLRPRobust             = 75
+	KCGLRPBackingStore       = 76
+	KCGLRPMPSafe             = 78
+	KCGLRPWindow             = 80
+	KCGLRPMultiScreen        = 81
+	KCGLRPCompliant          = 83
+	KCGLRPDisplayMask        = 84
+	KCGLRPBufferModes        = 100
+	KCGLRPColorModes         = 103
+	KCGLRPAccumModes         = 104
+	KCGLRPDepthModes         = 105
+	KCGLRPStencilModes       = 106
+	KCGLRPMaxAuxBuffers      = 107
+	KCGLRPMaxSampleBuffers   = 108
+	KCGLRPMaxSamples         = 109
+	KCGLRPSampleModes        = 110
+	KCGLRPSampleAlpha        = 111
+	KCGLRPVideoMemory        = 120
+	KCGLRPTextureMemory      = 121
+	KCGLRPGPUVertProcCapable = 122
+	KCGLRPGPUFragProcCapable = 123
+	KCGLRPRendererCount      = 128
+)
+
+// LPosFlag ENUM
+type LPosFlag = int32
+
+const (
+	LpAllowPastEol LPosFlag = iota
+	LpAdjustToNext
+	LpStopAtCodePoint
+)
+
+// MONITOR_DPI_TYPE ENUM
+type MONITOR_DPI_TYPE = int32
+
+const (
+	MDT_EFFECTIVE_DPI MONITOR_DPI_TYPE = iota
+	MDT_ANGULAR_DPI                    = 1
+	MDT_RAW_DPI                        = 2
+	MDT_DEFAULT                        = MDT_EFFECTIVE_DPI
+)
+
+// taComponents ENUM
+type taComponents = int32
+
+const (
+	TacTarrow taComponents = iota
+	TacTbitbtn
+	TacTbutton
+	TacTbuttonpanel
+	TacTcalcedit
+	TacTcalendar
+	TacTcheckbox
+	TacTcheckcombobox
+	TacTcheckgroup
+	TacTchecklistbox
+	TacTcolorbox
+	TacTcolorbutton
+	TacTcolorlistbox
+	TacTcombobox
+	TacTcomboboxex
+	TacTcontrolbar
+	TacTcoolbar
+	TacTdateedit
+	TacTdirectoryedit
+	TacTedit
+	TacTeditbutton
+	TacTfilelistbox
+	TacTfilenameedit
+	TacTfiltercombobox
+	TacTfloatspinedit
+	TacTgroupbox
+	TacTheadercontrol
+	TacTimage
+	TacTlabel
+	TacTlabelededit
+	TacTlistbox
+	TacTlistview
+	TacTmaskedit
+	TacTmemo
+	TacTnotebook
+	TacTpagecontrol
+	TacTpaintbox
+	TacTpanel
+	TacTprogressbar
+	TacTradiobutton
+	TacTradiogroup
+	TacTshape
+	TacTshelllistview
+	TacTshelltreeview
+	TacTspeedbutton
+	TacTspinedit
+	TacTsplitter
+	TacTstacTictext
+	TacTstatusbar
+	TacTstringgrid
+	TacTtabcontrol
+	TacTtimeedit
+	TacTtimer
+	TacTtogglebox
+	TacTtoolbar
+	TacTtrackbar
+	TacTtreeview
+	TacTupdown
+	TacTvaluelisteditor
+)
+
+// TActionListState ENUM
+type TActionListState = int32
+
+const (
+	AsNormal TActionListState = iota
+	AsSuspended
+	AsSuspendedEnabled
+)
+
+// TActiveXRegType ENUM
+//
+//	Component registration handlers
+type TActiveXRegType = int32
+
+const (
+	AxrComponentOnly TActiveXRegType = iota
+	AxrIncludeDescendants
+)
+
+// TAddMode ENUM
+type TAddMode = int32
+
+const (
+	TaAddFirst TAddMode = iota
+	TaAdd
+	TaInsert
+)
+
+// TAddPopupItemType ENUM
+type TAddPopupItemType = int32
+
+const (
+	ApNormal TAddPopupItemType = iota
+	ApDisabled
+	ApHidden
+)
+
+// taDialogs ENUM
+type taDialogs = int32
+
+const (
+	TadTcalculatordialog taDialogs = iota
+	TadTcalendardialog
+	TadTcolordialog
+	TadTfinddialog
+	TadTfontdialog
+	TadTMessageDialog
+	TadTopendialog
+	TadTopenpicturedialog
+	TadTreplacedialog
+	TadTsavedialog
+	TadTsavepicturedialog
+	TadTselectdirectorydialog
+	TadTQuestionDialog
+)
+
+// TAlign ENUM
+type TAlign = int32
+
+const (
+	AlNone TAlign = iota
+	AlTop
+	AlBottom
+	AlLeft
+	AlRight
+	AlClient
+	AlCustom
+)
+
+// TAlignment ENUM
+//
+//	Text alignment types
+type TAlignment = int32
+
+const (
+	TaLeftJustify TAlignment = iota
+	TaRightJustify
+	TaCenter
+)
+
+// TAnchorSideChangeOperation ENUM
+//
+//	TAnchorSide
+//	Class holding the reference sides of the anchors of a TControl.
+//	Every TControl has four AnchorSides:
+//	AnchorSide[akLeft], AnchorSide[akRight], AnchorSide[akTop] and
+//	AnchorSide[akBottom].
+//	Normally if Anchors contain akLeft, and the Parent is resized, the LCL
+//	tries to keep the distance between the left side of the control and the
+//	right side of its parent client area.
+//	With AnchorSide[akLeft] you can define a different reference side. The
+//	kept distance is defined by the BorderSpacing and Parent.ChildSizing.
+//	Example1:
+//	+-----+ +-----+
+//	| B | | C |
+//	| | +-----+
+//	+-----+
+//	If you want to have the top of B the same as the top of C use
+//	B.AnchorSide[akTop].Side:=asrTop;
+//	B.AnchorSide[akTop].Control:=C;
+//	If you want to keep a distance of 10 pixels between B and C use
+//	B.BorderSpacing.Right:=10;
+//	B.AnchorSide[akRight].Side:=asrLeft;
+//	B.AnchorSide[akRight].Control:=C;
+//	Do not setup in both directions, because this will create a circle, and
+//	circles are not allowed.
+//	Example2:
+//	+-------+
+//	+---+ | |
+//	| A | | B |
+//	+---+ | |
+//	+-------+
+//	Centering A relative to B:
+//	A.AnchorSide[akTop].Side:=arsCenter;
+//	A.AnchorSide[akTop].Control:=B;
+//	Or use this. It's equivalent:
+//	A.AnchorSide[akBottom].Side:=arsCenter;
+//	A.AnchorSide[akBottom].Control:=B;
+type TAnchorSideChangeOperation = int32
+
+const (
+	AscoAdd TAnchorSideChangeOperation = iota
+	AscoRemove
+	AscoChangeSide
+)
 
 // TAnchorSideReference ENUM
 type TAnchorSideReference = int32
@@ -2034,99 +1881,145 @@ const (
 	AsrCenter
 )
 
-// TControlCellAlign ENUM
-type TControlCellAlign = int32
+// TAntialiasingMode ENUM
+type TAntialiasingMode = int32
 
 const (
-	CcaFill TControlCellAlign = iota
-	CcaLeftTop
-	CcaRightBottom
-	CcaCenter
+	AmDontCare TAntialiasingMode = iota
+	AmOn
+	AmOff
 )
 
-// TControlCellAligns SET: TControlCellAlign
-type TControlCellAligns = TSet
-
-// TChildControlResizeStyle ENUM
-type TChildControlResizeStyle = int32
+// TAppHintTimerType ENUM
+type TAppHintTimerType = int32
 
 const (
-	CrsAnchorAligning        TChildControlResizeStyle = iota // (like Delphi)
-	CrsScaleChilds                                           // scale children equally, keep space between children fixed
-	CrsHomogenousChildResize                                 // enlarge children equally (i.e. by the same amount of pixel)
-	CrsHomogenousSpaceResize                                 // enlarge space between children equally
-	//{$IFDEF EnablecrsSameSize}
-	//,CrsSameSize  // each child gets the same size (maybe one pixel difference)
-	//{$ENDIF}
+	AhttNone TAppHintTimerType = iota
+	AhttShowHint
+	AhttHideHint
+	AhttReshowHint
 )
 
-// TControlChildrenLayout ENUM
-type TControlChildrenLayout = int32
+// TApplicationDoubleBuffered ENUM
+type TApplicationDoubleBuffered = int32
 
 const (
-	CclNone                       TControlChildrenLayout = iota
-	CclLeftToRightThenTopToBottom                        // if BiDiMode <> bdLeftToRight then it becomes RightToLeft
-	CclTopToBottomThenLeftToRight
+	AdbDefault TApplicationDoubleBuffered = iota
+	AdbFalse
+	AdbTrue
 )
 
-// TColumnLayout ENUM
-type TColumnLayout = int32
+// TApplicationExceptionDlg ENUM
+type TApplicationExceptionDlg = int32
 
 const (
-	ClHorizontalThenVertical TColumnLayout = iota
-	ClVerticalThenHorizontal
+	AedOkCancelDialog TApplicationExceptionDlg = iota
+	AedOkMessageBox
 )
 
-// TSortIndicator ENUM
-type TSortIndicator = int32
+// TApplicationHandlerType ENUM
+type TApplicationHandlerType = int32
 
 const (
-	SiNone TSortIndicator = iota
-	SiAscending
-	SiDescending
+	AhtIdle TApplicationHandlerType = iota
+	AhtIdleEnd
+	AhtKeyDownBefore
+	AhtKeyDownAfter
+	AhtActivate
+	AhtDeactivate
+	AhtUserInput
+	AhtException
+	AhtEndSession
+	AhtQueryEndSession
+	AhtMinimize
+	AhtModalBegin
+	AhtModalEnd
+	AhtRestore
+	AhtDropFiles
+	AhtHelp
+	AhtHint
+	AhtShowHint
+	AhtGetMainFormHandle
+	AhtActionExecute
+	AhtActionUpdate
 )
 
-// TLibType VCL或者LCL，只是用于引入的
-type TLibType = int32
+// TApplicationShowGlyphs ENUM
+type TApplicationShowGlyphs = int32
 
 const (
-	LtVCL TLibType = iota
-	LtLCL
+	SbgAlways TApplicationShowGlyphs = iota
+	SbgNever
+	SbgSystem
 )
 
-// TColumnButtonStyle ENUM
-type TColumnButtonStyle = int32
+// TApplicationType ENUM
+//
+//	This identifies the kind of device where the application currently runs on
+//	Note that the same application can run in all kinds of devices if it has a
+//	user interface flexible enough
+type TApplicationType = int32
 
 const (
-	CbsAuto TColumnButtonStyle = iota
-	CbsEllipsis
-	CbsNone
-	CbsPickList
-	CbsCheckboxColumn
-	CbsButton
-	CbsButtonColumn
+	AtDefault TApplicationType = iota
+	AtDesktop
+	AtPDA
+	AtKeyPadDevice
+	AtTablet
+	AtTV
+	AtMobileEmulator
 )
 
-// TGridZone ENUM
-type TGridZone = int32
+// TArrowShape ENUM
+type TArrowShape = int32
 
 const (
-	GzNormal TGridZone = iota
-	GzFixedCols
-	GzFixedRows
-	GzFixedCells
-	GzInvalid
+	AsClassicSmaller TArrowShape = iota
+	AsClassicLarger
+	AsModernSmaller
+	AsModernLarger
+	AsYetAnotherShape
+	AsTheme
 )
 
-// TGridZoneSet SET: TGridZone
-type TGridZoneSet = TSet
-
-// TSortOrder ENUM
-type TSortOrder = int32
+// TArrowType ENUM
+type TArrowType = int32
 
 const (
-	SoAscending TSortOrder = iota
-	SoDescending
+	AtUp TArrowType = iota
+	AtDown
+	AtLeft
+	AtRight
+)
+
+// TATButtonOverlayPosition ENUM
+type TATButtonOverlayPosition = int32
+
+const (
+	BopLeftTop TATButtonOverlayPosition = iota
+	BopRightTop
+	BopLeftBottom
+	BopRightBottom
+)
+
+// TATGaugeKind ENUM
+type TATGaugeKind = int32
+
+const (
+	GkText1 TATGaugeKind = iota
+	GkHorizontalBar1
+	GkVerticalBar1
+	GkPie1
+	GkNeedle1
+	GkHalfPie1
+)
+
+// TAttributeType ENUM
+type TAttributeType = int32
+
+const (
+	AtSelected TAttributeType = iota
+	AtDefaultText
 )
 
 // TAutoAdvance ENUM
@@ -2143,6 +2036,316 @@ const (
 	AaLeftUp
 )
 
+// TAutoSizeBoxOrientation ENUM
+type TAutoSizeBoxOrientation = int32
+
+const (
+	AsboHorizontal TAutoSizeBoxOrientation = iota
+	AsboVertical
+)
+
+// TAutoSizeSideDataState ENUM
+type TAutoSizeSideDataState = int32
+
+const (
+	AssdfInvalid TAutoSizeSideDataState = iota
+	AssdfComputing
+	AssdfUncomputable
+	AssdfValid
+)
+
+// TAutoSizeSideDistDirection ENUM
+type TAutoSizeSideDistDirection = int32
+
+const (
+	AssddLeftTop TAutoSizeSideDistDirection = iota
+	AssddRightBottom
+)
+
+// TBalloonFlags ENUM
+//
+//	TCustomTrayIcon
+type TBalloonFlags = int32
+
+const (
+	BfNone TBalloonFlags = iota
+	BfInfo
+	BfWarning
+	BfError
+)
+
+// TBandDrawingStyle ENUM
+//
+//	TControlBar
+type TBandDrawingStyle = int32
+
+const (
+	DsNormal TBandDrawingStyle = iota
+	DsGradient
+)
+
+// TBandMove ENUM
+type TBandMove = int32
+
+const (
+	BmNone1 TBandMove = iota
+	BmReady1
+	BmMoving1
+)
+
+// TBevelShape ENUM
+type TBevelShape = int32
+
+const (
+	BsBox TBevelShape = iota
+	BsFrame
+	BsTopLine
+	BsBottomLine
+	BsLeftLine
+	BsRightLine
+	BsSpacer
+)
+
+// TBevelStyle ENUM
+//
+//	TBevel
+type TBevelStyle = int32
+
+const (
+	BsLowered TBevelStyle = iota
+	BsRaised
+)
+
+// TBiDiMode ENUM
+type TBiDiMode = int32
+
+const (
+	BdLeftToRight TBiDiMode = iota
+	BdRightToLeft
+	BdRightToLeftNoAlign
+	BdRightToLeftReadingOnly
+)
+
+// TBitBtnKind ENUM
+//
+//	TCustomBitBtn
+//	when adding items here, also update TBitBtn.GetCaptionOfKind
+type TBitBtnKind = int32
+
+const (
+	BkCustom TBitBtnKind = iota
+	BkOK
+	BkCancel
+	BkHelp
+	BkYes
+	BkNo
+	BkClose
+	BkAbort
+	BkRetry
+	BkIgnore
+	BkAll
+	BkNoToAll
+	BkYesToAll
+)
+
+// TBitmapHandleType ENUM
+//
+//	TCustomBitmapImage
+//	Descendent of TSharedImage for TCustomBitmap. If a TCustomBitmap is assigned to another
+//	TCustomBitmap, only the reference count will be increased and both will share the
+//	same TCustomBitmapImage
+type TBitmapHandleType = int32
+
+const (
+	BmDIB TBitmapHandleType = iota
+	BmDDB
+)
+
+// TBom ENUM
+type TBom = int32
+
+const (
+	BomUtf8 TBom = iota
+	BomUtf16BE
+	BomUtf16LE
+	BomUndefined
+)
+
+// TBookmarkedRecordEnumeratorOptions ENUM
+type TBookmarkedRecordEnumeratorOptions = int32
+
+const (
+	BreDisableDataset TBookmarkedRecordEnumeratorOptions = iota
+	BreStopOnInvalidBookmark
+	BreRestoreCurrent
+)
+
+// TButtonLayout ENUM
+type TButtonLayout = int32
+
+const (
+	BlGlyphLeft TButtonLayout = iota
+	BlGlyphRight
+	BlGlyphTop
+	BlGlyphBottom
+)
+
+// TButtonOrder ENUM
+type TButtonOrder = int32
+
+const (
+	BoDefault TButtonOrder = iota
+	BoCloseCancelOK
+	BoCloseOKCancel
+)
+
+// TButtonState ENUM
+type TButtonState = int32
+
+const (
+	BsUp TButtonState = iota
+	BsDisabled
+	BsDown
+	BsExclusive
+	BsHot
+)
+
+// TCalculatorLayout ENUM
+type TCalculatorLayout = int32
+
+const (
+	ClNormal TCalculatorLayout = iota
+	ClSimple
+)
+
+// TCalculatorState ENUM
+type TCalculatorState = int32
+
+const (
+	CsFirst TCalculatorState = iota
+	CsValid
+	CsError
+)
+
+// TCalDayOfWeek ENUM
+type TCalDayOfWeek = int32
+
+const (
+	DowMonday TCalDayOfWeek = iota
+	DowTuesday
+	DowWednesday
+	DowThursday
+	DowFriday
+	DowSaturday
+	DowSunday
+	DowDefault
+)
+
+// TCalendarPart ENUM
+type TCalendarPart = int32
+
+const (
+	CpNoWhere TCalendarPart = iota
+	CpDate
+	CpWeekNumber
+	CpTitle
+	CpTitleBtn
+	CpTitleMonth
+	CpTitleYear
+)
+
+// TCalendarView ENUM
+//
+//	In Windows since Vista native calendar control has four possible views.
+//	In other widgetsets, as well as in older windows, calendar can only have
+//	standard "month view" - grid with days representing a month.
+type TCalendarView = int32
+
+const (
+	CvMonth TCalendarView = iota
+	CvYear
+	CvDecade
+	CvCentury
+)
+
+// TCanvasOrientation ENUM
+type TCanvasOrientation = int32
+
+const (
+	CsLefttoRight TCanvasOrientation = iota
+	CoRighttoLeft
+)
+
+// TCarbonBitmapAlignment ENUM
+//
+//	TCarbonBitmap
+type TCarbonBitmapAlignment = int32
+
+const (
+	CbaByte TCarbonBitmapAlignment = iota
+	CbaWord
+	CbaDWord
+	CbaQWord
+	CbaDQWord
+)
+
+// TCarbonBitmapType ENUM
+type TCarbonBitmapType = int32
+
+const (
+	CbtMono TCarbonBitmapType = iota
+	CbtGray
+	CbtRGB
+	CbtARGB
+	CbtRGBA
+	CbtBGR
+	CbtBGRA
+)
+
+// TCarbonControlEvent ENUM
+type TCarbonControlEvent = int32
+
+const (
+	CceValueChanged TCarbonControlEvent = iota
+	CceIndicatorMoved
+	CceDoAction
+	CceDraw
+	CceHit
+)
+
+// TCarbonCursorType ENUM
+type TCarbonCursorType = int32
+
+const (
+	CctUnknown TCarbonCursorType = iota
+	CctQDHardware
+	CctQDColor
+	CctTheme
+	CctAnimated
+	CctWait
+)
+
+// TCarbonWidgetFlag ENUM
+type TCarbonWidgetFlag = int32
+
+const (
+	CwfNone TCarbonWidgetFlag = iota
+	CwdTToolBar
+	CwdTTabControl
+)
+
+// TCDWSEventCapability ENUM
+//
+//	TCommonDialog
+type TCDWSEventCapability = int32
+
+const (
+	CdecWSPerformsDoShow TCDWSEventCapability = iota
+	CdecWSPerformsDoCanClose
+	CdecWSPerformsDoClose
+	CdecWSNOCanCloseSupport
+)
+
 // TCellHintPriority ENUM
 type TCellHintPriority = int32
 
@@ -2152,94 +2355,491 @@ const (
 	ChpTruncOnly
 )
 
-// TMouseWheelOption ENUM
-type TMouseWheelOption = int32
+// TCellProcessType ENUM
+//
+//	The grid can display three types of hint: the default hint (Hint property),
+//	individual cell hints (OnCellHint event), and hints for truncated cells.
+//	TCellHintPriority determines how the overall hint is combined when more
+//	multiple hint texts are to be displayed.
+type TCellProcessType = int32
 
 const (
-	MwCursor TMouseWheelOption = iota
-	MwGrid
+	CpCopy TCellProcessType = iota
+	CpPaste
 )
 
-// TGridOption2 ENUM
-type TGridOption2 = int32
+// TChangeReason ENUM
+type TChangeReason = int32
 
 const (
-	GoScrollToLastCol TGridOption2 = iota // allow scrolling to last column (so that last column can be leftcol)
-	GoScrollToLastRow                     // allow scrolling to last row (so that last row can be toprow)
+	CrIgnore TChangeReason = iota
+	CrAccumulated
+	CrChildAdded
+	CrChildDeleted
+	CrNodeAdded
+	CrNodeCopied
+	CrNodeMoved
 )
 
-// TGridOptions2 SET: TGridOption2
-type TGridOptions2 = TSet
-
-// TRangeSelectMode ENUM
-type TRangeSelectMode = int32
+// TCheckBoxState ENUM
+//
+//	TCustomCheckBox
+type TCheckBoxState = int32
 
 const (
-	RsmSingle TRangeSelectMode = iota
-	RsmMulti
+	CbUnchecked TCheckBoxState = iota
+	CbChecked
+	CbGrayed
 )
 
-// TTitleStyle ENUM
-type TTitleStyle = int32
+// TCheckImageKind ENUM
+type TCheckImageKind = int32
 
 const (
-	TsLazarus TTitleStyle = iota
-	TsStandard
-	TsNative
+	CkLightCheck TCheckImageKind = iota
+	CkDarkCheck
+	CkLightTick
+	CkDarkTick
+	CkFlat
+	CkXP
+	CkCustom
+	CkSystemFlat
+	CkSystemDefault
 )
 
-// TPrefixOption ENUM
-type TPrefixOption = int32
+// TCheckState ENUM
+//
+//	The check states include both, transient and fluent (temporary) states. The only temporary state defined so
+//	far is the pressed state.
+type TCheckState = int32
 
 const (
-	PoNone TPrefixOption = iota
-	PoHeaderClick
+	CsUncheckedNormal TCheckState = iota
+	CsUncheckedPressed
+	CsCheckedNormal
+	CsCheckedPressed
+	CsMixedNormal
+	CsMixedPressed
 )
 
-// TDisplaySetting ENUM
-type TDisplaySetting = int32
+// TCheckType ENUM
+type TCheckType = int32
 
 const (
-	DsShowHeadings TDisplaySetting = iota
-	DsShowDayNames
-	DsNoMonthChange
-	DsShowWeekNumbers
-	DsStartMonday
+	CtNone TCheckType = iota
+	CtTriStateCheckBox
+	CtCheckBox
+	CtRadioButton
+	CtButton
 )
 
-// TDisplaySettings SET TDisplaySetting
-type TDisplaySettings = TSet
-
-// TTimeFormat ENUM
-type TTimeFormat = int32
+// TChildControlResizeStyle ENUM
+//
+//	TControlChildSizing
+//	LeftRightSpacing, TopBottomSpacing: Integer;
+//	minimum space between left client border and left most children.
+//	For example: ClientLeftRight=5 means children Left position is at least 5.
+//	HorizontalSpacing, VerticalSpacing: Integer;
+//	minimum space between each child horizontally
+//	Defines how child controls are resized/aligned.
+//	crsAnchorAligning
+//	Anchors and Align work like Delphi. For example if Anchors property of
+//	the control is [akLeft], it means fixed distance between left border of
+//	parent's client area. [akRight] means fixed distance between right
+//	border of the control and the right border of the parent's client area.
+//	When the parent is resized the child is moved to keep the distance.
+//	[akLeft,akRight] means fixed distance to left border and fixed distance
+//	to right border. When the parent is resized, the controls width is
+//	changed (resized) to keep the left and right distance.
+//	Same for akTop,akBottom.
+//	Align=alLeft for a control means set Left leftmost, Top topmost and
+//	maximize Height. The width is kept, if akRight is not set. If akRight
+//	is set in the Anchors property, then the right distance is kept and
+//	the control's width is resized.
+//	If there several controls with Align=alLeft, they will not overlapp and
+//	be put side by side.
+//	Same for alRight, alTop, alBottom. (Always expand 3 sides).
+//	Align=alClient. The control will fill the whole remaining space.
+//	Setting two children to Align=alClient does only make sense, if you set
+//	maximum Constraints.
+//	Order: First all alTop children are resized, then alBottom, then alLeft,
+//	then alRight and finally alClient.
+//	crsScaleChilds
+//	Scale children, keep space between them fixed.
+//	Children are resized to their normal/adviced size. If there is some space
+//	left in the client area of the parent, then the children are scaled to
+//	fill the space. You can set maximum Constraints. Then the other children
+//	are scaled more.
+//	For example: 3 child controls A, B, C with A.Width=10, B.Width=20 and
+//	C.Width=30 (total=60). If the Parent's client area has a ClientWidth of
+//	120, then the children are scaled with Factor 2.
+//	If B has a maximum constraint width of 30, then first the children will be
+//	scaled with 1.5 (A.Width=15, B.Width=30, C.Width=45). Then A and C
+//	(15+45=60 and 30 pixel space left) will be scaled by 1.5 again, to a
+//	final result of: A.Width=23, B.Width=30, C.Width=67 (23+30+67=120).
+//	crsHomogenousChildResize
+//	Enlarge children equally.
+//	Children are resized to their normal/adviced size. If there is some space
+//	left in the client area of the parent, then the remaining space is
+//	distributed equally to each child.
+//	For example: 3 child controls A, B, C with A.Width=10, B.Width=20 and
+//	C.Width=30 (total=60). If the Parent's client area has a ClientWidth of
+//	120, then 60/3=20 is added to each Child.
+//	If B has a maximum constraint width of 30, then first 10 is added to
+//	all children (A.Width=20, B.Width=30, C.Width=40). Then A and C
+//	(20+40=60 and 30 pixel space left) will get 30/2=15 additional,
+//	resulting in: A.Width=35, B.Width=30, C.Width=55 (35+30+55=120).
+//	crsHomogenousSpaceResize
+//	Enlarge space between children equally.
+//	Children are resized to their normal/adviced size. If there is some space
+//	left in the client area of the parent, then the space between the children
+//	is expanded.
+//	For example: 3 child controls A, B, C with A.Width=10, B.Width=20 and
+//	C.Width=30 (total=60). If the Parent's client area has a ClientWidth of
+//	120, then there will be 60/2=30 space between A and B and between
+//	B and C.
+//	crsSameSize - not implemented yet
+//	Set each child to the same size (maybe one pixel difference).
+//	The client area is divided by the number of controls and each control
+//	gets the same size. The remainder is distributed to the first children.
+type TChildControlResizeStyle = int32
 
 const (
-	Tf12 TTimeFormat = iota // 12 hours format, with am/pm string
-	Tf24                    // 24 hours format
+	CrsAnchorAligning TChildControlResizeStyle = iota
+	CrsScaleChilds
+	CrsHomogenousChildResize
+	CrsHomogenousSpaceResize
+	CrsSameSize
 )
 
-// TTimeDisplay ENUM
-type TTimeDisplay = int32
+// TChildExitReason ENUM
+type TChildExitReason = int32
 
 const (
-	TdHM    TTimeDisplay = iota // hour and minute
-	TdHMS                       // hour Minute and second
-	TdHMSMs                     // hour Minute Second and milisecond
+	CerExit TChildExitReason = iota
+	CerSignal
 )
 
-// TArrowShape ENUM
-type TArrowShape = int32
+// TClipboardType ENUM
+type TClipboardType = int32
 
 const (
-	AsClassicSmaller TArrowShape = iota
-	AsClassicLarger
-	AsModernSmaller
-	AsModernLarger
-	AsYetAnotherShape
-	AsTheme
+	CtPrimarySelection TClipboardType = iota
+	CtSecondarySelection
+	CtClipboard
+)
+
+// TCloseAction ENUM
+type TCloseAction = int32
+
+const (
+	CaNone TCloseAction = iota
+	CaHide
+	CaFree
+	CaMinimize
+)
+
+// TCocoaBitmapAlignment ENUM
+type TCocoaBitmapAlignment = int32
+
+const (
+	CbaByte1 TCocoaBitmapAlignment = iota
+	CbaWord1
+	CbaDWord1
+	CbaQWord1
+	CbaDQWord1
+)
+
+// TCocoaBitmapType ENUM
+type TCocoaBitmapType = int32
+
+const (
+	CbtMono1 TCocoaBitmapType = iota
+	CbtGray1
+	CbtRGB1
+	CbtARGB1
+	CbtRGBA1
+	CbtABGR1
+	CbtBGRA1
+)
+
+// TCocoaClipboardDataType ENUM
+type TCocoaClipboardDataType = int32
+
+const (
+	CcdtText TCocoaClipboardDataType = iota
+	CcdtCocoaStandard
+	CcdtBitmap
+	CcdtNonStandard
+)
+
+// TCocoaCombine ENUM
+type TCocoaCombine = int32
+
+const (
+	Cc_And TCocoaCombine = iota
+	Cc_Xor
+	Cc_Or
+	Cc_Diff
+	Cc_Copy
+)
+
+// TCocoaPatternColorMode ENUM
+type TCocoaPatternColorMode = int32
+
+const (
+	CpmBitmap TCocoaPatternColorMode = iota
+	CpmBrushColor
+	CpmContextColor
+)
+
+// TCocoaRegionType ENUM
+type TCocoaRegionType = int32
+
+const (
+	Crt_Error TCocoaRegionType = iota
+	Crt_Empty
+	Crt_Rectangle
+	Crt_Complex
+)
+
+// TCollectionNotification ENUM
+type TCollectionNotification = int32
+
+const (
+	CnAdded TCollectionNotification = iota
+	CnExtracting
+	CnDeleting
+)
+
+// TColorFormat ENUM
+type TColorFormat = int32
+
+const (
+	CfMono TColorFormat = iota
+	CfGray2
+	CfGray4
+	CfGray8
+	CfGray16
+	CfGray24
+	CfGrayA8
+	CfGrayA16
+	CfGrayA32
+	CfRGB15
+	CfRGB16
+	CfRGB24
+	CfRGB32
+	CfRGB48
+	CfRGBA8
+	CfRGBA16
+	CfRGBA32
+	CfRGBA64
+	CfBGR15
+	CfBGR16
+	CfBGR24
+	CfBGR32
+	CfBGR48
+	CfABGR8
+	CfABGR16
+	CfABGR32
+	CfABGR64
+)
+
+// TColumnButtonStyle ENUM
+type TColumnButtonStyle = int32
+
+const (
+	CbsAuto TColumnButtonStyle = iota
+	CbsEllipsis
+	CbsNone
+	CbsPickList
+	CbsCheckboxColumn
+	CbsButton
+	CbsButtonColumn
+)
+
+// TColumnLayout ENUM
+//
+//	TCustomRadioGroup
+type TColumnLayout = int32
+
+const (
+	ClHorizontalThenVertical TColumnLayout = iota
+	ClVerticalThenHorizontal
+)
+
+// TColumnOrder ENUM
+type TColumnOrder = int32
+
+const (
+	CoDesignOrder TColumnOrder = iota
+	CoFieldIndexOrder
+)
+
+// TComboBoxExStyle ENUM
+type TComboBoxExStyle = int32
+
+const (
+	CsExDropDown TComboBoxExStyle = iota
+	CsExSimple
+	CsExDropDownList
+)
+
+// TComboBoxStyle ENUM
+type TComboBoxStyle = int32
+
+const (
+	CsDropDown TComboBoxStyle = iota
+	CsSimple
+	CsDropDownList
+	CsOwnerDrawFixed
+	CsOwnerDrawVariable
+	CsOwnerDrawEditableFixed
+	CsOwnerDrawEditableVariable
+)
+
+// TCommonButton ENUM
+//
+//	the standard kind of common buttons handled by the Task Dialog
+type TCommonButton = int32
+
+const (
+	CbOK TCommonButton = iota
+	CbYes
+	CbNo
+	CbCancel
+	CbRetry
+	CbClose
+)
+
+// TComputeResult ENUM
+type TComputeResult = int32
+
+const (
+	CrSuccess TComputeResult = iota
+	CrCircle
+	CrFixedCircled
+)
+
+// TControlCellAlign ENUM
+type TControlCellAlign = int32
+
+const (
+	CcaFill TControlCellAlign = iota
+	CcaLeftTop
+	CcaRightBottom
+	CcaCenter
+)
+
+// TControlChildrenLayout ENUM
+type TControlChildrenLayout = int32
+
+const (
+	CclNone TControlChildrenLayout = iota
+	CclLeftToRightThenTopToBottom
+	CclTopToBottomThenLeftToRight
+)
+
+// TControlFlag ENUM
+type TControlFlag = int32
+
+const (
+	CfLoading TControlFlag = iota
+	CfAutoSizeNeeded
+	CfLeftLoaded
+	CfTopLoaded
+	CfWidthLoaded
+	CfHeightLoaded
+	CfClientWidthLoaded
+	CfClientHeightLoaded
+	CfBoundsRectForNewParentValid
+	CfBaseBoundsValid
+	CfPreferredSizeValid
+	CfPreferredMinSizeValid
+	CfOnChangeBoundsNeeded
+	CfProcessingWMPaint
+	CfKillChangeBounds
+	CfKillInvalidatePreferredSize
+	CfKillAdjustSize
+)
+
+// TControlHandlerType ENUM
+type TControlHandlerType = int32
+
+const (
+	ChtOnResize TControlHandlerType = iota
+	ChtOnChangeBounds
+	ChtOnVisibleChanging
+	ChtOnVisibleChanged
+	ChtOnEnabledChanging
+	ChtOnEnabledChanged
+	ChtOnKeyDown
+	ChtOnBeforeDestruction
+	ChtOnMouseWheel
+	ChtOnMouseWheelHorz
+)
+
+// TCoolBandMaximize ENUM
+//
+//	BandMaximize is not used now but is needed for Delphi compatibility.
+//	It is not used in Delphi's TCoolBar either.
+type TCoolBandMaximize = int32
+
+const (
+	BmNone TCoolBandMaximize = iota
+	BmClick
+	BmDblClick
+)
+
+// TCursorDesign ENUM
+type TCursorDesign = int32
+
+const (
+	CdDefault TCursorDesign = iota
+	CdGrabber
+	CdRestricted
+)
+
+// TCustomDrawResultFlag ENUM
+type TCustomDrawResultFlag = int32
+
+const (
+	CdrSkipDefault TCustomDrawResultFlag = iota
+	CdrNotifyPostpaint
+	CdrNotifyItemdraw
+	CdrNotifySubitemdraw
+	CdrNotifyPosterase
+	CdrNotifyItemerase
+)
+
+// TCustomDrawStage ENUM
+type TCustomDrawStage = int32
+
+const (
+	CdPrePaint TCustomDrawStage = iota
+	CdPostPaint
+	CdPreErase
+	CdPostErase
+)
+
+// TCustomDrawTarget ENUM
+//
+//	Custom draw
+type TCustomDrawTarget = int32
+
+const (
+	DtControl TCustomDrawTarget = iota
+	DtItem
+	DtSubItem
 )
 
 // TDateDisplayOrder ENUM
+//
+//	Used by DateDisplayOrder property to determine the order to display date
+//	parts -- d-m-y, m-d-y or y-m-d.
+//	When ddoTryDefault is set, the actual order is determined from
+//	ShortDateFormat global variable -- see comments above
+//	AdjustEffectiveDateDisplayOrder procedure
 type TDateDisplayOrder = int32
 
 const (
@@ -2247,6 +2847,27 @@ const (
 	DdoMDY
 	DdoYMD
 	DdoTryDefault
+)
+
+// TDateOrder ENUM
+type TDateOrder = int32
+
+const (
+	DoNone TDateOrder = iota
+	DoMDY
+	DoDMY
+	DoYMd
+)
+
+// TDateTimeKind ENUM
+//
+//	TDateTimeKind determines if we should display date, time or both:
+type TDateTimeKind = int32
+
+const (
+	DtkDate TDateTimeKind = iota
+	DtkTime
+	DtkDateTime
 )
 
 // TDateTimePart ENUM
@@ -2263,23 +2884,847 @@ const (
 	DtpAMPM
 )
 
-// TDateTimeParts SET: TDateTimePart
-type TDateTimeParts = TSet
-
-// TDateTimePickerOption ENUM
-type TDateTimePickerOption = int32
+// TDbGridExtraOption ENUM
+type TDbGridExtraOption = int32
 
 const (
-	DtpoDoChangeOnSetDateTime TDateTimePickerOption = iota
-	DtpoEnabledIfUnchecked
-	DtpoAutoCheck
-	DtpoFlatButton
+	DgeAutoColumns TDbGridExtraOption = iota
+	DgeCheckboxColumn
 )
 
-// TDateTimePickerOptions SET: TDateTimePickerOption
-type TDateTimePickerOptions = TSet
+// TDBGridOption ENUM
+type TDBGridOption = int32
+
+const (
+	DgEditing TDBGridOption = iota
+	DgTitles
+	DgIndicator
+	DgColumnResize
+	DgColumnMove
+	DgColLines
+	DgRowLines
+	DgTabs
+	DgAlwaysShowEditor
+	DgRowSelect
+	DgAlwaysShowSelection
+	DgConfirmDelete
+	DgCancelOnExit
+	DgMultiselect
+	DgHeaderHotTracking
+	DgHeaderPushedLook
+	DgPersistentMultiSelect
+	DgAutoSizeColumns
+	DgAnyButtonCanSelect
+	DgDisableDelete
+	DgDisableInsert
+	DgCellHints
+	DgTruncCellHints
+	DgCellEllipsis
+	DgRowHighlight
+	DgThumbTracking
+	DgDblClickAutoSize
+	DgDisplayMemoText
+)
+
+// TDbGridStatusItem ENUM
+type TDbGridStatusItem = int32
+
+const (
+	GsUpdatingData TDbGridStatusItem = iota
+	GsAddingAutoColumns
+	GsRemovingAutoColumns
+	GsAutoSized
+	GsStartEditing
+	GsLoadingGrid
+)
+
+// TDBNavButtonDirection ENUM
+type TDBNavButtonDirection = int32
+
+const (
+	NbdHorizontal TDBNavButtonDirection = iota
+	NbdVertical
+)
+
+// TDBNavButtonType ENUM
+type TDBNavButtonType = int32
+
+const (
+	NbFirst TDBNavButtonType = iota
+	NbPrior
+	NbNext
+	NbLast
+	NbInsert
+	NbDelete
+	NbEdit
+	NbPost
+	NbCancel
+	NbRefresh
+)
+
+// TDBNavGlyph ENUM
+type TDBNavGlyph = int32
+
+const (
+	NgEnabled TDBNavGlyph = iota
+	NgDisabled
+)
+
+// TDBNavigatorOption ENUM
+type TDBNavigatorOption = int32
+
+const (
+	NavFocusableButtons TDBNavigatorOption = iota
+)
+
+// TDefaultColorType ENUM
+type TDefaultColorType = int32
+
+const (
+	DctBrush TDefaultColorType = iota
+	DctFont
+)
+
+// TDefaultMonitor ENUM
+type TDefaultMonitor = int32
+
+const (
+	DmDesktop TDefaultMonitor = iota
+	DmPrimary
+	DmMainForm
+	DmActiveForm
+)
+
+// TDialogKind ENUM
+type TDialogKind = int32
+
+const (
+	DkOpen TDialogKind = iota
+	DkSave
+	DkPictureOpen
+	DkPictureSave
+)
+
+// TDirection ENUM
+type TDirection = int32
+
+const (
+	FromBeginning TDirection = iota
+	FromEnd
+)
+
+// TDisplayCode ENUM
+type TDisplayCode = int32
+
+const (
+	DrBounds TDisplayCode = iota
+	DrIcon
+	DrLabel
+	DrSelectBounds
+)
+
+// TDockHeaderImageKind ENUM
+type TDockHeaderImageKind = int32
+
+const (
+	DhiRestore TDockHeaderImageKind = iota
+	DhiClose
+)
+
+// TDockImageOperation ENUM
+type TDockImageOperation = int32
+
+const (
+	DisShow TDockImageOperation = iota
+	DisMove
+	DisHide
+)
+
+// TDockOrientation ENUM
+type TDockOrientation = int32
+
+const (
+	DoNoOrient TDockOrientation = iota
+	DoHorizontal
+	DoVertical
+	DoPages
+)
+
+// TDockTreeFlag ENUM
+type TDockTreeFlag = int32
+
+const (
+	DtfUpdateAllNeeded TDockTreeFlag = iota
+)
+
+// TDragBand ENUM
+type TDragBand = int32
+
+const (
+	DbNone TDragBand = iota
+	DbMove
+	DbResize
+)
+
+// TDragKind ENUM
+type TDragKind = int32
+
+const (
+	DkDrag TDragKind = iota
+	DkDock
+)
+
+// TDragMessage ENUM
+type TDragMessage = int32
+
+const (
+	DmDragEnter TDragMessage = iota
+	DmDragLeave
+	DmDragMove
+	DmDragDrop
+	DmDragCancel
+	DmFindTarget
+)
+
+// TDragMode ENUM
+type TDragMode = int32
+
+const (
+	DmManual TDragMode = iota
+	DmAutomatic
+)
+
+// TDragState ENUM
+type TDragState = int32
+
+const (
+	DsDragEnter TDragState = iota
+	DsDragLeave
+	DsDragMove
+)
+
+// TDrawImageMode ENUM
+//
+//	TXButton
+type TDrawImageMode = int32
+
+const (
+	DimNormal TDrawImageMode = iota
+	DimCenter
+	DimStretch
+)
+
+// TDrawingStyle ENUM
+//
+//	TCustomImageList
+//	@abstract(Contains a list of images)
+//	Introduced by Marc Weustink <marc@dommelstein.net>
+//	Delphis TCustomImageList is based on the Win32 imagelists which has
+//	internally only one bitmap to hold all images. This reduces handle
+//	allocation.
+//	The original TCustomImageList implementation was LCL only based, so for
+//	other platforms the single bitmap implementation had some speed drawbacks.
+//	Therefore it was implemented as list of bitmaps, however it doesnt reduce
+//	handle allocation.
+//	In its current form, the imagelist is again based on a 32bit RGBA raw
+//	imagedata and the widgetset is notified when images are added or removed,
+//	so the widgetset can create its own optimal storage. The LCL keeps only the
+//	data, so all transparency info will be stored cross platform. (not all
+//	platforms have a 8bit alpha channel).
+//	NOTE: due to its implementation, the TCustomImageList is not a TBitmap
+//	collection. If a fast storage of bitmaps is needed, create your own list!
+//	Some temp rework defines, for old functionality both need so be set
+type TDrawingStyle = int32
+
+const (
+	DsFocus1 TDrawingStyle = iota
+	DsSelected1
+	DsNormal1
+	DsTransparent1
+)
+
+// TDropMode ENUM
+//
+//	modes to determine drop position further
+type TDropMode = int32
+
+const (
+	DmNowhere TDropMode = iota
+	DmAbove
+	DmOnNode
+	DmBelow
+)
+
+// TDTCalAlignment ENUM
+//
+//	calendar alignment - left or right,
+//	dtaDefault means it is determined by BiDiMode
+type TDTCalAlignment = int32
+
+const (
+	DtaLeft TDTCalAlignment = iota
+	DtaRight
+	DtaDefault
+)
+
+// TDTDateMode ENUM
+type TDTDateMode = int32
+
+const (
+	DmComboBox TDTDateMode = iota
+	DmUpDown
+	DmNone
+)
+
+// TDuplicates ENUM
+type TDuplicates = int32
+
+const (
+	DupIgnore TDuplicates = iota
+	DupAccept
+	DupError
+)
+
+// TEchoMode ENUM
+type TEchoMode = int32
+
+const (
+	EmNormal TEchoMode = iota
+	EmNone
+	EmPassword
+)
+
+// TEdgeStyle ENUM
+type TEdgeStyle = int32
+
+const (
+	EsNone TEdgeStyle = iota
+	EsRaised
+	EsLowered
+)
+
+// TEditCharCase ENUM
+//
+//	TCustomEdit Options
+type TEditCharCase = int32
+
+const (
+	EcNormal TEditCharCase = iota
+	EcUppercase
+	EcLowerCase
+)
+
+// TEditStyle ENUM
+type TEditStyle = int32
+
+const (
+	EsSimple TEditStyle = iota
+	EsEllipsis
+	EsPickList
+)
+
+// TEmulatedTextHintStatus ENUM
+//
+//	Used for TCustomComboBox and TCustomEdit.
+type TEmulatedTextHintStatus = int32
+
+const (
+	ThsHidden TEmulatedTextHintStatus = iota
+	ThsShowing
+	ThsChanging
+)
+
+// TEraseBkgndCommand ENUM
+type TEraseBkgndCommand = int32
+
+const (
+	EcDefault TEraseBkgndCommand = iota
+	EcDiscard
+	EcDiscardNoRemove
+	EcDoubleBufferNoRemove
+)
+
+// TEventType ENUM
+type TEventType = int32
+
+const (
+	EtNotify TEventType = iota
+	EtKey
+	EtKeyPress
+	EtMouseWheel
+	EtMouseUpDown
+)
+
+// TExpandCollapseMode ENUM
+type TExpandCollapseMode = int32
+
+const (
+	EcmRefreshedExpanding TExpandCollapseMode = iota
+	EcmKeepChildren
+	EcmCollapseAndClear
+)
+
+// TFileAttr ENUM
+//
+//	TCustomFileListBox
+type TFileAttr = int32
+
+const (
+	FtReadOnly TFileAttr = iota
+	FtHidden
+	FtSystem
+	FtVolumeID
+	FtDirectory
+	FtArchive
+	FtNormal
+)
+
+// TFilerFlag ENUM
+type TFilerFlag = int32
+
+const (
+	FfInherited TFilerFlag = iota
+	FfChildPos
+	FfInline
+)
+
+// TFileSortType ENUM
+type TFileSortType = int32
+
+const (
+	FstNone TFileSortType = iota
+	FstAlphabet
+	FstFoldersFirst
+	FstCustom
+)
+
+// TFillMode ENUM
+type TFillMode = int32
+
+const (
+	FmAlternate TFillMode = iota
+	FmWinding
+)
+
+// TFindItemKind ENUM
+//
+//	TMenu
+type TFindItemKind = int32
+
+const (
+	FkCommand TFindItemKind = iota
+	FkHandle
+	FkShortCut
+)
+
+// TFlowStyle ENUM
+type TFlowStyle = int32
+
+const (
+	FsLeftRightTopBottom TFlowStyle = iota
+	FsRightLeftTopBottom
+	FsLeftRightBottomTop
+	FsRightLeftBottomTop
+	FsTopBottomLeftRight
+	FsBottomTopLeftRight
+	FsTopBottomRightLeft
+	FsBottomTopRightLeft
+)
+
+// TFontPitch ENUM
+type TFontPitch = int32
+
+const (
+	FpDefault TFontPitch = iota
+	FpVariable
+	FpFixed
+)
+
+// TFontQuality ENUM
+type TFontQuality = int32
+
+const (
+	FqDefault TFontQuality = iota
+	FqDraft
+	FqProof
+	FqNonAntialiased
+	FqAntialiased
+	FqCleartype
+	FqCleartypeNatural
+)
+
+// TFormBorderStyle ENUM
+type TFormBorderStyle = int32
+
+const (
+	BsNone TFormBorderStyle = iota
+	BsSingle
+	BsSizeable
+	BsDialog
+	BsToolWindow
+	BsSizeToolWin
+)
+
+// TFormHandlerType ENUM
+type TFormHandlerType = int32
+
+const (
+	FhtFirstShow TFormHandlerType = iota
+	FhtClose
+	FhtCreate
+)
+
+// TFormStyle ENUM
+type TFormStyle = int32
+
+const (
+	FsNormal TFormStyle = iota
+	FsMDIChild
+	FsMDIForm
+	FsStayOnTop
+	FsSplash
+	FsSystemStayOnTop
+)
+
+// TFPBrushStyle ENUM
+type TFPBrushStyle = int32
+
+const (
+	BsSolid TFPBrushStyle = iota
+	BsClear
+	BsHorizontal
+	BsVertical
+	BsFDiagonal
+	BsBDiagonal
+	BsCross
+	BsDiagCross
+	BsImage
+	BsPattern
+)
+
+// TFPDrawingMode ENUM
+type TFPDrawingMode = int32
+
+const (
+	DmOpaque TFPDrawingMode = iota
+	DmAlphaBlend
+	DmCustom
+)
+
+// TFPImgProgressStage ENUM
+type TFPImgProgressStage = int32
+
+const (
+	PsStarting TFPImgProgressStage = iota
+	PsRunning
+	PsEnding
+)
+
+// TFPObservedOperation ENUM
+//
+//	Notification operations :
+//	Observer has changed, is freed, item added to/deleted from list, custom event.
+type TFPObservedOperation = int32
+
+const (
+	OoChange TFPObservedOperation = iota
+	OoFree
+	OoAddItem
+	OoDeleteItem
+	OoCustom
+)
+
+// TFPPenEndCap ENUM
+type TFPPenEndCap = int32
+
+const (
+	PecRound1 TFPPenEndCap = iota
+	PecSquare1
+	PecFlat1
+)
+
+// TFPPenJoinStyle ENUM
+type TFPPenJoinStyle = int32
+
+const (
+	PjsRound1 TFPPenJoinStyle = iota
+	PjsBevel1
+	PjsMiter1
+)
+
+// TFPPenMode ENUM
+type TFPPenMode = int32
+
+const (
+	PmBlack TFPPenMode = iota
+	PmWhite
+	PmNop
+	PmNot
+	PmCopy
+	PmNotCopy
+	PmMergePenNot
+	PmMaskPenNot
+	PmMergeNotPen
+	PmMaskNotPen
+	PmMerge
+	PmNotMerge
+	PmMask
+	PmNotMask
+	PmXor
+	PmNotXor
+)
+
+// TFPPenStyle ENUM
+type TFPPenStyle = int32
+
+const (
+	PsSolid TFPPenStyle = iota
+	PsDash
+	PsDot
+	PsDashDot
+	PsDashDotDot
+	PsinsideFrame
+	PsPattern
+	PsClear
+)
+
+// TGaugeKind ENUM
+//
+//	重新定义，目的为了兼容ATGauge的
+type TGaugeKind = int32
+
+const (
+	GkText TGaugeKind = iota
+	GkHorizontalBar
+	GkVerticalBar
+	GkPie
+	GkNeedle
+	GkHalfPie
+)
+
+// TGlyphShowMode ENUM
+type TGlyphShowMode = int32
+
+const (
+	GsmAlways TGlyphShowMode = iota
+	GsmNever
+	GsmApplication
+	GsmSystem
+)
+
+// TGlyphTransparencyMode ENUM
+//
+//	TButtonGlyph
+type TGlyphTransparencyMode = int32
+
+const (
+	GtmGlyph TGlyphTransparencyMode = iota
+	GtmOpaque
+	GtmTransparent
+)
+
+// TGrabStyle ENUM
+//
+//	TCoolBar
+type TGrabStyle = int32
+
+const (
+	GsSimple TGrabStyle = iota
+	GsDouble
+	GsHorLines
+	GsVerLines
+	GsGripper
+	GsButton
+)
+
+// TGradientDirection ENUM
+type TGradientDirection = int32
+
+const (
+	GdVertical TGradientDirection = iota
+	GdHorizontal
+)
+
+// TGraphicsBevelCut ENUM
+type TGraphicsBevelCut = int32
+
+const (
+	BvNone TGraphicsBevelCut = iota
+	BvLowered
+	BvRaised
+	BvSpace
+)
+
+// TGraphicsDrawEffect ENUM
+type TGraphicsDrawEffect = int32
+
+const (
+	GdeNormal TGraphicsDrawEffect = iota
+	GdeDisabled
+	GdeHighlighted
+	GdeShadowed
+	Gde1Bit
+)
+
+// TGraphicsFillStyle ENUM
+type TGraphicsFillStyle = int32
+
+const (
+	FsSurface TGraphicsFillStyle = iota
+	FsBorder
+)
+
+// TGridCursorState ENUM
+type TGridCursorState = int32
+
+const (
+	GcsDefault TGridCursorState = iota
+	GcsColWidthChanging
+	GcsRowHeightChanging
+	GcsDragging
+)
+
+// TGridFlagsOption ENUM
+type TGridFlagsOption = int32
+
+const (
+	GfEditorUpdateLock TGridFlagsOption = iota
+	GfNeedsSelectActive
+	GfEditorTab
+	GfRevEditorTab
+	GfVisualChange
+	GfColumnsLocked
+	GfEditingDone
+	GfSizingStarted
+	GfPainting
+	GfUpdatingSize
+	GfClientRectChange
+	GfAutoEditPending
+	GfUpdatingScrollbar
+)
+
+// TGridState ENUM
+type TGridState = int32
+
+const (
+	GsNormal TGridState = iota
+	GsSelecting
+	GsRowSizing
+	GsColSizing
+	GsRowMoving
+	GsColMoving
+	GsHeaderClicking
+	GsButtonColumnClicking
+)
+
+// THeaderSectionState ENUM
+//
+//	THeaderSection
+type THeaderSectionState = int32
+
+const (
+	HsNormal THeaderSectionState = iota
+	HsHot
+	HsPressed
+)
+
+// THelpNodeType ENUM
+//
+//	THelpNode
+//	A help node is a position/place in a help database.
+//	For example it points to a Help file or to a Link on a HTML file.
+type THelpNodeType = int32
+
+const (
+	HntURLIDContext THelpNodeType = iota
+	HntURL
+	HntURLID
+	HntID
+	HntContext
+	HntURLContext
+)
+
+// THelpType ENUM
+type THelpType = int32
+
+const (
+	HtKeyword THelpType = iota
+	HtContext
+)
+
+// THookedCommandFlag ENUM
+type THookedCommandFlag = int32
+
+const (
+	HcfInit THookedCommandFlag = iota
+	HcfPreExec
+	HcfPostExec
+	HcfFinish
+)
+
+// TicnsIconType ENUM
+//
+//	from lower to higher
+type TicnsIconType = int32
+
+const (
+	IitNone TicnsIconType = iota
+	IitMini4BitData
+	IitMini8BitData
+	IitSmall4BitData
+	IitSmall8BitData
+	IitSmall32BitData
+	IitLarge4BitData
+	IitLarge8BitData
+	IitLarge32BitData
+	IitHuge4BitData
+	IitHuge8BitData
+	IitHuge32BitData
+	IitThumbnail32BitData
+	IitMini1BitMask
+	IitSmall1BitMask
+	IitSmall8BitMask
+	IitLarge1BitMask
+	IitLarge8BitMask
+	IitHuge1BitMask
+	IitHuge8BitMask
+	IitThumbnail8BitMask
+	Iit256PixelDataARGB
+	Iit512PixelDataARGB
+)
+
+// TIconArrangement ENUM
+//
+//	TIconOptions
+type TIconArrangement = int32
+
+const (
+	IaTop TIconArrangement = iota
+	IaLeft
+)
+
+// TIdleTimerAutoEvent ENUM
+//
+//	TIdleTimer
+//	For example:
+//	Do something after 2 seconds after user input and idle.
+//	AutoEnabled:=true;
+//	AutoStartEvent:=itaOnIdle; // start the timer on first idle
+//	AutoEndEvent:=itaOnUserInput; // end on any user input
+//	If the OnTimer event works in several chunks, set FireOnIdle:=true.
+//	The OnTimer event will then be called on idle until FireOnIdle is false.
+//	FireOnIdle is set to false on any user input.
+type TIdleTimerAutoEvent = int32
+
+const (
+	ItaOnIdle TIdleTimerAutoEvent = iota
+	ItaOnIdleEnd
+	ItaOnUserInput
+)
 
 // TImageOrientation ENUM
+//
+//	TImageButton
 type TImageOrientation = int32
 
 const (
@@ -2287,51 +3732,876 @@ const (
 	IoVertical
 )
 
+// TImageType ENUM
+type TImageType = int32
+
+const (
+	ItImage TImageType = iota
+	ItMask
+)
+
+// TIniFileOption ENUM
+type TIniFileOption = int32
+
+const (
+	IfoStripComments TIniFileOption = iota
+	IfoStripInvalid
+	IfoEscapeLineFeeds
+	IfoCaseSensitive
+	IfoStripQuotes
+	IfoFormatSettingsActive
+	IfoWriteStringBoolean
+)
+
+// tinterfaceentrytype ENUM
+//
+//	This enumerate is found both in the rtl and compiler. Do not change the order of the fields.
+type tinterfaceentrytype = int32
+
+const (
+	EtStandard tinterfaceentrytype = iota
+	EtVirtualMethodResult
+	EtStaticMethodResult
+	EtFieldValue
+	EtVirtualMethodClass
+	EtStaticMethodClass
+	EtFieldValueClass
+)
+
+// TItemChange ENUM
+//
+//	TCustomListView
+type TItemChange = int32
+
+const (
+	CtText TItemChange = iota
+	CtImage
+	CtState
+)
+
+// TItemEraseAction ENUM
+//
+//	Used to describe the action to do when using the OnBeforeItemErase event.
+type TItemEraseAction = int32
+
+const (
+	EaColor TItemEraseAction = iota
+	EaDefault
+	EaNone
+)
+
+// TItemFind ENUM
+type TItemFind = int32
+
+const (
+	IfData TItemFind = iota
+	IfPartialString
+	IfExactString
+	IfNearest
+)
+
+// TItemType ENUM
+type TItemType = int32
+
+const (
+	ItNormal TItemType = iota
+	ItCell
+	ItColumn
+	ItRow
+	ItFixed
+	ItFixedColumn
+	ItFixedRow
+	ItSelected
+)
+
+// TLabelPosition ENUM
+//
+//	TCustomLabeledEdit
+type TLabelPosition = int32
+
+const (
+	LpAbove TLabelPosition = iota
+	LpBelow
+	LpLeft
+	LpRight
+)
+
 // TLayoutAdjustmentPolicy ENUM
 type TLayoutAdjustmentPolicy = int32
 
 const (
-	LapDefault                              TLayoutAdjustmentPolicy = iota // widgetset dependent
-	LapFixedLayout                                                         // A fixed absolute layout in all platforms
-	LapAutoAdjustWithoutHorizontalScrolling                                // Smartphone platforms use this one,
-	// the x axis is stretched to fill the screen and
-	// the y is scaled to fit the DPI
-	LapAutoAdjustForDPI // For desktops using High DPI, scale x and y to fit the DPI
+	LapDefault TLayoutAdjustmentPolicy = iota
+	LapFixedLayout
+	LapAutoAdjustWithoutHorizontalScrolling
+	LapAutoAdjustForDPI
 )
 
-// THitTest ENUM
-type THitTest = int32
+// TLazAccessibilityRole ENUM
+type TLazAccessibilityRole = int32
 
 const (
-	HtAbove THitTest = iota
-	HtBelow
-	HtNowhere
-	HtOnItem
-	HtOnButton
-	HtOnIcon
-	HtOnIndent
-	HtOnLabel
-	HtOnRight
-	HtOnStateIcon
-	HtToLeft
-	HtToRight
+	LarIgnore TLazAccessibilityRole = iota
+	LarAnimation
+	LarButton
+	LarCell
+	LarChart
+	LarCheckBox
+	LarClock
+	LarColorPicker
+	LarColumn
+	LarComboBox
+	LarDateField
+	LarGrid
+	LarGroup
+	LarImage
+	LarLabel
+	LarListBox
+	LarListItem
+	LarMenuBar
+	LarMenuItem
+	LarProgressIndicator
+	LarRadioButton
+	LarResizeGrip
+	LarRow
+	LarScrollBar
+	LarSpinner
+	LarTabControl
+	LarText
+	LarTextEditorMultiline
+	LarTextEditorSingleline
+	LarToolBar
+	LarToolBarButton
+	LarTrackBar
+	LarTreeView
+	LarTreeItem
+	LarUnknown
+	LarWindow
 )
 
-// THitTests SET
-type THitTests = TSet
-
-// TListItemState ENUM
-type TListItemState = int32
+// TLazCanvasImageFormat ENUM
+type TLazCanvasImageFormat = int32
 
 const (
-	LisCut TListItemState = iota
-	LisDropTarget
-	LisFocused
-	LisSelected
+	ClfOther TLazCanvasImageFormat = iota
+	ClfRGB16_R5G6B5
+	ClfRGB24
+	ClfRGB24UpsideDown
+	ClfBGR24
+	ClfBGRA32
+	ClfRGBA32
+	ClfARGB32
 )
 
-// TListItemStates SET TListItemState
-type TListItemStates = TSet
+// TLazDeviceMessageKind ENUM
+//
+//	TLazMessaging
+type TLazDeviceMessageKind = int32
+
+const (
+	DmkSMS TLazDeviceMessageKind = iota
+	DmkMMS
+	DmkEMail
+)
+
+// TLazDockHeaderPart ENUM
+type TLazDockHeaderPart = int32
+
+const (
+	LdhpAll TLazDockHeaderPart = iota
+	LdhpCaption
+	LdhpRestoreButton
+	LdhpCloseButton
+)
+
+// TLazFileDialogKind ENUM
+type TLazFileDialogKind = int32
+
+const (
+	LdkOpenDesktop TLazFileDialogKind = iota
+	LdkSaveDesktop
+	LdkOpenPDA
+	LdkSavePDA
+	LdkSelectDirectory
+)
+
+// TLazMessagingStatus ENUM
+type TLazMessagingStatus = int32
+
+const (
+	MssSentSuccessfully TLazMessagingStatus = iota
+	MssSendingGeneralError
+	MssRadioOff
+	MssNoService
+	MssReceivedSuccessfully
+	MssReceivingGeneralError
+)
+
+// TLazPositionMethod ENUM
+//
+//	TLazPositionInfo
+type TLazPositionMethod = int32
+
+const (
+	PmGPS TLazPositionMethod = iota
+	PmNetwork
+)
+
+// TLazReaderDIBEncoding ENUM
+//
+//	(*) Note: when reading images with an alpha channel and the alpha channel
+//	has no influence on the mask (unless the maskcolor is transparent)
+type TLazReaderDIBEncoding = int32
+
+const (
+	LrdeRGB TLazReaderDIBEncoding = iota
+	LrdeRLE
+	LrdeBitfield
+	LrdeJpeg
+	LrdePng
+	LrdeHuffman
+)
+
+// TLazReaderMaskMode ENUM
+//
+//	TLazReaderDIB
+//	This is an imroved FPImage reader for dib images.
+type TLazReaderMaskMode = int32
+
+const (
+	LrmmNone TLazReaderMaskMode = iota
+	LrmmAuto
+	LrmmColor
+)
+
+// TLazRegionFillMode ENUM
+type TLazRegionFillMode = int32
+
+const (
+	RfmOddEven TLazRegionFillMode = iota
+	RfmWinding
+)
+
+// TLazSynBorderSide ENUM
+type TLazSynBorderSide = int32
+
+const (
+	BsLeft TLazSynBorderSide = iota
+	BsTop
+	BsRight
+	BsBottom
+)
+
+// TLazSynWordBoundary ENUM
+type TLazSynWordBoundary = int32
+
+const (
+	SwbWordBegin TLazSynWordBoundary = iota
+	SwbWordEnd
+	SwbTokenBegin
+	SwbTokenEnd
+	SwbCaseChange
+	SwbWordSmart
+)
+
+// TLCLCapability ENUM
+type TLCLCapability = int32
+
+const (
+	LcAsyncProcess TLCLCapability = iota
+	LcCanDrawOutsideOnPaint
+	LcNeedMininimizeAppWithMainForm
+	LcApplicationTitle
+	LcApplicationWindow
+	LcFormIcon
+	LcModalWindow
+	LcDragDockStartOnTitleClick
+	LcAntialiasingEnabledByDefault
+	LcLMHelpSupport
+	LcReceivesLMClearCutCopyPasteReliably
+	LcSendsUTF8KeyPress
+	LcAllowChildControlsInNativeControls
+	LcEmulatedMDI
+	LcAccessibilitySupport
+	LcRadialGradientBrush
+	LcTransparentWindow
+	LcTextHint
+	LcNativeTaskDialog
+	LcCanDrawHidden
+	LcAccelleratorKeys
+)
+
+// TLCLGlyphsMissingResources ENUM
+type TLCLGlyphsMissingResources = int32
+
+const (
+	GmrAllMustExist TLCLGlyphsMissingResources = iota
+	GmrOneMustExist
+	GmrIgnoreAll
+)
+
+// TLCLPlatform ENUM
+type TLCLPlatform = int32
+
+const (
+	LpGtk TLCLPlatform = iota
+	LpGtk2
+	LpGtk3
+	LpWin32
+	LpWinCE
+	LpCarbon
+	LpQT
+	LpQt5
+	LpQt6
+	LpfpGUI
+	LpNoGUI
+	LpCocoa
+	LpCustomDrawn
+	LpMUI
+)
+
+// TLCLTaskDialogFooterIcon ENUM
+type TLCLTaskDialogFooterIcon = int32
+
+const (
+	TfiBlank1 TLCLTaskDialogFooterIcon = iota
+	TfiWarning1
+	TfiQuestion1
+	TfiError1
+	TfiInformation1
+	TfiShield1
+)
+
+// TLCLTaskDialogIcon ENUM
+type TLCLTaskDialogIcon = int32
+
+const (
+	TiBlank1 TLCLTaskDialogIcon = iota
+	TiWarning1
+	TiQuestion1
+	TiError1
+	TiInformation1
+	TiNotUsed1
+	TiShield1
+)
+
+// TLinkAction ENUM
+type TLinkAction = int32
+
+const (
+	LaClick TLinkAction = iota
+)
+
+// TListAssignOp ENUM
+type TListAssignOp = int32
+
+const (
+	LaCopy TListAssignOp = iota
+	LaAnd
+	LaOr
+	LaXor
+	LaSrcUnique
+	LaDestUnique
+)
+
+// TListBoxStyle ENUM
+//
+//	TCustomListBox
+type TListBoxStyle = int32
+
+const (
+	LbStandard TListBoxStyle = iota
+	LbOwnerDrawFixed
+	LbOwnerDrawVariable
+	LbVirtual
+)
+
+// TListItemFlag ENUM
+type TListItemFlag = int32
+
+const (
+	LifDestroying TListItemFlag = iota
+	LifCreated
+)
+
+// TListNotification ENUM
+//
+//	TList class
+type TListNotification = int32
+
+const (
+	LnAdded TListNotification = iota
+	LnExtracted
+	LnDeleted
+)
+
+// TListViewFlag ENUM
+type TListViewFlag = int32
+
+const (
+	LffSelectedValid TListViewFlag = iota
+	LffItemsMoving
+	LffItemsSorting
+	LffPreparingSorting
+)
+
+// TListViewImageList ENUM
+type TListViewImageList = int32
+
+const (
+	LvilSmall TListViewImageList = iota
+	LvilLarge
+	LvilState
+)
+
+// TListViewProperty ENUM
+type TListViewProperty = int32
+
+const (
+	LvpAutoArrange TListViewProperty = iota
+	LvpCheckboxes
+	LvpColumnClick
+	LvpFlatScrollBars
+	LvpFullDrag
+	LvpGridLines
+	LvpHideSelection
+	LvpHotTrack
+	LvpMultiSelect
+	LvpOwnerDraw
+	LvpReadOnly
+	LvpRowSelect
+	LvpShowColumnHeaders
+	LvpShowWorkAreas
+	LvpWrapText
+	LvpToolTips
+)
+
+// TLRSItemType ENUM
+type TLRSItemType = int32
+
+const (
+	LrsitCollection TLRSItemType = iota
+	LrsitComponent
+	LrsitList
+	LrsitProperty
+)
+
+// TLRSOWStackItemState ENUM
+//
+//	TLRSOWStackItem
+//	The TLRSObjectWriter can find empty entries and omit writing them to stream.
+//	For example:
+//	inline ConditionalOptionsFrame: TCompOptsConditionalsFrame
+//	inherited COCTreeView: TTreeView
+//	end
+//	inherited COCPopupMenu: TPopupMenu
+//	end
+//	end
+//	The empty inherited child components will not be written if
+//	WriteEmptyInheritedChilds = false (default).
+//	Reason:
+//	This allows one to delete/rename controls in ancestors without the need
+//	to update all descendants.
+type TLRSOWStackItemState = int32
+
+const (
+	LrsowsisStarted TLRSOWStackItemState = iota
+	LrsowsisHeaderWritten
+	LrsowsisDataWritten
+)
+
+// TLRSStreamOriginalFormat ENUM
+type TLRSStreamOriginalFormat = int32
+
+const (
+	SofUnknown TLRSStreamOriginalFormat = iota
+	SofBinary
+	SofText
+)
+
+// TLVStyleType ENUM
+type TLVStyleType = int32
+
+const (
+	LsStyle TLVStyleType = iota
+	LsInvert
+	LsExStyle
+	LsNone
+)
+
+// TMaskCaseSensitivity ENUM
+type TMaskCaseSensitivity = int32
+
+const (
+	McsPlatformDefault TMaskCaseSensitivity = iota
+	McsCaseInsensitive
+	McsCaseSensitive
+)
+
+// TMaskeditTrimType ENUM
+type TMaskeditTrimType = int32
+
+const (
+	MetTrimLeft TMaskeditTrimType = iota
+	MetTrimRight
+)
+
+// TMaskEditValidationErrorMode ENUM
+type TMaskEditValidationErrorMode = int32
+
+const (
+	MvemException TMaskEditValidationErrorMode = iota
+	MvemEvent
+)
+
+// tMaskedType ENUM
+//
+//	Type for mask (internal)
+//	When adding more: make sure to add them in procedure InitcMaskToMaskedTypeArray if appropriate
+type tMaskedType = int32
+
+const (
+	Char_Invalid tMaskedType = iota
+	Char_IsLiteral
+	Char_Number
+	Char_NumberFixed
+	Char_NumberPlusMin
+	Char_Letter
+	Char_LetterFixed
+	Char_LetterUpCase
+	Char_LetterDownCase
+	Char_LetterFixedUpCase
+	Char_LetterFixedDownCase
+	Char_AlphaNum
+	Char_AlphaNumFixed
+	Char_AlphaNumUpCase
+	Char_AlphaNumDownCase
+	Char_AlphaNumFixedUpCase
+	Char_AlphaNumFixedDownCase
+	Char_All
+	Char_AllFixed
+	Char_AllUpCase
+	Char_AllDownCase
+	Char_AllFixedUpCase
+	Char_AllFixedDownCase
+	Char_HourSeparator
+	Char_DateSeparator
+	Char_Hex
+	Char_HexFixed
+	Char_HexUpCase
+	Char_HexDownCase
+	Char_HexFixedUpCase
+	Char_HexFixedDownCase
+	Char_Binary
+	Char_BinaryFixed
+	Char_Set
+	Char_SetFixed
+	Char_SetNegateFixed
+)
+
+// TMenuItemAutoFlag ENUM
+type TMenuItemAutoFlag = int32
+
+const (
+	MaAutomatic TMenuItemAutoFlag = iota
+	MaManual
+	MaParent
+)
+
+// TMenuItemHandlerType ENUM
+//
+//	TMenuItem
+type TMenuItemHandlerType = int32
+
+const (
+	MihtDestroy TMenuItemHandlerType = iota
+)
+
+// TMissingNameValueSeparatorAction ENUM
+type TMissingNameValueSeparatorAction = int32
+
+const (
+	MnvaValue TMissingNameValueSeparatorAction = iota
+	MnvaName
+	MnvaEmpty
+	MnvaError
+)
+
+// TMonitorDefaultTo ENUM
+type TMonitorDefaultTo = int32
+
+const (
+	MdNearest TMonitorDefaultTo = iota
+	MdNull
+	MdPrimary
+)
+
+// TMonthDisplay ENUM
+type TMonthDisplay = int32
+
+const (
+	MdShort TMonthDisplay = iota
+	MdLong
+	MdCustom
+)
+
+// TMouseWheelOption ENUM
+type TMouseWheelOption = int32
+
+const (
+	MwCursor TMouseWheelOption = iota
+	MwGrid
+)
+
+// TNativeCanvasType ENUM
+type TNativeCanvasType = int32
+
+const (
+	NctWindowsDC TNativeCanvasType = iota
+	NctLazCanvas
+)
+
+// TNativeHandleType ENUM
+//
+//	Types for native Handle integration
+type TNativeHandleType = int32
+
+const (
+	NhtWindowsHWND TNativeHandleType = iota
+	NhtX11TWindow
+	NhtCocoaNSWindow
+	NhtQtQWidget
+)
+
+// TNodeAttachMode ENUM
+type TNodeAttachMode = int32
+
+const (
+	NaAdd TNodeAttachMode = iota
+	NaAddFirst
+	NaAddChild
+	NaAddChildFirst
+	NaInsert
+	NaInsertBehind
+)
+
+// TNotifierXButtonButtonState ENUM
+//
+//	TNotifierXButton
+//	To avoid dependency on Buttons
+type TNotifierXButtonButtonState = int32
+
+const (
+	NbsUp TNotifierXButtonButtonState = iota
+	NbsDown
+	NbsHot
+)
+
+// TNumberingStyle ENUM
+type TNumberingStyle = int32
+
+const (
+	NsNone TNumberingStyle = iota
+	NsBullet
+)
+
+// TObjectTextEncoding ENUM
+type TObjectTextEncoding = int32
+
+const (
+	OteDFM TObjectTextEncoding = iota
+	OteLFM
+)
+
+// TObjectType ENUM
+type TObjectType = int32
+
+const (
+	OtFolders TObjectType = iota
+	OtNonFolders
+	OtHidden
+)
+
+// TOnBeforeExeucteFlag ENUM
+type TOnBeforeExeucteFlag = int32
+
+const (
+	BefAbort TOnBeforeExeucteFlag = iota
+)
+
+// TOperation ENUM
+//
+//	TComponent class
+type TOperation = int32
+
+const (
+	OpInsert TOperation = iota
+	OpRemove
+)
+
+// TPageFlag ENUM
+//
+//	TCustomPage
+type TPageFlag = int32
+
+const (
+	PfAdded TPageFlag = iota
+	PfAdding
+	PfRemoving
+	PfInserting
+)
+
+// TPageMeasureUnits ENUM
+type TPageMeasureUnits = int32
+
+const (
+	PmDefault TPageMeasureUnits = iota
+	PmMillimeters
+	PmInches
+)
+
+// TPairSplitterType ENUM
+//
+//	TCustomPairSplitter
+type TPairSplitterType = int32
+
+const (
+	PstHorizontal TPairSplitterType = iota
+	PstVertical
+)
+
+// TPanelButtonEx ENUM
+type TPanelButtonEx = int32
+
+const (
+	PbOK TPanelButtonEx = iota
+	PbCancel
+	PbClose
+	PbHelp
+	PbNone
+)
+
+// TParaAlignment ENUM
+type TParaAlignment = int32
+
+const (
+	PaLeft1 TParaAlignment = iota
+	PaRight1
+	PaCenter1
+	PaJustify1
+)
+
+// TParaNumStyle ENUM
+type TParaNumStyle = int32
+
+const (
+	PnNone TParaNumStyle = iota
+	PnBullet
+	PnNumber
+	PnLowLetter
+	PnLowRoman
+	PnUpLetter
+	PnUpRoman
+	PnCustomChar
+)
+
+// TPenEndCap ENUM
+type TPenEndCap = int32
+
+const (
+	PecRound TPenEndCap = iota
+	PecSquare
+	PecFlat
+)
+
+// TPenJoinStyle ENUM
+type TPenJoinStyle = int32
+
+const (
+	PjsRound TPenJoinStyle = iota
+	PjsBevel
+	PjsMiter
+)
+
+// TPipeReason ENUM
+type TPipeReason = int32
+
+const (
+	PrDataAvailable TPipeReason = iota
+	PrBroken
+	PrCanWrite
+)
+
+// TPixelFormat ENUM
+//
+//	For Delphi compatibility
+type TPixelFormat = int32
+
+const (
+	PfDevice TPixelFormat = iota
+	Pf1bit
+	Pf4bit
+	Pf8bit
+	Pf15bit
+	Pf16bit
+	Pf24bit
+	Pf32bit
+	PfCustom
+)
+
+// TPlacementOperation ENUM
+type TPlacementOperation = int32
+
+const (
+	PoSave TPlacementOperation = iota
+	PoRestore
+)
+
+// TPluginState ENUM
+type TPluginState = int32
+
+const (
+	PsNone TPluginState = iota
+	PsExecuting
+	PsAccepting
+	PsCancelling
+)
+
+// TPopupAlignment ENUM
+//
+//	TPopupMenu
+type TPopupAlignment = int32
+
+const (
+	PaLeft TPopupAlignment = iota
+	PaRight
+	PaCenter
+)
+
+// TPopupMode ENUM
+type TPopupMode = int32
+
+const (
+	PmNone TPopupMode = iota
+	PmAuto
+	PmExplicit
+)
+
+// TPosition ENUM
+//
+//	form position policies:
+type TPosition = int32
+
+const (
+	PoDesigned TPosition = iota
+	PoDefault
+	PoDefaultPosOnly
+	PoDefaultSizeOnly
+	PoScreenCenter
+	PoDesktopCenter
+	PoMainFormCenter
+	PoOwnerFormCenter
+	PoWorkAreaCenter
+)
 
 // TPredefinedClipboardFormat ENUM
 type TPredefinedClipboardFormat = int32
@@ -2348,371 +4618,555 @@ const (
 	PcfCustomData
 )
 
-// TWrapAfter ENUM
-type TWrapAfter = int32
+// TPrefixOption ENUM
+type TPrefixOption = int32
 
 const (
-	WaAuto   TWrapAfter = iota // auto
-	WaForce                    // always wrap after this control
-	WaAvoid                    // try not to wrap after this control, if the control is already at the beginning of the row, wrap though
-	WaForbid                   // never wrap after this control
+	PoNone TPrefixOption = iota
+	PoHeaderClick
 )
 
-// TGraphicsDrawEffect ENUM
-type TGraphicsDrawEffect = int32
+// TPrintAction ENUM
+type TPrintAction = int32
 
 const (
-	GdeNormal      TGraphicsDrawEffect = iota // no effect
-	GdeDisabled                               // grayed image
-	GdeHighlighted                            // a bit highlighted image
-	GdeShadowed                               // a bit shadowed image
-	Gde1Bit                                   // 1 Bit image (for non-XP windows buttons)
+	PaDocStart TPrintAction = iota
+	PaPageStart
+	PaPageEnd
+	PaDocEnd
 )
 
-// TLazAccessibilityRole ENUM
-type TLazAccessibilityRole = int32
+// TPrinterCapability ENUM
+type TPrinterCapability = int32
 
 const (
-	LarIgnore               TLazAccessibilityRole = iota // Default value. Something to be ignored. For example a blank space between other objects.
-	LarAnimation                                         // An object that displays an animation.
-	LarButton                                            // A button.
-	LarCell                                              // A cell in a table.
-	LarChart                                             // An object that displays a graphical representation of data.
-	LarCheckBox                                          // An object that can be checked or unchecked, or sometimes in an intermediary state
-	LarClock                                             // A clock displaying time.
-	LarColorPicker                                       // A control which allows selecting a color.
-	LarColumn                                            // A generic column that goes in a table.
-	LarComboBox                                          // A list of choices that the user can select from.
-	LarDateField                                         // A controls which displays and possibly allows one to choose a date.
-	LarGrid                                              // A grid control which displays cells
-	LarGroup                                             // A control which groups others, such as a TGroupBox.
-	LarImage                                             // A graphic or picture or an icon.
-	LarLabel                                             // A text label as usually placed near other widgets.
-	LarListBox                                           // A list of items, from which the user can select one or more items.
-	LarListItem                                          // An item in a list of items.
-	LarMenuBar                                           // A main menu bar.
-	LarMenuItem                                          // A item in a menu.
-	LarProgressIndicator                                 // A control which shows a progress indication.
-	LarRadioButton                                       // A radio button, see for example TRadioButton.
-	LarResizeGrip                                        // A grip that the user can drag to change the size of widgets.
-	LarRow                                               // A generic row that goes in a table.
-	LarScrollBar                                         // A control to scroll another one
-	LarSpinner                                           // A control which allows one to increment / decrement a value.
-	LarTabControl                                        // A control with tabs, like TPageControl.
-	LarText                                              // Text inside of a control, like text in a row cell
-	LarTextEditorMultiline                               // A multi-line text editor (for example: TMemo, SynEdit)
-	LarTextEditorSingleline                              // A single-line text editor (for example: TEdit)
-	LarToolBar                                           // A control that holds ToolButtons
-	LarToolBarButton                                     // A button on a ToolBar
-	LarTrackBar                                          // A control which allows one to drag a slider.
-	LarTreeView                                          // A list of items in a tree structure.
-	LarTreeItem                                          // An item in a tree structure.
-	LarUnknown                                           // An item that doesn't fit any of the other categories.
-	LarWindow                                            // A top level window.
+	PcCopies TPrinterCapability = iota
+	PcOrientation
+	PcCollation
 )
 
-// THelpContext ENUM
-type THelpContext = int32
-
-// TApplicationType ENUM
-type TApplicationType = int32
+// TPrinterFlags ENUM
+type TPrinterFlags = int32
 
 const (
-	AtDefault        TApplicationType = iota // The widgetset will attempt to auto-detect the device type
-	AtDesktop                                // For common desktops and notebooks
-	AtPDA                                    // For smartphones and other devices with touch screen and a small screen
-	AtKeyPadDevice                           // Devices without any pointing device, such as keypad feature phones or kiosk machines
-	AtTablet                                 // Similar to a PDA/Smartphone, but with a large screen
-	AtTV                                     // The device is a television
-	AtMobileEmulator                         // For desktop platforms. It will create a main windows of 240x320 and place all forms there to immitate a mobile platform
+	PfPrinting TPrinterFlags = iota
+	PfAborted
+	PfDestroying
+	PfPrintersValid
+	PfRawMode
 )
 
-// TApplicationDoubleBuffered ENUM
-// what Forms.DoubleBuffered with ParentDoubleBuffered=True will gain when created
-type TApplicationDoubleBuffered = int32
+// TPrinterOrientation ENUM
+type TPrinterOrientation = int32
 
 const (
-	AdbDefault TApplicationDoubleBuffered = iota // widgetset dependent (LCLWin32: True unless in remote desktop connection; other WSs: False)
-	AdbFalse                                     // False
-	AdbTrue                                      // True
+	PoPortrait TPrinterOrientation = iota
+	PoLandscape
+	PoReverseLandscape
+	PoReversePortrait
 )
 
-// TApplicationExceptionDlg ENUM
-type TApplicationExceptionDlg = int32
+// TPrinterState ENUM
+type TPrinterState = int32
 
 const (
-	AedOkCancelDialog TApplicationExceptionDlg = iota // Exception handler window will be a dialog with Ok/Cancel buttons
-	AedOkMessageBox                                   // Exception handler window will be a simple message box
+	PsNoDefine TPrinterState = iota
+	PsReady
+	PsPrinting
+	PsStopped
 )
 
-// TApplicationFlag ENUM
-type TApplicationFlag = int32
+// TPrinterType ENUM
+type TPrinterType = int32
 
 const (
-	AppWaiting TApplicationFlag = iota
-	AppIdleEndSent
-	AppNoExceptionMessages
-	AppActive // application has focus
-	AppDestroying
-	AppDoNotCallAsyncQueue
-	AppInitialized // initialization of application was done
+	PtLocal TPrinterType = iota
+	PtNetWork
 )
 
-// TApplicationFlags SET TApplicationFlag
-type TApplicationFlags = TSet
-
-// TApplicationNavigationOption ENUM
-type TApplicationNavigationOption = int32
+// TPrintRange ENUM
+//
+//	TPrintDialog
+type TPrintRange = int32
 
 const (
-	AnoTabToSelectNext TApplicationNavigationOption = iota
-	AnoReturnForDefaultControl
-	AnoEscapeForCancelControl
-	AnoF1ForHelp
-	AnoArrowToSelectNextInParent
+	PrAllPages TPrintRange = iota
+	PrSelection
+	PrPageNums
+	PrCurrentPage
 )
 
-// TApplicationNavigationOptions SET TApplicationNavigationOption
-type TApplicationNavigationOptions = TSet
-
-// TGraphicsFillStyle ENUM
-type TGraphicsFillStyle = int32
+// TProgressBarOrientation ENUM
+type TProgressBarOrientation = int32
 
 const (
-	GfsSurface TGraphicsFillStyle = iota // fill till the color (it fills all except this color)
-	GfsBorder                            // fill this color (it fills only connected pixels of this color)
+	PbHorizontal TProgressBarOrientation = iota
+	PbVertical
+	PbRightToLeft
+	PbTopDown
 )
 
-// TTaskBarBehavior ENUM
-type TTaskBarBehavior = int32
+// TProgressBarState ENUM
+//
+//	used by TTaskDialogProgressBar, but Delphi defines it in ComCtrls unit
+type TProgressBarState = int32
 
 const (
-	TbDefault      TTaskBarBehavior = iota // widgetset dependent
-	TbMultiButton                          // show buttons for Forms with ShowTaskBar = stDefault
-	TbSingleButton                         // hide buttons for Forms with ShowTaskBar = stDefault.
-	// Some Linux window managers do not support it. For example Cinnamon.
+	PbsNormal TProgressBarState = iota
+	PbsError
+	PbsPaused
 )
 
-// TApplicationShowGlyphs ENUM
-type TApplicationShowGlyphs = int32
+// TProgressBarStyle ENUM
+type TProgressBarStyle = int32
 
 const (
-	SbgAlways TApplicationShowGlyphs = iota // show them always (default)
-	SbgNever                                // show them never
-	SbgSystem                               // show them depending on OS
+	PbstNormal TProgressBarStyle = iota
+	PbstMarquee
 )
 
-// TATButtonOverlayPosition ENUM
-type TATButtonOverlayPosition = int32
+// TPsCanvasState ENUM
+type TPsCanvasState = int32
 
 const (
-	BopLeftTop TATButtonOverlayPosition = iota
-	BopRightTop
-	BopLeftBottom
-	BopRightBottom
+	PcsPosValid TPsCanvasState = iota
+	PcsClipping
+	PcsClipSaved
 )
 
-// TFPDrawingMode ENUM
-type TFPDrawingMode = int32
+// TPSPaintType ENUM
+type TPSPaintType = int32
 
 const (
-	DmOpaque TFPDrawingMode = iota
-	DmAlphaBlend
-	DmCustom
+	PtColored TPSPaintType = iota
+	PtUncolored
 )
 
-// TFPPenEndCap ENUM
-type TFPPenEndCap = int32
+// TRangeSelectMode ENUM
+//
+//	Option goRangeSelect: --> select a single range only, or multiple ranges
+type TRangeSelectMode = int32
 
 const (
-	PecRound TFPPenEndCap = iota
-	PecSquare
-	PecFlat
+	RsmSingle TRangeSelectMode = iota
+	RsmMulti
 )
 
-// TPenEndCap ENUM
-type TPenEndCap = TFPPenEndCap
-
-// TFPPenJoinStyle ENUM
-type TFPPenJoinStyle = int32
+// TRawImageBitOrder ENUM
+type TRawImageBitOrder = int32
 
 const (
-	PjsRound TFPPenJoinStyle = iota
-	PjsBevel
-	PjsMiter
+	RiboBitsInOrder TRawImageBitOrder = iota
+	RiboReversedBits
 )
 
-// TPenJoinStyle ENUM
-type TPenJoinStyle = TFPPenJoinStyle
-
-// THeaderSectionState ENUM
-type THeaderSectionState = int32
+// TRawImageByteOrder ENUM
+type TRawImageByteOrder = int32
 
 const (
-	HsNormal THeaderSectionState = iota
-	HsHot
-	HsPressed
+	RiboLSBFirst TRawImageByteOrder = iota
+	RiboMSBFirst
 )
 
-// TJPEGScale ENUM
-type TJPEGScale = int32
+// TRawImageColorFormat ENUM
+//
+//	Colorformat: Higher values means higher intensity.
+//	For example: Red=0 means no red, Alpha=0 means transparent
+type TRawImageColorFormat = int32
 
 const (
-	JsFullSize TJPEGScale = iota
-	JsHalf
-	JsQuarter
-	JsEighth
+	RicfNone TRawImageColorFormat = iota
+	RicfRGBA
+	RicfGray
 )
 
-// TFormStateType ENUM
-type TFormStateType = int32
+// TRawImageLineEnd ENUM
+type TRawImageLineEnd = int32
 
 const (
-	FsCreating           TFormStateType = iota // initializing (form streaming)
-	FsVisible                                  // form should be shown
-	FsShowing                                  // form handling WM_SHOWWINDOW message
-	FsModal                                    // form is modal
-	FsCreatedMDIChild                          // todo: not mplemented
-	FsBorderStyleChanged                       // border style is changed before window handle creation
-	FsFormStyleChanged                         // form style is changed before window handle creation
-	FsFirstShow                                // form is shown for the first time
-	FsDisableAutoSize                          // disable autosize
+	RileTight TRawImageLineEnd = iota
+	RileByteBoundary
+	RileWordBoundary
+	RileDWordBoundary
+	RileQWordBoundary
+	RileDQWordBoundary
 )
 
-// TFormState SET TFormStateType
-type TFormState = TSet
-
-// TPopupMode ENUM
-type TPopupMode = int32
+// TRawImageLineOrder ENUM
+type TRawImageLineOrder = int32
 
 const (
-	PmNone     TPopupMode = iota // modal: popup to active form or if not available, to main form; non-modal: no window parent
-	PmAuto                       // modal & non-modal: popup to active form or if not available, to main form
-	PmExplicit                   // modal & non-modal: popup to PopupParent or if not available, to main form
+	RiloTopToBottom TRawImageLineOrder = iota
+	RiloBottomToTop
 )
 
-// TGridCursorState ENUM
-type TGridCursorState = int32
+// TRegDataType ENUM
+type TRegDataType = int32
 
 const (
-	GcsDefault TGridCursorState = iota
-	GcsColWidthChanging
-	GcsRowHeightChanging
-	GcsDragging
+	RdUnknown TRegDataType = iota
+	RdString
+	RdExpandString
+	RdBinary
+	RdInteger
+	RdIntegerBigEndian
+	RdLink
+	RdMultiString
+	RdResourceList
+	RdFullResourceDescriptor
+	RdResourceRequirementList
+	RdInt64
 )
 
-// TIniFileOption ENUM
-type TIniFileOption = int32
+// TRegionCombineMode ENUM
+type TRegionCombineMode = int32
 
 const (
-	IfoStripComments        TIniFileOption = iota // Strip comments when reading file
-	IfoStripInvalid                               // Strip invalid lines when reading file.
-	IfoEscapeLineFeeds                            // Escape linefeeds when reading file.
-	IfoCaseSensitive                              // Use Case sensitive section/key names
-	IfoStripQuotes                                // Strip quotes when reading string values.
-	IfoFormatSettingsActive                       // Use format settings when writing date/float etc.
-	IfoWriteStringBoolean                         // Write booleans as string
+	RgnAnd TRegionCombineMode = iota
+	RgnCopy
+	RgnDiff
+	RgnOr
+	RgnXOR
 )
 
-// TIniFileOptions SET TIniFileOption
-type TIniFileOptions = TSet
+// TRegionOperationType ENUM
+type TRegionOperationType = int32
+
+const (
+	RgnNewRect TRegionOperationType = iota
+	RgnCombine
+)
+
+// TReplacedChildSite ENUM
+type TReplacedChildSite = int32
+
+const (
+	RplcLeft TReplacedChildSite = iota
+	RplcRight
+)
 
 // TResizeStyle ENUM
+//
+//	TCustomSplitter
 type TResizeStyle = int32
 
 const (
-	RsLine    TResizeStyle = iota // draw a line, don't update splitter position during moving
-	RsNone                        // draw nothing and don't update splitter position during moving
-	RsPattern                     // draw a dot pattern, don't update splitter position during moving
-	RsUpdate                      // draw nothing, update splitter position during moving
+	RsLine TResizeStyle = iota
+	RsNone
+	RsPattern
+	RsUpdate
 )
 
-// TTrackBarScalePos ENUM
-type TTrackBarScalePos = int32
+// TRubberBandShape ENUM
+type TRubberBandShape = int32
 
 const (
-	TrLeft TTrackBarScalePos = iota
-	TrRight
-	TrTop
-	TrBottom
+	RbsLine TRubberBandShape = iota
+	RbsRectangle
 )
 
-// TTreeViewInsertMarkType ENUM
-type TTreeViewInsertMarkType = int32
+// TRuntimeError ENUM
+type TRuntimeError = int32
 
 const (
-	TvimNone         TTreeViewInsertMarkType = iota
-	TvimAsFirstChild                         // or as root
-	TvimAsNextSibling
-	TvimAsPrevSibling
+	ReIntOverflow TRuntimeError = iota
+	ReInvalidOp
+	ReZeroDivide
+	ReOverflow
+	ReUnderflow
+	ReInvalidCast
+	ReAccessViolation
+	RePrivInstruction
+	ReControlBreak
+	ReStackOverflow
+	ReVarTypeCast
+	ReVarInvalidOp
+	ReVarDispatch
+	ReVarArrayCreate
+	ReVarNotArray
+	ReVarArrayBounds
+	ReAssertionFailed
+	ReExternalException
+	ReIntfCastError
+	ReSafeCallError
+	ReQuit
+	ReCodesetConversion
+	ReNoDynLibsSupport
+	ReThreadError
 )
 
-// TMonthDisplay ENUM
-type TMonthDisplay = int32
+// TScreenNotification ENUM
+type TScreenNotification = int32
 
 const (
-	MdShort TMonthDisplay = iota
-	MdLong
-	MdCustom
+	SnNewFormCreated TScreenNotification = iota
+	SnFormAdded
+	SnRemoveForm
+	SnActiveControlChanged
+	SnActiveFormChanged
+	SnFormVisibleChanged
 )
 
-// TDockOrientation ENUM
-type TDockOrientation = int32
+// TScreenRotation ENUM
+//
+//	TLazDevice
+type TScreenRotation = int32
 
 const (
-	DoNoOrient   TDockOrientation = iota // zone contains a TControl and no child zones.
-	DoHorizontal                         // zone's children are stacked top-to-bottom.
-	DoVertical                           // zone's children are arranged left-to-right.
-	DoPages                              // zone's children are pages arranged left-to-right.
+	SrRotation_0 TScreenRotation = iota
+	SrRotation_90
+	SrRotation_180
+	SrRotation_270
 )
 
-// TListItemsFlag ENUM
-type TListItemsFlag = int32
+// TScrollBarKind ENUM
+//
+//	TControlScrollBar
+type TScrollBarKind = int32
 
 const (
-	LisfWSItemsCreated TListItemsFlag = iota
+	SbHorizontal TScrollBarKind = iota
+	SbVertical
 )
 
-// TListItemsFlags SET TListItemsFlag
-type TListItemsFlags = TSet
-
-// TMaskEditValidationErrorMode ENUM
-type TMaskEditValidationErrorMode = int32
+// TScrollBarStyle ENUM
+type TScrollBarStyle = int32
 
 const (
-	MvemException TMaskEditValidationErrorMode = iota
-	MvemEvent
+	SsRegular TScrollBarStyle = iota
+	SsFlat
+	SsHotTrack
 )
 
-// TSizeConstraintsOption ENUM
-type TSizeConstraintsOption = int32
+// TScrollCode ENUM
+type TScrollCode = int32
 
 const (
-	ScoAdviceWidthAsMin TSizeConstraintsOption = iota
-	ScoAdviceWidthAsMax
-	ScoAdviceHeightAsMin
-	ScoAdviceHeightAsMax
+	ScLineUp TScrollCode = iota
+	ScLineDown
+	ScPageUp
+	ScPageDown
+	ScPosition
+	ScTrack
+	ScTop
+	ScBottom
+	ScEndScroll
 )
 
-// TSizeConstraintsOptions SET  TSizeConstraintsOption
-type TSizeConstraintsOptions = TSet
+// TScrollStyle ENUM
+//
+//	TScrollBar
+type TScrollStyle = int32
+
+const (
+	SsNone TScrollStyle = iota
+	SsHorizontal
+	SsVertical
+	SsBoth
+	SsAutoHorizontal
+	SsAutoVertical
+	SsAutoBoth
+)
+
+// TSearchDirection ENUM
+type TSearchDirection = int32
+
+const (
+	SdLeft TSearchDirection = iota
+	SdRight
+	SdAbove
+	SdBelow
+	SdAll
+)
+
+// TSectionTrackState ENUM
+type TSectionTrackState = int32
+
+const (
+	TsTrackBegin TSectionTrackState = iota
+	TsTrackMove
+	TsTrackEnd
+)
+
+// TSeekOrigin ENUM
+type TSeekOrigin = int32
+
+const (
+	SoBeginning TSeekOrigin = iota
+	SoCurrent
+	SoEnd
+)
+
+// TSelectDirOpt ENUM
+type TSelectDirOpt = int32
+
+const (
+	SdAllowCreate TSelectDirOpt = iota
+	SdPerformCreate
+	SdPrompt
+)
+
+// TShadowType ENUM
+type TShadowType = int32
+
+const (
+	StNone TShadowType = iota
+	StIn
+	StOut
+	StEtchedIn
+	StEtchedOut
+	StFilled
+)
+
+// TShapeDirection ENUM
+type TShapeDirection = int32
+
+const (
+	AtUp1 TShapeDirection = iota
+	AtDown1
+	AtLeft1
+	AtRight1
+)
+
+// TShapeType ENUM
+//
+//	TShape
+type TShapeType = int32
+
+const (
+	StRectangle TShapeType = iota
+	StSquare
+	StRoundRect
+	StRoundSquare
+	StEllipse
+	StCircle
+	StSquaredDiamond
+	StDiamond
+	StTriangle
+	StTriangleLeft
+	StTriangleRight
+	StTriangleDown
+	StStar
+	StStarDown
+	StPolygon
+)
+
+// TShowHelpResult ENUM
+type TShowHelpResult = int32
+
+const (
+	ShrNone TShowHelpResult = iota
+	ShrSuccess
+	ShrCancel
+	ShrDatabaseNotFound
+	ShrContextNotFound
+	ShrViewerNotFound
+	ShrHelpNotFound
+	ShrViewerError
+	ShrSelectorError
+)
+
+// TShowInTaskBar ENUM
+type TShowInTaskBar = int32
+
+const (
+	StDefault TShowInTaskBar = iota
+	StAlways
+	StNever
+)
+
+// TSmartAutoFitType ENUM
+type TSmartAutoFitType = int32
+
+const (
+	SmaAllColumns TSmartAutoFitType = iota
+	SmaNoColumn
+	SmaUseColumnOption
+)
+
+// TSortDirection ENUM
+type TSortDirection = int32
+
+const (
+	SdAscending TSortDirection = iota
+	SdDescending
+)
+
+// TSortIndicator ENUM
+type TSortIndicator = int32
+
+const (
+	SiNone TSortIndicator = iota
+	SiAscending
+	SiDescending
+)
+
+// TSortOrder ENUM
+type TSortOrder = int32
+
+const (
+	SoAscending TSortOrder = iota
+	SoDescending
+)
+
+// TSortType ENUM
+type TSortType = int32
+
+const (
+	StNone1 TSortType = iota
+	StData1
+	StText1
+	StBoth1
+)
+
+// TStaticBorderStyle ENUM
+//
+//	TCustomStaticText
+type TStaticBorderStyle = int32
+
+const (
+	SbsNone TStaticBorderStyle = iota
+	SbsSingle
+	SbsSunken
+)
 
 // TStatusPanelBevel ENUM
 type TStatusPanelBevel = int32
 
 const (
-	PbNone TStatusPanelBevel = iota
-	PbLowered
-	PbRaised
+	PbNone1 TStatusPanelBevel = iota
+	PbLowered1
+	PbRaised1
 )
 
-// TDuplicates ENUM
-type TDuplicates = int32
+// TStatusPanelStyle ENUM
+type TStatusPanelStyle = int32
 
 const (
-	DupIgnore TDuplicates = iota
-	DupAccept
-	DupError
+	PsText TStatusPanelStyle = iota
+	PsOwnerDraw
+)
+
+// TStockFont ENUM
+//
+//	enum to use with InitStockFont
+type TStockFont = int32
+
+const (
+	SfSystem TStockFont = iota
+	SfHint
+	SfIcon
+	SfMenu
+)
+
+// TStreamOwnership ENUM
+//
+//	TStreamAdapter
+type TStreamOwnership = int32
+
+const (
+	SoReference TStreamOwnership = iota
+	SoOwned
 )
 
 // TStringsSortStyle ENUM
@@ -2724,21 +5178,704 @@ const (
 	SslAuto
 )
 
-// TStringsSortStyles SET TStringsSortStyle
-type TStringsSortStyles = TSet
-
-// TMissingNameValueSeparatorAction ENUM
-type TMissingNameValueSeparatorAction = int32
+// TSubItemUpdate ENUM
+type TSubItemUpdate = int32
 
 const (
-	MnvaValue TMissingNameValueSeparatorAction = iota
-	MnvaName
-	MnvaEmpty
-	MnvaError
+	SiuText TSubItemUpdate = iota
+	SiuImage
 )
 
-// TMissingNameValueSeparatorActions SET TMissingNameValueSeparatorAction
-type TMissingNameValueSeparatorActions = TSet
+// TSynBeautifierIndentType ENUM
+type TSynBeautifierIndentType = int32
+
+const (
+	SbitSpace TSynBeautifierIndentType = iota
+	SbitCopySpaceTab
+	SbitPositionCaret
+	SbitConvertToTabSpace
+	SbitConvertToTabOnly
+)
+
+// TSynBlockPersistMode ENUM
+type TSynBlockPersistMode = int32
+
+const (
+	SbpDefault TSynBlockPersistMode = iota
+	SbpWeak
+	SbpStrong
+)
+
+// TSynCaretAdjustMode ENUM
+type TSynCaretAdjustMode = int32
+
+const (
+	ScamIgnore TSynCaretAdjustMode = iota
+	ScamAdjust
+	ScamForceAdjust
+	ScamEnd
+	ScamBegin
+)
+
+// TSynCaretType ENUM
+type TSynCaretType = int32
+
+const (
+	CtVerticalLine TSynCaretType = iota
+	CtHorizontalLine
+	CtHalfBlock
+	CtBlock
+	CtCostum
+)
+
+// TSynCommentContineMode ENUM
+type TSynCommentContineMode = int32
+
+const (
+	SccNoPrefix TSynCommentContineMode = iota
+	SccPrefixAlways
+	SccPrefixMatch
+)
+
+// TSynCommentExtendMode ENUM
+type TSynCommentExtendMode = int32
+
+const (
+	SceNever TSynCommentExtendMode = iota
+	SceAlways
+	SceSplitLine
+	SceMatching
+	SceMatchingSplitLine
+)
+
+// TSynCommentIndentFlag ENUM
+type TSynCommentIndentFlag = int32
+
+const (
+	SciNone TSynCommentIndentFlag = iota
+	SciAlignOpen
+	SciAlignOpenOnce
+	SciAlignOpenSkipBOL
+	SciAddTokenLen
+	SciAddPastTokenIndent
+	SciMatchOnlyTokenLen
+	SciMatchOnlyPastTokenIndent
+	SciAlignOnlyTokenLen
+	SciAlignOnlyPastTokenIndent
+	SciApplyIndentForNoMatch
+)
+
+// TSynCommentMatchLine ENUM
+type TSynCommentMatchLine = int32
+
+const (
+	SclMatchFirst TSynCommentMatchLine = iota
+	SclMatchPrev
+)
+
+// TSynCommentMatchMode ENUM
+type TSynCommentMatchMode = int32
+
+const (
+	ScmMatchAfterOpening TSynCommentMatchMode = iota
+	ScmMatchOpening
+	ScmMatchWholeLine
+	ScmMatchAtAsterisk
+)
+
+// TSynCommentType ENUM
+type TSynCommentType = int32
+
+const (
+	SctAnsi TSynCommentType = iota
+	SctBor
+	SctSlash
+)
+
+// TSynCompletionLongHintType ENUM
+type TSynCompletionLongHintType = int32
+
+const (
+	SclpNone TSynCompletionLongHintType = iota
+	SclpExtendRightOnly
+	SclpExtendHalfLeft
+	SclpExtendUnlimitedLeft
+)
+
+// TSynCoordinateMappingFlag ENUM
+type TSynCoordinateMappingFlag = int32
+
+const (
+	ScmLimitToLines TSynCoordinateMappingFlag = iota
+	ScmIncludePartVisible
+	ScmForceLeftSidePos
+)
+
+// TSynCopyPasteAction ENUM
+type TSynCopyPasteAction = int32
+
+const (
+	ScaContinue TSynCopyPasteAction = iota
+	ScaPlainText
+	ScaAbort
+)
+
+// TSynCustomCaretSizeFlag ENUM
+//
+//	relative dimensions in percent from 0 to 1024 (=100%)
+type TSynCustomCaretSizeFlag = int32
+
+const (
+	CcsRelativeLeft TSynCustomCaretSizeFlag = iota
+	CcsRelativeTop
+	CcsRelativeWidth
+	CcsRelativeHeight
+)
+
+// TSynEditBracketHighlightStyle ENUM
+type TSynEditBracketHighlightStyle = int32
+
+const (
+	SbhsLeftOfCursor TSynEditBracketHighlightStyle = iota
+	SbhsRightOfCursor
+	SbhsBoth
+)
+
+// TSynEditCaretFlag ENUM
+//
+//	TSynEditCaret
+type TSynEditCaretFlag = int32
+
+const (
+	ScCharPosValid TSynEditCaretFlag = iota
+	ScBytePosValid
+	ScViewedPosValid
+	ScHasLineMapHandler
+	ScfUpdateLastCaretX
+)
+
+// TSynEditCaretUpdateFlag ENUM
+type TSynEditCaretUpdateFlag = int32
+
+const (
+	ScuForceSet TSynEditCaretUpdateFlag = iota
+	ScuChangedX
+	ScuChangedY
+	ScuNoInvalidate
+)
+
+// TSynEditHasTextFlag ENUM
+type TSynEditHasTextFlag = int32
+
+const (
+	ShtIncludeVirtual TSynEditHasTextFlag = iota
+)
+
+// TSynEditMarkChangeReason ENUM
+type TSynEditMarkChangeReason = int32
+
+const (
+	SmcrLine TSynEditMarkChangeReason = iota
+	SmcrColumn
+	SmcrVisible
+	SmcrChanged
+)
+
+// TSynEditMarkSortOrder ENUM
+type TSynEditMarkSortOrder = int32
+
+const (
+	SmsoUnsorted TSynEditMarkSortOrder = iota
+	SmsoColumn
+	SmsoPriority
+	SmsoBookmarkFirst
+	SmsoBookMarkLast
+)
+
+// TSynEditNotifyReason ENUM
+type TSynEditNotifyReason = int32
+
+const (
+	SenrLineCount TSynEditNotifyReason = iota
+	SenrLineChange
+	SenrLinesModified
+	SenrHighlightChanged
+	SenrLineMappingChanged
+	SenrEditAction
+	SenrCleared
+	SenrUndoRedoAdded
+	SenrModifiedChanged
+	SenrIncOwnedPaintLock
+	SenrDecOwnedPaintLock
+	SenrIncPaintLock
+	SenrDecPaintLock
+	SenrBeforeIncPaintLock
+	SenrAfterIncPaintLock
+	SenrBeforeDecPaintLock
+	SenrAfterDecPaintLock
+	SenrTextBufferChanging
+	SenrTextBufferChanged
+	SenrBeginUndoRedo
+	SenrEndUndoRedo
+)
+
+// TSynEditorMouseOption ENUM
+type TSynEditorMouseOption = int32
+
+const (
+	EmUseMouseActions TSynEditorMouseOption = iota
+	EmAltSetsColumnMode
+	EmDragDropEditing
+	EmRightMouseMovesCursor
+	EmDoubleClickSelectsLine
+	EmShowCtrlMouseLinks
+	EmCtrlWheelZoom
+)
+
+// TSynEditorOption ENUM
+type TSynEditorOption = int32
+
+const (
+	EoAutoIndent TSynEditorOption = iota
+	EoBracketHighlight
+	EoEnhanceHomeKey
+	EoGroupUndo
+	EoHalfPageScroll
+	EoHideRightMargin
+	EoKeepCaretX
+	EoNoCaret
+	EoNoSelection
+	EoPersistentCaret
+	EoScrollByOneLess
+	EoScrollPastEof
+	EoScrollPastEol
+	EoScrollHintFollows
+	EoShowScrollHint
+	EoShowSpecialChars
+	EoSmartTabs
+	EoTabIndent
+	EoTabsToSpaces
+	EoTrimTrailingSpaces
+	EoAutoSizeMaxScrollWidth
+	EoDisableScrollArrows
+	EoHideShowScrollbars
+	EoDropFiles
+	EoSmartTabDelete
+	EoSpacesToTabs
+	EoAutoIndentOnPaste
+	EoAltSetsColumnMode
+	EoDragDropEditing
+	EoRightMouseMovesCursor
+	EoDoubleClickSelectsLine
+	EoShowCtrlMouseLinks
+)
+
+// TSynEditorOption2 ENUM
+type TSynEditorOption2 = int32
+
+const (
+	EoCaretSkipsSelection TSynEditorOption2 = iota
+	EoCaretMoveEndsSelection
+	EoCaretSkipTab
+	EoAlwaysVisibleCaret
+	EoEnhanceEndKey
+	EoFoldedCopyPaste
+	EoPersistentBlock
+	EoOverwriteBlock
+	EoAutoHideCursor
+	EoColorSelectionTillEol
+	EoPersistentCaretStopBlink
+	EoNoScrollOnSelectRange
+	EoAcceptDragDropEditing
+	EoScrollPastEolAddPage
+	EoScrollPastEolAutoCaret
+	EoBookmarkRestoresScroll
+)
+
+// TSynEditorShareOption ENUM
+//
+//	options for textbuffersharing
+type TSynEditorShareOption = int32
+
+const (
+	EosShareMarks TSynEditorShareOption = iota
+)
+
+// TSynEditStringTrimmingType ENUM
+type TSynEditStringTrimmingType = int32
+
+const (
+	SettLeaveLine TSynEditStringTrimmingType = iota
+	SettEditLine
+	SettMoveCaret
+	SettIgnoreAll
+)
+
+// TSynEditTextFlag ENUM
+type TSynEditTextFlag = int32
+
+const (
+	SetSelect TSynEditTextFlag = iota
+	SetPersistentBlock
+	SetMoveBlock
+	SetExtendBlock
+)
+
+// TSynFrameEdges ENUM
+type TSynFrameEdges = int32
+
+const (
+	SfeNone TSynFrameEdges = iota
+	SfeAround
+	SfeBottom
+	SfeLeft
+)
+
+// TSynHighlighterCapability ENUM
+type TSynHighlighterCapability = int32
+
+const (
+	HcUserSettings TSynHighlighterCapability = iota
+	HcRegistry
+	HcCodeFolding
+)
+
+// TSynHomeMode ENUM
+type TSynHomeMode = int32
+
+const (
+	SynhmDefault TSynHomeMode = iota
+	SynhmFirstWord
+)
+
+// TSynLineState ENUM
+type TSynLineState = int32
+
+const (
+	SlsNone TSynLineState = iota
+	SlsSaved
+	SlsUnsaved
+)
+
+// TSynLineStyle ENUM
+type TSynLineStyle = int32
+
+const (
+	SlsSolid TSynLineStyle = iota
+	SlsDashed
+	SlsDotted
+	SlsWaved
+)
+
+// TSynLogCharSide ENUM
+type TSynLogCharSide = int32
+
+const (
+	CslBefore TSynLogCharSide = iota
+	CslAfter
+	CslFollowLtr
+	CslFollowRtl
+)
+
+// TSynLogPhysFlag ENUM
+type TSynLogPhysFlag = int32
+
+const (
+	LpfAdjustToCharBegin TSynLogPhysFlag = iota
+	LpfAdjustToNextChar
+)
+
+// TSynMAClickCount ENUM
+type TSynMAClickCount = int32
+
+const (
+	CcSingle TSynMAClickCount = iota
+	CcDouble
+	CcTriple
+	CcQuad
+	CcAny
+)
+
+// TSynMAClickDir ENUM
+type TSynMAClickDir = int32
+
+const (
+	CdUp TSynMAClickDir = iota
+	CdDown
+)
+
+// TSynMarksAdjustMode ENUM
+//   - This is used, if text is *replaced*.
+//     What to do with marks in text that is deleted/replaced
+type TSynMarksAdjustMode = int32
+
+const (
+	SmaMoveUp TSynMarksAdjustMode = iota
+	SmaKeep
+)
+
+// TSynMAUpRestriction ENUM
+type TSynMAUpRestriction = int32
+
+const (
+	CrLastDownPos TSynMAUpRestriction = iota
+	CrLastDownPosSameLine
+	CrLastDownPosSearchAll
+	CrLastDownButton
+	CrLastDownShift
+	CrAllowFallback
+)
+
+// TSynPaintEvent ENUM
+type TSynPaintEvent = int32
+
+const (
+	PeBeforePaint TSynPaintEvent = iota
+	PeAfterPaint
+)
+
+// TSynPhysCharSide ENUM
+type TSynPhysCharSide = int32
+
+const (
+	CspLeft TSynPhysCharSide = iota
+	CspRight
+	CspFollowLtr
+	CspFollowRtl
+)
+
+// TSynReplaceAction ENUM
+type TSynReplaceAction = int32
+
+const (
+	RaCancel TSynReplaceAction = iota
+	RaSkip
+	RaReplace
+	RaReplaceAll
+)
+
+// TSynScrollEvent ENUM
+type TSynScrollEvent = int32
+
+const (
+	PeBeforeScroll TSynScrollEvent = iota
+	PeAfterScroll
+	PeAfterScrollFailed
+)
+
+// TSynSearchOption ENUM
+type TSynSearchOption = int32
+
+const (
+	SsoBackwards TSynSearchOption = iota
+	SsoEntireScope
+	SsoSelectedOnly
+	SsoReplace
+	SsoReplaceAll
+	SsoPrompt
+	SsoSearchInReplacement
+	SsoRegExpr
+	SsoRegExprMultiLine
+	SsoFindContinue
+)
+
+// TSynSelectedColorEnum ENUM
+type TSynSelectedColorEnum = int32
+
+const (
+	SscBack TSynSelectedColorEnum = iota
+	SscFore
+	SscFrameLeft
+	SscFrameRight
+	SscFrameTop
+	SscFrameBottom
+)
+
+// TSynSelectionMode ENUM
+type TSynSelectionMode = int32
+
+const (
+	SmNormal TSynSelectionMode = iota
+	SmLine
+	SmColumn
+	SmCurrent
+)
+
+// TSynSizedDiffAVLFindMode ENUM
+type TSynSizedDiffAVLFindMode = int32
+
+const (
+	AfmNil TSynSizedDiffAVLFindMode = iota
+	AfmCreate
+	AfmPrev
+	AfmNext
+)
+
+// TSynStateFlag ENUM
+type TSynStateFlag = int32
+
+const (
+	SfCaretChanged TSynStateFlag = iota
+	SfHideCursor
+	SfEnsureCursorPos
+	SfEnsureCursorPosAtResize
+	SfEnsureCursorPosForEditRight
+	SfEnsureCursorPosForEditLeft
+	SfExplicitTopLine
+	SfExplicitLeftChar
+	SfPreventScrollAfterSelect
+	SfIgnoreNextChar
+	SfPainting
+	SfHasPainted
+	SfHasScrolled
+	SfScrollbarChanged
+	SfHorizScrollbarVisible
+	SfVertScrollbarVisible
+	SfGutterResized
+	SfAfterLoadFromFileNeeded
+	SfAfterHandleCreatedNeeded
+	SfLeftGutterClick
+	SfRightGutterClick
+	SfInClick
+	SfDblClicked
+	SfTripleClicked
+	SfQuadClicked
+	SfWaitForDragging
+	SfWaitForDraggingNoCaret
+	SfIsDragging
+	SfDraggingOver
+	SfWaitForMouseSelecting
+	SfMouseSelecting
+	SfMouseDoneSelecting
+	SfIgnoreUpClick
+	SfSelChanged
+)
+
+// TSynStatusChange ENUM
+type TSynStatusChange = int32
+
+const (
+	ScCaretX TSynStatusChange = iota
+	ScCaretY
+	ScLeftChar
+	ScTopLine
+	ScLinesInWindow
+	ScCharsInWindow
+	ScInsertMode
+	ScModified
+	ScSelection
+	ScReadOnly
+	ScFocus
+	ScOptions
+)
+
+// TSynVisibleSpecialChar ENUM
+type TSynVisibleSpecialChar = int32
+
+const (
+	VscSpace TSynVisibleSpecialChar = iota
+	VscTabAtFirst
+	VscTabAtLast
+)
+
+// TSysLinkType ENUM
+type TSysLinkType = int32
+
+const (
+	SltURL TSysLinkType = iota
+	SltID
+)
+
+// TTabAlignment ENUM
+type TTabAlignment = int32
+
+const (
+	TabLeft TTabAlignment = iota
+	TabCenter
+	TabRight
+	TabDecimal
+	TabWordBar
+)
+
+// TTabPosition ENUM
+type TTabPosition = int32
+
+const (
+	TpTop TTabPosition = iota
+	TpBottom
+	TpLeft
+	TpRight
+)
+
+// TTabStyle ENUM
+type TTabStyle = int32
+
+const (
+	TsTabs TTabStyle = iota
+	TsButtons
+	TsFlatButtons
+)
+
+// TTaskBarBehavior ENUM
+type TTaskBarBehavior = int32
+
+const (
+	TbDefault TTaskBarBehavior = iota
+	TbMultiButton
+	TbSingleButton
+)
+
+// TTaskDialogElement ENUM
+type TTaskDialogElement = int32
+
+const (
+	TdeContent TTaskDialogElement = iota
+	TdeExpandedInfo
+	TdeFooter
+	TdeMainInstruction
+	TdeEdit
+	TdeVerif
+)
+
+// TTaskDialogFooterIcon ENUM
+//
+//	the available footer icons for the Task Dialog
+type TTaskDialogFooterIcon = int32
+
+const (
+	TfiBlank TTaskDialogFooterIcon = iota
+	TfiWarning
+	TfiQuestion
+	TfiError
+	TfiInformation
+	TfiShield
+)
+
+// TTaskDialogIcon ENUM
+//
+//	the available main icons for the Task Dialog
+type TTaskDialogIcon = int32
+
+const (
+	TiBlank TTaskDialogIcon = iota
+	TiWarning
+	TiQuestion
+	TiError
+	TiInformation
+	TiNotUsed
+	TiShield
+)
+
+// TTextLayout ENUM
+//
+//	Reflects text style when drawn in a rectangle
+type TTextLayout = int32
+
+const (
+	TlTop TTextLayout = iota
+	TlCenter
+	TlBottom
+)
 
 // TTextLineBreakStyle ENUM
 type TTextLineBreakStyle = int32
@@ -2749,306 +5886,21 @@ const (
 	TlbsCR
 )
 
-// TUDAlignButton ENUM
-type TUDAlignButton = int32
+// TTextUIFeature ENUM
+type TTextUIFeature = int32
 
 const (
-	udLeft TUDAlignButton = iota
-	udRight
-	udTop
-	udBottom
-)
-
-// TDisplayOption ENUM
-type TDisplayOption = int32
-
-const (
-	DoColumnTitles TDisplayOption = iota
-	DoAutoColResize
-	DoKeyColFixed
-)
-
-// TDisplayOptions SET TDisplayOption
-type TDisplayOptions = TSet
-
-// TKeyOption ENUM
-type TKeyOption = int32
-
-const (
-	KeyEdit TKeyOption = iota
-	KeyAdd
-	KeyDelete
-	KeyUnique
-)
-
-// TKeyOptions SET TKeyOption
-type TKeyOptions = TSet
-
-// TClipboardType ENUM
-type TClipboardType = int32
-
-const (
-	CtPrimarySelection TClipboardType = iota
-	CtSecondarySelection
-	CtClipboard
-)
-
-// TComponentState ENUM
-type TComponentState = int32
-
-const (
-	CsLoading TComponentState = iota
-	CsReading
-	CsWriting
-	CsDestroying
-	CsDesigning
-	CsAncestor
-	CsUpdating
-	CsFixups
-	CsFreeNotification
-	CsInline
-	CsDesignInstance
-)
-
-// TComponentStates SET TComponentState
-type TComponentStates = TSet
-
-// TComponentStyle ENUM
-type TComponentStyle = int32
-
-const (
-	CsInheritable TComponentStyle = iota
-	CsCheckPropAvail
-	CsSubComponent
-	CsTransient
-)
-
-// TComponentStyles SET TComponentStyle
-type TComponentStyles = TSet
-
-// THelpType ENUM
-type THelpType = int32
-
-const (
-	htKeyword THelpType = iota
-	htContext
-)
-
-// TEventType ENUM
-type TEventType = int32
-
-const (
-	EtCustom TEventType = iota
-	EtInfo
-	EtWarning
-	EtError
-	EtDebug
-)
-
-// TEventTypes SET TEventType
-type TEventTypes = TSet
-
-// TEventLogTypes SET TEventType
-type TEventLogTypes = TSet
-
-// TComboBoxAutoCompleteTextOption ENUM
-type TComboBoxAutoCompleteTextOption = int32
-
-const (
-	CbactEnabled             TComboBoxAutoCompleteTextOption = iota //Enable Auto-Completion Feature
-	CbactEndOfLineComplete                                          //Perform Auto-Complete only when cursor is at end of line
-	CbactRetainPrefixCase                                           //Retains the case of characters user has typed if is cbactEndOfLineComplete
-	CbactSearchCaseSensitive                                        //Search Text with CaseSensitivity
-	CbactSearchAscending                                            //Search Text from top of the list
-)
-
-// TComboBoxAutoCompleteText SET TComboBoxAutoCompleteTextOption
-type TComboBoxAutoCompleteText = TSet
-
-// TEmulatedTextHintStatus ENUM
-type TEmulatedTextHintStatus = int32
-
-const (
-	ThsHidden TEmulatedTextHintStatus = iota
-	ThsShowing
-	ThsChanging
-)
-
-// TEchoMode ENUM
-type TEchoMode = int32
-
-const (
-	EmNormal TEchoMode = iota
-	EmNone
-	EmPassword
-)
-
-// TGrabStyle ENUM
-type TGrabStyle = int32
-
-const (
-	GsSimple TGrabStyle = iota
-	GsDouble
-	GsHorLines
-	GsVerLines
-	GsGripper
-	GsButton
-)
-
-// TGridSaveOptions ENUM
-type TGridSaveOptions = int32
-
-const (
-	SoDesign     TGridSaveOptions = iota // Save grid structure (col/row count and Options)
-	SoAttributes                         // Save grid attributes (Font,Brush,TextStyle)
-	SoContent                            // Save Grid Content (Text in StringGrid)
-	SoPosition                           // Save Grid cursor and selection position
-)
-
-// TSaveOptions SET TGridSaveOptions
-type TSaveOptions = TSet
-
-// TEditStyle ENUM
-type TEditStyle = int32
-
-const (
-	EsSimple TEditStyle = iota
-	EsEllipsis
-	EsPickList
-)
-
-// TFPObservedOperation ENUM
-type TFPObservedOperation = int32
-
-const (
-	OoChange TFPObservedOperation = iota
-	OoFree
-	OoAddItem
-	OoDeleteItem
-	OoCustom
-)
-
-// TVleSortCol ENUM
-type TVleSortCol = int32
-
-const (
-	ColKey TVleSortCol = iota
-	ColValue
-)
-
-// TControlAtPosFlag ENUM
-type TControlAtPosFlag = int32
-
-const (
-	CapfAllowDisabled    TControlAtPosFlag = iota // include controls with Enabled=false
-	CapfAllowWinControls                          // include TWinControls
-	CapfOnlyClientAreas                           // use the client areas, not the whole child area
-	CapfRecursive                                 // search recursively in grand childrens
-	CapfHasScrollOffset                           // do not add the scroll offset to Pos (already included)
-	CapfOnlyWinControls                           // include only TWinControls (ignore TControls)
-)
-
-// TControlAtPosFlags SET TControlAtPosFlag
-type TControlAtPosFlags = TSet
-
-// TDefaultColorType ENUM
-type TDefaultColorType = int32
-
-const (
-	DctBrush TDefaultColorType = iota
-	DctFont
-)
-
-// TControlAutoSizePhase ENUM
-type TControlAutoSizePhase = int32
-
-const (
-	CaspNone TControlAutoSizePhase = iota
-	CaspChangingProperties
-	CaspCreatingHandles // create/destroy handles
-	CaspComputingBounds
-	CaspRealizingBounds
-	CaspShowing // make handles visible
-)
-
-// TControlAutoSizePhases SET TControlAutoSizePhase
-type TControlAutoSizePhases = TSet
-
-// TFindItemKind ENUM
-type TFindItemKind = int32
-
-const (
-	FkCommand TFindItemKind = iota
-	FkHandle
-	FkShortCut
-)
-
-// TControlRoleForForm ENUM
-type TControlRoleForForm = int32
-
-const (
-	CrffDefault TControlRoleForForm = iota // this control is notified when user presses Return
-	CrffCancel                             // this control is notified when user presses Escape
-)
-
-// TControlRolesForForm SET TControlRoleForForm
-type TControlRolesForForm = TSet
-
-// TOperation ENUM
-type TOperation = int32
-
-const (
-	OpInsert TOperation = iota
-	OpRemove
-)
-
-// TThemeOption ENUM
-type TThemeOption = int32
-
-const (
-	ToShowButtonImages TThemeOption = iota // show images on buttons
-	ToShowMenuImages                       // show images on menus
-	ToUseGlyphEffects                      // use hot/down effects on (button) glyphs
-)
-
-// TThemedElement ENUM
-// These are all elements which can be themed.
-type TThemedElement = int32
-
-const (
-	TeButton TThemedElement = iota
-	TeClock
-	TeComboBox
-	TeEdit
-	TeExplorerBar
-	TeHeader
-	TeListView
-	TeMenu
-	TePage
-	TeProgress
-	TeRebar
-	TeScrollBar
-	TeSpin
-	TeStartPanel
-	TeStatus
-	TeTab
-	TeTaskBand
-	TeTaskBar
-	TeToolBar
-	TeToolTip
-	TeTrackBar
-	TeTrayNotify
-	TeTreeview
-	TeWindow
+	UiLink TTextUIFeature = iota
 )
 
 // TThemedButton ENUM
-// 'Button' theme data
+//
+//	'Button' theme data
 type TThemedButton = int32
 
 const (
 	TbButtonDontCare TThemedButton = iota
-	TbButtonRoot                   // The root part of each element is sometimes used for special painting and does not belong to a certain state.
+	TbButtonRoot
 	TbPushButtonNormal
 	TbPushButtonHot
 	TbPushButtonPressed
@@ -3080,7 +5932,8 @@ const (
 )
 
 // TThemedClock ENUM
-// 'Clock' theme data
+//
+//	'Clock' theme data
 type TThemedClock = int32
 
 const (
@@ -3090,7 +5943,8 @@ const (
 )
 
 // TThemedComboBox ENUM
-// 'ComboBox' theme data
+//
+//	'ComboBox' theme data
 type TThemedComboBox = int32
 
 const (
@@ -3103,7 +5957,8 @@ const (
 )
 
 // TThemedEdit ENUM
-// 'Edit' theme data
+//
+//	'Edit' theme data
 type TThemedEdit = int32
 
 const (
@@ -3119,8 +5974,41 @@ const (
 	TeEditCaret
 )
 
+// TThemedElement ENUM
+//
+//	These are all elements which can be themed.
+type TThemedElement = int32
+
+const (
+	TeButton TThemedElement = iota
+	TeClock
+	TeComboBox
+	TeEdit
+	TeExplorerBar
+	TeHeader
+	TeListView
+	TeMenu
+	TePage
+	TeProgress
+	TeRebar
+	TeScrollBar
+	TeSpin
+	TeStartPanel
+	TeStatus
+	TeTab
+	TeTaskBand
+	TeTaskBar
+	TeToolBar
+	TeToolTip
+	TeTrackBar
+	TeTrayNotify
+	TeTreeview
+	TeWindow
+)
+
 // TThemedExplorerBar ENUM
-// 'ExplorerBar' theme data
+//
+//	'ExplorerBar' theme data
 type TThemedExplorerBar = int32
 
 const (
@@ -3160,7 +6048,8 @@ const (
 )
 
 // TThemedHeader ENUM
-// 'Header' theme data
+//
+//	'Header' theme data
 type TThemedHeader = int32
 
 const (
@@ -3180,7 +6069,8 @@ const (
 )
 
 // TThemedListView ENUM
-// 'ListView' theme data
+//
+//	'ListView' theme data
 type TThemedListView = int32
 
 const (
@@ -3198,7 +6088,8 @@ const (
 )
 
 // TThemedMenu ENUM
-// 'Menu' theme data
+//
+//	'Menu' theme data
 type TThemedMenu = int32
 
 const (
@@ -3248,7 +6139,8 @@ const (
 )
 
 // TThemedPage ENUM
-// 'Page' theme data
+//
+//	'Page' theme data
 type TThemedPage = int32
 
 const (
@@ -3273,7 +6165,8 @@ const (
 )
 
 // TThemedProgress ENUM
-// 'Progress' theme data
+//
+//	'Progress' theme data
 type TThemedProgress = int32
 
 const (
@@ -3286,7 +6179,8 @@ const (
 )
 
 // TThemedRebar ENUM
-// 'Rebar' theme data
+//
+//	'Rebar' theme data
 type TThemedRebar = int32
 
 const (
@@ -3311,7 +6205,8 @@ const (
 )
 
 // TThemedScrollBar ENUM
-// 'ScrollBar' theme data
+//
+//	'ScrollBar' theme data
 type TThemedScrollBar = int32
 
 const (
@@ -3370,7 +6265,8 @@ const (
 )
 
 // TThemedSpin ENUM
-// 'Spin' theme data
+//
+//	'Spin' theme data
 type TThemedSpin = int32
 
 const (
@@ -3395,7 +6291,8 @@ const (
 )
 
 // TThemedStartPanel ENUM
-// 'StartPanel' theme data
+//
+//	'StartPanel' theme data
 type TThemedStartPanel = int32
 
 const (
@@ -3419,7 +6316,8 @@ const (
 )
 
 // TThemedStatus ENUM
-// 'Status' theme data
+//
+//	'Status' theme data
 type TThemedStatus = int32
 
 const (
@@ -3431,7 +6329,8 @@ const (
 )
 
 // TThemedTab ENUM
-// 'Tab' theme data
+//
+//	'Tab' theme data
 type TThemedTab = int32
 
 const (
@@ -3482,7 +6381,8 @@ const (
 )
 
 // TThemedTaskBand ENUM
-// 'TaskBand' theme data
+//
+//	'TaskBand' theme data
 type TThemedTaskBand = int32
 
 const (
@@ -3494,7 +6394,8 @@ const (
 )
 
 // TThemedTaskBar ENUM
-// 'TaskBar' theme data
+//
+//	'TaskBar' theme data
 type TThemedTaskBar = int32
 
 const (
@@ -3504,7 +6405,8 @@ const (
 )
 
 // TThemedToolBar ENUM
-// 'ToolBar' theme data
+//
+//	'ToolBar' theme data
 type TThemedToolBar = int32
 
 const (
@@ -3549,7 +6451,8 @@ const (
 )
 
 // TThemedToolTip ENUM
-// 'ToolTip' theme data
+//
+//	'ToolTip' theme data
 type TThemedToolTip = int32
 
 const (
@@ -3569,7 +6472,8 @@ const (
 )
 
 // TThemedTrackBar ENUM
-// 'TrackBar' theme data
+//
+//	'TrackBar' theme data
 type TThemedTrackBar = int32
 
 const (
@@ -3612,7 +6516,8 @@ const (
 )
 
 // TThemedTrayNotify ENUM
-// 'TrayNotify' theme data
+//
+//	'TrayNotify' theme data
 type TThemedTrayNotify = int32
 
 const (
@@ -3623,7 +6528,8 @@ const (
 )
 
 // TThemedTreeview ENUM
-// 'Treeview' theme data
+//
+//	'Treeview' theme data
 type TThemedTreeview = int32
 
 const (
@@ -3642,7 +6548,8 @@ const (
 )
 
 // TThemedWindow ENUM
-// 'Window' theme data
+//
+//	'Window' theme data
 type TThemedWindow = int32
 
 const (
@@ -3765,239 +6672,250 @@ const (
 	TwSmallFrameBottomSizingTemplate
 )
 
-// IdButton ENUM Stock Pixmap Types
-type IdButton = int32
+// TThemeOption ENUM
+type TThemeOption = int32
 
 const (
-	IdButtonBase     IdButton = 0
-	IdButtonOk                = IdButtonBase + 1
-	IdButtonCancel            = IdButtonBase + 2
-	IdButtonHelp              = IdButtonBase + 3
-	IdButtonYes               = IdButtonBase + 4
-	IdButtonNo                = IdButtonBase + 5
-	IdButtonClose             = IdButtonBase + 6
-	IdButtonAbort             = IdButtonBase + 7
-	IdButtonRetry             = IdButtonBase + 8
-	IdButtonIgnore            = IdButtonBase + 9
-	IdButtonAll               = IdButtonBase + 10
-	IdButtonYesToAll          = IdButtonBase + 11
-	IdButtonNoToAll           = IdButtonBase + 12
-	IdButtonOpen              = IdButtonBase + 13
-	IdButtonSave              = IdButtonBase + 14
-	IdButtonShield            = IdButtonBase + 15
-	IdButtonContinue          = IdButtonBase + 16
-	IdButtonTryAgain          = IdButtonBase + 17
+	ToShowButtonImages TThemeOption = iota
+	ToShowMenuImages
+	ToUseGlyphEffects
 )
 
-// TButtonImage ENUM IdButtonOk.. IdButtonNoToAll
-type TButtonImage = IdButton
-
-// TCalendarPart ENUM
-type TCalendarPart = int32
+// TThreadPriority ENUM
+type TThreadPriority = int32
 
 const (
-	CpNoWhere    TCalendarPart = iota // somewhere
-	CpDate                            // date part
-	CpWeekNumber                      // week number
-	CpTitle                           // somewhere in the title
-	CpTitleBtn                        // button in the title
-	CpTitleMonth                      // month value in the title
-	CpTitleYear                       // year value in the title
+	TpIdle TThreadPriority = iota
+	TpLowest
+	TpLower
+	TpNormal
+	TpHigher
+	TpHighest
+	TpTimeCritical
 )
 
-// TCalendarView ENUM
-/*
-In Windows since Vista native calendar control has four possible views.
-In other widgetsets, as well as in older windows, calendar can only have
-standard "month view" - grid with days representing a month.
-*/
-type TCalendarView = int32
+// TTickMark ENUM
+type TTickMark = int32
 
 const (
-	CvMonth   TCalendarView = iota // grid with days in one month
-	CvYear                         // grid with months in one year
-	CvDecade                       // grid with years from one decade
-	CvCentury                      // grid with decades of one century
+	TmBottomRight TTickMark = iota
+	TmTopLeft
+	TmBoth
 )
 
-// TSectionValuesOption ENUM
-type TSectionValuesOption = int32
+// TTickStyle ENUM
+type TTickStyle = int32
 
 const (
-	SvoIncludeComments TSectionValuesOption = iota
-	SvoIncludeInvalid
-	SvoIncludeQuotes
+	TsNone TTickStyle = iota
+	TsAuto
+	TsManual
 )
 
-// TSectionValuesOptions SET TSectionValuesOption
-type TSectionValuesOptions = TSet
-
-// TVScriptPos ENUM
-type TVScriptPos = int32
+// TTiffUnit ENUM
+//
+//	TTiffImage
+type TTiffUnit = int32
 
 const (
-	VpNormal TVScriptPos = iota
-	VpSubScript
-	VpSuperScript
+	TuUnknown TTiffUnit = iota
+	TuNone
+	TuInch
+	TuCentimeter
 )
 
-// TParaAlignment ENUM
-type TParaAlignment = int32
+// TTimeDisplay ENUM
+type TTimeDisplay = int32
 
 const (
-	PraLeft TParaAlignment = iota
-	PraRight
-	PraCenter
-	PraJustify
+	TdHM TTimeDisplay = iota
+	TdHMS
+	TdHMSMs
 )
 
-// TParaNumStyle ENUM
-type TParaNumStyle = int32
+// TTimeFormat ENUM
+type TTimeFormat = int32
 
 const (
-	PnNone TParaNumStyle = iota
-	PnBullet
-	PnNumber
-	PnLowLetter
-	PnLowRoman
-	PnUpLetter
-	PnUpRoman
-	PnCustomChar
+	Tf12 TTimeFormat = iota
+	Tf24
 )
 
-// TTabAlignment ENUM
-type TTabAlignment = int32
+// TTitleStyle ENUM
+type TTitleStyle = int32
 
 const (
-	TabLeft TTabAlignment = iota
-	TabCenter
-	TabRight
-	TabDecimal
-	TabWordBar
+	TsLazarus TTitleStyle = iota
+	TsStandard
+	TsNative
 )
 
-// TSearchOption ENUM
-type TSearchOption = int32
+// TToolBarFlag ENUM
+type TToolBarFlag = int32
 
 const (
-	SoMatchCase TSearchOption = iota
-	SoWholeWord
-	SoBackward
+	TbfUpdateVisibleBarNeeded TToolBarFlag = iota
+	TbfPlacingControls
 )
 
-// TSearchOptions SET TSearchOption
-type TSearchOptions = TSet
-
-// TTextModifyMaskEnum ENUM
-type TTextModifyMaskEnum = int32
+// TToolButtonFlag ENUM
+type TToolButtonFlag = int32
 
 const (
-	TmmColor TTextModifyMaskEnum = iota
-	TmmName
-	TmmSize
-	TmmStyles
-	TmmBackColor
+	TbfPressed TToolButtonFlag = iota
+	TbfArrowPressed
+	TbfMouseInArrow
+	TbfDropDownMenuShown
 )
 
-// TTextModifyMask SET TTextModifyMaskEnum
-type TTextModifyMask = TSet
-
-// TParaModifyMaskEnum ENUM
-type TParaModifyMaskEnum = int32
+// TToolButtonStyle ENUM
+type TToolButtonStyle = int32
 
 const (
-	PmmFirstLine TParaModifyMaskEnum = iota
-	PmmHeadIndent
-	PmmTailIndent
-	PmmSpaceBefore
-	PmmSpaceAfter
-	PmmLineSpacing
+	TbsButton TToolButtonStyle = iota
+	TbsCheck
+	TbsDropDown
+	TbsSeparator
+	TbsDivider
+	TbsButtonDrop
 )
 
-// TParaModifyMask SET TParaModifyMaskEnum
-type TParaModifyMask = TSet
-
-// TCTabControlCapability ENUM
-type TCTabControlCapability = int32
+// TTrackBarOrientation ENUM
+//
+//	TCustomTrackBar
+type TTrackBarOrientation = int32
 
 const (
-	NbcShowCloseButtons TCTabControlCapability = iota
-	NbcMultiLine
-	NbcPageListPopup
-	NbcShowAddTabButton
-	NbcTabsSizeable
+	TrHorizontal TTrackBarOrientation = iota
+	TrVertical
 )
 
-// TCTabControlCapabilities SET TCTabControlCapability
-type TCTabControlCapabilities = TSet
-
-type TListAssignOp = int32
+// TTrackBarScalePos ENUM
+type TTrackBarScalePos = int32
 
 const (
-	LaCopy TListAssignOp = iota
-	LaAnd
-	LaOr
-	LaXor
-	LaSrcUnique
-	LaDestUnique
+	TrLeft TTrackBarScalePos = iota
+	TrRight
+	TrTop
+	TrBottom
 )
 
-// TLazDockHeaderPart ENUM
-type TLazDockHeaderPart = int32
+// TTrackButton ENUM
+type TTrackButton = int32
 
 const (
-	LdhpAll           TLazDockHeaderPart = iota // total header rect
-	LdhpCaption                                 // header caption
-	LdhpRestoreButton                           // header restore button
-	LdhpCloseButton                             // header close button
+	TbRightButton TTrackButton = iota
+	TbLeftButton
 )
 
-// TDirection ENUM
-type TDirection = int32
+// TTransparentMode ENUM
+type TTransparentMode = int32
 
 const (
-	FromBeginning TDirection = iota
-	FromEnd
+	TmAuto TTransparentMode = iota
+	TmFixed
 )
 
-// TRegDataType ENUM
-type TRegDataType = int32
+// TTreeNodeChangeReason ENUM
+type TTreeNodeChangeReason = int32
 
 const (
-	RdUnknown TRegDataType = iota
-	RdString
-	RdExpandString
-	RdBinary
-	RdInteger
-	RdIntegerBigEndian
-	RdLink
-	RdMultiString
-	RdResourceList
-	RdFullResourceDescriptor
-	RdResourceRequirementList
-	RdInt64
+	NcTextChanged TTreeNodeChangeReason = iota
+	NcDataChanged
+	NcHeightChanged
+	NcImageEffect
+	NcImageIndex
+	NcParentChanged
+	NcVisibility
+	NcEnablement
+	NcOverlayIndex
+	NcStateIndex
+	NcSelectedIndex
 )
 
-// TMonitorDefaultTo ENUM
-type TMonitorDefaultTo = int32
+// TTreeViewExpandSignType ENUM
+type TTreeViewExpandSignType = int32
 
 const (
-	MdNearest TMonitorDefaultTo = iota
-	MdNull
-	MdPrimary
+	TvestTheme TTreeViewExpandSignType = iota
+	TvestPlusMinus
+	TvestArrow
+	TvestArrowFill
+	TvestAngleBracket
 )
 
-// TPanelPart ENUM
-type TPanelPart = int32
+// TTreeViewInsertMarkType ENUM
+type TTreeViewInsertMarkType = int32
 
 const (
-	PpText   TPanelPart = iota // for text and text alignment
-	PpBorder                   // for bevel and style
-	PpWidth                    // for width
+	TvimNone TTreeViewInsertMarkType = iota
+	TvimAsFirstChild
+	TvimAsNextSibling
+	TvimAsPrevSibling
 )
 
-// TPanelParts SET TPanelPart
-type TPanelParts = TSet
+// TTreeViewState ENUM
+//
+//	TCustomTreeView
+type TTreeViewState = int32
+
+const (
+	TvsScrollbarChanged TTreeViewState = iota
+	TvsMaxRightNeedsUpdate
+	TvsTopsNeedsUpdate
+	TvsMaxLvlNeedsUpdate
+	TvsTopItemNeedsUpdate
+	TvsBottomItemNeedsUpdate
+	TvsCanvasChanged
+	TvsDragged
+	TvsIsEditing
+	TvsStateChanging
+	TvsManualNotify
+	TvsUpdating
+	TvsPainting
+	TvoFocusedPainting
+	TvsDblClicked
+	TvsTripleClicked
+	TvsQuadClicked
+	TvsSelectionChanged
+	TvsEditOnMouseUp
+	TvsSingleSelectOnMouseUp
+)
+
+// TTriPts ENUM
+type TTriPts = int32
+
+const (
+	PtA TTriPts = iota
+	PtB
+	PtC
+)
+
+// TUDAlignButton ENUM
+type TUDAlignButton = int32
+
+const (
+	UdLeft TUDAlignButton = iota
+	UdRight
+	UdTop
+	UdBottom
+)
+
+// TUDBtnType ENUM
+type TUDBtnType = int32
+
+const (
+	BtNext TUDBtnType = iota
+	BtPrev
+)
+
+// TUDOrientation ENUM
+type TUDOrientation = int32
+
+const (
+	UdHorizontal TUDOrientation = iota
+	UdVertical
+)
 
 // TUpDownDirection ENUM
 type TUpDownDirection = int32
@@ -4008,158 +6926,126 @@ const (
 	UpdDown
 )
 
-// TFPImgProgressStage ENUM
-type TFPImgProgressStage = int32
-
-const (
-	PsStarting TFPImgProgressStage = iota
-	PsRunning
-	PsEnding
-)
-
-// TCellProcessType ENUM
-type TCellProcessType = int32
-
-const (
-	CpCopy TCellProcessType = iota
-	CpPaste
-)
-
-// TScrollCode ENUM
-type TScrollCode = int32
-
-const (
-	// !!! Beware. The position of these enums must correspond to the SB_xxx
-	// values in LCLType  (Delphi compatibility, not our decision)
-	// MWE: Don't know if this still is a requirement
-	//      afaik have I removed all casts from the LCL
-	ScLineUp    TScrollCode = iota // = SB_LINEUP
-	ScLineDown                     // = SB_LINEDOWN
-	ScPageUp                       // = SB_PAGEUP
-	ScPageDown                     // = SB_PAGEDOWN
-	ScPosition                     // = SB_THUMBPOSITION
-	ScTrack                        // = SB_THUMBTRACK
-	ScTop                          // = SB_TOP
-	ScBottom                       // = SB_BOTTOM
-	ScEndScroll                    // = SB_ENDSCROLL
-)
-
-// TTreeNodeChangeReason ENUM
-type TTreeNodeChangeReason = int32
-
-const (
-	NcTextChanged   TTreeNodeChangeReason = iota //The Node's Text has changed
-	NcDataChanged                                //The Node's Data has changed
-	NcHeightChanged                              //The Node's Height has changed
-	NcImageEffect                                //The Node's Image Effect has changed
-	NcImageIndex                                 //The Node's Image Index has changed
-	NcParentChanged                              //The Node's Parent has changed
-	NcVisibility                                 //The Node's Visibility has changed
-	NcEnablement                                 //The Node's Enabled/Disabled state has changed
-	NcOverlayIndex                               //The Node's Overlay Index has Changed
-	NcStateIndex                                 //The Node's State Index has Changed
-	NcSelectedIndex                              //The Node's Selected Index has Changed
-)
-
-// TStreamOwnership ENUM
-type TStreamOwnership = int32
-
-const (
-	SoReference TStreamOwnership = iota
-	SoOwned
-)
-
-// TRawImageQueryFlag ENUM
-type TRawImageQueryFlag = int32
-
-const (
-	RiqfMono    TRawImageQueryFlag = iota // Include a description for a mono image
-	RiqfGrey                              // Include a description for a grey image
-	RiqfRGB                               // Include a description for a RGB image
-	RiqfAlpha                             // Include a description for an Alpha channel
-	RiqfMask                              // Include a description for a Mask
-	RiqfPalette                           // Include a description for a Palette
-	RiqfUpdate                            // Update given description (instead of clearing it)
-)
-
-// TRawImageQueryFlags SET: TRawImageQueryFlag
-type TRawImageQueryFlags = TSet
-
-// TVirtualNodeState ENUM
-// Be careful when adding new states as this might change the size of the type which in turn
-// changes the alignment in the node record as well as the stream chunks.
-// Do not reorder the states and always add new states at the end of this enumeration in order to avoid
-// breaking existing code.
-type TVirtualNodeState = int32
-
-const (
-	VsInitialized            TVirtualNodeState = iota // Set after the node has been initialized.
-	VsChecking                                        // Node's check state is changing, avoid propagation.
-	VsCutOrCopy                                       // Node is selected as cut or copy and paste source.
-	VsDisabled                                        // Set if node is disabled.
-	VsDeleting                                        // Set when the node is about to be freed.
-	VsExpanded                                        // Set if the node is expanded.
-	VsHasChildren                                     // Indicates the presence of child nodes without actually setting them.
-	VsVisible                                         // Indicate whether the node is visible or not (independant of the expand states of its parents).
-	VsSelected                                        // Set if the node is in the current selection.
-	VsOnFreeNodeCallRequired                          // Set if user data has been set which requires OnFreeNode.
-	VsAllChildrenHidden                               // Set if vsHasChildren is set and no child node has the vsVisible flag set.
-	VsClearing                                        // A node's children are being deleted. Don't register structure change event.
-	VsMultiline                                       // Node text is wrapped at the cell boundaries instead of being shorted.
-	VsHeightMeasured                                  // Node height has been determined and does not need a recalculation.
-	VsToggling                                        // Set when a node is expanded/collapsed to prevent recursive calls.
-	VsFiltered                                        // Indicates that the node should not be painted (without effecting its children).
-)
-
-// TVirtualNodeStates SET: TVirtualNodeState
-type TVirtualNodeStates = TSet
-
-// TCheckState ENUM
-// The check states include both, transient and fluent (temporary) states. The only temporary state defined so
-// far is the pressed state.
-type TCheckState = int32
-
-const (
-	CsUncheckedNormal  TCheckState = iota // unchecked and not pressed
-	CsUncheckedPressed                    // unchecked and pressed
-	CsCheckedNormal                       // checked and not pressed
-	CsCheckedPressed                      // checked and pressed
-	CsMixedNormal                         // 3-state check box and not pressed
-	CsMixedPressed                        // 3-state check box and pressed
-)
-
-// TCheckType ENUM
-type TCheckType = int32
-
-const (
-	CtNone TCheckType = iota
-	CtTriStateCheckBox
-	CtCheckBox
-	CtRadioButton
-	CtButton
-)
-
-// TAutoScrollInterval ENUM
+// TValueType ENUM
 //
-//	Limits the speed interval which can be used for auto scrolling (milliseconds).
-//	1..1000
-type TAutoScrollInterval = int32
+//	TFiler
+type TValueType = int32
 
-// TVTScrollIncrement ENUM
+const (
+	VaNull TValueType = iota
+	VaList
+	VaInt8
+	VaInt16
+	VaInt32
+	VaExtended
+	VaString
+	VaIdent
+	VaFalse
+	VaTrue
+	VaBinary
+	VaSet
+	VaLString
+	VaNil
+	VaCollection
+	VaSingle
+	VaCurrency
+	VaDate
+	VaWString
+	VaInt64
+	VaUTF8String
+	VaUString
+	VaQWord
+)
+
+// TVerticalAlignment ENUM
+type TVerticalAlignment = int32
+
+const (
+	TaAlignTop TVerticalAlignment = iota
+	TaAlignBottom
+	TaVerticalCenter
+)
+
+// TViewedXYInfoFlag ENUM
+type TViewedXYInfoFlag = int32
+
+const (
+	VifAdjustLogXYToNextChar TViewedXYInfoFlag = iota
+	VifReturnPhysXY
+	VifReturnLogXY
+	VifReturnLogEOL
+	VifReturnPhysOffset
+)
+
+// TViewStyle ENUM
+type TViewStyle = int32
+
+const (
+	VsIcon TViewStyle = iota
+	VsSmallIcon
+	VsList
+	VsReport
+)
+
+// TVirtualTreeColumnStyle ENUM
+type TVirtualTreeColumnStyle = int32
+
+const (
+	VsText TVirtualTreeColumnStyle = iota
+	VsOwnerDraw
+)
+
+// TVleSortCol ENUM
+type TVleSortCol = int32
+
+const (
+	ColKey TVleSortCol = iota
+	ColValue
+)
+
+// TVScriptPos ENUM
+type TVScriptPos = int32
+
+const (
+	VpNormal TVScriptPos = iota
+	VpSubScript
+	VpSuperScript
+)
+
+// TVSTTextSourceType ENUM
 //
-//	1..10000
-type TVTScrollIncrement = int32
+//	Describes the source to use when converting a string tree into a string for clipboard etc.
+type TVSTTextSourceType = int32
+
+const (
+	TstAll TVSTTextSourceType = iota
+	TstInitialized
+	TstSelected
+	TstCutCopySet
+	TstVisible
+	TstChecked
+)
+
+// TVSTTextType ENUM
+//
+//	Describes the type of text to return in the text and draw info retrival events.
+type TVSTTextType = int32
+
+const (
+	TtNormal TVSTTextType = iota
+	TtStatic
+)
 
 // TVTButtonFillMode ENUM
 //
-//	is only used when the button style is bsRectangle and determines how to fill the interior.
+//	TButtonFillMode is only used when the button style is bsRectangle and determines how to fill the interior.
 type TVTButtonFillMode = int32
 
 const (
-	FmTreeColor   TVTButtonFillMode = iota // solid color, uses the tree's background color
-	FmWindowColor                          // solid color, uses clWindow
-	FmShaded                               // color gradient, Windows XP style (legacy code, use toThemeAware on Windows XP instead)
-	FmTransparent                          // transparent color, use the item's background color
+	FmTreeColor TVTButtonFillMode = iota
+	FmWindowColor
+	FmShaded
+	FmTransparent
 )
 
 // TVTButtonStyle ENUM
@@ -4168,36 +7054,29 @@ const (
 type TVTButtonStyle = int32
 
 const (
-	BsRectangle TVTButtonStyle = iota // traditional Windows look (plus/minus buttons)
-	BsTriangle                        // traditional Macintosh look
+	BsRectangle TVTButtonStyle = iota
+	BsTriangle
 )
 
-// TCheckImageKind ENUM
-type TCheckImageKind = int32
-
-const (
-	CkLightCheck    TCheckImageKind = iota // gray cross
-	CkDarkCheck                            // black cross
-	CkLightTick                            // gray tick mark
-	CkDarkTick                             // black tick mark
-	CkFlat                                 // flat images (no 3D border)
-	CkXP                                   // Windows XP style
-	CkCustom                               // application defined check images
-	CkSystemFlat                           // Flat system defined check images.
-	CkSystemDefault                        // Uses the system check images, theme aware.
-)
-
-// TVTNodeAttachMode ENUM
+// TVTCellContentMarginType ENUM
 //
-//	mode to describe a move action
-type TVTNodeAttachMode = int32
+//	Determines which sides of the cell content margin should be considered.
+type TVTCellContentMarginType = int32
 
 const (
-	AmNoWhere       TVTNodeAttachMode = iota // just for simplified tests, means to ignore the Add/Insert command
-	AmInsertBefore                           // insert node just before destination (as sibling of destination)
-	AmInsertAfter                            // insert node just after destionation (as sibling of destination)
-	AmAddChildFirst                          // add node as first child of destination
-	AmAddChildLast                           // add node as last child of destination
+	CcmtAllSides TVTCellContentMarginType = iota
+	CcmtTopLeftOnly
+	CcmtBottomRightOnly
+)
+
+// TVTCellPaintMode ENUM
+//
+//	Determines for which purpose the cell paint event is called.
+type TVTCellPaintMode = int32
+
+const (
+	CpmPaint TVTCellPaintMode = iota
+	CpmGetContentMargin
 )
 
 // TVTDragImageKind ENUM
@@ -4206,24 +7085,21 @@ const (
 type TVTDragImageKind = int32
 
 const (
-	DiComplete       TVTDragImageKind = iota // show a complete drag image with all columns, only visible columns are shown
-	DiMainColumnOnly                         // show only the main column (the tree column)
-	DiNoImage                                // don't show a drag image at all
+	DiComplete TVTDragImageKind = iota
+	DiMainColumnOnly
+	DiNoImage
 )
 
-// TDragOperation ENUM
+// TVTDragMoveRestriction ENUM
 //
-//	operations basically allowed during drag'n drop
-type TDragOperation = int32
+//	Simple move limitation for the drag image.
+type TVTDragMoveRestriction = int32
 
 const (
-	DoCopy TDragOperation = iota
-	DoMove
-	DoLink
+	DmrNone TVTDragMoveRestriction = iota
+	DmrHorizontalOnly
+	DmrVerticalOnly
 )
-
-// TDragOperations SET: TDragOperation
-type TDragOperations = TSet
 
 // TVTDragType ENUM
 //
@@ -4241,28 +7117,194 @@ const (
 type TVTDrawSelectionMode = int32
 
 const (
-	SmDottedRectangle  TVTDrawSelectionMode = iota // same as DrawFocusRect
-	SmBlendedRectangle                             // alpha blending, uses special colors (see TVTColors)
+	SmDottedRectangle TVTDrawSelectionMode = iota
+	SmBlendedRectangle
+)
+
+// TVTDropMarkMode ENUM
+//
+//	Used during owner draw of the header to indicate which drop mark for the column must be drawn.
+type TVTDropMarkMode = int32
+
+const (
+	DmmNone TVTDropMarkMode = iota
+	DmmLeft
+	DmmRight
+)
+
+// TVTExportMode ENUM
+//
+//	Options to control data export
+type TVTExportMode = int32
+
+const (
+	EmAll TVTExportMode = iota
+	EmChecked
+	EmUnchecked
+	EmVisibleDueToExpansion
+	EmSelected
+)
+
+// TVTExportType ENUM
+//
+//	Export type
+type TVTExportType = int32
+
+const (
+	EtRTF TVTExportType = iota
+	EtHTML
+	EtText
+	EtExcel
+	EtWord
+	EtCustom
+)
+
+// TVTHeaderColumnLayout ENUM
+type TVTHeaderColumnLayout = int32
+
+const (
+	BlGlyphLeft1 TVTHeaderColumnLayout = iota
+	BlGlyphRight1
+	BlGlyphTop1
+	BlGlyphBottom1
+)
+
+// TVTHeaderStyle ENUM
+type TVTHeaderStyle = int32
+
+const (
+	HsThickButtons TVTHeaderStyle = iota
+	HsFlatButtons
+	HsPlates
+)
+
+// TVTHintKind ENUM
+type TVTHintKind = int32
+
+const (
+	VhkText TVTHintKind = iota
+	VhkOwnerDraw
 )
 
 // TVTHintMode ENUM
 type TVTHintMode = int32
 
 const (
-	HmDefault        TVTHintMode = iota // show the hint of the control
-	HmHint                              // show node specific hint string returned by the application
-	HmHintAndDefault                    // same as hmHint but show the control's hint if no node is concerned
-	HmTooltip                           // show the text of the node if it isn't already fully shown
+	HmDefault TVTHintMode = iota
+	HmHint
+	HmHintAndDefault
+	HmTooltip
+)
+
+// TVTImageInfoIndex ENUM
+type TVTImageInfoIndex = int32
+
+const (
+	IiNormal TVTImageInfoIndex = iota
+	IiState
+	IiCheck
+	IiOverlay
+)
+
+// TVTImageKind ENUM
+type TVTImageKind = int32
+
+const (
+	IkNormal TVTImageKind = iota
+	IkSelected
+	IkState
+	IkOverlay
 )
 
 // TVTIncrementalSearch ENUM
 type TVTIncrementalSearch = int32
 
 const (
-	TvtIsNone            TVTIncrementalSearch = iota // disable incremental search
-	TvtIsAll                                         // search every node in tree, initialize if necessary
-	TvtIsInitializedOnly                             // search only initialized nodes, skip others
-	TvtIsVisibleOnly                                 // search only visible nodes, initialize if necessary
+	IsAll TVTIncrementalSearch = iota
+	IsNone
+	IsInitializedOnly
+	IsVisibleOnly
+)
+
+// TVTLineMode ENUM
+//
+//	Determines how to draw tree lines.
+type TVTLineMode = int32
+
+const (
+	LmNormal TVTLineMode = iota
+	LmBands
+)
+
+// TVTLineStyle ENUM
+//
+//	Determines the look of a tree's lines.
+type TVTLineStyle = int32
+
+const (
+	LsCustomStyle TVTLineStyle = iota
+	LsDotted
+	LsSolid
+)
+
+// TVTLineType ENUM
+//
+//	TVTLineType is used during painting a tree
+type TVTLineType = int32
+
+const (
+	LtNone TVTLineType = iota
+	LtBottomRight
+	LtTopDown
+	LtTopDownRight
+	LtRight
+	LtTopRight
+	LtLeft
+	LtLeftBottom
+)
+
+// TVTNodeAlignment ENUM
+//
+//	Determines how to use the align member of a node.
+type TVTNodeAlignment = int32
+
+const (
+	NaFromBottom TVTNodeAlignment = iota
+	NaFromTop
+	NaProportional
+)
+
+// TVTNodeAttachMode ENUM
+//
+//	mode to describe a move action
+type TVTNodeAttachMode = int32
+
+const (
+	AmNoWhere TVTNodeAttachMode = iota
+	AmInsertBefore
+	AmInsertAfter
+	AmAddChildFirst
+	AmAddChildLast
+)
+
+// TVTOperationKind ENUM
+//
+//	Kinds of operations
+type TVTOperationKind = int32
+
+const (
+	OkAutoFitColumns TVTOperationKind = iota
+	OkGetMaxColumnWidth
+	OkSortNode
+	OkSortTree
+)
+
+// TVTScrollBarStyle ENUM
+type TVTScrollBarStyle = int32
+
+const (
+	SbmRegular TVTScrollBarStyle = iota
+	Sbm3D
 )
 
 // TVTSearchDirection ENUM
@@ -4281,656 +7323,9 @@ const (
 type TVTSearchStart = int32
 
 const (
-	SsAlwaysStartOver TVTSearchStart = iota // always use the first/last node (depending on direction) to search from
-	SsLastHit                               // use the last found node
-	SsFocusedNode                           // use the currently focused node
-)
-
-// TVTLineMode ENUM
-//
-//	Determines how to draw tree lines.
-type TVTLineMode = int32
-
-const (
-	LmNormal TVTLineMode = iota // usual tree lines (as in TTreeview)
-	LmBands                     // looks similar to a Nassi-Schneidermann diagram
-)
-
-// TVTLineStyle ENUM
-//
-//	Determines the look of a tree's lines.
-type TVTLineStyle = int32
-
-const (
-	LsCustomStyle TVTLineStyle = iota // application provides a line pattern
-	LsDotted                          // usual dotted lines (default)
-	LsSolid                           // simple solid lines
-)
-
-// TVTNodeAlignment ENUM
-//
-//	Determines how to use the align member of a node.
-type TVTNodeAlignment = int32
-
-const (
-	NaFromBottom   TVTNodeAlignment = iota // the align member specifies amount of units (usually pixels) from top border of the node
-	NaFromTop                              // align is to be measured from bottom
-	NaProportional                         // align is to be measure in percent of the entire node height and relative to top
-)
-
-// TVirtualTreeState ENUM
-//
-//	Various events must be handled at different places than they were initiated or need
-//	a persistent storage until they are reset.
-type TVirtualTreeState = int32
-
-const (
-	TsCancelHintAnimation    TVirtualTreeState = iota // Set when a new hint is about to show but an old hint is still being animated.
-	TsChangePending                                   // A selection change is pending.
-	TsCheckPropagation                                // Set during automatic check state propagation.
-	TsCollapsing                                      // A full collapse operation is in progress.
-	TsToggleFocusedSelection                          // Node selection was modifed using Ctrl-click. Change selection state on next mouse up.
-	TsClearPending                                    // Need to clear the current selection on next mouse move.
-	TsClipboardFlushing                               // Set during flushing the clipboard to avoid freeing the content.
-	TsCopyPending                                     // Indicates a pending copy operation which needs to be finished.
-	TsCutPending                                      // Indicates a pending cut operation which needs to be finished.
-	TsDrawSelPending                                  // Multiselection only. User held down the left mouse button on a free
-	// area and might want to start draw selection.
-	TsDrawSelecting            // Multiselection only. Draw selection has actually started.
-	TsEditing                  // Indicates that an edit operation is currently in progress.
-	TsEditPending              // An mouse up start edit if dragging has not started.
-	TsExpanding                // A full expand operation is in progress.
-	TsNodeHeightTracking       // A node height changing operation is in progress.
-	TsNodeHeightTrackPending   // left button is down, user might want to start changing a node's height.
-	TsHint                     // Set when our hint is visible or soon will be.
-	TsInAnimation              // Set if the tree is currently in an animation loop.
-	TsIncrementalSearching     // Set when the user starts incremental search.
-	TsIncrementalSearchPending // Set in WM_KEYDOWN to tell to use the char in WM_CHAR for incremental search.
-	TsIterating                // Set when IterateSubtree is currently in progress.
-	TsKeyCheckPending          // A check operation is under way, initiated by a key press (space key). Ignore mouse.
-	TsLeftButtonDown           // Set when the left mouse button is down.
-	TsLeftDblClick             // Set when the left mouse button was doubly clicked.
-	TsMouseCheckPending        // A check operation is under way, initiated by a mouse click. Ignore space key.
-	TsMiddleButtonDown         // Set when the middle mouse button is down.
-	TsMiddleDblClick           // Set when the middle mouse button was doubly clicked.
-	TsNeedRootCountUpdate      // Set if while loading a root node count is set.
-	TsOLEDragging              // OLE dragging in progress.
-	TsOLEDragPending           // User has requested to start delayed dragging.
-	TsPainting                 // The tree is currently painting itself.
-	TsRightButtonDown          // Set when the right mouse button is down.
-	TsRightDblClick            // Set when the right mouse button was doubly clicked.
-	TsPopupMenuShown           // The user clicked the right mouse button, which might cause a popup menu to appear.
-	TsScrolling                // Set when autoscrolling is active.
-	TsScrollPending            // Set when waiting for the scroll delay time to elapse.
-	TsSizing                   // Set when the tree window is being resized. This is used to prevent recursive calls
-	// due to setting the scrollbars when sizing.
-	TsStopValidation             // Cache validation can be stopped (usually because a change has occurred meanwhile).
-	TsStructureChangePending     // The structure of the tree has been changed while the update was locked.
-	TsSynchMode                  // Set when the tree is in synch mode, where no timer events are triggered.
-	TsThumbTracking              // Stop updating the horizontal scroll bar while dragging the vertical thumb and vice versa.
-	TsToggling                   // A toggle operation (for some node) is in progress.
-	TsUpdateHiddenChildrenNeeded // Pending update for the hidden children flag after massive visibility changes.
-	TsUpdating                   // The tree does currently not update its window because a BeginUpdate has not yet ended.
-	TsUseCache                   // The tree's node caches are validated and non-empty.
-	TsUserDragObject             // Signals that the application created an own drag object in OnStartDrag.
-	TsUseThemes                  // The tree runs under WinXP+, is theme aware and themes are enabled.
-	TsValidating                 // The tree's node caches are currently validated.
-	TsPreviouslySelectedLocked   // The member FPreviouslySelected should not be changed
-	TsValidationNeeded           // Something in the structure of the tree has changed. The cache needs validation.
-	TsVCLDragging                // VCL drag'n drop in progress.
-	TsVCLDragPending             // One-shot flag to avoid clearing the current selection on implicit mouse up for VCL drag.
-	TsVCLDragFinished            // Flag to avoid triggering the OnColumnClick event twice
-	TsWheelPanning               // Wheel mouse panning is active or soon will be.
-	TsWheelScrolling             // Wheel mouse scrolling is active or soon will be.
-	TsWindowCreating             // Set during window handle creation to avoid frequent unnecessary updates.
-	TsUseExplorerTheme           // The tree runs under WinVista+ and is using the explorer theme
-)
-
-// TVirtualTreeStates SET: TVirtualTreeState
-//
-//	Various events must be handled at different places than they were initiated or need
-//	a persistent storage until they are reset.
-type TVirtualTreeStates = TSet
-
-// TVTInternalPaintOption ENUM
-//
-//	options which determine what to draw in PaintTree
-type TVTInternalPaintOption = int32
-
-const (
-	PoBackground    TVTInternalPaintOption = iota // draw background image if there is any and it is enabled
-	PoColumnColor                                 // erase node's background with the column's color
-	PoDrawFocusRect                               // draw focus rectangle around the focused node
-	PoDrawSelection                               // draw selected nodes with the normal selection color
-	PoDrawDropMark                                // draw drop mark if a node is currently the drop target
-	PoGridLines                                   // draw grid lines if enabled
-	PoMainOnly                                    // draw only the main column
-	PoSelectedOnly                                // draw only selected nodes
-	PoUnbuffered                                  // draw directly onto the target canvas; especially useful when printing
-)
-
-// TVTInternalPaintOptions SET: TVTInternalPaintOption
-type TVTInternalPaintOptions = TSet
-
-// TVTImageKind ENUM
-type TVTImageKind = int32
-
-const (
-	IkNormal TVTImageKind = iota
-	IkSelected
-	IkState
-	ikOverlay
-)
-
-// TVSTTextSourceType ENUM
-//
-//	Describes the source to use when converting a string tree into a string for clipboard etc.
-type TVSTTextSourceType = int32
-
-const (
-	TstAll         TVSTTextSourceType = iota // All nodes are rendered. Initialization is done on the fly.
-	TstInitialized                           // Only initialized nodes are rendered.
-	TstSelected                              // Only selected nodes are rendered.
-	TstCutCopySet                            // Only nodes currently marked as being in the cut/copy clipboard set are rendered.
-	TstVisible                               // Only visible nodes are rendered.
-	TstChecked                               // Only checked nodes are rendered
-)
-
-// TVSTTextType ENUM
-//
-//	Describes the type of text to return in the text and draw info retrival events.
-type TVSTTextType = int32
-
-const (
-	TtNormal TVSTTextType = iota // normal label of the node, this is also the text which can be edited
-	TtStatic                     // static (non-editable) text after the normal text
-)
-
-// TVTScrollBarStyle ENUM
-type TVTScrollBarStyle = int32
-
-const (
-	SbmRegular TVTScrollBarStyle = iota
-	Sbm3D
-)
-
-// TVTAnimationOption ENUM
-//
-//	Options to toggle animation support:
-type TVTAnimationOption = int32
-
-const (
-	ToAnimatedToggle         TVTAnimationOption = iota // Expanding and collapsing a node is animated (quick window scroll).
-	ToAdvancedAnimatedToggle                           // Do some advanced animation effects when toggling a node.
-)
-
-// TVTAnimationOptions SET: TVTAnimationOption
-type TVTAnimationOptions = TSet
-
-// TVTAutoOption ENUM
-//
-//	Options which toggle automatic handling of certain situations:
-type TVTAutoOption = int32
-
-const (
-	ToAutoDropExpand           TVTAutoOption = iota // Expand node if it is the drop target for more than a certain time.
-	ToAutoExpand                                    // Nodes are expanded (collapsed) when getting (losing) the focus.
-	ToAutoScroll                                    // Scroll if mouse is near the border while dragging or selecting.
-	ToAutoScrollOnExpand                            // Scroll as many child nodes in view as possible after expanding a node.
-	ToAutoSort                                      // Sort tree when Header.SortColumn or Header.SortDirection change or sort node if child nodes are added.
-	ToAutoSpanColumns                               // Large entries continue into next column(s) if there's no text in them (no clipping).
-	ToAutoTristateTracking                          // Checkstates are automatically propagated for tri state check boxes.
-	ToAutoHideButtons                               // Node buttons are hidden when there are child nodes, but all are invisible.
-	ToAutoDeleteMovedNodes                          // Delete nodes which where moved in a drag operation (if not directed otherwise).
-	ToDisableAutoscrollOnFocus                      // Disable scrolling a node or column into view if it gets focused.
-	ToAutoChangeScale                               // Change default node height automatically if the system's font scale is set to big fonts.
-	ToAutoFreeOnCollapse                            // Frees any child node after a node has been collapsed (HasChildren flag stays there).
-	ToDisableAutoscrollOnEdit                       // Do not center a node horizontally when it is edited.
-	ToAutoBidiColumnOrdering                        // When set then columns (if any exist) will be reordered from lowest index to highest index and vice versa when the tree's bidi mode is changed.
-)
-
-// TVTAutoOptions SET: TVTAutoOption
-type TVTAutoOptions = TSet
-
-// TVTExportMode
-//
-//	Options to control data export
-type TVTExportMode = int32
-
-const (
-	EmAll                   TVTExportMode = iota // export all records (regardless checked state)
-	EmChecked                                    // export checked records only
-	EmUnchecked                                  // export unchecked records only
-	EmVisibleDueToExpansion                      // Do not export nodes that are not visible because their parent is not expanded
-	EmSelected                                   // export selected nodes only
-)
-
-// TVTMiscOption ENUM
-// Options which do not fit into any of the other groups:
-type TVTMiscOption = int32
-
-const (
-	ToAcceptOLEDrop            TVTMiscOption = iota // Register tree as OLE accepting drop target
-	ToCheckSupport                                  // Show checkboxes/radio buttons.
-	ToEditable                                      // Node captions can be edited.
-	ToFullRepaintOnResize                           // Fully invalidate the tree when its window is resized (CS_HREDRAW/CS_VREDRAW).
-	ToGridExtensions                                // Use some special enhancements to simulate and support grid behavior.
-	ToInitOnSave                                    // Initialize nodes when saving a tree to a stream.
-	ToReportMode                                    // Tree behaves like TListView in report mode.
-	ToToggleOnDblClick                              // Toggle node expansion state when it is double clicked.
-	ToWheelPanning                                  // Support for mouse panning (wheel mice only). This option and toMiddleClickSelect are mutal exclusive, where panning has precedence.
-	ToReadOnly                                      // The tree does not allow to be modified in any way. No action is executed and node editing is not possible.
-	ToVariableNodeHeight                            // When set then GetNodeHeight will trigger OnMeasureItem to allow variable node heights.
-	ToFullRowDrag                                   // Start node dragging by clicking anywhere in it instead only on the caption or image. Must be used together with toDisableDrawSelection.
-	ToNodeHeightResize                              // Allows changing a node's height via mouse.
-	ToNodeHeightDblClickResize                      // Allows to reset a node's height to FDefaultNodeHeight via a double click.
-	ToEditOnClick                                   // Editing mode can be entered with a single click
-	ToEditOnDblClick                                // Editing mode can be entered with a double click
-	ToReverseFullExpandHotKey                       // Used to define Ctrl+'+' instead of Ctrl+Shift+'+' for full expand (and similar for collapsing)
-)
-
-// TVTMiscOptions SET: TVTMiscOption
-type TVTMiscOptions = TSet
-
-// TVTPaintOption ENUM
-//
-//	There is a heap of switchable behavior in the tree. Since published properties may never exceed 4 bytes,
-//	which limits sets to at most 32 members, and because for better overview tree options are splitted
-//	in various sub-options and are held in a commom options class.
-//	Options to customize tree appearance:
-type TVTPaintOption = int32
-
-const (
-	ToHideFocusRect         TVTPaintOption = iota // Avoid drawing the dotted rectangle around the currently focused node.
-	ToHideSelection                               // Selected nodes are drawn as unselected nodes if the tree is unfocused.
-	ToHotTrack                                    // Track which node is under the mouse cursor.
-	ToPopupMode                                   // Paint tree as would it always have the focus (useful for tree combo boxes etc.)
-	ToShowBackground                              // Use the background image if there's one.
-	ToShowButtons                                 // Display collapse/expand buttons left to a node.
-	ToShowDropmark                                // Show the dropmark during drag'n drop operations.
-	ToShowHorzGridLines                           // Display horizontal lines to simulate a grid.
-	ToShowRoot                                    // Show lines also at top level (does not show the hidden/internal root node).
-	ToShowTreeLines                               // Display tree lines to show hierarchy of nodes.
-	ToShowVertGridLines                           // Display vertical lines (depending on columns) to simulate a grid.
-	ToThemeAware                                  // Draw UI elements (header, tree buttons etc.) according to the current theme if enabled (Windows XP+ only, application must be themed).
-	ToUseBlendedImages                            // Enable alpha blending for ghosted nodes or those which are being cut/copied.
-	ToGhostedIfUnfocused                          // Ghosted images are still shown as ghosted if unfocused (otherwise the become non-ghosted images).
-	ToFullVertGridLines                           // Display vertical lines over the full client area, not only the space occupied by nodes. This option only has an effect if toShowVertGridLines is enabled too.
-	ToAlwaysHideSelection                         // Do not draw node selection, regardless of focused state.
-	ToUseBlendedSelection                         // Enable alpha blending for node selections.
-	ToStaticBackground                            // Show simple static background instead of a tiled one.
-	ToChildrenAbove                               // Display child nodes above their parent.
-	ToFixedIndent                                 // Draw the tree with a fixed indent.
-	ToUseExplorerTheme                            // Use the explorer theme if run under Windows Vista (or above).
-	ToHideTreeLinesIfThemed                       // Do not show tree lines if theming is used.
-	ToShowFilteredNodes                           // Draw nodes even if they are filtered out.
-)
-
-// TVTPaintOptions SET: TVTPaintOption
-type TVTPaintOptions = TSet
-
-// TVTSelectionOption ENUM
-//
-//	Options which determine the tree's behavior when selecting nodes:
-type TVTSelectionOption = int32
-
-const (
-	ToDisableDrawSelection    TVTSelectionOption = iota // Prevent user from selecting with the selection rectangle in multiselect mode.
-	ToExtendedFocus                                     // Entries other than in the main column can be selected, edited etc.
-	ToFullRowSelect                                     // Hit test as well as selection highlight are not constrained to the text of a node.
-	ToLevelSelectConstraint                             // Constrain selection to the same level as the selection anchor.
-	ToMiddleClickSelect                                 // Allow selection, dragging etc. with the middle mouse button. This and toWheelPanning are mutual exclusive.
-	ToMultiSelect                                       // Allow more than one node to be selected.
-	ToRightClickSelect                                  // Allow selection, dragging etc. with the right mouse button.
-	ToSiblingSelectConstraint                           // Constrain selection to nodes with same parent.
-	ToCenterScrollIntoView                              // Center nodes vertically in the client area when scrolling into view.
-	ToSimpleDrawSelection                               // Simplifies draw selection, so a node's caption does not need to intersect with the selection rectangle.
-	ToAlwaysSelectNode                                  // If this flag is set to true, the tree view tries to always have a node selected. This behavior is closer to the Windows TreeView and useful in Windows Explorer style applications.
-	ToRestoreSelection                                  // Set to true if upon refill the previously selected nodes should be selected again.  The nodes will be identified by its caption only.
-)
-
-// TVTSelectionOptions SET: TVTSelectionOption
-type TVTSelectionOptions = TSet
-
-// TVTStringOption
-// Options regarding strings (useful only for the string tree and descendants):
-type TVTStringOption = int32
-
-const (
-	ToSaveCaptions         TVTStringOption = iota // If set then the caption is automatically saved with the tree node, regardless of what is saved in the user data.
-	ToShowStaticText                              // Show static text in a caption which can be differently formatted than the caption but cannot be edited.
-	ToAutoAcceptEditChange                        // Automatically accept changes during edit if the user finishes editing other then VK_RETURN or ESC. If not set then changes are cancelled.
-)
-
-// TVTStringOptions SET: TVTStringOption
-type TVTStringOptions = TSet
-
-// TVTDragMoveRestriction ENUM
-//
-//	Simple move limitation for the drag image.
-type TVTDragMoveRestriction = int32
-
-const (
-	DmrNone TVTDragMoveRestriction = iota
-	DmrHorizontalOnly
-	DmrVerticalOnly
-)
-
-// TVTTransparency ENUM  0..255
-// Drag image support for the tree.
-type TVTTransparency = uint8
-
-// TVTBias ENUM -128..127
-type TVTBias = int8
-
-// THeaderState ENUM
-type THeaderState = int32
-
-const (
-	HsAutoSizing              THeaderState = iota // auto size chain is in progess, do not trigger again on WM_SIZE
-	HsDragging                                    // header dragging is in progress (only if enabled)
-	HsDragPending                                 // left button is down, user might want to start dragging a column
-	HsLoading                                     // The header currently loads from stream, so updates are not necessary.
-	HsColumnWidthTracking                         // column resizing is in progress
-	HsColumnWidthTrackPending                     // left button is down, user might want to start resize a column
-	HsHeightTracking                              // height resizing is in progress
-	HsHeightTrackPending                          // left button is down, user might want to start changing height
-	HsResizing                                    // multi column resizing in progress
-	HsScaling                                     // the header is scaled after a change of FixedAreaConstraints or client size
-	HsNeedScaling                                 // the header needs to be scaled
-)
-
-// THeaderStates SET: THeaderState
-type THeaderStates = TSet
-
-// TVTHeaderOption ENUM
-type TVTHeaderOption = int32
-
-const (
-	HoAutoResize            TVTHeaderOption = iota // Adjust a column so that the header never exceeds the client width of the owner control.
-	HoColumnResize                                 // Resizing columns with the mouse is allowed.
-	HoDblClickResize                               // Allows a column to resize itself to its largest entry.
-	HoDrag                                         // Dragging columns is allowed.
-	HoHotTrack                                     // Header captions are highlighted when mouse is over a particular column.
-	HoOwnerDraw                                    // Header items with the owner draw style can be drawn by the application via event.
-	HoRestrictDrag                                 // Header can only be dragged horizontally.
-	HoShowHint                                     // Show application defined header hint.
-	HoShowImages                                   // Show header images.
-	HoShowSortGlyphs                               // Allow visible sort glyphs.
-	HoVisible                                      // Header is visible.
-	HoAutoSpring                                   // Distribute size changes of the header to all columns, which are sizable and have the coAutoSpring option enabled.
-	HoFullRepaintOnResize                          // Fully invalidate the header (instead of subsequent columns only) when a column is resized.
-	HoDisableAnimatedResize                        // Disable animated resize for all columns.
-	HoHeightResize                                 // Allow resizing header height via mouse.
-	HoHeightDblClickResize                         // Allow the header to resize itself to its default height.
-	HoHeaderClickAutoSort                          // Clicks on the header will make the clicked column the SortColumn or toggle sort direction if it already was the sort column
-)
-
-// TVTHeaderOptions SET: TVTHeaderOption
-type TVTHeaderOptions = TSet
-
-// TVTHeaderStyle ENUM
-type TVTHeaderStyle = int32
-
-const (
-	HsThickButtons TVTHeaderStyle = iota // TButton look and feel
-	HsFlatButtons                        // flatter look than hsThickButton, like an always raised flat TToolButton
-	HsPlates                             // flat TToolButton look and feel (raise on hover etc.)
-)
-
-// TVTColumnOption
-// Options per column.
-type TVTColumnOption = int32
-
-const (
-	CoAllowClick            TVTColumnOption = iota // Column can be clicked (must be enabled too).
-	CoDraggable                                    // Column can be dragged.
-	CoEnabled                                      // Column is enabled.
-	CoParentBidiMode                               // Column uses the parent's bidi mode.
-	CoParentColor                                  // Column uses the parent's background color.
-	CoResizable                                    // Column can be resized.
-	CoShowDropMark                                 // Column shows the drop mark if it is currently the drop target.
-	CoVisible                                      // Column is shown.
-	CoAutoSpring                                   // Column takes part in the auto spring feature of the header (must be resizable too).
-	CoFixed                                        // Column is fixed and can not be selected or scrolled etc.
-	CoSmartResize                                  // Column is resized to its largest entry which is in view (instead of its largest visible entry).
-	CoAllowFocus                                   // Column can be focused.
-	CoDisableAnimatedResize                        // Column resizing is not animated.
-	CoWrapCaption                                  // Caption could be wrapped across several header lines to fit columns width.
-	CoUseCaptionAlignment                          // Column's caption has its own aligment.
-	CoEditable                                     // Column can be edited
-)
-
-// TVTColumnOptions SET: TVTColumnOption
-type TVTColumnOptions = TSet
-
-// TSmartAutoFitType ENUM
-type TSmartAutoFitType = int32
-
-const (
-	SmaAllColumns      TSmartAutoFitType = iota // consider nodes in view only for all columns
-	SmaNoColumn                                 // consider nodes in view only for no column
-	SmaUseColumnOption                          // use coSmartResize of the corresponding column
-) // describes the used column resize behaviour for AutoFitColumns
-
-// TVTConstraintPercent ENUM 0..100
-type TVTConstraintPercent = uint8
-
-// TVTHeaderColumnLayout ENUM
-type TVTHeaderColumnLayout = int32
-
-const (
-	GcBlGlyphLeft TVTHeaderColumnLayout = iota
-	GcBlGlyphRight
-	GcBlGlyphTop
-	GcBlGlyphBottom
-)
-
-// TVirtualTreeColumnStyle ENUM
-type TVirtualTreeColumnStyle = int32
-
-const (
-	VsText TVirtualTreeColumnStyle = iota
-	VsOwnerDraw
-)
-
-// TChangeReason ENUM
-type TChangeReason = int32
-
-const (
-	CrIgnore       TChangeReason = iota // used as placeholder
-	CrAccumulated                       // used for delayed changes
-	CrChildAdded                        // one or more child nodes have been added
-	CrChildDeleted                      // one or more child nodes have been deleted
-	CrNodeAdded                         // a node has been added
-	CrNodeCopied                        // a node has been duplicated
-	CrNodeMoved                         // a node has been moved to a new place
-) // desribes what made a structure change event happen
-
-// TVirtualNodeInitState ENUM
-//
-//	States used in InitNode to indicate states a node shall initially have.
-type TVirtualNodeInitState = int32
-
-const (
-	IvsDisabled TVirtualNodeInitState = iota
-	IvsExpanded
-	IvsHasChildren
-	IvsMultiline
-	IvsSelected
-	IvsFiltered
-	IvsReInit
-)
-
-// TVirtualNodeInitStates SET: TVirtualNodeInitState
-type TVirtualNodeInitStates = TSet
-
-// TVTExportType
-// Export type
-type TVTExportType = int32
-
-const (
-	TvtEtRTF    TVTExportType = iota // contentToRTF
-	TvtEtHTML                        // contentToHTML
-	TvtEtText                        // contentToText
-	TvtEtExcel                       // supported by external tools
-	TvtEtWord                        // supported by external tools
-	TvtEtCustom                      // supported by external tools
-)
-
-// TVTImageInfoIndex ENUM
-type TVTImageInfoIndex = int32
-
-const (
-	IiNormal TVTImageInfoIndex = iota
-	IiState
-	IiCheck
-	IiOverlay
-)
-
-// TVTCellContentMarginType ENUM
-//
-//	Determines which sides of the cell content margin should be considered.
-type TVTCellContentMarginType = int32
-
-const (
-	CcmtAllSides        TVTCellContentMarginType = iota // consider all sides
-	CcmtTopLeftOnly                                     // consider top margin and left margin only
-	CcmtBottomRightOnly                                 // consider bottom margin and right margin only
-)
-
-// TVTHeaderHitPosition ENUM
-// These flags are used to indicate where a click in the header happened.
-type TVTHeaderHitPosition = int32
-
-const (
-	HhiNoWhere    TVTHeaderHitPosition = iota // No column is involved (possible only if the tree is smaller than the client area).
-	HhiOnColumn                               // On a column.
-	HhiOnIcon                                 // On the bitmap associated with a column.
-	HhiOnCheckbox                             // On the checkbox if enabled.
-)
-
-// TVTHeaderHitPositions SET: TVTHeaderHitPosition
-type TVTHeaderHitPositions = TSet
-
-// TVTDropMarkMode ENUM
-//
-//	Used during owner draw of the header to indicate which drop mark for the column must be drawn.
-type TVTDropMarkMode = int32
-
-const (
-	DmmNone TVTDropMarkMode = iota
-	DmmLeft
-	DmmRight
-)
-
-// THeaderPaintElement ENUM
-//
-//	These elements are used both to query the application, which of them it wants to draw itself and to tell it during
-//	painting, which elements must be drawn during the advanced custom draw events.
-type THeaderPaintElement = int32
-
-const (
-	HpeBackground THeaderPaintElement = iota
-	HpeDropMark
-	HpeHeaderGlyph
-	HpeSortGlyph
-	HpeText
-)
-
-// THeaderPaintElements SET: THeaderPaintElement
-type THeaderPaintElements = TSet
-
-// THitPosition ENUM
-// These flags are returned by the hit test method.
-type THitPosition = int32
-
-const (
-	HiAbove             THitPosition = iota // above the client area (if relative) or the absolute tree area
-	HiBelow                                 // below the client area (if relative) or the absolute tree area
-	HiNowhere                               // no node is involved (possible only if the tree is not as tall as the client area)
-	HiOnItem                                // on the bitmaps/buttons or label associated with an item
-	HiOnItemButton                          // on the button associated with an item
-	HiOnItemButtonExact                     // exactly on the button associated with an item
-	HiOnItemCheckbox                        // on the checkbox if enabled
-	HiOnItemIndent                          // in the indentation area in front of a node
-	HiOnItemLabel                           // on the normal text area associated with an item
-	HiOnItemLeft                            // in the area to the left of a node's text area (e.g. when right aligned or centered)
-	HiOnItemRight                           // in the area to the right of a node's text area (e.g. if left aligned or centered)
-	HiOnNormalIcon                          // on the "normal" image
-	HiOnStateIcon                           // on the state image
-	HiToLeft                                // to the left of the client area (if relative) or the absolute tree area
-	HiToRight                               // to the right of the client area (if relative) or the absolute tree area
-	HiUpperSplitter                         // in the upper splitter area of a node
-	HiLowerSplitter                         // in the lower splitter area of a node
-)
-
-// THitPositions SET: THitPosition
-type THitPositions = TSet
-
-// TDropMode ENUM
-// modes to determine drop position further
-type TDropMode = int32
-
-const (
-	DmNowhere TDropMode = iota
-	DmAbove
-	DmOnNode
-	DmBelow
-)
-
-// TItemEraseAction ENUM
-// Used to describe the action to do when using the OnBeforeItemErase event.
-type TItemEraseAction = int32
-
-const (
-	EaColor   TItemEraseAction = iota // Use the provided color to erase the background instead the one of the tree.
-	EaDefault                         // The tree should erase the item's background (bitmap or solid).
-	EaNone                            // Do nothing. Let the application paint the background.
-)
-
-// TVTCellPaintMode ENUM
-// Determines for which purpose the cell paint event is called.
-type TVTCellPaintMode = int32
-
-const (
-	CpmPaint            TVTCellPaintMode = iota // painting the cell
-	CpmGetContentMargin                         // getting cell content margin
-)
-
-// TVTOperationKind ENUM
-// Kinds of operations
-type TVTOperationKind = int32
-
-const (
-	OkAutoFitColumns TVTOperationKind = iota
-	OkGetMaxColumnWidth
-	OkSortNode
-	OkSortTree
-)
-
-// TVTOperationKinds SET: TVTOperationKind
-type TVTOperationKinds = TSet
-
-// TVTHintKind ENUM
-type TVTHintKind = int32
-
-const (
-	VhkText TVTHintKind = iota
-	VhkOwnerDraw
-)
-
-// TVTUpdateState ENUM
-// Indicates in the OnUpdating event what state the tree is currently in.
-type TVTUpdateState = int32
-
-const (
-	UsBegin      TVTUpdateState = iota // The tree just entered the update state (BeginUpdate call for the first time).
-	UsBeginSynch                       // The tree just entered the synch update state (BeginSynch call for the first time).
-	UsSynch                            // Begin/EndSynch has been called but the tree did not change the update state.
-	UsUpdate                           // Begin/EndUpdate has been called but the tree did not change the update state.
-	UsEnd                              // The tree just left the update state (EndUpdate called for the last level).
-	UsEndSynch                         // The tree just left the synch update state (EndSynch called for the last level).
+	SsAlwaysStartOver TVTSearchStart = iota
+	SsLastHit
+	SsFocusedNode
 )
 
 // TVTTooltipLineBreakStyle ENUM
@@ -4939,18 +7334,173 @@ const (
 type TVTTooltipLineBreakStyle = int32
 
 const (
-	HlbDefault         TVTTooltipLineBreakStyle = iota // Use multi-line style of the node.
-	HlbForceSingleLine                                 // Use single line hint.
-	HlbForceMultiLine                                  // Use multi line hint.
+	HlbDefault TVTTooltipLineBreakStyle = iota
+	HlbForceSingleLine
+	HlbForceMultiLine
 )
 
-// TOpenGLControlOption ENUM
-type TOpenGLControlOption = int32
+// TVTUpdateState ENUM
+//
+//	Indicates in the OnUpdating event what state the tree is currently in.
+type TVTUpdateState = int32
 
 const (
-	OcoMacRetinaMode TOpenGLControlOption = iota
-	OcoRenderAtDesignTime
+	UsBegin TVTUpdateState = iota
+	UsBeginSynch
+	UsSynch
+	UsUpdate
+	UsEnd
+	UsEndSynch
 )
 
-// TOpenGLControlOptions SET: TOpenGLControlOption
-type TOpenGLControlOptions = TSet
+// TVZVirtualNodeEnumerationMode ENUM
+type TVZVirtualNodeEnumerationMode = int32
+
+const (
+	VneAll TVZVirtualNodeEnumerationMode = iota
+	VneChecked
+	VneChild
+	VneCutCopy
+	VneInitialized
+	VneLeaf
+	VneLevel
+	VneNoInit
+	VneSelected
+	VneVisible
+	VneVisibleChild
+	VneVisibleNoInitChild
+	VneVisibleNoInit
+)
+
+// TWinCETitlePolicy ENUM
+//
+//	Policy for using the "OK" close button in the title instead of
+//	the default "X" minimize button
+type TWinCETitlePolicy = int32
+
+const (
+	TpAlwaysUseOKButton TWinCETitlePolicy = iota
+	TpOKButtonOnlyOnDialogs
+	TpControlWithBorderIcons
+)
+
+// TWinCEVersion ENUM
+type TWinCEVersion = int32
+
+const (
+	Wince_1 TWinCEVersion = iota
+	Wince_2
+	Wince_3
+	Wince_4
+	Wince_5
+	Wince_6
+	Wince_6_1
+	Wince_6_5
+	Wince_7
+	Wince_other
+)
+
+// TWinControlFlag ENUM
+//
+//	TWinControl
+type TWinControlFlag = int32
+
+const (
+	WcfClientRectNeedsUpdate TWinControlFlag = iota
+	WcfColorChanged
+	WcfFontChanged
+	WcfAllAutoSizing
+	WcfAligningControls
+	WcfEraseBackground
+	WcfCreatingHandle
+	WcfInitializing
+	WcfCreatingChildHandles
+	WcfRealizingBounds
+	WcfBoundsRealized
+	WcfUpdateShowing
+	WcfHandleVisible
+	WcfAdjustedLogicalClientRectValid
+	WcfKillIntfSetBounds
+	WcfDesignerDeleting
+	WcfSpecialSubControl
+)
+
+// TWindowState ENUM
+type TWindowState = int32
+
+const (
+	WsNormal TWindowState = iota
+	WsMinimized
+	WsMaximized
+	WsFullScreen
+)
+
+// TWindowsVersion ENUM
+type TWindowsVersion = int32
+
+const (
+	WvUnknown TWindowsVersion = iota
+	Wv95
+	WvNT4
+	Wv98
+	WvMe
+	Wv2000
+	WvXP
+	WvServer2003
+	WvVista
+	Wv7
+	Wv8
+	Wv8_1
+	Wv10
+	Wv11
+	WvLater
+)
+
+// TWrapAfter ENUM
+type TWrapAfter = int32
+
+const (
+	WaAuto TWrapAfter = iota
+	WaForce
+	WaAvoid
+	WaForbid
+)
+
+// TWSListViewItemChange ENUM
+//
+//	TWSCustomListView
+type TWSListViewItemChange = int32
+
+const (
+	LvicText TWSListViewItemChange = iota
+	LvicImage
+)
+
+// TWSZPosition ENUM
+//
+//	TWSWinControl
+type TWSZPosition = int32
+
+const (
+	WszpBack TWSZPosition = iota
+	WszpFront
+)
+
+// TXButtonState ENUM
+type TXButtonState = int32
+
+const (
+	XbsNone TXButtonState = iota
+	XbsHot
+	XbsDown
+	XbsDisabled
+)
+
+// TXPMRange ENUM
+type TXPMRange = int32
+
+const (
+	XrCode TXPMRange = iota
+	XrStaticKeyWord
+	XrCharKeyWord
+)

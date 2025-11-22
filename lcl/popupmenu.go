@@ -9,151 +9,199 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IPopupMenu Parent: IMenu
 type IPopupMenu interface {
 	IMenu
-	PopupComponent() IComponent          // property
-	SetPopupComponent(AValue IComponent) // property
-	PopupPoint() (resultPoint TPoint)    // property
-	Alignment() TPopupAlignment          // property
-	SetAlignment(AValue TPopupAlignment) // property
-	AutoPopup() bool                     // property
-	SetAutoPopup(AValue bool)            // property
-	HelpContext() THelpContext           // property
-	SetHelpContext(AValue THelpContext)  // property
-	TrackButton() TTrackButton           // property
-	SetTrackButton(AValue TTrackButton)  // property
-	PopUp()                              // procedure
-	PopUp1(X, Y int32)                   // procedure
-	Close()                              // procedure
-	SetOnPopup(fn TNotifyEvent)          // property event
-	SetOnClose(fn TNotifyEvent)          // property event
+	PopUp()                                   // procedure
+	PopUpWithIntX2(X int32, Y int32)          // procedure
+	Close()                                   // procedure
+	PopupComponent() IComponent               // property PopupComponent Getter
+	SetPopupComponent(value IComponent)       // property PopupComponent Setter
+	PopupPoint() types.TPoint                 // property PopupPoint Getter
+	SetPopupPoint(value types.TPoint)         // property PopupPoint Setter
+	Alignment() types.TPopupAlignment         // property Alignment Getter
+	SetAlignment(value types.TPopupAlignment) // property Alignment Setter
+	AutoPopup() bool                          // property AutoPopup Getter
+	SetAutoPopup(value bool)                  // property AutoPopup Setter
+	HelpContext() types.THelpContext          // property HelpContext Getter
+	SetHelpContext(value types.THelpContext)  // property HelpContext Setter
+	TrackButton() types.TTrackButton          // property TrackButton Getter
+	SetTrackButton(value types.TTrackButton)  // property TrackButton Setter
+	SetOnPopup(fn TNotifyEvent)               // property event
+	SetOnClose(fn TNotifyEvent)               // property event
 }
 
-// TPopupMenu Parent: TMenu
 type TPopupMenu struct {
 	TMenu
-	popupPtr uintptr
-	closePtr uintptr
-}
-
-func NewPopupMenu(AOwner IComponent) IPopupMenu {
-	r1 := popupMenuImportAPI().SysCallN(4, GetObjectUintptr(AOwner))
-	return AsPopupMenu(r1)
-}
-
-func (m *TPopupMenu) PopupComponent() IComponent {
-	r1 := popupMenuImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return AsComponent(r1)
-}
-
-func (m *TPopupMenu) SetPopupComponent(AValue IComponent) {
-	popupMenuImportAPI().SysCallN(8, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TPopupMenu) PopupPoint() (resultPoint TPoint) {
-	popupMenuImportAPI().SysCallN(9, m.Instance(), uintptr(unsafePointer(&resultPoint)))
-	return
-}
-
-func (m *TPopupMenu) Alignment() TPopupAlignment {
-	r1 := popupMenuImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TPopupAlignment(r1)
-}
-
-func (m *TPopupMenu) SetAlignment(AValue TPopupAlignment) {
-	popupMenuImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TPopupMenu) AutoPopup() bool {
-	r1 := popupMenuImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TPopupMenu) SetAutoPopup(AValue bool) {
-	popupMenuImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TPopupMenu) HelpContext() THelpContext {
-	r1 := popupMenuImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return THelpContext(r1)
-}
-
-func (m *TPopupMenu) SetHelpContext(AValue THelpContext) {
-	popupMenuImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TPopupMenu) TrackButton() TTrackButton {
-	r1 := popupMenuImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return TTrackButton(r1)
-}
-
-func (m *TPopupMenu) SetTrackButton(AValue TTrackButton) {
-	popupMenuImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
-}
-
-func PopupMenuClass() TClass {
-	ret := popupMenuImportAPI().SysCallN(2)
-	return TClass(ret)
 }
 
 func (m *TPopupMenu) PopUp() {
-	popupMenuImportAPI().SysCallN(6, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	popupMenuAPI().SysCallN(1, m.Instance())
 }
 
-func (m *TPopupMenu) PopUp1(X, Y int32) {
-	popupMenuImportAPI().SysCallN(7, m.Instance(), uintptr(X), uintptr(Y))
+func (m *TPopupMenu) PopUpWithIntX2(X int32, Y int32) {
+	if !m.IsValid() {
+		return
+	}
+	popupMenuAPI().SysCallN(2, m.Instance(), uintptr(X), uintptr(Y))
 }
 
 func (m *TPopupMenu) Close() {
-	popupMenuImportAPI().SysCallN(3, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	popupMenuAPI().SysCallN(3, m.Instance())
+}
+
+func (m *TPopupMenu) PopupComponent() IComponent {
+	if !m.IsValid() {
+		return nil
+	}
+	r := popupMenuAPI().SysCallN(4, 0, m.Instance())
+	return AsComponent(r)
+}
+
+func (m *TPopupMenu) SetPopupComponent(value IComponent) {
+	if !m.IsValid() {
+		return
+	}
+	popupMenuAPI().SysCallN(4, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TPopupMenu) PopupPoint() (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	popupMenuAPI().SysCallN(5, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TPopupMenu) SetPopupPoint(value types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	popupMenuAPI().SysCallN(5, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TPopupMenu) Alignment() types.TPopupAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := popupMenuAPI().SysCallN(6, 0, m.Instance())
+	return types.TPopupAlignment(r)
+}
+
+func (m *TPopupMenu) SetAlignment(value types.TPopupAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	popupMenuAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TPopupMenu) AutoPopup() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := popupMenuAPI().SysCallN(7, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TPopupMenu) SetAutoPopup(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	popupMenuAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TPopupMenu) HelpContext() types.THelpContext {
+	if !m.IsValid() {
+		return 0
+	}
+	r := popupMenuAPI().SysCallN(8, 0, m.Instance())
+	return types.THelpContext(r)
+}
+
+func (m *TPopupMenu) SetHelpContext(value types.THelpContext) {
+	if !m.IsValid() {
+		return
+	}
+	popupMenuAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TPopupMenu) TrackButton() types.TTrackButton {
+	if !m.IsValid() {
+		return 0
+	}
+	r := popupMenuAPI().SysCallN(9, 0, m.Instance())
+	return types.TTrackButton(r)
+}
+
+func (m *TPopupMenu) SetTrackButton(value types.TTrackButton) {
+	if !m.IsValid() {
+		return
+	}
+	popupMenuAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPopupMenu) SetOnPopup(fn TNotifyEvent) {
-	if m.popupPtr != 0 {
-		RemoveEventElement(m.popupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.popupPtr = MakeEventDataPtr(fn)
-	popupMenuImportAPI().SysCallN(11, m.Instance(), m.popupPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 10, popupMenuAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPopupMenu) SetOnClose(fn TNotifyEvent) {
-	if m.closePtr != 0 {
-		RemoveEventElement(m.closePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.closePtr = MakeEventDataPtr(fn)
-	popupMenuImportAPI().SysCallN(10, m.Instance(), m.closePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 11, popupMenuAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewPopupMenu class constructor
+func NewPopupMenu(owner IComponent) IPopupMenu {
+	r := popupMenuAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsPopupMenu(r)
+}
+
+func TPopupMenuClass() types.TClass {
+	r := popupMenuAPI().SysCallN(12)
+	return types.TClass(r)
 }
 
 var (
-	popupMenuImport       *imports.Imports = nil
-	popupMenuImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("PopupMenu_Alignment", 0),
-		/*1*/ imports.NewTable("PopupMenu_AutoPopup", 0),
-		/*2*/ imports.NewTable("PopupMenu_Class", 0),
-		/*3*/ imports.NewTable("PopupMenu_Close", 0),
-		/*4*/ imports.NewTable("PopupMenu_Create", 0),
-		/*5*/ imports.NewTable("PopupMenu_HelpContext", 0),
-		/*6*/ imports.NewTable("PopupMenu_PopUp", 0),
-		/*7*/ imports.NewTable("PopupMenu_PopUp1", 0),
-		/*8*/ imports.NewTable("PopupMenu_PopupComponent", 0),
-		/*9*/ imports.NewTable("PopupMenu_PopupPoint", 0),
-		/*10*/ imports.NewTable("PopupMenu_SetOnClose", 0),
-		/*11*/ imports.NewTable("PopupMenu_SetOnPopup", 0),
-		/*12*/ imports.NewTable("PopupMenu_TrackButton", 0),
-	}
+	popupMenuOnce   base.Once
+	popupMenuImport *imports.Imports = nil
 )
 
-func popupMenuImportAPI() *imports.Imports {
-	if popupMenuImport == nil {
-		popupMenuImport = NewDefaultImports()
-		popupMenuImport.SetImportTable(popupMenuImportTables)
-		popupMenuImportTables = nil
-	}
+func popupMenuAPI() *imports.Imports {
+	popupMenuOnce.Do(func() {
+		popupMenuImport = api.NewDefaultImports()
+		popupMenuImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPopupMenu_Create", 0), // constructor NewPopupMenu
+			/* 1 */ imports.NewTable("TPopupMenu_PopUp", 0), // procedure PopUp
+			/* 2 */ imports.NewTable("TPopupMenu_PopUpWithIntX2", 0), // procedure PopUpWithIntX2
+			/* 3 */ imports.NewTable("TPopupMenu_Close", 0), // procedure Close
+			/* 4 */ imports.NewTable("TPopupMenu_PopupComponent", 0), // property PopupComponent
+			/* 5 */ imports.NewTable("TPopupMenu_PopupPoint", 0), // property PopupPoint
+			/* 6 */ imports.NewTable("TPopupMenu_Alignment", 0), // property Alignment
+			/* 7 */ imports.NewTable("TPopupMenu_AutoPopup", 0), // property AutoPopup
+			/* 8 */ imports.NewTable("TPopupMenu_HelpContext", 0), // property HelpContext
+			/* 9 */ imports.NewTable("TPopupMenu_TrackButton", 0), // property TrackButton
+			/* 10 */ imports.NewTable("TPopupMenu_OnPopup", 0), // event OnPopup
+			/* 11 */ imports.NewTable("TPopupMenu_OnClose", 0), // event OnClose
+			/* 12 */ imports.NewTable("TPopupMenu_TClass", 0), // function TPopupMenuClass
+		}
+	})
 	return popupMenuImport
 }

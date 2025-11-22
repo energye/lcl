@@ -9,128 +9,164 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ITextAttributes Parent: IPersistent
 type ITextAttributes interface {
 	IPersistent
-	Name() string                   // property
-	SetName(AValue string)          // property
-	Pitch() TFontPitch              // property
-	SetPitch(AValue TFontPitch)     // property
-	Charset() TFontCharSet          // property
-	SetCharset(AValue TFontCharSet) // property
-	Color() TColor                  // property
-	SetColor(AValue TColor)         // property
-	Size() int32                    // property
-	SetSize(AValue int32)           // property
-	Style() TFontStyles             // property
-	SetStyle(AValue TFontStyles)    // property
-	Height() int32                  // property
-	SetHeight(AValue int32)         // property
+	Name() string                        // property Name Getter
+	SetName(value string)                // property Name Setter
+	Pitch() types.TFontPitch             // property Pitch Getter
+	SetPitch(value types.TFontPitch)     // property Pitch Setter
+	Charset() types.TFontCharSet         // property Charset Getter
+	SetCharset(value types.TFontCharSet) // property Charset Setter
+	Color() types.TColor                 // property Color Getter
+	SetColor(value types.TColor)         // property Color Setter
+	Size() int32                         // property Size Getter
+	SetSize(value int32)                 // property Size Setter
+	Style() types.TFontStyles            // property Style Getter
+	SetStyle(value types.TFontStyles)    // property Style Setter
+	Height() int32                       // property Height Getter
+	SetHeight(value int32)               // property Height Setter
 }
 
-// TTextAttributes Parent: TPersistent
 type TTextAttributes struct {
 	TPersistent
 }
 
-func NewTextAttributes(AOwner IRichMemo, AType TAttributeType) ITextAttributes {
-	r1 := extAttributesImportAPI().SysCallN(3, GetObjectUintptr(AOwner), uintptr(AType))
-	return AsTextAttributes(r1)
-}
-
 func (m *TTextAttributes) Name() string {
-	r1 := extAttributesImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := textAttributesAPI().SysCallN(1, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TTextAttributes) SetName(AValue string) {
-	extAttributesImportAPI().SysCallN(5, 1, m.Instance(), PascalStr(AValue))
+func (m *TTextAttributes) SetName(value string) {
+	if !m.IsValid() {
+		return
+	}
+	textAttributesAPI().SysCallN(1, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TTextAttributes) Pitch() TFontPitch {
-	r1 := extAttributesImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return TFontPitch(r1)
+func (m *TTextAttributes) Pitch() types.TFontPitch {
+	if !m.IsValid() {
+		return 0
+	}
+	r := textAttributesAPI().SysCallN(2, 0, m.Instance())
+	return types.TFontPitch(r)
 }
 
-func (m *TTextAttributes) SetPitch(AValue TFontPitch) {
-	extAttributesImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TTextAttributes) SetPitch(value types.TFontPitch) {
+	if !m.IsValid() {
+		return
+	}
+	textAttributesAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TTextAttributes) Charset() TFontCharSet {
-	r1 := extAttributesImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TFontCharSet(r1)
+func (m *TTextAttributes) Charset() types.TFontCharSet {
+	if !m.IsValid() {
+		return 0
+	}
+	r := textAttributesAPI().SysCallN(3, 0, m.Instance())
+	return types.TFontCharSet(r)
 }
 
-func (m *TTextAttributes) SetCharset(AValue TFontCharSet) {
-	extAttributesImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TTextAttributes) SetCharset(value types.TFontCharSet) {
+	if !m.IsValid() {
+		return
+	}
+	textAttributesAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TTextAttributes) Color() TColor {
-	r1 := extAttributesImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TTextAttributes) Color() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := textAttributesAPI().SysCallN(4, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TTextAttributes) SetColor(AValue TColor) {
-	extAttributesImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TTextAttributes) SetColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	textAttributesAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TTextAttributes) Size() int32 {
-	r1 := extAttributesImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := textAttributesAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TTextAttributes) SetSize(AValue int32) {
-	extAttributesImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TTextAttributes) SetSize(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	textAttributesAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TTextAttributes) Style() TFontStyles {
-	r1 := extAttributesImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TFontStyles(r1)
+func (m *TTextAttributes) Style() types.TFontStyles {
+	if !m.IsValid() {
+		return 0
+	}
+	r := textAttributesAPI().SysCallN(6, 0, m.Instance())
+	return types.TFontStyles(r)
 }
 
-func (m *TTextAttributes) SetStyle(AValue TFontStyles) {
-	extAttributesImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TTextAttributes) SetStyle(value types.TFontStyles) {
+	if !m.IsValid() {
+		return
+	}
+	textAttributesAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TTextAttributes) Height() int32 {
-	r1 := extAttributesImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := textAttributesAPI().SysCallN(7, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TTextAttributes) SetHeight(AValue int32) {
-	extAttributesImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TTextAttributes) SetHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	textAttributesAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
-func TextAttributesClass() TClass {
-	ret := extAttributesImportAPI().SysCallN(1)
-	return TClass(ret)
+// NewTextAttributes class constructor
+func NewTextAttributes(owner IRichMemo, type_ types.TAttributeType) ITextAttributes {
+	r := textAttributesAPI().SysCallN(0, base.GetObjectUintptr(owner), uintptr(type_))
+	return AsTextAttributes(r)
 }
 
 var (
-	extAttributesImport       *imports.Imports = nil
-	extAttributesImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("TextAttributes_Charset", 0),
-		/*1*/ imports.NewTable("TextAttributes_Class", 0),
-		/*2*/ imports.NewTable("TextAttributes_Color", 0),
-		/*3*/ imports.NewTable("TextAttributes_Create", 0),
-		/*4*/ imports.NewTable("TextAttributes_Height", 0),
-		/*5*/ imports.NewTable("TextAttributes_Name", 0),
-		/*6*/ imports.NewTable("TextAttributes_Pitch", 0),
-		/*7*/ imports.NewTable("TextAttributes_Size", 0),
-		/*8*/ imports.NewTable("TextAttributes_Style", 0),
-	}
+	textAttributesOnce   base.Once
+	textAttributesImport *imports.Imports = nil
 )
 
-func extAttributesImportAPI() *imports.Imports {
-	if extAttributesImport == nil {
-		extAttributesImport = NewDefaultImports()
-		extAttributesImport.SetImportTable(extAttributesImportTables)
-		extAttributesImportTables = nil
-	}
-	return extAttributesImport
+func textAttributesAPI() *imports.Imports {
+	textAttributesOnce.Do(func() {
+		textAttributesImport = api.NewDefaultImports()
+		textAttributesImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TTextAttributes_Create", 0), // constructor NewTextAttributes
+			/* 1 */ imports.NewTable("TTextAttributes_Name", 0), // property Name
+			/* 2 */ imports.NewTable("TTextAttributes_Pitch", 0), // property Pitch
+			/* 3 */ imports.NewTable("TTextAttributes_Charset", 0), // property Charset
+			/* 4 */ imports.NewTable("TTextAttributes_Color", 0), // property Color
+			/* 5 */ imports.NewTable("TTextAttributes_Size", 0), // property Size
+			/* 6 */ imports.NewTable("TTextAttributes_Style", 0), // property Style
+			/* 7 */ imports.NewTable("TTextAttributes_Height", 0), // property Height
+		}
+	})
+	return textAttributesImport
 }

@@ -9,171 +9,228 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IListColumn Parent: ICollectionItem
 type IListColumn interface {
 	ICollectionItem
-	WidthType() int32                       // property
-	Alignment() TAlignment                  // property
-	SetAlignment(AValue TAlignment)         // property
-	AutoSize() bool                         // property
-	SetAutoSize(AValue bool)                // property
-	Caption() string                        // property
-	SetCaption(AValue string)               // property
-	ImageIndex() TImageIndex                // property
-	SetImageIndex(AValue TImageIndex)       // property
-	MaxWidth() int32                        // property
-	SetMaxWidth(AValue int32)               // property
-	MinWidth() int32                        // property
-	SetMinWidth(AValue int32)               // property
-	Tag() uint32                            // property
-	SetTag(AValue uint32)                   // property
-	Visible() bool                          // property
-	SetVisible(AValue bool)                 // property
-	Width() int32                           // property
-	SetWidth(AValue int32)                  // property
-	SortIndicator() TSortIndicator          // property
-	SetSortIndicator(AValue TSortIndicator) // property
+	WidthType() int32                            // property WidthType Getter
+	Alignment() types.TAlignment                 // property Alignment Getter
+	SetAlignment(value types.TAlignment)         // property Alignment Setter
+	AutoSize() bool                              // property AutoSize Getter
+	SetAutoSize(value bool)                      // property AutoSize Setter
+	Caption() string                             // property Caption Getter
+	SetCaption(value string)                     // property Caption Setter
+	ImageIndex() int32                           // property ImageIndex Getter
+	SetImageIndex(value int32)                   // property ImageIndex Setter
+	MaxWidth() int32                             // property MaxWidth Getter
+	SetMaxWidth(value int32)                     // property MaxWidth Setter
+	MinWidth() int32                             // property MinWidth Getter
+	SetMinWidth(value int32)                     // property MinWidth Setter
+	Tag() uintptr                                // property Tag Getter
+	SetTag(value uintptr)                        // property Tag Setter
+	Visible() bool                               // property Visible Getter
+	SetVisible(value bool)                       // property Visible Setter
+	Width() int32                                // property Width Getter
+	SetWidth(value int32)                        // property Width Setter
+	SortIndicator() types.TSortIndicator         // property SortIndicator Getter
+	SetSortIndicator(value types.TSortIndicator) // property SortIndicator Setter
 }
 
-// TListColumn Parent: TCollectionItem
 type TListColumn struct {
 	TCollectionItem
 }
 
-func NewListColumn(ACollection ICollection) IListColumn {
-	r1 := listColumnImportAPI().SysCallN(4, GetObjectUintptr(ACollection))
-	return AsListColumn(r1)
-}
-
 func (m *TListColumn) WidthType() int32 {
-	r1 := listColumnImportAPI().SysCallN(12, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := listColumnAPI().SysCallN(1, m.Instance())
+	return int32(r)
 }
 
-func (m *TListColumn) Alignment() TAlignment {
-	r1 := listColumnImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TAlignment(r1)
+func (m *TListColumn) Alignment() types.TAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listColumnAPI().SysCallN(2, 0, m.Instance())
+	return types.TAlignment(r)
 }
 
-func (m *TListColumn) SetAlignment(AValue TAlignment) {
-	listColumnImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TListColumn) SetAlignment(value types.TAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	listColumnAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListColumn) AutoSize() bool {
-	r1 := listColumnImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listColumnAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListColumn) SetAutoSize(AValue bool) {
-	listColumnImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
+func (m *TListColumn) SetAutoSize(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listColumnAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TListColumn) Caption() string {
-	r1 := listColumnImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := listColumnAPI().SysCallN(4, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TListColumn) SetCaption(AValue string) {
-	listColumnImportAPI().SysCallN(2, 1, m.Instance(), PascalStr(AValue))
+func (m *TListColumn) SetCaption(value string) {
+	if !m.IsValid() {
+		return
+	}
+	listColumnAPI().SysCallN(4, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TListColumn) ImageIndex() TImageIndex {
-	r1 := listColumnImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TImageIndex(r1)
+func (m *TListColumn) ImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listColumnAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TListColumn) SetImageIndex(AValue TImageIndex) {
-	listColumnImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TListColumn) SetImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listColumnAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListColumn) MaxWidth() int32 {
-	r1 := listColumnImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := listColumnAPI().SysCallN(6, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TListColumn) SetMaxWidth(AValue int32) {
-	listColumnImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TListColumn) SetMaxWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listColumnAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListColumn) MinWidth() int32 {
-	r1 := listColumnImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := listColumnAPI().SysCallN(7, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TListColumn) SetMinWidth(AValue int32) {
-	listColumnImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TListColumn) SetMinWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listColumnAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TListColumn) Tag() uint32 {
-	r1 := listColumnImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return uint32(r1)
+func (m *TListColumn) Tag() uintptr {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listColumnAPI().SysCallN(8, 0, m.Instance())
+	return uintptr(r)
 }
 
-func (m *TListColumn) SetTag(AValue uint32) {
-	listColumnImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TListColumn) SetTag(value uintptr) {
+	if !m.IsValid() {
+		return
+	}
+	listColumnAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TListColumn) Visible() bool {
-	r1 := listColumnImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := listColumnAPI().SysCallN(9, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TListColumn) SetVisible(AValue bool) {
-	listColumnImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
+func (m *TListColumn) SetVisible(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	listColumnAPI().SysCallN(9, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TListColumn) Width() int32 {
-	r1 := listColumnImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := listColumnAPI().SysCallN(10, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TListColumn) SetWidth(AValue int32) {
-	listColumnImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
+func (m *TListColumn) SetWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	listColumnAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TListColumn) SortIndicator() TSortIndicator {
-	r1 := listColumnImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TSortIndicator(r1)
+func (m *TListColumn) SortIndicator() types.TSortIndicator {
+	if !m.IsValid() {
+		return 0
+	}
+	r := listColumnAPI().SysCallN(11, 0, m.Instance())
+	return types.TSortIndicator(r)
 }
 
-func (m *TListColumn) SetSortIndicator(AValue TSortIndicator) {
-	listColumnImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TListColumn) SetSortIndicator(value types.TSortIndicator) {
+	if !m.IsValid() {
+		return
+	}
+	listColumnAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
 }
 
-func ListColumnClass() TClass {
-	ret := listColumnImportAPI().SysCallN(3)
-	return TClass(ret)
+// NewListColumn class constructor
+func NewListColumn(collection ICollection) IListColumn {
+	r := listColumnAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsListColumn(r)
 }
 
 var (
-	listColumnImport       *imports.Imports = nil
-	listColumnImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ListColumn_Alignment", 0),
-		/*1*/ imports.NewTable("ListColumn_AutoSize", 0),
-		/*2*/ imports.NewTable("ListColumn_Caption", 0),
-		/*3*/ imports.NewTable("ListColumn_Class", 0),
-		/*4*/ imports.NewTable("ListColumn_Create", 0),
-		/*5*/ imports.NewTable("ListColumn_ImageIndex", 0),
-		/*6*/ imports.NewTable("ListColumn_MaxWidth", 0),
-		/*7*/ imports.NewTable("ListColumn_MinWidth", 0),
-		/*8*/ imports.NewTable("ListColumn_SortIndicator", 0),
-		/*9*/ imports.NewTable("ListColumn_Tag", 0),
-		/*10*/ imports.NewTable("ListColumn_Visible", 0),
-		/*11*/ imports.NewTable("ListColumn_Width", 0),
-		/*12*/ imports.NewTable("ListColumn_WidthType", 0),
-	}
+	listColumnOnce   base.Once
+	listColumnImport *imports.Imports = nil
 )
 
-func listColumnImportAPI() *imports.Imports {
-	if listColumnImport == nil {
-		listColumnImport = NewDefaultImports()
-		listColumnImport.SetImportTable(listColumnImportTables)
-		listColumnImportTables = nil
-	}
+func listColumnAPI() *imports.Imports {
+	listColumnOnce.Do(func() {
+		listColumnImport = api.NewDefaultImports()
+		listColumnImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TListColumn_Create", 0), // constructor NewListColumn
+			/* 1 */ imports.NewTable("TListColumn_WidthType", 0), // property WidthType
+			/* 2 */ imports.NewTable("TListColumn_Alignment", 0), // property Alignment
+			/* 3 */ imports.NewTable("TListColumn_AutoSize", 0), // property AutoSize
+			/* 4 */ imports.NewTable("TListColumn_Caption", 0), // property Caption
+			/* 5 */ imports.NewTable("TListColumn_ImageIndex", 0), // property ImageIndex
+			/* 6 */ imports.NewTable("TListColumn_MaxWidth", 0), // property MaxWidth
+			/* 7 */ imports.NewTable("TListColumn_MinWidth", 0), // property MinWidth
+			/* 8 */ imports.NewTable("TListColumn_Tag", 0), // property Tag
+			/* 9 */ imports.NewTable("TListColumn_Visible", 0), // property Visible
+			/* 10 */ imports.NewTable("TListColumn_Width", 0), // property Width
+			/* 11 */ imports.NewTable("TListColumn_SortIndicator", 0), // property SortIndicator
+		}
+	})
 	return listColumnImport
 }

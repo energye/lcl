@@ -9,152 +9,199 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomCheckCombo Parent: ICustomComboBox
 type ICustomCheckCombo interface {
 	ICustomComboBox
-	AllowGrayed() bool                                                      // property
-	SetAllowGrayed(AValue bool)                                             // property
-	Count() int32                                                           // property
-	Checked(AIndex int32) bool                                              // property
-	SetChecked(AIndex int32, AValue bool)                                   // property
-	ItemEnabled(AIndex int32) bool                                          // property
-	SetItemEnabled(AIndex int32, AValue bool)                               // property
-	Objects(AIndex int32) IObject                                           // property
-	SetObjects(AIndex int32, AValue IObject)                                // property
-	State(AIndex int32) TCheckBoxState                                      // property
-	SetState(AIndex int32, AValue TCheckBoxState)                           // property
-	AddItemForPChar(AItem string, AState TCheckBoxState, AEnabled bool)     // procedure
-	AssignItems(AItems IStrings)                                            // procedure
-	DeleteItem(AIndex int32)                                                // procedure
-	CheckAll(AState TCheckBoxState, AAllowGrayed bool, AAllowDisabled bool) // procedure
-	Toggle(AIndex int32)                                                    // procedure
-	SetOnItemChange(fn TCheckItemChange)                                    // property event
+	AddItemWithStringCheckBoxStateBool(item string, state types.TCheckBoxState, enabled bool) // procedure
+	AssignItems(items IStrings)                                                               // procedure
+	DeleteItem(index int32)                                                                   // procedure
+	CheckAll(state types.TCheckBoxState, allowGrayed bool, allowDisabled bool)                // procedure
+	Toggle(index int32)                                                                       // procedure
+	AllowGrayed() bool                                                                        // property AllowGrayed Getter
+	SetAllowGrayed(value bool)                                                                // property AllowGrayed Setter
+	Count() int32                                                                             // property Count Getter
+	Checked(index int32) bool                                                                 // property Checked Getter
+	SetChecked(index int32, value bool)                                                       // property Checked Setter
+	ItemEnabled(index int32) bool                                                             // property ItemEnabled Getter
+	SetItemEnabled(index int32, value bool)                                                   // property ItemEnabled Setter
+	Objects(index int32) IObject                                                              // property Objects Getter
+	SetObjects(index int32, value IObject)                                                    // property Objects Setter
+	State(index int32) types.TCheckBoxState                                                   // property State Getter
+	SetState(index int32, value types.TCheckBoxState)                                         // property State Setter
+	SetOnItemChange(fn TCheckItemChange)                                                      // property event
 }
 
-// TCustomCheckCombo Parent: TCustomComboBox
 type TCustomCheckCombo struct {
 	TCustomComboBox
-	itemChangePtr uintptr
 }
 
-func NewCustomCheckCombo(AOwner IComponent) ICustomCheckCombo {
-	r1 := customCheckComboImportAPI().SysCallN(7, GetObjectUintptr(AOwner))
-	return AsCustomCheckCombo(r1)
+func (m *TCustomCheckCombo) AddItemWithStringCheckBoxStateBool(item string, state types.TCheckBoxState, enabled bool) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckComboAPI().SysCallN(1, m.Instance(), api.PasStr(item), uintptr(state), api.PasBool(enabled))
+}
+
+func (m *TCustomCheckCombo) AssignItems(items IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckComboAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(items))
+}
+
+func (m *TCustomCheckCombo) DeleteItem(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckComboAPI().SysCallN(3, m.Instance(), uintptr(index))
+}
+
+func (m *TCustomCheckCombo) CheckAll(state types.TCheckBoxState, allowGrayed bool, allowDisabled bool) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckComboAPI().SysCallN(4, m.Instance(), uintptr(state), api.PasBool(allowGrayed), api.PasBool(allowDisabled))
+}
+
+func (m *TCustomCheckCombo) Toggle(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckComboAPI().SysCallN(5, m.Instance(), uintptr(index))
 }
 
 func (m *TCustomCheckCombo) AllowGrayed() bool {
-	r1 := customCheckComboImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customCheckComboAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomCheckCombo) SetAllowGrayed(AValue bool) {
-	customCheckComboImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomCheckCombo) SetAllowGrayed(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckComboAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomCheckCombo) Count() int32 {
-	r1 := customCheckComboImportAPI().SysCallN(6, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customCheckComboAPI().SysCallN(7, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomCheckCombo) Checked(AIndex int32) bool {
-	r1 := customCheckComboImportAPI().SysCallN(4, 0, m.Instance(), uintptr(AIndex))
-	return GoBool(r1)
+func (m *TCustomCheckCombo) Checked(index int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customCheckComboAPI().SysCallN(8, 0, m.Instance(), uintptr(index))
+	return api.GoBool(r)
 }
 
-func (m *TCustomCheckCombo) SetChecked(AIndex int32, AValue bool) {
-	customCheckComboImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
+func (m *TCustomCheckCombo) SetChecked(index int32, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckComboAPI().SysCallN(8, 1, m.Instance(), uintptr(index), api.PasBool(value))
 }
 
-func (m *TCustomCheckCombo) ItemEnabled(AIndex int32) bool {
-	r1 := customCheckComboImportAPI().SysCallN(9, 0, m.Instance(), uintptr(AIndex))
-	return GoBool(r1)
+func (m *TCustomCheckCombo) ItemEnabled(index int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customCheckComboAPI().SysCallN(9, 0, m.Instance(), uintptr(index))
+	return api.GoBool(r)
 }
 
-func (m *TCustomCheckCombo) SetItemEnabled(AIndex int32, AValue bool) {
-	customCheckComboImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
+func (m *TCustomCheckCombo) SetItemEnabled(index int32, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckComboAPI().SysCallN(9, 1, m.Instance(), uintptr(index), api.PasBool(value))
 }
 
-func (m *TCustomCheckCombo) Objects(AIndex int32) IObject {
-	r1 := customCheckComboImportAPI().SysCallN(10, 0, m.Instance(), uintptr(AIndex))
-	return AsObject(r1)
+func (m *TCustomCheckCombo) Objects(index int32) IObject {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customCheckComboAPI().SysCallN(10, 0, m.Instance(), uintptr(index))
+	return AsObject(r)
 }
 
-func (m *TCustomCheckCombo) SetObjects(AIndex int32, AValue IObject) {
-	customCheckComboImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AIndex), GetObjectUintptr(AValue))
+func (m *TCustomCheckCombo) SetObjects(index int32, value IObject) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckComboAPI().SysCallN(10, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
 }
 
-func (m *TCustomCheckCombo) State(AIndex int32) TCheckBoxState {
-	r1 := customCheckComboImportAPI().SysCallN(12, 0, m.Instance(), uintptr(AIndex))
-	return TCheckBoxState(r1)
+func (m *TCustomCheckCombo) State(index int32) types.TCheckBoxState {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customCheckComboAPI().SysCallN(11, 0, m.Instance(), uintptr(index))
+	return types.TCheckBoxState(r)
 }
 
-func (m *TCustomCheckCombo) SetState(AIndex int32, AValue TCheckBoxState) {
-	customCheckComboImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AIndex), uintptr(AValue))
-}
-
-func CustomCheckComboClass() TClass {
-	ret := customCheckComboImportAPI().SysCallN(5)
-	return TClass(ret)
-}
-
-func (m *TCustomCheckCombo) AddItemForPChar(AItem string, AState TCheckBoxState, AEnabled bool) {
-	customCheckComboImportAPI().SysCallN(0, m.Instance(), PascalStr(AItem), uintptr(AState), PascalBool(AEnabled))
-}
-
-func (m *TCustomCheckCombo) AssignItems(AItems IStrings) {
-	customCheckComboImportAPI().SysCallN(2, m.Instance(), GetObjectUintptr(AItems))
-}
-
-func (m *TCustomCheckCombo) DeleteItem(AIndex int32) {
-	customCheckComboImportAPI().SysCallN(8, m.Instance(), uintptr(AIndex))
-}
-
-func (m *TCustomCheckCombo) CheckAll(AState TCheckBoxState, AAllowGrayed bool, AAllowDisabled bool) {
-	customCheckComboImportAPI().SysCallN(3, m.Instance(), uintptr(AState), PascalBool(AAllowGrayed), PascalBool(AAllowDisabled))
-}
-
-func (m *TCustomCheckCombo) Toggle(AIndex int32) {
-	customCheckComboImportAPI().SysCallN(13, m.Instance(), uintptr(AIndex))
+func (m *TCustomCheckCombo) SetState(index int32, value types.TCheckBoxState) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckComboAPI().SysCallN(11, 1, m.Instance(), uintptr(index), uintptr(value))
 }
 
 func (m *TCustomCheckCombo) SetOnItemChange(fn TCheckItemChange) {
-	if m.itemChangePtr != 0 {
-		RemoveEventElement(m.itemChangePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.itemChangePtr = MakeEventDataPtr(fn)
-	customCheckComboImportAPI().SysCallN(11, m.Instance(), m.itemChangePtr)
+	cb := makeTCheckItemChange(fn)
+	base.SetEvent(m, 12, customCheckComboAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomCheckCombo class constructor
+func NewCustomCheckCombo(owner IComponent) ICustomCheckCombo {
+	r := customCheckComboAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomCheckCombo(r)
+}
+
+func TCustomCheckComboClass() types.TClass {
+	r := customCheckComboAPI().SysCallN(13)
+	return types.TClass(r)
 }
 
 var (
-	customCheckComboImport       *imports.Imports = nil
-	customCheckComboImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomCheckCombo_AddItemForPChar", 0),
-		/*1*/ imports.NewTable("CustomCheckCombo_AllowGrayed", 0),
-		/*2*/ imports.NewTable("CustomCheckCombo_AssignItems", 0),
-		/*3*/ imports.NewTable("CustomCheckCombo_CheckAll", 0),
-		/*4*/ imports.NewTable("CustomCheckCombo_Checked", 0),
-		/*5*/ imports.NewTable("CustomCheckCombo_Class", 0),
-		/*6*/ imports.NewTable("CustomCheckCombo_Count", 0),
-		/*7*/ imports.NewTable("CustomCheckCombo_Create", 0),
-		/*8*/ imports.NewTable("CustomCheckCombo_DeleteItem", 0),
-		/*9*/ imports.NewTable("CustomCheckCombo_ItemEnabled", 0),
-		/*10*/ imports.NewTable("CustomCheckCombo_Objects", 0),
-		/*11*/ imports.NewTable("CustomCheckCombo_SetOnItemChange", 0),
-		/*12*/ imports.NewTable("CustomCheckCombo_State", 0),
-		/*13*/ imports.NewTable("CustomCheckCombo_Toggle", 0),
-	}
+	customCheckComboOnce   base.Once
+	customCheckComboImport *imports.Imports = nil
 )
 
-func customCheckComboImportAPI() *imports.Imports {
-	if customCheckComboImport == nil {
-		customCheckComboImport = NewDefaultImports()
-		customCheckComboImport.SetImportTable(customCheckComboImportTables)
-		customCheckComboImportTables = nil
-	}
+func customCheckComboAPI() *imports.Imports {
+	customCheckComboOnce.Do(func() {
+		customCheckComboImport = api.NewDefaultImports()
+		customCheckComboImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomCheckCombo_Create", 0), // constructor NewCustomCheckCombo
+			/* 1 */ imports.NewTable("TCustomCheckCombo_AddItemWithStringCheckBoxStateBool", 0), // procedure AddItemWithStringCheckBoxStateBool
+			/* 2 */ imports.NewTable("TCustomCheckCombo_AssignItems", 0), // procedure AssignItems
+			/* 3 */ imports.NewTable("TCustomCheckCombo_DeleteItem", 0), // procedure DeleteItem
+			/* 4 */ imports.NewTable("TCustomCheckCombo_CheckAll", 0), // procedure CheckAll
+			/* 5 */ imports.NewTable("TCustomCheckCombo_Toggle", 0), // procedure Toggle
+			/* 6 */ imports.NewTable("TCustomCheckCombo_AllowGrayed", 0), // property AllowGrayed
+			/* 7 */ imports.NewTable("TCustomCheckCombo_Count", 0), // property Count
+			/* 8 */ imports.NewTable("TCustomCheckCombo_Checked", 0), // property Checked
+			/* 9 */ imports.NewTable("TCustomCheckCombo_ItemEnabled", 0), // property ItemEnabled
+			/* 10 */ imports.NewTable("TCustomCheckCombo_Objects", 0), // property Objects
+			/* 11 */ imports.NewTable("TCustomCheckCombo_State", 0), // property State
+			/* 12 */ imports.NewTable("TCustomCheckCombo_OnItemChange", 0), // event OnItemChange
+			/* 13 */ imports.NewTable("TCustomCheckCombo_TClass", 0), // function TCustomCheckComboClass
+		}
+	})
 	return customCheckComboImport
 }

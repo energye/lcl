@@ -9,36 +9,39 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICheckComboBox Parent: ICustomCheckCombo
 type ICheckComboBox interface {
 	ICustomCheckCombo
-	BorderStyle() TBorderStyle                     // property
-	SetBorderStyle(AValue TBorderStyle)            // property
-	DragCursor() TCursor                           // property
-	SetDragCursor(AValue TCursor)                  // property
-	DragKind() TDragKind                           // property
-	SetDragKind(AValue TDragKind)                  // property
-	DragMode() TDragMode                           // property
-	SetDragMode(AValue TDragMode)                  // property
-	ItemHeight() int32                             // property
-	SetItemHeight(AValue int32)                    // property
-	ItemWidth() int32                              // property
-	SetItemWidth(AValue int32)                     // property
-	MaxLength() int32                              // property
-	SetMaxLength(AValue int32)                     // property
-	ParentColor() bool                             // property
-	SetParentColor(AValue bool)                    // property
-	ParentFont() bool                              // property
-	SetParentFont(AValue bool)                     // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
-	Sorted() bool                                  // property
-	SetSorted(AValue bool)                         // property
+	// BorderStyle
+	//  properties which are not supported by all descendents
+	BorderStyle() types.TBorderStyle               // property BorderStyle Getter
+	SetBorderStyle(value types.TBorderStyle)       // property BorderStyle Setter
+	DragCursor() types.TCursor                     // property DragCursor Getter
+	SetDragCursor(value types.TCursor)             // property DragCursor Setter
+	DragKind() types.TDragKind                     // property DragKind Getter
+	SetDragKind(value types.TDragKind)             // property DragKind Setter
+	DragMode() types.TDragMode                     // property DragMode Getter
+	SetDragMode(value types.TDragMode)             // property DragMode Setter
+	ItemHeight() int32                             // property ItemHeight Getter
+	SetItemHeight(value int32)                     // property ItemHeight Setter
+	ItemWidth() int32                              // property ItemWidth Getter
+	SetItemWidth(value int32)                      // property ItemWidth Setter
+	MaxLength() int32                              // property MaxLength Getter
+	SetMaxLength(value int32)                      // property MaxLength Setter
+	ParentColor() bool                             // property ParentColor Getter
+	SetParentColor(value bool)                     // property ParentColor Setter
+	ParentFont() bool                              // property ParentFont Getter
+	SetParentFont(value bool)                      // property ParentFont Setter
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
+	Sorted() bool                                  // property Sorted Getter
+	SetSorted(value bool)                          // property Sorted Setter
 	SetOnChange(fn TNotifyEvent)                   // property event
 	SetOnCloseUp(fn TNotifyEvent)                  // property event
 	SetOnContextPopup(fn TContextPopupEvent)       // property event
@@ -61,344 +64,389 @@ type ICheckComboBox interface {
 	SetOnSelect(fn TNotifyEvent)                   // property event
 }
 
-// TCheckComboBox Parent: TCustomCheckCombo
 type TCheckComboBox struct {
 	TCustomCheckCombo
-	changePtr         uintptr
-	closeUpPtr        uintptr
-	contextPopupPtr   uintptr
-	dblClickPtr       uintptr
-	dragDropPtr       uintptr
-	dragOverPtr       uintptr
-	endDragPtr        uintptr
-	dropDownPtr       uintptr
-	editingDonePtr    uintptr
-	getItemsPtr       uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	startDragPtr      uintptr
-	selectPtr         uintptr
 }
 
-func NewCheckComboBox(AOwner IComponent) ICheckComboBox {
-	r1 := checkComboBoxImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
-	return AsCheckComboBox(r1)
+func (m *TCheckComboBox) BorderStyle() types.TBorderStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkComboBoxAPI().SysCallN(1, 0, m.Instance())
+	return types.TBorderStyle(r)
 }
 
-func (m *TCheckComboBox) BorderStyle() TBorderStyle {
-	r1 := checkComboBoxImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TBorderStyle(r1)
+func (m *TCheckComboBox) SetBorderStyle(value types.TBorderStyle) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCheckComboBox) SetBorderStyle(AValue TBorderStyle) {
-	checkComboBoxImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckComboBox) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkComboBoxAPI().SysCallN(2, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TCheckComboBox) DragCursor() TCursor {
-	r1 := checkComboBoxImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TCheckComboBox) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCheckComboBox) SetDragCursor(AValue TCursor) {
-	checkComboBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckComboBox) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkComboBoxAPI().SysCallN(3, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TCheckComboBox) DragKind() TDragKind {
-	r1 := checkComboBoxImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TCheckComboBox) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCheckComboBox) SetDragKind(AValue TDragKind) {
-	checkComboBoxImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckComboBox) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkComboBoxAPI().SysCallN(4, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TCheckComboBox) DragMode() TDragMode {
-	r1 := checkComboBoxImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TCheckComboBox) SetDragMode(AValue TDragMode) {
-	checkComboBoxImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckComboBox) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCheckComboBox) ItemHeight() int32 {
-	r1 := checkComboBoxImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkComboBoxAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCheckComboBox) SetItemHeight(AValue int32) {
-	checkComboBoxImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckComboBox) SetItemHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCheckComboBox) ItemWidth() int32 {
-	r1 := checkComboBoxImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkComboBoxAPI().SysCallN(6, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCheckComboBox) SetItemWidth(AValue int32) {
-	checkComboBoxImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckComboBox) SetItemWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCheckComboBox) MaxLength() int32 {
-	r1 := checkComboBoxImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkComboBoxAPI().SysCallN(7, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCheckComboBox) SetMaxLength(AValue int32) {
-	checkComboBoxImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckComboBox) SetMaxLength(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCheckComboBox) ParentColor() bool {
-	r1 := checkComboBoxImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkComboBoxAPI().SysCallN(8, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckComboBox) SetParentColor(AValue bool) {
-	checkComboBoxImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
+func (m *TCheckComboBox) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(8, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCheckComboBox) ParentFont() bool {
-	r1 := checkComboBoxImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkComboBoxAPI().SysCallN(9, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckComboBox) SetParentFont(AValue bool) {
-	checkComboBoxImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
+func (m *TCheckComboBox) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(9, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCheckComboBox) ParentShowHint() bool {
-	r1 := checkComboBoxImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkComboBoxAPI().SysCallN(10, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckComboBox) SetParentShowHint(AValue bool) {
-	checkComboBoxImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
+func (m *TCheckComboBox) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(10, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCheckComboBox) Sorted() bool {
-	r1 := checkComboBoxImportAPI().SysCallN(32, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkComboBoxAPI().SysCallN(11, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckComboBox) SetSorted(AValue bool) {
-	checkComboBoxImportAPI().SysCallN(32, 1, m.Instance(), PascalBool(AValue))
-}
-
-func CheckComboBoxClass() TClass {
-	ret := checkComboBoxImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TCheckComboBox) SetSorted(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkComboBoxAPI().SysCallN(11, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCheckComboBox) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(12, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnCloseUp(fn TNotifyEvent) {
-	if m.closeUpPtr != 0 {
-		RemoveEventElement(m.closeUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.closeUpPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(13, m.Instance(), m.closeUpPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 13, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(14, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 14, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(15, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 15, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(16, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 16, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(17, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 17, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(20, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 18, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnDropDown(fn TNotifyEvent) {
-	if m.dropDownPtr != 0 {
-		RemoveEventElement(m.dropDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dropDownPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(18, m.Instance(), m.dropDownPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 19, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnEditingDone(fn TNotifyEvent) {
-	if m.editingDonePtr != 0 {
-		RemoveEventElement(m.editingDonePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.editingDonePtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(19, m.Instance(), m.editingDonePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 20, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnGetItems(fn TNotifyEvent) {
-	if m.getItemsPtr != 0 {
-		RemoveEventElement(m.getItemsPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getItemsPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(21, m.Instance(), m.getItemsPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 21, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(22, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 22, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(23, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 23, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(24, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 24, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(25, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 25, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(26, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 26, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(27, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 27, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(28, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 28, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(29, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 29, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(31, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 30, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckComboBox) SetOnSelect(fn TNotifyEvent) {
-	if m.selectPtr != 0 {
-		RemoveEventElement(m.selectPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.selectPtr = MakeEventDataPtr(fn)
-	checkComboBoxImportAPI().SysCallN(30, m.Instance(), m.selectPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 31, checkComboBoxAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCheckComboBox class constructor
+func NewCheckComboBox(owner IComponent) ICheckComboBox {
+	r := checkComboBoxAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCheckComboBox(r)
+}
+
+func TCheckComboBoxClass() types.TClass {
+	r := checkComboBoxAPI().SysCallN(32)
+	return types.TClass(r)
 }
 
 var (
-	checkComboBoxImport       *imports.Imports = nil
-	checkComboBoxImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CheckComboBox_BorderStyle", 0),
-		/*1*/ imports.NewTable("CheckComboBox_Class", 0),
-		/*2*/ imports.NewTable("CheckComboBox_Create", 0),
-		/*3*/ imports.NewTable("CheckComboBox_DragCursor", 0),
-		/*4*/ imports.NewTable("CheckComboBox_DragKind", 0),
-		/*5*/ imports.NewTable("CheckComboBox_DragMode", 0),
-		/*6*/ imports.NewTable("CheckComboBox_ItemHeight", 0),
-		/*7*/ imports.NewTable("CheckComboBox_ItemWidth", 0),
-		/*8*/ imports.NewTable("CheckComboBox_MaxLength", 0),
-		/*9*/ imports.NewTable("CheckComboBox_ParentColor", 0),
-		/*10*/ imports.NewTable("CheckComboBox_ParentFont", 0),
-		/*11*/ imports.NewTable("CheckComboBox_ParentShowHint", 0),
-		/*12*/ imports.NewTable("CheckComboBox_SetOnChange", 0),
-		/*13*/ imports.NewTable("CheckComboBox_SetOnCloseUp", 0),
-		/*14*/ imports.NewTable("CheckComboBox_SetOnContextPopup", 0),
-		/*15*/ imports.NewTable("CheckComboBox_SetOnDblClick", 0),
-		/*16*/ imports.NewTable("CheckComboBox_SetOnDragDrop", 0),
-		/*17*/ imports.NewTable("CheckComboBox_SetOnDragOver", 0),
-		/*18*/ imports.NewTable("CheckComboBox_SetOnDropDown", 0),
-		/*19*/ imports.NewTable("CheckComboBox_SetOnEditingDone", 0),
-		/*20*/ imports.NewTable("CheckComboBox_SetOnEndDrag", 0),
-		/*21*/ imports.NewTable("CheckComboBox_SetOnGetItems", 0),
-		/*22*/ imports.NewTable("CheckComboBox_SetOnMouseDown", 0),
-		/*23*/ imports.NewTable("CheckComboBox_SetOnMouseEnter", 0),
-		/*24*/ imports.NewTable("CheckComboBox_SetOnMouseLeave", 0),
-		/*25*/ imports.NewTable("CheckComboBox_SetOnMouseMove", 0),
-		/*26*/ imports.NewTable("CheckComboBox_SetOnMouseUp", 0),
-		/*27*/ imports.NewTable("CheckComboBox_SetOnMouseWheel", 0),
-		/*28*/ imports.NewTable("CheckComboBox_SetOnMouseWheelDown", 0),
-		/*29*/ imports.NewTable("CheckComboBox_SetOnMouseWheelUp", 0),
-		/*30*/ imports.NewTable("CheckComboBox_SetOnSelect", 0),
-		/*31*/ imports.NewTable("CheckComboBox_SetOnStartDrag", 0),
-		/*32*/ imports.NewTable("CheckComboBox_Sorted", 0),
-	}
+	checkComboBoxOnce   base.Once
+	checkComboBoxImport *imports.Imports = nil
 )
 
-func checkComboBoxImportAPI() *imports.Imports {
-	if checkComboBoxImport == nil {
-		checkComboBoxImport = NewDefaultImports()
-		checkComboBoxImport.SetImportTable(checkComboBoxImportTables)
-		checkComboBoxImportTables = nil
-	}
+func checkComboBoxAPI() *imports.Imports {
+	checkComboBoxOnce.Do(func() {
+		checkComboBoxImport = api.NewDefaultImports()
+		checkComboBoxImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCheckComboBox_Create", 0), // constructor NewCheckComboBox
+			/* 1 */ imports.NewTable("TCheckComboBox_BorderStyle", 0), // property BorderStyle
+			/* 2 */ imports.NewTable("TCheckComboBox_DragCursor", 0), // property DragCursor
+			/* 3 */ imports.NewTable("TCheckComboBox_DragKind", 0), // property DragKind
+			/* 4 */ imports.NewTable("TCheckComboBox_DragMode", 0), // property DragMode
+			/* 5 */ imports.NewTable("TCheckComboBox_ItemHeight", 0), // property ItemHeight
+			/* 6 */ imports.NewTable("TCheckComboBox_ItemWidth", 0), // property ItemWidth
+			/* 7 */ imports.NewTable("TCheckComboBox_MaxLength", 0), // property MaxLength
+			/* 8 */ imports.NewTable("TCheckComboBox_ParentColor", 0), // property ParentColor
+			/* 9 */ imports.NewTable("TCheckComboBox_ParentFont", 0), // property ParentFont
+			/* 10 */ imports.NewTable("TCheckComboBox_ParentShowHint", 0), // property ParentShowHint
+			/* 11 */ imports.NewTable("TCheckComboBox_Sorted", 0), // property Sorted
+			/* 12 */ imports.NewTable("TCheckComboBox_OnChange", 0), // event OnChange
+			/* 13 */ imports.NewTable("TCheckComboBox_OnCloseUp", 0), // event OnCloseUp
+			/* 14 */ imports.NewTable("TCheckComboBox_OnContextPopup", 0), // event OnContextPopup
+			/* 15 */ imports.NewTable("TCheckComboBox_OnDblClick", 0), // event OnDblClick
+			/* 16 */ imports.NewTable("TCheckComboBox_OnDragDrop", 0), // event OnDragDrop
+			/* 17 */ imports.NewTable("TCheckComboBox_OnDragOver", 0), // event OnDragOver
+			/* 18 */ imports.NewTable("TCheckComboBox_OnEndDrag", 0), // event OnEndDrag
+			/* 19 */ imports.NewTable("TCheckComboBox_OnDropDown", 0), // event OnDropDown
+			/* 20 */ imports.NewTable("TCheckComboBox_OnEditingDone", 0), // event OnEditingDone
+			/* 21 */ imports.NewTable("TCheckComboBox_OnGetItems", 0), // event OnGetItems
+			/* 22 */ imports.NewTable("TCheckComboBox_OnMouseDown", 0), // event OnMouseDown
+			/* 23 */ imports.NewTable("TCheckComboBox_OnMouseEnter", 0), // event OnMouseEnter
+			/* 24 */ imports.NewTable("TCheckComboBox_OnMouseLeave", 0), // event OnMouseLeave
+			/* 25 */ imports.NewTable("TCheckComboBox_OnMouseMove", 0), // event OnMouseMove
+			/* 26 */ imports.NewTable("TCheckComboBox_OnMouseUp", 0), // event OnMouseUp
+			/* 27 */ imports.NewTable("TCheckComboBox_OnMouseWheel", 0), // event OnMouseWheel
+			/* 28 */ imports.NewTable("TCheckComboBox_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 29 */ imports.NewTable("TCheckComboBox_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 30 */ imports.NewTable("TCheckComboBox_OnStartDrag", 0), // event OnStartDrag
+			/* 31 */ imports.NewTable("TCheckComboBox_OnSelect", 0), // event OnSelect
+			/* 32 */ imports.NewTable("TCheckComboBox_TClass", 0), // function TCheckComboBoxClass
+		}
+	})
 	return checkComboBoxImport
 }

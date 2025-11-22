@@ -9,1112 +9,1353 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomDrawGrid Parent: ICustomGrid
 type ICustomDrawGrid interface {
 	ICustomGrid
-	AllowOutboundEvents() bool                                             // property
-	SetAllowOutboundEvents(AValue bool)                                    // property
-	BorderColor() TColor                                                   // property
-	SetBorderColor(AValue TColor)                                          // property
-	Col() int32                                                            // property
-	SetCol(AValue int32)                                                   // property
-	ColWidths(aCol int32) int32                                            // property
-	SetColWidths(aCol int32, AValue int32)                                 // property
-	ColRow() (resultPoint TPoint)                                          // property
-	SetColRow(AValue *TPoint)                                              // property
-	DisabledFontColor() TColor                                             // property
-	SetDisabledFontColor(AValue TColor)                                    // property
-	Editor() IWinControl                                                   // property
-	SetEditor(AValue IWinControl)                                          // property
-	EditorBorderStyle() TBorderStyle                                       // property
-	SetEditorBorderStyle(AValue TBorderStyle)                              // property
-	EditorMode() bool                                                      // property
-	SetEditorMode(AValue bool)                                             // property
-	ExtendedColSizing() bool                                               // property
-	SetExtendedColSizing(AValue bool)                                      // property
-	AltColorStartNormal() bool                                             // property
-	SetAltColorStartNormal(AValue bool)                                    // property
-	FastEditing() bool                                                     // property
-	SetFastEditing(AValue bool)                                            // property
-	FixedGridLineColor() TColor                                            // property
-	SetFixedGridLineColor(AValue TColor)                                   // property
-	FocusColor() TColor                                                    // property
-	SetFocusColor(AValue TColor)                                           // property
-	FocusRectVisible() bool                                                // property
-	SetFocusRectVisible(AValue bool)                                       // property
-	GridHeight() int32                                                     // property
-	GridWidth() int32                                                      // property
-	IsCellSelected(aCol, aRow int32) bool                                  // property
-	LeftCol() int32                                                        // property
-	SetLeftCol(AValue int32)                                               // property
-	Row() int32                                                            // property
-	SetRow(AValue int32)                                                   // property
-	RowHeights(aRow int32) int32                                           // property
-	SetRowHeights(aRow int32, AValue int32)                                // property
-	SaveOptions() TSaveOptions                                             // property
-	SetSaveOptions(AValue TSaveOptions)                                    // property
-	SelectedColor() TColor                                                 // property
-	SetSelectedColor(AValue TColor)                                        // property
-	SelectedColumn() IGridColumn                                           // property
-	Selection() (resultGridRect TGridRect)                                 // property
-	SetSelection(AValue *TGridRect)                                        // property
-	StrictSort() bool                                                      // property
-	SetStrictSort(AValue bool)                                             // property
-	TopRow() int32                                                         // property
-	SetTopRow(AValue int32)                                                // property
-	UseXORFeatures() bool                                                  // property
-	SetUseXORFeatures(AValue bool)                                         // property
-	AutoAdvance() TAutoAdvance                                             // property
-	SetAutoAdvance(AValue TAutoAdvance)                                    // property
-	AutoFillColumns() bool                                                 // property
-	SetAutoFillColumns(AValue bool)                                        // property
-	ColCount() int32                                                       // property
-	SetColCount(AValue int32)                                              // property
-	Columns() IGridColumns                                                 // property
-	SetColumns(AValue IGridColumns)                                        // property
-	DefaultColWidth() int32                                                // property
-	SetDefaultColWidth(AValue int32)                                       // property
-	DefaultDrawing() bool                                                  // property
-	SetDefaultDrawing(AValue bool)                                         // property
-	DefaultRowHeight() int32                                               // property
-	SetDefaultRowHeight(AValue int32)                                      // property
-	FadeUnfocusedSelection() bool                                          // property
-	SetFadeUnfocusedSelection(AValue bool)                                 // property
-	FixedColor() TColor                                                    // property
-	SetFixedColor(AValue TColor)                                           // property
-	FixedCols() int32                                                      // property
-	SetFixedCols(AValue int32)                                             // property
-	FixedHotColor() TColor                                                 // property
-	SetFixedHotColor(AValue TColor)                                        // property
-	FixedRows() int32                                                      // property
-	SetFixedRows(AValue int32)                                             // property
-	Flat() bool                                                            // property
-	SetFlat(AValue bool)                                                   // property
-	GridLineColor() TColor                                                 // property
-	SetGridLineColor(AValue TColor)                                        // property
-	GridLineStyle() TPenStyle                                              // property
-	SetGridLineStyle(AValue TPenStyle)                                     // property
-	GridLineWidth() int32                                                  // property
-	SetGridLineWidth(AValue int32)                                         // property
-	Options() TGridOptions                                                 // property
-	SetOptions(AValue TGridOptions)                                        // property
-	Options2() TGridOptions2                                               // property
-	SetOptions2(AValue TGridOptions2)                                      // property
-	ParentShowHint() bool                                                  // property
-	SetParentShowHint(AValue bool)                                         // property
-	RowCount() int32                                                       // property
-	SetRowCount(AValue int32)                                              // property
-	ScrollBars() TScrollStyle                                              // property
-	SetScrollBars(AValue TScrollStyle)                                     // property
-	TabAdvance() TAutoAdvance                                              // property
-	SetTabAdvance(AValue TAutoAdvance)                                     // property
-	VisibleColCount() int32                                                // property
-	VisibleRowCount() int32                                                // property
-	DeleteColRow(IsColumn bool, index int32)                               // procedure
-	DeleteCol(Index int32)                                                 // procedure
-	DeleteRow(Index int32)                                                 // procedure
-	ExchangeColRow(IsColumn bool, index, WithIndex int32)                  // procedure
-	InsertColRow(IsColumn bool, index int32)                               // procedure
-	MoveColRow(IsColumn bool, FromIndex, ToIndex int32)                    // procedure
-	SortColRow(IsColumn bool, index int32)                                 // procedure
-	SortColRow1(IsColumn bool, Index, FromIndex, ToIndex int32)            // procedure
-	DefaultDrawCell(aCol, aRow int32, aRect *TRect, aState TGridDrawState) // procedure
-	SetOnAfterSelection(fn TOnSelectEvent)                                 // property event
-	SetOnBeforeSelection(fn TOnSelectEvent)                                // property event
-	SetOnColRowDeleted(fn TGridOperationEvent)                             // property event
-	SetOnColRowExchanged(fn TGridOperationEvent)                           // property event
-	SetOnColRowInserted(fn TGridOperationEvent)                            // property event
-	SetOnColRowMoved(fn TGridOperationEvent)                               // property event
-	SetOnCompareCells(fn TOnCompareCells)                                  // property event
-	SetOnContextPopup(fn TContextPopupEvent)                               // property event
-	SetOnDblClick(fn TNotifyEvent)                                         // property event
-	SetOnDragDrop(fn TDragDropEvent)                                       // property event
-	SetOnDragOver(fn TDragOverEvent)                                       // property event
-	SetOnDrawCell(fn TOnDrawCell)                                          // property event
-	SetOnButtonClick(fn TOnSelectEvent)                                    // property event
-	SetOnEndDock(fn TEndDragEvent)                                         // property event
-	SetOnEndDrag(fn TEndDragEvent)                                         // property event
-	SetOnGetEditMask(fn TGetEditEvent)                                     // property event
-	SetOnGetEditText(fn TGetEditEvent)                                     // property event
-	SetOnHeaderClick(fn THdrEvent)                                         // property event
-	SetOnHeaderSized(fn THdrEvent)                                         // property event
-	SetOnHeaderSizing(fn THeaderSizingEvent)                               // property event
-	SetOnMouseDown(fn TMouseEvent)                                         // property event
-	SetOnMouseEnter(fn TNotifyEvent)                                       // property event
-	SetOnMouseLeave(fn TNotifyEvent)                                       // property event
-	SetOnMouseMove(fn TMouseMoveEvent)                                     // property event
-	SetOnMouseUp(fn TMouseEvent)                                           // property event
-	SetOnMouseWheel(fn TMouseWheelEvent)                                   // property event
-	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent)                         // property event
-	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)                           // property event
-	SetOnPickListSelect(fn TNotifyEvent)                                   // property event
-	SetOnPrepareCanvas(fn TOnPrepareCanvasEvent)                           // property event
-	SetOnSelectEditor(fn TSelectEditorEvent)                               // property event
-	SetOnSelection(fn TOnSelectEvent)                                      // property event
-	SetOnSelectCell(fn TOnSelectCellEvent)                                 // property event
-	SetOnSetEditText(fn TSetEditEvent)                                     // property event
-	SetOnStartDock(fn TStartDockEvent)                                     // property event
-	SetOnStartDrag(fn TStartDragEvent)                                     // property event
-	SetOnTopleftChanged(fn TNotifyEvent)                                   // property event
-	SetOnValidateEntry(fn TValidateEntryEvent)                             // property event
+	DeleteColRow(isColumn bool, index int32)                                             // procedure
+	DeleteCol(index int32)                                                               // procedure
+	DeleteRow(index int32)                                                               // procedure
+	ExchangeColRow(isColumn bool, index int32, withIndex int32)                          // procedure
+	InsertColRow(isColumn bool, index int32)                                             // procedure
+	MoveColRow(isColumn bool, fromIndex int32, toIndex int32)                            // procedure
+	SortColRowWithBoolInt(isColumn bool, index int32)                                    // procedure
+	SortColRowWithBoolIntX3(isColumn bool, index int32, fromIndex int32, toIndex int32)  // procedure
+	DefaultDrawCell(col int32, row int32, rect *types.TRect, state types.TGridDrawState) // procedure
+	AllowOutboundEvents() bool                                                           // property AllowOutboundEvents Getter
+	SetAllowOutboundEvents(value bool)                                                   // property AllowOutboundEvents Setter
+	BorderColor() types.TColor                                                           // property BorderColor Getter
+	SetBorderColor(value types.TColor)                                                   // property BorderColor Setter
+	Col() int32                                                                          // property Col Getter
+	SetCol(value int32)                                                                  // property Col Setter
+	ColWidths(col int32) int32                                                           // property ColWidths Getter
+	SetColWidths(col int32, value int32)                                                 // property ColWidths Setter
+	ColRow() types.TPoint                                                                // property ColRow Getter
+	SetColRow(value types.TPoint)                                                        // property ColRow Setter
+	DisabledFontColor() types.TColor                                                     // property DisabledFontColor Getter
+	SetDisabledFontColor(value types.TColor)                                             // property DisabledFontColor Setter
+	Editor() IWinControl                                                                 // property Editor Getter
+	SetEditor(value IWinControl)                                                         // property Editor Setter
+	EditorBorderStyle() types.TBorderStyle                                               // property EditorBorderStyle Getter
+	SetEditorBorderStyle(value types.TBorderStyle)                                       // property EditorBorderStyle Setter
+	EditorMode() bool                                                                    // property EditorMode Getter
+	SetEditorMode(value bool)                                                            // property EditorMode Setter
+	ExtendedColSizing() bool                                                             // property ExtendedColSizing Getter
+	SetExtendedColSizing(value bool)                                                     // property ExtendedColSizing Setter
+	AltColorStartNormal() bool                                                           // property AltColorStartNormal Getter
+	SetAltColorStartNormal(value bool)                                                   // property AltColorStartNormal Setter
+	FastEditing() bool                                                                   // property FastEditing Getter
+	SetFastEditing(value bool)                                                           // property FastEditing Setter
+	FixedGridLineColor() types.TColor                                                    // property FixedGridLineColor Getter
+	SetFixedGridLineColor(value types.TColor)                                            // property FixedGridLineColor Setter
+	FocusColor() types.TColor                                                            // property FocusColor Getter
+	SetFocusColor(value types.TColor)                                                    // property FocusColor Setter
+	FocusRectVisible() bool                                                              // property FocusRectVisible Getter
+	SetFocusRectVisible(value bool)                                                      // property FocusRectVisible Setter
+	GridHeight() int32                                                                   // property GridHeight Getter
+	GridWidth() int32                                                                    // property GridWidth Getter
+	IsCellSelected(col int32, row int32) bool                                            // property IsCellSelected Getter
+	LeftCol() int32                                                                      // property LeftCol Getter
+	SetLeftCol(value int32)                                                              // property LeftCol Setter
+	Row() int32                                                                          // property Row Getter
+	SetRow(value int32)                                                                  // property Row Setter
+	RowHeights(row int32) int32                                                          // property RowHeights Getter
+	SetRowHeights(row int32, value int32)                                                // property RowHeights Setter
+	SaveOptions() types.TSaveOptions                                                     // property SaveOptions Getter
+	SetSaveOptions(value types.TSaveOptions)                                             // property SaveOptions Setter
+	SelectedColor() types.TColor                                                         // property SelectedColor Getter
+	SetSelectedColor(value types.TColor)                                                 // property SelectedColor Setter
+	SelectedColumn() IGridColumn                                                         // property SelectedColumn Getter
+	Selection() types.TGridRect                                                          // property Selection Getter
+	SetSelection(value types.TGridRect)                                                  // property Selection Setter
+	StrictSort() bool                                                                    // property StrictSort Getter
+	SetStrictSort(value bool)                                                            // property StrictSort Setter
+	TopRow() int32                                                                       // property TopRow Getter
+	SetTopRow(value int32)                                                               // property TopRow Setter
+	UseXORFeatures() bool                                                                // property UseXORFeatures Getter
+	SetUseXORFeatures(value bool)                                                        // property UseXORFeatures Setter
+	AutoAdvance() types.TAutoAdvance                                                     // property AutoAdvance Getter
+	SetAutoAdvance(value types.TAutoAdvance)                                             // property AutoAdvance Setter
+	AutoFillColumns() bool                                                               // property AutoFillColumns Getter
+	SetAutoFillColumns(value bool)                                                       // property AutoFillColumns Setter
+	ColCount() int32                                                                     // property ColCount Getter
+	SetColCount(value int32)                                                             // property ColCount Setter
+	Columns() IGridColumns                                                               // property Columns Getter
+	SetColumns(value IGridColumns)                                                       // property Columns Setter
+	DefaultColWidth() int32                                                              // property DefaultColWidth Getter
+	SetDefaultColWidth(value int32)                                                      // property DefaultColWidth Setter
+	DefaultDrawing() bool                                                                // property DefaultDrawing Getter
+	SetDefaultDrawing(value bool)                                                        // property DefaultDrawing Setter
+	DefaultRowHeight() int32                                                             // property DefaultRowHeight Getter
+	SetDefaultRowHeight(value int32)                                                     // property DefaultRowHeight Setter
+	FadeUnfocusedSelection() bool                                                        // property FadeUnfocusedSelection Getter
+	SetFadeUnfocusedSelection(value bool)                                                // property FadeUnfocusedSelection Setter
+	FixedColor() types.TColor                                                            // property FixedColor Getter
+	SetFixedColor(value types.TColor)                                                    // property FixedColor Setter
+	FixedCols() int32                                                                    // property FixedCols Getter
+	SetFixedCols(value int32)                                                            // property FixedCols Setter
+	FixedHotColor() types.TColor                                                         // property FixedHotColor Getter
+	SetFixedHotColor(value types.TColor)                                                 // property FixedHotColor Setter
+	FixedRows() int32                                                                    // property FixedRows Getter
+	SetFixedRows(value int32)                                                            // property FixedRows Setter
+	Flat() bool                                                                          // property Flat Getter
+	SetFlat(value bool)                                                                  // property Flat Setter
+	GridLineColor() types.TColor                                                         // property GridLineColor Getter
+	SetGridLineColor(value types.TColor)                                                 // property GridLineColor Setter
+	GridLineStyle() types.TPenStyle                                                      // property GridLineStyle Getter
+	SetGridLineStyle(value types.TPenStyle)                                              // property GridLineStyle Setter
+	GridLineWidth() int32                                                                // property GridLineWidth Getter
+	SetGridLineWidth(value int32)                                                        // property GridLineWidth Setter
+	Options() types.TGridOptions                                                         // property Options Getter
+	SetOptions(value types.TGridOptions)                                                 // property Options Setter
+	Options2() types.TGridOptions2                                                       // property Options2 Getter
+	SetOptions2(value types.TGridOptions2)                                               // property Options2 Setter
+	ParentShowHint() bool                                                                // property ParentShowHint Getter
+	SetParentShowHint(value bool)                                                        // property ParentShowHint Setter
+	RowCount() int32                                                                     // property RowCount Getter
+	SetRowCount(value int32)                                                             // property RowCount Setter
+	ScrollBars() types.TScrollStyle                                                      // property ScrollBars Getter
+	SetScrollBars(value types.TScrollStyle)                                              // property ScrollBars Setter
+	TabAdvance() types.TAutoAdvance                                                      // property TabAdvance Getter
+	SetTabAdvance(value types.TAutoAdvance)                                              // property TabAdvance Setter
+	VisibleColCount() int32                                                              // property VisibleColCount Getter
+	VisibleRowCount() int32                                                              // property VisibleRowCount Getter
+	SetOnAfterSelection(fn TOnSelectEvent)                                               // property event
+	SetOnBeforeSelection(fn TOnSelectEvent)                                              // property event
+	SetOnCompareCells(fn TOnCompareCells)                                                // property event
+	SetOnContextPopup(fn TContextPopupEvent)                                             // property event
+	SetOnDblClick(fn TNotifyEvent)                                                       // property event
+	SetOnDragDrop(fn TDragDropEvent)                                                     // property event
+	SetOnDragOver(fn TDragOverEvent)                                                     // property event
+	SetOnDrawCell(fn TOnDrawCell)                                                        // property event
+	SetOnButtonClick(fn TOnSelectEvent)                                                  // property event
+	SetOnEndDock(fn TEndDragEvent)                                                       // property event
+	SetOnEndDrag(fn TEndDragEvent)                                                       // property event
+	SetOnGetEditMask(fn TGetEditEvent)                                                   // property event
+	SetOnGetEditText(fn TGetEditEvent)                                                   // property event
+	SetOnHeaderClick(fn THdrEvent)                                                       // property event
+	SetOnHeaderSized(fn THdrEvent)                                                       // property event
+	SetOnHeaderSizing(fn THeaderSizingEvent)                                             // property event
+	SetOnMouseDown(fn TMouseEvent)                                                       // property event
+	SetOnMouseEnter(fn TNotifyEvent)                                                     // property event
+	SetOnMouseLeave(fn TNotifyEvent)                                                     // property event
+	SetOnMouseMove(fn TMouseMoveEvent)                                                   // property event
+	SetOnMouseUp(fn TMouseEvent)                                                         // property event
+	SetOnMouseWheel(fn TMouseWheelEvent)                                                 // property event
+	SetOnMouseWheelDown(fn TMouseWheelUpDownEvent)                                       // property event
+	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)                                         // property event
+	SetOnPickListSelect(fn TNotifyEvent)                                                 // property event
+	SetOnPrepareCanvas(fn TOnPrepareCanvasEvent)                                         // property event
+	SetOnSelectEditor(fn TSelectEditorEvent)                                             // property event
+	SetOnSelection(fn TOnSelectEvent)                                                    // property event
+	SetOnSelectCell(fn TOnSelectCellEvent)                                               // property event
+	SetOnSetEditText(fn TSetEditEvent)                                                   // property event
+	SetOnStartDock(fn TStartDockEvent)                                                   // property event
+	SetOnStartDrag(fn TStartDragEvent)                                                   // property event
+	SetOnTopleftChanged(fn TNotifyEvent)                                                 // property event
+	SetOnValidateEntry(fn TValidateEntryEvent)                                           // property event
 }
 
-// TCustomDrawGrid Parent: TCustomGrid
 type TCustomDrawGrid struct {
 	TCustomGrid
-	afterSelectionPtr  uintptr
-	beforeSelectionPtr uintptr
-	colRowDeletedPtr   uintptr
-	colRowExchangedPtr uintptr
-	colRowInsertedPtr  uintptr
-	colRowMovedPtr     uintptr
-	compareCellsPtr    uintptr
-	contextPopupPtr    uintptr
-	dblClickPtr        uintptr
-	dragDropPtr        uintptr
-	dragOverPtr        uintptr
-	drawCellPtr        uintptr
-	buttonClickPtr     uintptr
-	endDockPtr         uintptr
-	endDragPtr         uintptr
-	getEditMaskPtr     uintptr
-	getEditTextPtr     uintptr
-	headerClickPtr     uintptr
-	headerSizedPtr     uintptr
-	headerSizingPtr    uintptr
-	mouseDownPtr       uintptr
-	mouseEnterPtr      uintptr
-	mouseLeavePtr      uintptr
-	mouseMovePtr       uintptr
-	mouseUpPtr         uintptr
-	mouseWheelPtr      uintptr
-	mouseWheelDownPtr  uintptr
-	mouseWheelUpPtr    uintptr
-	pickListSelectPtr  uintptr
-	prepareCanvasPtr   uintptr
-	selectEditorPtr    uintptr
-	selectionPtr       uintptr
-	selectCellPtr      uintptr
-	setEditTextPtr     uintptr
-	startDockPtr       uintptr
-	startDragPtr       uintptr
-	topleftChangedPtr  uintptr
-	validateEntryPtr   uintptr
 }
 
-func NewCustomDrawGrid(AOwner IComponent) ICustomDrawGrid {
-	r1 := customDrawGridImportAPI().SysCallN(11, GetObjectUintptr(AOwner))
-	return AsCustomDrawGrid(r1)
+func (m *TCustomDrawGrid) DeleteColRow(isColumn bool, index int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(1, m.Instance(), api.PasBool(isColumn), uintptr(index))
+}
+
+func (m *TCustomDrawGrid) DeleteCol(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(2, m.Instance(), uintptr(index))
+}
+
+func (m *TCustomDrawGrid) DeleteRow(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(3, m.Instance(), uintptr(index))
+}
+
+func (m *TCustomDrawGrid) ExchangeColRow(isColumn bool, index int32, withIndex int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(4, m.Instance(), api.PasBool(isColumn), uintptr(index), uintptr(withIndex))
+}
+
+func (m *TCustomDrawGrid) InsertColRow(isColumn bool, index int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(5, m.Instance(), api.PasBool(isColumn), uintptr(index))
+}
+
+func (m *TCustomDrawGrid) MoveColRow(isColumn bool, fromIndex int32, toIndex int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(6, m.Instance(), api.PasBool(isColumn), uintptr(fromIndex), uintptr(toIndex))
+}
+
+func (m *TCustomDrawGrid) SortColRowWithBoolInt(isColumn bool, index int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(7, m.Instance(), api.PasBool(isColumn), uintptr(index))
+}
+
+func (m *TCustomDrawGrid) SortColRowWithBoolIntX3(isColumn bool, index int32, fromIndex int32, toIndex int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(8, m.Instance(), api.PasBool(isColumn), uintptr(index), uintptr(fromIndex), uintptr(toIndex))
+}
+
+func (m *TCustomDrawGrid) DefaultDrawCell(col int32, row int32, rect *types.TRect, state types.TGridDrawState) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(9, m.Instance(), uintptr(col), uintptr(row), uintptr(base.UnsafePointer(rect)), uintptr(state))
 }
 
 func (m *TCustomDrawGrid) AllowOutboundEvents() bool {
-	r1 := customDrawGridImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(10, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetAllowOutboundEvents(AValue bool) {
-	customDrawGridImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetAllowOutboundEvents(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(10, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomDrawGrid) BorderColor() TColor {
-	r1 := customDrawGridImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomDrawGrid) BorderColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(11, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomDrawGrid) SetBorderColor(AValue TColor) {
-	customDrawGridImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetBorderColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) Col() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(12, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetCol(AValue int32) {
-	customDrawGridImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetCol(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) ColWidths(aCol int32) int32 {
-	r1 := customDrawGridImportAPI().SysCallN(9, 0, m.Instance(), uintptr(aCol))
-	return int32(r1)
+func (m *TCustomDrawGrid) ColWidths(col int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(13, 0, m.Instance(), uintptr(col))
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetColWidths(aCol int32, AValue int32) {
-	customDrawGridImportAPI().SysCallN(9, 1, m.Instance(), uintptr(aCol), uintptr(AValue))
+func (m *TCustomDrawGrid) SetColWidths(col int32, value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(13, 1, m.Instance(), uintptr(col), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) ColRow() (resultPoint TPoint) {
-	customDrawGridImportAPI().SysCallN(8, 0, m.Instance(), uintptr(unsafePointer(&resultPoint)), uintptr(unsafePointer(&resultPoint)))
+func (m *TCustomDrawGrid) ColRow() (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(14, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TCustomDrawGrid) SetColRow(AValue *TPoint) {
-	customDrawGridImportAPI().SysCallN(8, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+func (m *TCustomDrawGrid) SetColRow(value types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(14, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
-func (m *TCustomDrawGrid) DisabledFontColor() TColor {
-	r1 := customDrawGridImportAPI().SysCallN(19, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomDrawGrid) DisabledFontColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(15, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomDrawGrid) SetDisabledFontColor(AValue TColor) {
-	customDrawGridImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetDisabledFontColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(15, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) Editor() IWinControl {
-	r1 := customDrawGridImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return AsWinControl(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := customDrawGridAPI().SysCallN(16, 0, m.Instance())
+	return AsWinControl(r)
 }
 
-func (m *TCustomDrawGrid) SetEditor(AValue IWinControl) {
-	customDrawGridImportAPI().SysCallN(20, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TCustomDrawGrid) SetEditor(value IWinControl) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(16, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TCustomDrawGrid) EditorBorderStyle() TBorderStyle {
-	r1 := customDrawGridImportAPI().SysCallN(21, 0, m.Instance(), 0)
-	return TBorderStyle(r1)
+func (m *TCustomDrawGrid) EditorBorderStyle() types.TBorderStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(17, 0, m.Instance())
+	return types.TBorderStyle(r)
 }
 
-func (m *TCustomDrawGrid) SetEditorBorderStyle(AValue TBorderStyle) {
-	customDrawGridImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetEditorBorderStyle(value types.TBorderStyle) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(17, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) EditorMode() bool {
-	r1 := customDrawGridImportAPI().SysCallN(22, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(18, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetEditorMode(AValue bool) {
-	customDrawGridImportAPI().SysCallN(22, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetEditorMode(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(18, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomDrawGrid) ExtendedColSizing() bool {
-	r1 := customDrawGridImportAPI().SysCallN(24, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(19, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetExtendedColSizing(AValue bool) {
-	customDrawGridImportAPI().SysCallN(24, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetExtendedColSizing(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(19, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomDrawGrid) AltColorStartNormal() bool {
-	r1 := customDrawGridImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(20, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetAltColorStartNormal(AValue bool) {
-	customDrawGridImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetAltColorStartNormal(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(20, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomDrawGrid) FastEditing() bool {
-	r1 := customDrawGridImportAPI().SysCallN(26, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(21, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetFastEditing(AValue bool) {
-	customDrawGridImportAPI().SysCallN(26, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetFastEditing(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(21, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomDrawGrid) FixedGridLineColor() TColor {
-	r1 := customDrawGridImportAPI().SysCallN(29, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomDrawGrid) FixedGridLineColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(22, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomDrawGrid) SetFixedGridLineColor(AValue TColor) {
-	customDrawGridImportAPI().SysCallN(29, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetFixedGridLineColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) FocusColor() TColor {
-	r1 := customDrawGridImportAPI().SysCallN(33, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomDrawGrid) FocusColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(23, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomDrawGrid) SetFocusColor(AValue TColor) {
-	customDrawGridImportAPI().SysCallN(33, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetFocusColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) FocusRectVisible() bool {
-	r1 := customDrawGridImportAPI().SysCallN(34, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(24, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetFocusRectVisible(AValue bool) {
-	customDrawGridImportAPI().SysCallN(34, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetFocusRectVisible(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(24, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomDrawGrid) GridHeight() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(35, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(25, m.Instance())
+	return int32(r)
 }
 
 func (m *TCustomDrawGrid) GridWidth() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(39, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(26, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) IsCellSelected(aCol, aRow int32) bool {
-	r1 := customDrawGridImportAPI().SysCallN(41, m.Instance(), uintptr(aCol), uintptr(aRow))
-	return GoBool(r1)
+func (m *TCustomDrawGrid) IsCellSelected(col int32, row int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(27, m.Instance(), uintptr(col), uintptr(row))
+	return api.GoBool(r)
 }
 
 func (m *TCustomDrawGrid) LeftCol() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(42, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(28, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetLeftCol(AValue int32) {
-	customDrawGridImportAPI().SysCallN(42, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetLeftCol(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(28, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) Row() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(47, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(29, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetRow(AValue int32) {
-	customDrawGridImportAPI().SysCallN(47, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetRow(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(29, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) RowHeights(aRow int32) int32 {
-	r1 := customDrawGridImportAPI().SysCallN(49, 0, m.Instance(), uintptr(aRow))
-	return int32(r1)
+func (m *TCustomDrawGrid) RowHeights(row int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(30, 0, m.Instance(), uintptr(row))
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetRowHeights(aRow int32, AValue int32) {
-	customDrawGridImportAPI().SysCallN(49, 1, m.Instance(), uintptr(aRow), uintptr(AValue))
+func (m *TCustomDrawGrid) SetRowHeights(row int32, value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(30, 1, m.Instance(), uintptr(row), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) SaveOptions() TSaveOptions {
-	r1 := customDrawGridImportAPI().SysCallN(50, 0, m.Instance(), 0)
-	return TSaveOptions(r1)
+func (m *TCustomDrawGrid) SaveOptions() types.TSaveOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(31, 0, m.Instance())
+	return types.TSaveOptions(r)
 }
 
-func (m *TCustomDrawGrid) SetSaveOptions(AValue TSaveOptions) {
-	customDrawGridImportAPI().SysCallN(50, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetSaveOptions(value types.TSaveOptions) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(31, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) SelectedColor() TColor {
-	r1 := customDrawGridImportAPI().SysCallN(52, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomDrawGrid) SelectedColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(32, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomDrawGrid) SetSelectedColor(AValue TColor) {
-	customDrawGridImportAPI().SysCallN(52, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetSelectedColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(32, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) SelectedColumn() IGridColumn {
-	r1 := customDrawGridImportAPI().SysCallN(53, m.Instance())
-	return AsGridColumn(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := customDrawGridAPI().SysCallN(33, m.Instance())
+	return AsGridColumn(r)
 }
 
-func (m *TCustomDrawGrid) Selection() (resultGridRect TGridRect) {
-	customDrawGridImportAPI().SysCallN(54, 0, m.Instance(), uintptr(unsafePointer(&resultGridRect)), uintptr(unsafePointer(&resultGridRect)))
+func (m *TCustomDrawGrid) Selection() (result types.TGridRect) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(34, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TCustomDrawGrid) SetSelection(AValue *TGridRect) {
-	customDrawGridImportAPI().SysCallN(54, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+func (m *TCustomDrawGrid) SetSelection(value types.TGridRect) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(34, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
 func (m *TCustomDrawGrid) StrictSort() bool {
-	r1 := customDrawGridImportAPI().SysCallN(95, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(35, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetStrictSort(AValue bool) {
-	customDrawGridImportAPI().SysCallN(95, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetStrictSort(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(35, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomDrawGrid) TopRow() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(97, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(36, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetTopRow(AValue int32) {
-	customDrawGridImportAPI().SysCallN(97, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetTopRow(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(36, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) UseXORFeatures() bool {
-	r1 := customDrawGridImportAPI().SysCallN(98, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(37, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetUseXORFeatures(AValue bool) {
-	customDrawGridImportAPI().SysCallN(98, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetUseXORFeatures(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(37, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomDrawGrid) AutoAdvance() TAutoAdvance {
-	r1 := customDrawGridImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TAutoAdvance(r1)
+func (m *TCustomDrawGrid) AutoAdvance() types.TAutoAdvance {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(38, 0, m.Instance())
+	return types.TAutoAdvance(r)
 }
 
-func (m *TCustomDrawGrid) SetAutoAdvance(AValue TAutoAdvance) {
-	customDrawGridImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetAutoAdvance(value types.TAutoAdvance) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(38, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) AutoFillColumns() bool {
-	r1 := customDrawGridImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(39, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetAutoFillColumns(AValue bool) {
-	customDrawGridImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetAutoFillColumns(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(39, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomDrawGrid) ColCount() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(40, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetColCount(AValue int32) {
-	customDrawGridImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetColCount(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(40, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) Columns() IGridColumns {
-	r1 := customDrawGridImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return AsGridColumns(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := customDrawGridAPI().SysCallN(41, 0, m.Instance())
+	return AsGridColumns(r)
 }
 
-func (m *TCustomDrawGrid) SetColumns(AValue IGridColumns) {
-	customDrawGridImportAPI().SysCallN(10, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TCustomDrawGrid) SetColumns(value IGridColumns) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(41, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TCustomDrawGrid) DefaultColWidth() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(42, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetDefaultColWidth(AValue int32) {
-	customDrawGridImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetDefaultColWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(42, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) DefaultDrawing() bool {
-	r1 := customDrawGridImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(43, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetDefaultDrawing(AValue bool) {
-	customDrawGridImportAPI().SysCallN(14, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetDefaultDrawing(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(43, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomDrawGrid) DefaultRowHeight() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(44, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetDefaultRowHeight(AValue int32) {
-	customDrawGridImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetDefaultRowHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(44, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) FadeUnfocusedSelection() bool {
-	r1 := customDrawGridImportAPI().SysCallN(25, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(45, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetFadeUnfocusedSelection(AValue bool) {
-	customDrawGridImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetFadeUnfocusedSelection(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(45, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomDrawGrid) FixedColor() TColor {
-	r1 := customDrawGridImportAPI().SysCallN(27, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomDrawGrid) FixedColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(46, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomDrawGrid) SetFixedColor(AValue TColor) {
-	customDrawGridImportAPI().SysCallN(27, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetFixedColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(46, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) FixedCols() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(28, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(47, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetFixedCols(AValue int32) {
-	customDrawGridImportAPI().SysCallN(28, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetFixedCols(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(47, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) FixedHotColor() TColor {
-	r1 := customDrawGridImportAPI().SysCallN(30, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomDrawGrid) FixedHotColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(48, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomDrawGrid) SetFixedHotColor(AValue TColor) {
-	customDrawGridImportAPI().SysCallN(30, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetFixedHotColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(48, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) FixedRows() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(31, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(49, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetFixedRows(AValue int32) {
-	customDrawGridImportAPI().SysCallN(31, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetFixedRows(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(49, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) Flat() bool {
-	r1 := customDrawGridImportAPI().SysCallN(32, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(50, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetFlat(AValue bool) {
-	customDrawGridImportAPI().SysCallN(32, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetFlat(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(50, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomDrawGrid) GridLineColor() TColor {
-	r1 := customDrawGridImportAPI().SysCallN(36, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomDrawGrid) GridLineColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(51, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomDrawGrid) SetGridLineColor(AValue TColor) {
-	customDrawGridImportAPI().SysCallN(36, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetGridLineColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(51, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) GridLineStyle() TPenStyle {
-	r1 := customDrawGridImportAPI().SysCallN(37, 0, m.Instance(), 0)
-	return TPenStyle(r1)
+func (m *TCustomDrawGrid) GridLineStyle() types.TPenStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(52, 0, m.Instance())
+	return types.TPenStyle(r)
 }
 
-func (m *TCustomDrawGrid) SetGridLineStyle(AValue TPenStyle) {
-	customDrawGridImportAPI().SysCallN(37, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetGridLineStyle(value types.TPenStyle) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(52, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) GridLineWidth() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(38, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(53, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetGridLineWidth(AValue int32) {
-	customDrawGridImportAPI().SysCallN(38, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetGridLineWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(53, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) Options() TGridOptions {
-	r1 := customDrawGridImportAPI().SysCallN(44, 0, m.Instance(), 0)
-	return TGridOptions(r1)
+func (m *TCustomDrawGrid) Options() types.TGridOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(54, 0, m.Instance())
+	return types.TGridOptions(r)
 }
 
-func (m *TCustomDrawGrid) SetOptions(AValue TGridOptions) {
-	customDrawGridImportAPI().SysCallN(44, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetOptions(value types.TGridOptions) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(54, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) Options2() TGridOptions2 {
-	r1 := customDrawGridImportAPI().SysCallN(45, 0, m.Instance(), 0)
-	return TGridOptions2(r1)
+func (m *TCustomDrawGrid) Options2() types.TGridOptions2 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(55, 0, m.Instance())
+	return types.TGridOptions2(r)
 }
 
-func (m *TCustomDrawGrid) SetOptions2(AValue TGridOptions2) {
-	customDrawGridImportAPI().SysCallN(45, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetOptions2(value types.TGridOptions2) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(55, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) ParentShowHint() bool {
-	r1 := customDrawGridImportAPI().SysCallN(46, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customDrawGridAPI().SysCallN(56, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomDrawGrid) SetParentShowHint(AValue bool) {
-	customDrawGridImportAPI().SysCallN(46, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomDrawGrid) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(56, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomDrawGrid) RowCount() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(48, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(57, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomDrawGrid) SetRowCount(AValue int32) {
-	customDrawGridImportAPI().SysCallN(48, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetRowCount(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(57, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) ScrollBars() TScrollStyle {
-	r1 := customDrawGridImportAPI().SysCallN(51, 0, m.Instance(), 0)
-	return TScrollStyle(r1)
+func (m *TCustomDrawGrid) ScrollBars() types.TScrollStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(58, 0, m.Instance())
+	return types.TScrollStyle(r)
 }
 
-func (m *TCustomDrawGrid) SetScrollBars(AValue TScrollStyle) {
-	customDrawGridImportAPI().SysCallN(51, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetScrollBars(value types.TScrollStyle) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(58, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomDrawGrid) TabAdvance() TAutoAdvance {
-	r1 := customDrawGridImportAPI().SysCallN(96, 0, m.Instance(), 0)
-	return TAutoAdvance(r1)
+func (m *TCustomDrawGrid) TabAdvance() types.TAutoAdvance {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(59, 0, m.Instance())
+	return types.TAutoAdvance(r)
 }
 
-func (m *TCustomDrawGrid) SetTabAdvance(AValue TAutoAdvance) {
-	customDrawGridImportAPI().SysCallN(96, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomDrawGrid) SetTabAdvance(value types.TAutoAdvance) {
+	if !m.IsValid() {
+		return
+	}
+	customDrawGridAPI().SysCallN(59, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomDrawGrid) VisibleColCount() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(99, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(60, m.Instance())
+	return int32(r)
 }
 
 func (m *TCustomDrawGrid) VisibleRowCount() int32 {
-	r1 := customDrawGridImportAPI().SysCallN(100, m.Instance())
-	return int32(r1)
-}
-
-func CustomDrawGridClass() TClass {
-	ret := customDrawGridImportAPI().SysCallN(5)
-	return TClass(ret)
-}
-
-func (m *TCustomDrawGrid) DeleteColRow(IsColumn bool, index int32) {
-	customDrawGridImportAPI().SysCallN(17, m.Instance(), PascalBool(IsColumn), uintptr(index))
-}
-
-func (m *TCustomDrawGrid) DeleteCol(Index int32) {
-	customDrawGridImportAPI().SysCallN(16, m.Instance(), uintptr(Index))
-}
-
-func (m *TCustomDrawGrid) DeleteRow(Index int32) {
-	customDrawGridImportAPI().SysCallN(18, m.Instance(), uintptr(Index))
-}
-
-func (m *TCustomDrawGrid) ExchangeColRow(IsColumn bool, index, WithIndex int32) {
-	customDrawGridImportAPI().SysCallN(23, m.Instance(), PascalBool(IsColumn), uintptr(index), uintptr(WithIndex))
-}
-
-func (m *TCustomDrawGrid) InsertColRow(IsColumn bool, index int32) {
-	customDrawGridImportAPI().SysCallN(40, m.Instance(), PascalBool(IsColumn), uintptr(index))
-}
-
-func (m *TCustomDrawGrid) MoveColRow(IsColumn bool, FromIndex, ToIndex int32) {
-	customDrawGridImportAPI().SysCallN(43, m.Instance(), PascalBool(IsColumn), uintptr(FromIndex), uintptr(ToIndex))
-}
-
-func (m *TCustomDrawGrid) SortColRow(IsColumn bool, index int32) {
-	customDrawGridImportAPI().SysCallN(93, m.Instance(), PascalBool(IsColumn), uintptr(index))
-}
-
-func (m *TCustomDrawGrid) SortColRow1(IsColumn bool, Index, FromIndex, ToIndex int32) {
-	customDrawGridImportAPI().SysCallN(94, m.Instance(), PascalBool(IsColumn), uintptr(Index), uintptr(FromIndex), uintptr(ToIndex))
-}
-
-func (m *TCustomDrawGrid) DefaultDrawCell(aCol, aRow int32, aRect *TRect, aState TGridDrawState) {
-	var result1 uintptr
-	customDrawGridImportAPI().SysCallN(13, m.Instance(), uintptr(aCol), uintptr(aRow), uintptr(unsafePointer(&result1)), uintptr(aState))
-	*aRect = *(*TRect)(getPointer(result1))
+	if !m.IsValid() {
+		return 0
+	}
+	r := customDrawGridAPI().SysCallN(61, m.Instance())
+	return int32(r)
 }
 
 func (m *TCustomDrawGrid) SetOnAfterSelection(fn TOnSelectEvent) {
-	if m.afterSelectionPtr != 0 {
-		RemoveEventElement(m.afterSelectionPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.afterSelectionPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(55, m.Instance(), m.afterSelectionPtr)
+	cb := makeTOnSelectEvent(fn)
+	base.SetEvent(m, 62, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnBeforeSelection(fn TOnSelectEvent) {
-	if m.beforeSelectionPtr != 0 {
-		RemoveEventElement(m.beforeSelectionPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.beforeSelectionPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(56, m.Instance(), m.beforeSelectionPtr)
-}
-
-func (m *TCustomDrawGrid) SetOnColRowDeleted(fn TGridOperationEvent) {
-	if m.colRowDeletedPtr != 0 {
-		RemoveEventElement(m.colRowDeletedPtr)
-	}
-	m.colRowDeletedPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(58, m.Instance(), m.colRowDeletedPtr)
-}
-
-func (m *TCustomDrawGrid) SetOnColRowExchanged(fn TGridOperationEvent) {
-	if m.colRowExchangedPtr != 0 {
-		RemoveEventElement(m.colRowExchangedPtr)
-	}
-	m.colRowExchangedPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(59, m.Instance(), m.colRowExchangedPtr)
-}
-
-func (m *TCustomDrawGrid) SetOnColRowInserted(fn TGridOperationEvent) {
-	if m.colRowInsertedPtr != 0 {
-		RemoveEventElement(m.colRowInsertedPtr)
-	}
-	m.colRowInsertedPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(60, m.Instance(), m.colRowInsertedPtr)
-}
-
-func (m *TCustomDrawGrid) SetOnColRowMoved(fn TGridOperationEvent) {
-	if m.colRowMovedPtr != 0 {
-		RemoveEventElement(m.colRowMovedPtr)
-	}
-	m.colRowMovedPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(61, m.Instance(), m.colRowMovedPtr)
+	cb := makeTOnSelectEvent(fn)
+	base.SetEvent(m, 63, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnCompareCells(fn TOnCompareCells) {
-	if m.compareCellsPtr != 0 {
-		RemoveEventElement(m.compareCellsPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.compareCellsPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(62, m.Instance(), m.compareCellsPtr)
+	cb := makeTOnCompareCells(fn)
+	base.SetEvent(m, 64, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(63, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 65, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(64, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 66, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(65, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 67, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(66, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 68, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnDrawCell(fn TOnDrawCell) {
-	if m.drawCellPtr != 0 {
-		RemoveEventElement(m.drawCellPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.drawCellPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(67, m.Instance(), m.drawCellPtr)
+	cb := makeTOnDrawCell(fn)
+	base.SetEvent(m, 69, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnButtonClick(fn TOnSelectEvent) {
-	if m.buttonClickPtr != 0 {
-		RemoveEventElement(m.buttonClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.buttonClickPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(57, m.Instance(), m.buttonClickPtr)
+	cb := makeTOnSelectEvent(fn)
+	base.SetEvent(m, 70, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnEndDock(fn TEndDragEvent) {
-	if m.endDockPtr != 0 {
-		RemoveEventElement(m.endDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDockPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(68, m.Instance(), m.endDockPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 71, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(69, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 72, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnGetEditMask(fn TGetEditEvent) {
-	if m.getEditMaskPtr != 0 {
-		RemoveEventElement(m.getEditMaskPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getEditMaskPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(70, m.Instance(), m.getEditMaskPtr)
+	cb := makeTGetEditEvent(fn)
+	base.SetEvent(m, 73, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnGetEditText(fn TGetEditEvent) {
-	if m.getEditTextPtr != 0 {
-		RemoveEventElement(m.getEditTextPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getEditTextPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(71, m.Instance(), m.getEditTextPtr)
+	cb := makeTGetEditEvent(fn)
+	base.SetEvent(m, 74, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnHeaderClick(fn THdrEvent) {
-	if m.headerClickPtr != 0 {
-		RemoveEventElement(m.headerClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.headerClickPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(72, m.Instance(), m.headerClickPtr)
+	cb := makeTHdrEvent(fn)
+	base.SetEvent(m, 75, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnHeaderSized(fn THdrEvent) {
-	if m.headerSizedPtr != 0 {
-		RemoveEventElement(m.headerSizedPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.headerSizedPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(73, m.Instance(), m.headerSizedPtr)
+	cb := makeTHdrEvent(fn)
+	base.SetEvent(m, 76, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnHeaderSizing(fn THeaderSizingEvent) {
-	if m.headerSizingPtr != 0 {
-		RemoveEventElement(m.headerSizingPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.headerSizingPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(74, m.Instance(), m.headerSizingPtr)
+	cb := makeTHeaderSizingEvent(fn)
+	base.SetEvent(m, 77, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(75, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 78, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(76, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 79, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(77, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 80, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(78, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 81, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(79, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 82, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(80, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 83, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(81, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 84, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(82, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 85, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnPickListSelect(fn TNotifyEvent) {
-	if m.pickListSelectPtr != 0 {
-		RemoveEventElement(m.pickListSelectPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.pickListSelectPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(83, m.Instance(), m.pickListSelectPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 86, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnPrepareCanvas(fn TOnPrepareCanvasEvent) {
-	if m.prepareCanvasPtr != 0 {
-		RemoveEventElement(m.prepareCanvasPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.prepareCanvasPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(84, m.Instance(), m.prepareCanvasPtr)
+	cb := makeTOnPrepareCanvasEvent(fn)
+	base.SetEvent(m, 87, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnSelectEditor(fn TSelectEditorEvent) {
-	if m.selectEditorPtr != 0 {
-		RemoveEventElement(m.selectEditorPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.selectEditorPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(86, m.Instance(), m.selectEditorPtr)
+	cb := makeTSelectEditorEvent(fn)
+	base.SetEvent(m, 88, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnSelection(fn TOnSelectEvent) {
-	if m.selectionPtr != 0 {
-		RemoveEventElement(m.selectionPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.selectionPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(87, m.Instance(), m.selectionPtr)
+	cb := makeTOnSelectEvent(fn)
+	base.SetEvent(m, 89, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnSelectCell(fn TOnSelectCellEvent) {
-	if m.selectCellPtr != 0 {
-		RemoveEventElement(m.selectCellPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.selectCellPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(85, m.Instance(), m.selectCellPtr)
+	cb := makeTOnSelectCellEvent(fn)
+	base.SetEvent(m, 90, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnSetEditText(fn TSetEditEvent) {
-	if m.setEditTextPtr != 0 {
-		RemoveEventElement(m.setEditTextPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.setEditTextPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(88, m.Instance(), m.setEditTextPtr)
+	cb := makeTSetEditEvent(fn)
+	base.SetEvent(m, 91, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnStartDock(fn TStartDockEvent) {
-	if m.startDockPtr != 0 {
-		RemoveEventElement(m.startDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDockPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(89, m.Instance(), m.startDockPtr)
+	cb := makeTStartDockEvent(fn)
+	base.SetEvent(m, 92, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(90, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 93, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnTopleftChanged(fn TNotifyEvent) {
-	if m.topleftChangedPtr != 0 {
-		RemoveEventElement(m.topleftChangedPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.topleftChangedPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(91, m.Instance(), m.topleftChangedPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 94, customDrawGridAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomDrawGrid) SetOnValidateEntry(fn TValidateEntryEvent) {
-	if m.validateEntryPtr != 0 {
-		RemoveEventElement(m.validateEntryPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.validateEntryPtr = MakeEventDataPtr(fn)
-	customDrawGridImportAPI().SysCallN(92, m.Instance(), m.validateEntryPtr)
+	cb := makeTValidateEntryEvent(fn)
+	base.SetEvent(m, 95, customDrawGridAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomDrawGrid class constructor
+func NewCustomDrawGrid(owner IComponent) ICustomDrawGrid {
+	r := customDrawGridAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomDrawGrid(r)
+}
+
+func TCustomDrawGridClass() types.TClass {
+	r := customDrawGridAPI().SysCallN(96)
+	return types.TClass(r)
 }
 
 var (
-	customDrawGridImport       *imports.Imports = nil
-	customDrawGridImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomDrawGrid_AllowOutboundEvents", 0),
-		/*1*/ imports.NewTable("CustomDrawGrid_AltColorStartNormal", 0),
-		/*2*/ imports.NewTable("CustomDrawGrid_AutoAdvance", 0),
-		/*3*/ imports.NewTable("CustomDrawGrid_AutoFillColumns", 0),
-		/*4*/ imports.NewTable("CustomDrawGrid_BorderColor", 0),
-		/*5*/ imports.NewTable("CustomDrawGrid_Class", 0),
-		/*6*/ imports.NewTable("CustomDrawGrid_Col", 0),
-		/*7*/ imports.NewTable("CustomDrawGrid_ColCount", 0),
-		/*8*/ imports.NewTable("CustomDrawGrid_ColRow", 0),
-		/*9*/ imports.NewTable("CustomDrawGrid_ColWidths", 0),
-		/*10*/ imports.NewTable("CustomDrawGrid_Columns", 0),
-		/*11*/ imports.NewTable("CustomDrawGrid_Create", 0),
-		/*12*/ imports.NewTable("CustomDrawGrid_DefaultColWidth", 0),
-		/*13*/ imports.NewTable("CustomDrawGrid_DefaultDrawCell", 0),
-		/*14*/ imports.NewTable("CustomDrawGrid_DefaultDrawing", 0),
-		/*15*/ imports.NewTable("CustomDrawGrid_DefaultRowHeight", 0),
-		/*16*/ imports.NewTable("CustomDrawGrid_DeleteCol", 0),
-		/*17*/ imports.NewTable("CustomDrawGrid_DeleteColRow", 0),
-		/*18*/ imports.NewTable("CustomDrawGrid_DeleteRow", 0),
-		/*19*/ imports.NewTable("CustomDrawGrid_DisabledFontColor", 0),
-		/*20*/ imports.NewTable("CustomDrawGrid_Editor", 0),
-		/*21*/ imports.NewTable("CustomDrawGrid_EditorBorderStyle", 0),
-		/*22*/ imports.NewTable("CustomDrawGrid_EditorMode", 0),
-		/*23*/ imports.NewTable("CustomDrawGrid_ExchangeColRow", 0),
-		/*24*/ imports.NewTable("CustomDrawGrid_ExtendedColSizing", 0),
-		/*25*/ imports.NewTable("CustomDrawGrid_FadeUnfocusedSelection", 0),
-		/*26*/ imports.NewTable("CustomDrawGrid_FastEditing", 0),
-		/*27*/ imports.NewTable("CustomDrawGrid_FixedColor", 0),
-		/*28*/ imports.NewTable("CustomDrawGrid_FixedCols", 0),
-		/*29*/ imports.NewTable("CustomDrawGrid_FixedGridLineColor", 0),
-		/*30*/ imports.NewTable("CustomDrawGrid_FixedHotColor", 0),
-		/*31*/ imports.NewTable("CustomDrawGrid_FixedRows", 0),
-		/*32*/ imports.NewTable("CustomDrawGrid_Flat", 0),
-		/*33*/ imports.NewTable("CustomDrawGrid_FocusColor", 0),
-		/*34*/ imports.NewTable("CustomDrawGrid_FocusRectVisible", 0),
-		/*35*/ imports.NewTable("CustomDrawGrid_GridHeight", 0),
-		/*36*/ imports.NewTable("CustomDrawGrid_GridLineColor", 0),
-		/*37*/ imports.NewTable("CustomDrawGrid_GridLineStyle", 0),
-		/*38*/ imports.NewTable("CustomDrawGrid_GridLineWidth", 0),
-		/*39*/ imports.NewTable("CustomDrawGrid_GridWidth", 0),
-		/*40*/ imports.NewTable("CustomDrawGrid_InsertColRow", 0),
-		/*41*/ imports.NewTable("CustomDrawGrid_IsCellSelected", 0),
-		/*42*/ imports.NewTable("CustomDrawGrid_LeftCol", 0),
-		/*43*/ imports.NewTable("CustomDrawGrid_MoveColRow", 0),
-		/*44*/ imports.NewTable("CustomDrawGrid_Options", 0),
-		/*45*/ imports.NewTable("CustomDrawGrid_Options2", 0),
-		/*46*/ imports.NewTable("CustomDrawGrid_ParentShowHint", 0),
-		/*47*/ imports.NewTable("CustomDrawGrid_Row", 0),
-		/*48*/ imports.NewTable("CustomDrawGrid_RowCount", 0),
-		/*49*/ imports.NewTable("CustomDrawGrid_RowHeights", 0),
-		/*50*/ imports.NewTable("CustomDrawGrid_SaveOptions", 0),
-		/*51*/ imports.NewTable("CustomDrawGrid_ScrollBars", 0),
-		/*52*/ imports.NewTable("CustomDrawGrid_SelectedColor", 0),
-		/*53*/ imports.NewTable("CustomDrawGrid_SelectedColumn", 0),
-		/*54*/ imports.NewTable("CustomDrawGrid_Selection", 0),
-		/*55*/ imports.NewTable("CustomDrawGrid_SetOnAfterSelection", 0),
-		/*56*/ imports.NewTable("CustomDrawGrid_SetOnBeforeSelection", 0),
-		/*57*/ imports.NewTable("CustomDrawGrid_SetOnButtonClick", 0),
-		/*58*/ imports.NewTable("CustomDrawGrid_SetOnColRowDeleted", 0),
-		/*59*/ imports.NewTable("CustomDrawGrid_SetOnColRowExchanged", 0),
-		/*60*/ imports.NewTable("CustomDrawGrid_SetOnColRowInserted", 0),
-		/*61*/ imports.NewTable("CustomDrawGrid_SetOnColRowMoved", 0),
-		/*62*/ imports.NewTable("CustomDrawGrid_SetOnCompareCells", 0),
-		/*63*/ imports.NewTable("CustomDrawGrid_SetOnContextPopup", 0),
-		/*64*/ imports.NewTable("CustomDrawGrid_SetOnDblClick", 0),
-		/*65*/ imports.NewTable("CustomDrawGrid_SetOnDragDrop", 0),
-		/*66*/ imports.NewTable("CustomDrawGrid_SetOnDragOver", 0),
-		/*67*/ imports.NewTable("CustomDrawGrid_SetOnDrawCell", 0),
-		/*68*/ imports.NewTable("CustomDrawGrid_SetOnEndDock", 0),
-		/*69*/ imports.NewTable("CustomDrawGrid_SetOnEndDrag", 0),
-		/*70*/ imports.NewTable("CustomDrawGrid_SetOnGetEditMask", 0),
-		/*71*/ imports.NewTable("CustomDrawGrid_SetOnGetEditText", 0),
-		/*72*/ imports.NewTable("CustomDrawGrid_SetOnHeaderClick", 0),
-		/*73*/ imports.NewTable("CustomDrawGrid_SetOnHeaderSized", 0),
-		/*74*/ imports.NewTable("CustomDrawGrid_SetOnHeaderSizing", 0),
-		/*75*/ imports.NewTable("CustomDrawGrid_SetOnMouseDown", 0),
-		/*76*/ imports.NewTable("CustomDrawGrid_SetOnMouseEnter", 0),
-		/*77*/ imports.NewTable("CustomDrawGrid_SetOnMouseLeave", 0),
-		/*78*/ imports.NewTable("CustomDrawGrid_SetOnMouseMove", 0),
-		/*79*/ imports.NewTable("CustomDrawGrid_SetOnMouseUp", 0),
-		/*80*/ imports.NewTable("CustomDrawGrid_SetOnMouseWheel", 0),
-		/*81*/ imports.NewTable("CustomDrawGrid_SetOnMouseWheelDown", 0),
-		/*82*/ imports.NewTable("CustomDrawGrid_SetOnMouseWheelUp", 0),
-		/*83*/ imports.NewTable("CustomDrawGrid_SetOnPickListSelect", 0),
-		/*84*/ imports.NewTable("CustomDrawGrid_SetOnPrepareCanvas", 0),
-		/*85*/ imports.NewTable("CustomDrawGrid_SetOnSelectCell", 0),
-		/*86*/ imports.NewTable("CustomDrawGrid_SetOnSelectEditor", 0),
-		/*87*/ imports.NewTable("CustomDrawGrid_SetOnSelection", 0),
-		/*88*/ imports.NewTable("CustomDrawGrid_SetOnSetEditText", 0),
-		/*89*/ imports.NewTable("CustomDrawGrid_SetOnStartDock", 0),
-		/*90*/ imports.NewTable("CustomDrawGrid_SetOnStartDrag", 0),
-		/*91*/ imports.NewTable("CustomDrawGrid_SetOnTopleftChanged", 0),
-		/*92*/ imports.NewTable("CustomDrawGrid_SetOnValidateEntry", 0),
-		/*93*/ imports.NewTable("CustomDrawGrid_SortColRow", 0),
-		/*94*/ imports.NewTable("CustomDrawGrid_SortColRow1", 0),
-		/*95*/ imports.NewTable("CustomDrawGrid_StrictSort", 0),
-		/*96*/ imports.NewTable("CustomDrawGrid_TabAdvance", 0),
-		/*97*/ imports.NewTable("CustomDrawGrid_TopRow", 0),
-		/*98*/ imports.NewTable("CustomDrawGrid_UseXORFeatures", 0),
-		/*99*/ imports.NewTable("CustomDrawGrid_VisibleColCount", 0),
-		/*100*/ imports.NewTable("CustomDrawGrid_VisibleRowCount", 0),
-	}
+	customDrawGridOnce   base.Once
+	customDrawGridImport *imports.Imports = nil
 )
 
-func customDrawGridImportAPI() *imports.Imports {
-	if customDrawGridImport == nil {
-		customDrawGridImport = NewDefaultImports()
-		customDrawGridImport.SetImportTable(customDrawGridImportTables)
-		customDrawGridImportTables = nil
-	}
+func customDrawGridAPI() *imports.Imports {
+	customDrawGridOnce.Do(func() {
+		customDrawGridImport = api.NewDefaultImports()
+		customDrawGridImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomDrawGrid_Create", 0), // constructor NewCustomDrawGrid
+			/* 1 */ imports.NewTable("TCustomDrawGrid_DeleteColRow", 0), // procedure DeleteColRow
+			/* 2 */ imports.NewTable("TCustomDrawGrid_DeleteCol", 0), // procedure DeleteCol
+			/* 3 */ imports.NewTable("TCustomDrawGrid_DeleteRow", 0), // procedure DeleteRow
+			/* 4 */ imports.NewTable("TCustomDrawGrid_ExchangeColRow", 0), // procedure ExchangeColRow
+			/* 5 */ imports.NewTable("TCustomDrawGrid_InsertColRow", 0), // procedure InsertColRow
+			/* 6 */ imports.NewTable("TCustomDrawGrid_MoveColRow", 0), // procedure MoveColRow
+			/* 7 */ imports.NewTable("TCustomDrawGrid_SortColRowWithBoolInt", 0), // procedure SortColRowWithBoolInt
+			/* 8 */ imports.NewTable("TCustomDrawGrid_SortColRowWithBoolIntX3", 0), // procedure SortColRowWithBoolIntX3
+			/* 9 */ imports.NewTable("TCustomDrawGrid_DefaultDrawCell", 0), // procedure DefaultDrawCell
+			/* 10 */ imports.NewTable("TCustomDrawGrid_AllowOutboundEvents", 0), // property AllowOutboundEvents
+			/* 11 */ imports.NewTable("TCustomDrawGrid_BorderColor", 0), // property BorderColor
+			/* 12 */ imports.NewTable("TCustomDrawGrid_Col", 0), // property Col
+			/* 13 */ imports.NewTable("TCustomDrawGrid_ColWidths", 0), // property ColWidths
+			/* 14 */ imports.NewTable("TCustomDrawGrid_ColRow", 0), // property ColRow
+			/* 15 */ imports.NewTable("TCustomDrawGrid_DisabledFontColor", 0), // property DisabledFontColor
+			/* 16 */ imports.NewTable("TCustomDrawGrid_Editor", 0), // property Editor
+			/* 17 */ imports.NewTable("TCustomDrawGrid_EditorBorderStyle", 0), // property EditorBorderStyle
+			/* 18 */ imports.NewTable("TCustomDrawGrid_EditorMode", 0), // property EditorMode
+			/* 19 */ imports.NewTable("TCustomDrawGrid_ExtendedColSizing", 0), // property ExtendedColSizing
+			/* 20 */ imports.NewTable("TCustomDrawGrid_AltColorStartNormal", 0), // property AltColorStartNormal
+			/* 21 */ imports.NewTable("TCustomDrawGrid_FastEditing", 0), // property FastEditing
+			/* 22 */ imports.NewTable("TCustomDrawGrid_FixedGridLineColor", 0), // property FixedGridLineColor
+			/* 23 */ imports.NewTable("TCustomDrawGrid_FocusColor", 0), // property FocusColor
+			/* 24 */ imports.NewTable("TCustomDrawGrid_FocusRectVisible", 0), // property FocusRectVisible
+			/* 25 */ imports.NewTable("TCustomDrawGrid_GridHeight", 0), // property GridHeight
+			/* 26 */ imports.NewTable("TCustomDrawGrid_GridWidth", 0), // property GridWidth
+			/* 27 */ imports.NewTable("TCustomDrawGrid_IsCellSelected", 0), // property IsCellSelected
+			/* 28 */ imports.NewTable("TCustomDrawGrid_LeftCol", 0), // property LeftCol
+			/* 29 */ imports.NewTable("TCustomDrawGrid_Row", 0), // property Row
+			/* 30 */ imports.NewTable("TCustomDrawGrid_RowHeights", 0), // property RowHeights
+			/* 31 */ imports.NewTable("TCustomDrawGrid_SaveOptions", 0), // property SaveOptions
+			/* 32 */ imports.NewTable("TCustomDrawGrid_SelectedColor", 0), // property SelectedColor
+			/* 33 */ imports.NewTable("TCustomDrawGrid_SelectedColumn", 0), // property SelectedColumn
+			/* 34 */ imports.NewTable("TCustomDrawGrid_Selection", 0), // property Selection
+			/* 35 */ imports.NewTable("TCustomDrawGrid_StrictSort", 0), // property StrictSort
+			/* 36 */ imports.NewTable("TCustomDrawGrid_TopRow", 0), // property TopRow
+			/* 37 */ imports.NewTable("TCustomDrawGrid_UseXORFeatures", 0), // property UseXORFeatures
+			/* 38 */ imports.NewTable("TCustomDrawGrid_AutoAdvance", 0), // property AutoAdvance
+			/* 39 */ imports.NewTable("TCustomDrawGrid_AutoFillColumns", 0), // property AutoFillColumns
+			/* 40 */ imports.NewTable("TCustomDrawGrid_ColCount", 0), // property ColCount
+			/* 41 */ imports.NewTable("TCustomDrawGrid_Columns", 0), // property Columns
+			/* 42 */ imports.NewTable("TCustomDrawGrid_DefaultColWidth", 0), // property DefaultColWidth
+			/* 43 */ imports.NewTable("TCustomDrawGrid_DefaultDrawing", 0), // property DefaultDrawing
+			/* 44 */ imports.NewTable("TCustomDrawGrid_DefaultRowHeight", 0), // property DefaultRowHeight
+			/* 45 */ imports.NewTable("TCustomDrawGrid_FadeUnfocusedSelection", 0), // property FadeUnfocusedSelection
+			/* 46 */ imports.NewTable("TCustomDrawGrid_FixedColor", 0), // property FixedColor
+			/* 47 */ imports.NewTable("TCustomDrawGrid_FixedCols", 0), // property FixedCols
+			/* 48 */ imports.NewTable("TCustomDrawGrid_FixedHotColor", 0), // property FixedHotColor
+			/* 49 */ imports.NewTable("TCustomDrawGrid_FixedRows", 0), // property FixedRows
+			/* 50 */ imports.NewTable("TCustomDrawGrid_Flat", 0), // property Flat
+			/* 51 */ imports.NewTable("TCustomDrawGrid_GridLineColor", 0), // property GridLineColor
+			/* 52 */ imports.NewTable("TCustomDrawGrid_GridLineStyle", 0), // property GridLineStyle
+			/* 53 */ imports.NewTable("TCustomDrawGrid_GridLineWidth", 0), // property GridLineWidth
+			/* 54 */ imports.NewTable("TCustomDrawGrid_Options", 0), // property Options
+			/* 55 */ imports.NewTable("TCustomDrawGrid_Options2", 0), // property Options2
+			/* 56 */ imports.NewTable("TCustomDrawGrid_ParentShowHint", 0), // property ParentShowHint
+			/* 57 */ imports.NewTable("TCustomDrawGrid_RowCount", 0), // property RowCount
+			/* 58 */ imports.NewTable("TCustomDrawGrid_ScrollBars", 0), // property ScrollBars
+			/* 59 */ imports.NewTable("TCustomDrawGrid_TabAdvance", 0), // property TabAdvance
+			/* 60 */ imports.NewTable("TCustomDrawGrid_VisibleColCount", 0), // property VisibleColCount
+			/* 61 */ imports.NewTable("TCustomDrawGrid_VisibleRowCount", 0), // property VisibleRowCount
+			/* 62 */ imports.NewTable("TCustomDrawGrid_OnAfterSelection", 0), // event OnAfterSelection
+			/* 63 */ imports.NewTable("TCustomDrawGrid_OnBeforeSelection", 0), // event OnBeforeSelection
+			/* 64 */ imports.NewTable("TCustomDrawGrid_OnCompareCells", 0), // event OnCompareCells
+			/* 65 */ imports.NewTable("TCustomDrawGrid_OnContextPopup", 0), // event OnContextPopup
+			/* 66 */ imports.NewTable("TCustomDrawGrid_OnDblClick", 0), // event OnDblClick
+			/* 67 */ imports.NewTable("TCustomDrawGrid_OnDragDrop", 0), // event OnDragDrop
+			/* 68 */ imports.NewTable("TCustomDrawGrid_OnDragOver", 0), // event OnDragOver
+			/* 69 */ imports.NewTable("TCustomDrawGrid_OnDrawCell", 0), // event OnDrawCell
+			/* 70 */ imports.NewTable("TCustomDrawGrid_OnButtonClick", 0), // event OnButtonClick
+			/* 71 */ imports.NewTable("TCustomDrawGrid_OnEndDock", 0), // event OnEndDock
+			/* 72 */ imports.NewTable("TCustomDrawGrid_OnEndDrag", 0), // event OnEndDrag
+			/* 73 */ imports.NewTable("TCustomDrawGrid_OnGetEditMask", 0), // event OnGetEditMask
+			/* 74 */ imports.NewTable("TCustomDrawGrid_OnGetEditText", 0), // event OnGetEditText
+			/* 75 */ imports.NewTable("TCustomDrawGrid_OnHeaderClick", 0), // event OnHeaderClick
+			/* 76 */ imports.NewTable("TCustomDrawGrid_OnHeaderSized", 0), // event OnHeaderSized
+			/* 77 */ imports.NewTable("TCustomDrawGrid_OnHeaderSizing", 0), // event OnHeaderSizing
+			/* 78 */ imports.NewTable("TCustomDrawGrid_OnMouseDown", 0), // event OnMouseDown
+			/* 79 */ imports.NewTable("TCustomDrawGrid_OnMouseEnter", 0), // event OnMouseEnter
+			/* 80 */ imports.NewTable("TCustomDrawGrid_OnMouseLeave", 0), // event OnMouseLeave
+			/* 81 */ imports.NewTable("TCustomDrawGrid_OnMouseMove", 0), // event OnMouseMove
+			/* 82 */ imports.NewTable("TCustomDrawGrid_OnMouseUp", 0), // event OnMouseUp
+			/* 83 */ imports.NewTable("TCustomDrawGrid_OnMouseWheel", 0), // event OnMouseWheel
+			/* 84 */ imports.NewTable("TCustomDrawGrid_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 85 */ imports.NewTable("TCustomDrawGrid_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 86 */ imports.NewTable("TCustomDrawGrid_OnPickListSelect", 0), // event OnPickListSelect
+			/* 87 */ imports.NewTable("TCustomDrawGrid_OnPrepareCanvas", 0), // event OnPrepareCanvas
+			/* 88 */ imports.NewTable("TCustomDrawGrid_OnSelectEditor", 0), // event OnSelectEditor
+			/* 89 */ imports.NewTable("TCustomDrawGrid_OnSelection", 0), // event OnSelection
+			/* 90 */ imports.NewTable("TCustomDrawGrid_OnSelectCell", 0), // event OnSelectCell
+			/* 91 */ imports.NewTable("TCustomDrawGrid_OnSetEditText", 0), // event OnSetEditText
+			/* 92 */ imports.NewTable("TCustomDrawGrid_OnStartDock", 0), // event OnStartDock
+			/* 93 */ imports.NewTable("TCustomDrawGrid_OnStartDrag", 0), // event OnStartDrag
+			/* 94 */ imports.NewTable("TCustomDrawGrid_OnTopleftChanged", 0), // event OnTopleftChanged
+			/* 95 */ imports.NewTable("TCustomDrawGrid_OnValidateEntry", 0), // event OnValidateEntry
+			/* 96 */ imports.NewTable("TCustomDrawGrid_TClass", 0), // function TCustomDrawGridClass
+		}
+	})
 	return customDrawGridImport
 }

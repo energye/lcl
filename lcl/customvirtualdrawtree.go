@@ -9,46 +9,44 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomVirtualDrawTree Parent: IBaseVirtualTree
-// Tree descendant to let an application draw its stuff itself.
 type ICustomVirtualDrawTree interface {
 	IBaseVirtualTree
 }
 
-// TCustomVirtualDrawTree Parent: TBaseVirtualTree
-// Tree descendant to let an application draw its stuff itself.
 type TCustomVirtualDrawTree struct {
 	TBaseVirtualTree
 }
 
-func NewCustomVirtualDrawTree(AOwner IComponent) ICustomVirtualDrawTree {
-	r1 := customVirtualDrawTreeImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsCustomVirtualDrawTree(r1)
+// NewCustomVirtualDrawTree class constructor
+func NewCustomVirtualDrawTree(owner IComponent) ICustomVirtualDrawTree {
+	r := customVirtualDrawTreeAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomVirtualDrawTree(r)
 }
 
-func CustomVirtualDrawTreeClass() TClass {
-	ret := customVirtualDrawTreeImportAPI().SysCallN(0)
-	return TClass(ret)
+func TCustomVirtualDrawTreeClass() types.TClass {
+	r := customVirtualDrawTreeAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	customVirtualDrawTreeImport       *imports.Imports = nil
-	customVirtualDrawTreeImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomVirtualDrawTree_Class", 0),
-		/*1*/ imports.NewTable("CustomVirtualDrawTree_Create", 0),
-	}
+	customVirtualDrawTreeOnce   base.Once
+	customVirtualDrawTreeImport *imports.Imports = nil
 )
 
-func customVirtualDrawTreeImportAPI() *imports.Imports {
-	if customVirtualDrawTreeImport == nil {
-		customVirtualDrawTreeImport = NewDefaultImports()
-		customVirtualDrawTreeImport.SetImportTable(customVirtualDrawTreeImportTables)
-		customVirtualDrawTreeImportTables = nil
-	}
+func customVirtualDrawTreeAPI() *imports.Imports {
+	customVirtualDrawTreeOnce.Do(func() {
+		customVirtualDrawTreeImport = api.NewDefaultImports()
+		customVirtualDrawTreeImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomVirtualDrawTree_Create", 0), // constructor NewCustomVirtualDrawTree
+			/* 1 */ imports.NewTable("TCustomVirtualDrawTree_TClass", 0), // function TCustomVirtualDrawTreeClass
+		}
+	})
 	return customVirtualDrawTreeImport
 }

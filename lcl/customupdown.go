@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomUpDown Parent: ICustomControl
@@ -19,34 +20,33 @@ type ICustomUpDown interface {
 	ICustomControl
 }
 
-// TCustomUpDown Parent: TCustomControl
 type TCustomUpDown struct {
 	TCustomControl
 }
 
-func NewCustomUpDown(AOwner IComponent) ICustomUpDown {
-	r1 := customUpDownImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsCustomUpDown(r1)
+// NewCustomUpDown class constructor
+func NewCustomUpDown(owner IComponent) ICustomUpDown {
+	r := customUpDownAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomUpDown(r)
 }
 
-func CustomUpDownClass() TClass {
-	ret := customUpDownImportAPI().SysCallN(0)
-	return TClass(ret)
+func TCustomUpDownClass() types.TClass {
+	r := customUpDownAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	customUpDownImport       *imports.Imports = nil
-	customUpDownImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomUpDown_Class", 0),
-		/*1*/ imports.NewTable("CustomUpDown_Create", 0),
-	}
+	customUpDownOnce   base.Once
+	customUpDownImport *imports.Imports = nil
 )
 
-func customUpDownImportAPI() *imports.Imports {
-	if customUpDownImport == nil {
-		customUpDownImport = NewDefaultImports()
-		customUpDownImport.SetImportTable(customUpDownImportTables)
-		customUpDownImportTables = nil
-	}
+func customUpDownAPI() *imports.Imports {
+	customUpDownOnce.Do(func() {
+		customUpDownImport = api.NewDefaultImports()
+		customUpDownImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomUpDown_Create", 0), // constructor NewCustomUpDown
+			/* 1 */ imports.NewTable("TCustomUpDown_TClass", 0), // function TCustomUpDownClass
+		}
+	})
 	return customUpDownImport
 }

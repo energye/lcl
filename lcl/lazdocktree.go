@@ -9,84 +9,96 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ILazDockTree Parent: IDockTree
 type ILazDockTree interface {
 	IDockTree
-	AutoFreeDockSite() bool                                                      // property
-	SetAutoFreeDockSite(AValue bool)                                             // property
-	FindBorderControl(Zone ILazDockZone, Side TAnchorKind) IControl              // function
-	GetAnchorControl(Zone ILazDockZone, Side TAnchorKind, OutSide bool) IControl // function
-	BuildDockLayout(Zone ILazDockZone)                                           // procedure
-	FindBorderControls(Zone ILazDockZone, Side TAnchorKind, List *IFPList)       // procedure
+	FindBorderControl(zone ILazDockZone, side types.TAnchorKind) IControl              // function
+	GetAnchorControl(zone ILazDockZone, side types.TAnchorKind, outSide bool) IControl // function
+	BuildDockLayout(zone ILazDockZone)                                                 // procedure
+	FindBorderControls(zone ILazDockZone, side types.TAnchorKind, list *IFPList)       // procedure
+	AutoFreeDockSite() bool                                                            // property AutoFreeDockSite Getter
+	SetAutoFreeDockSite(value bool)                                                    // property AutoFreeDockSite Setter
 }
 
-// TLazDockTree Parent: TDockTree
 type TLazDockTree struct {
 	TDockTree
 }
 
-func NewLazDockTree(TheDockSite IWinControl) ILazDockTree {
-	r1 := lazDockTreeImportAPI().SysCallN(3, GetObjectUintptr(TheDockSite))
-	return AsLazDockTree(r1)
+func (m *TLazDockTree) FindBorderControl(zone ILazDockZone, side types.TAnchorKind) IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazDockTreeAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(zone), uintptr(side))
+	return AsControl(r)
+}
+
+func (m *TLazDockTree) GetAnchorControl(zone ILazDockZone, side types.TAnchorKind, outSide bool) IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazDockTreeAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(zone), uintptr(side), api.PasBool(outSide))
+	return AsControl(r)
+}
+
+func (m *TLazDockTree) BuildDockLayout(zone ILazDockZone) {
+	if !m.IsValid() {
+		return
+	}
+	lazDockTreeAPI().SysCallN(3, m.Instance(), base.GetObjectUintptr(zone))
+}
+
+func (m *TLazDockTree) FindBorderControls(zone ILazDockZone, side types.TAnchorKind, list *IFPList) {
+	if !m.IsValid() {
+		return
+	}
+	listPtr := base.GetObjectUintptr(*list)
+	lazDockTreeAPI().SysCallN(4, m.Instance(), base.GetObjectUintptr(zone), uintptr(side), uintptr(base.UnsafePointer(&listPtr)))
+	*list = AsFPList(listPtr)
 }
 
 func (m *TLazDockTree) AutoFreeDockSite() bool {
-	r1 := lazDockTreeImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := lazDockTreeAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TLazDockTree) SetAutoFreeDockSite(AValue bool) {
-	lazDockTreeImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
+func (m *TLazDockTree) SetAutoFreeDockSite(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	lazDockTreeAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TLazDockTree) FindBorderControl(Zone ILazDockZone, Side TAnchorKind) IControl {
-	r1 := lazDockTreeImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(Zone), uintptr(Side))
-	return AsControl(r1)
-}
-
-func (m *TLazDockTree) GetAnchorControl(Zone ILazDockZone, Side TAnchorKind, OutSide bool) IControl {
-	r1 := lazDockTreeImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(Zone), uintptr(Side), PascalBool(OutSide))
-	return AsControl(r1)
-}
-
-func LazDockTreeClass() TClass {
-	ret := lazDockTreeImportAPI().SysCallN(2)
-	return TClass(ret)
-}
-
-func (m *TLazDockTree) BuildDockLayout(Zone ILazDockZone) {
-	lazDockTreeImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Zone))
-}
-
-func (m *TLazDockTree) FindBorderControls(Zone ILazDockZone, Side TAnchorKind, List *IFPList) {
-	var result2 uintptr
-	lazDockTreeImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(Zone), uintptr(Side), uintptr(unsafePointer(&result2)))
-	*List = AsFPList(result2)
+// NewLazDockTree class constructor
+func NewLazDockTree(theDockSite IWinControl) ILazDockTree {
+	r := lazDockTreeAPI().SysCallN(0, base.GetObjectUintptr(theDockSite))
+	return AsLazDockTree(r)
 }
 
 var (
-	lazDockTreeImport       *imports.Imports = nil
-	lazDockTreeImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("LazDockTree_AutoFreeDockSite", 0),
-		/*1*/ imports.NewTable("LazDockTree_BuildDockLayout", 0),
-		/*2*/ imports.NewTable("LazDockTree_Class", 0),
-		/*3*/ imports.NewTable("LazDockTree_Create", 0),
-		/*4*/ imports.NewTable("LazDockTree_FindBorderControl", 0),
-		/*5*/ imports.NewTable("LazDockTree_FindBorderControls", 0),
-		/*6*/ imports.NewTable("LazDockTree_GetAnchorControl", 0),
-	}
+	lazDockTreeOnce   base.Once
+	lazDockTreeImport *imports.Imports = nil
 )
 
-func lazDockTreeImportAPI() *imports.Imports {
-	if lazDockTreeImport == nil {
-		lazDockTreeImport = NewDefaultImports()
-		lazDockTreeImport.SetImportTable(lazDockTreeImportTables)
-		lazDockTreeImportTables = nil
-	}
+func lazDockTreeAPI() *imports.Imports {
+	lazDockTreeOnce.Do(func() {
+		lazDockTreeImport = api.NewDefaultImports()
+		lazDockTreeImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TLazDockTree_Create", 0), // constructor NewLazDockTree
+			/* 1 */ imports.NewTable("TLazDockTree_FindBorderControl", 0), // function FindBorderControl
+			/* 2 */ imports.NewTable("TLazDockTree_GetAnchorControl", 0), // function GetAnchorControl
+			/* 3 */ imports.NewTable("TLazDockTree_BuildDockLayout", 0), // procedure BuildDockLayout
+			/* 4 */ imports.NewTable("TLazDockTree_FindBorderControls", 0), // procedure FindBorderControls
+			/* 5 */ imports.NewTable("TLazDockTree_AutoFreeDockSite", 0), // property AutoFreeDockSite
+		}
+	})
 	return lazDockTreeImport
 }

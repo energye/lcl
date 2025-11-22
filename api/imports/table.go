@@ -10,16 +10,13 @@
 
 package imports
 
-import (
-	"sync/atomic"
-	"unsafe"
-)
-
+// Table lib API 表
 type Table struct {
-	name string
-	addr ProcAddr
+	name string   // API 名称
+	addr ProcAddr // API 函数地址
 }
 
+// NewTable 创建一个新的 API  table
 func NewTable(name string, addr ProcAddr) *Table {
 	r := &Table{}
 	r.name = name
@@ -27,24 +24,12 @@ func NewTable(name string, addr ProcAddr) *Table {
 	return r
 }
 
+// Name 返回这个 API 名称
 func (m *Table) Name() string {
 	return m.name
 }
 
+// Addr 返回这个 API 函数地址
 func (m *Table) Addr() ProcAddr {
 	return m.addr
-}
-
-func internalGetImportFunc(uiLib DLL, table []*Table, index int) ProcAddr {
-	item := table[index]
-	if atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&item.addr))) == nil {
-		var err error
-		item.addr, err = uiLib.GetProcAddr(item.name)
-		if err != nil {
-			println(err.Error(), item.name)
-			return 0
-		}
-		atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&table[index].addr)), unsafe.Pointer(item.addr))
-	}
-	return item.addr
 }

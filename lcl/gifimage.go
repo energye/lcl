@@ -9,60 +9,57 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IGIFImage Parent: IFPImageBitmap
 type IGIFImage interface {
 	IFPImageBitmap
-	LoadFromBytes(data []byte)
-	LoadFromFSFile(Filename string) error
-	Interlaced() bool   // property
-	BitsPerPixel() byte // property
+	Interlaced() bool   // property Interlaced Getter
+	BitsPerPixel() byte // property BitsPerPixel Getter
 }
 
-// TGIFImage Parent: TFPImageBitmap
 type TGIFImage struct {
 	TFPImageBitmap
 }
 
-func NewGIFImage() IGIFImage {
-	r1 := gIFImageImportAPI().SysCallN(2)
-	return AsGIFImage(r1)
-}
-
 func (m *TGIFImage) Interlaced() bool {
-	r1 := gIFImageImportAPI().SysCallN(3, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := gIFImageAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TGIFImage) BitsPerPixel() byte {
-	r1 := gIFImageImportAPI().SysCallN(0, m.Instance())
-	return byte(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := gIFImageAPI().SysCallN(2, m.Instance())
+	return byte(r)
 }
 
-func GIFImageClass() TClass {
-	ret := gIFImageImportAPI().SysCallN(1)
-	return TClass(ret)
+// NewGIFImage class constructor
+func NewGIFImage() IGIFImage {
+	r := gIFImageAPI().SysCallN(0)
+	return AsGIFImage(r)
 }
 
 var (
-	gIFImageImport       *imports.Imports = nil
-	gIFImageImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("GIFImage_BitsPerPixel", 0),
-		/*1*/ imports.NewTable("GIFImage_Class", 0),
-		/*2*/ imports.NewTable("GIFImage_Create", 0),
-		/*3*/ imports.NewTable("GIFImage_Interlaced", 0),
-	}
+	gIFImageOnce   base.Once
+	gIFImageImport *imports.Imports = nil
 )
 
-func gIFImageImportAPI() *imports.Imports {
-	if gIFImageImport == nil {
-		gIFImageImport = NewDefaultImports()
-		gIFImageImport.SetImportTable(gIFImageImportTables)
-		gIFImageImportTables = nil
-	}
+func gIFImageAPI() *imports.Imports {
+	gIFImageOnce.Do(func() {
+		gIFImageImport = api.NewDefaultImports()
+		gIFImageImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TGIFImage_Create", 0), // constructor NewGIFImage
+			/* 1 */ imports.NewTable("TGIFImage_Interlaced", 0), // property Interlaced
+			/* 2 */ imports.NewTable("TGIFImage_BitsPerPixel", 0), // property BitsPerPixel
+		}
+	})
 	return gIFImageImport
 }

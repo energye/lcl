@@ -9,9 +9,9 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IFPImageBitmap Parent: ICustomBitmap
@@ -19,34 +19,39 @@ type IFPImageBitmap interface {
 	ICustomBitmap
 }
 
-// TFPImageBitmap Parent: TCustomBitmap
 type TFPImageBitmap struct {
 	TCustomBitmap
 }
 
-func NewFPImageBitmap() IFPImageBitmap {
-	r1 := fPImageBitmapImportAPI().SysCallN(1)
-	return AsFPImageBitmap(r1)
+// FPImageBitmap  is static instance
+var FPImageBitmap _FPImageBitmapClass
+
+// _FPImageBitmapClass is class type defined by TFPImageBitmap
+type _FPImageBitmapClass uintptr
+
+func (_FPImageBitmapClass) IsFileExtensionSupported(fileExtension string) bool {
+	r := fPImageBitmapAPI().SysCallN(1, api.PasStr(fileExtension))
+	return api.GoBool(r)
 }
 
-func FPImageBitmapClass() TClass {
-	ret := fPImageBitmapImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewFPImageBitmap class constructor
+func NewFPImageBitmap() IFPImageBitmap {
+	r := fPImageBitmapAPI().SysCallN(0)
+	return AsFPImageBitmap(r)
 }
 
 var (
-	fPImageBitmapImport       *imports.Imports = nil
-	fPImageBitmapImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FPImageBitmap_Class", 0),
-		/*1*/ imports.NewTable("FPImageBitmap_Create", 0),
-	}
+	fPImageBitmapOnce   base.Once
+	fPImageBitmapImport *imports.Imports = nil
 )
 
-func fPImageBitmapImportAPI() *imports.Imports {
-	if fPImageBitmapImport == nil {
-		fPImageBitmapImport = NewDefaultImports()
-		fPImageBitmapImport.SetImportTable(fPImageBitmapImportTables)
-		fPImageBitmapImportTables = nil
-	}
+func fPImageBitmapAPI() *imports.Imports {
+	fPImageBitmapOnce.Do(func() {
+		fPImageBitmapImport = api.NewDefaultImports()
+		fPImageBitmapImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFPImageBitmap_Create", 0), // constructor NewFPImageBitmap
+			/* 1 */ imports.NewTable("TFPImageBitmap_IsFileExtensionSupported", 0), // static function IsFileExtensionSupported
+		}
+	})
 	return fPImageBitmapImport
 }

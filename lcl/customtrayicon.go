@@ -9,294 +9,380 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomTrayIcon Parent: ILCLComponent
 type ICustomTrayIcon interface {
 	ILCLComponent
-	Animate() bool                        // property
-	SetAnimate(AValue bool)               // property
-	AnimateInterval() uint32              // property
-	SetAnimateInterval(AValue uint32)     // property
-	BalloonFlags() TBalloonFlags          // property
-	SetBalloonFlags(AValue TBalloonFlags) // property
-	BalloonHint() string                  // property
-	SetBalloonHint(AValue string)         // property
-	BalloonTimeout() int32                // property
-	SetBalloonTimeout(AValue int32)       // property
-	BalloonTitle() string                 // property
-	SetBalloonTitle(AValue string)        // property
-	Canvas() ICanvas                      // property
-	PopUpMenu() IPopupMenu                // property
-	SetPopUpMenu(AValue IPopupMenu)       // property
-	Icon() IIcon                          // property
-	SetIcon(AValue IIcon)                 // property
-	Icons() ICustomImageList              // property
-	SetIcons(AValue ICustomImageList)     // property
-	Hint() string                         // property
-	SetHint(AValue string)                // property
-	ShowIcon() bool                       // property
-	SetShowIcon(AValue bool)              // property
-	Visible() bool                        // property
-	SetVisible(AValue bool)               // property
-	Hide() bool                           // function
-	Show() bool                           // function
-	GetPosition() (resultPoint TPoint)    // function
-	InternalUpdate()                      // procedure
-	ShowBalloonHint()                     // procedure
-	SetOnClick(fn TNotifyEvent)           // property event
-	SetOnDblClick(fn TNotifyEvent)        // property event
-	SetOnMouseDown(fn TMouseEvent)        // property event
-	SetOnMouseUp(fn TMouseEvent)          // property event
-	SetOnMouseMove(fn TMouseMoveEvent)    // property event
-	SetOnPaint(fn TNotifyEvent)           // property event
+	Hide() bool                // function
+	Show() bool                // function
+	GetPosition() types.TPoint // function
+	InternalUpdate()           // procedure
+	ShowBalloonHint()          // procedure
+	// Animate
+	//  Properties
+	Animate() bool                             // property Animate Getter
+	SetAnimate(value bool)                     // property Animate Setter
+	AnimateInterval() uint32                   // property AnimateInterval Getter
+	SetAnimateInterval(value uint32)           // property AnimateInterval Setter
+	BalloonFlags() types.TBalloonFlags         // property BalloonFlags Getter
+	SetBalloonFlags(value types.TBalloonFlags) // property BalloonFlags Setter
+	BalloonHint() string                       // property BalloonHint Getter
+	SetBalloonHint(value string)               // property BalloonHint Setter
+	BalloonTimeout() int32                     // property BalloonTimeout Getter
+	SetBalloonTimeout(value int32)             // property BalloonTimeout Setter
+	BalloonTitle() string                      // property BalloonTitle Getter
+	SetBalloonTitle(value string)              // property BalloonTitle Setter
+	Canvas() ICanvas                           // property Canvas Getter
+	PopUpMenu() IPopupMenu                     // property PopUpMenu Getter
+	SetPopUpMenu(value IPopupMenu)             // property PopUpMenu Setter
+	Icon() IIcon                               // property Icon Getter
+	SetIcon(value IIcon)                       // property Icon Setter
+	Icons() ICustomImageList                   // property Icons Getter
+	SetIcons(value ICustomImageList)           // property Icons Setter
+	Hint() string                              // property Hint Getter
+	SetHint(value string)                      // property Hint Setter
+	ShowIcon() bool                            // property ShowIcon Getter
+	SetShowIcon(value bool)                    // property ShowIcon Setter
+	Visible() bool                             // property Visible Getter
+	SetVisible(value bool)                     // property Visible Setter
+	SetOnClick(fn TNotifyEvent)                // property event
+	SetOnDblClick(fn TNotifyEvent)             // property event
+	SetOnMouseDown(fn TMouseEvent)             // property event
+	SetOnMouseUp(fn TMouseEvent)               // property event
+	SetOnMouseMove(fn TMouseMoveEvent)         // property event
+	SetOnPaint(fn TNotifyEvent)                // property event
 }
 
-// TCustomTrayIcon Parent: TLCLComponent
 type TCustomTrayIcon struct {
 	TLCLComponent
-	clickPtr     uintptr
-	dblClickPtr  uintptr
-	mouseDownPtr uintptr
-	mouseUpPtr   uintptr
-	mouseMovePtr uintptr
-	paintPtr     uintptr
-}
-
-func NewCustomTrayIcon(TheOwner IComponent) ICustomTrayIcon {
-	r1 := customTrayIconImportAPI().SysCallN(8, GetObjectUintptr(TheOwner))
-	return AsCustomTrayIcon(r1)
-}
-
-func (m *TCustomTrayIcon) Animate() bool {
-	r1 := customTrayIconImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomTrayIcon) SetAnimate(AValue bool) {
-	customTrayIconImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomTrayIcon) AnimateInterval() uint32 {
-	r1 := customTrayIconImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return uint32(r1)
-}
-
-func (m *TCustomTrayIcon) SetAnimateInterval(AValue uint32) {
-	customTrayIconImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomTrayIcon) BalloonFlags() TBalloonFlags {
-	r1 := customTrayIconImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TBalloonFlags(r1)
-}
-
-func (m *TCustomTrayIcon) SetBalloonFlags(AValue TBalloonFlags) {
-	customTrayIconImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomTrayIcon) BalloonHint() string {
-	r1 := customTrayIconImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TCustomTrayIcon) SetBalloonHint(AValue string) {
-	customTrayIconImportAPI().SysCallN(3, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TCustomTrayIcon) BalloonTimeout() int32 {
-	r1 := customTrayIconImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomTrayIcon) SetBalloonTimeout(AValue int32) {
-	customTrayIconImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomTrayIcon) BalloonTitle() string {
-	r1 := customTrayIconImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TCustomTrayIcon) SetBalloonTitle(AValue string) {
-	customTrayIconImportAPI().SysCallN(5, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TCustomTrayIcon) Canvas() ICanvas {
-	r1 := customTrayIconImportAPI().SysCallN(6, m.Instance())
-	return AsCanvas(r1)
-}
-
-func (m *TCustomTrayIcon) PopUpMenu() IPopupMenu {
-	r1 := customTrayIconImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return AsPopupMenu(r1)
-}
-
-func (m *TCustomTrayIcon) SetPopUpMenu(AValue IPopupMenu) {
-	customTrayIconImportAPI().SysCallN(15, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCustomTrayIcon) Icon() IIcon {
-	r1 := customTrayIconImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return AsIcon(r1)
-}
-
-func (m *TCustomTrayIcon) SetIcon(AValue IIcon) {
-	customTrayIconImportAPI().SysCallN(12, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCustomTrayIcon) Icons() ICustomImageList {
-	r1 := customTrayIconImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
-}
-
-func (m *TCustomTrayIcon) SetIcons(AValue ICustomImageList) {
-	customTrayIconImportAPI().SysCallN(13, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCustomTrayIcon) Hint() string {
-	r1 := customTrayIconImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TCustomTrayIcon) SetHint(AValue string) {
-	customTrayIconImportAPI().SysCallN(11, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TCustomTrayIcon) ShowIcon() bool {
-	r1 := customTrayIconImportAPI().SysCallN(24, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomTrayIcon) SetShowIcon(AValue bool) {
-	customTrayIconImportAPI().SysCallN(24, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomTrayIcon) Visible() bool {
-	r1 := customTrayIconImportAPI().SysCallN(25, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomTrayIcon) SetVisible(AValue bool) {
-	customTrayIconImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomTrayIcon) Hide() bool {
-	r1 := customTrayIconImportAPI().SysCallN(10, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customTrayIconAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TCustomTrayIcon) Show() bool {
-	r1 := customTrayIconImportAPI().SysCallN(22, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customTrayIconAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomTrayIcon) GetPosition() (resultPoint TPoint) {
-	customTrayIconImportAPI().SysCallN(9, m.Instance(), uintptr(unsafePointer(&resultPoint)))
+func (m *TCustomTrayIcon) GetPosition() (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(3, m.Instance(), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func CustomTrayIconClass() TClass {
-	ret := customTrayIconImportAPI().SysCallN(7)
-	return TClass(ret)
-}
-
 func (m *TCustomTrayIcon) InternalUpdate() {
-	customTrayIconImportAPI().SysCallN(14, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(4, m.Instance())
 }
 
 func (m *TCustomTrayIcon) ShowBalloonHint() {
-	customTrayIconImportAPI().SysCallN(23, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(5, m.Instance())
+}
+
+func (m *TCustomTrayIcon) Animate() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customTrayIconAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomTrayIcon) SetAnimate(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomTrayIcon) AnimateInterval() uint32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customTrayIconAPI().SysCallN(7, 0, m.Instance())
+	return uint32(r)
+}
+
+func (m *TCustomTrayIcon) SetAnimateInterval(value uint32) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomTrayIcon) BalloonFlags() types.TBalloonFlags {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customTrayIconAPI().SysCallN(8, 0, m.Instance())
+	return types.TBalloonFlags(r)
+}
+
+func (m *TCustomTrayIcon) SetBalloonFlags(value types.TBalloonFlags) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomTrayIcon) BalloonHint() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customTrayIconAPI().SysCallN(9, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TCustomTrayIcon) SetBalloonHint(value string) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(9, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TCustomTrayIcon) BalloonTimeout() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customTrayIconAPI().SysCallN(10, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomTrayIcon) SetBalloonTimeout(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomTrayIcon) BalloonTitle() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customTrayIconAPI().SysCallN(11, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TCustomTrayIcon) SetBalloonTitle(value string) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(11, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TCustomTrayIcon) Canvas() ICanvas {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customTrayIconAPI().SysCallN(12, m.Instance())
+	return AsCanvas(r)
+}
+
+func (m *TCustomTrayIcon) PopUpMenu() IPopupMenu {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customTrayIconAPI().SysCallN(13, 0, m.Instance())
+	return AsPopupMenu(r)
+}
+
+func (m *TCustomTrayIcon) SetPopUpMenu(value IPopupMenu) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(13, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCustomTrayIcon) Icon() IIcon {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customTrayIconAPI().SysCallN(14, 0, m.Instance())
+	return AsIcon(r)
+}
+
+func (m *TCustomTrayIcon) SetIcon(value IIcon) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(14, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCustomTrayIcon) Icons() ICustomImageList {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customTrayIconAPI().SysCallN(15, 0, m.Instance())
+	return AsCustomImageList(r)
+}
+
+func (m *TCustomTrayIcon) SetIcons(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(15, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCustomTrayIcon) Hint() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customTrayIconAPI().SysCallN(16, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TCustomTrayIcon) SetHint(value string) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(16, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TCustomTrayIcon) ShowIcon() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customTrayIconAPI().SysCallN(17, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomTrayIcon) SetShowIcon(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(17, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomTrayIcon) Visible() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customTrayIconAPI().SysCallN(18, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomTrayIcon) SetVisible(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customTrayIconAPI().SysCallN(18, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomTrayIcon) SetOnClick(fn TNotifyEvent) {
-	if m.clickPtr != 0 {
-		RemoveEventElement(m.clickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.clickPtr = MakeEventDataPtr(fn)
-	customTrayIconImportAPI().SysCallN(16, m.Instance(), m.clickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 19, customTrayIconAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomTrayIcon) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	customTrayIconImportAPI().SysCallN(17, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 20, customTrayIconAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomTrayIcon) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	customTrayIconImportAPI().SysCallN(18, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 21, customTrayIconAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomTrayIcon) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	customTrayIconImportAPI().SysCallN(20, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 22, customTrayIconAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomTrayIcon) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	customTrayIconImportAPI().SysCallN(19, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 23, customTrayIconAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomTrayIcon) SetOnPaint(fn TNotifyEvent) {
-	if m.paintPtr != 0 {
-		RemoveEventElement(m.paintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.paintPtr = MakeEventDataPtr(fn)
-	customTrayIconImportAPI().SysCallN(21, m.Instance(), m.paintPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 24, customTrayIconAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomTrayIcon class constructor
+func NewCustomTrayIcon(theOwner IComponent) ICustomTrayIcon {
+	r := customTrayIconAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsCustomTrayIcon(r)
+}
+
+func TCustomTrayIconClass() types.TClass {
+	r := customTrayIconAPI().SysCallN(25)
+	return types.TClass(r)
 }
 
 var (
-	customTrayIconImport       *imports.Imports = nil
-	customTrayIconImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomTrayIcon_Animate", 0),
-		/*1*/ imports.NewTable("CustomTrayIcon_AnimateInterval", 0),
-		/*2*/ imports.NewTable("CustomTrayIcon_BalloonFlags", 0),
-		/*3*/ imports.NewTable("CustomTrayIcon_BalloonHint", 0),
-		/*4*/ imports.NewTable("CustomTrayIcon_BalloonTimeout", 0),
-		/*5*/ imports.NewTable("CustomTrayIcon_BalloonTitle", 0),
-		/*6*/ imports.NewTable("CustomTrayIcon_Canvas", 0),
-		/*7*/ imports.NewTable("CustomTrayIcon_Class", 0),
-		/*8*/ imports.NewTable("CustomTrayIcon_Create", 0),
-		/*9*/ imports.NewTable("CustomTrayIcon_GetPosition", 0),
-		/*10*/ imports.NewTable("CustomTrayIcon_Hide", 0),
-		/*11*/ imports.NewTable("CustomTrayIcon_Hint", 0),
-		/*12*/ imports.NewTable("CustomTrayIcon_Icon", 0),
-		/*13*/ imports.NewTable("CustomTrayIcon_Icons", 0),
-		/*14*/ imports.NewTable("CustomTrayIcon_InternalUpdate", 0),
-		/*15*/ imports.NewTable("CustomTrayIcon_PopUpMenu", 0),
-		/*16*/ imports.NewTable("CustomTrayIcon_SetOnClick", 0),
-		/*17*/ imports.NewTable("CustomTrayIcon_SetOnDblClick", 0),
-		/*18*/ imports.NewTable("CustomTrayIcon_SetOnMouseDown", 0),
-		/*19*/ imports.NewTable("CustomTrayIcon_SetOnMouseMove", 0),
-		/*20*/ imports.NewTable("CustomTrayIcon_SetOnMouseUp", 0),
-		/*21*/ imports.NewTable("CustomTrayIcon_SetOnPaint", 0),
-		/*22*/ imports.NewTable("CustomTrayIcon_Show", 0),
-		/*23*/ imports.NewTable("CustomTrayIcon_ShowBalloonHint", 0),
-		/*24*/ imports.NewTable("CustomTrayIcon_ShowIcon", 0),
-		/*25*/ imports.NewTable("CustomTrayIcon_Visible", 0),
-	}
+	customTrayIconOnce   base.Once
+	customTrayIconImport *imports.Imports = nil
 )
 
-func customTrayIconImportAPI() *imports.Imports {
-	if customTrayIconImport == nil {
-		customTrayIconImport = NewDefaultImports()
-		customTrayIconImport.SetImportTable(customTrayIconImportTables)
-		customTrayIconImportTables = nil
-	}
+func customTrayIconAPI() *imports.Imports {
+	customTrayIconOnce.Do(func() {
+		customTrayIconImport = api.NewDefaultImports()
+		customTrayIconImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomTrayIcon_Create", 0), // constructor NewCustomTrayIcon
+			/* 1 */ imports.NewTable("TCustomTrayIcon_Hide", 0), // function Hide
+			/* 2 */ imports.NewTable("TCustomTrayIcon_Show", 0), // function Show
+			/* 3 */ imports.NewTable("TCustomTrayIcon_GetPosition", 0), // function GetPosition
+			/* 4 */ imports.NewTable("TCustomTrayIcon_InternalUpdate", 0), // procedure InternalUpdate
+			/* 5 */ imports.NewTable("TCustomTrayIcon_ShowBalloonHint", 0), // procedure ShowBalloonHint
+			/* 6 */ imports.NewTable("TCustomTrayIcon_Animate", 0), // property Animate
+			/* 7 */ imports.NewTable("TCustomTrayIcon_AnimateInterval", 0), // property AnimateInterval
+			/* 8 */ imports.NewTable("TCustomTrayIcon_BalloonFlags", 0), // property BalloonFlags
+			/* 9 */ imports.NewTable("TCustomTrayIcon_BalloonHint", 0), // property BalloonHint
+			/* 10 */ imports.NewTable("TCustomTrayIcon_BalloonTimeout", 0), // property BalloonTimeout
+			/* 11 */ imports.NewTable("TCustomTrayIcon_BalloonTitle", 0), // property BalloonTitle
+			/* 12 */ imports.NewTable("TCustomTrayIcon_Canvas", 0), // property Canvas
+			/* 13 */ imports.NewTable("TCustomTrayIcon_PopUpMenu", 0), // property PopUpMenu
+			/* 14 */ imports.NewTable("TCustomTrayIcon_Icon", 0), // property Icon
+			/* 15 */ imports.NewTable("TCustomTrayIcon_Icons", 0), // property Icons
+			/* 16 */ imports.NewTable("TCustomTrayIcon_Hint", 0), // property Hint
+			/* 17 */ imports.NewTable("TCustomTrayIcon_ShowIcon", 0), // property ShowIcon
+			/* 18 */ imports.NewTable("TCustomTrayIcon_Visible", 0), // property Visible
+			/* 19 */ imports.NewTable("TCustomTrayIcon_OnClick", 0), // event OnClick
+			/* 20 */ imports.NewTable("TCustomTrayIcon_OnDblClick", 0), // event OnDblClick
+			/* 21 */ imports.NewTable("TCustomTrayIcon_OnMouseDown", 0), // event OnMouseDown
+			/* 22 */ imports.NewTable("TCustomTrayIcon_OnMouseUp", 0), // event OnMouseUp
+			/* 23 */ imports.NewTable("TCustomTrayIcon_OnMouseMove", 0), // event OnMouseMove
+			/* 24 */ imports.NewTable("TCustomTrayIcon_OnPaint", 0), // event OnPaint
+			/* 25 */ imports.NewTable("TCustomTrayIcon_TClass", 0), // function TCustomTrayIconClass
+		}
+	})
 	return customTrayIconImport
 }

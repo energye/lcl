@@ -9,123 +9,148 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IBasicAction Parent: IComponent
 type IBasicAction interface {
 	IComponent
-	ActionComponent() IComponent              // property
-	SetActionComponent(AValue IComponent)     // property
-	HandlesTarget(Target IObject) bool        // function
+	HandlesTarget(target IObject) bool        // function
 	Execute() bool                            // function
 	Update() bool                             // function
-	UpdateTarget(Target IObject)              // procedure
-	ExecuteTarget(Target IObject)             // procedure
-	RegisterChanges(Value IBasicActionLink)   // procedure
-	UnRegisterChanges(Value IBasicActionLink) // procedure
+	UpdateTarget(target IObject)              // procedure
+	ExecuteTarget(target IObject)             // procedure
+	RegisterChanges(value IBasicActionLink)   // procedure
+	UnRegisterChanges(value IBasicActionLink) // procedure
+	ActionComponent() IComponent              // property ActionComponent Getter
+	SetActionComponent(value IComponent)      // property ActionComponent Setter
 	SetOnExecute(fn TNotifyEvent)             // property event
 	SetOnUpdate(fn TNotifyEvent)              // property event
 }
 
-// TBasicAction Parent: TComponent
 type TBasicAction struct {
 	TComponent
-	executePtr uintptr
-	updatePtr  uintptr
 }
 
-func NewBasicAction(AOwner IComponent) IBasicAction {
-	r1 := basicActionImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
-	return AsBasicAction(r1)
-}
-
-func (m *TBasicAction) ActionComponent() IComponent {
-	r1 := basicActionImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return AsComponent(r1)
-}
-
-func (m *TBasicAction) SetActionComponent(AValue IComponent) {
-	basicActionImportAPI().SysCallN(0, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TBasicAction) HandlesTarget(Target IObject) bool {
-	r1 := basicActionImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(Target))
-	return GoBool(r1)
+func (m *TBasicAction) HandlesTarget(target IObject) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := basicActionAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(target))
+	return api.GoBool(r)
 }
 
 func (m *TBasicAction) Execute() bool {
-	r1 := basicActionImportAPI().SysCallN(3, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := basicActionAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TBasicAction) Update() bool {
-	r1 := basicActionImportAPI().SysCallN(10, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := basicActionAPI().SysCallN(3, m.Instance())
+	return api.GoBool(r)
 }
 
-func BasicActionClass() TClass {
-	ret := basicActionImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TBasicAction) UpdateTarget(target IObject) {
+	if !m.IsValid() {
+		return
+	}
+	basicActionAPI().SysCallN(4, m.Instance(), base.GetObjectUintptr(target))
 }
 
-func (m *TBasicAction) UpdateTarget(Target IObject) {
-	basicActionImportAPI().SysCallN(11, m.Instance(), GetObjectUintptr(Target))
+func (m *TBasicAction) ExecuteTarget(target IObject) {
+	if !m.IsValid() {
+		return
+	}
+	basicActionAPI().SysCallN(5, m.Instance(), base.GetObjectUintptr(target))
 }
 
-func (m *TBasicAction) ExecuteTarget(Target IObject) {
-	basicActionImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(Target))
+func (m *TBasicAction) RegisterChanges(value IBasicActionLink) {
+	if !m.IsValid() {
+		return
+	}
+	basicActionAPI().SysCallN(6, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TBasicAction) RegisterChanges(Value IBasicActionLink) {
-	basicActionImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(Value))
+func (m *TBasicAction) UnRegisterChanges(value IBasicActionLink) {
+	if !m.IsValid() {
+		return
+	}
+	basicActionAPI().SysCallN(7, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TBasicAction) UnRegisterChanges(Value IBasicActionLink) {
-	basicActionImportAPI().SysCallN(9, m.Instance(), GetObjectUintptr(Value))
+func (m *TBasicAction) ActionComponent() IComponent {
+	if !m.IsValid() {
+		return nil
+	}
+	r := basicActionAPI().SysCallN(8, 0, m.Instance())
+	return AsComponent(r)
+}
+
+func (m *TBasicAction) SetActionComponent(value IComponent) {
+	if !m.IsValid() {
+		return
+	}
+	basicActionAPI().SysCallN(8, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TBasicAction) SetOnExecute(fn TNotifyEvent) {
-	if m.executePtr != 0 {
-		RemoveEventElement(m.executePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.executePtr = MakeEventDataPtr(fn)
-	basicActionImportAPI().SysCallN(7, m.Instance(), m.executePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 9, basicActionAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TBasicAction) SetOnUpdate(fn TNotifyEvent) {
-	if m.updatePtr != 0 {
-		RemoveEventElement(m.updatePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.updatePtr = MakeEventDataPtr(fn)
-	basicActionImportAPI().SysCallN(8, m.Instance(), m.updatePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 10, basicActionAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewBasicAction class constructor
+func NewBasicAction(owner IComponent) IBasicAction {
+	r := basicActionAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsBasicAction(r)
+}
+
+func TBasicActionClass() types.TClass {
+	r := basicActionAPI().SysCallN(11)
+	return types.TClass(r)
 }
 
 var (
-	basicActionImport       *imports.Imports = nil
-	basicActionImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("BasicAction_ActionComponent", 0),
-		/*1*/ imports.NewTable("BasicAction_Class", 0),
-		/*2*/ imports.NewTable("BasicAction_Create", 0),
-		/*3*/ imports.NewTable("BasicAction_Execute", 0),
-		/*4*/ imports.NewTable("BasicAction_ExecuteTarget", 0),
-		/*5*/ imports.NewTable("BasicAction_HandlesTarget", 0),
-		/*6*/ imports.NewTable("BasicAction_RegisterChanges", 0),
-		/*7*/ imports.NewTable("BasicAction_SetOnExecute", 0),
-		/*8*/ imports.NewTable("BasicAction_SetOnUpdate", 0),
-		/*9*/ imports.NewTable("BasicAction_UnRegisterChanges", 0),
-		/*10*/ imports.NewTable("BasicAction_Update", 0),
-		/*11*/ imports.NewTable("BasicAction_UpdateTarget", 0),
-	}
+	basicActionOnce   base.Once
+	basicActionImport *imports.Imports = nil
 )
 
-func basicActionImportAPI() *imports.Imports {
-	if basicActionImport == nil {
-		basicActionImport = NewDefaultImports()
-		basicActionImport.SetImportTable(basicActionImportTables)
-		basicActionImportTables = nil
-	}
+func basicActionAPI() *imports.Imports {
+	basicActionOnce.Do(func() {
+		basicActionImport = api.NewDefaultImports()
+		basicActionImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TBasicAction_Create", 0), // constructor NewBasicAction
+			/* 1 */ imports.NewTable("TBasicAction_HandlesTarget", 0), // function HandlesTarget
+			/* 2 */ imports.NewTable("TBasicAction_Execute", 0), // function Execute
+			/* 3 */ imports.NewTable("TBasicAction_Update", 0), // function Update
+			/* 4 */ imports.NewTable("TBasicAction_UpdateTarget", 0), // procedure UpdateTarget
+			/* 5 */ imports.NewTable("TBasicAction_ExecuteTarget", 0), // procedure ExecuteTarget
+			/* 6 */ imports.NewTable("TBasicAction_RegisterChanges", 0), // procedure RegisterChanges
+			/* 7 */ imports.NewTable("TBasicAction_UnRegisterChanges", 0), // procedure UnRegisterChanges
+			/* 8 */ imports.NewTable("TBasicAction_ActionComponent", 0), // property ActionComponent
+			/* 9 */ imports.NewTable("TBasicAction_OnExecute", 0), // event OnExecute
+			/* 10 */ imports.NewTable("TBasicAction_OnUpdate", 0), // event OnUpdate
+			/* 11 */ imports.NewTable("TBasicAction_TClass", 0), // function TBasicActionClass
+		}
+	})
 	return basicActionImport
 }

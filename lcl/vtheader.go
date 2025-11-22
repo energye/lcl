@@ -9,352 +9,469 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IVTHeader Parent: IPersistent
 type IVTHeader interface {
 	IPersistent
-	DragImage() IVTDragImage                                                                                            // property
-	States() THeaderStates                                                                                              // property
-	Treeview() IBaseVirtualTree                                                                                         // property
-	UseColumns() bool                                                                                                   // property
-	AutoSizeIndex() TColumnIndex                                                                                        // property
-	SetAutoSizeIndex(AValue TColumnIndex)                                                                               // property
-	Background() TColor                                                                                                 // property
-	SetBackground(AValue TColor)                                                                                        // property
-	Columns() IVirtualTreeColumns                                                                                       // property
-	SetColumns(AValue IVirtualTreeColumns)                                                                              // property
-	DefaultHeight() int32                                                                                               // property
-	SetDefaultHeight(AValue int32)                                                                                      // property
-	Font() IFont                                                                                                        // property
-	SetFont(AValue IFont)                                                                                               // property
-	FixedAreaConstraints() IVTFixedAreaConstraints                                                                      // property
-	SetFixedAreaConstraints(AValue IVTFixedAreaConstraints)                                                             // property
-	Height() int32                                                                                                      // property
-	SetHeight(AValue int32)                                                                                             // property
-	Images() ICustomImageList                                                                                           // property
-	SetImages(AValue ICustomImageList)                                                                                  // property
-	ImagesWidth() int32                                                                                                 // property
-	SetImagesWidth(AValue int32)                                                                                        // property
-	MainColumn() TColumnIndex                                                                                           // property
-	SetMainColumn(AValue TColumnIndex)                                                                                  // property
-	MaxHeight() int32                                                                                                   // property
-	SetMaxHeight(AValue int32)                                                                                          // property
-	MinHeight() int32                                                                                                   // property
-	SetMinHeight(AValue int32)                                                                                          // property
-	Options() TVTHeaderOptions                                                                                          // property
-	SetOptions(AValue TVTHeaderOptions)                                                                                 // property
-	ParentFont() bool                                                                                                   // property
-	SetParentFont(AValue bool)                                                                                          // property
-	PopupMenu() IPopupMenu                                                                                              // property
-	SetPopupMenu(AValue IPopupMenu)                                                                                     // property
-	SortColumn() TColumnIndex                                                                                           // property
-	SetSortColumn(AValue TColumnIndex)                                                                                  // property
-	SortDirection() TSortDirection                                                                                      // property
-	SetSortDirection(AValue TSortDirection)                                                                             // property
-	Style() TVTHeaderStyle                                                                                              // property
-	SetStyle(AValue TVTHeaderStyle)                                                                                     // property
-	AllowFocus(ColumnIndex TColumnIndex) bool                                                                           // function
-	InHeader(P *TPoint) bool                                                                                            // function
-	InHeaderSplitterArea(P *TPoint) bool                                                                                // function
-	ResizeColumns(ChangeBy int32, RangeStartCol TColumnIndex, RangeEndCol TColumnIndex, Options TVTColumnOptions) int32 // function
-	AutoFitColumns(Animated bool, SmartAutoFitType TSmartAutoFitType, RangeStartCol int32, RangeEndCol int32)           // procedure
-	FixDesignFontsPPI(ADesignTimePPI int32)                                                                             // procedure
-	Invalidate(Column IVirtualTreeColumn, ExpandToBorder bool)                                                          // procedure
-	LoadFromStream(Stream IStream)                                                                                      // procedure
-	RestoreColumns()                                                                                                    // procedure
-	SaveToStream(Stream IStream)                                                                                        // procedure
+	AllowFocus(columnIndex int32) bool                                                                              // function
+	InHeader(P types.TPoint) bool                                                                                   // function
+	InHeaderSplitterArea(P types.TPoint) bool                                                                       // function
+	ResizeColumns(changeBy int32, rangeStartCol int32, rangeEndCol int32, options types.TVTColumnOptions) int32     // function
+	AutoFitColumns(animated bool, smartAutoFitType types.TSmartAutoFitType, rangeStartCol int32, rangeEndCol int32) // procedure
+	Invalidate(column IVirtualTreeColumn, expandToBorder bool)                                                      // procedure
+	LoadFromStream(stream IStream)                                                                                  // procedure
+	RestoreColumns()                                                                                                // procedure
+	SaveToStream(stream IStream)                                                                                    // procedure
+	DragImage() IVTDragImage                                                                                        // property DragImage Getter
+	States() types.THeaderStates                                                                                    // property States Getter
+	Treeview() IBaseVirtualTree                                                                                     // property Treeview Getter
+	UseColumns() bool                                                                                               // property UseColumns Getter
+	AutoSizeIndex() int32                                                                                           // property AutoSizeIndex Getter
+	SetAutoSizeIndex(value int32)                                                                                   // property AutoSizeIndex Setter
+	Background() types.TColor                                                                                       // property Background Getter
+	SetBackground(value types.TColor)                                                                               // property Background Setter
+	Columns() IVirtualTreeColumns                                                                                   // property Columns Getter
+	SetColumns(value IVirtualTreeColumns)                                                                           // property Columns Setter
+	DefaultHeight() int32                                                                                           // property DefaultHeight Getter
+	SetDefaultHeight(value int32)                                                                                   // property DefaultHeight Setter
+	Font() IFont                                                                                                    // property Font Getter
+	SetFont(value IFont)                                                                                            // property Font Setter
+	FixedAreaConstraints() IVTFixedAreaConstraints                                                                  // property FixedAreaConstraints Getter
+	SetFixedAreaConstraints(value IVTFixedAreaConstraints)                                                          // property FixedAreaConstraints Setter
+	Height() int32                                                                                                  // property Height Getter
+	SetHeight(value int32)                                                                                          // property Height Setter
+	Images() ICustomImageList                                                                                       // property Images Getter
+	SetImages(value ICustomImageList)                                                                               // property Images Setter
+	MainColumn() int32                                                                                              // property MainColumn Getter
+	SetMainColumn(value int32)                                                                                      // property MainColumn Setter
+	MaxHeight() int32                                                                                               // property MaxHeight Getter
+	SetMaxHeight(value int32)                                                                                       // property MaxHeight Setter
+	MinHeight() int32                                                                                               // property MinHeight Getter
+	SetMinHeight(value int32)                                                                                       // property MinHeight Setter
+	Options() types.TVTHeaderOptions                                                                                // property Options Getter
+	SetOptions(value types.TVTHeaderOptions)                                                                        // property Options Setter
+	ParentFont() bool                                                                                               // property ParentFont Getter
+	SetParentFont(value bool)                                                                                       // property ParentFont Setter
+	PopupMenu() IPopupMenu                                                                                          // property PopupMenu Getter
+	SetPopupMenu(value IPopupMenu)                                                                                  // property PopupMenu Setter
+	SortColumn() int32                                                                                              // property SortColumn Getter
+	SetSortColumn(value int32)                                                                                      // property SortColumn Setter
+	SortDirection() types.TSortDirection                                                                            // property SortDirection Getter
+	SetSortDirection(value types.TSortDirection)                                                                    // property SortDirection Setter
+	Style() types.TVTHeaderStyle                                                                                    // property Style Getter
+	SetStyle(value types.TVTHeaderStyle)                                                                            // property Style Setter
 }
 
-// TVTHeader Parent: TPersistent
 type TVTHeader struct {
 	TPersistent
 }
 
-func NewVTHeader(AOwner IBaseVirtualTree) IVTHeader {
-	r1 := vTHeaderImportAPI().SysCallN(6, GetObjectUintptr(AOwner))
-	return AsVTHeader(r1)
+func (m *TVTHeader) AllowFocus(columnIndex int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := vTHeaderAPI().SysCallN(1, m.Instance(), uintptr(columnIndex))
+	return api.GoBool(r)
 }
 
-func (m *TVTHeader) DragImage() IVTDragImage {
-	r1 := vTHeaderImportAPI().SysCallN(8, m.Instance())
-	return AsVTDragImage(r1)
+func (m *TVTHeader) InHeader(P types.TPoint) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := vTHeaderAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(&P)))
+	return api.GoBool(r)
 }
 
-func (m *TVTHeader) States() THeaderStates {
-	r1 := vTHeaderImportAPI().SysCallN(30, m.Instance())
-	return THeaderStates(r1)
+func (m *TVTHeader) InHeaderSplitterArea(P types.TPoint) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := vTHeaderAPI().SysCallN(3, m.Instance(), uintptr(base.UnsafePointer(&P)))
+	return api.GoBool(r)
 }
 
-func (m *TVTHeader) Treeview() IBaseVirtualTree {
-	r1 := vTHeaderImportAPI().SysCallN(32, m.Instance())
-	return AsBaseVirtualTree(r1)
+func (m *TVTHeader) ResizeColumns(changeBy int32, rangeStartCol int32, rangeEndCol int32, options types.TVTColumnOptions) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(4, m.Instance(), uintptr(changeBy), uintptr(rangeStartCol), uintptr(rangeEndCol), uintptr(options))
+	return int32(r)
 }
 
-func (m *TVTHeader) UseColumns() bool {
-	r1 := vTHeaderImportAPI().SysCallN(33, m.Instance())
-	return GoBool(r1)
+func (m *TVTHeader) AutoFitColumns(animated bool, smartAutoFitType types.TSmartAutoFitType, rangeStartCol int32, rangeEndCol int32) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(5, m.Instance(), api.PasBool(animated), uintptr(smartAutoFitType), uintptr(rangeStartCol), uintptr(rangeEndCol))
 }
 
-func (m *TVTHeader) AutoSizeIndex() TColumnIndex {
-	r1 := vTHeaderImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TColumnIndex(r1)
+func (m *TVTHeader) Invalidate(column IVirtualTreeColumn, expandToBorder bool) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(6, m.Instance(), base.GetObjectUintptr(column), api.PasBool(expandToBorder))
 }
 
-func (m *TVTHeader) SetAutoSizeIndex(AValue TColumnIndex) {
-	vTHeaderImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) Background() TColor {
-	r1 := vTHeaderImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TVTHeader) SetBackground(AValue TColor) {
-	vTHeaderImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) Columns() IVirtualTreeColumns {
-	r1 := vTHeaderImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return AsVirtualTreeColumns(r1)
-}
-
-func (m *TVTHeader) SetColumns(AValue IVirtualTreeColumns) {
-	vTHeaderImportAPI().SysCallN(5, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TVTHeader) DefaultHeight() int32 {
-	r1 := vTHeaderImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TVTHeader) SetDefaultHeight(AValue int32) {
-	vTHeaderImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) Font() IFont {
-	r1 := vTHeaderImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return AsFont(r1)
-}
-
-func (m *TVTHeader) SetFont(AValue IFont) {
-	vTHeaderImportAPI().SysCallN(11, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TVTHeader) FixedAreaConstraints() IVTFixedAreaConstraints {
-	r1 := vTHeaderImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return AsVTFixedAreaConstraints(r1)
-}
-
-func (m *TVTHeader) SetFixedAreaConstraints(AValue IVTFixedAreaConstraints) {
-	vTHeaderImportAPI().SysCallN(10, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TVTHeader) Height() int32 {
-	r1 := vTHeaderImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TVTHeader) SetHeight(AValue int32) {
-	vTHeaderImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) Images() ICustomImageList {
-	r1 := vTHeaderImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
-}
-
-func (m *TVTHeader) SetImages(AValue ICustomImageList) {
-	vTHeaderImportAPI().SysCallN(13, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TVTHeader) ImagesWidth() int32 {
-	r1 := vTHeaderImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TVTHeader) SetImagesWidth(AValue int32) {
-	vTHeaderImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) MainColumn() TColumnIndex {
-	r1 := vTHeaderImportAPI().SysCallN(19, 0, m.Instance(), 0)
-	return TColumnIndex(r1)
-}
-
-func (m *TVTHeader) SetMainColumn(AValue TColumnIndex) {
-	vTHeaderImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) MaxHeight() int32 {
-	r1 := vTHeaderImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TVTHeader) SetMaxHeight(AValue int32) {
-	vTHeaderImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) MinHeight() int32 {
-	r1 := vTHeaderImportAPI().SysCallN(21, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TVTHeader) SetMinHeight(AValue int32) {
-	vTHeaderImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) Options() TVTHeaderOptions {
-	r1 := vTHeaderImportAPI().SysCallN(22, 0, m.Instance(), 0)
-	return TVTHeaderOptions(r1)
-}
-
-func (m *TVTHeader) SetOptions(AValue TVTHeaderOptions) {
-	vTHeaderImportAPI().SysCallN(22, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) ParentFont() bool {
-	r1 := vTHeaderImportAPI().SysCallN(23, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TVTHeader) SetParentFont(AValue bool) {
-	vTHeaderImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TVTHeader) PopupMenu() IPopupMenu {
-	r1 := vTHeaderImportAPI().SysCallN(24, 0, m.Instance(), 0)
-	return AsPopupMenu(r1)
-}
-
-func (m *TVTHeader) SetPopupMenu(AValue IPopupMenu) {
-	vTHeaderImportAPI().SysCallN(24, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TVTHeader) SortColumn() TColumnIndex {
-	r1 := vTHeaderImportAPI().SysCallN(28, 0, m.Instance(), 0)
-	return TColumnIndex(r1)
-}
-
-func (m *TVTHeader) SetSortColumn(AValue TColumnIndex) {
-	vTHeaderImportAPI().SysCallN(28, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) SortDirection() TSortDirection {
-	r1 := vTHeaderImportAPI().SysCallN(29, 0, m.Instance(), 0)
-	return TSortDirection(r1)
-}
-
-func (m *TVTHeader) SetSortDirection(AValue TSortDirection) {
-	vTHeaderImportAPI().SysCallN(29, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) Style() TVTHeaderStyle {
-	r1 := vTHeaderImportAPI().SysCallN(31, 0, m.Instance(), 0)
-	return TVTHeaderStyle(r1)
-}
-
-func (m *TVTHeader) SetStyle(AValue TVTHeaderStyle) {
-	vTHeaderImportAPI().SysCallN(31, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TVTHeader) AllowFocus(ColumnIndex TColumnIndex) bool {
-	r1 := vTHeaderImportAPI().SysCallN(0, m.Instance(), uintptr(ColumnIndex))
-	return GoBool(r1)
-}
-
-func (m *TVTHeader) InHeader(P *TPoint) bool {
-	r1 := vTHeaderImportAPI().SysCallN(15, m.Instance(), uintptr(unsafePointer(P)))
-	return GoBool(r1)
-}
-
-func (m *TVTHeader) InHeaderSplitterArea(P *TPoint) bool {
-	r1 := vTHeaderImportAPI().SysCallN(16, m.Instance(), uintptr(unsafePointer(P)))
-	return GoBool(r1)
-}
-
-func (m *TVTHeader) ResizeColumns(ChangeBy int32, RangeStartCol TColumnIndex, RangeEndCol TColumnIndex, Options TVTColumnOptions) int32 {
-	r1 := vTHeaderImportAPI().SysCallN(25, m.Instance(), uintptr(ChangeBy), uintptr(RangeStartCol), uintptr(RangeEndCol), uintptr(Options))
-	return int32(r1)
-}
-
-func VTHeaderClass() TClass {
-	ret := vTHeaderImportAPI().SysCallN(4)
-	return TClass(ret)
-}
-
-func (m *TVTHeader) AutoFitColumns(Animated bool, SmartAutoFitType TSmartAutoFitType, RangeStartCol int32, RangeEndCol int32) {
-	vTHeaderImportAPI().SysCallN(1, m.Instance(), PascalBool(Animated), uintptr(SmartAutoFitType), uintptr(RangeStartCol), uintptr(RangeEndCol))
-}
-
-func (m *TVTHeader) FixDesignFontsPPI(ADesignTimePPI int32) {
-	vTHeaderImportAPI().SysCallN(9, m.Instance(), uintptr(ADesignTimePPI))
-}
-
-func (m *TVTHeader) Invalidate(Column IVirtualTreeColumn, ExpandToBorder bool) {
-	vTHeaderImportAPI().SysCallN(17, m.Instance(), GetObjectUintptr(Column), PascalBool(ExpandToBorder))
-}
-
-func (m *TVTHeader) LoadFromStream(Stream IStream) {
-	vTHeaderImportAPI().SysCallN(18, m.Instance(), GetObjectUintptr(Stream))
+func (m *TVTHeader) LoadFromStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(7, m.Instance(), base.GetObjectUintptr(stream))
 }
 
 func (m *TVTHeader) RestoreColumns() {
-	vTHeaderImportAPI().SysCallN(26, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(8, m.Instance())
 }
 
-func (m *TVTHeader) SaveToStream(Stream IStream) {
-	vTHeaderImportAPI().SysCallN(27, m.Instance(), GetObjectUintptr(Stream))
+func (m *TVTHeader) SaveToStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(9, m.Instance(), base.GetObjectUintptr(stream))
+}
+
+func (m *TVTHeader) DragImage() IVTDragImage {
+	if !m.IsValid() {
+		return nil
+	}
+	r := vTHeaderAPI().SysCallN(10, m.Instance())
+	return AsVTDragImage(r)
+}
+
+func (m *TVTHeader) States() types.THeaderStates {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(11, m.Instance())
+	return types.THeaderStates(r)
+}
+
+func (m *TVTHeader) Treeview() IBaseVirtualTree {
+	if !m.IsValid() {
+		return nil
+	}
+	r := vTHeaderAPI().SysCallN(12, m.Instance())
+	return AsBaseVirtualTree(r)
+}
+
+func (m *TVTHeader) UseColumns() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := vTHeaderAPI().SysCallN(13, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TVTHeader) AutoSizeIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(14, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVTHeader) SetAutoSizeIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVTHeader) Background() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(15, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TVTHeader) SetBackground(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(15, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVTHeader) Columns() IVirtualTreeColumns {
+	if !m.IsValid() {
+		return nil
+	}
+	r := vTHeaderAPI().SysCallN(16, 0, m.Instance())
+	return AsVirtualTreeColumns(r)
+}
+
+func (m *TVTHeader) SetColumns(value IVirtualTreeColumns) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(16, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TVTHeader) DefaultHeight() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(17, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVTHeader) SetDefaultHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(17, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVTHeader) Font() IFont {
+	if !m.IsValid() {
+		return nil
+	}
+	r := vTHeaderAPI().SysCallN(18, 0, m.Instance())
+	return AsFont(r)
+}
+
+func (m *TVTHeader) SetFont(value IFont) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(18, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TVTHeader) FixedAreaConstraints() IVTFixedAreaConstraints {
+	if !m.IsValid() {
+		return nil
+	}
+	r := vTHeaderAPI().SysCallN(19, 0, m.Instance())
+	return AsVTFixedAreaConstraints(r)
+}
+
+func (m *TVTHeader) SetFixedAreaConstraints(value IVTFixedAreaConstraints) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(19, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TVTHeader) Height() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(20, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVTHeader) SetHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(20, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVTHeader) Images() ICustomImageList {
+	if !m.IsValid() {
+		return nil
+	}
+	r := vTHeaderAPI().SysCallN(21, 0, m.Instance())
+	return AsCustomImageList(r)
+}
+
+func (m *TVTHeader) SetImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(21, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TVTHeader) MainColumn() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(22, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVTHeader) SetMainColumn(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVTHeader) MaxHeight() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(23, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVTHeader) SetMaxHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVTHeader) MinHeight() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(24, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVTHeader) SetMinHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(24, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVTHeader) Options() types.TVTHeaderOptions {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(25, 0, m.Instance())
+	return types.TVTHeaderOptions(r)
+}
+
+func (m *TVTHeader) SetOptions(value types.TVTHeaderOptions) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(25, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVTHeader) ParentFont() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := vTHeaderAPI().SysCallN(26, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TVTHeader) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(26, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TVTHeader) PopupMenu() IPopupMenu {
+	if !m.IsValid() {
+		return nil
+	}
+	r := vTHeaderAPI().SysCallN(27, 0, m.Instance())
+	return AsPopupMenu(r)
+}
+
+func (m *TVTHeader) SetPopupMenu(value IPopupMenu) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(27, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TVTHeader) SortColumn() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(28, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TVTHeader) SetSortColumn(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(28, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVTHeader) SortDirection() types.TSortDirection {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(29, 0, m.Instance())
+	return types.TSortDirection(r)
+}
+
+func (m *TVTHeader) SetSortDirection(value types.TSortDirection) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(29, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TVTHeader) Style() types.TVTHeaderStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := vTHeaderAPI().SysCallN(30, 0, m.Instance())
+	return types.TVTHeaderStyle(r)
+}
+
+func (m *TVTHeader) SetStyle(value types.TVTHeaderStyle) {
+	if !m.IsValid() {
+		return
+	}
+	vTHeaderAPI().SysCallN(30, 1, m.Instance(), uintptr(value))
+}
+
+// NewVTHeader class constructor
+func NewVTHeader(owner IBaseVirtualTree) IVTHeader {
+	r := vTHeaderAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsVTHeader(r)
 }
 
 var (
-	vTHeaderImport       *imports.Imports = nil
-	vTHeaderImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("VTHeader_AllowFocus", 0),
-		/*1*/ imports.NewTable("VTHeader_AutoFitColumns", 0),
-		/*2*/ imports.NewTable("VTHeader_AutoSizeIndex", 0),
-		/*3*/ imports.NewTable("VTHeader_Background", 0),
-		/*4*/ imports.NewTable("VTHeader_Class", 0),
-		/*5*/ imports.NewTable("VTHeader_Columns", 0),
-		/*6*/ imports.NewTable("VTHeader_Create", 0),
-		/*7*/ imports.NewTable("VTHeader_DefaultHeight", 0),
-		/*8*/ imports.NewTable("VTHeader_DragImage", 0),
-		/*9*/ imports.NewTable("VTHeader_FixDesignFontsPPI", 0),
-		/*10*/ imports.NewTable("VTHeader_FixedAreaConstraints", 0),
-		/*11*/ imports.NewTable("VTHeader_Font", 0),
-		/*12*/ imports.NewTable("VTHeader_Height", 0),
-		/*13*/ imports.NewTable("VTHeader_Images", 0),
-		/*14*/ imports.NewTable("VTHeader_ImagesWidth", 0),
-		/*15*/ imports.NewTable("VTHeader_InHeader", 0),
-		/*16*/ imports.NewTable("VTHeader_InHeaderSplitterArea", 0),
-		/*17*/ imports.NewTable("VTHeader_Invalidate", 0),
-		/*18*/ imports.NewTable("VTHeader_LoadFromStream", 0),
-		/*19*/ imports.NewTable("VTHeader_MainColumn", 0),
-		/*20*/ imports.NewTable("VTHeader_MaxHeight", 0),
-		/*21*/ imports.NewTable("VTHeader_MinHeight", 0),
-		/*22*/ imports.NewTable("VTHeader_Options", 0),
-		/*23*/ imports.NewTable("VTHeader_ParentFont", 0),
-		/*24*/ imports.NewTable("VTHeader_PopupMenu", 0),
-		/*25*/ imports.NewTable("VTHeader_ResizeColumns", 0),
-		/*26*/ imports.NewTable("VTHeader_RestoreColumns", 0),
-		/*27*/ imports.NewTable("VTHeader_SaveToStream", 0),
-		/*28*/ imports.NewTable("VTHeader_SortColumn", 0),
-		/*29*/ imports.NewTable("VTHeader_SortDirection", 0),
-		/*30*/ imports.NewTable("VTHeader_States", 0),
-		/*31*/ imports.NewTable("VTHeader_Style", 0),
-		/*32*/ imports.NewTable("VTHeader_Treeview", 0),
-		/*33*/ imports.NewTable("VTHeader_UseColumns", 0),
-	}
+	vTHeaderOnce   base.Once
+	vTHeaderImport *imports.Imports = nil
 )
 
-func vTHeaderImportAPI() *imports.Imports {
-	if vTHeaderImport == nil {
-		vTHeaderImport = NewDefaultImports()
-		vTHeaderImport.SetImportTable(vTHeaderImportTables)
-		vTHeaderImportTables = nil
-	}
+func vTHeaderAPI() *imports.Imports {
+	vTHeaderOnce.Do(func() {
+		vTHeaderImport = api.NewDefaultImports()
+		vTHeaderImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TVTHeader_Create", 0), // constructor NewVTHeader
+			/* 1 */ imports.NewTable("TVTHeader_AllowFocus", 0), // function AllowFocus
+			/* 2 */ imports.NewTable("TVTHeader_InHeader", 0), // function InHeader
+			/* 3 */ imports.NewTable("TVTHeader_InHeaderSplitterArea", 0), // function InHeaderSplitterArea
+			/* 4 */ imports.NewTable("TVTHeader_ResizeColumns", 0), // function ResizeColumns
+			/* 5 */ imports.NewTable("TVTHeader_AutoFitColumns", 0), // procedure AutoFitColumns
+			/* 6 */ imports.NewTable("TVTHeader_Invalidate", 0), // procedure Invalidate
+			/* 7 */ imports.NewTable("TVTHeader_LoadFromStream", 0), // procedure LoadFromStream
+			/* 8 */ imports.NewTable("TVTHeader_RestoreColumns", 0), // procedure RestoreColumns
+			/* 9 */ imports.NewTable("TVTHeader_SaveToStream", 0), // procedure SaveToStream
+			/* 10 */ imports.NewTable("TVTHeader_DragImage", 0), // property DragImage
+			/* 11 */ imports.NewTable("TVTHeader_States", 0), // property States
+			/* 12 */ imports.NewTable("TVTHeader_Treeview", 0), // property Treeview
+			/* 13 */ imports.NewTable("TVTHeader_UseColumns", 0), // property UseColumns
+			/* 14 */ imports.NewTable("TVTHeader_AutoSizeIndex", 0), // property AutoSizeIndex
+			/* 15 */ imports.NewTable("TVTHeader_Background", 0), // property Background
+			/* 16 */ imports.NewTable("TVTHeader_Columns", 0), // property Columns
+			/* 17 */ imports.NewTable("TVTHeader_DefaultHeight", 0), // property DefaultHeight
+			/* 18 */ imports.NewTable("TVTHeader_Font", 0), // property Font
+			/* 19 */ imports.NewTable("TVTHeader_FixedAreaConstraints", 0), // property FixedAreaConstraints
+			/* 20 */ imports.NewTable("TVTHeader_Height", 0), // property Height
+			/* 21 */ imports.NewTable("TVTHeader_Images", 0), // property Images
+			/* 22 */ imports.NewTable("TVTHeader_MainColumn", 0), // property MainColumn
+			/* 23 */ imports.NewTable("TVTHeader_MaxHeight", 0), // property MaxHeight
+			/* 24 */ imports.NewTable("TVTHeader_MinHeight", 0), // property MinHeight
+			/* 25 */ imports.NewTable("TVTHeader_Options", 0), // property Options
+			/* 26 */ imports.NewTable("TVTHeader_ParentFont", 0), // property ParentFont
+			/* 27 */ imports.NewTable("TVTHeader_PopupMenu", 0), // property PopupMenu
+			/* 28 */ imports.NewTable("TVTHeader_SortColumn", 0), // property SortColumn
+			/* 29 */ imports.NewTable("TVTHeader_SortDirection", 0), // property SortDirection
+			/* 30 */ imports.NewTable("TVTHeader_Style", 0), // property Style
+		}
+	})
 	return vTHeaderImport
 }

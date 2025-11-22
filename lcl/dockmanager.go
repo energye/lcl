@@ -9,156 +9,197 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
-// IDockManager Is Abstract Class Parent: IPersistent
+// IDockManager Parent: IPersistent
 type IDockManager interface {
 	IPersistent
-	GetDockEdge(ADockObject IDragDockObject) bool                                  // function
-	AutoFreeByControl() bool                                                       // function
-	IsEnabledControl(Control IControl) bool                                        // function
-	CanBeDoubleDocked() bool                                                       // function
-	BeginUpdate()                                                                  // procedure
-	EndUpdate()                                                                    // procedure
-	GetControlBounds(Control IControl, OutControlBounds *TRect)                    // procedure Is Abstract
-	InsertControl(ADockObject IDragDockObject)                                     // procedure
-	InsertControl1(Control IControl, InsertAt TAlign, DropCtl IControl)            // procedure Is Abstract
-	LoadFromStream(Stream IStream)                                                 // procedure Is Abstract
-	PaintSite(DC HDC)                                                              // procedure
-	MessageHandler(Sender IControl, Message *TLMessage)                            // procedure
-	PositionDockRect(ADockObject IDragDockObject)                                  // procedure
-	PositionDockRect1(Client, DropCtl IControl, DropAlign TAlign, DockRect *TRect) // procedure Is Abstract
-	RemoveControl(Control IControl)                                                // procedure Is Abstract
-	ResetBounds(Force bool)                                                        // procedure Is Abstract
-	SaveToStream(Stream IStream)                                                   // procedure Is Abstract
-	SetReplacingControl(Control IControl)                                          // procedure
+	GetDockEdge(dockObject IDragDockObject) bool                                                                             // function
+	AutoFreeByControl() bool                                                                                                 // function
+	IsEnabledControl(control IControl) bool                                                                                  // function
+	CanBeDoubleDocked() bool                                                                                                 // function
+	BeginUpdate()                                                                                                            // procedure
+	EndUpdate()                                                                                                              // procedure
+	GetControlBounds(control IControl, outControlBounds *types.TRect)                                                        // procedure
+	InsertControlWithDragDockObject(dockObject IDragDockObject)                                                              // procedure
+	InsertControlWithControlX2Align(control IControl, insertAt types.TAlign, dropCtl IControl)                               // procedure
+	LoadFromStream(stream IStream)                                                                                           // procedure
+	PaintSite(dC types.HDC)                                                                                                  // procedure
+	MessageHandler(sender IControl, message *types.TLMessage)                                                                // procedure
+	PositionDockRectWithDragDockObject(dockObject IDragDockObject)                                                           // procedure
+	PositionDockRectWithControlX2AlignRect(client IControl, dropCtl IControl, dropAlign types.TAlign, dockRect *types.TRect) // procedure
+	RemoveControl(control IControl)                                                                                          // procedure
+	ResetBounds(force bool)                                                                                                  // procedure
+	SaveToStream(stream IStream)                                                                                             // procedure
+	SetReplacingControl(control IControl)                                                                                    // procedure
 }
 
-// TDockManager Is Abstract Class Parent: TPersistent
 type TDockManager struct {
 	TPersistent
 }
 
-func (m *TDockManager) GetDockEdge(ADockObject IDragDockObject) bool {
-	r1 := dockManagerImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(ADockObject))
-	return GoBool(r1)
+func (m *TDockManager) GetDockEdge(dockObject IDragDockObject) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := dockManagerAPI().SysCallN(0, m.Instance(), base.GetObjectUintptr(dockObject))
+	return api.GoBool(r)
 }
 
 func (m *TDockManager) AutoFreeByControl() bool {
-	r1 := dockManagerImportAPI().SysCallN(0, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := dockManagerAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TDockManager) IsEnabledControl(Control IControl) bool {
-	r1 := dockManagerImportAPI().SysCallN(9, m.Instance(), GetObjectUintptr(Control))
-	return GoBool(r1)
+func (m *TDockManager) IsEnabledControl(control IControl) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := dockManagerAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(control))
+	return api.GoBool(r)
 }
 
 func (m *TDockManager) CanBeDoubleDocked() bool {
-	r1 := dockManagerImportAPI().SysCallN(2, m.Instance())
-	return GoBool(r1)
-}
-
-func DockManagerClass() TClass {
-	ret := dockManagerImportAPI().SysCallN(3)
-	return TClass(ret)
+	if !m.IsValid() {
+		return false
+	}
+	r := dockManagerAPI().SysCallN(3, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TDockManager) BeginUpdate() {
-	dockManagerImportAPI().SysCallN(1, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(4, m.Instance())
 }
 
 func (m *TDockManager) EndUpdate() {
-	dockManagerImportAPI().SysCallN(4, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(5, m.Instance())
 }
 
-func (m *TDockManager) GetControlBounds(Control IControl, OutControlBounds *TRect) {
-	var result1 uintptr
-	dockManagerImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(Control), uintptr(unsafePointer(&result1)))
-	*OutControlBounds = *(*TRect)(getPointer(result1))
+func (m *TDockManager) GetControlBounds(control IControl, outControlBounds *types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(6, m.Instance(), base.GetObjectUintptr(control), uintptr(base.UnsafePointer(outControlBounds)))
 }
 
-func (m *TDockManager) InsertControl(ADockObject IDragDockObject) {
-	dockManagerImportAPI().SysCallN(7, m.Instance(), GetObjectUintptr(ADockObject))
+func (m *TDockManager) InsertControlWithDragDockObject(dockObject IDragDockObject) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(7, m.Instance(), base.GetObjectUintptr(dockObject))
 }
 
-func (m *TDockManager) InsertControl1(Control IControl, InsertAt TAlign, DropCtl IControl) {
-	dockManagerImportAPI().SysCallN(8, m.Instance(), GetObjectUintptr(Control), uintptr(InsertAt), GetObjectUintptr(DropCtl))
+func (m *TDockManager) InsertControlWithControlX2Align(control IControl, insertAt types.TAlign, dropCtl IControl) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(8, m.Instance(), base.GetObjectUintptr(control), uintptr(insertAt), base.GetObjectUintptr(dropCtl))
 }
 
-func (m *TDockManager) LoadFromStream(Stream IStream) {
-	dockManagerImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(Stream))
+func (m *TDockManager) LoadFromStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(9, m.Instance(), base.GetObjectUintptr(stream))
 }
 
-func (m *TDockManager) PaintSite(DC HDC) {
-	dockManagerImportAPI().SysCallN(12, m.Instance(), uintptr(DC))
+func (m *TDockManager) PaintSite(dC types.HDC) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(10, m.Instance(), uintptr(dC))
 }
 
-func (m *TDockManager) MessageHandler(Sender IControl, Message *TLMessage) {
-	var result1 uintptr
-	dockManagerImportAPI().SysCallN(11, m.Instance(), GetObjectUintptr(Sender), uintptr(unsafePointer(&result1)))
-	*Message = *(*TLMessage)(getPointer(result1))
+func (m *TDockManager) MessageHandler(sender IControl, message *types.TLMessage) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(11, m.Instance(), base.GetObjectUintptr(sender), uintptr(base.UnsafePointer(message)))
 }
 
-func (m *TDockManager) PositionDockRect(ADockObject IDragDockObject) {
-	dockManagerImportAPI().SysCallN(13, m.Instance(), GetObjectUintptr(ADockObject))
+func (m *TDockManager) PositionDockRectWithDragDockObject(dockObject IDragDockObject) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(12, m.Instance(), base.GetObjectUintptr(dockObject))
 }
 
-func (m *TDockManager) PositionDockRect1(Client, DropCtl IControl, DropAlign TAlign, DockRect *TRect) {
-	var result2 uintptr
-	dockManagerImportAPI().SysCallN(14, m.Instance(), GetObjectUintptr(Client), GetObjectUintptr(DropCtl), uintptr(DropAlign), uintptr(unsafePointer(&result2)))
-	*DockRect = *(*TRect)(getPointer(result2))
+func (m *TDockManager) PositionDockRectWithControlX2AlignRect(client IControl, dropCtl IControl, dropAlign types.TAlign, dockRect *types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(13, m.Instance(), base.GetObjectUintptr(client), base.GetObjectUintptr(dropCtl), uintptr(dropAlign), uintptr(base.UnsafePointer(dockRect)))
 }
 
-func (m *TDockManager) RemoveControl(Control IControl) {
-	dockManagerImportAPI().SysCallN(15, m.Instance(), GetObjectUintptr(Control))
+func (m *TDockManager) RemoveControl(control IControl) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(14, m.Instance(), base.GetObjectUintptr(control))
 }
 
-func (m *TDockManager) ResetBounds(Force bool) {
-	dockManagerImportAPI().SysCallN(16, m.Instance(), PascalBool(Force))
+func (m *TDockManager) ResetBounds(force bool) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(15, m.Instance(), api.PasBool(force))
 }
 
-func (m *TDockManager) SaveToStream(Stream IStream) {
-	dockManagerImportAPI().SysCallN(17, m.Instance(), GetObjectUintptr(Stream))
+func (m *TDockManager) SaveToStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(16, m.Instance(), base.GetObjectUintptr(stream))
 }
 
-func (m *TDockManager) SetReplacingControl(Control IControl) {
-	dockManagerImportAPI().SysCallN(18, m.Instance(), GetObjectUintptr(Control))
+func (m *TDockManager) SetReplacingControl(control IControl) {
+	if !m.IsValid() {
+		return
+	}
+	dockManagerAPI().SysCallN(17, m.Instance(), base.GetObjectUintptr(control))
 }
 
 var (
-	dockManagerImport       *imports.Imports = nil
-	dockManagerImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("DockManager_AutoFreeByControl", 0),
-		/*1*/ imports.NewTable("DockManager_BeginUpdate", 0),
-		/*2*/ imports.NewTable("DockManager_CanBeDoubleDocked", 0),
-		/*3*/ imports.NewTable("DockManager_Class", 0),
-		/*4*/ imports.NewTable("DockManager_EndUpdate", 0),
-		/*5*/ imports.NewTable("DockManager_GetControlBounds", 0),
-		/*6*/ imports.NewTable("DockManager_GetDockEdge", 0),
-		/*7*/ imports.NewTable("DockManager_InsertControl", 0),
-		/*8*/ imports.NewTable("DockManager_InsertControl1", 0),
-		/*9*/ imports.NewTable("DockManager_IsEnabledControl", 0),
-		/*10*/ imports.NewTable("DockManager_LoadFromStream", 0),
-		/*11*/ imports.NewTable("DockManager_MessageHandler", 0),
-		/*12*/ imports.NewTable("DockManager_PaintSite", 0),
-		/*13*/ imports.NewTable("DockManager_PositionDockRect", 0),
-		/*14*/ imports.NewTable("DockManager_PositionDockRect1", 0),
-		/*15*/ imports.NewTable("DockManager_RemoveControl", 0),
-		/*16*/ imports.NewTable("DockManager_ResetBounds", 0),
-		/*17*/ imports.NewTable("DockManager_SaveToStream", 0),
-		/*18*/ imports.NewTable("DockManager_SetReplacingControl", 0),
-	}
+	dockManagerOnce   base.Once
+	dockManagerImport *imports.Imports = nil
 )
 
-func dockManagerImportAPI() *imports.Imports {
-	if dockManagerImport == nil {
-		dockManagerImport = NewDefaultImports()
-		dockManagerImport.SetImportTable(dockManagerImportTables)
-		dockManagerImportTables = nil
-	}
+func dockManagerAPI() *imports.Imports {
+	dockManagerOnce.Do(func() {
+		dockManagerImport = api.NewDefaultImports()
+		dockManagerImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TDockManager_GetDockEdge", 0), // function GetDockEdge
+			/* 1 */ imports.NewTable("TDockManager_AutoFreeByControl", 0), // function AutoFreeByControl
+			/* 2 */ imports.NewTable("TDockManager_IsEnabledControl", 0), // function IsEnabledControl
+			/* 3 */ imports.NewTable("TDockManager_CanBeDoubleDocked", 0), // function CanBeDoubleDocked
+			/* 4 */ imports.NewTable("TDockManager_BeginUpdate", 0), // procedure BeginUpdate
+			/* 5 */ imports.NewTable("TDockManager_EndUpdate", 0), // procedure EndUpdate
+			/* 6 */ imports.NewTable("TDockManager_GetControlBounds", 0), // procedure GetControlBounds
+			/* 7 */ imports.NewTable("TDockManager_InsertControlWithDragDockObject", 0), // procedure InsertControlWithDragDockObject
+			/* 8 */ imports.NewTable("TDockManager_InsertControlWithControlX2Align", 0), // procedure InsertControlWithControlX2Align
+			/* 9 */ imports.NewTable("TDockManager_LoadFromStream", 0), // procedure LoadFromStream
+			/* 10 */ imports.NewTable("TDockManager_PaintSite", 0), // procedure PaintSite
+			/* 11 */ imports.NewTable("TDockManager_MessageHandler", 0), // procedure MessageHandler
+			/* 12 */ imports.NewTable("TDockManager_PositionDockRectWithDragDockObject", 0), // procedure PositionDockRectWithDragDockObject
+			/* 13 */ imports.NewTable("TDockManager_PositionDockRectWithControlX2AlignRect", 0), // procedure PositionDockRectWithControlX2AlignRect
+			/* 14 */ imports.NewTable("TDockManager_RemoveControl", 0), // procedure RemoveControl
+			/* 15 */ imports.NewTable("TDockManager_ResetBounds", 0), // procedure ResetBounds
+			/* 16 */ imports.NewTable("TDockManager_SaveToStream", 0), // procedure SaveToStream
+			/* 17 */ imports.NewTable("TDockManager_SetReplacingControl", 0), // procedure SetReplacingControl
+		}
+	})
 	return dockManagerImport
 }

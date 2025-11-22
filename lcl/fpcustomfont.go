@@ -9,159 +9,208 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IFPCustomFont Parent: IFPCanvasHelper
 type IFPCustomFont interface {
 	IFPCanvasHelper
-	Name() string                         // property
-	SetName(AValue string)                // property
-	Size() int32                          // property
-	SetSize(AValue int32)                 // property
-	Bold() bool                           // property
-	SetBold(AValue bool)                  // property
-	Italic() bool                         // property
-	SetItalic(AValue bool)                // property
-	Underline() bool                      // property
-	SetUnderline(AValue bool)             // property
-	StrikeThrough() bool                  // property
-	SetStrikeThrough(AValue bool)         // property
-	Orientation() int32                   // property
-	SetOrientation(AValue int32)          // property
-	CopyFont() IFPCustomFont              // function
-	GetTextHeight(text string) int32      // function
-	GetTextWidth(text string) int32       // function
-	GetTextSize(text string, w, h *int32) // procedure
+	CopyFont() IFPCustomFont         // function
+	GetTextHeight(text string) int32 // function
+	GetTextWidth(text string) int32  // function
+	// GetTextSize
+	//  Creates a copy of the font with all properties the same, but not allocated
+	GetTextSize(text string, W *int32, H *int32) // procedure
+	Name() string                                // property Name Getter
+	SetName(value string)                        // property Name Setter
+	Size() int32                                 // property Size Getter
+	SetSize(value int32)                         // property Size Setter
+	Bold() bool                                  // property Bold Getter
+	SetBold(value bool)                          // property Bold Setter
+	Italic() bool                                // property Italic Getter
+	SetItalic(value bool)                        // property Italic Setter
+	Underline() bool                             // property Underline Getter
+	SetUnderline(value bool)                     // property Underline Setter
+	StrikeThrough() bool                         // property StrikeThrough Getter
+	SetStrikeThrough(value bool)                 // property StrikeThrough Setter
+	Orientation() int32                          // property Orientation Getter
+	SetOrientation(value int32)                  // property Orientation Setter
 }
 
-// TFPCustomFont Parent: TFPCanvasHelper
 type TFPCustomFont struct {
 	TFPCanvasHelper
 }
 
-func NewFPCustomFont() IFPCustomFont {
-	r1 := fPCustomFontImportAPI().SysCallN(3)
-	return AsFPCustomFont(r1)
-}
-
-func (m *TFPCustomFont) Name() string {
-	r1 := fPCustomFontImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TFPCustomFont) SetName(AValue string) {
-	fPCustomFontImportAPI().SysCallN(8, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TFPCustomFont) Size() int32 {
-	r1 := fPCustomFontImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TFPCustomFont) SetSize(AValue int32) {
-	fPCustomFontImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TFPCustomFont) Bold() bool {
-	r1 := fPCustomFontImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TFPCustomFont) SetBold(AValue bool) {
-	fPCustomFontImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TFPCustomFont) Italic() bool {
-	r1 := fPCustomFontImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TFPCustomFont) SetItalic(AValue bool) {
-	fPCustomFontImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TFPCustomFont) Underline() bool {
-	r1 := fPCustomFontImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TFPCustomFont) SetUnderline(AValue bool) {
-	fPCustomFontImportAPI().SysCallN(12, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TFPCustomFont) StrikeThrough() bool {
-	r1 := fPCustomFontImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TFPCustomFont) SetStrikeThrough(AValue bool) {
-	fPCustomFontImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TFPCustomFont) Orientation() int32 {
-	r1 := fPCustomFontImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TFPCustomFont) SetOrientation(AValue int32) {
-	fPCustomFontImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
-}
-
 func (m *TFPCustomFont) CopyFont() IFPCustomFont {
-	r1 := fPCustomFontImportAPI().SysCallN(2, m.Instance())
-	return AsFPCustomFont(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := fPCustomFontAPI().SysCallN(1, m.Instance())
+	return AsFPCustomFont(r)
 }
 
 func (m *TFPCustomFont) GetTextHeight(text string) int32 {
-	r1 := fPCustomFontImportAPI().SysCallN(4, m.Instance(), PascalStr(text))
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPCustomFontAPI().SysCallN(2, m.Instance(), api.PasStr(text))
+	return int32(r)
 }
 
 func (m *TFPCustomFont) GetTextWidth(text string) int32 {
-	r1 := fPCustomFontImportAPI().SysCallN(6, m.Instance(), PascalStr(text))
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPCustomFontAPI().SysCallN(3, m.Instance(), api.PasStr(text))
+	return int32(r)
 }
 
-func FPCustomFontClass() TClass {
-	ret := fPCustomFontImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TFPCustomFont) GetTextSize(text string, W *int32, H *int32) {
+	if !m.IsValid() {
+		return
+	}
+	WPtr := uintptr(*W)
+	HPtr := uintptr(*H)
+	fPCustomFontAPI().SysCallN(4, m.Instance(), api.PasStr(text), uintptr(base.UnsafePointer(&WPtr)), uintptr(base.UnsafePointer(&HPtr)))
+	*W = int32(WPtr)
+	*H = int32(HPtr)
 }
 
-func (m *TFPCustomFont) GetTextSize(text string, w, h *int32) {
-	var result1 uintptr
-	var result2 uintptr
-	fPCustomFontImportAPI().SysCallN(5, m.Instance(), PascalStr(text), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
-	*w = int32(result1)
-	*h = int32(result2)
+func (m *TFPCustomFont) Name() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := fPCustomFontAPI().SysCallN(5, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TFPCustomFont) SetName(value string) {
+	if !m.IsValid() {
+		return
+	}
+	fPCustomFontAPI().SysCallN(5, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TFPCustomFont) Size() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPCustomFontAPI().SysCallN(6, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TFPCustomFont) SetSize(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	fPCustomFontAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TFPCustomFont) Bold() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := fPCustomFontAPI().SysCallN(7, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TFPCustomFont) SetBold(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	fPCustomFontAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TFPCustomFont) Italic() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := fPCustomFontAPI().SysCallN(8, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TFPCustomFont) SetItalic(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	fPCustomFontAPI().SysCallN(8, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TFPCustomFont) Underline() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := fPCustomFontAPI().SysCallN(9, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TFPCustomFont) SetUnderline(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	fPCustomFontAPI().SysCallN(9, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TFPCustomFont) StrikeThrough() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := fPCustomFontAPI().SysCallN(10, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TFPCustomFont) SetStrikeThrough(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	fPCustomFontAPI().SysCallN(10, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TFPCustomFont) Orientation() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPCustomFontAPI().SysCallN(11, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TFPCustomFont) SetOrientation(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	fPCustomFontAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
+}
+
+// NewFPCustomFont class constructor
+func NewFPCustomFont() IFPCustomFont {
+	r := fPCustomFontAPI().SysCallN(0)
+	return AsFPCustomFont(r)
 }
 
 var (
-	fPCustomFontImport       *imports.Imports = nil
-	fPCustomFontImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FPCustomFont_Bold", 0),
-		/*1*/ imports.NewTable("FPCustomFont_Class", 0),
-		/*2*/ imports.NewTable("FPCustomFont_CopyFont", 0),
-		/*3*/ imports.NewTable("FPCustomFont_Create", 0),
-		/*4*/ imports.NewTable("FPCustomFont_GetTextHeight", 0),
-		/*5*/ imports.NewTable("FPCustomFont_GetTextSize", 0),
-		/*6*/ imports.NewTable("FPCustomFont_GetTextWidth", 0),
-		/*7*/ imports.NewTable("FPCustomFont_Italic", 0),
-		/*8*/ imports.NewTable("FPCustomFont_Name", 0),
-		/*9*/ imports.NewTable("FPCustomFont_Orientation", 0),
-		/*10*/ imports.NewTable("FPCustomFont_Size", 0),
-		/*11*/ imports.NewTable("FPCustomFont_StrikeThrough", 0),
-		/*12*/ imports.NewTable("FPCustomFont_Underline", 0),
-	}
+	fPCustomFontOnce   base.Once
+	fPCustomFontImport *imports.Imports = nil
 )
 
-func fPCustomFontImportAPI() *imports.Imports {
-	if fPCustomFontImport == nil {
-		fPCustomFontImport = NewDefaultImports()
-		fPCustomFontImport.SetImportTable(fPCustomFontImportTables)
-		fPCustomFontImportTables = nil
-	}
+func fPCustomFontAPI() *imports.Imports {
+	fPCustomFontOnce.Do(func() {
+		fPCustomFontImport = api.NewDefaultImports()
+		fPCustomFontImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFPCustomFont_Create", 0), // constructor NewFPCustomFont
+			/* 1 */ imports.NewTable("TFPCustomFont_CopyFont", 0), // function CopyFont
+			/* 2 */ imports.NewTable("TFPCustomFont_GetTextHeight", 0), // function GetTextHeight
+			/* 3 */ imports.NewTable("TFPCustomFont_GetTextWidth", 0), // function GetTextWidth
+			/* 4 */ imports.NewTable("TFPCustomFont_GetTextSize", 0), // procedure GetTextSize
+			/* 5 */ imports.NewTable("TFPCustomFont_Name", 0), // property Name
+			/* 6 */ imports.NewTable("TFPCustomFont_Size", 0), // property Size
+			/* 7 */ imports.NewTable("TFPCustomFont_Bold", 0), // property Bold
+			/* 8 */ imports.NewTable("TFPCustomFont_Italic", 0), // property Italic
+			/* 9 */ imports.NewTable("TFPCustomFont_Underline", 0), // property Underline
+			/* 10 */ imports.NewTable("TFPCustomFont_StrikeThrough", 0), // property StrikeThrough
+			/* 11 */ imports.NewTable("TFPCustomFont_Orientation", 0), // property Orientation
+		}
+	})
 	return fPCustomFontImport
 }

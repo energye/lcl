@@ -9,124 +9,164 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomIcon Parent: IRasterImage
 type ICustomIcon interface {
 	IRasterImage
-	Current() int32                                                                  // property
-	SetCurrent(AValue int32)                                                         // property
-	Count() int32                                                                    // property
-	GetBestIndexForSize(ASize *TSize) int32                                          // function
-	Add(AFormat TPixelFormat, AHeight, AWidth Word)                                  // procedure
-	AssignImage(ASource IRasterImage)                                                // procedure
-	Delete(Aindex int32)                                                             // procedure
-	Remove(AFormat TPixelFormat, AHeight, AWidth Word)                               // procedure
-	GetDescription(Aindex int32, OutFormat *TPixelFormat, OutHeight, OutWidth *Word) // procedure
-	SetSize(AWidth, AHeight int32)                                                   // procedure
-	LoadFromResourceHandle(Instance THandle, ResHandle TFPResourceHandle)            // procedure
-	Sort()                                                                           // procedure
+	GetBestIndexForSize(size types.TSize) int32                                                      // function
+	ExportImage(index int32, imageClass types.TFPImageBitmapClass) IFPImageBitmap                    // function
+	Add(format types.TPixelFormat, height uint16, width uint16)                                      // procedure
+	AssignImage(source IRasterImage)                                                                 // procedure
+	Delete(aindex int32)                                                                             // procedure
+	Remove(format types.TPixelFormat, height uint16, width uint16)                                   // procedure
+	GetDescription(aindex int32, outFormat *types.TPixelFormat, outHeight *uint16, outWidth *uint16) // procedure
+	SetSize(width int32, height int32)                                                               // procedure
+	LoadFromResourceHandle(instance types.TLCLHandle, resHandle uintptr)                             // procedure
+	Sort()                                                                                           // procedure
+	Current() int32                                                                                  // property Current Getter
+	SetCurrent(value int32)                                                                          // property Current Setter
+	Count() int32                                                                                    // property Count Getter
 }
 
-// TCustomIcon Parent: TRasterImage
 type TCustomIcon struct {
 	TRasterImage
 }
 
-func NewCustomIcon() ICustomIcon {
-	r1 := customIconImportAPI().SysCallN(4)
-	return AsCustomIcon(r1)
+func (m *TCustomIcon) GetBestIndexForSize(size types.TSize) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customIconAPI().SysCallN(1, m.Instance(), uintptr(base.UnsafePointer(&size)))
+	return int32(r)
 }
 
-func (m *TCustomIcon) Current() int32 {
-	r1 := customIconImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return int32(r1)
+func (m *TCustomIcon) ExportImage(index int32, imageClass types.TFPImageBitmapClass) IFPImageBitmap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customIconAPI().SysCallN(2, m.Instance(), uintptr(index), uintptr(imageClass))
+	return AsFPImageBitmap(r)
 }
 
-func (m *TCustomIcon) SetCurrent(AValue int32) {
-	customIconImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomIcon) Add(format types.TPixelFormat, height uint16, width uint16) {
+	if !m.IsValid() {
+		return
+	}
+	customIconAPI().SysCallN(3, m.Instance(), uintptr(format), uintptr(height), uintptr(width))
 }
 
-func (m *TCustomIcon) Count() int32 {
-	r1 := customIconImportAPI().SysCallN(3, m.Instance())
-	return int32(r1)
+func (m *TCustomIcon) AssignImage(source IRasterImage) {
+	if !m.IsValid() {
+		return
+	}
+	customIconAPI().SysCallN(4, m.Instance(), base.GetObjectUintptr(source))
 }
 
-func (m *TCustomIcon) GetBestIndexForSize(ASize *TSize) int32 {
-	r1 := customIconImportAPI().SysCallN(7, m.Instance(), uintptr(unsafePointer(ASize)))
-	return int32(r1)
+func (m *TCustomIcon) Delete(aindex int32) {
+	if !m.IsValid() {
+		return
+	}
+	customIconAPI().SysCallN(5, m.Instance(), uintptr(aindex))
 }
 
-func CustomIconClass() TClass {
-	ret := customIconImportAPI().SysCallN(2)
-	return TClass(ret)
+func (m *TCustomIcon) Remove(format types.TPixelFormat, height uint16, width uint16) {
+	if !m.IsValid() {
+		return
+	}
+	customIconAPI().SysCallN(6, m.Instance(), uintptr(format), uintptr(height), uintptr(width))
 }
 
-func (m *TCustomIcon) Add(AFormat TPixelFormat, AHeight, AWidth Word) {
-	customIconImportAPI().SysCallN(0, m.Instance(), uintptr(AFormat), uintptr(AHeight), uintptr(AWidth))
+func (m *TCustomIcon) GetDescription(aindex int32, outFormat *types.TPixelFormat, outHeight *uint16, outWidth *uint16) {
+	if !m.IsValid() {
+		return
+	}
+	var formatPtr uintptr
+	var heightPtr uintptr
+	var widthPtr uintptr
+	customIconAPI().SysCallN(7, m.Instance(), uintptr(aindex), uintptr(base.UnsafePointer(&formatPtr)), uintptr(base.UnsafePointer(&heightPtr)), uintptr(base.UnsafePointer(&widthPtr)))
+	*outFormat = types.TPixelFormat(formatPtr)
+	*outHeight = uint16(heightPtr)
+	*outWidth = uint16(widthPtr)
 }
 
-func (m *TCustomIcon) AssignImage(ASource IRasterImage) {
-	customIconImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(ASource))
+func (m *TCustomIcon) SetSize(width int32, height int32) {
+	if !m.IsValid() {
+		return
+	}
+	customIconAPI().SysCallN(8, m.Instance(), uintptr(width), uintptr(height))
 }
 
-func (m *TCustomIcon) Delete(Aindex int32) {
-	customIconImportAPI().SysCallN(6, m.Instance(), uintptr(Aindex))
-}
-
-func (m *TCustomIcon) Remove(AFormat TPixelFormat, AHeight, AWidth Word) {
-	customIconImportAPI().SysCallN(10, m.Instance(), uintptr(AFormat), uintptr(AHeight), uintptr(AWidth))
-}
-
-func (m *TCustomIcon) GetDescription(Aindex int32, OutFormat *TPixelFormat, OutHeight, OutWidth *Word) {
-	var result1 uintptr
-	var result2 uintptr
-	var result3 uintptr
-	customIconImportAPI().SysCallN(8, m.Instance(), uintptr(Aindex), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)), uintptr(unsafePointer(&result3)))
-	*OutFormat = TPixelFormat(result1)
-	*OutHeight = Word(result2)
-	*OutWidth = Word(result3)
-}
-
-func (m *TCustomIcon) SetSize(AWidth, AHeight int32) {
-	customIconImportAPI().SysCallN(11, m.Instance(), uintptr(AWidth), uintptr(AHeight))
-}
-
-func (m *TCustomIcon) LoadFromResourceHandle(Instance THandle, ResHandle TFPResourceHandle) {
-	customIconImportAPI().SysCallN(9, m.Instance(), uintptr(Instance), uintptr(ResHandle))
+func (m *TCustomIcon) LoadFromResourceHandle(instance types.TLCLHandle, resHandle uintptr) {
+	if !m.IsValid() {
+		return
+	}
+	customIconAPI().SysCallN(9, m.Instance(), uintptr(instance), uintptr(resHandle))
 }
 
 func (m *TCustomIcon) Sort() {
-	customIconImportAPI().SysCallN(12, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customIconAPI().SysCallN(10, m.Instance())
+}
+
+func (m *TCustomIcon) Current() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customIconAPI().SysCallN(11, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomIcon) SetCurrent(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customIconAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomIcon) Count() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customIconAPI().SysCallN(12, m.Instance())
+	return int32(r)
+}
+
+// NewCustomIcon class constructor
+func NewCustomIcon() ICustomIcon {
+	r := customIconAPI().SysCallN(0)
+	return AsCustomIcon(r)
 }
 
 var (
-	customIconImport       *imports.Imports = nil
-	customIconImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomIcon_Add", 0),
-		/*1*/ imports.NewTable("CustomIcon_AssignImage", 0),
-		/*2*/ imports.NewTable("CustomIcon_Class", 0),
-		/*3*/ imports.NewTable("CustomIcon_Count", 0),
-		/*4*/ imports.NewTable("CustomIcon_Create", 0),
-		/*5*/ imports.NewTable("CustomIcon_Current", 0),
-		/*6*/ imports.NewTable("CustomIcon_Delete", 0),
-		/*7*/ imports.NewTable("CustomIcon_GetBestIndexForSize", 0),
-		/*8*/ imports.NewTable("CustomIcon_GetDescription", 0),
-		/*9*/ imports.NewTable("CustomIcon_LoadFromResourceHandle", 0),
-		/*10*/ imports.NewTable("CustomIcon_Remove", 0),
-		/*11*/ imports.NewTable("CustomIcon_SetSize", 0),
-		/*12*/ imports.NewTable("CustomIcon_Sort", 0),
-	}
+	customIconOnce   base.Once
+	customIconImport *imports.Imports = nil
 )
 
-func customIconImportAPI() *imports.Imports {
-	if customIconImport == nil {
-		customIconImport = NewDefaultImports()
-		customIconImport.SetImportTable(customIconImportTables)
-		customIconImportTables = nil
-	}
+func customIconAPI() *imports.Imports {
+	customIconOnce.Do(func() {
+		customIconImport = api.NewDefaultImports()
+		customIconImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomIcon_Create", 0), // constructor NewCustomIcon
+			/* 1 */ imports.NewTable("TCustomIcon_GetBestIndexForSize", 0), // function GetBestIndexForSize
+			/* 2 */ imports.NewTable("TCustomIcon_ExportImage", 0), // function ExportImage
+			/* 3 */ imports.NewTable("TCustomIcon_Add", 0), // procedure Add
+			/* 4 */ imports.NewTable("TCustomIcon_AssignImage", 0), // procedure AssignImage
+			/* 5 */ imports.NewTable("TCustomIcon_Delete", 0), // procedure Delete
+			/* 6 */ imports.NewTable("TCustomIcon_Remove", 0), // procedure Remove
+			/* 7 */ imports.NewTable("TCustomIcon_GetDescription", 0), // procedure GetDescription
+			/* 8 */ imports.NewTable("TCustomIcon_SetSize", 0), // procedure SetSize
+			/* 9 */ imports.NewTable("TCustomIcon_LoadFromResourceHandle", 0), // procedure LoadFromResourceHandle
+			/* 10 */ imports.NewTable("TCustomIcon_Sort", 0), // procedure Sort
+			/* 11 */ imports.NewTable("TCustomIcon_Current", 0), // property Current
+			/* 12 */ imports.NewTable("TCustomIcon_Count", 0), // property Count
+		}
+	})
 	return customIconImport
 }

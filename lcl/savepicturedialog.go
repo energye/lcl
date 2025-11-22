@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ISavePictureDialog Parent: IOpenPictureDialog
@@ -19,34 +20,33 @@ type ISavePictureDialog interface {
 	IOpenPictureDialog
 }
 
-// TSavePictureDialog Parent: TOpenPictureDialog
 type TSavePictureDialog struct {
 	TOpenPictureDialog
 }
 
-func NewSavePictureDialog(TheOwner IComponent) ISavePictureDialog {
-	r1 := savePictureDialogImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsSavePictureDialog(r1)
+// NewSavePictureDialog class constructor
+func NewSavePictureDialog(theOwner IComponent) ISavePictureDialog {
+	r := savePictureDialogAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsSavePictureDialog(r)
 }
 
-func SavePictureDialogClass() TClass {
-	ret := savePictureDialogImportAPI().SysCallN(0)
-	return TClass(ret)
+func TSavePictureDialogClass() types.TClass {
+	r := savePictureDialogAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	savePictureDialogImport       *imports.Imports = nil
-	savePictureDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("SavePictureDialog_Class", 0),
-		/*1*/ imports.NewTable("SavePictureDialog_Create", 0),
-	}
+	savePictureDialogOnce   base.Once
+	savePictureDialogImport *imports.Imports = nil
 )
 
-func savePictureDialogImportAPI() *imports.Imports {
-	if savePictureDialogImport == nil {
-		savePictureDialogImport = NewDefaultImports()
-		savePictureDialogImport.SetImportTable(savePictureDialogImportTables)
-		savePictureDialogImportTables = nil
-	}
+func savePictureDialogAPI() *imports.Imports {
+	savePictureDialogOnce.Do(func() {
+		savePictureDialogImport = api.NewDefaultImports()
+		savePictureDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TSavePictureDialog_Create", 0), // constructor NewSavePictureDialog
+			/* 1 */ imports.NewTable("TSavePictureDialog_TClass", 0), // function TSavePictureDialogClass
+		}
+	})
 	return savePictureDialogImport
 }

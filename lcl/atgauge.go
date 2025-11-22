@@ -9,38 +9,39 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IATGauge Parent: IGraphicControl
 type IATGauge interface {
 	IGraphicControl
-	PercentDone() int32                            // property
-	Theme() (resultPATFlatTheme TATFlatTheme)      // property
-	SetTheme(AValue *TATFlatTheme)                 // property
-	BorderStyle() TBorderStyle                     // property
-	SetBorderStyle(AValue TBorderStyle)            // property
-	DoubleBuffered() bool                          // property
-	SetDoubleBuffered(AValue bool)                 // property
-	ParentColor() bool                             // property
-	SetParentColor(AValue bool)                    // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
-	Kind() TATGaugeKind                            // property
-	SetKind(AValue TATGaugeKind)                   // property
-	Progress() int32                               // property
-	SetProgress(AValue int32)                      // property
-	MinValue() int32                               // property
-	SetMinValue(AValue int32)                      // property
-	MaxValue() int32                               // property
-	SetMaxValue(AValue int32)                      // property
-	ShowText() bool                                // property
-	SetShowText(AValue bool)                       // property
-	ShowTextInverted() bool                        // property
-	SetShowTextInverted(AValue bool)               // property
-	AddProgress(AValue int32)                      // procedure
+	AddProgress(value int32)                       // procedure
+	PercentDone() int32                            // property PercentDone Getter
+	Theme() types.PATFlatTheme                     // property Theme Getter
+	SetTheme(value types.PATFlatTheme)             // property Theme Setter
+	BorderStyle() types.TBorderStyle               // property BorderStyle Getter
+	SetBorderStyle(value types.TBorderStyle)       // property BorderStyle Setter
+	DoubleBuffered() bool                          // property DoubleBuffered Getter
+	SetDoubleBuffered(value bool)                  // property DoubleBuffered Setter
+	ParentColor() bool                             // property ParentColor Getter
+	SetParentColor(value bool)                     // property ParentColor Setter
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
+	KindToATGaugeKind() types.TATGaugeKind         // property Kind Getter
+	SetKindToATGaugeKind(value types.TATGaugeKind) // property Kind Setter
+	Progress() int32                               // property Progress Getter
+	SetProgress(value int32)                       // property Progress Setter
+	MinValue() int32                               // property MinValue Getter
+	SetMinValue(value int32)                       // property MinValue Setter
+	MaxValue() int32                               // property MaxValue Getter
+	SetMaxValue(value int32)                       // property MaxValue Setter
+	ShowText() bool                                // property ShowText Getter
+	SetShowText(value bool)                        // property ShowText Setter
+	ShowTextInverted() bool                        // property ShowTextInverted Getter
+	SetShowTextInverted(value bool)                // property ShowTextInverted Setter
 	SetOnDblClick(fn TNotifyEvent)                 // property event
 	SetOnContextPopup(fn TContextPopupEvent)       // property event
 	SetOnMouseDown(fn TMouseEvent)                 // property event
@@ -53,255 +54,316 @@ type IATGauge interface {
 	SetOnMouseWheelUp(fn TMouseWheelUpDownEvent)   // property event
 }
 
-// TATGauge Parent: TGraphicControl
 type TATGauge struct {
 	TGraphicControl
-	dblClickPtr       uintptr
-	contextPopupPtr   uintptr
-	mouseDownPtr      uintptr
-	mouseUpPtr        uintptr
-	mouseMovePtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
 }
 
-func NewATGauge(AOwner IComponent) IATGauge {
-	r1 := aTGaugeImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
-	return AsATGauge(r1)
+func (m *TATGauge) AddProgress(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(1, m.Instance(), uintptr(value))
 }
 
 func (m *TATGauge) PercentDone() int32 {
-	r1 := aTGaugeImportAPI().SysCallN(10, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := aTGaugeAPI().SysCallN(2, m.Instance())
+	return int32(r)
 }
 
-func (m *TATGauge) Theme() (resultPATFlatTheme TATFlatTheme) {
-	r1 := aTGaugeImportAPI().SysCallN(24, 0, m.Instance(), 0)
-	return *(*TATFlatTheme)(getPointer(r1))
+func (m *TATGauge) Theme() types.PATFlatTheme {
+	if !m.IsValid() {
+		return 0
+	}
+	r := aTGaugeAPI().SysCallN(3, 0, m.Instance())
+	return types.PATFlatTheme(r)
 }
 
-func (m *TATGauge) SetTheme(AValue *TATFlatTheme) {
-	aTGaugeImportAPI().SysCallN(24, 1, m.Instance(), uintptr(unsafePointer(AValue)))
+func (m *TATGauge) SetTheme(value types.PATFlatTheme) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(3, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
-func (m *TATGauge) BorderStyle() TBorderStyle {
-	r1 := aTGaugeImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TBorderStyle(r1)
+func (m *TATGauge) BorderStyle() types.TBorderStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := aTGaugeAPI().SysCallN(4, 0, m.Instance())
+	return types.TBorderStyle(r)
 }
 
-func (m *TATGauge) SetBorderStyle(AValue TBorderStyle) {
-	aTGaugeImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
+func (m *TATGauge) SetBorderStyle(value types.TBorderStyle) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TATGauge) DoubleBuffered() bool {
-	r1 := aTGaugeImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := aTGaugeAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TATGauge) SetDoubleBuffered(AValue bool) {
-	aTGaugeImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
+func (m *TATGauge) SetDoubleBuffered(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TATGauge) ParentColor() bool {
-	r1 := aTGaugeImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := aTGaugeAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TATGauge) SetParentColor(AValue bool) {
-	aTGaugeImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
+func (m *TATGauge) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TATGauge) ParentShowHint() bool {
-	r1 := aTGaugeImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := aTGaugeAPI().SysCallN(7, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TATGauge) SetParentShowHint(AValue bool) {
-	aTGaugeImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
+func (m *TATGauge) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TATGauge) Kind() TATGaugeKind {
-	r1 := aTGaugeImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TATGaugeKind(r1)
+func (m *TATGauge) KindToATGaugeKind() types.TATGaugeKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := aTGaugeAPI().SysCallN(8, 0, m.Instance())
+	return types.TATGaugeKind(r)
 }
 
-func (m *TATGauge) SetKind(AValue TATGaugeKind) {
-	aTGaugeImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TATGauge) SetKindToATGaugeKind(value types.TATGaugeKind) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TATGauge) Progress() int32 {
-	r1 := aTGaugeImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := aTGaugeAPI().SysCallN(9, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TATGauge) SetProgress(AValue int32) {
-	aTGaugeImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
+func (m *TATGauge) SetProgress(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TATGauge) MinValue() int32 {
-	r1 := aTGaugeImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := aTGaugeAPI().SysCallN(10, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TATGauge) SetMinValue(AValue int32) {
-	aTGaugeImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TATGauge) SetMinValue(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TATGauge) MaxValue() int32 {
-	r1 := aTGaugeImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := aTGaugeAPI().SysCallN(11, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TATGauge) SetMaxValue(AValue int32) {
-	aTGaugeImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TATGauge) SetMaxValue(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TATGauge) ShowText() bool {
-	r1 := aTGaugeImportAPI().SysCallN(22, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := aTGaugeAPI().SysCallN(12, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TATGauge) SetShowText(AValue bool) {
-	aTGaugeImportAPI().SysCallN(22, 1, m.Instance(), PascalBool(AValue))
+func (m *TATGauge) SetShowText(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(12, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TATGauge) ShowTextInverted() bool {
-	r1 := aTGaugeImportAPI().SysCallN(23, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := aTGaugeAPI().SysCallN(13, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TATGauge) SetShowTextInverted(AValue bool) {
-	aTGaugeImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
-}
-
-func ATGaugeClass() TClass {
-	ret := aTGaugeImportAPI().SysCallN(2)
-	return TClass(ret)
-}
-
-func (m *TATGauge) AddProgress(AValue int32) {
-	aTGaugeImportAPI().SysCallN(0, m.Instance(), uintptr(AValue))
+func (m *TATGauge) SetShowTextInverted(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	aTGaugeAPI().SysCallN(13, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TATGauge) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	aTGaugeImportAPI().SysCallN(13, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 14, aTGaugeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TATGauge) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	aTGaugeImportAPI().SysCallN(12, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 15, aTGaugeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TATGauge) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	aTGaugeImportAPI().SysCallN(14, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 16, aTGaugeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TATGauge) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	aTGaugeImportAPI().SysCallN(18, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 17, aTGaugeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TATGauge) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	aTGaugeImportAPI().SysCallN(17, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 18, aTGaugeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TATGauge) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	aTGaugeImportAPI().SysCallN(15, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 19, aTGaugeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TATGauge) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	aTGaugeImportAPI().SysCallN(16, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 20, aTGaugeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TATGauge) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	aTGaugeImportAPI().SysCallN(19, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 21, aTGaugeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TATGauge) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	aTGaugeImportAPI().SysCallN(20, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 22, aTGaugeAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TATGauge) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	aTGaugeImportAPI().SysCallN(21, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 23, aTGaugeAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewATGauge class constructor
+func NewATGauge(owner IComponent) IATGauge {
+	r := aTGaugeAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsATGauge(r)
+}
+
+func TATGaugeClass() types.TClass {
+	r := aTGaugeAPI().SysCallN(24)
+	return types.TClass(r)
 }
 
 var (
-	aTGaugeImport       *imports.Imports = nil
-	aTGaugeImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ATGauge_AddProgress", 0),
-		/*1*/ imports.NewTable("ATGauge_BorderStyle", 0),
-		/*2*/ imports.NewTable("ATGauge_Class", 0),
-		/*3*/ imports.NewTable("ATGauge_Create", 0),
-		/*4*/ imports.NewTable("ATGauge_DoubleBuffered", 0),
-		/*5*/ imports.NewTable("ATGauge_Kind", 0),
-		/*6*/ imports.NewTable("ATGauge_MaxValue", 0),
-		/*7*/ imports.NewTable("ATGauge_MinValue", 0),
-		/*8*/ imports.NewTable("ATGauge_ParentColor", 0),
-		/*9*/ imports.NewTable("ATGauge_ParentShowHint", 0),
-		/*10*/ imports.NewTable("ATGauge_PercentDone", 0),
-		/*11*/ imports.NewTable("ATGauge_Progress", 0),
-		/*12*/ imports.NewTable("ATGauge_SetOnContextPopup", 0),
-		/*13*/ imports.NewTable("ATGauge_SetOnDblClick", 0),
-		/*14*/ imports.NewTable("ATGauge_SetOnMouseDown", 0),
-		/*15*/ imports.NewTable("ATGauge_SetOnMouseEnter", 0),
-		/*16*/ imports.NewTable("ATGauge_SetOnMouseLeave", 0),
-		/*17*/ imports.NewTable("ATGauge_SetOnMouseMove", 0),
-		/*18*/ imports.NewTable("ATGauge_SetOnMouseUp", 0),
-		/*19*/ imports.NewTable("ATGauge_SetOnMouseWheel", 0),
-		/*20*/ imports.NewTable("ATGauge_SetOnMouseWheelDown", 0),
-		/*21*/ imports.NewTable("ATGauge_SetOnMouseWheelUp", 0),
-		/*22*/ imports.NewTable("ATGauge_ShowText", 0),
-		/*23*/ imports.NewTable("ATGauge_ShowTextInverted", 0),
-		/*24*/ imports.NewTable("ATGauge_Theme", 0),
-	}
+	aTGaugeOnce   base.Once
+	aTGaugeImport *imports.Imports = nil
 )
 
-func aTGaugeImportAPI() *imports.Imports {
-	if aTGaugeImport == nil {
-		aTGaugeImport = NewDefaultImports()
-		aTGaugeImport.SetImportTable(aTGaugeImportTables)
-		aTGaugeImportTables = nil
-	}
+func aTGaugeAPI() *imports.Imports {
+	aTGaugeOnce.Do(func() {
+		aTGaugeImport = api.NewDefaultImports()
+		aTGaugeImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TATGauge_Create", 0), // constructor NewATGauge
+			/* 1 */ imports.NewTable("TATGauge_AddProgress", 0), // procedure AddProgress
+			/* 2 */ imports.NewTable("TATGauge_PercentDone", 0), // property PercentDone
+			/* 3 */ imports.NewTable("TATGauge_Theme", 0), // property Theme
+			/* 4 */ imports.NewTable("TATGauge_BorderStyle", 0), // property BorderStyle
+			/* 5 */ imports.NewTable("TATGauge_DoubleBuffered", 0), // property DoubleBuffered
+			/* 6 */ imports.NewTable("TATGauge_ParentColor", 0), // property ParentColor
+			/* 7 */ imports.NewTable("TATGauge_ParentShowHint", 0), // property ParentShowHint
+			/* 8 */ imports.NewTable("TATGauge_KindToATGaugeKind", 0), // property KindToATGaugeKind
+			/* 9 */ imports.NewTable("TATGauge_Progress", 0), // property Progress
+			/* 10 */ imports.NewTable("TATGauge_MinValue", 0), // property MinValue
+			/* 11 */ imports.NewTable("TATGauge_MaxValue", 0), // property MaxValue
+			/* 12 */ imports.NewTable("TATGauge_ShowText", 0), // property ShowText
+			/* 13 */ imports.NewTable("TATGauge_ShowTextInverted", 0), // property ShowTextInverted
+			/* 14 */ imports.NewTable("TATGauge_OnDblClick", 0), // event OnDblClick
+			/* 15 */ imports.NewTable("TATGauge_OnContextPopup", 0), // event OnContextPopup
+			/* 16 */ imports.NewTable("TATGauge_OnMouseDown", 0), // event OnMouseDown
+			/* 17 */ imports.NewTable("TATGauge_OnMouseUp", 0), // event OnMouseUp
+			/* 18 */ imports.NewTable("TATGauge_OnMouseMove", 0), // event OnMouseMove
+			/* 19 */ imports.NewTable("TATGauge_OnMouseEnter", 0), // event OnMouseEnter
+			/* 20 */ imports.NewTable("TATGauge_OnMouseLeave", 0), // event OnMouseLeave
+			/* 21 */ imports.NewTable("TATGauge_OnMouseWheel", 0), // event OnMouseWheel
+			/* 22 */ imports.NewTable("TATGauge_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 23 */ imports.NewTable("TATGauge_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 24 */ imports.NewTable("TATGauge_TClass", 0), // function TATGaugeClass
+		}
+	})
 	return aTGaugeImport
 }

@@ -9,21 +9,22 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ITabSheet Parent: ICustomPage
 type ITabSheet interface {
 	ICustomPage
-	PageControl() IPageControl                     // property
-	SetPageControl(AValue IPageControl)            // property
-	TabIndex() int32                               // property
-	ParentFont() bool                              // property
-	SetParentFont(AValue bool)                     // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
+	PageControl() IPageControl                     // property PageControl Getter
+	SetPageControl(value IPageControl)             // property PageControl Setter
+	TabIndex() int32                               // property TabIndex Getter
+	ParentFont() bool                              // property ParentFont Getter
+	SetParentFont(value bool)                      // property ParentFont Setter
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
 	SetOnContextPopup(fn TContextPopupEvent)       // property event
 	SetOnDragDrop(fn TDragDropEvent)               // property event
 	SetOnDragOver(fn TDragOverEvent)               // property event
@@ -39,200 +40,207 @@ type ITabSheet interface {
 	SetOnStartDrag(fn TStartDragEvent)             // property event
 }
 
-// TTabSheet Parent: TCustomPage
 type TTabSheet struct {
 	TCustomPage
-	contextPopupPtr   uintptr
-	dragDropPtr       uintptr
-	dragOverPtr       uintptr
-	endDragPtr        uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	startDragPtr      uintptr
-}
-
-func NewTabSheet(TheOwner IComponent) ITabSheet {
-	r1 := abSheetImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsTabSheet(r1)
 }
 
 func (m *TTabSheet) PageControl() IPageControl {
-	r1 := abSheetImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return AsPageControl(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := tabSheetAPI().SysCallN(1, 0, m.Instance())
+	return AsPageControl(r)
 }
 
-func (m *TTabSheet) SetPageControl(AValue IPageControl) {
-	abSheetImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TTabSheet) SetPageControl(value IPageControl) {
+	if !m.IsValid() {
+		return
+	}
+	tabSheetAPI().SysCallN(1, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TTabSheet) TabIndex() int32 {
-	r1 := abSheetImportAPI().SysCallN(18, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := tabSheetAPI().SysCallN(2, m.Instance())
+	return int32(r)
 }
 
 func (m *TTabSheet) ParentFont() bool {
-	r1 := abSheetImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := tabSheetAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TTabSheet) SetParentFont(AValue bool) {
-	abSheetImportAPI().SysCallN(3, 1, m.Instance(), PascalBool(AValue))
+func (m *TTabSheet) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	tabSheetAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TTabSheet) ParentShowHint() bool {
-	r1 := abSheetImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := tabSheetAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TTabSheet) SetParentShowHint(AValue bool) {
-	abSheetImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
-}
-
-func TabSheetClass() TClass {
-	ret := abSheetImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TTabSheet) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	tabSheetAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TTabSheet) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(5, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 5, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(6, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 6, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(7, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 7, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(8, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 8, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(9, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 9, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(10, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 10, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(11, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 11, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(12, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 12, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(13, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 13, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(14, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 14, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(15, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 15, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(16, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 16, tabSheetAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTabSheet) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	abSheetImportAPI().SysCallN(17, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 17, tabSheetAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewTabSheet class constructor
+func NewTabSheet(theOwner IComponent) ITabSheet {
+	r := tabSheetAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsTabSheet(r)
+}
+
+func TTabSheetClass() types.TClass {
+	r := tabSheetAPI().SysCallN(18)
+	return types.TClass(r)
 }
 
 var (
-	abSheetImport       *imports.Imports = nil
-	abSheetImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("TabSheet_Class", 0),
-		/*1*/ imports.NewTable("TabSheet_Create", 0),
-		/*2*/ imports.NewTable("TabSheet_PageControl", 0),
-		/*3*/ imports.NewTable("TabSheet_ParentFont", 0),
-		/*4*/ imports.NewTable("TabSheet_ParentShowHint", 0),
-		/*5*/ imports.NewTable("TabSheet_SetOnContextPopup", 0),
-		/*6*/ imports.NewTable("TabSheet_SetOnDragDrop", 0),
-		/*7*/ imports.NewTable("TabSheet_SetOnDragOver", 0),
-		/*8*/ imports.NewTable("TabSheet_SetOnEndDrag", 0),
-		/*9*/ imports.NewTable("TabSheet_SetOnMouseDown", 0),
-		/*10*/ imports.NewTable("TabSheet_SetOnMouseEnter", 0),
-		/*11*/ imports.NewTable("TabSheet_SetOnMouseLeave", 0),
-		/*12*/ imports.NewTable("TabSheet_SetOnMouseMove", 0),
-		/*13*/ imports.NewTable("TabSheet_SetOnMouseUp", 0),
-		/*14*/ imports.NewTable("TabSheet_SetOnMouseWheel", 0),
-		/*15*/ imports.NewTable("TabSheet_SetOnMouseWheelDown", 0),
-		/*16*/ imports.NewTable("TabSheet_SetOnMouseWheelUp", 0),
-		/*17*/ imports.NewTable("TabSheet_SetOnStartDrag", 0),
-		/*18*/ imports.NewTable("TabSheet_TabIndex", 0),
-	}
+	tabSheetOnce   base.Once
+	tabSheetImport *imports.Imports = nil
 )
 
-func abSheetImportAPI() *imports.Imports {
-	if abSheetImport == nil {
-		abSheetImport = NewDefaultImports()
-		abSheetImport.SetImportTable(abSheetImportTables)
-		abSheetImportTables = nil
-	}
-	return abSheetImport
+func tabSheetAPI() *imports.Imports {
+	tabSheetOnce.Do(func() {
+		tabSheetImport = api.NewDefaultImports()
+		tabSheetImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TTabSheet_Create", 0), // constructor NewTabSheet
+			/* 1 */ imports.NewTable("TTabSheet_PageControl", 0), // property PageControl
+			/* 2 */ imports.NewTable("TTabSheet_TabIndex", 0), // property TabIndex
+			/* 3 */ imports.NewTable("TTabSheet_ParentFont", 0), // property ParentFont
+			/* 4 */ imports.NewTable("TTabSheet_ParentShowHint", 0), // property ParentShowHint
+			/* 5 */ imports.NewTable("TTabSheet_OnContextPopup", 0), // event OnContextPopup
+			/* 6 */ imports.NewTable("TTabSheet_OnDragDrop", 0), // event OnDragDrop
+			/* 7 */ imports.NewTable("TTabSheet_OnDragOver", 0), // event OnDragOver
+			/* 8 */ imports.NewTable("TTabSheet_OnEndDrag", 0), // event OnEndDrag
+			/* 9 */ imports.NewTable("TTabSheet_OnMouseDown", 0), // event OnMouseDown
+			/* 10 */ imports.NewTable("TTabSheet_OnMouseEnter", 0), // event OnMouseEnter
+			/* 11 */ imports.NewTable("TTabSheet_OnMouseLeave", 0), // event OnMouseLeave
+			/* 12 */ imports.NewTable("TTabSheet_OnMouseMove", 0), // event OnMouseMove
+			/* 13 */ imports.NewTable("TTabSheet_OnMouseUp", 0), // event OnMouseUp
+			/* 14 */ imports.NewTable("TTabSheet_OnMouseWheel", 0), // event OnMouseWheel
+			/* 15 */ imports.NewTable("TTabSheet_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 16 */ imports.NewTable("TTabSheet_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 17 */ imports.NewTable("TTabSheet_OnStartDrag", 0), // event OnStartDrag
+			/* 18 */ imports.NewTable("TTabSheet_TClass", 0), // function TTabSheetClass
+		}
+	})
+	return tabSheetImport
 }

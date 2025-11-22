@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IButtonControl Parent: IWinControl
@@ -19,34 +20,33 @@ type IButtonControl interface {
 	IWinControl
 }
 
-// TButtonControl Parent: TWinControl
 type TButtonControl struct {
 	TWinControl
 }
 
-func NewButtonControl(TheOwner IComponent) IButtonControl {
-	r1 := buttonControlImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsButtonControl(r1)
+// NewButtonControl class constructor
+func NewButtonControl(theOwner IComponent) IButtonControl {
+	r := buttonControlAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsButtonControl(r)
 }
 
-func ButtonControlClass() TClass {
-	ret := buttonControlImportAPI().SysCallN(0)
-	return TClass(ret)
+func TButtonControlClass() types.TClass {
+	r := buttonControlAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	buttonControlImport       *imports.Imports = nil
-	buttonControlImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ButtonControl_Class", 0),
-		/*1*/ imports.NewTable("ButtonControl_Create", 0),
-	}
+	buttonControlOnce   base.Once
+	buttonControlImport *imports.Imports = nil
 )
 
-func buttonControlImportAPI() *imports.Imports {
-	if buttonControlImport == nil {
-		buttonControlImport = NewDefaultImports()
-		buttonControlImport.SetImportTable(buttonControlImportTables)
-		buttonControlImportTables = nil
-	}
+func buttonControlAPI() *imports.Imports {
+	buttonControlOnce.Do(func() {
+		buttonControlImport = api.NewDefaultImports()
+		buttonControlImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TButtonControl_Create", 0), // constructor NewButtonControl
+			/* 1 */ imports.NewTable("TButtonControl_TClass", 0), // function TButtonControlClass
+		}
+	})
 	return buttonControlImport
 }

@@ -16,9 +16,9 @@ import "github.com/energye/lcl/api"
 //
 // Create a shortcut to a URL
 //
-//	rtl.CreateURLShortCut("C:\\aaa\\bbb\\", "govcl", "https://github.com/energye/lcl")
+//	rtl.CreateURLShortCut("C:\\aaa\\bbb\\", "MyDir", "https://github.com/energye/lcl")
 func CreateURLShortCut(aDestPath, aShortCutName, aURL string) {
-	api.DCreateURLShortCut(aDestPath, aShortCutName, aURL)
+	api.CreateURLShortCut(aDestPath, aShortCutName, aURL)
 }
 
 // CreateShortCut
@@ -26,8 +26,8 @@ func CreateURLShortCut(aDestPath, aShortCutName, aURL string) {
 // 创建一个快捷方式
 //
 // Create a shortcut
-//  1. rtl.CreateShortCut("C:\\Users\\administrator\\Desktop\\", "govcl", os.Args[0], "", "", "")
-//  2. rtl.CreateShortCut("C:\\Users\\administrator\\Desktop\\", "govcl", os.Args[0], "", "Description text", "-a -b")
+//  1. rtl.CreateShortCut("C:\\Users\\administrator\\Desktop\\", "MyDir", os.Args[0], "", "", "")
+//  2. rtl.CreateShortCut("C:\\Users\\administrator\\Desktop\\", "MyDir", os.Args[0], "", "Description text", "-a -b")
 func CreateShortCut(aDestPath, aShortCutName, aSrcFileName, aIconFileName, aDescription, aCmdArgs string) bool {
-	return api.DCreateShortCut(aDestPath, aShortCutName, aSrcFileName, aIconFileName, aDescription, aCmdArgs)
+	return api.CreateShortCut(aDestPath, aShortCutName, aSrcFileName, aIconFileName, aDescription, aCmdArgs)
 }

@@ -9,164 +9,217 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomCheckListBox Parent: ICustomListBox
 type ICustomCheckListBox interface {
 	ICustomListBox
-	AllowGrayed() bool                                                      // property
-	SetAllowGrayed(AValue bool)                                             // property
-	Checked(AIndex int32) bool                                              // property
-	SetChecked(AIndex int32, AValue bool)                                   // property
-	Header(AIndex int32) bool                                               // property
-	SetHeader(AIndex int32, AValue bool)                                    // property
-	HeaderBackgroundColor() TColor                                          // property
-	SetHeaderBackgroundColor(AValue TColor)                                 // property
-	HeaderColor() TColor                                                    // property
-	SetHeaderColor(AValue TColor)                                           // property
-	ItemEnabled(AIndex int32) bool                                          // property
-	SetItemEnabled(AIndex int32, AValue bool)                               // property
-	State(AIndex int32) TCheckBoxState                                      // property
-	SetState(AIndex int32, AValue TCheckBoxState)                           // property
-	CalculateStandardItemHeight() int32                                     // function
-	Toggle(AIndex int32)                                                    // procedure
-	CheckAll(AState TCheckBoxState, aAllowGrayed bool, aAllowDisabled bool) // procedure
-	Exchange(AIndex1, AIndex2 int32)                                        // procedure
-	SetOnClickCheck(fn TNotifyEvent)                                        // property event
+	CalculateStandardItemHeight() int32                                        // function
+	Toggle(index int32)                                                        // procedure
+	CheckAll(state types.TCheckBoxState, allowGrayed bool, allowDisabled bool) // procedure
+	Exchange(index1 int32, index2 int32)                                       // procedure
+	AllowGrayed() bool                                                         // property AllowGrayed Getter
+	SetAllowGrayed(value bool)                                                 // property AllowGrayed Setter
+	Checked(index int32) bool                                                  // property Checked Getter
+	SetChecked(index int32, value bool)                                        // property Checked Setter
+	Header(index int32) bool                                                   // property Header Getter
+	SetHeader(index int32, value bool)                                         // property Header Setter
+	HeaderBackgroundColor() types.TColor                                       // property HeaderBackgroundColor Getter
+	SetHeaderBackgroundColor(value types.TColor)                               // property HeaderBackgroundColor Setter
+	HeaderColor() types.TColor                                                 // property HeaderColor Getter
+	SetHeaderColor(value types.TColor)                                         // property HeaderColor Setter
+	ItemEnabled(index int32) bool                                              // property ItemEnabled Getter
+	SetItemEnabled(index int32, value bool)                                    // property ItemEnabled Setter
+	State(index int32) types.TCheckBoxState                                    // property State Getter
+	SetState(index int32, value types.TCheckBoxState)                          // property State Setter
+	SetOnClickCheck(fn TNotifyEvent)                                           // property event
 }
 
-// TCustomCheckListBox Parent: TCustomListBox
 type TCustomCheckListBox struct {
 	TCustomListBox
-	clickCheckPtr uintptr
-}
-
-func NewCustomCheckListBox(AOwner IComponent) ICustomCheckListBox {
-	r1 := customCheckListBoxImportAPI().SysCallN(5, GetObjectUintptr(AOwner))
-	return AsCustomCheckListBox(r1)
-}
-
-func (m *TCustomCheckListBox) AllowGrayed() bool {
-	r1 := customCheckListBoxImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomCheckListBox) SetAllowGrayed(AValue bool) {
-	customCheckListBoxImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomCheckListBox) Checked(AIndex int32) bool {
-	r1 := customCheckListBoxImportAPI().SysCallN(3, 0, m.Instance(), uintptr(AIndex))
-	return GoBool(r1)
-}
-
-func (m *TCustomCheckListBox) SetChecked(AIndex int32, AValue bool) {
-	customCheckListBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
-}
-
-func (m *TCustomCheckListBox) Header(AIndex int32) bool {
-	r1 := customCheckListBoxImportAPI().SysCallN(7, 0, m.Instance(), uintptr(AIndex))
-	return GoBool(r1)
-}
-
-func (m *TCustomCheckListBox) SetHeader(AIndex int32, AValue bool) {
-	customCheckListBoxImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
-}
-
-func (m *TCustomCheckListBox) HeaderBackgroundColor() TColor {
-	r1 := customCheckListBoxImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TCustomCheckListBox) SetHeaderBackgroundColor(AValue TColor) {
-	customCheckListBoxImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomCheckListBox) HeaderColor() TColor {
-	r1 := customCheckListBoxImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TCustomCheckListBox) SetHeaderColor(AValue TColor) {
-	customCheckListBoxImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomCheckListBox) ItemEnabled(AIndex int32) bool {
-	r1 := customCheckListBoxImportAPI().SysCallN(10, 0, m.Instance(), uintptr(AIndex))
-	return GoBool(r1)
-}
-
-func (m *TCustomCheckListBox) SetItemEnabled(AIndex int32, AValue bool) {
-	customCheckListBoxImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AIndex), PascalBool(AValue))
-}
-
-func (m *TCustomCheckListBox) State(AIndex int32) TCheckBoxState {
-	r1 := customCheckListBoxImportAPI().SysCallN(12, 0, m.Instance(), uintptr(AIndex))
-	return TCheckBoxState(r1)
-}
-
-func (m *TCustomCheckListBox) SetState(AIndex int32, AValue TCheckBoxState) {
-	customCheckListBoxImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AIndex), uintptr(AValue))
 }
 
 func (m *TCustomCheckListBox) CalculateStandardItemHeight() int32 {
-	r1 := customCheckListBoxImportAPI().SysCallN(1, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customCheckListBoxAPI().SysCallN(1, m.Instance())
+	return int32(r)
 }
 
-func CustomCheckListBoxClass() TClass {
-	ret := customCheckListBoxImportAPI().SysCallN(4)
-	return TClass(ret)
+func (m *TCustomCheckListBox) Toggle(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckListBoxAPI().SysCallN(2, m.Instance(), uintptr(index))
 }
 
-func (m *TCustomCheckListBox) Toggle(AIndex int32) {
-	customCheckListBoxImportAPI().SysCallN(13, m.Instance(), uintptr(AIndex))
+func (m *TCustomCheckListBox) CheckAll(state types.TCheckBoxState, allowGrayed bool, allowDisabled bool) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckListBoxAPI().SysCallN(3, m.Instance(), uintptr(state), api.PasBool(allowGrayed), api.PasBool(allowDisabled))
 }
 
-func (m *TCustomCheckListBox) CheckAll(AState TCheckBoxState, aAllowGrayed bool, aAllowDisabled bool) {
-	customCheckListBoxImportAPI().SysCallN(2, m.Instance(), uintptr(AState), PascalBool(aAllowGrayed), PascalBool(aAllowDisabled))
+func (m *TCustomCheckListBox) Exchange(index1 int32, index2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckListBoxAPI().SysCallN(4, m.Instance(), uintptr(index1), uintptr(index2))
 }
 
-func (m *TCustomCheckListBox) Exchange(AIndex1, AIndex2 int32) {
-	customCheckListBoxImportAPI().SysCallN(6, m.Instance(), uintptr(AIndex1), uintptr(AIndex2))
+func (m *TCustomCheckListBox) AllowGrayed() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customCheckListBoxAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomCheckListBox) SetAllowGrayed(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckListBoxAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomCheckListBox) Checked(index int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customCheckListBoxAPI().SysCallN(6, 0, m.Instance(), uintptr(index))
+	return api.GoBool(r)
+}
+
+func (m *TCustomCheckListBox) SetChecked(index int32, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckListBoxAPI().SysCallN(6, 1, m.Instance(), uintptr(index), api.PasBool(value))
+}
+
+func (m *TCustomCheckListBox) Header(index int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customCheckListBoxAPI().SysCallN(7, 0, m.Instance(), uintptr(index))
+	return api.GoBool(r)
+}
+
+func (m *TCustomCheckListBox) SetHeader(index int32, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckListBoxAPI().SysCallN(7, 1, m.Instance(), uintptr(index), api.PasBool(value))
+}
+
+func (m *TCustomCheckListBox) HeaderBackgroundColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customCheckListBoxAPI().SysCallN(8, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TCustomCheckListBox) SetHeaderBackgroundColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckListBoxAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomCheckListBox) HeaderColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customCheckListBoxAPI().SysCallN(9, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TCustomCheckListBox) SetHeaderColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckListBoxAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomCheckListBox) ItemEnabled(index int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customCheckListBoxAPI().SysCallN(10, 0, m.Instance(), uintptr(index))
+	return api.GoBool(r)
+}
+
+func (m *TCustomCheckListBox) SetItemEnabled(index int32, value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckListBoxAPI().SysCallN(10, 1, m.Instance(), uintptr(index), api.PasBool(value))
+}
+
+func (m *TCustomCheckListBox) State(index int32) types.TCheckBoxState {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customCheckListBoxAPI().SysCallN(11, 0, m.Instance(), uintptr(index))
+	return types.TCheckBoxState(r)
+}
+
+func (m *TCustomCheckListBox) SetState(index int32, value types.TCheckBoxState) {
+	if !m.IsValid() {
+		return
+	}
+	customCheckListBoxAPI().SysCallN(11, 1, m.Instance(), uintptr(index), uintptr(value))
 }
 
 func (m *TCustomCheckListBox) SetOnClickCheck(fn TNotifyEvent) {
-	if m.clickCheckPtr != 0 {
-		RemoveEventElement(m.clickCheckPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.clickCheckPtr = MakeEventDataPtr(fn)
-	customCheckListBoxImportAPI().SysCallN(11, m.Instance(), m.clickCheckPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, customCheckListBoxAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomCheckListBox class constructor
+func NewCustomCheckListBox(owner IComponent) ICustomCheckListBox {
+	r := customCheckListBoxAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomCheckListBox(r)
+}
+
+func TCustomCheckListBoxClass() types.TClass {
+	r := customCheckListBoxAPI().SysCallN(13)
+	return types.TClass(r)
 }
 
 var (
-	customCheckListBoxImport       *imports.Imports = nil
-	customCheckListBoxImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomCheckListBox_AllowGrayed", 0),
-		/*1*/ imports.NewTable("CustomCheckListBox_CalculateStandardItemHeight", 0),
-		/*2*/ imports.NewTable("CustomCheckListBox_CheckAll", 0),
-		/*3*/ imports.NewTable("CustomCheckListBox_Checked", 0),
-		/*4*/ imports.NewTable("CustomCheckListBox_Class", 0),
-		/*5*/ imports.NewTable("CustomCheckListBox_Create", 0),
-		/*6*/ imports.NewTable("CustomCheckListBox_Exchange", 0),
-		/*7*/ imports.NewTable("CustomCheckListBox_Header", 0),
-		/*8*/ imports.NewTable("CustomCheckListBox_HeaderBackgroundColor", 0),
-		/*9*/ imports.NewTable("CustomCheckListBox_HeaderColor", 0),
-		/*10*/ imports.NewTable("CustomCheckListBox_ItemEnabled", 0),
-		/*11*/ imports.NewTable("CustomCheckListBox_SetOnClickCheck", 0),
-		/*12*/ imports.NewTable("CustomCheckListBox_State", 0),
-		/*13*/ imports.NewTable("CustomCheckListBox_Toggle", 0),
-	}
+	customCheckListBoxOnce   base.Once
+	customCheckListBoxImport *imports.Imports = nil
 )
 
-func customCheckListBoxImportAPI() *imports.Imports {
-	if customCheckListBoxImport == nil {
-		customCheckListBoxImport = NewDefaultImports()
-		customCheckListBoxImport.SetImportTable(customCheckListBoxImportTables)
-		customCheckListBoxImportTables = nil
-	}
+func customCheckListBoxAPI() *imports.Imports {
+	customCheckListBoxOnce.Do(func() {
+		customCheckListBoxImport = api.NewDefaultImports()
+		customCheckListBoxImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomCheckListBox_Create", 0), // constructor NewCustomCheckListBox
+			/* 1 */ imports.NewTable("TCustomCheckListBox_CalculateStandardItemHeight", 0), // function CalculateStandardItemHeight
+			/* 2 */ imports.NewTable("TCustomCheckListBox_Toggle", 0), // procedure Toggle
+			/* 3 */ imports.NewTable("TCustomCheckListBox_CheckAll", 0), // procedure CheckAll
+			/* 4 */ imports.NewTable("TCustomCheckListBox_Exchange", 0), // procedure Exchange
+			/* 5 */ imports.NewTable("TCustomCheckListBox_AllowGrayed", 0), // property AllowGrayed
+			/* 6 */ imports.NewTable("TCustomCheckListBox_Checked", 0), // property Checked
+			/* 7 */ imports.NewTable("TCustomCheckListBox_Header", 0), // property Header
+			/* 8 */ imports.NewTable("TCustomCheckListBox_HeaderBackgroundColor", 0), // property HeaderBackgroundColor
+			/* 9 */ imports.NewTable("TCustomCheckListBox_HeaderColor", 0), // property HeaderColor
+			/* 10 */ imports.NewTable("TCustomCheckListBox_ItemEnabled", 0), // property ItemEnabled
+			/* 11 */ imports.NewTable("TCustomCheckListBox_State", 0), // property State
+			/* 12 */ imports.NewTable("TCustomCheckListBox_OnClickCheck", 0), // event OnClickCheck
+			/* 13 */ imports.NewTable("TCustomCheckListBox_TClass", 0), // function TCustomCheckListBoxClass
+		}
+	})
 	return customCheckListBoxImport
 }

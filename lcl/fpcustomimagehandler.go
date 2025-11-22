@@ -9,9 +9,9 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IFPCustomImageHandler Parent: IObject
@@ -20,44 +20,36 @@ type IFPCustomImageHandler interface {
 	SetOnProgress(fn TFPImgProgressEvent) // property event
 }
 
-// TFPCustomImageHandler Parent: TObject
 type TFPCustomImageHandler struct {
 	TObject
-	progressPtr uintptr
-}
-
-func NewFPCustomImageHandler() IFPCustomImageHandler {
-	r1 := fPCustomImageHandlerImportAPI().SysCallN(1)
-	return AsFPCustomImageHandler(r1)
-}
-
-func FPCustomImageHandlerClass() TClass {
-	ret := fPCustomImageHandlerImportAPI().SysCallN(0)
-	return TClass(ret)
 }
 
 func (m *TFPCustomImageHandler) SetOnProgress(fn TFPImgProgressEvent) {
-	if m.progressPtr != 0 {
-		RemoveEventElement(m.progressPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.progressPtr = MakeEventDataPtr(fn)
-	fPCustomImageHandlerImportAPI().SysCallN(2, m.Instance(), m.progressPtr)
+	cb := makeTFPImgProgressEvent(fn)
+	base.SetEvent(m, 1, fPCustomImageHandlerAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewFPCustomImageHandler class constructor
+func NewFPCustomImageHandler() IFPCustomImageHandler {
+	r := fPCustomImageHandlerAPI().SysCallN(0)
+	return AsFPCustomImageHandler(r)
 }
 
 var (
-	fPCustomImageHandlerImport       *imports.Imports = nil
-	fPCustomImageHandlerImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FPCustomImageHandler_Class", 0),
-		/*1*/ imports.NewTable("FPCustomImageHandler_Create", 0),
-		/*2*/ imports.NewTable("FPCustomImageHandler_SetOnProgress", 0),
-	}
+	fPCustomImageHandlerOnce   base.Once
+	fPCustomImageHandlerImport *imports.Imports = nil
 )
 
-func fPCustomImageHandlerImportAPI() *imports.Imports {
-	if fPCustomImageHandlerImport == nil {
-		fPCustomImageHandlerImport = NewDefaultImports()
-		fPCustomImageHandlerImport.SetImportTable(fPCustomImageHandlerImportTables)
-		fPCustomImageHandlerImportTables = nil
-	}
+func fPCustomImageHandlerAPI() *imports.Imports {
+	fPCustomImageHandlerOnce.Do(func() {
+		fPCustomImageHandlerImport = api.NewDefaultImports()
+		fPCustomImageHandlerImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFPCustomImageHandler_Create", 0), // constructor NewFPCustomImageHandler
+			/* 1 */ imports.NewTable("TFPCustomImageHandler_OnProgress", 0), // event OnProgress
+		}
+	})
 	return fPCustomImageHandlerImport
 }

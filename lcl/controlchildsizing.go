@@ -9,201 +9,266 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IControlChildSizing Parent: IPersistent
 type IControlChildSizing interface {
 	IPersistent
-	Control() IWinControl                                 // property
-	LeftRightSpacing() int32                              // property
-	SetLeftRightSpacing(AValue int32)                     // property
-	TopBottomSpacing() int32                              // property
-	SetTopBottomSpacing(AValue int32)                     // property
-	HorizontalSpacing() int32                             // property
-	SetHorizontalSpacing(AValue int32)                    // property
-	VerticalSpacing() int32                               // property
-	SetVerticalSpacing(AValue int32)                      // property
-	EnlargeHorizontal() TChildControlResizeStyle          // property
-	SetEnlargeHorizontal(AValue TChildControlResizeStyle) // property
-	EnlargeVertical() TChildControlResizeStyle            // property
-	SetEnlargeVertical(AValue TChildControlResizeStyle)   // property
-	ShrinkHorizontal() TChildControlResizeStyle           // property
-	SetShrinkHorizontal(AValue TChildControlResizeStyle)  // property
-	ShrinkVertical() TChildControlResizeStyle             // property
-	SetShrinkVertical(AValue TChildControlResizeStyle)    // property
-	Layout() TControlChildrenLayout                       // property
-	SetLayout(AValue TControlChildrenLayout)              // property
-	ControlsPerLine() int32                               // property
-	SetControlsPerLine(AValue int32)                      // property
-	IsEqual(Sizing IControlChildSizing) bool              // function
-	AssignTo(Dest IPersistent)                            // procedure
-	SetGridSpacing(Spacing int32)                         // procedure
-	SetOnChange(fn TNotifyEvent)                          // property event
+	IsEqual(sizing IControlChildSizing) bool                   // function
+	AssignTo(dest IPersistent)                                 // procedure
+	SetGridSpacing(spacing int32)                              // procedure
+	Control() IWinControl                                      // property Control Getter
+	LeftRightSpacing() int32                                   // property LeftRightSpacing Getter
+	SetLeftRightSpacing(value int32)                           // property LeftRightSpacing Setter
+	TopBottomSpacing() int32                                   // property TopBottomSpacing Getter
+	SetTopBottomSpacing(value int32)                           // property TopBottomSpacing Setter
+	HorizontalSpacing() int32                                  // property HorizontalSpacing Getter
+	SetHorizontalSpacing(value int32)                          // property HorizontalSpacing Setter
+	VerticalSpacing() int32                                    // property VerticalSpacing Getter
+	SetVerticalSpacing(value int32)                            // property VerticalSpacing Setter
+	EnlargeHorizontal() types.TChildControlResizeStyle         // property EnlargeHorizontal Getter
+	SetEnlargeHorizontal(value types.TChildControlResizeStyle) // property EnlargeHorizontal Setter
+	EnlargeVertical() types.TChildControlResizeStyle           // property EnlargeVertical Getter
+	SetEnlargeVertical(value types.TChildControlResizeStyle)   // property EnlargeVertical Setter
+	ShrinkHorizontal() types.TChildControlResizeStyle          // property ShrinkHorizontal Getter
+	SetShrinkHorizontal(value types.TChildControlResizeStyle)  // property ShrinkHorizontal Setter
+	ShrinkVertical() types.TChildControlResizeStyle            // property ShrinkVertical Getter
+	SetShrinkVertical(value types.TChildControlResizeStyle)    // property ShrinkVertical Setter
+	Layout() types.TControlChildrenLayout                      // property Layout Getter
+	SetLayout(value types.TControlChildrenLayout)              // property Layout Setter
+	ControlsPerLine() int32                                    // property ControlsPerLine Getter
+	SetControlsPerLine(value int32)                            // property ControlsPerLine Setter
+	SetOnChange(fn TNotifyEvent)                               // property event
 }
 
-// TControlChildSizing Parent: TPersistent
 type TControlChildSizing struct {
 	TPersistent
-	changePtr uintptr
 }
 
-func NewControlChildSizing(OwnerControl IWinControl) IControlChildSizing {
-	r1 := controlChildSizingImportAPI().SysCallN(4, GetObjectUintptr(OwnerControl))
-	return AsControlChildSizing(r1)
+func (m *TControlChildSizing) IsEqual(sizing IControlChildSizing) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlChildSizingAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(sizing))
+	return api.GoBool(r)
+}
+
+func (m *TControlChildSizing) AssignTo(dest IPersistent) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(dest))
+}
+
+func (m *TControlChildSizing) SetGridSpacing(spacing int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(3, m.Instance(), uintptr(spacing))
 }
 
 func (m *TControlChildSizing) Control() IWinControl {
-	r1 := controlChildSizingImportAPI().SysCallN(2, m.Instance())
-	return AsWinControl(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlChildSizingAPI().SysCallN(4, m.Instance())
+	return AsWinControl(r)
 }
 
 func (m *TControlChildSizing) LeftRightSpacing() int32 {
-	r1 := controlChildSizingImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlChildSizingAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TControlChildSizing) SetLeftRightSpacing(AValue int32) {
-	controlChildSizingImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
+func (m *TControlChildSizing) SetLeftRightSpacing(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TControlChildSizing) TopBottomSpacing() int32 {
-	r1 := controlChildSizingImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlChildSizingAPI().SysCallN(6, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TControlChildSizing) SetTopBottomSpacing(AValue int32) {
-	controlChildSizingImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
+func (m *TControlChildSizing) SetTopBottomSpacing(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TControlChildSizing) HorizontalSpacing() int32 {
-	r1 := controlChildSizingImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlChildSizingAPI().SysCallN(7, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TControlChildSizing) SetHorizontalSpacing(AValue int32) {
-	controlChildSizingImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TControlChildSizing) SetHorizontalSpacing(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TControlChildSizing) VerticalSpacing() int32 {
-	r1 := controlChildSizingImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlChildSizingAPI().SysCallN(8, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TControlChildSizing) SetVerticalSpacing(AValue int32) {
-	controlChildSizingImportAPI().SysCallN(16, 1, m.Instance(), uintptr(AValue))
+func (m *TControlChildSizing) SetVerticalSpacing(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TControlChildSizing) EnlargeHorizontal() TChildControlResizeStyle {
-	r1 := controlChildSizingImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TChildControlResizeStyle(r1)
+func (m *TControlChildSizing) EnlargeHorizontal() types.TChildControlResizeStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlChildSizingAPI().SysCallN(9, 0, m.Instance())
+	return types.TChildControlResizeStyle(r)
 }
 
-func (m *TControlChildSizing) SetEnlargeHorizontal(AValue TChildControlResizeStyle) {
-	controlChildSizingImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TControlChildSizing) SetEnlargeHorizontal(value types.TChildControlResizeStyle) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TControlChildSizing) EnlargeVertical() TChildControlResizeStyle {
-	r1 := controlChildSizingImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return TChildControlResizeStyle(r1)
+func (m *TControlChildSizing) EnlargeVertical() types.TChildControlResizeStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlChildSizingAPI().SysCallN(10, 0, m.Instance())
+	return types.TChildControlResizeStyle(r)
 }
 
-func (m *TControlChildSizing) SetEnlargeVertical(AValue TChildControlResizeStyle) {
-	controlChildSizingImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TControlChildSizing) SetEnlargeVertical(value types.TChildControlResizeStyle) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TControlChildSizing) ShrinkHorizontal() TChildControlResizeStyle {
-	r1 := controlChildSizingImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return TChildControlResizeStyle(r1)
+func (m *TControlChildSizing) ShrinkHorizontal() types.TChildControlResizeStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlChildSizingAPI().SysCallN(11, 0, m.Instance())
+	return types.TChildControlResizeStyle(r)
 }
 
-func (m *TControlChildSizing) SetShrinkHorizontal(AValue TChildControlResizeStyle) {
-	controlChildSizingImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
+func (m *TControlChildSizing) SetShrinkHorizontal(value types.TChildControlResizeStyle) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TControlChildSizing) ShrinkVertical() TChildControlResizeStyle {
-	r1 := controlChildSizingImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return TChildControlResizeStyle(r1)
+func (m *TControlChildSizing) ShrinkVertical() types.TChildControlResizeStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlChildSizingAPI().SysCallN(12, 0, m.Instance())
+	return types.TChildControlResizeStyle(r)
 }
 
-func (m *TControlChildSizing) SetShrinkVertical(AValue TChildControlResizeStyle) {
-	controlChildSizingImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
+func (m *TControlChildSizing) SetShrinkVertical(value types.TChildControlResizeStyle) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TControlChildSizing) Layout() TControlChildrenLayout {
-	r1 := controlChildSizingImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TControlChildrenLayout(r1)
+func (m *TControlChildSizing) Layout() types.TControlChildrenLayout {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlChildSizingAPI().SysCallN(13, 0, m.Instance())
+	return types.TControlChildrenLayout(r)
 }
 
-func (m *TControlChildSizing) SetLayout(AValue TControlChildrenLayout) {
-	controlChildSizingImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TControlChildSizing) SetLayout(value types.TControlChildrenLayout) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(13, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TControlChildSizing) ControlsPerLine() int32 {
-	r1 := controlChildSizingImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlChildSizingAPI().SysCallN(14, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TControlChildSizing) SetControlsPerLine(AValue int32) {
-	controlChildSizingImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControlChildSizing) IsEqual(Sizing IControlChildSizing) bool {
-	r1 := controlChildSizingImportAPI().SysCallN(8, m.Instance(), GetObjectUintptr(Sizing))
-	return GoBool(r1)
-}
-
-func ControlChildSizingClass() TClass {
-	ret := controlChildSizingImportAPI().SysCallN(1)
-	return TClass(ret)
-}
-
-func (m *TControlChildSizing) AssignTo(Dest IPersistent) {
-	controlChildSizingImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(Dest))
-}
-
-func (m *TControlChildSizing) SetGridSpacing(Spacing int32) {
-	controlChildSizingImportAPI().SysCallN(11, m.Instance(), uintptr(Spacing))
+func (m *TControlChildSizing) SetControlsPerLine(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlChildSizingAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TControlChildSizing) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	controlChildSizingImportAPI().SysCallN(12, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 15, controlChildSizingAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewControlChildSizing class constructor
+func NewControlChildSizing(ownerControl IWinControl) IControlChildSizing {
+	r := controlChildSizingAPI().SysCallN(0, base.GetObjectUintptr(ownerControl))
+	return AsControlChildSizing(r)
 }
 
 var (
-	controlChildSizingImport       *imports.Imports = nil
-	controlChildSizingImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ControlChildSizing_AssignTo", 0),
-		/*1*/ imports.NewTable("ControlChildSizing_Class", 0),
-		/*2*/ imports.NewTable("ControlChildSizing_Control", 0),
-		/*3*/ imports.NewTable("ControlChildSizing_ControlsPerLine", 0),
-		/*4*/ imports.NewTable("ControlChildSizing_Create", 0),
-		/*5*/ imports.NewTable("ControlChildSizing_EnlargeHorizontal", 0),
-		/*6*/ imports.NewTable("ControlChildSizing_EnlargeVertical", 0),
-		/*7*/ imports.NewTable("ControlChildSizing_HorizontalSpacing", 0),
-		/*8*/ imports.NewTable("ControlChildSizing_IsEqual", 0),
-		/*9*/ imports.NewTable("ControlChildSizing_Layout", 0),
-		/*10*/ imports.NewTable("ControlChildSizing_LeftRightSpacing", 0),
-		/*11*/ imports.NewTable("ControlChildSizing_SetGridSpacing", 0),
-		/*12*/ imports.NewTable("ControlChildSizing_SetOnChange", 0),
-		/*13*/ imports.NewTable("ControlChildSizing_ShrinkHorizontal", 0),
-		/*14*/ imports.NewTable("ControlChildSizing_ShrinkVertical", 0),
-		/*15*/ imports.NewTable("ControlChildSizing_TopBottomSpacing", 0),
-		/*16*/ imports.NewTable("ControlChildSizing_VerticalSpacing", 0),
-	}
+	controlChildSizingOnce   base.Once
+	controlChildSizingImport *imports.Imports = nil
 )
 
-func controlChildSizingImportAPI() *imports.Imports {
-	if controlChildSizingImport == nil {
-		controlChildSizingImport = NewDefaultImports()
-		controlChildSizingImport.SetImportTable(controlChildSizingImportTables)
-		controlChildSizingImportTables = nil
-	}
+func controlChildSizingAPI() *imports.Imports {
+	controlChildSizingOnce.Do(func() {
+		controlChildSizingImport = api.NewDefaultImports()
+		controlChildSizingImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TControlChildSizing_Create", 0), // constructor NewControlChildSizing
+			/* 1 */ imports.NewTable("TControlChildSizing_IsEqual", 0), // function IsEqual
+			/* 2 */ imports.NewTable("TControlChildSizing_AssignTo", 0), // procedure AssignTo
+			/* 3 */ imports.NewTable("TControlChildSizing_SetGridSpacing", 0), // procedure SetGridSpacing
+			/* 4 */ imports.NewTable("TControlChildSizing_Control", 0), // property Control
+			/* 5 */ imports.NewTable("TControlChildSizing_LeftRightSpacing", 0), // property LeftRightSpacing
+			/* 6 */ imports.NewTable("TControlChildSizing_TopBottomSpacing", 0), // property TopBottomSpacing
+			/* 7 */ imports.NewTable("TControlChildSizing_HorizontalSpacing", 0), // property HorizontalSpacing
+			/* 8 */ imports.NewTable("TControlChildSizing_VerticalSpacing", 0), // property VerticalSpacing
+			/* 9 */ imports.NewTable("TControlChildSizing_EnlargeHorizontal", 0), // property EnlargeHorizontal
+			/* 10 */ imports.NewTable("TControlChildSizing_EnlargeVertical", 0), // property EnlargeVertical
+			/* 11 */ imports.NewTable("TControlChildSizing_ShrinkHorizontal", 0), // property ShrinkHorizontal
+			/* 12 */ imports.NewTable("TControlChildSizing_ShrinkVertical", 0), // property ShrinkVertical
+			/* 13 */ imports.NewTable("TControlChildSizing_Layout", 0), // property Layout
+			/* 14 */ imports.NewTable("TControlChildSizing_ControlsPerLine", 0), // property ControlsPerLine
+			/* 15 */ imports.NewTable("TControlChildSizing_OnChange", 0), // event OnChange
+		}
+	})
 	return controlChildSizingImport
 }

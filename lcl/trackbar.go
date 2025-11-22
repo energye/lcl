@@ -9,24 +9,25 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ITrackBar Parent: ICustomTrackBar
 type ITrackBar interface {
 	ICustomTrackBar
-	DragCursor() TCursor                            // property
-	SetDragCursor(AValue TCursor)                   // property
-	DragMode() TDragMode                            // property
-	SetDragMode(AValue TDragMode)                   // property
-	ParentColor() bool                              // property
-	SetParentColor(AValue bool)                     // property
-	ParentFont() bool                               // property
-	SetParentFont(AValue bool)                      // property
-	ParentShowHint() bool                           // property
-	SetParentShowHint(AValue bool)                  // property
+	DragCursor() types.TCursor                      // property DragCursor Getter
+	SetDragCursor(value types.TCursor)              // property DragCursor Setter
+	DragMode() types.TDragMode                      // property DragMode Getter
+	SetDragMode(value types.TDragMode)              // property DragMode Setter
+	ParentColor() bool                              // property ParentColor Getter
+	SetParentColor(value bool)                      // property ParentColor Setter
+	ParentFont() bool                               // property ParentFont Getter
+	SetParentFont(value bool)                       // property ParentFont Setter
+	ParentShowHint() bool                           // property ParentShowHint Getter
+	SetParentShowHint(value bool)                   // property ParentShowHint Setter
 	SetOnContextPopup(fn TContextPopupEvent)        // property event
 	SetOnDragDrop(fn TDragDropEvent)                // property event
 	SetOnDragOver(fn TDragOverEvent)                // property event
@@ -45,244 +46,257 @@ type ITrackBar interface {
 	SetOnStartDrag(fn TStartDragEvent)              // property event
 }
 
-// TTrackBar Parent: TCustomTrackBar
 type TTrackBar struct {
 	TCustomTrackBar
-	contextPopupPtr    uintptr
-	dragDropPtr        uintptr
-	dragOverPtr        uintptr
-	endDragPtr         uintptr
-	mouseDownPtr       uintptr
-	mouseEnterPtr      uintptr
-	mouseLeavePtr      uintptr
-	mouseMovePtr       uintptr
-	mouseUpPtr         uintptr
-	mouseWheelPtr      uintptr
-	mouseWheelDownPtr  uintptr
-	mouseWheelUpPtr    uintptr
-	mouseWheelHorzPtr  uintptr
-	mouseWheelLeftPtr  uintptr
-	mouseWheelRightPtr uintptr
-	startDragPtr       uintptr
 }
 
-func NewTrackBar(AOwner IComponent) ITrackBar {
-	r1 := rackBarImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsTrackBar(r1)
+func (m *TTrackBar) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := trackBarAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TTrackBar) DragCursor() TCursor {
-	r1 := rackBarImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TTrackBar) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	trackBarAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TTrackBar) SetDragCursor(AValue TCursor) {
-	rackBarImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TTrackBar) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := trackBarAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TTrackBar) DragMode() TDragMode {
-	r1 := rackBarImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TTrackBar) SetDragMode(AValue TDragMode) {
-	rackBarImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TTrackBar) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	trackBarAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TTrackBar) ParentColor() bool {
-	r1 := rackBarImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := trackBarAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TTrackBar) SetParentColor(AValue bool) {
-	rackBarImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
+func (m *TTrackBar) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	trackBarAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TTrackBar) ParentFont() bool {
-	r1 := rackBarImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := trackBarAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TTrackBar) SetParentFont(AValue bool) {
-	rackBarImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TTrackBar) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	trackBarAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TTrackBar) ParentShowHint() bool {
-	r1 := rackBarImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := trackBarAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TTrackBar) SetParentShowHint(AValue bool) {
-	rackBarImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
-}
-
-func TrackBarClass() TClass {
-	ret := rackBarImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TTrackBar) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	trackBarAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TTrackBar) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(7, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 6, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(8, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 7, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(9, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 8, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(10, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 9, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(11, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 10, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(12, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 11, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(13, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(14, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 13, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(15, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 14, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(16, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 15, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(17, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 16, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(21, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 17, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(18, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 18, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(19, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 19, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(20, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 20, trackBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TTrackBar) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	rackBarImportAPI().SysCallN(22, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 21, trackBarAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewTrackBar class constructor
+func NewTrackBar(owner IComponent) ITrackBar {
+	r := trackBarAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsTrackBar(r)
+}
+
+func TTrackBarClass() types.TClass {
+	r := trackBarAPI().SysCallN(22)
+	return types.TClass(r)
 }
 
 var (
-	rackBarImport       *imports.Imports = nil
-	rackBarImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("TrackBar_Class", 0),
-		/*1*/ imports.NewTable("TrackBar_Create", 0),
-		/*2*/ imports.NewTable("TrackBar_DragCursor", 0),
-		/*3*/ imports.NewTable("TrackBar_DragMode", 0),
-		/*4*/ imports.NewTable("TrackBar_ParentColor", 0),
-		/*5*/ imports.NewTable("TrackBar_ParentFont", 0),
-		/*6*/ imports.NewTable("TrackBar_ParentShowHint", 0),
-		/*7*/ imports.NewTable("TrackBar_SetOnContextPopup", 0),
-		/*8*/ imports.NewTable("TrackBar_SetOnDragDrop", 0),
-		/*9*/ imports.NewTable("TrackBar_SetOnDragOver", 0),
-		/*10*/ imports.NewTable("TrackBar_SetOnEndDrag", 0),
-		/*11*/ imports.NewTable("TrackBar_SetOnMouseDown", 0),
-		/*12*/ imports.NewTable("TrackBar_SetOnMouseEnter", 0),
-		/*13*/ imports.NewTable("TrackBar_SetOnMouseLeave", 0),
-		/*14*/ imports.NewTable("TrackBar_SetOnMouseMove", 0),
-		/*15*/ imports.NewTable("TrackBar_SetOnMouseUp", 0),
-		/*16*/ imports.NewTable("TrackBar_SetOnMouseWheel", 0),
-		/*17*/ imports.NewTable("TrackBar_SetOnMouseWheelDown", 0),
-		/*18*/ imports.NewTable("TrackBar_SetOnMouseWheelHorz", 0),
-		/*19*/ imports.NewTable("TrackBar_SetOnMouseWheelLeft", 0),
-		/*20*/ imports.NewTable("TrackBar_SetOnMouseWheelRight", 0),
-		/*21*/ imports.NewTable("TrackBar_SetOnMouseWheelUp", 0),
-		/*22*/ imports.NewTable("TrackBar_SetOnStartDrag", 0),
-	}
+	trackBarOnce   base.Once
+	trackBarImport *imports.Imports = nil
 )
 
-func rackBarImportAPI() *imports.Imports {
-	if rackBarImport == nil {
-		rackBarImport = NewDefaultImports()
-		rackBarImport.SetImportTable(rackBarImportTables)
-		rackBarImportTables = nil
-	}
-	return rackBarImport
+func trackBarAPI() *imports.Imports {
+	trackBarOnce.Do(func() {
+		trackBarImport = api.NewDefaultImports()
+		trackBarImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TTrackBar_Create", 0), // constructor NewTrackBar
+			/* 1 */ imports.NewTable("TTrackBar_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TTrackBar_DragMode", 0), // property DragMode
+			/* 3 */ imports.NewTable("TTrackBar_ParentColor", 0), // property ParentColor
+			/* 4 */ imports.NewTable("TTrackBar_ParentFont", 0), // property ParentFont
+			/* 5 */ imports.NewTable("TTrackBar_ParentShowHint", 0), // property ParentShowHint
+			/* 6 */ imports.NewTable("TTrackBar_OnContextPopup", 0), // event OnContextPopup
+			/* 7 */ imports.NewTable("TTrackBar_OnDragDrop", 0), // event OnDragDrop
+			/* 8 */ imports.NewTable("TTrackBar_OnDragOver", 0), // event OnDragOver
+			/* 9 */ imports.NewTable("TTrackBar_OnEndDrag", 0), // event OnEndDrag
+			/* 10 */ imports.NewTable("TTrackBar_OnMouseDown", 0), // event OnMouseDown
+			/* 11 */ imports.NewTable("TTrackBar_OnMouseEnter", 0), // event OnMouseEnter
+			/* 12 */ imports.NewTable("TTrackBar_OnMouseLeave", 0), // event OnMouseLeave
+			/* 13 */ imports.NewTable("TTrackBar_OnMouseMove", 0), // event OnMouseMove
+			/* 14 */ imports.NewTable("TTrackBar_OnMouseUp", 0), // event OnMouseUp
+			/* 15 */ imports.NewTable("TTrackBar_OnMouseWheel", 0), // event OnMouseWheel
+			/* 16 */ imports.NewTable("TTrackBar_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 17 */ imports.NewTable("TTrackBar_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 18 */ imports.NewTable("TTrackBar_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 19 */ imports.NewTable("TTrackBar_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 20 */ imports.NewTable("TTrackBar_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 21 */ imports.NewTable("TTrackBar_OnStartDrag", 0), // event OnStartDrag
+			/* 22 */ imports.NewTable("TTrackBar_TClass", 0), // function TTrackBarClass
+		}
+	})
+	return trackBarImport
 }

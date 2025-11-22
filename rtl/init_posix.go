@@ -16,8 +16,8 @@ import (
 	"strings"
 )
 
-// 初始化
-func RtlInit() {
+// Init 初始化
+func Init() {
 	SysLocale.FarEast = true
 	SysLocale.MiddleEast = true
 	// 这个环境变量在MacOS下只有通过命令行启动的才能获取得到。

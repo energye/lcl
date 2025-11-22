@@ -9,123 +9,149 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IFPCanvasHelper Parent: IPersistent
 type IFPCanvasHelper interface {
 	IPersistent
-	Allocated() bool                                          // property
-	FixedCanvas() bool                                        // property
-	Canvas() IFPCustomCanvas                                  // property
-	FPColor() (resultFPColor TFPColor)                        // property
-	SetFPColor(AValue *TFPColor)                              // property
-	DelayAllocate() bool                                      // property
-	SetDelayAllocate(AValue bool)                             // property
-	AllocateResources(ACanvas IFPCustomCanvas, CanDelay bool) // procedure
-	DeallocateResources()                                     // procedure
-	SetOnChanging(fn TNotifyEvent)                            // property event
-	SetOnChange(fn TNotifyEvent)                              // property event
+	AllocateResources(canvas IFPCustomCanvas, canDelay bool) // procedure
+	// DeallocateResources
+	//  free all resource used by this helper
+	DeallocateResources() // procedure
+	Allocated() bool      // property Allocated Getter
+	// FixedCanvas
+	//  properties cannot be changed when allocated
+	FixedCanvas() bool // property FixedCanvas Getter
+	// Canvas
+	//  Canvas for which the helper is allocated
+	Canvas() IFPCustomCanvas // property Canvas Getter
+	// FPColor
+	//  color of the helper
+	FPColor() TFPColor             // property FPColor Getter
+	SetFPColor(value TFPColor)     // property FPColor Setter
+	DelayAllocate() bool           // property DelayAllocate Getter
+	SetDelayAllocate(value bool)   // property DelayAllocate Setter
+	SetOnChanging(fn TNotifyEvent) // property event
+	SetOnChange(fn TNotifyEvent)   // property event
 }
 
-// TFPCanvasHelper Parent: TPersistent
 type TFPCanvasHelper struct {
 	TPersistent
-	changingPtr uintptr
-	changePtr   uintptr
 }
 
-func NewFPCanvasHelper() IFPCanvasHelper {
-	r1 := fPCanvasHelperImportAPI().SysCallN(4)
-	return AsFPCanvasHelper(r1)
-}
-
-func (m *TFPCanvasHelper) Allocated() bool {
-	r1 := fPCanvasHelperImportAPI().SysCallN(1, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TFPCanvasHelper) FixedCanvas() bool {
-	r1 := fPCanvasHelperImportAPI().SysCallN(8, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TFPCanvasHelper) Canvas() IFPCustomCanvas {
-	r1 := fPCanvasHelperImportAPI().SysCallN(2, m.Instance())
-	return AsFPCustomCanvas(r1)
-}
-
-func (m *TFPCanvasHelper) FPColor() (resultFPColor TFPColor) {
-	r1 := fPCanvasHelperImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return *(*TFPColor)(getPointer(r1))
-}
-
-func (m *TFPCanvasHelper) SetFPColor(AValue *TFPColor) {
-	fPCanvasHelperImportAPI().SysCallN(7, 1, m.Instance(), uintptr(unsafePointer(AValue)))
-}
-
-func (m *TFPCanvasHelper) DelayAllocate() bool {
-	r1 := fPCanvasHelperImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TFPCanvasHelper) SetDelayAllocate(AValue bool) {
-	fPCanvasHelperImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
-}
-
-func FPCanvasHelperClass() TClass {
-	ret := fPCanvasHelperImportAPI().SysCallN(3)
-	return TClass(ret)
-}
-
-func (m *TFPCanvasHelper) AllocateResources(ACanvas IFPCustomCanvas, CanDelay bool) {
-	fPCanvasHelperImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(ACanvas), PascalBool(CanDelay))
+func (m *TFPCanvasHelper) AllocateResources(canvas IFPCustomCanvas, canDelay bool) {
+	if !m.IsValid() {
+		return
+	}
+	fPCanvasHelperAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(canvas), api.PasBool(canDelay))
 }
 
 func (m *TFPCanvasHelper) DeallocateResources() {
-	fPCanvasHelperImportAPI().SysCallN(5, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	fPCanvasHelperAPI().SysCallN(2, m.Instance())
+}
+
+func (m *TFPCanvasHelper) Allocated() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := fPCanvasHelperAPI().SysCallN(3, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TFPCanvasHelper) FixedCanvas() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := fPCanvasHelperAPI().SysCallN(4, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TFPCanvasHelper) Canvas() IFPCustomCanvas {
+	if !m.IsValid() {
+		return nil
+	}
+	r := fPCanvasHelperAPI().SysCallN(5, m.Instance())
+	return AsFPCustomCanvas(r)
+}
+
+func (m *TFPCanvasHelper) FPColor() (result TFPColor) {
+	if !m.IsValid() {
+		return
+	}
+	fPCanvasHelperAPI().SysCallN(6, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TFPCanvasHelper) SetFPColor(value TFPColor) {
+	if !m.IsValid() {
+		return
+	}
+	fPCanvasHelperAPI().SysCallN(6, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TFPCanvasHelper) DelayAllocate() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := fPCanvasHelperAPI().SysCallN(7, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TFPCanvasHelper) SetDelayAllocate(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	fPCanvasHelperAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TFPCanvasHelper) SetOnChanging(fn TNotifyEvent) {
-	if m.changingPtr != 0 {
-		RemoveEventElement(m.changingPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changingPtr = MakeEventDataPtr(fn)
-	fPCanvasHelperImportAPI().SysCallN(10, m.Instance(), m.changingPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 8, fPCanvasHelperAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TFPCanvasHelper) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	fPCanvasHelperImportAPI().SysCallN(9, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 9, fPCanvasHelperAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewFPCanvasHelper class constructor
+func NewFPCanvasHelper() IFPCanvasHelper {
+	r := fPCanvasHelperAPI().SysCallN(0)
+	return AsFPCanvasHelper(r)
 }
 
 var (
-	fPCanvasHelperImport       *imports.Imports = nil
-	fPCanvasHelperImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FPCanvasHelper_AllocateResources", 0),
-		/*1*/ imports.NewTable("FPCanvasHelper_Allocated", 0),
-		/*2*/ imports.NewTable("FPCanvasHelper_Canvas", 0),
-		/*3*/ imports.NewTable("FPCanvasHelper_Class", 0),
-		/*4*/ imports.NewTable("FPCanvasHelper_Create", 0),
-		/*5*/ imports.NewTable("FPCanvasHelper_DeallocateResources", 0),
-		/*6*/ imports.NewTable("FPCanvasHelper_DelayAllocate", 0),
-		/*7*/ imports.NewTable("FPCanvasHelper_FPColor", 0),
-		/*8*/ imports.NewTable("FPCanvasHelper_FixedCanvas", 0),
-		/*9*/ imports.NewTable("FPCanvasHelper_SetOnChange", 0),
-		/*10*/ imports.NewTable("FPCanvasHelper_SetOnChanging", 0),
-	}
+	fPCanvasHelperOnce   base.Once
+	fPCanvasHelperImport *imports.Imports = nil
 )
 
-func fPCanvasHelperImportAPI() *imports.Imports {
-	if fPCanvasHelperImport == nil {
-		fPCanvasHelperImport = NewDefaultImports()
-		fPCanvasHelperImport.SetImportTable(fPCanvasHelperImportTables)
-		fPCanvasHelperImportTables = nil
-	}
+func fPCanvasHelperAPI() *imports.Imports {
+	fPCanvasHelperOnce.Do(func() {
+		fPCanvasHelperImport = api.NewDefaultImports()
+		fPCanvasHelperImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFPCanvasHelper_Create", 0), // constructor NewFPCanvasHelper
+			/* 1 */ imports.NewTable("TFPCanvasHelper_AllocateResources", 0), // procedure AllocateResources
+			/* 2 */ imports.NewTable("TFPCanvasHelper_DeallocateResources", 0), // procedure DeallocateResources
+			/* 3 */ imports.NewTable("TFPCanvasHelper_Allocated", 0), // property Allocated
+			/* 4 */ imports.NewTable("TFPCanvasHelper_FixedCanvas", 0), // property FixedCanvas
+			/* 5 */ imports.NewTable("TFPCanvasHelper_Canvas", 0), // property Canvas
+			/* 6 */ imports.NewTable("TFPCanvasHelper_FPColor", 0), // property FPColor
+			/* 7 */ imports.NewTable("TFPCanvasHelper_DelayAllocate", 0), // property DelayAllocate
+			/* 8 */ imports.NewTable("TFPCanvasHelper_OnChanging", 0), // event OnChanging
+			/* 9 */ imports.NewTable("TFPCanvasHelper_OnChange", 0), // event OnChange
+		}
+	})
 	return fPCanvasHelperImport
 }

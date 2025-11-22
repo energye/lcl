@@ -9,152 +9,180 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICollection Parent: IPersistent
 type ICollection interface {
 	IPersistent
-	Count() int32                                 // property
-	ItemClass() TCollectionItemClass              // property
-	Items(Index int32) ICollectionItem            // property
-	SetItems(Index int32, AValue ICollectionItem) // property
-	Owner() IPersistent                           // function
-	Add() ICollectionItem                         // function
-	GetEnumerator() ICollectionEnumerator         // function
-	Insert(Index int32) ICollectionItem           // function
-	FindItemID(ID int32) ICollectionItem          // function
-	BeginUpdate()                                 // procedure
-	Clear()                                       // procedure
-	EndUpdate()                                   // procedure
-	Delete(Index int32)                           // procedure
-	Exchange(Index1, index2 int32)                // procedure
-	Move(Index1, index2 int32)                    // procedure
-	Sort(fn TCollectionSortCompare)               // procedure
+	OwnerToPersistent() IPersistent                                     // function
+	AddToCollectionItem() ICollectionItem                               // function
+	GetEnumerator() ICollectionEnumerator                               // function
+	Insert(index int32) ICollectionItem                                 // function
+	FindItemID(iD int32) ICollectionItem                                // function
+	BeginUpdate()                                                       // procedure
+	Clear()                                                             // procedure
+	EndUpdate()                                                         // procedure
+	Delete(index int32)                                                 // procedure
+	Exchange(index1 int32, index2 int32)                                // procedure
+	Move(index1 int32, index2 int32)                                    // procedure
+	Count() int32                                                       // property Count Getter
+	ItemClass() types.TCollectionItemClass                              // property ItemClass Getter
+	ItemsWithIntToCollectionItem(index int32) ICollectionItem           // property Items Getter
+	SetItemsWithIntToCollectionItem(index int32, value ICollectionItem) // property Items Setter
 }
 
-// TCollection Parent: TPersistent
 type TCollection struct {
 	TPersistent
-	sortPtr uintptr
 }
 
-func NewCollection(AItemClass TCollectionItemClass) ICollection {
-	r1 := collectionImportAPI().SysCallN(5, uintptr(AItemClass))
-	return AsCollection(r1)
+func (m *TCollection) OwnerToPersistent() IPersistent {
+	if !m.IsValid() {
+		return nil
+	}
+	r := collectionAPI().SysCallN(1, m.Instance())
+	return AsPersistent(r)
 }
 
-func (m *TCollection) Count() int32 {
-	r1 := collectionImportAPI().SysCallN(4, m.Instance())
-	return int32(r1)
-}
-
-func (m *TCollection) ItemClass() TCollectionItemClass {
-	r1 := collectionImportAPI().SysCallN(12, m.Instance())
-	return TCollectionItemClass(r1)
-}
-
-func (m *TCollection) Items(Index int32) ICollectionItem {
-	r1 := collectionImportAPI().SysCallN(13, 0, m.Instance(), uintptr(Index))
-	return AsCollectionItem(r1)
-}
-
-func (m *TCollection) SetItems(Index int32, AValue ICollectionItem) {
-	collectionImportAPI().SysCallN(13, 1, m.Instance(), uintptr(Index), GetObjectUintptr(AValue))
-}
-
-func (m *TCollection) Owner() IPersistent {
-	r1 := collectionImportAPI().SysCallN(15, m.Instance())
-	return AsPersistent(r1)
-}
-
-func (m *TCollection) Add() ICollectionItem {
-	r1 := collectionImportAPI().SysCallN(0, m.Instance())
-	return AsCollectionItem(r1)
+func (m *TCollection) AddToCollectionItem() ICollectionItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := collectionAPI().SysCallN(2, m.Instance())
+	return AsCollectionItem(r)
 }
 
 func (m *TCollection) GetEnumerator() ICollectionEnumerator {
-	r1 := collectionImportAPI().SysCallN(10, m.Instance())
-	return AsCollectionEnumerator(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := collectionAPI().SysCallN(3, m.Instance())
+	return AsCollectionEnumerator(r)
 }
 
-func (m *TCollection) Insert(Index int32) ICollectionItem {
-	r1 := collectionImportAPI().SysCallN(11, m.Instance(), uintptr(Index))
-	return AsCollectionItem(r1)
+func (m *TCollection) Insert(index int32) ICollectionItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := collectionAPI().SysCallN(4, m.Instance(), uintptr(index))
+	return AsCollectionItem(r)
 }
 
-func (m *TCollection) FindItemID(ID int32) ICollectionItem {
-	r1 := collectionImportAPI().SysCallN(9, m.Instance(), uintptr(ID))
-	return AsCollectionItem(r1)
-}
-
-func CollectionClass() TClass {
-	ret := collectionImportAPI().SysCallN(2)
-	return TClass(ret)
+func (m *TCollection) FindItemID(iD int32) ICollectionItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := collectionAPI().SysCallN(5, m.Instance(), uintptr(iD))
+	return AsCollectionItem(r)
 }
 
 func (m *TCollection) BeginUpdate() {
-	collectionImportAPI().SysCallN(1, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	collectionAPI().SysCallN(6, m.Instance())
 }
 
 func (m *TCollection) Clear() {
-	collectionImportAPI().SysCallN(3, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	collectionAPI().SysCallN(7, m.Instance())
 }
 
 func (m *TCollection) EndUpdate() {
-	collectionImportAPI().SysCallN(7, m.Instance())
-}
-
-func (m *TCollection) Delete(Index int32) {
-	collectionImportAPI().SysCallN(6, m.Instance(), uintptr(Index))
-}
-
-func (m *TCollection) Exchange(Index1, index2 int32) {
-	collectionImportAPI().SysCallN(8, m.Instance(), uintptr(Index1), uintptr(index2))
-}
-
-func (m *TCollection) Move(Index1, index2 int32) {
-	collectionImportAPI().SysCallN(14, m.Instance(), uintptr(Index1), uintptr(index2))
-}
-
-func (m *TCollection) Sort(fn TCollectionSortCompare) {
-	if m.sortPtr != 0 {
-		RemoveEventElement(m.sortPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.sortPtr = MakeEventDataPtr(fn)
-	collectionImportAPI().SysCallN(16, m.Instance(), m.sortPtr)
+	collectionAPI().SysCallN(8, m.Instance())
+}
+
+func (m *TCollection) Delete(index int32) {
+	if !m.IsValid() {
+		return
+	}
+	collectionAPI().SysCallN(9, m.Instance(), uintptr(index))
+}
+
+func (m *TCollection) Exchange(index1 int32, index2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	collectionAPI().SysCallN(10, m.Instance(), uintptr(index1), uintptr(index2))
+}
+
+func (m *TCollection) Move(index1 int32, index2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	collectionAPI().SysCallN(11, m.Instance(), uintptr(index1), uintptr(index2))
+}
+
+func (m *TCollection) Count() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := collectionAPI().SysCallN(12, m.Instance())
+	return int32(r)
+}
+
+func (m *TCollection) ItemClass() types.TCollectionItemClass {
+	if !m.IsValid() {
+		return 0
+	}
+	r := collectionAPI().SysCallN(13, m.Instance())
+	return types.TCollectionItemClass(r)
+}
+
+func (m *TCollection) ItemsWithIntToCollectionItem(index int32) ICollectionItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := collectionAPI().SysCallN(14, 0, m.Instance(), uintptr(index))
+	return AsCollectionItem(r)
+}
+
+func (m *TCollection) SetItemsWithIntToCollectionItem(index int32, value ICollectionItem) {
+	if !m.IsValid() {
+		return
+	}
+	collectionAPI().SysCallN(14, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
+}
+
+// NewCollection class constructor
+func NewCollection(itemClass types.TCollectionItemClass) ICollection {
+	r := collectionAPI().SysCallN(0, uintptr(itemClass))
+	return AsCollection(r)
 }
 
 var (
-	collectionImport       *imports.Imports = nil
-	collectionImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Collection_Add", 0),
-		/*1*/ imports.NewTable("Collection_BeginUpdate", 0),
-		/*2*/ imports.NewTable("Collection_Class", 0),
-		/*3*/ imports.NewTable("Collection_Clear", 0),
-		/*4*/ imports.NewTable("Collection_Count", 0),
-		/*5*/ imports.NewTable("Collection_Create", 0),
-		/*6*/ imports.NewTable("Collection_Delete", 0),
-		/*7*/ imports.NewTable("Collection_EndUpdate", 0),
-		/*8*/ imports.NewTable("Collection_Exchange", 0),
-		/*9*/ imports.NewTable("Collection_FindItemID", 0),
-		/*10*/ imports.NewTable("Collection_GetEnumerator", 0),
-		/*11*/ imports.NewTable("Collection_Insert", 0),
-		/*12*/ imports.NewTable("Collection_ItemClass", 0),
-		/*13*/ imports.NewTable("Collection_Items", 0),
-		/*14*/ imports.NewTable("Collection_Move", 0),
-		/*15*/ imports.NewTable("Collection_Owner", 0),
-		/*16*/ imports.NewTable("Collection_Sort", 0),
-	}
+	collectionOnce   base.Once
+	collectionImport *imports.Imports = nil
 )
 
-func collectionImportAPI() *imports.Imports {
-	if collectionImport == nil {
-		collectionImport = NewDefaultImports()
-		collectionImport.SetImportTable(collectionImportTables)
-		collectionImportTables = nil
-	}
+func collectionAPI() *imports.Imports {
+	collectionOnce.Do(func() {
+		collectionImport = api.NewDefaultImports()
+		collectionImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCollection_Create", 0), // constructor NewCollection
+			/* 1 */ imports.NewTable("TCollection_OwnerToPersistent", 0), // function OwnerToPersistent
+			/* 2 */ imports.NewTable("TCollection_AddToCollectionItem", 0), // function AddToCollectionItem
+			/* 3 */ imports.NewTable("TCollection_GetEnumerator", 0), // function GetEnumerator
+			/* 4 */ imports.NewTable("TCollection_Insert", 0), // function Insert
+			/* 5 */ imports.NewTable("TCollection_FindItemID", 0), // function FindItemID
+			/* 6 */ imports.NewTable("TCollection_BeginUpdate", 0), // procedure BeginUpdate
+			/* 7 */ imports.NewTable("TCollection_Clear", 0), // procedure Clear
+			/* 8 */ imports.NewTable("TCollection_EndUpdate", 0), // procedure EndUpdate
+			/* 9 */ imports.NewTable("TCollection_Delete", 0), // procedure Delete
+			/* 10 */ imports.NewTable("TCollection_Exchange", 0), // procedure Exchange
+			/* 11 */ imports.NewTable("TCollection_Move", 0), // procedure Move
+			/* 12 */ imports.NewTable("TCollection_Count", 0), // property Count
+			/* 13 */ imports.NewTable("TCollection_ItemClass", 0), // property ItemClass
+			/* 14 */ imports.NewTable("TCollection_ItemsWithIntToCollectionItem", 0), // property ItemsWithIntToCollectionItem
+		}
+	})
 	return collectionImport
 }

@@ -9,153 +9,200 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomColorBox Parent: ICustomComboBox
 type ICustomColorBox interface {
 	ICustomComboBox
-	ColorRectWidth() int32                          // property
-	SetColorRectWidth(AValue int32)                 // property
-	ColorRectOffset() int32                         // property
-	SetColorRectOffset(AValue int32)                // property
-	StyleForColorBoxStyle() TColorBoxStyle          // property
-	SetStyleForColorBoxStyle(AValue TColorBoxStyle) // property
-	Colors(Index int32) TColor                      // property
-	ColorNames(Index int32) string                  // property
-	Selected() TColor                               // property
-	SetSelected(AValue TColor)                      // property
-	DefaultColorColor() TColor                      // property
-	SetDefaultColorColor(AValue TColor)             // property
-	NoneColorColor() TColor                         // property
-	SetNoneColorColor(AValue TColor)                // property
-	ColorDialog() IColorDialog                      // property
-	SetColorDialog(AValue IColorDialog)             // property
-	SetOnGetColors(fn TGetColorsEvent)              // property event
+	ColorRectWidth() int32                              // property ColorRectWidth Getter
+	SetColorRectWidth(value int32)                      // property ColorRectWidth Setter
+	ColorRectOffset() int32                             // property ColorRectOffset Getter
+	SetColorRectOffset(value int32)                     // property ColorRectOffset Setter
+	StyleToColorBoxStyle() types.TColorBoxStyle         // property Style Getter
+	SetStyleToColorBoxStyle(value types.TColorBoxStyle) // property Style Setter
+	Colors(index int32) types.TColor                    // property Colors Getter
+	ColorNames(index int32) string                      // property ColorNames Getter
+	Selected() types.TColor                             // property Selected Getter
+	SetSelected(value types.TColor)                     // property Selected Setter
+	DefaultColorColor() types.TColor                    // property DefaultColorColor Getter
+	SetDefaultColorColor(value types.TColor)            // property DefaultColorColor Setter
+	NoneColorColor() types.TColor                       // property NoneColorColor Getter
+	SetNoneColorColor(value types.TColor)               // property NoneColorColor Setter
+	ColorDialog() IColorDialog                          // property ColorDialog Getter
+	SetColorDialog(value IColorDialog)                  // property ColorDialog Setter
+	SetOnGetColors(fn TGetColorsEvent)                  // property event
 }
 
-// TCustomColorBox Parent: TCustomComboBox
 type TCustomColorBox struct {
 	TCustomComboBox
-	getColorsPtr uintptr
-}
-
-func NewCustomColorBox(AOwner IComponent) ICustomColorBox {
-	r1 := customColorBoxImportAPI().SysCallN(6, GetObjectUintptr(AOwner))
-	return AsCustomColorBox(r1)
 }
 
 func (m *TCustomColorBox) ColorRectWidth() int32 {
-	r1 := customColorBoxImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customColorBoxAPI().SysCallN(1, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomColorBox) SetColorRectWidth(AValue int32) {
-	customColorBoxImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomColorBox) SetColorRectWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customColorBoxAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomColorBox) ColorRectOffset() int32 {
-	r1 := customColorBoxImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customColorBoxAPI().SysCallN(2, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TCustomColorBox) SetColorRectOffset(AValue int32) {
-	customColorBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomColorBox) SetColorRectOffset(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customColorBoxAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomColorBox) StyleForColorBoxStyle() TColorBoxStyle {
-	r1 := customColorBoxImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return TColorBoxStyle(r1)
+func (m *TCustomColorBox) StyleToColorBoxStyle() types.TColorBoxStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customColorBoxAPI().SysCallN(3, 0, m.Instance())
+	return types.TColorBoxStyle(r)
 }
 
-func (m *TCustomColorBox) SetStyleForColorBoxStyle(AValue TColorBoxStyle) {
-	customColorBoxImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomColorBox) SetStyleToColorBoxStyle(value types.TColorBoxStyle) {
+	if !m.IsValid() {
+		return
+	}
+	customColorBoxAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomColorBox) Colors(Index int32) TColor {
-	r1 := customColorBoxImportAPI().SysCallN(5, m.Instance(), uintptr(Index))
-	return TColor(r1)
+func (m *TCustomColorBox) Colors(index int32) types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customColorBoxAPI().SysCallN(4, m.Instance(), uintptr(index))
+	return types.TColor(r)
 }
 
-func (m *TCustomColorBox) ColorNames(Index int32) string {
-	r1 := customColorBoxImportAPI().SysCallN(2, m.Instance(), uintptr(Index))
-	return GoStr(r1)
+func (m *TCustomColorBox) ColorNames(index int32) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customColorBoxAPI().SysCallN(5, m.Instance(), uintptr(index))
+	return api.GoStr(r)
 }
 
-func (m *TCustomColorBox) Selected() TColor {
-	r1 := customColorBoxImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomColorBox) Selected() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customColorBoxAPI().SysCallN(6, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomColorBox) SetSelected(AValue TColor) {
-	customColorBoxImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomColorBox) SetSelected(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customColorBoxAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomColorBox) DefaultColorColor() TColor {
-	r1 := customColorBoxImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomColorBox) DefaultColorColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customColorBoxAPI().SysCallN(7, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomColorBox) SetDefaultColorColor(AValue TColor) {
-	customColorBoxImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomColorBox) SetDefaultColorColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customColorBoxAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomColorBox) NoneColorColor() TColor {
-	r1 := customColorBoxImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomColorBox) NoneColorColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customColorBoxAPI().SysCallN(8, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomColorBox) SetNoneColorColor(AValue TColor) {
-	customColorBoxImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomColorBox) SetNoneColorColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customColorBoxAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomColorBox) ColorDialog() IColorDialog {
-	r1 := customColorBoxImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return AsColorDialog(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := customColorBoxAPI().SysCallN(9, 0, m.Instance())
+	return AsColorDialog(r)
 }
 
-func (m *TCustomColorBox) SetColorDialog(AValue IColorDialog) {
-	customColorBoxImportAPI().SysCallN(1, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func CustomColorBoxClass() TClass {
-	ret := customColorBoxImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TCustomColorBox) SetColorDialog(value IColorDialog) {
+	if !m.IsValid() {
+		return
+	}
+	customColorBoxAPI().SysCallN(9, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TCustomColorBox) SetOnGetColors(fn TGetColorsEvent) {
-	if m.getColorsPtr != 0 {
-		RemoveEventElement(m.getColorsPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getColorsPtr = MakeEventDataPtr(fn)
-	customColorBoxImportAPI().SysCallN(10, m.Instance(), m.getColorsPtr)
+	cb := makeTGetColorsEvent(fn)
+	base.SetEvent(m, 10, customColorBoxAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomColorBox class constructor
+func NewCustomColorBox(owner IComponent) ICustomColorBox {
+	r := customColorBoxAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomColorBox(r)
+}
+
+func TCustomColorBoxClass() types.TClass {
+	r := customColorBoxAPI().SysCallN(11)
+	return types.TClass(r)
 }
 
 var (
-	customColorBoxImport       *imports.Imports = nil
-	customColorBoxImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomColorBox_Class", 0),
-		/*1*/ imports.NewTable("CustomColorBox_ColorDialog", 0),
-		/*2*/ imports.NewTable("CustomColorBox_ColorNames", 0),
-		/*3*/ imports.NewTable("CustomColorBox_ColorRectOffset", 0),
-		/*4*/ imports.NewTable("CustomColorBox_ColorRectWidth", 0),
-		/*5*/ imports.NewTable("CustomColorBox_Colors", 0),
-		/*6*/ imports.NewTable("CustomColorBox_Create", 0),
-		/*7*/ imports.NewTable("CustomColorBox_DefaultColorColor", 0),
-		/*8*/ imports.NewTable("CustomColorBox_NoneColorColor", 0),
-		/*9*/ imports.NewTable("CustomColorBox_Selected", 0),
-		/*10*/ imports.NewTable("CustomColorBox_SetOnGetColors", 0),
-		/*11*/ imports.NewTable("CustomColorBox_StyleForColorBoxStyle", 0),
-	}
+	customColorBoxOnce   base.Once
+	customColorBoxImport *imports.Imports = nil
 )
 
-func customColorBoxImportAPI() *imports.Imports {
-	if customColorBoxImport == nil {
-		customColorBoxImport = NewDefaultImports()
-		customColorBoxImport.SetImportTable(customColorBoxImportTables)
-		customColorBoxImportTables = nil
-	}
+func customColorBoxAPI() *imports.Imports {
+	customColorBoxOnce.Do(func() {
+		customColorBoxImport = api.NewDefaultImports()
+		customColorBoxImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomColorBox_Create", 0), // constructor NewCustomColorBox
+			/* 1 */ imports.NewTable("TCustomColorBox_ColorRectWidth", 0), // property ColorRectWidth
+			/* 2 */ imports.NewTable("TCustomColorBox_ColorRectOffset", 0), // property ColorRectOffset
+			/* 3 */ imports.NewTable("TCustomColorBox_StyleToColorBoxStyle", 0), // property StyleToColorBoxStyle
+			/* 4 */ imports.NewTable("TCustomColorBox_Colors", 0), // property Colors
+			/* 5 */ imports.NewTable("TCustomColorBox_ColorNames", 0), // property ColorNames
+			/* 6 */ imports.NewTable("TCustomColorBox_Selected", 0), // property Selected
+			/* 7 */ imports.NewTable("TCustomColorBox_DefaultColorColor", 0), // property DefaultColorColor
+			/* 8 */ imports.NewTable("TCustomColorBox_NoneColorColor", 0), // property NoneColorColor
+			/* 9 */ imports.NewTable("TCustomColorBox_ColorDialog", 0), // property ColorDialog
+			/* 10 */ imports.NewTable("TCustomColorBox_OnGetColors", 0), // event OnGetColors
+			/* 11 */ imports.NewTable("TCustomColorBox_TClass", 0), // function TCustomColorBoxClass
+		}
+	})
 	return customColorBoxImport
 }

@@ -9,34 +9,37 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IComboBoxEx Parent: ICustomComboBoxEx
 type IComboBoxEx interface {
 	ICustomComboBoxEx
-	BorderStyle() TBorderStyle                     // property
-	SetBorderStyle(AValue TBorderStyle)            // property
-	DragCursor() TCursor                           // property
-	SetDragCursor(AValue TCursor)                  // property
-	DragKind() TDragKind                           // property
-	SetDragKind(AValue TDragKind)                  // property
-	DragMode() TDragMode                           // property
-	SetDragMode(AValue TDragMode)                  // property
-	ItemHeight() int32                             // property
-	SetItemHeight(AValue int32)                    // property
-	ItemWidth() int32                              // property
-	SetItemWidth(AValue int32)                     // property
-	MaxLength() int32                              // property
-	SetMaxLength(AValue int32)                     // property
-	ParentColor() bool                             // property
-	SetParentColor(AValue bool)                    // property
-	ParentFont() bool                              // property
-	SetParentFont(AValue bool)                     // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
+	// BorderStyle
+	//  properties which are not supported by all descendents
+	BorderStyle() types.TBorderStyle               // property BorderStyle Getter
+	SetBorderStyle(value types.TBorderStyle)       // property BorderStyle Setter
+	DragCursor() types.TCursor                     // property DragCursor Getter
+	SetDragCursor(value types.TCursor)             // property DragCursor Setter
+	DragKind() types.TDragKind                     // property DragKind Getter
+	SetDragKind(value types.TDragKind)             // property DragKind Setter
+	DragMode() types.TDragMode                     // property DragMode Getter
+	SetDragMode(value types.TDragMode)             // property DragMode Setter
+	ItemHeight() int32                             // property ItemHeight Getter
+	SetItemHeight(value int32)                     // property ItemHeight Setter
+	ItemWidth() int32                              // property ItemWidth Getter
+	SetItemWidth(value int32)                      // property ItemWidth Setter
+	MaxLength() int32                              // property MaxLength Getter
+	SetMaxLength(value int32)                      // property MaxLength Setter
+	ParentColor() bool                             // property ParentColor Getter
+	SetParentColor(value bool)                     // property ParentColor Setter
+	ParentFont() bool                              // property ParentFont Getter
+	SetParentFont(value bool)                      // property ParentFont Setter
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
 	SetOnChange(fn TNotifyEvent)                   // property event
 	SetOnCloseUp(fn TNotifyEvent)                  // property event
 	SetOnContextPopup(fn TContextPopupEvent)       // property event
@@ -61,354 +64,391 @@ type IComboBoxEx interface {
 	SetOnStartDrag(fn TStartDragEvent)             // property event
 }
 
-// TComboBoxEx Parent: TCustomComboBoxEx
 type TComboBoxEx struct {
 	TCustomComboBoxEx
-	changePtr         uintptr
-	closeUpPtr        uintptr
-	contextPopupPtr   uintptr
-	dblClickPtr       uintptr
-	dragDropPtr       uintptr
-	dragOverPtr       uintptr
-	dropDownPtr       uintptr
-	editingDonePtr    uintptr
-	endDockPtr        uintptr
-	endDragPtr        uintptr
-	getItemsPtr       uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	selectPtr         uintptr
-	startDockPtr      uintptr
-	startDragPtr      uintptr
 }
 
-func NewComboBoxEx(TheOwner IComponent) IComboBoxEx {
-	r1 := comboBoxExImportAPI().SysCallN(2, GetObjectUintptr(TheOwner))
-	return AsComboBoxEx(r1)
+func (m *TComboBoxEx) BorderStyle() types.TBorderStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := comboBoxExAPI().SysCallN(1, 0, m.Instance())
+	return types.TBorderStyle(r)
 }
 
-func (m *TComboBoxEx) BorderStyle() TBorderStyle {
-	r1 := comboBoxExImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TBorderStyle(r1)
+func (m *TComboBoxEx) SetBorderStyle(value types.TBorderStyle) {
+	if !m.IsValid() {
+		return
+	}
+	comboBoxExAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TComboBoxEx) SetBorderStyle(AValue TBorderStyle) {
-	comboBoxExImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TComboBoxEx) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := comboBoxExAPI().SysCallN(2, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TComboBoxEx) DragCursor() TCursor {
-	r1 := comboBoxExImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TComboBoxEx) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	comboBoxExAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TComboBoxEx) SetDragCursor(AValue TCursor) {
-	comboBoxExImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TComboBoxEx) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := comboBoxExAPI().SysCallN(3, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TComboBoxEx) DragKind() TDragKind {
-	r1 := comboBoxExImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TComboBoxEx) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	comboBoxExAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TComboBoxEx) SetDragKind(AValue TDragKind) {
-	comboBoxExImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TComboBoxEx) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := comboBoxExAPI().SysCallN(4, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TComboBoxEx) DragMode() TDragMode {
-	r1 := comboBoxExImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TComboBoxEx) SetDragMode(AValue TDragMode) {
-	comboBoxExImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TComboBoxEx) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	comboBoxExAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TComboBoxEx) ItemHeight() int32 {
-	r1 := comboBoxExImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := comboBoxExAPI().SysCallN(5, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TComboBoxEx) SetItemHeight(AValue int32) {
-	comboBoxExImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TComboBoxEx) SetItemHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	comboBoxExAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TComboBoxEx) ItemWidth() int32 {
-	r1 := comboBoxExImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := comboBoxExAPI().SysCallN(6, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TComboBoxEx) SetItemWidth(AValue int32) {
-	comboBoxExImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TComboBoxEx) SetItemWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	comboBoxExAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TComboBoxEx) MaxLength() int32 {
-	r1 := comboBoxExImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := comboBoxExAPI().SysCallN(7, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TComboBoxEx) SetMaxLength(AValue int32) {
-	comboBoxExImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TComboBoxEx) SetMaxLength(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	comboBoxExAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TComboBoxEx) ParentColor() bool {
-	r1 := comboBoxExImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := comboBoxExAPI().SysCallN(8, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TComboBoxEx) SetParentColor(AValue bool) {
-	comboBoxExImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
+func (m *TComboBoxEx) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	comboBoxExAPI().SysCallN(8, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TComboBoxEx) ParentFont() bool {
-	r1 := comboBoxExImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := comboBoxExAPI().SysCallN(9, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TComboBoxEx) SetParentFont(AValue bool) {
-	comboBoxExImportAPI().SysCallN(10, 1, m.Instance(), PascalBool(AValue))
+func (m *TComboBoxEx) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	comboBoxExAPI().SysCallN(9, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TComboBoxEx) ParentShowHint() bool {
-	r1 := comboBoxExImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := comboBoxExAPI().SysCallN(10, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TComboBoxEx) SetParentShowHint(AValue bool) {
-	comboBoxExImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
-}
-
-func ComboBoxExClass() TClass {
-	ret := comboBoxExImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *TComboBoxEx) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	comboBoxExAPI().SysCallN(10, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TComboBoxEx) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(12, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 11, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnCloseUp(fn TNotifyEvent) {
-	if m.closeUpPtr != 0 {
-		RemoveEventElement(m.closeUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.closeUpPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(13, m.Instance(), m.closeUpPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(14, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 13, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(15, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 14, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(16, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 15, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(17, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 16, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnDropDown(fn TNotifyEvent) {
-	if m.dropDownPtr != 0 {
-		RemoveEventElement(m.dropDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dropDownPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(18, m.Instance(), m.dropDownPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 17, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnEditingDone(fn TNotifyEvent) {
-	if m.editingDonePtr != 0 {
-		RemoveEventElement(m.editingDonePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.editingDonePtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(19, m.Instance(), m.editingDonePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 18, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnEndDock(fn TEndDragEvent) {
-	if m.endDockPtr != 0 {
-		RemoveEventElement(m.endDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDockPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(20, m.Instance(), m.endDockPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 19, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(21, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 20, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnGetItems(fn TNotifyEvent) {
-	if m.getItemsPtr != 0 {
-		RemoveEventElement(m.getItemsPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.getItemsPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(22, m.Instance(), m.getItemsPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 21, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(23, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 22, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(24, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 23, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(25, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 24, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(26, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 25, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(27, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 26, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(28, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 27, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(29, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 28, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(30, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 29, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnSelect(fn TNotifyEvent) {
-	if m.selectPtr != 0 {
-		RemoveEventElement(m.selectPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.selectPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(31, m.Instance(), m.selectPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 30, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnStartDock(fn TStartDockEvent) {
-	if m.startDockPtr != 0 {
-		RemoveEventElement(m.startDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDockPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(32, m.Instance(), m.startDockPtr)
+	cb := makeTStartDockEvent(fn)
+	base.SetEvent(m, 31, comboBoxExAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TComboBoxEx) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	comboBoxExImportAPI().SysCallN(33, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 32, comboBoxExAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewComboBoxEx class constructor
+func NewComboBoxEx(theOwner IComponent) IComboBoxEx {
+	r := comboBoxExAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsComboBoxEx(r)
+}
+
+func TComboBoxExClass() types.TClass {
+	r := comboBoxExAPI().SysCallN(33)
+	return types.TClass(r)
 }
 
 var (
-	comboBoxExImport       *imports.Imports = nil
-	comboBoxExImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ComboBoxEx_BorderStyle", 0),
-		/*1*/ imports.NewTable("ComboBoxEx_Class", 0),
-		/*2*/ imports.NewTable("ComboBoxEx_Create", 0),
-		/*3*/ imports.NewTable("ComboBoxEx_DragCursor", 0),
-		/*4*/ imports.NewTable("ComboBoxEx_DragKind", 0),
-		/*5*/ imports.NewTable("ComboBoxEx_DragMode", 0),
-		/*6*/ imports.NewTable("ComboBoxEx_ItemHeight", 0),
-		/*7*/ imports.NewTable("ComboBoxEx_ItemWidth", 0),
-		/*8*/ imports.NewTable("ComboBoxEx_MaxLength", 0),
-		/*9*/ imports.NewTable("ComboBoxEx_ParentColor", 0),
-		/*10*/ imports.NewTable("ComboBoxEx_ParentFont", 0),
-		/*11*/ imports.NewTable("ComboBoxEx_ParentShowHint", 0),
-		/*12*/ imports.NewTable("ComboBoxEx_SetOnChange", 0),
-		/*13*/ imports.NewTable("ComboBoxEx_SetOnCloseUp", 0),
-		/*14*/ imports.NewTable("ComboBoxEx_SetOnContextPopup", 0),
-		/*15*/ imports.NewTable("ComboBoxEx_SetOnDblClick", 0),
-		/*16*/ imports.NewTable("ComboBoxEx_SetOnDragDrop", 0),
-		/*17*/ imports.NewTable("ComboBoxEx_SetOnDragOver", 0),
-		/*18*/ imports.NewTable("ComboBoxEx_SetOnDropDown", 0),
-		/*19*/ imports.NewTable("ComboBoxEx_SetOnEditingDone", 0),
-		/*20*/ imports.NewTable("ComboBoxEx_SetOnEndDock", 0),
-		/*21*/ imports.NewTable("ComboBoxEx_SetOnEndDrag", 0),
-		/*22*/ imports.NewTable("ComboBoxEx_SetOnGetItems", 0),
-		/*23*/ imports.NewTable("ComboBoxEx_SetOnMouseDown", 0),
-		/*24*/ imports.NewTable("ComboBoxEx_SetOnMouseEnter", 0),
-		/*25*/ imports.NewTable("ComboBoxEx_SetOnMouseLeave", 0),
-		/*26*/ imports.NewTable("ComboBoxEx_SetOnMouseMove", 0),
-		/*27*/ imports.NewTable("ComboBoxEx_SetOnMouseUp", 0),
-		/*28*/ imports.NewTable("ComboBoxEx_SetOnMouseWheel", 0),
-		/*29*/ imports.NewTable("ComboBoxEx_SetOnMouseWheelDown", 0),
-		/*30*/ imports.NewTable("ComboBoxEx_SetOnMouseWheelUp", 0),
-		/*31*/ imports.NewTable("ComboBoxEx_SetOnSelect", 0),
-		/*32*/ imports.NewTable("ComboBoxEx_SetOnStartDock", 0),
-		/*33*/ imports.NewTable("ComboBoxEx_SetOnStartDrag", 0),
-	}
+	comboBoxExOnce   base.Once
+	comboBoxExImport *imports.Imports = nil
 )
 
-func comboBoxExImportAPI() *imports.Imports {
-	if comboBoxExImport == nil {
-		comboBoxExImport = NewDefaultImports()
-		comboBoxExImport.SetImportTable(comboBoxExImportTables)
-		comboBoxExImportTables = nil
-	}
+func comboBoxExAPI() *imports.Imports {
+	comboBoxExOnce.Do(func() {
+		comboBoxExImport = api.NewDefaultImports()
+		comboBoxExImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TComboBoxEx_Create", 0), // constructor NewComboBoxEx
+			/* 1 */ imports.NewTable("TComboBoxEx_BorderStyle", 0), // property BorderStyle
+			/* 2 */ imports.NewTable("TComboBoxEx_DragCursor", 0), // property DragCursor
+			/* 3 */ imports.NewTable("TComboBoxEx_DragKind", 0), // property DragKind
+			/* 4 */ imports.NewTable("TComboBoxEx_DragMode", 0), // property DragMode
+			/* 5 */ imports.NewTable("TComboBoxEx_ItemHeight", 0), // property ItemHeight
+			/* 6 */ imports.NewTable("TComboBoxEx_ItemWidth", 0), // property ItemWidth
+			/* 7 */ imports.NewTable("TComboBoxEx_MaxLength", 0), // property MaxLength
+			/* 8 */ imports.NewTable("TComboBoxEx_ParentColor", 0), // property ParentColor
+			/* 9 */ imports.NewTable("TComboBoxEx_ParentFont", 0), // property ParentFont
+			/* 10 */ imports.NewTable("TComboBoxEx_ParentShowHint", 0), // property ParentShowHint
+			/* 11 */ imports.NewTable("TComboBoxEx_OnChange", 0), // event OnChange
+			/* 12 */ imports.NewTable("TComboBoxEx_OnCloseUp", 0), // event OnCloseUp
+			/* 13 */ imports.NewTable("TComboBoxEx_OnContextPopup", 0), // event OnContextPopup
+			/* 14 */ imports.NewTable("TComboBoxEx_OnDblClick", 0), // event OnDblClick
+			/* 15 */ imports.NewTable("TComboBoxEx_OnDragDrop", 0), // event OnDragDrop
+			/* 16 */ imports.NewTable("TComboBoxEx_OnDragOver", 0), // event OnDragOver
+			/* 17 */ imports.NewTable("TComboBoxEx_OnDropDown", 0), // event OnDropDown
+			/* 18 */ imports.NewTable("TComboBoxEx_OnEditingDone", 0), // event OnEditingDone
+			/* 19 */ imports.NewTable("TComboBoxEx_OnEndDock", 0), // event OnEndDock
+			/* 20 */ imports.NewTable("TComboBoxEx_OnEndDrag", 0), // event OnEndDrag
+			/* 21 */ imports.NewTable("TComboBoxEx_OnGetItems", 0), // event OnGetItems
+			/* 22 */ imports.NewTable("TComboBoxEx_OnMouseDown", 0), // event OnMouseDown
+			/* 23 */ imports.NewTable("TComboBoxEx_OnMouseEnter", 0), // event OnMouseEnter
+			/* 24 */ imports.NewTable("TComboBoxEx_OnMouseLeave", 0), // event OnMouseLeave
+			/* 25 */ imports.NewTable("TComboBoxEx_OnMouseMove", 0), // event OnMouseMove
+			/* 26 */ imports.NewTable("TComboBoxEx_OnMouseUp", 0), // event OnMouseUp
+			/* 27 */ imports.NewTable("TComboBoxEx_OnMouseWheel", 0), // event OnMouseWheel
+			/* 28 */ imports.NewTable("TComboBoxEx_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 29 */ imports.NewTable("TComboBoxEx_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 30 */ imports.NewTable("TComboBoxEx_OnSelect", 0), // event OnSelect
+			/* 31 */ imports.NewTable("TComboBoxEx_OnStartDock", 0), // event OnStartDock
+			/* 32 */ imports.NewTable("TComboBoxEx_OnStartDrag", 0), // event OnStartDrag
+			/* 33 */ imports.NewTable("TComboBoxEx_TClass", 0), // function TComboBoxExClass
+		}
+	})
 	return comboBoxExImport
 }

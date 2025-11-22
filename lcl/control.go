@@ -9,1446 +9,2108 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IControl Parent: ILCLComponent
 type IControl interface {
 	ILCLComponent
-	AnchoredControls(Index int32) IControl                                                                         // property
-	BaseBounds() (resultRect TRect)                                                                                // property
-	ReadBounds() (resultRect TRect)                                                                                // property
-	BaseParentClientSize() (resultSize TSize)                                                                      // property
-	AccessibleName() string                                                                                        // property
-	SetAccessibleName(AValue string)                                                                               // property
-	AccessibleDescription() string                                                                                 // property
-	SetAccessibleDescription(AValue string)                                                                        // property
-	AccessibleValue() string                                                                                       // property
-	SetAccessibleValue(AValue string)                                                                              // property
-	AccessibleRole() TLazAccessibilityRole                                                                         // property
-	SetAccessibleRole(AValue TLazAccessibilityRole)                                                                // property
-	Action() IBasicAction                                                                                          // property
-	SetAction(AValue IBasicAction)                                                                                 // property
-	Align() TAlign                                                                                                 // property
-	SetAlign(AValue TAlign)                                                                                        // property
-	Anchors() TAnchors                                                                                             // property
-	SetAnchors(AValue TAnchors)                                                                                    // property
-	AnchorSide(Kind TAnchorKind) IAnchorSide                                                                       // property
-	AutoSize() bool                                                                                                // property
-	SetAutoSize(AValue bool)                                                                                       // property
-	BorderSpacing() IControlBorderSpacing                                                                          // property
-	SetBorderSpacing(AValue IControlBorderSpacing)                                                                 // property
-	BoundsRect() (resultRect TRect)                                                                                // property
-	SetBoundsRect(AValue *TRect)                                                                                   // property
-	BoundsRectForNewParent() (resultRect TRect)                                                                    // property
-	SetBoundsRectForNewParent(AValue *TRect)                                                                       // property
-	Caption() string                                                                                               // property
-	SetCaption(AValue string)                                                                                      // property
-	CaptureMouseButtons() TCaptureMouseButtons                                                                     // property
-	SetCaptureMouseButtons(AValue TCaptureMouseButtons)                                                            // property
-	ClientHeight() int32                                                                                           // property
-	SetClientHeight(AValue int32)                                                                                  // property
-	ClientOrigin() (resultPoint TPoint)                                                                            // property
-	ClientRect() (resultRect TRect)                                                                                // property
-	ClientWidth() int32                                                                                            // property
-	SetClientWidth(AValue int32)                                                                                   // property
-	Color() TColor                                                                                                 // property
-	SetColor(AValue TColor)                                                                                        // property
-	Constraints() ISizeConstraints                                                                                 // property
-	SetConstraints(AValue ISizeConstraints)                                                                        // property
-	ControlOrigin() (resultPoint TPoint)                                                                           // property
-	ControlState() TControlState                                                                                   // property
-	SetControlState(AValue TControlState)                                                                          // property
-	ControlStyle() TControlStyle                                                                                   // property
-	SetControlStyle(AValue TControlStyle)                                                                          // property
-	Enabled() bool                                                                                                 // property
-	SetEnabled(AValue bool)                                                                                        // property
-	Font() IFont                                                                                                   // property
-	SetFont(AValue IFont)                                                                                          // property
-	IsControl() bool                                                                                               // property
-	SetIsControl(AValue bool)                                                                                      // property
-	MouseInClient() bool                                                                                           // property
-	Parent() IWinControl                                                                                           // property
-	SetParent(AValue IWinControl)                                                                                  // property
-	PopupMenu() IPopupMenu                                                                                         // property
-	SetPopupMenu(AValue IPopupMenu)                                                                                // property
-	ShowHint() bool                                                                                                // property
-	SetShowHint(AValue bool)                                                                                       // property
-	Visible() bool                                                                                                 // property
-	SetVisible(AValue bool)                                                                                        // property
-	DockOrientation() TDockOrientation                                                                             // property
-	SetDockOrientation(AValue TDockOrientation)                                                                    // property
-	Floating() bool                                                                                                // property
-	FloatingDockSiteClass() TWinControlClass                                                                       // property
-	SetFloatingDockSiteClass(AValue TWinControlClass)                                                              // property
-	HostDockSite() IWinControl                                                                                     // property
-	SetHostDockSite(AValue IWinControl)                                                                            // property
-	LRDockWidth() int32                                                                                            // property
-	SetLRDockWidth(AValue int32)                                                                                   // property
-	TBDockHeight() int32                                                                                           // property
-	SetTBDockHeight(AValue int32)                                                                                  // property
-	UndockHeight() int32                                                                                           // property
-	SetUndockHeight(AValue int32)                                                                                  // property
-	UndockWidth() int32                                                                                            // property
-	SetUndockWidth(AValue int32)                                                                                   // property
-	BiDiMode() TBiDiMode                                                                                           // property
-	SetBiDiMode(AValue TBiDiMode)                                                                                  // property
-	ParentBiDiMode() bool                                                                                          // property
-	SetParentBiDiMode(AValue bool)                                                                                 // property
-	AnchorSideLeft() IAnchorSide                                                                                   // property
-	SetAnchorSideLeft(AValue IAnchorSide)                                                                          // property
-	AnchorSideTop() IAnchorSide                                                                                    // property
-	SetAnchorSideTop(AValue IAnchorSide)                                                                           // property
-	AnchorSideRight() IAnchorSide                                                                                  // property
-	SetAnchorSideRight(AValue IAnchorSide)                                                                         // property
-	AnchorSideBottom() IAnchorSide                                                                                 // property
-	SetAnchorSideBottom(AValue IAnchorSide)                                                                        // property
-	Cursor() TCursor                                                                                               // property
-	SetCursor(AValue TCursor)                                                                                      // property
-	Left() int32                                                                                                   // property
-	SetLeft(AValue int32)                                                                                          // property
-	Height() int32                                                                                                 // property
-	SetHeight(AValue int32)                                                                                        // property
-	Hint() string                                                                                                  // property
-	SetHint(AValue string)                                                                                         // property
-	Top() int32                                                                                                    // property
-	SetTop(AValue int32)                                                                                           // property
-	Width() int32                                                                                                  // property
-	SetWidth(AValue int32)                                                                                         // property
-	HelpType() THelpType                                                                                           // property
-	SetHelpType(AValue THelpType)                                                                                  // property
-	HelpKeyword() string                                                                                           // property
-	SetHelpKeyword(AValue string)                                                                                  // property
-	HelpContext() THelpContext                                                                                     // property
-	SetHelpContext(AValue THelpContext)                                                                            // property
-	ManualDock(NewDockSite IWinControl, DropControl IControl, ControlSide TAlign, KeepDockSiteSize bool) bool      // function
-	ManualFloat(TheScreenRect *TRect, KeepDockSiteSize bool) bool                                                  // function
-	ReplaceDockedControl(Control IControl, NewDockSite IWinControl, DropControl IControl, ControlSide TAlign) bool // function
-	Docked() bool                                                                                                  // function
-	Dragging() bool                                                                                                // function
-	GetAccessibleObject() ILazAccessibleObject                                                                     // function
-	CreateAccessibleObject() ILazAccessibleObject                                                                  // function
-	GetSelectedChildAccessibleObject() ILazAccessibleObject                                                        // function
-	GetChildAccessibleObjectAtPos(APos *TPoint) ILazAccessibleObject                                               // function
-	ScaleDesignToForm(ASize int32) int32                                                                           // function
-	ScaleFormToDesign(ASize int32) int32                                                                           // function
-	Scale96ToForm(ASize int32) int32                                                                               // function
-	ScaleFormTo96(ASize int32) int32                                                                               // function
-	Scale96ToFont(ASize int32) int32                                                                               // function
-	ScaleFontTo96(ASize int32) int32                                                                               // function
-	ScaleScreenToFont(ASize int32) int32                                                                           // function
-	ScaleFontToScreen(ASize int32) int32                                                                           // function
-	Scale96ToScreen(ASize int32) int32                                                                             // function
-	ScaleScreenTo96(ASize int32) int32                                                                             // function
-	AutoSizePhases() TControlAutoSizePhases                                                                        // function
-	AutoSizeDelayed() bool                                                                                         // function
-	AutoSizeDelayedReport() string                                                                                 // function
-	AutoSizeDelayedHandle() bool                                                                                   // function
-	AnchoredControlCount() int32                                                                                   // function
-	GetCanvasScaleFactor() (resultDouble float64)                                                                  // function
-	GetDefaultWidth() int32                                                                                        // function
-	GetDefaultHeight() int32                                                                                       // function
-	GetDefaultColor(DefaultColorType TDefaultColorType) TColor                                                     // function
-	GetColorResolvingParent() TColor                                                                               // function
-	GetRGBColorResolvingParent() TColor                                                                            // function
-	GetSidePosition(Side TAnchorKind) int32                                                                        // function
-	GetAnchorsDependingOnParent(WithNormalAnchors bool) TAnchors                                                   // function
-	IsParentOf(AControl IControl) bool                                                                             // function
-	GetTopParent() IControl                                                                                        // function
-	FindSubComponent(AName string) IComponent                                                                      // function
-	IsVisible() bool                                                                                               // function
-	IsControlVisible() bool                                                                                        // function
-	IsEnabled() bool                                                                                               // function
-	IsParentColor() bool                                                                                           // function
-	IsParentFont() bool                                                                                            // function
-	FormIsUpdating() bool                                                                                          // function
-	IsProcessingPaintMsg() bool                                                                                    // function
-	CheckChildClassAllowed(ChildClass TClass, ExceptionOnInvalid bool) bool                                        // function
-	GetTextBuf(Buffer *string, BufSize int32) int32                                                                // function
-	GetTextLen() int32                                                                                             // function
-	Perform(Msg uint32, WParam WPARAM, LParam LPARAM) LRESULT                                                      // function
-	ScreenToClient(APoint *TPoint) (resultPoint TPoint)                                                            // function
-	ClientToScreen(APoint *TPoint) (resultPoint TPoint)                                                            // function
-	ClientToScreen1(ARect *TRect) (resultRect TRect)                                                               // function
-	ScreenToControl(APoint *TPoint) (resultPoint TPoint)                                                           // function
-	ControlToScreen(APoint *TPoint) (resultPoint TPoint)                                                           // function
-	ClientToParent(Point *TPoint, AParent IWinControl) (resultPoint TPoint)                                        // function
-	ParentToClient(Point *TPoint, AParent IWinControl) (resultPoint TPoint)                                        // function
-	GetChildrenRect(Scrolled bool) (resultRect TRect)                                                              // function
-	HandleObjectShouldBeVisible() bool                                                                             // function
-	ParentDestroyingHandle() bool                                                                                  // function
-	ParentHandlesAllocated() bool                                                                                  // function
-	HasHelp() bool                                                                                                 // function
-	UseRightToLeftAlignment() bool                                                                                 // function
-	UseRightToLeftReading() bool                                                                                   // function
-	UseRightToLeftScrollBar() bool                                                                                 // function
-	IsRightToLeft() bool                                                                                           // function
-	DragDrop(Source IObject, X, Y int32)                                                                           // procedure
-	Dock(NewDockSite IWinControl, ARect *TRect)                                                                    // procedure
-	AdjustSize()                                                                                                   // procedure
-	AnchorToNeighbour(Side TAnchorKind, Space TSpacingSize, Sibling IControl)                                      // procedure
-	AnchorParallel(Side TAnchorKind, Space TSpacingSize, Sibling IControl)                                         // procedure
-	AnchorHorizontalCenterTo(Sibling IControl)                                                                     // procedure
-	AnchorVerticalCenterTo(Sibling IControl)                                                                       // procedure
-	AnchorToCompanion(Side TAnchorKind, Space TSpacingSize, Sibling IControl, FreeCompositeSide bool)              // procedure
-	AnchorSame(Side TAnchorKind, Sibling IControl)                                                                 // procedure
-	AnchorAsAlign(TheAlign TAlign, Space TSpacingSize)                                                             // procedure
-	AnchorClient(Space TSpacingSize)                                                                               // procedure
-	SetBounds(aLeft, aTop, aWidth, aHeight int32)                                                                  // procedure
-	SetInitialBounds(aLeft, aTop, aWidth, aHeight int32)                                                           // procedure
-	SetBoundsKeepBase(aLeft, aTop, aWidth, aHeight int32)                                                          // procedure
-	GetPreferredSize(PreferredWidth, PreferredHeight *int32, Raw bool, WithThemeSpace bool)                        // procedure
-	CNPreferredSizeChanged()                                                                                       // procedure
-	InvalidatePreferredSize()                                                                                      // procedure
-	DisableAutoSizing()                                                                                            // procedure
-	EnableAutoSizing()                                                                                             // procedure
-	UpdateBaseBounds(StoreBounds, StoreParentClientSize, UseLoadedValues bool)                                     // procedure
-	WriteLayoutDebugReport(Prefix string)                                                                          // procedure
-	AutoAdjustLayout(AMode TLayoutAdjustmentPolicy, AFromPPI, AToPPI, AOldFormWidth, ANewFormWidth int32)          // procedure
-	ShouldAutoAdjust(AWidth, AHeight *bool)                                                                        // procedure
-	FixDesignFontsPPI(ADesignTimePPI int32)                                                                        // procedure
-	ScaleFontsPPI(AToPPI int32, AProportion float64)                                                               // procedure
-	EditingDone()                                                                                                  // procedure
-	ExecuteDefaultAction()                                                                                         // procedure
-	ExecuteCancelAction()                                                                                          // procedure
-	BeginDrag(Immediate bool, Threshold int32)                                                                     // procedure
-	EndDrag(Drop bool)                                                                                             // procedure
-	BringToFront()                                                                                                 // procedure
-	Hide()                                                                                                         // procedure
-	Refresh()                                                                                                      // procedure
-	Repaint()                                                                                                      // procedure
-	Invalidate()                                                                                                   // procedure
-	CheckNewParent(AParent IWinControl)                                                                            // procedure
-	SendToBack()                                                                                                   // procedure
-	SetTempCursor(Value TCursor)                                                                                   // procedure
-	UpdateRolesForForm()                                                                                           // procedure
-	ActiveDefaultControlChanged(NewControl IControl)                                                               // procedure
-	SetTextBuf(Buffer string)                                                                                      // procedure
-	Show()                                                                                                         // procedure
-	Update()                                                                                                       // procedure
-	InitiateAction()                                                                                               // procedure
-	ShowHelp()                                                                                                     // procedure
-	SetOnChangeBounds(fn TNotifyEvent)                                                                             // property event
-	SetOnClick(fn TNotifyEvent)                                                                                    // property event
-	SetOnResize(fn TNotifyEvent)                                                                                   // property event
-	SetOnShowHint(fn TControlShowHintEvent)                                                                        // property event
+	ManualDock(newDockSite IWinControl, dropControl IControl, controlSide types.TAlign, keepDockSiteSize bool) bool      // function
+	ManualFloat(theScreenRect types.TRect, keepDockSiteSize bool) bool                                                   // function
+	ReplaceDockedControl(control IControl, newDockSite IWinControl, dropControl IControl, controlSide types.TAlign) bool // function
+	Docked() bool                                                                                                        // function
+	Dragging() bool                                                                                                      // function
+	// GetAccessibleObject
+	//  accessibility
+	GetAccessibleObject() ILazAccessibleObject                           // function
+	CreateAccessibleObject() ILazAccessibleObject                        // function
+	GetSelectedChildAccessibleObject() ILazAccessibleObject              // function
+	GetChildAccessibleObjectAtPos(pos types.TPoint) ILazAccessibleObject // function
+	// ScaleDesignToForm
+	//  scale support
+	ScaleDesignToForm(size int32) int32                                    // function
+	ScaleFormToDesign(size int32) int32                                    // function
+	Scale96ToForm(size int32) int32                                        // function
+	ScaleFormTo96(size int32) int32                                        // function
+	Scale96ToFont(size int32) int32                                        // function
+	ScaleFontTo96(size int32) int32                                        // function
+	ScaleScreenToFont(size int32) int32                                    // function
+	ScaleFontToScreen(size int32) int32                                    // function
+	Scale96ToScreen(size int32) int32                                      // function
+	ScaleScreenTo96(size int32) int32                                      // function
+	AutoSizePhases() types.TControlAutoSizePhases                          // function
+	AutoSizeDelayed() bool                                                 // function
+	AutoSizeDelayedReport() string                                         // function
+	AutoSizeDelayedHandle() bool                                           // function
+	AnchoredControlCount() int32                                           // function
+	GetCanvasScaleFactor() float64                                         // function
+	GetDefaultWidth() int32                                                // function
+	GetDefaultHeight() int32                                               // function
+	GetDefaultColor(defaultColorType types.TDefaultColorType) types.TColor // function
+	// GetColorResolvingParent
+	//  These two are helper routines to help obtain the background color of a control
+	GetColorResolvingParent() types.TColor    // function
+	GetRGBColorResolvingParent() types.TColor // function
+	// GetSidePosition
+	//
+	GetSidePosition(side types.TAnchorKind) int32                                 // function
+	GetAnchorsDependingOnParent(withNormalAnchors bool) types.TAnchors            // function
+	IsParentOf(control IControl) bool                                             // function
+	GetTopParent() IControl                                                       // function
+	FindSubComponent(name string) IComponent                                      // function
+	IsVisible() bool                                                              // function
+	IsControlVisible() bool                                                       // function
+	IsEnabled() bool                                                              // function
+	IsParentColor() bool                                                          // function
+	IsParentFont() bool                                                           // function
+	FormIsUpdating() bool                                                         // function
+	IsProcessingPaintMsg() bool                                                   // function
+	CheckChildClassAllowed(childClass types.TClass, exceptionOnInvalid bool) bool // function
+	GetTextBuf(buffer uintptr, bufSize int32) int32                               // function
+	GetTextLen() int32                                                            // function
+	Perform(msg uint32, wParam types.WParam, lParam types.LParam) types.LRESULT   // function
+	ScreenToClient(point types.TPoint) types.TPoint                               // function
+	ClientToScreenWithPoint(point types.TPoint) types.TPoint                      // function
+	ClientToScreenWithRect(rect types.TRect) types.TRect                          // function
+	ScreenToControl(point types.TPoint) types.TPoint                              // function
+	ControlToScreen(point types.TPoint) types.TPoint                              // function
+	ClientToParent(point types.TPoint, parent IWinControl) types.TPoint           // function
+	ParentToClient(point types.TPoint, parent IWinControl) types.TPoint           // function
+	GetChildrenRect(scrolled bool) types.TRect                                    // function
+	HandleObjectShouldBeVisible() bool                                            // function
+	ParentDestroyingHandle() bool                                                 // function
+	ParentHandlesAllocated() bool                                                 // function
+	HasHelp() bool                                                                // function
+	UseRightToLeftAlignment() bool                                                // function
+	UseRightToLeftReading() bool                                                  // function
+	UseRightToLeftScrollBar() bool                                                // function
+	IsRightToLeft() bool                                                          // function
+	// DragDrop
+	//  is a hack for speed. It will be replaced by the use of the widgetset
+	//  classes.
+	//  So, don't use it anymore.
+	//  drag and dock
+	DragDrop(source IObject, X int32, Y int32)      // procedure
+	Dock(newDockSite IWinControl, rect types.TRect) // procedure
+	// AdjustSize
+	//  size
+	AdjustSize()                                                                                                  // procedure
+	AnchorToNeighbour(side types.TAnchorKind, space types.TSpacingSize, sibling IControl)                         // procedure
+	AnchorParallel(side types.TAnchorKind, space types.TSpacingSize, sibling IControl)                            // procedure
+	AnchorHorizontalCenterTo(sibling IControl)                                                                    // procedure
+	AnchorVerticalCenterTo(sibling IControl)                                                                      // procedure
+	AnchorToCompanion(side types.TAnchorKind, space types.TSpacingSize, sibling IControl, freeCompositeSide bool) // procedure
+	AnchorSame(side types.TAnchorKind, sibling IControl)                                                          // procedure
+	AnchorAsAlign(theAlign types.TAlign, space types.TSpacingSize)                                                // procedure
+	AnchorClient(space types.TSpacingSize)                                                                        // procedure
+	SetBounds(left int32, top int32, width int32, height int32)                                                   // procedure
+	SetInitialBounds(left int32, top int32, width int32, height int32)                                            // procedure
+	SetBoundsKeepBase(left int32, top int32, width int32, height int32)                                           // procedure
+	GetPreferredSize(preferredWidth *int32, preferredHeight *int32, raw bool, withThemeSpace bool)                // procedure
+	CNPreferredSizeChanged()                                                                                      // procedure
+	InvalidatePreferredSize()                                                                                     // procedure
+	DisableAutoSizing()                                                                                           // procedure
+	EnableAutoSizing()                                                                                            // procedure
+	UpdateBaseBounds(storeBounds bool, storeParentClientSize bool, useLoadedValues bool)                          // procedure
+	WriteLayoutDebugReport(prefix string)                                                                         // procedure
+	// AutoAdjustLayout
+	//  LCL Scaling (High-DPI)
+	AutoAdjustLayout(mode types.TLayoutAdjustmentPolicy, fromPPI int32, toPPI int32, oldFormWidth int32, newFormWidth int32) // procedure
+	ShouldAutoAdjust(width *bool, height *bool)                                                                              // procedure
+	FixDesignFontsPPI(designTimePPI int32)                                                                                   // procedure
+	ScaleFontsPPI(toPPI int32, proportion float64)                                                                           // procedure
+	EditingDone()                                                                                                            // procedure
+	ExecuteDefaultAction()                                                                                                   // procedure
+	ExecuteCancelAction()                                                                                                    // procedure
+	BeginDrag(immediate bool, threshold int32)                                                                               // procedure
+	EndDrag(drop bool)                                                                                                       // procedure
+	BringToFront()                                                                                                           // procedure
+	Hide()                                                                                                                   // procedure
+	Refresh()                                                                                                                // procedure
+	Repaint()                                                                                                                // procedure
+	Invalidate()                                                                                                             // procedure
+	CheckNewParent(parent IWinControl)                                                                                       // procedure
+	SendToBack()                                                                                                             // procedure
+	SetTempCursor(value types.TCursor)                                                                                       // procedure
+	UpdateRolesForForm()                                                                                                     // procedure
+	ActiveDefaultControlChanged(newControl IControl)                                                                         // procedure
+	SetTextBuf(buffer uintptr)                                                                                               // procedure
+	Show()                                                                                                                   // procedure
+	Update()                                                                                                                 // procedure
+	InitiateAction()                                                                                                         // procedure
+	ShowHelp()                                                                                                               // procedure
+	AnchoredControls(index int32) IControl                                                                                   // property AnchoredControls Getter
+	BaseBounds() types.TRect                                                                                                 // property BaseBounds Getter
+	ReadBounds() types.TRect                                                                                                 // property ReadBounds Getter
+	BaseParentClientSize() types.TSize                                                                                       // property BaseParentClientSize Getter
+	// AccessibleName
+	//  standard properties, which should be supported by all descendants
+	AccessibleName() string                                  // property AccessibleName Getter
+	SetAccessibleName(value string)                          // property AccessibleName Setter
+	AccessibleDescription() string                           // property AccessibleDescription Getter
+	SetAccessibleDescription(value string)                   // property AccessibleDescription Setter
+	AccessibleValue() string                                 // property AccessibleValue Getter
+	SetAccessibleValue(value string)                         // property AccessibleValue Setter
+	AccessibleRole() types.TLazAccessibilityRole             // property AccessibleRole Getter
+	SetAccessibleRole(value types.TLazAccessibilityRole)     // property AccessibleRole Setter
+	Action() IBasicAction                                    // property Action Getter
+	SetAction(value IBasicAction)                            // property Action Setter
+	Align() types.TAlign                                     // property Align Getter
+	SetAlign(value types.TAlign)                             // property Align Setter
+	Anchors() types.TAnchors                                 // property Anchors Getter
+	SetAnchors(value types.TAnchors)                         // property Anchors Setter
+	AnchorSide(kind types.TAnchorKind) IAnchorSide           // property AnchorSide Getter
+	AutoSize() bool                                          // property AutoSize Getter
+	SetAutoSize(value bool)                                  // property AutoSize Setter
+	BorderSpacing() IControlBorderSpacing                    // property BorderSpacing Getter
+	SetBorderSpacing(value IControlBorderSpacing)            // property BorderSpacing Setter
+	BoundsRect() types.TRect                                 // property BoundsRect Getter
+	SetBoundsRect(value types.TRect)                         // property BoundsRect Setter
+	BoundsRectForNewParent() types.TRect                     // property BoundsRectForNewParent Getter
+	SetBoundsRectForNewParent(value types.TRect)             // property BoundsRectForNewParent Setter
+	Caption() string                                         // property Caption Getter
+	SetCaption(value string)                                 // property Caption Setter
+	CaptureMouseButtons() types.TCaptureMouseButtons         // property CaptureMouseButtons Getter
+	SetCaptureMouseButtons(value types.TCaptureMouseButtons) // property CaptureMouseButtons Setter
+	ClientHeight() int32                                     // property ClientHeight Getter
+	SetClientHeight(value int32)                             // property ClientHeight Setter
+	ClientOrigin() types.TPoint                              // property ClientOrigin Getter
+	ClientRect() types.TRect                                 // property ClientRect Getter
+	ClientWidth() int32                                      // property ClientWidth Getter
+	SetClientWidth(value int32)                              // property ClientWidth Setter
+	Color() types.TColor                                     // property Color Getter
+	SetColor(value types.TColor)                             // property Color Setter
+	Constraints() ISizeConstraints                           // property Constraints Getter
+	SetConstraints(value ISizeConstraints)                   // property Constraints Setter
+	ControlOrigin() types.TPoint                             // property ControlOrigin Getter
+	ControlState() types.TControlState                       // property ControlState Getter
+	SetControlState(value types.TControlState)               // property ControlState Setter
+	ControlStyle() types.TControlStyle                       // property ControlStyle Getter
+	SetControlStyle(value types.TControlStyle)               // property ControlStyle Setter
+	Enabled() bool                                           // property Enabled Getter
+	SetEnabled(value bool)                                   // property Enabled Setter
+	Font() IFont                                             // property Font Getter
+	SetFont(value IFont)                                     // property Font Setter
+	IsControl() bool                                         // property IsControl Getter
+	SetIsControl(value bool)                                 // property IsControl Setter
+	MouseInClient() bool                                     // property MouseInClient Getter
+	Parent() IWinControl                                     // property Parent Getter
+	SetParent(value IWinControl)                             // property Parent Setter
+	PopupMenu() IPopupMenu                                   // property PopupMenu Getter
+	SetPopupMenu(value IPopupMenu)                           // property PopupMenu Setter
+	ShowHint() bool                                          // property ShowHint Getter
+	SetShowHint(value bool)                                  // property ShowHint Setter
+	Visible() bool                                           // property Visible Getter
+	SetVisible(value bool)                                   // property Visible Setter
+	// DockOrientation
+	//  docking properties
+	DockOrientation() types.TDockOrientation               // property DockOrientation Getter
+	SetDockOrientation(value types.TDockOrientation)       // property DockOrientation Setter
+	Floating() bool                                        // property Floating Getter
+	FloatingDockSiteClass() types.TWinControlClass         // property FloatingDockSiteClass Getter
+	SetFloatingDockSiteClass(value types.TWinControlClass) // property FloatingDockSiteClass Setter
+	HostDockSite() IWinControl                             // property HostDockSite Getter
+	SetHostDockSite(value IWinControl)                     // property HostDockSite Setter
+	LRDockWidth() int32                                    // property LRDockWidth Getter
+	SetLRDockWidth(value int32)                            // property LRDockWidth Setter
+	TBDockHeight() int32                                   // property TBDockHeight Getter
+	SetTBDockHeight(value int32)                           // property TBDockHeight Setter
+	UndockHeight() int32                                   // property UndockHeight Getter
+	SetUndockHeight(value int32)                           // property UndockHeight Setter
+	UndockWidth() int32                                    // property UndockWidth Getter
+	SetUndockWidth(value int32)                            // property UndockWidth Setter
+	BiDiMode() types.TBiDiMode                             // property BiDiMode Getter
+	SetBiDiMode(value types.TBiDiMode)                     // property BiDiMode Setter
+	ParentBiDiMode() bool                                  // property ParentBiDiMode Getter
+	SetParentBiDiMode(value bool)                          // property ParentBiDiMode Setter
+	AnchorSideLeft() IAnchorSide                           // property AnchorSideLeft Getter
+	SetAnchorSideLeft(value IAnchorSide)                   // property AnchorSideLeft Setter
+	AnchorSideTop() IAnchorSide                            // property AnchorSideTop Getter
+	SetAnchorSideTop(value IAnchorSide)                    // property AnchorSideTop Setter
+	AnchorSideRight() IAnchorSide                          // property AnchorSideRight Getter
+	SetAnchorSideRight(value IAnchorSide)                  // property AnchorSideRight Setter
+	AnchorSideBottom() IAnchorSide                         // property AnchorSideBottom Getter
+	SetAnchorSideBottom(value IAnchorSide)                 // property AnchorSideBottom Setter
+	Cursor() types.TCursor                                 // property Cursor Getter
+	SetCursor(value types.TCursor)                         // property Cursor Setter
+	Left() int32                                           // property Left Getter
+	SetLeft(value int32)                                   // property Left Setter
+	Height() int32                                         // property Height Getter
+	SetHeight(value int32)                                 // property Height Setter
+	Hint() string                                          // property Hint Getter
+	SetHint(value string)                                  // property Hint Setter
+	Top() int32                                            // property Top Getter
+	SetTop(value int32)                                    // property Top Setter
+	Width() int32                                          // property Width Getter
+	SetWidth(value int32)                                  // property Width Setter
+	HelpType() types.THelpType                             // property HelpType Getter
+	SetHelpType(value types.THelpType)                     // property HelpType Setter
+	HelpKeyword() string                                   // property HelpKeyword Getter
+	SetHelpKeyword(value string)                           // property HelpKeyword Setter
+	HelpContext() types.THelpContext                       // property HelpContext Getter
+	SetHelpContext(value types.THelpContext)               // property HelpContext Setter
+	SetOnChangeBounds(fn TNotifyEvent)                     // property event
+	SetOnClick(fn TNotifyEvent)                            // property event
+	SetOnResize(fn TNotifyEvent)                           // property event
+	SetOnShowHint(fn TControlShowHintEvent)                // property event
+	SetWindowProc(fn TWndMethod)                           // property event
 }
 
-// TControl Parent: TLCLComponent
 type TControl struct {
 	TLCLComponent
-	changeBoundsPtr uintptr
-	clickPtr        uintptr
-	resizePtr       uintptr
-	showHintPtr     uintptr
 }
 
-func NewControl(TheOwner IComponent) IControl {
-	r1 := controlImportAPI().SysCallN(57, GetObjectUintptr(TheOwner))
-	return AsControl(r1)
+func (m *TControl) ManualDock(newDockSite IWinControl, dropControl IControl, controlSide types.TAlign, keepDockSiteSize bool) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(newDockSite), base.GetObjectUintptr(dropControl), uintptr(controlSide), api.PasBool(keepDockSiteSize))
+	return api.GoBool(r)
 }
 
-func (m *TControl) AnchoredControls(Index int32) IControl {
-	r1 := controlImportAPI().SysCallN(22, m.Instance(), uintptr(Index))
-	return AsControl(r1)
+func (m *TControl) ManualFloat(theScreenRect types.TRect, keepDockSiteSize bool) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(&theScreenRect)), api.PasBool(keepDockSiteSize))
+	return api.GoBool(r)
 }
 
-func (m *TControl) BaseBounds() (resultRect TRect) {
-	controlImportAPI().SysCallN(30, m.Instance(), uintptr(unsafePointer(&resultRect)))
-	return
-}
-
-func (m *TControl) ReadBounds() (resultRect TRect) {
-	controlImportAPI().SysCallN(127, m.Instance(), uintptr(unsafePointer(&resultRect)))
-	return
-}
-
-func (m *TControl) BaseParentClientSize() (resultSize TSize) {
-	controlImportAPI().SysCallN(31, m.Instance(), uintptr(unsafePointer(&resultSize)))
-	return
-}
-
-func (m *TControl) AccessibleName() string {
-	r1 := controlImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TControl) SetAccessibleName(AValue string) {
-	controlImportAPI().SysCallN(1, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TControl) AccessibleDescription() string {
-	r1 := controlImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TControl) SetAccessibleDescription(AValue string) {
-	controlImportAPI().SysCallN(0, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TControl) AccessibleValue() string {
-	r1 := controlImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TControl) SetAccessibleValue(AValue string) {
-	controlImportAPI().SysCallN(3, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TControl) AccessibleRole() TLazAccessibilityRole {
-	r1 := controlImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TLazAccessibilityRole(r1)
-}
-
-func (m *TControl) SetAccessibleRole(AValue TLazAccessibilityRole) {
-	controlImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) Action() IBasicAction {
-	r1 := controlImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return AsBasicAction(r1)
-}
-
-func (m *TControl) SetAction(AValue IBasicAction) {
-	controlImportAPI().SysCallN(4, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) Align() TAlign {
-	r1 := controlImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return TAlign(r1)
-}
-
-func (m *TControl) SetAlign(AValue TAlign) {
-	controlImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) Anchors() TAnchors {
-	r1 := controlImportAPI().SysCallN(23, 0, m.Instance(), 0)
-	return TAnchors(r1)
-}
-
-func (m *TControl) SetAnchors(AValue TAnchors) {
-	controlImportAPI().SysCallN(23, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) AnchorSide(Kind TAnchorKind) IAnchorSide {
-	r1 := controlImportAPI().SysCallN(13, m.Instance(), uintptr(Kind))
-	return AsAnchorSide(r1)
-}
-
-func (m *TControl) AutoSize() bool {
-	r1 := controlImportAPI().SysCallN(25, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TControl) SetAutoSize(AValue bool) {
-	controlImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TControl) BorderSpacing() IControlBorderSpacing {
-	r1 := controlImportAPI().SysCallN(34, 0, m.Instance(), 0)
-	return AsControlBorderSpacing(r1)
-}
-
-func (m *TControl) SetBorderSpacing(AValue IControlBorderSpacing) {
-	controlImportAPI().SysCallN(34, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) BoundsRect() (resultRect TRect) {
-	controlImportAPI().SysCallN(35, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
-	return
-}
-
-func (m *TControl) SetBoundsRect(AValue *TRect) {
-	controlImportAPI().SysCallN(35, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
-}
-
-func (m *TControl) BoundsRectForNewParent() (resultRect TRect) {
-	controlImportAPI().SysCallN(36, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
-	return
-}
-
-func (m *TControl) SetBoundsRectForNewParent(AValue *TRect) {
-	controlImportAPI().SysCallN(36, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
-}
-
-func (m *TControl) Caption() string {
-	r1 := controlImportAPI().SysCallN(39, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TControl) SetCaption(AValue string) {
-	controlImportAPI().SysCallN(39, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TControl) CaptureMouseButtons() TCaptureMouseButtons {
-	r1 := controlImportAPI().SysCallN(40, 0, m.Instance(), 0)
-	return TCaptureMouseButtons(r1)
-}
-
-func (m *TControl) SetCaptureMouseButtons(AValue TCaptureMouseButtons) {
-	controlImportAPI().SysCallN(40, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) ClientHeight() int32 {
-	r1 := controlImportAPI().SysCallN(44, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TControl) SetClientHeight(AValue int32) {
-	controlImportAPI().SysCallN(44, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) ClientOrigin() (resultPoint TPoint) {
-	controlImportAPI().SysCallN(45, m.Instance(), uintptr(unsafePointer(&resultPoint)))
-	return
-}
-
-func (m *TControl) ClientRect() (resultRect TRect) {
-	controlImportAPI().SysCallN(46, m.Instance(), uintptr(unsafePointer(&resultRect)))
-	return
-}
-
-func (m *TControl) ClientWidth() int32 {
-	r1 := controlImportAPI().SysCallN(50, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TControl) SetClientWidth(AValue int32) {
-	controlImportAPI().SysCallN(50, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) Color() TColor {
-	r1 := controlImportAPI().SysCallN(51, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TControl) SetColor(AValue TColor) {
-	controlImportAPI().SysCallN(51, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) Constraints() ISizeConstraints {
-	r1 := controlImportAPI().SysCallN(52, 0, m.Instance(), 0)
-	return AsSizeConstraints(r1)
-}
-
-func (m *TControl) SetConstraints(AValue ISizeConstraints) {
-	controlImportAPI().SysCallN(52, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) ControlOrigin() (resultPoint TPoint) {
-	controlImportAPI().SysCallN(53, m.Instance(), uintptr(unsafePointer(&resultPoint)))
-	return
-}
-
-func (m *TControl) ControlState() TControlState {
-	r1 := controlImportAPI().SysCallN(54, 0, m.Instance(), 0)
-	return TControlState(r1)
-}
-
-func (m *TControl) SetControlState(AValue TControlState) {
-	controlImportAPI().SysCallN(54, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) ControlStyle() TControlStyle {
-	r1 := controlImportAPI().SysCallN(55, 0, m.Instance(), 0)
-	return TControlStyle(r1)
-}
-
-func (m *TControl) SetControlStyle(AValue TControlStyle) {
-	controlImportAPI().SysCallN(55, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) Enabled() bool {
-	r1 := controlImportAPI().SysCallN(68, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TControl) SetEnabled(AValue bool) {
-	controlImportAPI().SysCallN(68, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TControl) Font() IFont {
-	r1 := controlImportAPI().SysCallN(76, 0, m.Instance(), 0)
-	return AsFont(r1)
-}
-
-func (m *TControl) SetFont(AValue IFont) {
-	controlImportAPI().SysCallN(76, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) IsControl() bool {
-	r1 := controlImportAPI().SysCallN(106, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TControl) SetIsControl(AValue bool) {
-	controlImportAPI().SysCallN(106, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TControl) MouseInClient() bool {
-	r1 := controlImportAPI().SysCallN(119, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TControl) Parent() IWinControl {
-	r1 := controlImportAPI().SysCallN(120, 0, m.Instance(), 0)
-	return AsWinControl(r1)
-}
-
-func (m *TControl) SetParent(AValue IWinControl) {
-	controlImportAPI().SysCallN(120, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) PopupMenu() IPopupMenu {
-	r1 := controlImportAPI().SysCallN(126, 0, m.Instance(), 0)
-	return AsPopupMenu(r1)
-}
-
-func (m *TControl) SetPopupMenu(AValue IPopupMenu) {
-	controlImportAPI().SysCallN(126, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) ShowHint() bool {
-	r1 := controlImportAPI().SysCallN(157, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TControl) SetShowHint(AValue bool) {
-	controlImportAPI().SysCallN(157, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TControl) Visible() bool {
-	r1 := controlImportAPI().SysCallN(168, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TControl) SetVisible(AValue bool) {
-	controlImportAPI().SysCallN(168, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TControl) DockOrientation() TDockOrientation {
-	r1 := controlImportAPI().SysCallN(62, 0, m.Instance(), 0)
-	return TDockOrientation(r1)
-}
-
-func (m *TControl) SetDockOrientation(AValue TDockOrientation) {
-	controlImportAPI().SysCallN(62, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) Floating() bool {
-	r1 := controlImportAPI().SysCallN(74, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TControl) FloatingDockSiteClass() TWinControlClass {
-	r1 := controlImportAPI().SysCallN(75, 0, m.Instance(), 0)
-	return TWinControlClass(r1)
-}
-
-func (m *TControl) SetFloatingDockSiteClass(AValue TWinControlClass) {
-	controlImportAPI().SysCallN(75, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) HostDockSite() IWinControl {
-	r1 := controlImportAPI().SysCallN(102, 0, m.Instance(), 0)
-	return AsWinControl(r1)
-}
-
-func (m *TControl) SetHostDockSite(AValue IWinControl) {
-	controlImportAPI().SysCallN(102, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) LRDockWidth() int32 {
-	r1 := controlImportAPI().SysCallN(115, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TControl) SetLRDockWidth(AValue int32) {
-	controlImportAPI().SysCallN(115, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) TBDockHeight() int32 {
-	r1 := controlImportAPI().SysCallN(158, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TControl) SetTBDockHeight(AValue int32) {
-	controlImportAPI().SysCallN(158, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) UndockHeight() int32 {
-	r1 := controlImportAPI().SysCallN(160, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TControl) SetUndockHeight(AValue int32) {
-	controlImportAPI().SysCallN(160, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) UndockWidth() int32 {
-	r1 := controlImportAPI().SysCallN(161, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TControl) SetUndockWidth(AValue int32) {
-	controlImportAPI().SysCallN(161, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) BiDiMode() TBiDiMode {
-	r1 := controlImportAPI().SysCallN(33, 0, m.Instance(), 0)
-	return TBiDiMode(r1)
-}
-
-func (m *TControl) SetBiDiMode(AValue TBiDiMode) {
-	controlImportAPI().SysCallN(33, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) ParentBiDiMode() bool {
-	r1 := controlImportAPI().SysCallN(121, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TControl) SetParentBiDiMode(AValue bool) {
-	controlImportAPI().SysCallN(121, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TControl) AnchorSideLeft() IAnchorSide {
-	r1 := controlImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return AsAnchorSide(r1)
-}
-
-func (m *TControl) SetAnchorSideLeft(AValue IAnchorSide) {
-	controlImportAPI().SysCallN(15, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) AnchorSideTop() IAnchorSide {
-	r1 := controlImportAPI().SysCallN(17, 0, m.Instance(), 0)
-	return AsAnchorSide(r1)
-}
-
-func (m *TControl) SetAnchorSideTop(AValue IAnchorSide) {
-	controlImportAPI().SysCallN(17, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) AnchorSideRight() IAnchorSide {
-	r1 := controlImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return AsAnchorSide(r1)
-}
-
-func (m *TControl) SetAnchorSideRight(AValue IAnchorSide) {
-	controlImportAPI().SysCallN(16, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) AnchorSideBottom() IAnchorSide {
-	r1 := controlImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return AsAnchorSide(r1)
-}
-
-func (m *TControl) SetAnchorSideBottom(AValue IAnchorSide) {
-	controlImportAPI().SysCallN(14, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TControl) Cursor() TCursor {
-	r1 := controlImportAPI().SysCallN(59, 0, m.Instance(), 0)
-	return TCursor(r1)
-}
-
-func (m *TControl) SetCursor(AValue TCursor) {
-	controlImportAPI().SysCallN(59, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) Left() int32 {
-	r1 := controlImportAPI().SysCallN(116, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TControl) SetLeft(AValue int32) {
-	controlImportAPI().SysCallN(116, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) Height() int32 {
-	r1 := controlImportAPI().SysCallN(96, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TControl) SetHeight(AValue int32) {
-	controlImportAPI().SysCallN(96, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) Hint() string {
-	r1 := controlImportAPI().SysCallN(101, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TControl) SetHint(AValue string) {
-	controlImportAPI().SysCallN(101, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TControl) Top() int32 {
-	r1 := controlImportAPI().SysCallN(159, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TControl) SetTop(AValue int32) {
-	controlImportAPI().SysCallN(159, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) Width() int32 {
-	r1 := controlImportAPI().SysCallN(169, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TControl) SetWidth(AValue int32) {
-	controlImportAPI().SysCallN(169, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) HelpType() THelpType {
-	r1 := controlImportAPI().SysCallN(99, 0, m.Instance(), 0)
-	return THelpType(r1)
-}
-
-func (m *TControl) SetHelpType(AValue THelpType) {
-	controlImportAPI().SysCallN(99, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) HelpKeyword() string {
-	r1 := controlImportAPI().SysCallN(98, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *TControl) SetHelpKeyword(AValue string) {
-	controlImportAPI().SysCallN(98, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *TControl) HelpContext() THelpContext {
-	r1 := controlImportAPI().SysCallN(97, 0, m.Instance(), 0)
-	return THelpContext(r1)
-}
-
-func (m *TControl) SetHelpContext(AValue THelpContext) {
-	controlImportAPI().SysCallN(97, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TControl) ManualDock(NewDockSite IWinControl, DropControl IControl, ControlSide TAlign, KeepDockSiteSize bool) bool {
-	r1 := controlImportAPI().SysCallN(117, m.Instance(), GetObjectUintptr(NewDockSite), GetObjectUintptr(DropControl), uintptr(ControlSide), PascalBool(KeepDockSiteSize))
-	return GoBool(r1)
-}
-
-func (m *TControl) ManualFloat(TheScreenRect *TRect, KeepDockSiteSize bool) bool {
-	r1 := controlImportAPI().SysCallN(118, m.Instance(), uintptr(unsafePointer(TheScreenRect)), PascalBool(KeepDockSiteSize))
-	return GoBool(r1)
-}
-
-func (m *TControl) ReplaceDockedControl(Control IControl, NewDockSite IWinControl, DropControl IControl, ControlSide TAlign) bool {
-	r1 := controlImportAPI().SysCallN(130, m.Instance(), GetObjectUintptr(Control), GetObjectUintptr(NewDockSite), GetObjectUintptr(DropControl), uintptr(ControlSide))
-	return GoBool(r1)
+func (m *TControl) ReplaceDockedControl(control IControl, newDockSite IWinControl, dropControl IControl, controlSide types.TAlign) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(3, m.Instance(), base.GetObjectUintptr(control), base.GetObjectUintptr(newDockSite), base.GetObjectUintptr(dropControl), uintptr(controlSide))
+	return api.GoBool(r)
 }
 
 func (m *TControl) Docked() bool {
-	r1 := controlImportAPI().SysCallN(63, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(4, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) Dragging() bool {
-	r1 := controlImportAPI().SysCallN(65, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(5, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) GetAccessibleObject() ILazAccessibleObject {
-	r1 := controlImportAPI().SysCallN(78, m.Instance())
-	return AsLazAccessibleObject(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(6, m.Instance())
+	return AsLazAccessibleObject(r)
 }
 
 func (m *TControl) CreateAccessibleObject() ILazAccessibleObject {
-	r1 := controlImportAPI().SysCallN(58, m.Instance())
-	return AsLazAccessibleObject(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(7, m.Instance())
+	return AsLazAccessibleObject(r)
 }
 
 func (m *TControl) GetSelectedChildAccessibleObject() ILazAccessibleObject {
-	r1 := controlImportAPI().SysCallN(89, m.Instance())
-	return AsLazAccessibleObject(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(8, m.Instance())
+	return AsLazAccessibleObject(r)
 }
 
-func (m *TControl) GetChildAccessibleObjectAtPos(APos *TPoint) ILazAccessibleObject {
-	r1 := controlImportAPI().SysCallN(81, m.Instance(), uintptr(unsafePointer(APos)))
-	return AsLazAccessibleObject(r1)
+func (m *TControl) GetChildAccessibleObjectAtPos(pos types.TPoint) ILazAccessibleObject {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(9, m.Instance(), uintptr(base.UnsafePointer(&pos)))
+	return AsLazAccessibleObject(r)
 }
 
-func (m *TControl) ScaleDesignToForm(ASize int32) int32 {
-	r1 := controlImportAPI().SysCallN(134, m.Instance(), uintptr(ASize))
-	return int32(r1)
+func (m *TControl) ScaleDesignToForm(size int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(10, m.Instance(), uintptr(size))
+	return int32(r)
 }
 
-func (m *TControl) ScaleFormToDesign(ASize int32) int32 {
-	r1 := controlImportAPI().SysCallN(139, m.Instance(), uintptr(ASize))
-	return int32(r1)
+func (m *TControl) ScaleFormToDesign(size int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(11, m.Instance(), uintptr(size))
+	return int32(r)
 }
 
-func (m *TControl) Scale96ToForm(ASize int32) int32 {
-	r1 := controlImportAPI().SysCallN(132, m.Instance(), uintptr(ASize))
-	return int32(r1)
+func (m *TControl) Scale96ToForm(size int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(12, m.Instance(), uintptr(size))
+	return int32(r)
 }
 
-func (m *TControl) ScaleFormTo96(ASize int32) int32 {
-	r1 := controlImportAPI().SysCallN(138, m.Instance(), uintptr(ASize))
-	return int32(r1)
+func (m *TControl) ScaleFormTo96(size int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(13, m.Instance(), uintptr(size))
+	return int32(r)
 }
 
-func (m *TControl) Scale96ToFont(ASize int32) int32 {
-	r1 := controlImportAPI().SysCallN(131, m.Instance(), uintptr(ASize))
-	return int32(r1)
+func (m *TControl) Scale96ToFont(size int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(14, m.Instance(), uintptr(size))
+	return int32(r)
 }
 
-func (m *TControl) ScaleFontTo96(ASize int32) int32 {
-	r1 := controlImportAPI().SysCallN(135, m.Instance(), uintptr(ASize))
-	return int32(r1)
+func (m *TControl) ScaleFontTo96(size int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(15, m.Instance(), uintptr(size))
+	return int32(r)
 }
 
-func (m *TControl) ScaleScreenToFont(ASize int32) int32 {
-	r1 := controlImportAPI().SysCallN(141, m.Instance(), uintptr(ASize))
-	return int32(r1)
+func (m *TControl) ScaleScreenToFont(size int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(16, m.Instance(), uintptr(size))
+	return int32(r)
 }
 
-func (m *TControl) ScaleFontToScreen(ASize int32) int32 {
-	r1 := controlImportAPI().SysCallN(136, m.Instance(), uintptr(ASize))
-	return int32(r1)
+func (m *TControl) ScaleFontToScreen(size int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(17, m.Instance(), uintptr(size))
+	return int32(r)
 }
 
-func (m *TControl) Scale96ToScreen(ASize int32) int32 {
-	r1 := controlImportAPI().SysCallN(133, m.Instance(), uintptr(ASize))
-	return int32(r1)
+func (m *TControl) Scale96ToScreen(size int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(18, m.Instance(), uintptr(size))
+	return int32(r)
 }
 
-func (m *TControl) ScaleScreenTo96(ASize int32) int32 {
-	r1 := controlImportAPI().SysCallN(140, m.Instance(), uintptr(ASize))
-	return int32(r1)
+func (m *TControl) ScaleScreenTo96(size int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(19, m.Instance(), uintptr(size))
+	return int32(r)
 }
 
-func (m *TControl) AutoSizePhases() TControlAutoSizePhases {
-	r1 := controlImportAPI().SysCallN(29, m.Instance())
-	return TControlAutoSizePhases(r1)
+func (m *TControl) AutoSizePhases() types.TControlAutoSizePhases {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(20, m.Instance())
+	return types.TControlAutoSizePhases(r)
 }
 
 func (m *TControl) AutoSizeDelayed() bool {
-	r1 := controlImportAPI().SysCallN(26, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(21, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) AutoSizeDelayedReport() string {
-	r1 := controlImportAPI().SysCallN(28, m.Instance())
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := controlAPI().SysCallN(22, m.Instance())
+	return api.GoStr(r)
 }
 
 func (m *TControl) AutoSizeDelayedHandle() bool {
-	r1 := controlImportAPI().SysCallN(27, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(23, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) AnchoredControlCount() int32 {
-	r1 := controlImportAPI().SysCallN(21, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(24, m.Instance())
+	return int32(r)
 }
 
-func (m *TControl) GetCanvasScaleFactor() (resultDouble float64) {
-	controlImportAPI().SysCallN(80, m.Instance(), uintptr(unsafePointer(&resultDouble)))
+func (m *TControl) GetCanvasScaleFactor() (result float64) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(25, m.Instance(), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
 func (m *TControl) GetDefaultWidth() int32 {
-	r1 := controlImportAPI().SysCallN(86, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(26, m.Instance())
+	return int32(r)
 }
 
 func (m *TControl) GetDefaultHeight() int32 {
-	r1 := controlImportAPI().SysCallN(85, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(27, m.Instance())
+	return int32(r)
 }
 
-func (m *TControl) GetDefaultColor(DefaultColorType TDefaultColorType) TColor {
-	r1 := controlImportAPI().SysCallN(84, m.Instance(), uintptr(DefaultColorType))
-	return TColor(r1)
+func (m *TControl) GetDefaultColor(defaultColorType types.TDefaultColorType) types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(28, m.Instance(), uintptr(defaultColorType))
+	return types.TColor(r)
 }
 
-func (m *TControl) GetColorResolvingParent() TColor {
-	r1 := controlImportAPI().SysCallN(83, m.Instance())
-	return TColor(r1)
+func (m *TControl) GetColorResolvingParent() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(29, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TControl) GetRGBColorResolvingParent() TColor {
-	r1 := controlImportAPI().SysCallN(88, m.Instance())
-	return TColor(r1)
+func (m *TControl) GetRGBColorResolvingParent() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(30, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TControl) GetSidePosition(Side TAnchorKind) int32 {
-	r1 := controlImportAPI().SysCallN(90, m.Instance(), uintptr(Side))
-	return int32(r1)
+func (m *TControl) GetSidePosition(side types.TAnchorKind) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(31, m.Instance(), uintptr(side))
+	return int32(r)
 }
 
-func (m *TControl) GetAnchorsDependingOnParent(WithNormalAnchors bool) TAnchors {
-	r1 := controlImportAPI().SysCallN(79, m.Instance(), PascalBool(WithNormalAnchors))
-	return TAnchors(r1)
+func (m *TControl) GetAnchorsDependingOnParent(withNormalAnchors bool) types.TAnchors {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(32, m.Instance(), api.PasBool(withNormalAnchors))
+	return types.TAnchors(r)
 }
 
-func (m *TControl) IsParentOf(AControl IControl) bool {
-	r1 := controlImportAPI().SysCallN(111, m.Instance(), GetObjectUintptr(AControl))
-	return GoBool(r1)
+func (m *TControl) IsParentOf(control IControl) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(33, m.Instance(), base.GetObjectUintptr(control))
+	return api.GoBool(r)
 }
 
 func (m *TControl) GetTopParent() IControl {
-	r1 := controlImportAPI().SysCallN(93, m.Instance())
-	return AsControl(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(34, m.Instance())
+	return AsControl(r)
 }
 
-func (m *TControl) FindSubComponent(AName string) IComponent {
-	r1 := controlImportAPI().SysCallN(72, m.Instance(), PascalStr(AName))
-	return AsComponent(r1)
+func (m *TControl) FindSubComponent(name string) IComponent {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(35, m.Instance(), api.PasStr(name))
+	return AsComponent(r)
 }
 
 func (m *TControl) IsVisible() bool {
-	r1 := controlImportAPI().SysCallN(114, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(36, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) IsControlVisible() bool {
-	r1 := controlImportAPI().SysCallN(107, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(37, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) IsEnabled() bool {
-	r1 := controlImportAPI().SysCallN(108, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(38, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) IsParentColor() bool {
-	r1 := controlImportAPI().SysCallN(109, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(39, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) IsParentFont() bool {
-	r1 := controlImportAPI().SysCallN(110, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(40, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) FormIsUpdating() bool {
-	r1 := controlImportAPI().SysCallN(77, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(41, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) IsProcessingPaintMsg() bool {
-	r1 := controlImportAPI().SysCallN(112, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(42, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TControl) CheckChildClassAllowed(ChildClass TClass, ExceptionOnInvalid bool) bool {
-	r1 := controlImportAPI().SysCallN(41, m.Instance(), uintptr(ChildClass), PascalBool(ExceptionOnInvalid))
-	return GoBool(r1)
+func (m *TControl) CheckChildClassAllowed(childClass types.TClass, exceptionOnInvalid bool) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(43, m.Instance(), uintptr(childClass), api.PasBool(exceptionOnInvalid))
+	return api.GoBool(r)
 }
 
-func (m *TControl) GetTextBuf(Buffer *string, BufSize int32) int32 {
-	r1 := sysCallGetTextBuf(controlImportAPI(), 91, m.Instance(), Buffer, BufSize)
-	return int32(r1)
+func (m *TControl) GetTextBuf(buffer uintptr, bufSize int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(44, m.Instance(), uintptr(buffer), uintptr(bufSize))
+	return int32(r)
 }
 
 func (m *TControl) GetTextLen() int32 {
-	r1 := controlImportAPI().SysCallN(92, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(45, m.Instance())
+	return int32(r)
 }
 
-func (m *TControl) Perform(Msg uint32, WParam WPARAM, LParam LPARAM) LRESULT {
-	r1 := controlImportAPI().SysCallN(125, m.Instance(), uintptr(Msg), uintptr(WParam), uintptr(LParam))
-	return LRESULT(r1)
+func (m *TControl) Perform(msg uint32, wParam types.WParam, lParam types.LParam) types.LRESULT {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(46, m.Instance(), uintptr(msg), uintptr(wParam), uintptr(lParam))
+	return types.LRESULT(r)
 }
 
-func (m *TControl) ScreenToClient(APoint *TPoint) (resultPoint TPoint) {
-	controlImportAPI().SysCallN(142, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
+func (m *TControl) ScreenToClient(point types.TPoint) (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(47, m.Instance(), uintptr(base.UnsafePointer(&point)), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TControl) ClientToScreen(APoint *TPoint) (resultPoint TPoint) {
-	controlImportAPI().SysCallN(48, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
+func (m *TControl) ClientToScreenWithPoint(point types.TPoint) (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(48, m.Instance(), uintptr(base.UnsafePointer(&point)), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TControl) ClientToScreen1(ARect *TRect) (resultRect TRect) {
-	controlImportAPI().SysCallN(49, m.Instance(), uintptr(unsafePointer(ARect)), uintptr(unsafePointer(&resultRect)))
+func (m *TControl) ClientToScreenWithRect(rect types.TRect) (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(49, m.Instance(), uintptr(base.UnsafePointer(&rect)), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TControl) ScreenToControl(APoint *TPoint) (resultPoint TPoint) {
-	controlImportAPI().SysCallN(143, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
+func (m *TControl) ScreenToControl(point types.TPoint) (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(50, m.Instance(), uintptr(base.UnsafePointer(&point)), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TControl) ControlToScreen(APoint *TPoint) (resultPoint TPoint) {
-	controlImportAPI().SysCallN(56, m.Instance(), uintptr(unsafePointer(APoint)), uintptr(unsafePointer(&resultPoint)))
+func (m *TControl) ControlToScreen(point types.TPoint) (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(51, m.Instance(), uintptr(base.UnsafePointer(&point)), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TControl) ClientToParent(Point *TPoint, AParent IWinControl) (resultPoint TPoint) {
-	controlImportAPI().SysCallN(47, m.Instance(), uintptr(unsafePointer(Point)), GetObjectUintptr(AParent), uintptr(unsafePointer(&resultPoint)))
+func (m *TControl) ClientToParent(point types.TPoint, parent IWinControl) (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(52, m.Instance(), uintptr(base.UnsafePointer(&point)), base.GetObjectUintptr(parent), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TControl) ParentToClient(Point *TPoint, AParent IWinControl) (resultPoint TPoint) {
-	controlImportAPI().SysCallN(124, m.Instance(), uintptr(unsafePointer(Point)), GetObjectUintptr(AParent), uintptr(unsafePointer(&resultPoint)))
+func (m *TControl) ParentToClient(point types.TPoint, parent IWinControl) (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(53, m.Instance(), uintptr(base.UnsafePointer(&point)), base.GetObjectUintptr(parent), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TControl) GetChildrenRect(Scrolled bool) (resultRect TRect) {
-	controlImportAPI().SysCallN(82, m.Instance(), PascalBool(Scrolled), uintptr(unsafePointer(&resultRect)))
+func (m *TControl) GetChildrenRect(scrolled bool) (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(54, m.Instance(), api.PasBool(scrolled), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
 func (m *TControl) HandleObjectShouldBeVisible() bool {
-	r1 := controlImportAPI().SysCallN(94, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(55, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) ParentDestroyingHandle() bool {
-	r1 := controlImportAPI().SysCallN(122, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(56, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) ParentHandlesAllocated() bool {
-	r1 := controlImportAPI().SysCallN(123, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(57, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) HasHelp() bool {
-	r1 := controlImportAPI().SysCallN(95, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(58, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) UseRightToLeftAlignment() bool {
-	r1 := controlImportAPI().SysCallN(165, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(59, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) UseRightToLeftReading() bool {
-	r1 := controlImportAPI().SysCallN(166, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(60, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) UseRightToLeftScrollBar() bool {
-	r1 := controlImportAPI().SysCallN(167, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(61, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TControl) IsRightToLeft() bool {
-	r1 := controlImportAPI().SysCallN(113, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(62, m.Instance())
+	return api.GoBool(r)
 }
 
-func ControlClass() TClass {
-	ret := controlImportAPI().SysCallN(43)
-	return TClass(ret)
+func (m *TControl) DragDrop(source IObject, X int32, Y int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(63, m.Instance(), base.GetObjectUintptr(source), uintptr(X), uintptr(Y))
 }
 
-func (m *TControl) DragDrop(Source IObject, X, Y int32) {
-	controlImportAPI().SysCallN(64, m.Instance(), GetObjectUintptr(Source), uintptr(X), uintptr(Y))
-}
-
-func (m *TControl) Dock(NewDockSite IWinControl, ARect *TRect) {
-	controlImportAPI().SysCallN(61, m.Instance(), GetObjectUintptr(NewDockSite), uintptr(unsafePointer(ARect)))
+func (m *TControl) Dock(newDockSite IWinControl, rect types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(64, m.Instance(), base.GetObjectUintptr(newDockSite), uintptr(base.UnsafePointer(&rect)))
 }
 
 func (m *TControl) AdjustSize() {
-	controlImportAPI().SysCallN(6, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(65, m.Instance())
 }
 
-func (m *TControl) AnchorToNeighbour(Side TAnchorKind, Space TSpacingSize, Sibling IControl) {
-	controlImportAPI().SysCallN(19, m.Instance(), uintptr(Side), uintptr(Space), GetObjectUintptr(Sibling))
+func (m *TControl) AnchorToNeighbour(side types.TAnchorKind, space types.TSpacingSize, sibling IControl) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(66, m.Instance(), uintptr(side), uintptr(space), base.GetObjectUintptr(sibling))
 }
 
-func (m *TControl) AnchorParallel(Side TAnchorKind, Space TSpacingSize, Sibling IControl) {
-	controlImportAPI().SysCallN(11, m.Instance(), uintptr(Side), uintptr(Space), GetObjectUintptr(Sibling))
+func (m *TControl) AnchorParallel(side types.TAnchorKind, space types.TSpacingSize, sibling IControl) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(67, m.Instance(), uintptr(side), uintptr(space), base.GetObjectUintptr(sibling))
 }
 
-func (m *TControl) AnchorHorizontalCenterTo(Sibling IControl) {
-	controlImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(Sibling))
+func (m *TControl) AnchorHorizontalCenterTo(sibling IControl) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(68, m.Instance(), base.GetObjectUintptr(sibling))
 }
 
-func (m *TControl) AnchorVerticalCenterTo(Sibling IControl) {
-	controlImportAPI().SysCallN(20, m.Instance(), GetObjectUintptr(Sibling))
+func (m *TControl) AnchorVerticalCenterTo(sibling IControl) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(69, m.Instance(), base.GetObjectUintptr(sibling))
 }
 
-func (m *TControl) AnchorToCompanion(Side TAnchorKind, Space TSpacingSize, Sibling IControl, FreeCompositeSide bool) {
-	controlImportAPI().SysCallN(18, m.Instance(), uintptr(Side), uintptr(Space), GetObjectUintptr(Sibling), PascalBool(FreeCompositeSide))
+func (m *TControl) AnchorToCompanion(side types.TAnchorKind, space types.TSpacingSize, sibling IControl, freeCompositeSide bool) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(70, m.Instance(), uintptr(side), uintptr(space), base.GetObjectUintptr(sibling), api.PasBool(freeCompositeSide))
 }
 
-func (m *TControl) AnchorSame(Side TAnchorKind, Sibling IControl) {
-	controlImportAPI().SysCallN(12, m.Instance(), uintptr(Side), GetObjectUintptr(Sibling))
+func (m *TControl) AnchorSame(side types.TAnchorKind, sibling IControl) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(71, m.Instance(), uintptr(side), base.GetObjectUintptr(sibling))
 }
 
-func (m *TControl) AnchorAsAlign(TheAlign TAlign, Space TSpacingSize) {
-	controlImportAPI().SysCallN(8, m.Instance(), uintptr(TheAlign), uintptr(Space))
+func (m *TControl) AnchorAsAlign(theAlign types.TAlign, space types.TSpacingSize) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(72, m.Instance(), uintptr(theAlign), uintptr(space))
 }
 
-func (m *TControl) AnchorClient(Space TSpacingSize) {
-	controlImportAPI().SysCallN(9, m.Instance(), uintptr(Space))
+func (m *TControl) AnchorClient(space types.TSpacingSize) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(73, m.Instance(), uintptr(space))
 }
 
-func (m *TControl) SetBounds(aLeft, aTop, aWidth, aHeight int32) {
-	controlImportAPI().SysCallN(145, m.Instance(), uintptr(aLeft), uintptr(aTop), uintptr(aWidth), uintptr(aHeight))
+func (m *TControl) SetBounds(left int32, top int32, width int32, height int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(74, m.Instance(), uintptr(left), uintptr(top), uintptr(width), uintptr(height))
 }
 
-func (m *TControl) SetInitialBounds(aLeft, aTop, aWidth, aHeight int32) {
-	controlImportAPI().SysCallN(147, m.Instance(), uintptr(aLeft), uintptr(aTop), uintptr(aWidth), uintptr(aHeight))
+func (m *TControl) SetInitialBounds(left int32, top int32, width int32, height int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(75, m.Instance(), uintptr(left), uintptr(top), uintptr(width), uintptr(height))
 }
 
-func (m *TControl) SetBoundsKeepBase(aLeft, aTop, aWidth, aHeight int32) {
-	controlImportAPI().SysCallN(146, m.Instance(), uintptr(aLeft), uintptr(aTop), uintptr(aWidth), uintptr(aHeight))
+func (m *TControl) SetBoundsKeepBase(left int32, top int32, width int32, height int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(76, m.Instance(), uintptr(left), uintptr(top), uintptr(width), uintptr(height))
 }
 
-func (m *TControl) GetPreferredSize(PreferredWidth, PreferredHeight *int32, Raw bool, WithThemeSpace bool) {
-	var result0 uintptr
-	var result1 uintptr
-	controlImportAPI().SysCallN(87, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)), PascalBool(Raw), PascalBool(WithThemeSpace))
-	*PreferredWidth = int32(result0)
-	*PreferredHeight = int32(result1)
+func (m *TControl) GetPreferredSize(preferredWidth *int32, preferredHeight *int32, raw bool, withThemeSpace bool) {
+	if !m.IsValid() {
+		return
+	}
+	preferredWidthPtr := uintptr(*preferredWidth)
+	preferredHeightPtr := uintptr(*preferredHeight)
+	controlAPI().SysCallN(77, m.Instance(), uintptr(base.UnsafePointer(&preferredWidthPtr)), uintptr(base.UnsafePointer(&preferredHeightPtr)), api.PasBool(raw), api.PasBool(withThemeSpace))
+	*preferredWidth = int32(preferredWidthPtr)
+	*preferredHeight = int32(preferredHeightPtr)
 }
 
 func (m *TControl) CNPreferredSizeChanged() {
-	controlImportAPI().SysCallN(38, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(78, m.Instance())
 }
 
 func (m *TControl) InvalidatePreferredSize() {
-	controlImportAPI().SysCallN(105, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(79, m.Instance())
 }
 
 func (m *TControl) DisableAutoSizing() {
-	controlImportAPI().SysCallN(60, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(80, m.Instance())
 }
 
 func (m *TControl) EnableAutoSizing() {
-	controlImportAPI().SysCallN(67, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(81, m.Instance())
 }
 
-func (m *TControl) UpdateBaseBounds(StoreBounds, StoreParentClientSize, UseLoadedValues bool) {
-	controlImportAPI().SysCallN(163, m.Instance(), PascalBool(StoreBounds), PascalBool(StoreParentClientSize), PascalBool(UseLoadedValues))
+func (m *TControl) UpdateBaseBounds(storeBounds bool, storeParentClientSize bool, useLoadedValues bool) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(82, m.Instance(), api.PasBool(storeBounds), api.PasBool(storeParentClientSize), api.PasBool(useLoadedValues))
 }
 
-func (m *TControl) WriteLayoutDebugReport(Prefix string) {
-	controlImportAPI().SysCallN(170, m.Instance(), PascalStr(Prefix))
+func (m *TControl) WriteLayoutDebugReport(prefix string) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(83, m.Instance(), api.PasStr(prefix))
 }
 
-func (m *TControl) AutoAdjustLayout(AMode TLayoutAdjustmentPolicy, AFromPPI, AToPPI, AOldFormWidth, ANewFormWidth int32) {
-	controlImportAPI().SysCallN(24, m.Instance(), uintptr(AMode), uintptr(AFromPPI), uintptr(AToPPI), uintptr(AOldFormWidth), uintptr(ANewFormWidth))
+func (m *TControl) AutoAdjustLayout(mode types.TLayoutAdjustmentPolicy, fromPPI int32, toPPI int32, oldFormWidth int32, newFormWidth int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(84, m.Instance(), uintptr(mode), uintptr(fromPPI), uintptr(toPPI), uintptr(oldFormWidth), uintptr(newFormWidth))
 }
 
-func (m *TControl) ShouldAutoAdjust(AWidth, AHeight *bool) {
-	var result0 uintptr
-	var result1 uintptr
-	controlImportAPI().SysCallN(154, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)))
-	*AWidth = GoBool(result0)
-	*AHeight = GoBool(result1)
+func (m *TControl) ShouldAutoAdjust(width *bool, height *bool) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(85, m.Instance(), uintptr(base.UnsafePointer(width)), uintptr(base.UnsafePointer(height)))
 }
 
-func (m *TControl) FixDesignFontsPPI(ADesignTimePPI int32) {
-	controlImportAPI().SysCallN(73, m.Instance(), uintptr(ADesignTimePPI))
+func (m *TControl) FixDesignFontsPPI(designTimePPI int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(86, m.Instance(), uintptr(designTimePPI))
 }
 
-func (m *TControl) ScaleFontsPPI(AToPPI int32, AProportion float64) {
-	controlImportAPI().SysCallN(137, m.Instance(), uintptr(AToPPI), uintptr(unsafePointer(&AProportion)))
+func (m *TControl) ScaleFontsPPI(toPPI int32, proportion float64) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(87, m.Instance(), uintptr(toPPI), uintptr(base.UnsafePointer(&proportion)))
 }
 
 func (m *TControl) EditingDone() {
-	controlImportAPI().SysCallN(66, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(88, m.Instance())
 }
 
 func (m *TControl) ExecuteDefaultAction() {
-	controlImportAPI().SysCallN(71, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(89, m.Instance())
 }
 
 func (m *TControl) ExecuteCancelAction() {
-	controlImportAPI().SysCallN(70, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(90, m.Instance())
 }
 
-func (m *TControl) BeginDrag(Immediate bool, Threshold int32) {
-	controlImportAPI().SysCallN(32, m.Instance(), PascalBool(Immediate), uintptr(Threshold))
+func (m *TControl) BeginDrag(immediate bool, threshold int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(91, m.Instance(), api.PasBool(immediate), uintptr(threshold))
 }
 
-func (m *TControl) EndDrag(Drop bool) {
-	controlImportAPI().SysCallN(69, m.Instance(), PascalBool(Drop))
+func (m *TControl) EndDrag(drop bool) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(92, m.Instance(), api.PasBool(drop))
 }
 
 func (m *TControl) BringToFront() {
-	controlImportAPI().SysCallN(37, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(93, m.Instance())
 }
 
 func (m *TControl) Hide() {
-	controlImportAPI().SysCallN(100, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(94, m.Instance())
 }
 
 func (m *TControl) Refresh() {
-	controlImportAPI().SysCallN(128, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(95, m.Instance())
 }
 
 func (m *TControl) Repaint() {
-	controlImportAPI().SysCallN(129, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(96, m.Instance())
 }
 
 func (m *TControl) Invalidate() {
-	controlImportAPI().SysCallN(104, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(97, m.Instance())
 }
 
-func (m *TControl) CheckNewParent(AParent IWinControl) {
-	controlImportAPI().SysCallN(42, m.Instance(), GetObjectUintptr(AParent))
+func (m *TControl) CheckNewParent(parent IWinControl) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(98, m.Instance(), base.GetObjectUintptr(parent))
 }
 
 func (m *TControl) SendToBack() {
-	controlImportAPI().SysCallN(144, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(99, m.Instance())
 }
 
-func (m *TControl) SetTempCursor(Value TCursor) {
-	controlImportAPI().SysCallN(152, m.Instance(), uintptr(Value))
+func (m *TControl) SetTempCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(100, m.Instance(), uintptr(value))
 }
 
 func (m *TControl) UpdateRolesForForm() {
-	controlImportAPI().SysCallN(164, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(101, m.Instance())
 }
 
-func (m *TControl) ActiveDefaultControlChanged(NewControl IControl) {
-	controlImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(NewControl))
+func (m *TControl) ActiveDefaultControlChanged(newControl IControl) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(102, m.Instance(), base.GetObjectUintptr(newControl))
 }
 
-func (m *TControl) SetTextBuf(Buffer string) {
-	controlImportAPI().SysCallN(153, m.Instance(), PascalStr(Buffer))
+func (m *TControl) SetTextBuf(buffer uintptr) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(103, m.Instance(), uintptr(buffer))
 }
 
 func (m *TControl) Show() {
-	controlImportAPI().SysCallN(155, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(104, m.Instance())
 }
 
 func (m *TControl) Update() {
-	controlImportAPI().SysCallN(162, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(105, m.Instance())
 }
 
 func (m *TControl) InitiateAction() {
-	controlImportAPI().SysCallN(103, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(106, m.Instance())
 }
 
 func (m *TControl) ShowHelp() {
-	controlImportAPI().SysCallN(156, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(107, m.Instance())
+}
+
+func (m *TControl) AnchoredControls(index int32) IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(108, m.Instance(), uintptr(index))
+	return AsControl(r)
+}
+
+func (m *TControl) BaseBounds() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(109, m.Instance(), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TControl) ReadBounds() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(110, m.Instance(), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TControl) BaseParentClientSize() (result types.TSize) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(111, m.Instance(), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TControl) AccessibleName() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := controlAPI().SysCallN(112, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TControl) SetAccessibleName(value string) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(112, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TControl) AccessibleDescription() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := controlAPI().SysCallN(113, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TControl) SetAccessibleDescription(value string) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(113, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TControl) AccessibleValue() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := controlAPI().SysCallN(114, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TControl) SetAccessibleValue(value string) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(114, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TControl) AccessibleRole() types.TLazAccessibilityRole {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(115, 0, m.Instance())
+	return types.TLazAccessibilityRole(r)
+}
+
+func (m *TControl) SetAccessibleRole(value types.TLazAccessibilityRole) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(115, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) Action() IBasicAction {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(116, 0, m.Instance())
+	return AsBasicAction(r)
+}
+
+func (m *TControl) SetAction(value IBasicAction) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(116, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) Align() types.TAlign {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(117, 0, m.Instance())
+	return types.TAlign(r)
+}
+
+func (m *TControl) SetAlign(value types.TAlign) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(117, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) Anchors() types.TAnchors {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(118, 0, m.Instance())
+	return types.TAnchors(r)
+}
+
+func (m *TControl) SetAnchors(value types.TAnchors) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(118, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) AnchorSide(kind types.TAnchorKind) IAnchorSide {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(119, m.Instance(), uintptr(kind))
+	return AsAnchorSide(r)
+}
+
+func (m *TControl) AutoSize() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(120, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TControl) SetAutoSize(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(120, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TControl) BorderSpacing() IControlBorderSpacing {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(121, 0, m.Instance())
+	return AsControlBorderSpacing(r)
+}
+
+func (m *TControl) SetBorderSpacing(value IControlBorderSpacing) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(121, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) BoundsRect() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(122, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TControl) SetBoundsRect(value types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(122, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TControl) BoundsRectForNewParent() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(123, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TControl) SetBoundsRectForNewParent(value types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(123, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TControl) Caption() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := controlAPI().SysCallN(124, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TControl) SetCaption(value string) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(124, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TControl) CaptureMouseButtons() types.TCaptureMouseButtons {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(125, 0, m.Instance())
+	return types.TCaptureMouseButtons(r)
+}
+
+func (m *TControl) SetCaptureMouseButtons(value types.TCaptureMouseButtons) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(125, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) ClientHeight() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(126, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TControl) SetClientHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(126, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) ClientOrigin() (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(127, m.Instance(), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TControl) ClientRect() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(128, m.Instance(), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TControl) ClientWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(129, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TControl) SetClientWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(129, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) Color() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(130, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TControl) SetColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(130, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) Constraints() ISizeConstraints {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(131, 0, m.Instance())
+	return AsSizeConstraints(r)
+}
+
+func (m *TControl) SetConstraints(value ISizeConstraints) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(131, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) ControlOrigin() (result types.TPoint) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(132, m.Instance(), uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TControl) ControlState() types.TControlState {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(133, 0, m.Instance())
+	return types.TControlState(r)
+}
+
+func (m *TControl) SetControlState(value types.TControlState) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(133, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) ControlStyle() types.TControlStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(134, 0, m.Instance())
+	return types.TControlStyle(r)
+}
+
+func (m *TControl) SetControlStyle(value types.TControlStyle) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(134, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) Enabled() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(135, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TControl) SetEnabled(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(135, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TControl) Font() IFont {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(136, 0, m.Instance())
+	return AsFont(r)
+}
+
+func (m *TControl) SetFont(value IFont) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(136, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) IsControl() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(137, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TControl) SetIsControl(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(137, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TControl) MouseInClient() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(138, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TControl) Parent() IWinControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(139, 0, m.Instance())
+	return AsWinControl(r)
+}
+
+func (m *TControl) SetParent(value IWinControl) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(139, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) PopupMenu() IPopupMenu {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(140, 0, m.Instance())
+	return AsPopupMenu(r)
+}
+
+func (m *TControl) SetPopupMenu(value IPopupMenu) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(140, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) ShowHint() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(141, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TControl) SetShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(141, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TControl) Visible() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(142, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TControl) SetVisible(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(142, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TControl) DockOrientation() types.TDockOrientation {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(143, 0, m.Instance())
+	return types.TDockOrientation(r)
+}
+
+func (m *TControl) SetDockOrientation(value types.TDockOrientation) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(143, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) Floating() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(144, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TControl) FloatingDockSiteClass() types.TWinControlClass {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(145, 0, m.Instance())
+	return types.TWinControlClass(r)
+}
+
+func (m *TControl) SetFloatingDockSiteClass(value types.TWinControlClass) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(145, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) HostDockSite() IWinControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(146, 0, m.Instance())
+	return AsWinControl(r)
+}
+
+func (m *TControl) SetHostDockSite(value IWinControl) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(146, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) LRDockWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(147, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TControl) SetLRDockWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(147, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) TBDockHeight() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(148, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TControl) SetTBDockHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(148, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) UndockHeight() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(149, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TControl) SetUndockHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(149, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) UndockWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(150, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TControl) SetUndockWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(150, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) BiDiMode() types.TBiDiMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(151, 0, m.Instance())
+	return types.TBiDiMode(r)
+}
+
+func (m *TControl) SetBiDiMode(value types.TBiDiMode) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(151, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) ParentBiDiMode() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := controlAPI().SysCallN(152, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TControl) SetParentBiDiMode(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(152, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TControl) AnchorSideLeft() IAnchorSide {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(153, 0, m.Instance())
+	return AsAnchorSide(r)
+}
+
+func (m *TControl) SetAnchorSideLeft(value IAnchorSide) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(153, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) AnchorSideTop() IAnchorSide {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(154, 0, m.Instance())
+	return AsAnchorSide(r)
+}
+
+func (m *TControl) SetAnchorSideTop(value IAnchorSide) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(154, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) AnchorSideRight() IAnchorSide {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(155, 0, m.Instance())
+	return AsAnchorSide(r)
+}
+
+func (m *TControl) SetAnchorSideRight(value IAnchorSide) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(155, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) AnchorSideBottom() IAnchorSide {
+	if !m.IsValid() {
+		return nil
+	}
+	r := controlAPI().SysCallN(156, 0, m.Instance())
+	return AsAnchorSide(r)
+}
+
+func (m *TControl) SetAnchorSideBottom(value IAnchorSide) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(156, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TControl) Cursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(157, 0, m.Instance())
+	return types.TCursor(r)
+}
+
+func (m *TControl) SetCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(157, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) Left() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(158, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TControl) SetLeft(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(158, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) Height() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(159, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TControl) SetHeight(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(159, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) Hint() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := controlAPI().SysCallN(160, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TControl) SetHint(value string) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(160, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TControl) Top() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(161, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TControl) SetTop(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(161, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) Width() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(162, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TControl) SetWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(162, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) HelpType() types.THelpType {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(163, 0, m.Instance())
+	return types.THelpType(r)
+}
+
+func (m *TControl) SetHelpType(value types.THelpType) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(163, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TControl) HelpKeyword() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := controlAPI().SysCallN(164, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *TControl) SetHelpKeyword(value string) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(164, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *TControl) HelpContext() types.THelpContext {
+	if !m.IsValid() {
+		return 0
+	}
+	r := controlAPI().SysCallN(165, 0, m.Instance())
+	return types.THelpContext(r)
+}
+
+func (m *TControl) SetHelpContext(value types.THelpContext) {
+	if !m.IsValid() {
+		return
+	}
+	controlAPI().SysCallN(165, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TControl) SetOnChangeBounds(fn TNotifyEvent) {
-	if m.changeBoundsPtr != 0 {
-		RemoveEventElement(m.changeBoundsPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changeBoundsPtr = MakeEventDataPtr(fn)
-	controlImportAPI().SysCallN(148, m.Instance(), m.changeBoundsPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 166, controlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TControl) SetOnClick(fn TNotifyEvent) {
-	if m.clickPtr != 0 {
-		RemoveEventElement(m.clickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.clickPtr = MakeEventDataPtr(fn)
-	controlImportAPI().SysCallN(149, m.Instance(), m.clickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 167, controlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TControl) SetOnResize(fn TNotifyEvent) {
-	if m.resizePtr != 0 {
-		RemoveEventElement(m.resizePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.resizePtr = MakeEventDataPtr(fn)
-	controlImportAPI().SysCallN(150, m.Instance(), m.resizePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 168, controlAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TControl) SetOnShowHint(fn TControlShowHintEvent) {
-	if m.showHintPtr != 0 {
-		RemoveEventElement(m.showHintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.showHintPtr = MakeEventDataPtr(fn)
-	controlImportAPI().SysCallN(151, m.Instance(), m.showHintPtr)
+	cb := makeTControlShowHintEvent(fn)
+	base.SetEvent(m, 169, controlAPI(), api.MakeEventDataPtr(cb))
+}
+
+func (m *TControl) SetWindowProc(fn TWndMethod) {
+	if !m.IsValid() {
+		return
+	}
+	cb := makeTWndMethod(fn)
+	base.SetEvent(m, 170, controlAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewControl class constructor
+func NewControl(theOwner IComponent) IControl {
+	r := controlAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsControl(r)
+}
+
+func TControlClass() types.TClass {
+	r := controlAPI().SysCallN(171)
+	return types.TClass(r)
 }
 
 var (
-	controlImport       *imports.Imports = nil
-	controlImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Control_AccessibleDescription", 0),
-		/*1*/ imports.NewTable("Control_AccessibleName", 0),
-		/*2*/ imports.NewTable("Control_AccessibleRole", 0),
-		/*3*/ imports.NewTable("Control_AccessibleValue", 0),
-		/*4*/ imports.NewTable("Control_Action", 0),
-		/*5*/ imports.NewTable("Control_ActiveDefaultControlChanged", 0),
-		/*6*/ imports.NewTable("Control_AdjustSize", 0),
-		/*7*/ imports.NewTable("Control_Align", 0),
-		/*8*/ imports.NewTable("Control_AnchorAsAlign", 0),
-		/*9*/ imports.NewTable("Control_AnchorClient", 0),
-		/*10*/ imports.NewTable("Control_AnchorHorizontalCenterTo", 0),
-		/*11*/ imports.NewTable("Control_AnchorParallel", 0),
-		/*12*/ imports.NewTable("Control_AnchorSame", 0),
-		/*13*/ imports.NewTable("Control_AnchorSide", 0),
-		/*14*/ imports.NewTable("Control_AnchorSideBottom", 0),
-		/*15*/ imports.NewTable("Control_AnchorSideLeft", 0),
-		/*16*/ imports.NewTable("Control_AnchorSideRight", 0),
-		/*17*/ imports.NewTable("Control_AnchorSideTop", 0),
-		/*18*/ imports.NewTable("Control_AnchorToCompanion", 0),
-		/*19*/ imports.NewTable("Control_AnchorToNeighbour", 0),
-		/*20*/ imports.NewTable("Control_AnchorVerticalCenterTo", 0),
-		/*21*/ imports.NewTable("Control_AnchoredControlCount", 0),
-		/*22*/ imports.NewTable("Control_AnchoredControls", 0),
-		/*23*/ imports.NewTable("Control_Anchors", 0),
-		/*24*/ imports.NewTable("Control_AutoAdjustLayout", 0),
-		/*25*/ imports.NewTable("Control_AutoSize", 0),
-		/*26*/ imports.NewTable("Control_AutoSizeDelayed", 0),
-		/*27*/ imports.NewTable("Control_AutoSizeDelayedHandle", 0),
-		/*28*/ imports.NewTable("Control_AutoSizeDelayedReport", 0),
-		/*29*/ imports.NewTable("Control_AutoSizePhases", 0),
-		/*30*/ imports.NewTable("Control_BaseBounds", 0),
-		/*31*/ imports.NewTable("Control_BaseParentClientSize", 0),
-		/*32*/ imports.NewTable("Control_BeginDrag", 0),
-		/*33*/ imports.NewTable("Control_BiDiMode", 0),
-		/*34*/ imports.NewTable("Control_BorderSpacing", 0),
-		/*35*/ imports.NewTable("Control_BoundsRect", 0),
-		/*36*/ imports.NewTable("Control_BoundsRectForNewParent", 0),
-		/*37*/ imports.NewTable("Control_BringToFront", 0),
-		/*38*/ imports.NewTable("Control_CNPreferredSizeChanged", 0),
-		/*39*/ imports.NewTable("Control_Caption", 0),
-		/*40*/ imports.NewTable("Control_CaptureMouseButtons", 0),
-		/*41*/ imports.NewTable("Control_CheckChildClassAllowed", 0),
-		/*42*/ imports.NewTable("Control_CheckNewParent", 0),
-		/*43*/ imports.NewTable("Control_Class", 0),
-		/*44*/ imports.NewTable("Control_ClientHeight", 0),
-		/*45*/ imports.NewTable("Control_ClientOrigin", 0),
-		/*46*/ imports.NewTable("Control_ClientRect", 0),
-		/*47*/ imports.NewTable("Control_ClientToParent", 0),
-		/*48*/ imports.NewTable("Control_ClientToScreen", 0),
-		/*49*/ imports.NewTable("Control_ClientToScreen1", 0),
-		/*50*/ imports.NewTable("Control_ClientWidth", 0),
-		/*51*/ imports.NewTable("Control_Color", 0),
-		/*52*/ imports.NewTable("Control_Constraints", 0),
-		/*53*/ imports.NewTable("Control_ControlOrigin", 0),
-		/*54*/ imports.NewTable("Control_ControlState", 0),
-		/*55*/ imports.NewTable("Control_ControlStyle", 0),
-		/*56*/ imports.NewTable("Control_ControlToScreen", 0),
-		/*57*/ imports.NewTable("Control_Create", 0),
-		/*58*/ imports.NewTable("Control_CreateAccessibleObject", 0),
-		/*59*/ imports.NewTable("Control_Cursor", 0),
-		/*60*/ imports.NewTable("Control_DisableAutoSizing", 0),
-		/*61*/ imports.NewTable("Control_Dock", 0),
-		/*62*/ imports.NewTable("Control_DockOrientation", 0),
-		/*63*/ imports.NewTable("Control_Docked", 0),
-		/*64*/ imports.NewTable("Control_DragDrop", 0),
-		/*65*/ imports.NewTable("Control_Dragging", 0),
-		/*66*/ imports.NewTable("Control_EditingDone", 0),
-		/*67*/ imports.NewTable("Control_EnableAutoSizing", 0),
-		/*68*/ imports.NewTable("Control_Enabled", 0),
-		/*69*/ imports.NewTable("Control_EndDrag", 0),
-		/*70*/ imports.NewTable("Control_ExecuteCancelAction", 0),
-		/*71*/ imports.NewTable("Control_ExecuteDefaultAction", 0),
-		/*72*/ imports.NewTable("Control_FindSubComponent", 0),
-		/*73*/ imports.NewTable("Control_FixDesignFontsPPI", 0),
-		/*74*/ imports.NewTable("Control_Floating", 0),
-		/*75*/ imports.NewTable("Control_FloatingDockSiteClass", 0),
-		/*76*/ imports.NewTable("Control_Font", 0),
-		/*77*/ imports.NewTable("Control_FormIsUpdating", 0),
-		/*78*/ imports.NewTable("Control_GetAccessibleObject", 0),
-		/*79*/ imports.NewTable("Control_GetAnchorsDependingOnParent", 0),
-		/*80*/ imports.NewTable("Control_GetCanvasScaleFactor", 0),
-		/*81*/ imports.NewTable("Control_GetChildAccessibleObjectAtPos", 0),
-		/*82*/ imports.NewTable("Control_GetChildrenRect", 0),
-		/*83*/ imports.NewTable("Control_GetColorResolvingParent", 0),
-		/*84*/ imports.NewTable("Control_GetDefaultColor", 0),
-		/*85*/ imports.NewTable("Control_GetDefaultHeight", 0),
-		/*86*/ imports.NewTable("Control_GetDefaultWidth", 0),
-		/*87*/ imports.NewTable("Control_GetPreferredSize", 0),
-		/*88*/ imports.NewTable("Control_GetRGBColorResolvingParent", 0),
-		/*89*/ imports.NewTable("Control_GetSelectedChildAccessibleObject", 0),
-		/*90*/ imports.NewTable("Control_GetSidePosition", 0),
-		/*91*/ imports.NewTable("Control_GetTextBuf", 0),
-		/*92*/ imports.NewTable("Control_GetTextLen", 0),
-		/*93*/ imports.NewTable("Control_GetTopParent", 0),
-		/*94*/ imports.NewTable("Control_HandleObjectShouldBeVisible", 0),
-		/*95*/ imports.NewTable("Control_HasHelp", 0),
-		/*96*/ imports.NewTable("Control_Height", 0),
-		/*97*/ imports.NewTable("Control_HelpContext", 0),
-		/*98*/ imports.NewTable("Control_HelpKeyword", 0),
-		/*99*/ imports.NewTable("Control_HelpType", 0),
-		/*100*/ imports.NewTable("Control_Hide", 0),
-		/*101*/ imports.NewTable("Control_Hint", 0),
-		/*102*/ imports.NewTable("Control_HostDockSite", 0),
-		/*103*/ imports.NewTable("Control_InitiateAction", 0),
-		/*104*/ imports.NewTable("Control_Invalidate", 0),
-		/*105*/ imports.NewTable("Control_InvalidatePreferredSize", 0),
-		/*106*/ imports.NewTable("Control_IsControl", 0),
-		/*107*/ imports.NewTable("Control_IsControlVisible", 0),
-		/*108*/ imports.NewTable("Control_IsEnabled", 0),
-		/*109*/ imports.NewTable("Control_IsParentColor", 0),
-		/*110*/ imports.NewTable("Control_IsParentFont", 0),
-		/*111*/ imports.NewTable("Control_IsParentOf", 0),
-		/*112*/ imports.NewTable("Control_IsProcessingPaintMsg", 0),
-		/*113*/ imports.NewTable("Control_IsRightToLeft", 0),
-		/*114*/ imports.NewTable("Control_IsVisible", 0),
-		/*115*/ imports.NewTable("Control_LRDockWidth", 0),
-		/*116*/ imports.NewTable("Control_Left", 0),
-		/*117*/ imports.NewTable("Control_ManualDock", 0),
-		/*118*/ imports.NewTable("Control_ManualFloat", 0),
-		/*119*/ imports.NewTable("Control_MouseInClient", 0),
-		/*120*/ imports.NewTable("Control_Parent", 0),
-		/*121*/ imports.NewTable("Control_ParentBiDiMode", 0),
-		/*122*/ imports.NewTable("Control_ParentDestroyingHandle", 0),
-		/*123*/ imports.NewTable("Control_ParentHandlesAllocated", 0),
-		/*124*/ imports.NewTable("Control_ParentToClient", 0),
-		/*125*/ imports.NewTable("Control_Perform", 0),
-		/*126*/ imports.NewTable("Control_PopupMenu", 0),
-		/*127*/ imports.NewTable("Control_ReadBounds", 0),
-		/*128*/ imports.NewTable("Control_Refresh", 0),
-		/*129*/ imports.NewTable("Control_Repaint", 0),
-		/*130*/ imports.NewTable("Control_ReplaceDockedControl", 0),
-		/*131*/ imports.NewTable("Control_Scale96ToFont", 0),
-		/*132*/ imports.NewTable("Control_Scale96ToForm", 0),
-		/*133*/ imports.NewTable("Control_Scale96ToScreen", 0),
-		/*134*/ imports.NewTable("Control_ScaleDesignToForm", 0),
-		/*135*/ imports.NewTable("Control_ScaleFontTo96", 0),
-		/*136*/ imports.NewTable("Control_ScaleFontToScreen", 0),
-		/*137*/ imports.NewTable("Control_ScaleFontsPPI", 0),
-		/*138*/ imports.NewTable("Control_ScaleFormTo96", 0),
-		/*139*/ imports.NewTable("Control_ScaleFormToDesign", 0),
-		/*140*/ imports.NewTable("Control_ScaleScreenTo96", 0),
-		/*141*/ imports.NewTable("Control_ScaleScreenToFont", 0),
-		/*142*/ imports.NewTable("Control_ScreenToClient", 0),
-		/*143*/ imports.NewTable("Control_ScreenToControl", 0),
-		/*144*/ imports.NewTable("Control_SendToBack", 0),
-		/*145*/ imports.NewTable("Control_SetBounds", 0),
-		/*146*/ imports.NewTable("Control_SetBoundsKeepBase", 0),
-		/*147*/ imports.NewTable("Control_SetInitialBounds", 0),
-		/*148*/ imports.NewTable("Control_SetOnChangeBounds", 0),
-		/*149*/ imports.NewTable("Control_SetOnClick", 0),
-		/*150*/ imports.NewTable("Control_SetOnResize", 0),
-		/*151*/ imports.NewTable("Control_SetOnShowHint", 0),
-		/*152*/ imports.NewTable("Control_SetTempCursor", 0),
-		/*153*/ imports.NewTable("Control_SetTextBuf", 0),
-		/*154*/ imports.NewTable("Control_ShouldAutoAdjust", 0),
-		/*155*/ imports.NewTable("Control_Show", 0),
-		/*156*/ imports.NewTable("Control_ShowHelp", 0),
-		/*157*/ imports.NewTable("Control_ShowHint", 0),
-		/*158*/ imports.NewTable("Control_TBDockHeight", 0),
-		/*159*/ imports.NewTable("Control_Top", 0),
-		/*160*/ imports.NewTable("Control_UndockHeight", 0),
-		/*161*/ imports.NewTable("Control_UndockWidth", 0),
-		/*162*/ imports.NewTable("Control_Update", 0),
-		/*163*/ imports.NewTable("Control_UpdateBaseBounds", 0),
-		/*164*/ imports.NewTable("Control_UpdateRolesForForm", 0),
-		/*165*/ imports.NewTable("Control_UseRightToLeftAlignment", 0),
-		/*166*/ imports.NewTable("Control_UseRightToLeftReading", 0),
-		/*167*/ imports.NewTable("Control_UseRightToLeftScrollBar", 0),
-		/*168*/ imports.NewTable("Control_Visible", 0),
-		/*169*/ imports.NewTable("Control_Width", 0),
-		/*170*/ imports.NewTable("Control_WriteLayoutDebugReport", 0),
-	}
+	controlOnce   base.Once
+	controlImport *imports.Imports = nil
 )
 
-func controlImportAPI() *imports.Imports {
-	if controlImport == nil {
-		controlImport = NewDefaultImports()
-		controlImport.SetImportTable(controlImportTables)
-		controlImportTables = nil
-	}
+func controlAPI() *imports.Imports {
+	controlOnce.Do(func() {
+		controlImport = api.NewDefaultImports()
+		controlImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TControl_Create", 0), // constructor NewControl
+			/* 1 */ imports.NewTable("TControl_ManualDock", 0), // function ManualDock
+			/* 2 */ imports.NewTable("TControl_ManualFloat", 0), // function ManualFloat
+			/* 3 */ imports.NewTable("TControl_ReplaceDockedControl", 0), // function ReplaceDockedControl
+			/* 4 */ imports.NewTable("TControl_Docked", 0), // function Docked
+			/* 5 */ imports.NewTable("TControl_Dragging", 0), // function Dragging
+			/* 6 */ imports.NewTable("TControl_GetAccessibleObject", 0), // function GetAccessibleObject
+			/* 7 */ imports.NewTable("TControl_CreateAccessibleObject", 0), // function CreateAccessibleObject
+			/* 8 */ imports.NewTable("TControl_GetSelectedChildAccessibleObject", 0), // function GetSelectedChildAccessibleObject
+			/* 9 */ imports.NewTable("TControl_GetChildAccessibleObjectAtPos", 0), // function GetChildAccessibleObjectAtPos
+			/* 10 */ imports.NewTable("TControl_ScaleDesignToForm", 0), // function ScaleDesignToForm
+			/* 11 */ imports.NewTable("TControl_ScaleFormToDesign", 0), // function ScaleFormToDesign
+			/* 12 */ imports.NewTable("TControl_Scale96ToForm", 0), // function Scale96ToForm
+			/* 13 */ imports.NewTable("TControl_ScaleFormTo96", 0), // function ScaleFormTo96
+			/* 14 */ imports.NewTable("TControl_Scale96ToFont", 0), // function Scale96ToFont
+			/* 15 */ imports.NewTable("TControl_ScaleFontTo96", 0), // function ScaleFontTo96
+			/* 16 */ imports.NewTable("TControl_ScaleScreenToFont", 0), // function ScaleScreenToFont
+			/* 17 */ imports.NewTable("TControl_ScaleFontToScreen", 0), // function ScaleFontToScreen
+			/* 18 */ imports.NewTable("TControl_Scale96ToScreen", 0), // function Scale96ToScreen
+			/* 19 */ imports.NewTable("TControl_ScaleScreenTo96", 0), // function ScaleScreenTo96
+			/* 20 */ imports.NewTable("TControl_AutoSizePhases", 0), // function AutoSizePhases
+			/* 21 */ imports.NewTable("TControl_AutoSizeDelayed", 0), // function AutoSizeDelayed
+			/* 22 */ imports.NewTable("TControl_AutoSizeDelayedReport", 0), // function AutoSizeDelayedReport
+			/* 23 */ imports.NewTable("TControl_AutoSizeDelayedHandle", 0), // function AutoSizeDelayedHandle
+			/* 24 */ imports.NewTable("TControl_AnchoredControlCount", 0), // function AnchoredControlCount
+			/* 25 */ imports.NewTable("TControl_GetCanvasScaleFactor", 0), // function GetCanvasScaleFactor
+			/* 26 */ imports.NewTable("TControl_GetDefaultWidth", 0), // function GetDefaultWidth
+			/* 27 */ imports.NewTable("TControl_GetDefaultHeight", 0), // function GetDefaultHeight
+			/* 28 */ imports.NewTable("TControl_GetDefaultColor", 0), // function GetDefaultColor
+			/* 29 */ imports.NewTable("TControl_GetColorResolvingParent", 0), // function GetColorResolvingParent
+			/* 30 */ imports.NewTable("TControl_GetRGBColorResolvingParent", 0), // function GetRGBColorResolvingParent
+			/* 31 */ imports.NewTable("TControl_GetSidePosition", 0), // function GetSidePosition
+			/* 32 */ imports.NewTable("TControl_GetAnchorsDependingOnParent", 0), // function GetAnchorsDependingOnParent
+			/* 33 */ imports.NewTable("TControl_IsParentOf", 0), // function IsParentOf
+			/* 34 */ imports.NewTable("TControl_GetTopParent", 0), // function GetTopParent
+			/* 35 */ imports.NewTable("TControl_FindSubComponent", 0), // function FindSubComponent
+			/* 36 */ imports.NewTable("TControl_IsVisible", 0), // function IsVisible
+			/* 37 */ imports.NewTable("TControl_IsControlVisible", 0), // function IsControlVisible
+			/* 38 */ imports.NewTable("TControl_IsEnabled", 0), // function IsEnabled
+			/* 39 */ imports.NewTable("TControl_IsParentColor", 0), // function IsParentColor
+			/* 40 */ imports.NewTable("TControl_IsParentFont", 0), // function IsParentFont
+			/* 41 */ imports.NewTable("TControl_FormIsUpdating", 0), // function FormIsUpdating
+			/* 42 */ imports.NewTable("TControl_IsProcessingPaintMsg", 0), // function IsProcessingPaintMsg
+			/* 43 */ imports.NewTable("TControl_CheckChildClassAllowed", 0), // function CheckChildClassAllowed
+			/* 44 */ imports.NewTable("TControl_GetTextBuf", 0), // function GetTextBuf
+			/* 45 */ imports.NewTable("TControl_GetTextLen", 0), // function GetTextLen
+			/* 46 */ imports.NewTable("TControl_Perform", 0), // function Perform
+			/* 47 */ imports.NewTable("TControl_ScreenToClient", 0), // function ScreenToClient
+			/* 48 */ imports.NewTable("TControl_ClientToScreenWithPoint", 0), // function ClientToScreenWithPoint
+			/* 49 */ imports.NewTable("TControl_ClientToScreenWithRect", 0), // function ClientToScreenWithRect
+			/* 50 */ imports.NewTable("TControl_ScreenToControl", 0), // function ScreenToControl
+			/* 51 */ imports.NewTable("TControl_ControlToScreen", 0), // function ControlToScreen
+			/* 52 */ imports.NewTable("TControl_ClientToParent", 0), // function ClientToParent
+			/* 53 */ imports.NewTable("TControl_ParentToClient", 0), // function ParentToClient
+			/* 54 */ imports.NewTable("TControl_GetChildrenRect", 0), // function GetChildrenRect
+			/* 55 */ imports.NewTable("TControl_HandleObjectShouldBeVisible", 0), // function HandleObjectShouldBeVisible
+			/* 56 */ imports.NewTable("TControl_ParentDestroyingHandle", 0), // function ParentDestroyingHandle
+			/* 57 */ imports.NewTable("TControl_ParentHandlesAllocated", 0), // function ParentHandlesAllocated
+			/* 58 */ imports.NewTable("TControl_HasHelp", 0), // function HasHelp
+			/* 59 */ imports.NewTable("TControl_UseRightToLeftAlignment", 0), // function UseRightToLeftAlignment
+			/* 60 */ imports.NewTable("TControl_UseRightToLeftReading", 0), // function UseRightToLeftReading
+			/* 61 */ imports.NewTable("TControl_UseRightToLeftScrollBar", 0), // function UseRightToLeftScrollBar
+			/* 62 */ imports.NewTable("TControl_IsRightToLeft", 0), // function IsRightToLeft
+			/* 63 */ imports.NewTable("TControl_DragDrop", 0), // procedure DragDrop
+			/* 64 */ imports.NewTable("TControl_Dock", 0), // procedure Dock
+			/* 65 */ imports.NewTable("TControl_AdjustSize", 0), // procedure AdjustSize
+			/* 66 */ imports.NewTable("TControl_AnchorToNeighbour", 0), // procedure AnchorToNeighbour
+			/* 67 */ imports.NewTable("TControl_AnchorParallel", 0), // procedure AnchorParallel
+			/* 68 */ imports.NewTable("TControl_AnchorHorizontalCenterTo", 0), // procedure AnchorHorizontalCenterTo
+			/* 69 */ imports.NewTable("TControl_AnchorVerticalCenterTo", 0), // procedure AnchorVerticalCenterTo
+			/* 70 */ imports.NewTable("TControl_AnchorToCompanion", 0), // procedure AnchorToCompanion
+			/* 71 */ imports.NewTable("TControl_AnchorSame", 0), // procedure AnchorSame
+			/* 72 */ imports.NewTable("TControl_AnchorAsAlign", 0), // procedure AnchorAsAlign
+			/* 73 */ imports.NewTable("TControl_AnchorClient", 0), // procedure AnchorClient
+			/* 74 */ imports.NewTable("TControl_SetBounds", 0), // procedure SetBounds
+			/* 75 */ imports.NewTable("TControl_SetInitialBounds", 0), // procedure SetInitialBounds
+			/* 76 */ imports.NewTable("TControl_SetBoundsKeepBase", 0), // procedure SetBoundsKeepBase
+			/* 77 */ imports.NewTable("TControl_GetPreferredSize", 0), // procedure GetPreferredSize
+			/* 78 */ imports.NewTable("TControl_CNPreferredSizeChanged", 0), // procedure CNPreferredSizeChanged
+			/* 79 */ imports.NewTable("TControl_InvalidatePreferredSize", 0), // procedure InvalidatePreferredSize
+			/* 80 */ imports.NewTable("TControl_DisableAutoSizing", 0), // procedure DisableAutoSizing
+			/* 81 */ imports.NewTable("TControl_EnableAutoSizing", 0), // procedure EnableAutoSizing
+			/* 82 */ imports.NewTable("TControl_UpdateBaseBounds", 0), // procedure UpdateBaseBounds
+			/* 83 */ imports.NewTable("TControl_WriteLayoutDebugReport", 0), // procedure WriteLayoutDebugReport
+			/* 84 */ imports.NewTable("TControl_AutoAdjustLayout", 0), // procedure AutoAdjustLayout
+			/* 85 */ imports.NewTable("TControl_ShouldAutoAdjust", 0), // procedure ShouldAutoAdjust
+			/* 86 */ imports.NewTable("TControl_FixDesignFontsPPI", 0), // procedure FixDesignFontsPPI
+			/* 87 */ imports.NewTable("TControl_ScaleFontsPPI", 0), // procedure ScaleFontsPPI
+			/* 88 */ imports.NewTable("TControl_EditingDone", 0), // procedure EditingDone
+			/* 89 */ imports.NewTable("TControl_ExecuteDefaultAction", 0), // procedure ExecuteDefaultAction
+			/* 90 */ imports.NewTable("TControl_ExecuteCancelAction", 0), // procedure ExecuteCancelAction
+			/* 91 */ imports.NewTable("TControl_BeginDrag", 0), // procedure BeginDrag
+			/* 92 */ imports.NewTable("TControl_EndDrag", 0), // procedure EndDrag
+			/* 93 */ imports.NewTable("TControl_BringToFront", 0), // procedure BringToFront
+			/* 94 */ imports.NewTable("TControl_Hide", 0), // procedure Hide
+			/* 95 */ imports.NewTable("TControl_Refresh", 0), // procedure Refresh
+			/* 96 */ imports.NewTable("TControl_Repaint", 0), // procedure Repaint
+			/* 97 */ imports.NewTable("TControl_Invalidate", 0), // procedure Invalidate
+			/* 98 */ imports.NewTable("TControl_CheckNewParent", 0), // procedure CheckNewParent
+			/* 99 */ imports.NewTable("TControl_SendToBack", 0), // procedure SendToBack
+			/* 100 */ imports.NewTable("TControl_SetTempCursor", 0), // procedure SetTempCursor
+			/* 101 */ imports.NewTable("TControl_UpdateRolesForForm", 0), // procedure UpdateRolesForForm
+			/* 102 */ imports.NewTable("TControl_ActiveDefaultControlChanged", 0), // procedure ActiveDefaultControlChanged
+			/* 103 */ imports.NewTable("TControl_SetTextBuf", 0), // procedure SetTextBuf
+			/* 104 */ imports.NewTable("TControl_Show", 0), // procedure Show
+			/* 105 */ imports.NewTable("TControl_Update", 0), // procedure Update
+			/* 106 */ imports.NewTable("TControl_InitiateAction", 0), // procedure InitiateAction
+			/* 107 */ imports.NewTable("TControl_ShowHelp", 0), // procedure ShowHelp
+			/* 108 */ imports.NewTable("TControl_AnchoredControls", 0), // property AnchoredControls
+			/* 109 */ imports.NewTable("TControl_BaseBounds", 0), // property BaseBounds
+			/* 110 */ imports.NewTable("TControl_ReadBounds", 0), // property ReadBounds
+			/* 111 */ imports.NewTable("TControl_BaseParentClientSize", 0), // property BaseParentClientSize
+			/* 112 */ imports.NewTable("TControl_AccessibleName", 0), // property AccessibleName
+			/* 113 */ imports.NewTable("TControl_AccessibleDescription", 0), // property AccessibleDescription
+			/* 114 */ imports.NewTable("TControl_AccessibleValue", 0), // property AccessibleValue
+			/* 115 */ imports.NewTable("TControl_AccessibleRole", 0), // property AccessibleRole
+			/* 116 */ imports.NewTable("TControl_Action", 0), // property Action
+			/* 117 */ imports.NewTable("TControl_Align", 0), // property Align
+			/* 118 */ imports.NewTable("TControl_Anchors", 0), // property Anchors
+			/* 119 */ imports.NewTable("TControl_AnchorSide", 0), // property AnchorSide
+			/* 120 */ imports.NewTable("TControl_AutoSize", 0), // property AutoSize
+			/* 121 */ imports.NewTable("TControl_BorderSpacing", 0), // property BorderSpacing
+			/* 122 */ imports.NewTable("TControl_BoundsRect", 0), // property BoundsRect
+			/* 123 */ imports.NewTable("TControl_BoundsRectForNewParent", 0), // property BoundsRectForNewParent
+			/* 124 */ imports.NewTable("TControl_Caption", 0), // property Caption
+			/* 125 */ imports.NewTable("TControl_CaptureMouseButtons", 0), // property CaptureMouseButtons
+			/* 126 */ imports.NewTable("TControl_ClientHeight", 0), // property ClientHeight
+			/* 127 */ imports.NewTable("TControl_ClientOrigin", 0), // property ClientOrigin
+			/* 128 */ imports.NewTable("TControl_ClientRect", 0), // property ClientRect
+			/* 129 */ imports.NewTable("TControl_ClientWidth", 0), // property ClientWidth
+			/* 130 */ imports.NewTable("TControl_Color", 0), // property Color
+			/* 131 */ imports.NewTable("TControl_Constraints", 0), // property Constraints
+			/* 132 */ imports.NewTable("TControl_ControlOrigin", 0), // property ControlOrigin
+			/* 133 */ imports.NewTable("TControl_ControlState", 0), // property ControlState
+			/* 134 */ imports.NewTable("TControl_ControlStyle", 0), // property ControlStyle
+			/* 135 */ imports.NewTable("TControl_Enabled", 0), // property Enabled
+			/* 136 */ imports.NewTable("TControl_Font", 0), // property Font
+			/* 137 */ imports.NewTable("TControl_IsControl", 0), // property IsControl
+			/* 138 */ imports.NewTable("TControl_MouseInClient", 0), // property MouseInClient
+			/* 139 */ imports.NewTable("TControl_Parent", 0), // property Parent
+			/* 140 */ imports.NewTable("TControl_PopupMenu", 0), // property PopupMenu
+			/* 141 */ imports.NewTable("TControl_ShowHint", 0), // property ShowHint
+			/* 142 */ imports.NewTable("TControl_Visible", 0), // property Visible
+			/* 143 */ imports.NewTable("TControl_DockOrientation", 0), // property DockOrientation
+			/* 144 */ imports.NewTable("TControl_Floating", 0), // property Floating
+			/* 145 */ imports.NewTable("TControl_FloatingDockSiteClass", 0), // property FloatingDockSiteClass
+			/* 146 */ imports.NewTable("TControl_HostDockSite", 0), // property HostDockSite
+			/* 147 */ imports.NewTable("TControl_LRDockWidth", 0), // property LRDockWidth
+			/* 148 */ imports.NewTable("TControl_TBDockHeight", 0), // property TBDockHeight
+			/* 149 */ imports.NewTable("TControl_UndockHeight", 0), // property UndockHeight
+			/* 150 */ imports.NewTable("TControl_UndockWidth", 0), // property UndockWidth
+			/* 151 */ imports.NewTable("TControl_BiDiMode", 0), // property BiDiMode
+			/* 152 */ imports.NewTable("TControl_ParentBiDiMode", 0), // property ParentBiDiMode
+			/* 153 */ imports.NewTable("TControl_AnchorSideLeft", 0), // property AnchorSideLeft
+			/* 154 */ imports.NewTable("TControl_AnchorSideTop", 0), // property AnchorSideTop
+			/* 155 */ imports.NewTable("TControl_AnchorSideRight", 0), // property AnchorSideRight
+			/* 156 */ imports.NewTable("TControl_AnchorSideBottom", 0), // property AnchorSideBottom
+			/* 157 */ imports.NewTable("TControl_Cursor", 0), // property Cursor
+			/* 158 */ imports.NewTable("TControl_Left", 0), // property Left
+			/* 159 */ imports.NewTable("TControl_Height", 0), // property Height
+			/* 160 */ imports.NewTable("TControl_Hint", 0), // property Hint
+			/* 161 */ imports.NewTable("TControl_Top", 0), // property Top
+			/* 162 */ imports.NewTable("TControl_Width", 0), // property Width
+			/* 163 */ imports.NewTable("TControl_HelpType", 0), // property HelpType
+			/* 164 */ imports.NewTable("TControl_HelpKeyword", 0), // property HelpKeyword
+			/* 165 */ imports.NewTable("TControl_HelpContext", 0), // property HelpContext
+			/* 166 */ imports.NewTable("TControl_OnChangeBounds", 0), // event OnChangeBounds
+			/* 167 */ imports.NewTable("TControl_OnClick", 0), // event OnClick
+			/* 168 */ imports.NewTable("TControl_OnResize", 0), // event OnResize
+			/* 169 */ imports.NewTable("TControl_OnShowHint", 0), // event OnShowHint
+			/* 170 */ imports.NewTable("TControl_WindowProc", 0), // event WindowProc
+			/* 171 */ imports.NewTable("TControl_TClass", 0), // function TControlClass
+		}
+	})
 	return controlImport
 }

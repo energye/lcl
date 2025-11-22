@@ -9,79 +9,92 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomControl Parent: IWinControl
 type ICustomControl interface {
 	IWinControl
-	Canvas() ICanvas                    // property
-	SetCanvas(AValue ICanvas)           // property
-	BorderStyle() TBorderStyle          // property
-	SetBorderStyle(AValue TBorderStyle) // property
-	SetOnPaint(fn TNotifyEvent)         // property event
+	Canvas() ICanvas         // property Canvas Getter
+	SetCanvas(value ICanvas) // property Canvas Setter
+	// BorderStyleToBorderStyle
+	//  properties which are not supported by all descendents
+	BorderStyleToBorderStyle() types.TBorderStyle         // property BorderStyle Getter
+	SetBorderStyleToBorderStyle(value types.TBorderStyle) // property BorderStyle Setter
+	SetOnPaint(fn TNotifyEvent)                           // property event
 }
 
-// TCustomControl Parent: TWinControl
 type TCustomControl struct {
 	TWinControl
-	paintPtr uintptr
-}
-
-func NewCustomControl(AOwner IComponent) ICustomControl {
-	r1 := customControlImportAPI().SysCallN(3, GetObjectUintptr(AOwner))
-	return AsCustomControl(r1)
 }
 
 func (m *TCustomControl) Canvas() ICanvas {
-	r1 := customControlImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return AsCanvas(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := customControlAPI().SysCallN(1, 0, m.Instance())
+	return AsCanvas(r)
 }
 
-func (m *TCustomControl) SetCanvas(AValue ICanvas) {
-	customControlImportAPI().SysCallN(1, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TCustomControl) SetCanvas(value ICanvas) {
+	if !m.IsValid() {
+		return
+	}
+	customControlAPI().SysCallN(1, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TCustomControl) BorderStyle() TBorderStyle {
-	r1 := customControlImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TBorderStyle(r1)
+func (m *TCustomControl) BorderStyleToBorderStyle() types.TBorderStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customControlAPI().SysCallN(2, 0, m.Instance())
+	return types.TBorderStyle(r)
 }
 
-func (m *TCustomControl) SetBorderStyle(AValue TBorderStyle) {
-	customControlImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
-}
-
-func CustomControlClass() TClass {
-	ret := customControlImportAPI().SysCallN(2)
-	return TClass(ret)
+func (m *TCustomControl) SetBorderStyleToBorderStyle(value types.TBorderStyle) {
+	if !m.IsValid() {
+		return
+	}
+	customControlAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomControl) SetOnPaint(fn TNotifyEvent) {
-	if m.paintPtr != 0 {
-		RemoveEventElement(m.paintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.paintPtr = MakeEventDataPtr(fn)
-	customControlImportAPI().SysCallN(4, m.Instance(), m.paintPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 3, customControlAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomControl class constructor
+func NewCustomControl(owner IComponent) ICustomControl {
+	r := customControlAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomControl(r)
+}
+
+func TCustomControlClass() types.TClass {
+	r := customControlAPI().SysCallN(4)
+	return types.TClass(r)
 }
 
 var (
-	customControlImport       *imports.Imports = nil
-	customControlImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomControl_BorderStyle", 0),
-		/*1*/ imports.NewTable("CustomControl_Canvas", 0),
-		/*2*/ imports.NewTable("CustomControl_Class", 0),
-		/*3*/ imports.NewTable("CustomControl_Create", 0),
-		/*4*/ imports.NewTable("CustomControl_SetOnPaint", 0),
-	}
+	customControlOnce   base.Once
+	customControlImport *imports.Imports = nil
 )
 
-func customControlImportAPI() *imports.Imports {
-	if customControlImport == nil {
-		customControlImport = NewDefaultImports()
-		customControlImport.SetImportTable(customControlImportTables)
-		customControlImportTables = nil
-	}
+func customControlAPI() *imports.Imports {
+	customControlOnce.Do(func() {
+		customControlImport = api.NewDefaultImports()
+		customControlImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomControl_Create", 0), // constructor NewCustomControl
+			/* 1 */ imports.NewTable("TCustomControl_Canvas", 0), // property Canvas
+			/* 2 */ imports.NewTable("TCustomControl_BorderStyleToBorderStyle", 0), // property BorderStyleToBorderStyle
+			/* 3 */ imports.NewTable("TCustomControl_OnPaint", 0), // event OnPaint
+			/* 4 */ imports.NewTable("TCustomControl_TClass", 0), // function TCustomControlClass
+		}
+	})
 	return customControlImport
 }

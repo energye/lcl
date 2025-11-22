@@ -9,24 +9,25 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ISpeedButton Parent: ICustomSpeedButton
 type ISpeedButton interface {
 	ICustomSpeedButton
-	DragCursor() TCursor                           // property
-	SetDragCursor(AValue TCursor)                  // property
-	DragKind() TDragKind                           // property
-	SetDragKind(AValue TDragKind)                  // property
-	DragMode() TDragMode                           // property
-	SetDragMode(AValue TDragMode)                  // property
-	ParentFont() bool                              // property
-	SetParentFont(AValue bool)                     // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
+	DragCursor() types.TCursor                     // property DragCursor Getter
+	SetDragCursor(value types.TCursor)             // property DragCursor Setter
+	DragKind() types.TDragKind                     // property DragKind Getter
+	SetDragKind(value types.TDragKind)             // property DragKind Setter
+	DragMode() types.TDragMode                     // property DragMode Getter
+	SetDragMode(value types.TDragMode)             // property DragMode Setter
+	ParentFont() bool                              // property ParentFont Getter
+	SetParentFont(value bool)                      // property ParentFont Setter
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
 	SetOnContextPopup(fn TContextPopupEvent)       // property event
 	SetOnDblClick(fn TNotifyEvent)                 // property event
 	SetOnDragDrop(fn TDragDropEvent)               // property event
@@ -44,234 +45,248 @@ type ISpeedButton interface {
 	SetOnStartDrag(fn TStartDragEvent)             // property event
 }
 
-// TSpeedButton Parent: TCustomSpeedButton
 type TSpeedButton struct {
 	TCustomSpeedButton
-	contextPopupPtr   uintptr
-	dblClickPtr       uintptr
-	dragDropPtr       uintptr
-	dragOverPtr       uintptr
-	endDragPtr        uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	paintPtr          uintptr
-	startDragPtr      uintptr
 }
 
-func NewSpeedButton(AOwner IComponent) ISpeedButton {
-	r1 := speedButtonImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsSpeedButton(r1)
+func (m *TSpeedButton) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := speedButtonAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TSpeedButton) DragCursor() TCursor {
-	r1 := speedButtonImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TSpeedButton) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	speedButtonAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TSpeedButton) SetDragCursor(AValue TCursor) {
-	speedButtonImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TSpeedButton) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := speedButtonAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TSpeedButton) DragKind() TDragKind {
-	r1 := speedButtonImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TSpeedButton) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	speedButtonAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TSpeedButton) SetDragKind(AValue TDragKind) {
-	speedButtonImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TSpeedButton) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := speedButtonAPI().SysCallN(3, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TSpeedButton) DragMode() TDragMode {
-	r1 := speedButtonImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TSpeedButton) SetDragMode(AValue TDragMode) {
-	speedButtonImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TSpeedButton) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	speedButtonAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TSpeedButton) ParentFont() bool {
-	r1 := speedButtonImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := speedButtonAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TSpeedButton) SetParentFont(AValue bool) {
-	speedButtonImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TSpeedButton) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	speedButtonAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TSpeedButton) ParentShowHint() bool {
-	r1 := speedButtonImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := speedButtonAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TSpeedButton) SetParentShowHint(AValue bool) {
-	speedButtonImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
-}
-
-func SpeedButtonClass() TClass {
-	ret := speedButtonImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TSpeedButton) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	speedButtonAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TSpeedButton) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(7, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 6, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(8, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 7, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(9, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 8, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(10, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 9, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(11, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 10, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(12, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 11, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(13, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(14, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 13, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(15, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 14, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(16, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 15, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(17, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 16, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(18, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 17, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(19, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 18, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnPaint(fn TNotifyEvent) {
-	if m.paintPtr != 0 {
-		RemoveEventElement(m.paintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.paintPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(20, m.Instance(), m.paintPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 19, speedButtonAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TSpeedButton) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	speedButtonImportAPI().SysCallN(21, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 20, speedButtonAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewSpeedButton class constructor
+func NewSpeedButton(owner IComponent) ISpeedButton {
+	r := speedButtonAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsSpeedButton(r)
+}
+
+func TSpeedButtonClass() types.TClass {
+	r := speedButtonAPI().SysCallN(21)
+	return types.TClass(r)
 }
 
 var (
-	speedButtonImport       *imports.Imports = nil
-	speedButtonImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("SpeedButton_Class", 0),
-		/*1*/ imports.NewTable("SpeedButton_Create", 0),
-		/*2*/ imports.NewTable("SpeedButton_DragCursor", 0),
-		/*3*/ imports.NewTable("SpeedButton_DragKind", 0),
-		/*4*/ imports.NewTable("SpeedButton_DragMode", 0),
-		/*5*/ imports.NewTable("SpeedButton_ParentFont", 0),
-		/*6*/ imports.NewTable("SpeedButton_ParentShowHint", 0),
-		/*7*/ imports.NewTable("SpeedButton_SetOnContextPopup", 0),
-		/*8*/ imports.NewTable("SpeedButton_SetOnDblClick", 0),
-		/*9*/ imports.NewTable("SpeedButton_SetOnDragDrop", 0),
-		/*10*/ imports.NewTable("SpeedButton_SetOnDragOver", 0),
-		/*11*/ imports.NewTable("SpeedButton_SetOnEndDrag", 0),
-		/*12*/ imports.NewTable("SpeedButton_SetOnMouseDown", 0),
-		/*13*/ imports.NewTable("SpeedButton_SetOnMouseEnter", 0),
-		/*14*/ imports.NewTable("SpeedButton_SetOnMouseLeave", 0),
-		/*15*/ imports.NewTable("SpeedButton_SetOnMouseMove", 0),
-		/*16*/ imports.NewTable("SpeedButton_SetOnMouseUp", 0),
-		/*17*/ imports.NewTable("SpeedButton_SetOnMouseWheel", 0),
-		/*18*/ imports.NewTable("SpeedButton_SetOnMouseWheelDown", 0),
-		/*19*/ imports.NewTable("SpeedButton_SetOnMouseWheelUp", 0),
-		/*20*/ imports.NewTable("SpeedButton_SetOnPaint", 0),
-		/*21*/ imports.NewTable("SpeedButton_SetOnStartDrag", 0),
-	}
+	speedButtonOnce   base.Once
+	speedButtonImport *imports.Imports = nil
 )
 
-func speedButtonImportAPI() *imports.Imports {
-	if speedButtonImport == nil {
-		speedButtonImport = NewDefaultImports()
-		speedButtonImport.SetImportTable(speedButtonImportTables)
-		speedButtonImportTables = nil
-	}
+func speedButtonAPI() *imports.Imports {
+	speedButtonOnce.Do(func() {
+		speedButtonImport = api.NewDefaultImports()
+		speedButtonImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TSpeedButton_Create", 0), // constructor NewSpeedButton
+			/* 1 */ imports.NewTable("TSpeedButton_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TSpeedButton_DragKind", 0), // property DragKind
+			/* 3 */ imports.NewTable("TSpeedButton_DragMode", 0), // property DragMode
+			/* 4 */ imports.NewTable("TSpeedButton_ParentFont", 0), // property ParentFont
+			/* 5 */ imports.NewTable("TSpeedButton_ParentShowHint", 0), // property ParentShowHint
+			/* 6 */ imports.NewTable("TSpeedButton_OnContextPopup", 0), // event OnContextPopup
+			/* 7 */ imports.NewTable("TSpeedButton_OnDblClick", 0), // event OnDblClick
+			/* 8 */ imports.NewTable("TSpeedButton_OnDragDrop", 0), // event OnDragDrop
+			/* 9 */ imports.NewTable("TSpeedButton_OnDragOver", 0), // event OnDragOver
+			/* 10 */ imports.NewTable("TSpeedButton_OnEndDrag", 0), // event OnEndDrag
+			/* 11 */ imports.NewTable("TSpeedButton_OnMouseDown", 0), // event OnMouseDown
+			/* 12 */ imports.NewTable("TSpeedButton_OnMouseEnter", 0), // event OnMouseEnter
+			/* 13 */ imports.NewTable("TSpeedButton_OnMouseLeave", 0), // event OnMouseLeave
+			/* 14 */ imports.NewTable("TSpeedButton_OnMouseMove", 0), // event OnMouseMove
+			/* 15 */ imports.NewTable("TSpeedButton_OnMouseUp", 0), // event OnMouseUp
+			/* 16 */ imports.NewTable("TSpeedButton_OnMouseWheel", 0), // event OnMouseWheel
+			/* 17 */ imports.NewTable("TSpeedButton_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 18 */ imports.NewTable("TSpeedButton_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 19 */ imports.NewTable("TSpeedButton_OnPaint", 0), // event OnPaint
+			/* 20 */ imports.NewTable("TSpeedButton_OnStartDrag", 0), // event OnStartDrag
+			/* 21 */ imports.NewTable("TSpeedButton_TClass", 0), // function TSpeedButtonClass
+		}
+	})
 	return speedButtonImport
 }

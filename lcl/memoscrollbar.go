@@ -9,44 +9,38 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
-// IMemoScrollBar Parent: IControlScrollBar
-type IMemoScrollBar interface {
+// IMemoScrollbar Parent: IControlScrollBar
+type IMemoScrollbar interface {
 	IControlScrollBar
 }
 
-// TMemoScrollBar Parent: TControlScrollBar
-type TMemoScrollBar struct {
+type TMemoScrollbar struct {
 	TControlScrollBar
 }
 
-func NewMemoScrollBar(AControl IWinControl, AKind TScrollBarKind) IMemoScrollBar {
-	r1 := memoScrollBarImportAPI().SysCallN(1, GetObjectUintptr(AControl), uintptr(AKind))
-	return AsMemoScrollBar(r1)
-}
-
-func MemoScrollBarClass() TClass {
-	ret := memoScrollBarImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewMemoScrollbar class constructor
+func NewMemoScrollbar(control IWinControl, kind types.TScrollBarKind) IMemoScrollbar {
+	r := memoScrollbarAPI().SysCallN(0, base.GetObjectUintptr(control), uintptr(kind))
+	return AsMemoScrollbar(r)
 }
 
 var (
-	memoScrollBarImport       *imports.Imports = nil
-	memoScrollBarImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("MemoScrollBar_Class", 0),
-		/*1*/ imports.NewTable("MemoScrollBar_Create", 0),
-	}
+	memoScrollbarOnce   base.Once
+	memoScrollbarImport *imports.Imports = nil
 )
 
-func memoScrollBarImportAPI() *imports.Imports {
-	if memoScrollBarImport == nil {
-		memoScrollBarImport = NewDefaultImports()
-		memoScrollBarImport.SetImportTable(memoScrollBarImportTables)
-		memoScrollBarImportTables = nil
-	}
-	return memoScrollBarImport
+func memoScrollbarAPI() *imports.Imports {
+	memoScrollbarOnce.Do(func() {
+		memoScrollbarImport = api.NewDefaultImports()
+		memoScrollbarImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TMemoScrollbar_Create", 0), // constructor NewMemoScrollbar
+		}
+	})
+	return memoScrollbarImport
 }

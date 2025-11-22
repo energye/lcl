@@ -1,6 +1,6 @@
 //----------------------------------------
 //
-// Copyright © ying32. All Rights Reserved.
+// Copyright © yanghy. All Rights Reserved.
 //
 // Licensed under Apache License 2.0
 //
@@ -73,7 +73,7 @@ func (p ProcAddr) Call(args ...uintptr) (r1, r2 uintptr, err error) {
 	return SyscallN(uintptr(p), args...)
 }
 
-// SyscallN 调用一个函数，最大12个参数。
+// SyscallN 调用一个函数，最大18个参数
 func SyscallN(addr uintptr, args ...uintptr) (r1, r2 uintptr, err error) {
 	if addr == 0 {
 		return 0, 0, syscall.EINVAL
@@ -106,7 +106,18 @@ func SyscallN(addr uintptr, args ...uintptr) (r1, r2 uintptr, err error) {
 		ret = C.Syscall11(toPtr(addr), toPtr(args[0]), toPtr(args[1]), toPtr(args[2]), toPtr(args[3]), toPtr(args[4]), toPtr(args[5]), toPtr(args[6]), toPtr(args[7]), toPtr(args[8]), toPtr(args[9]), toPtr(args[10]))
 	case 12:
 		ret = C.Syscall12(toPtr(addr), toPtr(args[0]), toPtr(args[1]), toPtr(args[2]), toPtr(args[3]), toPtr(args[4]), toPtr(args[5]), toPtr(args[6]), toPtr(args[7]), toPtr(args[8]), toPtr(args[9]), toPtr(args[10]), toPtr(args[11]))
-
+	case 13:
+		ret = C.Syscall13(toPtr(addr), toPtr(args[0]), toPtr(args[1]), toPtr(args[2]), toPtr(args[3]), toPtr(args[4]), toPtr(args[5]), toPtr(args[6]), toPtr(args[7]), toPtr(args[8]), toPtr(args[9]), toPtr(args[10]), toPtr(args[11]), toPtr(args[12]))
+	case 14:
+		ret = C.Syscall14(toPtr(addr), toPtr(args[0]), toPtr(args[1]), toPtr(args[2]), toPtr(args[3]), toPtr(args[4]), toPtr(args[5]), toPtr(args[6]), toPtr(args[7]), toPtr(args[8]), toPtr(args[9]), toPtr(args[10]), toPtr(args[11]), toPtr(args[12]), toPtr(args[13]))
+	case 15:
+		ret = C.Syscall15(toPtr(addr), toPtr(args[0]), toPtr(args[1]), toPtr(args[2]), toPtr(args[3]), toPtr(args[4]), toPtr(args[5]), toPtr(args[6]), toPtr(args[7]), toPtr(args[8]), toPtr(args[9]), toPtr(args[10]), toPtr(args[11]), toPtr(args[12]), toPtr(args[13]), toPtr(args[14]))
+	case 16:
+		ret = C.Syscall16(toPtr(addr), toPtr(args[0]), toPtr(args[1]), toPtr(args[2]), toPtr(args[3]), toPtr(args[4]), toPtr(args[5]), toPtr(args[6]), toPtr(args[7]), toPtr(args[8]), toPtr(args[9]), toPtr(args[10]), toPtr(args[11]), toPtr(args[12]), toPtr(args[13]), toPtr(args[14]), toPtr(args[15]))
+	case 17:
+		ret = C.Syscall17(toPtr(addr), toPtr(args[0]), toPtr(args[1]), toPtr(args[2]), toPtr(args[3]), toPtr(args[4]), toPtr(args[5]), toPtr(args[6]), toPtr(args[7]), toPtr(args[8]), toPtr(args[9]), toPtr(args[10]), toPtr(args[11]), toPtr(args[12]), toPtr(args[13]), toPtr(args[14]), toPtr(args[15]), toPtr(args[16]))
+	case 18:
+		ret = C.Syscall18(toPtr(addr), toPtr(args[0]), toPtr(args[1]), toPtr(args[2]), toPtr(args[3]), toPtr(args[4]), toPtr(args[5]), toPtr(args[6]), toPtr(args[7]), toPtr(args[8]), toPtr(args[9]), toPtr(args[10]), toPtr(args[11]), toPtr(args[12]), toPtr(args[13]), toPtr(args[14]), toPtr(args[15]), toPtr(args[16]), toPtr(args[17]))
 	default:
 		return 0, 0, errors.New("the number of invalid parameters")
 	}

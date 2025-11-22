@@ -28,7 +28,7 @@ func GUIDToString(guid types.TGUID) string {
 //
 // Convert GUID in character form to TGUID structure.
 func StringToGUID(str string) types.TGUID {
-	return api.DStringToGUID(str)
+	return api.StringToGUID(str)
 }
 
 // CreateGUID
@@ -37,5 +37,5 @@ func StringToGUID(str string) types.TGUID {
 //
 // Create a new GUID.
 func CreateGUID() types.TGUID {
-	return api.DCreateGUID()
+	return api.CreateGUID()
 }

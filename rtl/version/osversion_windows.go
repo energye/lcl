@@ -14,8 +14,9 @@ package version
 
 import (
 	"fmt"
-	"github.com/energye/lcl/pkgs/win"
 	"unsafe"
+
+	"github.com/energye/lcl/pkgs/win"
 )
 
 const (

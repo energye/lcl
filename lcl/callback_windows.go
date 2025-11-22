@@ -6,6 +6,8 @@
 //
 //----------------------------------------
 
+// :predefine:
+
 package lcl
 
 import (
@@ -13,10 +15,11 @@ import (
 )
 
 var (
-	eventCallback                   = syscall.NewCallback(eventCallbackProc)
-	removeEventCallback             = syscall.NewCallback(removeEventCallbackProc)
-	messageCallback                 = syscall.NewCallback(messageCallbackProc)
-	threadSyncCallback              = syscall.NewCallback(threadSyncCallbackProc)
-	requestCallCreateParamsCallback = syscall.NewCallback(requestCallCreateParamsCallbackProc)
-	requestCallFormCreateCallback   = syscall.NewCallback(requestCallFormCreateCallbackProc)
+	eventCallback        = syscall.NewCallback(eventCallbackProc)
+	removeEventCallback  = syscall.NewCallback(removeEventCallbackProc)
+	messageCallback      = syscall.NewCallback(messageCallbackProc)
+	threadSyncCallback   = syscall.NewCallback(threadSyncCallbackProc)
+	threadAsyncCallback  = syscall.NewCallback(threadAsyncCallbackProc)
+	createParamsCallback = syscall.NewCallback(createParamsCallbackProc)
+	formCreateCallback   = syscall.NewCallback(formCreateCallbackProc)
 )

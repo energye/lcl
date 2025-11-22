@@ -9,24 +9,25 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICheckGroup Parent: ICustomCheckGroup
 type ICheckGroup interface {
 	ICustomCheckGroup
-	DragCursor() TCursor                           // property
-	SetDragCursor(AValue TCursor)                  // property
-	DragMode() TDragMode                           // property
-	SetDragMode(AValue TDragMode)                  // property
-	ParentFont() bool                              // property
-	SetParentFont(AValue bool)                     // property
-	ParentColor() bool                             // property
-	SetParentColor(AValue bool)                    // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
+	DragCursor() types.TCursor                     // property DragCursor Getter
+	SetDragCursor(value types.TCursor)             // property DragCursor Setter
+	DragMode() types.TDragMode                     // property DragMode Getter
+	SetDragMode(value types.TDragMode)             // property DragMode Setter
+	ParentFont() bool                              // property ParentFont Getter
+	SetParentFont(value bool)                      // property ParentFont Setter
+	ParentColor() bool                             // property ParentColor Getter
+	SetParentColor(value bool)                     // property ParentColor Setter
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
 	SetOnDblClick(fn TNotifyEvent)                 // property event
 	SetOnDragDrop(fn TDragDropEvent)               // property event
 	SetOnDragOver(fn TDragOverEvent)               // property event
@@ -42,214 +43,230 @@ type ICheckGroup interface {
 	SetOnStartDrag(fn TStartDragEvent)             // property event
 }
 
-// TCheckGroup Parent: TCustomCheckGroup
 type TCheckGroup struct {
 	TCustomCheckGroup
-	dblClickPtr       uintptr
-	dragDropPtr       uintptr
-	dragOverPtr       uintptr
-	endDragPtr        uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	startDragPtr      uintptr
 }
 
-func NewCheckGroup(TheOwner IComponent) ICheckGroup {
-	r1 := checkGroupImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsCheckGroup(r1)
+func (m *TCheckGroup) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkGroupAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TCheckGroup) DragCursor() TCursor {
-	r1 := checkGroupImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TCheckGroup) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	checkGroupAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCheckGroup) SetDragCursor(AValue TCursor) {
-	checkGroupImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckGroup) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := checkGroupAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TCheckGroup) DragMode() TDragMode {
-	r1 := checkGroupImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TCheckGroup) SetDragMode(AValue TDragMode) {
-	checkGroupImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TCheckGroup) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	checkGroupAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCheckGroup) ParentFont() bool {
-	r1 := checkGroupImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkGroupAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckGroup) SetParentFont(AValue bool) {
-	checkGroupImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TCheckGroup) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkGroupAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCheckGroup) ParentColor() bool {
-	r1 := checkGroupImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkGroupAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckGroup) SetParentColor(AValue bool) {
-	checkGroupImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
+func (m *TCheckGroup) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkGroupAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCheckGroup) ParentShowHint() bool {
-	r1 := checkGroupImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := checkGroupAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCheckGroup) SetParentShowHint(AValue bool) {
-	checkGroupImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
-}
-
-func CheckGroupClass() TClass {
-	ret := checkGroupImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TCheckGroup) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	checkGroupAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCheckGroup) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(7, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 6, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(8, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 7, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(9, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 8, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(10, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 9, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(11, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 10, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(12, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 11, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(13, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(14, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 13, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(15, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 14, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(16, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 15, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(17, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 16, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(18, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 17, checkGroupAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCheckGroup) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	checkGroupImportAPI().SysCallN(19, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 18, checkGroupAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCheckGroup class constructor
+func NewCheckGroup(theOwner IComponent) ICheckGroup {
+	r := checkGroupAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsCheckGroup(r)
+}
+
+func TCheckGroupClass() types.TClass {
+	r := checkGroupAPI().SysCallN(19)
+	return types.TClass(r)
 }
 
 var (
-	checkGroupImport       *imports.Imports = nil
-	checkGroupImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CheckGroup_Class", 0),
-		/*1*/ imports.NewTable("CheckGroup_Create", 0),
-		/*2*/ imports.NewTable("CheckGroup_DragCursor", 0),
-		/*3*/ imports.NewTable("CheckGroup_DragMode", 0),
-		/*4*/ imports.NewTable("CheckGroup_ParentColor", 0),
-		/*5*/ imports.NewTable("CheckGroup_ParentFont", 0),
-		/*6*/ imports.NewTable("CheckGroup_ParentShowHint", 0),
-		/*7*/ imports.NewTable("CheckGroup_SetOnDblClick", 0),
-		/*8*/ imports.NewTable("CheckGroup_SetOnDragDrop", 0),
-		/*9*/ imports.NewTable("CheckGroup_SetOnDragOver", 0),
-		/*10*/ imports.NewTable("CheckGroup_SetOnEndDrag", 0),
-		/*11*/ imports.NewTable("CheckGroup_SetOnMouseDown", 0),
-		/*12*/ imports.NewTable("CheckGroup_SetOnMouseEnter", 0),
-		/*13*/ imports.NewTable("CheckGroup_SetOnMouseLeave", 0),
-		/*14*/ imports.NewTable("CheckGroup_SetOnMouseMove", 0),
-		/*15*/ imports.NewTable("CheckGroup_SetOnMouseUp", 0),
-		/*16*/ imports.NewTable("CheckGroup_SetOnMouseWheel", 0),
-		/*17*/ imports.NewTable("CheckGroup_SetOnMouseWheelDown", 0),
-		/*18*/ imports.NewTable("CheckGroup_SetOnMouseWheelUp", 0),
-		/*19*/ imports.NewTable("CheckGroup_SetOnStartDrag", 0),
-	}
+	checkGroupOnce   base.Once
+	checkGroupImport *imports.Imports = nil
 )
 
-func checkGroupImportAPI() *imports.Imports {
-	if checkGroupImport == nil {
-		checkGroupImport = NewDefaultImports()
-		checkGroupImport.SetImportTable(checkGroupImportTables)
-		checkGroupImportTables = nil
-	}
+func checkGroupAPI() *imports.Imports {
+	checkGroupOnce.Do(func() {
+		checkGroupImport = api.NewDefaultImports()
+		checkGroupImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCheckGroup_Create", 0), // constructor NewCheckGroup
+			/* 1 */ imports.NewTable("TCheckGroup_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TCheckGroup_DragMode", 0), // property DragMode
+			/* 3 */ imports.NewTable("TCheckGroup_ParentFont", 0), // property ParentFont
+			/* 4 */ imports.NewTable("TCheckGroup_ParentColor", 0), // property ParentColor
+			/* 5 */ imports.NewTable("TCheckGroup_ParentShowHint", 0), // property ParentShowHint
+			/* 6 */ imports.NewTable("TCheckGroup_OnDblClick", 0), // event OnDblClick
+			/* 7 */ imports.NewTable("TCheckGroup_OnDragDrop", 0), // event OnDragDrop
+			/* 8 */ imports.NewTable("TCheckGroup_OnDragOver", 0), // event OnDragOver
+			/* 9 */ imports.NewTable("TCheckGroup_OnEndDrag", 0), // event OnEndDrag
+			/* 10 */ imports.NewTable("TCheckGroup_OnMouseDown", 0), // event OnMouseDown
+			/* 11 */ imports.NewTable("TCheckGroup_OnMouseEnter", 0), // event OnMouseEnter
+			/* 12 */ imports.NewTable("TCheckGroup_OnMouseLeave", 0), // event OnMouseLeave
+			/* 13 */ imports.NewTable("TCheckGroup_OnMouseMove", 0), // event OnMouseMove
+			/* 14 */ imports.NewTable("TCheckGroup_OnMouseUp", 0), // event OnMouseUp
+			/* 15 */ imports.NewTable("TCheckGroup_OnMouseWheel", 0), // event OnMouseWheel
+			/* 16 */ imports.NewTable("TCheckGroup_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 17 */ imports.NewTable("TCheckGroup_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 18 */ imports.NewTable("TCheckGroup_OnStartDrag", 0), // event OnStartDrag
+			/* 19 */ imports.NewTable("TCheckGroup_TClass", 0), // function TCheckGroupClass
+		}
+	})
 	return checkGroupImport
 }

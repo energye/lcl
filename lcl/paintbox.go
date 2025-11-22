@@ -9,24 +9,25 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IPaintBox Parent: IGraphicControl
 type IPaintBox interface {
 	IGraphicControl
-	DragCursor() TCursor                            // property
-	SetDragCursor(AValue TCursor)                   // property
-	DragMode() TDragMode                            // property
-	SetDragMode(AValue TDragMode)                   // property
-	ParentColor() bool                              // property
-	SetParentColor(AValue bool)                     // property
-	ParentFont() bool                               // property
-	SetParentFont(AValue bool)                      // property
-	ParentShowHint() bool                           // property
-	SetParentShowHint(AValue bool)                  // property
+	DragCursor() types.TCursor                      // property DragCursor Getter
+	SetDragCursor(value types.TCursor)              // property DragCursor Setter
+	DragMode() types.TDragMode                      // property DragMode Getter
+	SetDragMode(value types.TDragMode)              // property DragMode Setter
+	ParentColor() bool                              // property ParentColor Getter
+	SetParentColor(value bool)                      // property ParentColor Setter
+	ParentFont() bool                               // property ParentFont Getter
+	SetParentFont(value bool)                       // property ParentFont Setter
+	ParentShowHint() bool                           // property ParentShowHint Getter
+	SetParentShowHint(value bool)                   // property ParentShowHint Setter
 	SetOnContextPopup(fn TContextPopupEvent)        // property event
 	SetOnDblClick(fn TNotifyEvent)                  // property event
 	SetOnDragDrop(fn TDragDropEvent)                // property event
@@ -47,264 +48,275 @@ type IPaintBox interface {
 	SetOnStartDrag(fn TStartDragEvent)              // property event
 }
 
-// TPaintBox Parent: TGraphicControl
 type TPaintBox struct {
 	TGraphicControl
-	contextPopupPtr    uintptr
-	dblClickPtr        uintptr
-	dragDropPtr        uintptr
-	dragOverPtr        uintptr
-	endDragPtr         uintptr
-	mouseDownPtr       uintptr
-	mouseEnterPtr      uintptr
-	mouseLeavePtr      uintptr
-	mouseMovePtr       uintptr
-	mouseUpPtr         uintptr
-	mouseWheelPtr      uintptr
-	mouseWheelDownPtr  uintptr
-	mouseWheelUpPtr    uintptr
-	mouseWheelHorzPtr  uintptr
-	mouseWheelLeftPtr  uintptr
-	mouseWheelRightPtr uintptr
-	paintPtr           uintptr
-	startDragPtr       uintptr
 }
 
-func NewPaintBox(AOwner IComponent) IPaintBox {
-	r1 := paintBoxImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsPaintBox(r1)
+func (m *TPaintBox) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := paintBoxAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TPaintBox) DragCursor() TCursor {
-	r1 := paintBoxImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TPaintBox) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	paintBoxAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TPaintBox) SetDragCursor(AValue TCursor) {
-	paintBoxImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TPaintBox) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := paintBoxAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TPaintBox) DragMode() TDragMode {
-	r1 := paintBoxImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TPaintBox) SetDragMode(AValue TDragMode) {
-	paintBoxImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TPaintBox) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	paintBoxAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPaintBox) ParentColor() bool {
-	r1 := paintBoxImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := paintBoxAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TPaintBox) SetParentColor(AValue bool) {
-	paintBoxImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
+func (m *TPaintBox) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	paintBoxAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TPaintBox) ParentFont() bool {
-	r1 := paintBoxImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := paintBoxAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TPaintBox) SetParentFont(AValue bool) {
-	paintBoxImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TPaintBox) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	paintBoxAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TPaintBox) ParentShowHint() bool {
-	r1 := paintBoxImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := paintBoxAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TPaintBox) SetParentShowHint(AValue bool) {
-	paintBoxImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
-}
-
-func PaintBoxClass() TClass {
-	ret := paintBoxImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TPaintBox) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	paintBoxAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TPaintBox) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(7, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 6, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(8, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 7, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(9, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 8, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(10, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 9, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(11, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 10, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(12, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 11, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(13, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(14, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 13, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(15, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 14, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(16, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 15, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(17, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 16, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(18, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 17, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(22, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 18, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(19, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 19, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(20, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 20, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(21, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 21, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnPaint(fn TNotifyEvent) {
-	if m.paintPtr != 0 {
-		RemoveEventElement(m.paintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.paintPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(23, m.Instance(), m.paintPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 22, paintBoxAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TPaintBox) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	paintBoxImportAPI().SysCallN(24, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 23, paintBoxAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewPaintBox class constructor
+func NewPaintBox(owner IComponent) IPaintBox {
+	r := paintBoxAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsPaintBox(r)
+}
+
+func TPaintBoxClass() types.TClass {
+	r := paintBoxAPI().SysCallN(24)
+	return types.TClass(r)
 }
 
 var (
-	paintBoxImport       *imports.Imports = nil
-	paintBoxImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("PaintBox_Class", 0),
-		/*1*/ imports.NewTable("PaintBox_Create", 0),
-		/*2*/ imports.NewTable("PaintBox_DragCursor", 0),
-		/*3*/ imports.NewTable("PaintBox_DragMode", 0),
-		/*4*/ imports.NewTable("PaintBox_ParentColor", 0),
-		/*5*/ imports.NewTable("PaintBox_ParentFont", 0),
-		/*6*/ imports.NewTable("PaintBox_ParentShowHint", 0),
-		/*7*/ imports.NewTable("PaintBox_SetOnContextPopup", 0),
-		/*8*/ imports.NewTable("PaintBox_SetOnDblClick", 0),
-		/*9*/ imports.NewTable("PaintBox_SetOnDragDrop", 0),
-		/*10*/ imports.NewTable("PaintBox_SetOnDragOver", 0),
-		/*11*/ imports.NewTable("PaintBox_SetOnEndDrag", 0),
-		/*12*/ imports.NewTable("PaintBox_SetOnMouseDown", 0),
-		/*13*/ imports.NewTable("PaintBox_SetOnMouseEnter", 0),
-		/*14*/ imports.NewTable("PaintBox_SetOnMouseLeave", 0),
-		/*15*/ imports.NewTable("PaintBox_SetOnMouseMove", 0),
-		/*16*/ imports.NewTable("PaintBox_SetOnMouseUp", 0),
-		/*17*/ imports.NewTable("PaintBox_SetOnMouseWheel", 0),
-		/*18*/ imports.NewTable("PaintBox_SetOnMouseWheelDown", 0),
-		/*19*/ imports.NewTable("PaintBox_SetOnMouseWheelHorz", 0),
-		/*20*/ imports.NewTable("PaintBox_SetOnMouseWheelLeft", 0),
-		/*21*/ imports.NewTable("PaintBox_SetOnMouseWheelRight", 0),
-		/*22*/ imports.NewTable("PaintBox_SetOnMouseWheelUp", 0),
-		/*23*/ imports.NewTable("PaintBox_SetOnPaint", 0),
-		/*24*/ imports.NewTable("PaintBox_SetOnStartDrag", 0),
-	}
+	paintBoxOnce   base.Once
+	paintBoxImport *imports.Imports = nil
 )
 
-func paintBoxImportAPI() *imports.Imports {
-	if paintBoxImport == nil {
-		paintBoxImport = NewDefaultImports()
-		paintBoxImport.SetImportTable(paintBoxImportTables)
-		paintBoxImportTables = nil
-	}
+func paintBoxAPI() *imports.Imports {
+	paintBoxOnce.Do(func() {
+		paintBoxImport = api.NewDefaultImports()
+		paintBoxImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPaintBox_Create", 0), // constructor NewPaintBox
+			/* 1 */ imports.NewTable("TPaintBox_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TPaintBox_DragMode", 0), // property DragMode
+			/* 3 */ imports.NewTable("TPaintBox_ParentColor", 0), // property ParentColor
+			/* 4 */ imports.NewTable("TPaintBox_ParentFont", 0), // property ParentFont
+			/* 5 */ imports.NewTable("TPaintBox_ParentShowHint", 0), // property ParentShowHint
+			/* 6 */ imports.NewTable("TPaintBox_OnContextPopup", 0), // event OnContextPopup
+			/* 7 */ imports.NewTable("TPaintBox_OnDblClick", 0), // event OnDblClick
+			/* 8 */ imports.NewTable("TPaintBox_OnDragDrop", 0), // event OnDragDrop
+			/* 9 */ imports.NewTable("TPaintBox_OnDragOver", 0), // event OnDragOver
+			/* 10 */ imports.NewTable("TPaintBox_OnEndDrag", 0), // event OnEndDrag
+			/* 11 */ imports.NewTable("TPaintBox_OnMouseDown", 0), // event OnMouseDown
+			/* 12 */ imports.NewTable("TPaintBox_OnMouseEnter", 0), // event OnMouseEnter
+			/* 13 */ imports.NewTable("TPaintBox_OnMouseLeave", 0), // event OnMouseLeave
+			/* 14 */ imports.NewTable("TPaintBox_OnMouseMove", 0), // event OnMouseMove
+			/* 15 */ imports.NewTable("TPaintBox_OnMouseUp", 0), // event OnMouseUp
+			/* 16 */ imports.NewTable("TPaintBox_OnMouseWheel", 0), // event OnMouseWheel
+			/* 17 */ imports.NewTable("TPaintBox_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 18 */ imports.NewTable("TPaintBox_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 19 */ imports.NewTable("TPaintBox_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 20 */ imports.NewTable("TPaintBox_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 21 */ imports.NewTable("TPaintBox_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 22 */ imports.NewTable("TPaintBox_OnPaint", 0), // event OnPaint
+			/* 23 */ imports.NewTable("TPaintBox_OnStartDrag", 0), // event OnStartDrag
+			/* 24 */ imports.NewTable("TPaintBox_TClass", 0), // function TPaintBoxClass
+		}
+	})
 	return paintBoxImport
 }

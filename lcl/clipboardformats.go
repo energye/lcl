@@ -9,51 +9,47 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IClipboardFormats Parent: IStringList
 type IClipboardFormats interface {
 	IStringList
-	Owner() IBaseVirtualTree // property
+	Owner() IBaseVirtualTree // property Owner Getter
 }
 
-// TClipboardFormats Parent: TStringList
 type TClipboardFormats struct {
 	TStringList
 }
 
-func NewClipboardFormats(AOwner IBaseVirtualTree) IClipboardFormats {
-	r1 := clipboardFormatsImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsClipboardFormats(r1)
-}
-
 func (m *TClipboardFormats) Owner() IBaseVirtualTree {
-	r1 := clipboardFormatsImportAPI().SysCallN(2, m.Instance())
-	return AsBaseVirtualTree(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := clipboardFormatsAPI().SysCallN(1, m.Instance())
+	return AsBaseVirtualTree(r)
 }
 
-func ClipboardFormatsClass() TClass {
-	ret := clipboardFormatsImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewClipboardFormats class constructor
+func NewClipboardFormats(owner IBaseVirtualTree) IClipboardFormats {
+	r := clipboardFormatsAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsClipboardFormats(r)
 }
 
 var (
-	clipboardFormatsImport       *imports.Imports = nil
-	clipboardFormatsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ClipboardFormats_Class", 0),
-		/*1*/ imports.NewTable("ClipboardFormats_Create", 0),
-		/*2*/ imports.NewTable("ClipboardFormats_Owner", 0),
-	}
+	clipboardFormatsOnce   base.Once
+	clipboardFormatsImport *imports.Imports = nil
 )
 
-func clipboardFormatsImportAPI() *imports.Imports {
-	if clipboardFormatsImport == nil {
-		clipboardFormatsImport = NewDefaultImports()
-		clipboardFormatsImport.SetImportTable(clipboardFormatsImportTables)
-		clipboardFormatsImportTables = nil
-	}
+func clipboardFormatsAPI() *imports.Imports {
+	clipboardFormatsOnce.Do(func() {
+		clipboardFormatsImport = api.NewDefaultImports()
+		clipboardFormatsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TClipboardFormats_Create", 0), // constructor NewClipboardFormats
+			/* 1 */ imports.NewTable("TClipboardFormats_Owner", 0), // property Owner
+		}
+	})
 	return clipboardFormatsImport
 }

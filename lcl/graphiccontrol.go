@@ -9,51 +9,54 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IGraphicControl Parent: IControl
 type IGraphicControl interface {
 	IControl
-	Canvas() ICanvas // property
+	Canvas() ICanvas // property Canvas Getter
 }
 
-// TGraphicControl Parent: TControl
 type TGraphicControl struct {
 	TControl
 }
 
-func NewGraphicControl(AOwner IComponent) IGraphicControl {
-	r1 := graphicControlImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
-	return AsGraphicControl(r1)
-}
-
 func (m *TGraphicControl) Canvas() ICanvas {
-	r1 := graphicControlImportAPI().SysCallN(0, m.Instance())
-	return AsCanvas(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := graphicControlAPI().SysCallN(1, m.Instance())
+	return AsCanvas(r)
 }
 
-func GraphicControlClass() TClass {
-	ret := graphicControlImportAPI().SysCallN(1)
-	return TClass(ret)
+// NewGraphicControl class constructor
+func NewGraphicControl(owner IComponent) IGraphicControl {
+	r := graphicControlAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsGraphicControl(r)
+}
+
+func TGraphicControlClass() types.TClass {
+	r := graphicControlAPI().SysCallN(2)
+	return types.TClass(r)
 }
 
 var (
-	graphicControlImport       *imports.Imports = nil
-	graphicControlImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("GraphicControl_Canvas", 0),
-		/*1*/ imports.NewTable("GraphicControl_Class", 0),
-		/*2*/ imports.NewTable("GraphicControl_Create", 0),
-	}
+	graphicControlOnce   base.Once
+	graphicControlImport *imports.Imports = nil
 )
 
-func graphicControlImportAPI() *imports.Imports {
-	if graphicControlImport == nil {
-		graphicControlImport = NewDefaultImports()
-		graphicControlImport.SetImportTable(graphicControlImportTables)
-		graphicControlImportTables = nil
-	}
+func graphicControlAPI() *imports.Imports {
+	graphicControlOnce.Do(func() {
+		graphicControlImport = api.NewDefaultImports()
+		graphicControlImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TGraphicControl_Create", 0), // constructor NewGraphicControl
+			/* 1 */ imports.NewTable("TGraphicControl_Canvas", 0), // property Canvas
+			/* 2 */ imports.NewTable("TGraphicControl_TClass", 0), // function TGraphicControlClass
+		}
+	})
 	return graphicControlImport
 }

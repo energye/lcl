@@ -9,9 +9,9 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IPixmap Parent: IFPImageBitmap
@@ -19,34 +19,27 @@ type IPixmap interface {
 	IFPImageBitmap
 }
 
-// TPixmap Parent: TFPImageBitmap
 type TPixmap struct {
 	TFPImageBitmap
 }
 
+// NewPixmap class constructor
 func NewPixmap() IPixmap {
-	r1 := pixmapImportAPI().SysCallN(1)
-	return AsPixmap(r1)
-}
-
-func PixmapClass() TClass {
-	ret := pixmapImportAPI().SysCallN(0)
-	return TClass(ret)
+	r := pixmapAPI().SysCallN(0)
+	return AsPixmap(r)
 }
 
 var (
-	pixmapImport       *imports.Imports = nil
-	pixmapImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Pixmap_Class", 0),
-		/*1*/ imports.NewTable("Pixmap_Create", 0),
-	}
+	pixmapOnce   base.Once
+	pixmapImport *imports.Imports = nil
 )
 
-func pixmapImportAPI() *imports.Imports {
-	if pixmapImport == nil {
-		pixmapImport = NewDefaultImports()
-		pixmapImport.SetImportTable(pixmapImportTables)
-		pixmapImportTables = nil
-	}
+func pixmapAPI() *imports.Imports {
+	pixmapOnce.Do(func() {
+		pixmapImport = api.NewDefaultImports()
+		pixmapImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPixmap_Create", 0), // constructor NewPixmap
+		}
+	})
 	return pixmapImport
 }

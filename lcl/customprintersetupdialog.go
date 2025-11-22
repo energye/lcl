@@ -9,9 +9,10 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomPrinterSetupDialog Parent: ICommonDialog
@@ -19,34 +20,33 @@ type ICustomPrinterSetupDialog interface {
 	ICommonDialog
 }
 
-// TCustomPrinterSetupDialog Parent: TCommonDialog
 type TCustomPrinterSetupDialog struct {
 	TCommonDialog
 }
 
-func NewCustomPrinterSetupDialog(TheOwner IComponent) ICustomPrinterSetupDialog {
-	r1 := customPrinterSetupDialogImportAPI().SysCallN(1, GetObjectUintptr(TheOwner))
-	return AsCustomPrinterSetupDialog(r1)
+// NewCustomPrinterSetupDialog class constructor
+func NewCustomPrinterSetupDialog(theOwner IComponent) ICustomPrinterSetupDialog {
+	r := customPrinterSetupDialogAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsCustomPrinterSetupDialog(r)
 }
 
-func CustomPrinterSetupDialogClass() TClass {
-	ret := customPrinterSetupDialogImportAPI().SysCallN(0)
-	return TClass(ret)
+func TCustomPrinterSetupDialogClass() types.TClass {
+	r := customPrinterSetupDialogAPI().SysCallN(1)
+	return types.TClass(r)
 }
 
 var (
-	customPrinterSetupDialogImport       *imports.Imports = nil
-	customPrinterSetupDialogImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomPrinterSetupDialog_Class", 0),
-		/*1*/ imports.NewTable("CustomPrinterSetupDialog_Create", 0),
-	}
+	customPrinterSetupDialogOnce   base.Once
+	customPrinterSetupDialogImport *imports.Imports = nil
 )
 
-func customPrinterSetupDialogImportAPI() *imports.Imports {
-	if customPrinterSetupDialogImport == nil {
-		customPrinterSetupDialogImport = NewDefaultImports()
-		customPrinterSetupDialogImport.SetImportTable(customPrinterSetupDialogImportTables)
-		customPrinterSetupDialogImportTables = nil
-	}
+func customPrinterSetupDialogAPI() *imports.Imports {
+	customPrinterSetupDialogOnce.Do(func() {
+		customPrinterSetupDialogImport = api.NewDefaultImports()
+		customPrinterSetupDialogImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomPrinterSetupDialog_Create", 0), // constructor NewCustomPrinterSetupDialog
+			/* 1 */ imports.NewTable("TCustomPrinterSetupDialog_TClass", 0), // function TCustomPrinterSetupDialogClass
+		}
+	})
 	return customPrinterSetupDialogImport
 }

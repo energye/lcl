@@ -9,82 +9,107 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IFlowPanelControl Parent: ICollectionItem
 type IFlowPanelControl interface {
 	ICollectionItem
-	Control() IControl              // property
-	SetControl(AValue IControl)     // property
-	WrapAfter() TWrapAfter          // property
-	SetWrapAfter(AValue TWrapAfter) // property
-	AllowAdd() bool                 // function
-	AllowDelete() bool              // function
+	// AllowAdd
+	//  These methods are used by the Object Inspector only
+	AllowAdd() bool                      // function
+	AllowDelete() bool                   // function
+	Control() IControl                   // property Control Getter
+	SetControl(value IControl)           // property Control Setter
+	WrapAfter() types.TWrapAfter         // property WrapAfter Getter
+	SetWrapAfter(value types.TWrapAfter) // property WrapAfter Setter
+	AsIntfObjInspInterface() uintptr
 }
 
-// TFlowPanelControl Parent: TCollectionItem
 type TFlowPanelControl struct {
 	TCollectionItem
 }
 
-func NewFlowPanelControl(ACollection ICollection) IFlowPanelControl {
-	r1 := flowPanelControlImportAPI().SysCallN(4, GetObjectUintptr(ACollection))
-	return AsFlowPanelControl(r1)
-}
-
-func (m *TFlowPanelControl) Control() IControl {
-	r1 := flowPanelControlImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return AsControl(r1)
-}
-
-func (m *TFlowPanelControl) SetControl(AValue IControl) {
-	flowPanelControlImportAPI().SysCallN(3, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TFlowPanelControl) WrapAfter() TWrapAfter {
-	r1 := flowPanelControlImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TWrapAfter(r1)
-}
-
-func (m *TFlowPanelControl) SetWrapAfter(AValue TWrapAfter) {
-	flowPanelControlImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
-}
-
 func (m *TFlowPanelControl) AllowAdd() bool {
-	r1 := flowPanelControlImportAPI().SysCallN(0, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := flowPanelControlAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TFlowPanelControl) AllowDelete() bool {
-	r1 := flowPanelControlImportAPI().SysCallN(1, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := flowPanelControlAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func FlowPanelControlClass() TClass {
-	ret := flowPanelControlImportAPI().SysCallN(2)
-	return TClass(ret)
+func (m *TFlowPanelControl) Control() IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := flowPanelControlAPI().SysCallN(3, 0, m.Instance())
+	return AsControl(r)
+}
+
+func (m *TFlowPanelControl) SetControl(value IControl) {
+	if !m.IsValid() {
+		return
+	}
+	flowPanelControlAPI().SysCallN(3, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TFlowPanelControl) WrapAfter() types.TWrapAfter {
+	if !m.IsValid() {
+		return 0
+	}
+	r := flowPanelControlAPI().SysCallN(4, 0, m.Instance())
+	return types.TWrapAfter(r)
+}
+
+func (m *TFlowPanelControl) SetWrapAfter(value types.TWrapAfter) {
+	if !m.IsValid() {
+		return
+	}
+	flowPanelControlAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TFlowPanelControl) AsIntfObjInspInterface() uintptr {
+	return m.GetIntfPointer(0)
+}
+
+// NewFlowPanelControl class constructor
+func NewFlowPanelControl(collection ICollection) IFlowPanelControl {
+	var objInspInterfacePtr uintptr // IObjInspInterface
+	r := flowPanelControlAPI().SysCallN(0, base.GetObjectUintptr(collection), uintptr(base.UnsafePointer(&objInspInterfacePtr)))
+	ret := AsFlowPanelControl(r)
+	if intf, ok := ret.(base.IIntfs); ok {
+		intf.Create(1)
+		intf.SetIntfPointer(0, objInspInterfacePtr)
+	}
+	return ret
 }
 
 var (
-	flowPanelControlImport       *imports.Imports = nil
-	flowPanelControlImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FlowPanelControl_AllowAdd", 0),
-		/*1*/ imports.NewTable("FlowPanelControl_AllowDelete", 0),
-		/*2*/ imports.NewTable("FlowPanelControl_Class", 0),
-		/*3*/ imports.NewTable("FlowPanelControl_Control", 0),
-		/*4*/ imports.NewTable("FlowPanelControl_Create", 0),
-		/*5*/ imports.NewTable("FlowPanelControl_WrapAfter", 0),
-	}
+	flowPanelControlOnce   base.Once
+	flowPanelControlImport *imports.Imports = nil
 )
 
-func flowPanelControlImportAPI() *imports.Imports {
-	if flowPanelControlImport == nil {
-		flowPanelControlImport = NewDefaultImports()
-		flowPanelControlImport.SetImportTable(flowPanelControlImportTables)
-		flowPanelControlImportTables = nil
-	}
+func flowPanelControlAPI() *imports.Imports {
+	flowPanelControlOnce.Do(func() {
+		flowPanelControlImport = api.NewDefaultImports()
+		flowPanelControlImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFlowPanelControl_Create", 0), // constructor NewFlowPanelControl
+			/* 1 */ imports.NewTable("TFlowPanelControl_AllowAdd", 0), // function AllowAdd
+			/* 2 */ imports.NewTable("TFlowPanelControl_AllowDelete", 0), // function AllowDelete
+			/* 3 */ imports.NewTable("TFlowPanelControl_Control", 0), // property Control
+			/* 4 */ imports.NewTable("TFlowPanelControl_WrapAfter", 0), // property WrapAfter
+		}
+	})
 	return flowPanelControlImport
 }

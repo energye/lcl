@@ -9,135 +9,174 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IStatusPanel Parent: ICollectionItem
 type IStatusPanel interface {
 	ICollectionItem
-	Alignment() TAlignment             // property
-	SetAlignment(AValue TAlignment)    // property
-	Bevel() TStatusPanelBevel          // property
-	SetBevel(AValue TStatusPanelBevel) // property
-	BidiMode() TBiDiMode               // property
-	SetBidiMode(AValue TBiDiMode)      // property
-	ParentBiDiMode() bool              // property
-	SetParentBiDiMode(AValue bool)     // property
-	Style() TStatusPanelStyle          // property
-	SetStyle(AValue TStatusPanelStyle) // property
-	Text() string                      // property
-	SetText(AValue string)             // property
-	Width() int32                      // property
-	SetWidth(AValue int32)             // property
-	StatusBar() IStatusBar             // function
+	StatusBar() IStatusBar                  // function
+	Alignment() types.TAlignment            // property Alignment Getter
+	SetAlignment(value types.TAlignment)    // property Alignment Setter
+	Bevel() types.TStatusPanelBevel         // property Bevel Getter
+	SetBevel(value types.TStatusPanelBevel) // property Bevel Setter
+	BidiMode() types.TBiDiMode              // property BidiMode Getter
+	SetBidiMode(value types.TBiDiMode)      // property BidiMode Setter
+	ParentBiDiMode() bool                   // property ParentBiDiMode Getter
+	SetParentBiDiMode(value bool)           // property ParentBiDiMode Setter
+	Style() types.TStatusPanelStyle         // property Style Getter
+	SetStyle(value types.TStatusPanelStyle) // property Style Setter
+	Text() string                           // property Text Getter
+	SetText(value string)                   // property Text Setter
+	Width() int32                           // property Width Getter
+	SetWidth(value int32)                   // property Width Setter
 }
 
-// TStatusPanel Parent: TCollectionItem
 type TStatusPanel struct {
 	TCollectionItem
 }
 
-func NewStatusPanel(ACollection ICollection) IStatusPanel {
-	r1 := statusPanelImportAPI().SysCallN(4, GetObjectUintptr(ACollection))
-	return AsStatusPanel(r1)
+func (m *TStatusPanel) StatusBar() IStatusBar {
+	if !m.IsValid() {
+		return nil
+	}
+	r := statusPanelAPI().SysCallN(1, m.Instance())
+	return AsStatusBar(r)
 }
 
-func (m *TStatusPanel) Alignment() TAlignment {
-	r1 := statusPanelImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TAlignment(r1)
+func (m *TStatusPanel) Alignment() types.TAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := statusPanelAPI().SysCallN(2, 0, m.Instance())
+	return types.TAlignment(r)
 }
 
-func (m *TStatusPanel) SetAlignment(AValue TAlignment) {
-	statusPanelImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TStatusPanel) SetAlignment(value types.TAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	statusPanelAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStatusPanel) Bevel() TStatusPanelBevel {
-	r1 := statusPanelImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TStatusPanelBevel(r1)
+func (m *TStatusPanel) Bevel() types.TStatusPanelBevel {
+	if !m.IsValid() {
+		return 0
+	}
+	r := statusPanelAPI().SysCallN(3, 0, m.Instance())
+	return types.TStatusPanelBevel(r)
 }
 
-func (m *TStatusPanel) SetBevel(AValue TStatusPanelBevel) {
-	statusPanelImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
+func (m *TStatusPanel) SetBevel(value types.TStatusPanelBevel) {
+	if !m.IsValid() {
+		return
+	}
+	statusPanelAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStatusPanel) BidiMode() TBiDiMode {
-	r1 := statusPanelImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TBiDiMode(r1)
+func (m *TStatusPanel) BidiMode() types.TBiDiMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := statusPanelAPI().SysCallN(4, 0, m.Instance())
+	return types.TBiDiMode(r)
 }
 
-func (m *TStatusPanel) SetBidiMode(AValue TBiDiMode) {
-	statusPanelImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TStatusPanel) SetBidiMode(value types.TBiDiMode) {
+	if !m.IsValid() {
+		return
+	}
+	statusPanelAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TStatusPanel) ParentBiDiMode() bool {
-	r1 := statusPanelImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := statusPanelAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TStatusPanel) SetParentBiDiMode(AValue bool) {
-	statusPanelImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TStatusPanel) SetParentBiDiMode(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	statusPanelAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TStatusPanel) Style() TStatusPanelStyle {
-	r1 := statusPanelImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return TStatusPanelStyle(r1)
+func (m *TStatusPanel) Style() types.TStatusPanelStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := statusPanelAPI().SysCallN(6, 0, m.Instance())
+	return types.TStatusPanelStyle(r)
 }
 
-func (m *TStatusPanel) SetStyle(AValue TStatusPanelStyle) {
-	statusPanelImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
+func (m *TStatusPanel) SetStyle(value types.TStatusPanelStyle) {
+	if !m.IsValid() {
+		return
+	}
+	statusPanelAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TStatusPanel) Text() string {
-	r1 := statusPanelImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := statusPanelAPI().SysCallN(7, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TStatusPanel) SetText(AValue string) {
-	statusPanelImportAPI().SysCallN(8, 1, m.Instance(), PascalStr(AValue))
+func (m *TStatusPanel) SetText(value string) {
+	if !m.IsValid() {
+		return
+	}
+	statusPanelAPI().SysCallN(7, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TStatusPanel) Width() int32 {
-	r1 := statusPanelImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := statusPanelAPI().SysCallN(8, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TStatusPanel) SetWidth(AValue int32) {
-	statusPanelImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
+func (m *TStatusPanel) SetWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	statusPanelAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStatusPanel) StatusBar() IStatusBar {
-	r1 := statusPanelImportAPI().SysCallN(6, m.Instance())
-	return AsStatusBar(r1)
-}
-
-func StatusPanelClass() TClass {
-	ret := statusPanelImportAPI().SysCallN(3)
-	return TClass(ret)
+// NewStatusPanel class constructor
+func NewStatusPanel(collection ICollection) IStatusPanel {
+	r := statusPanelAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsStatusPanel(r)
 }
 
 var (
-	statusPanelImport       *imports.Imports = nil
-	statusPanelImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("StatusPanel_Alignment", 0),
-		/*1*/ imports.NewTable("StatusPanel_Bevel", 0),
-		/*2*/ imports.NewTable("StatusPanel_BidiMode", 0),
-		/*3*/ imports.NewTable("StatusPanel_Class", 0),
-		/*4*/ imports.NewTable("StatusPanel_Create", 0),
-		/*5*/ imports.NewTable("StatusPanel_ParentBiDiMode", 0),
-		/*6*/ imports.NewTable("StatusPanel_StatusBar", 0),
-		/*7*/ imports.NewTable("StatusPanel_Style", 0),
-		/*8*/ imports.NewTable("StatusPanel_Text", 0),
-		/*9*/ imports.NewTable("StatusPanel_Width", 0),
-	}
+	statusPanelOnce   base.Once
+	statusPanelImport *imports.Imports = nil
 )
 
-func statusPanelImportAPI() *imports.Imports {
-	if statusPanelImport == nil {
-		statusPanelImport = NewDefaultImports()
-		statusPanelImport.SetImportTable(statusPanelImportTables)
-		statusPanelImportTables = nil
-	}
+func statusPanelAPI() *imports.Imports {
+	statusPanelOnce.Do(func() {
+		statusPanelImport = api.NewDefaultImports()
+		statusPanelImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TStatusPanel_Create", 0), // constructor NewStatusPanel
+			/* 1 */ imports.NewTable("TStatusPanel_StatusBar", 0), // function StatusBar
+			/* 2 */ imports.NewTable("TStatusPanel_Alignment", 0), // property Alignment
+			/* 3 */ imports.NewTable("TStatusPanel_Bevel", 0), // property Bevel
+			/* 4 */ imports.NewTable("TStatusPanel_BidiMode", 0), // property BidiMode
+			/* 5 */ imports.NewTable("TStatusPanel_ParentBiDiMode", 0), // property ParentBiDiMode
+			/* 6 */ imports.NewTable("TStatusPanel_Style", 0), // property Style
+			/* 7 */ imports.NewTable("TStatusPanel_Text", 0), // property Text
+			/* 8 */ imports.NewTable("TStatusPanel_Width", 0), // property Width
+		}
+	})
 	return statusPanelImport
 }

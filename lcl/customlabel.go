@@ -9,70 +9,79 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomLabel Parent: IGraphicControl
 type ICustomLabel interface {
 	IGraphicControl
-	CalcFittingFontHeight(TheText string, MaxWidth, MaxHeight int32, OutFontHeight, OutNeededWidth, OutNeededHeight *int32) bool // function
-	AdjustFontForOptimalFill() bool                                                                                              // function
-	Paint()                                                                                                                      // procedure
+	CalcFittingFontHeight(theText string, maxWidth int32, maxHeight int32, outFontHeight *int32, outNeededWidth *int32, outNeededHeight *int32) bool // function
+	AdjustFontForOptimalFill() bool                                                                                                                  // function
+	Paint()                                                                                                                                          // procedure
 }
 
-// TCustomLabel Parent: TGraphicControl
 type TCustomLabel struct {
 	TGraphicControl
 }
 
-func NewCustomLabel(TheOwner IComponent) ICustomLabel {
-	r1 := customLabelImportAPI().SysCallN(3, GetObjectUintptr(TheOwner))
-	return AsCustomLabel(r1)
-}
-
-func (m *TCustomLabel) CalcFittingFontHeight(TheText string, MaxWidth, MaxHeight int32, OutFontHeight, OutNeededWidth, OutNeededHeight *int32) bool {
-	var result2 uintptr
-	var result3 uintptr
-	var result4 uintptr
-	r1 := customLabelImportAPI().SysCallN(1, m.Instance(), PascalStr(TheText), uintptr(MaxWidth), uintptr(MaxHeight), uintptr(unsafePointer(&result2)), uintptr(unsafePointer(&result3)), uintptr(unsafePointer(&result4)))
-	*OutFontHeight = int32(result2)
-	*OutNeededWidth = int32(result3)
-	*OutNeededHeight = int32(result4)
-	return GoBool(r1)
+func (m *TCustomLabel) CalcFittingFontHeight(theText string, maxWidth int32, maxHeight int32, outFontHeight *int32, outNeededWidth *int32, outNeededHeight *int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	var fontHeightPtr uintptr
+	var neededWidthPtr uintptr
+	var neededHeightPtr uintptr
+	r := customLabelAPI().SysCallN(1, m.Instance(), api.PasStr(theText), uintptr(maxWidth), uintptr(maxHeight), uintptr(base.UnsafePointer(&fontHeightPtr)), uintptr(base.UnsafePointer(&neededWidthPtr)), uintptr(base.UnsafePointer(&neededHeightPtr)))
+	*outFontHeight = int32(fontHeightPtr)
+	*outNeededWidth = int32(neededWidthPtr)
+	*outNeededHeight = int32(neededHeightPtr)
+	return api.GoBool(r)
 }
 
 func (m *TCustomLabel) AdjustFontForOptimalFill() bool {
-	r1 := customLabelImportAPI().SysCallN(0, m.Instance())
-	return GoBool(r1)
-}
-
-func CustomLabelClass() TClass {
-	ret := customLabelImportAPI().SysCallN(2)
-	return TClass(ret)
+	if !m.IsValid() {
+		return false
+	}
+	r := customLabelAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TCustomLabel) Paint() {
-	customLabelImportAPI().SysCallN(4, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customLabelAPI().SysCallN(3, m.Instance())
+}
+
+// NewCustomLabel class constructor
+func NewCustomLabel(theOwner IComponent) ICustomLabel {
+	r := customLabelAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsCustomLabel(r)
+}
+
+func TCustomLabelClass() types.TClass {
+	r := customLabelAPI().SysCallN(4)
+	return types.TClass(r)
 }
 
 var (
-	customLabelImport       *imports.Imports = nil
-	customLabelImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomLabel_AdjustFontForOptimalFill", 0),
-		/*1*/ imports.NewTable("CustomLabel_CalcFittingFontHeight", 0),
-		/*2*/ imports.NewTable("CustomLabel_Class", 0),
-		/*3*/ imports.NewTable("CustomLabel_Create", 0),
-		/*4*/ imports.NewTable("CustomLabel_Paint", 0),
-	}
+	customLabelOnce   base.Once
+	customLabelImport *imports.Imports = nil
 )
 
-func customLabelImportAPI() *imports.Imports {
-	if customLabelImport == nil {
-		customLabelImport = NewDefaultImports()
-		customLabelImport.SetImportTable(customLabelImportTables)
-		customLabelImportTables = nil
-	}
+func customLabelAPI() *imports.Imports {
+	customLabelOnce.Do(func() {
+		customLabelImport = api.NewDefaultImports()
+		customLabelImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomLabel_Create", 0), // constructor NewCustomLabel
+			/* 1 */ imports.NewTable("TCustomLabel_CalcFittingFontHeight", 0), // function CalcFittingFontHeight
+			/* 2 */ imports.NewTable("TCustomLabel_AdjustFontForOptimalFill", 0), // function AdjustFontForOptimalFill
+			/* 3 */ imports.NewTable("TCustomLabel_Paint", 0), // procedure Paint
+			/* 4 */ imports.NewTable("TCustomLabel_TClass", 0), // function TCustomLabelClass
+		}
+	})
 	return customLabelImport
 }

@@ -9,26 +9,27 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IProgressBar Parent: ICustomProgressBar
 type IProgressBar interface {
 	ICustomProgressBar
-	DragCursor() TCursor                           // property
-	SetDragCursor(AValue TCursor)                  // property
-	DragKind() TDragKind                           // property
-	SetDragKind(AValue TDragKind)                  // property
-	DragMode() TDragMode                           // property
-	SetDragMode(AValue TDragMode)                  // property
-	ParentColor() bool                             // property
-	SetParentColor(AValue bool)                    // property
-	ParentFont() bool                              // property
-	SetParentFont(AValue bool)                     // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
+	DragCursor() types.TCursor                     // property DragCursor Getter
+	SetDragCursor(value types.TCursor)             // property DragCursor Setter
+	DragKind() types.TDragKind                     // property DragKind Getter
+	SetDragKind(value types.TDragKind)             // property DragKind Setter
+	DragMode() types.TDragMode                     // property DragMode Getter
+	SetDragMode(value types.TDragMode)             // property DragMode Setter
+	ParentColor() bool                             // property ParentColor Getter
+	SetParentColor(value bool)                     // property ParentColor Setter
+	ParentFont() bool                              // property ParentFont Getter
+	SetParentFont(value bool)                      // property ParentFont Setter
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
 	SetOnContextPopup(fn TContextPopupEvent)       // property event
 	SetOnDragDrop(fn TDragDropEvent)               // property event
 	SetOnDragOver(fn TDragOverEvent)               // property event
@@ -45,234 +46,255 @@ type IProgressBar interface {
 	SetOnStartDrag(fn TStartDragEvent)             // property event
 }
 
-// TProgressBar Parent: TCustomProgressBar
 type TProgressBar struct {
 	TCustomProgressBar
-	contextPopupPtr   uintptr
-	dragDropPtr       uintptr
-	dragOverPtr       uintptr
-	endDragPtr        uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	startDockPtr      uintptr
-	startDragPtr      uintptr
 }
 
-func NewProgressBar(AOwner IComponent) IProgressBar {
-	r1 := progressBarImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsProgressBar(r1)
+func (m *TProgressBar) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := progressBarAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TProgressBar) DragCursor() TCursor {
-	r1 := progressBarImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TProgressBar) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	progressBarAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TProgressBar) SetDragCursor(AValue TCursor) {
-	progressBarImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TProgressBar) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := progressBarAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TProgressBar) DragKind() TDragKind {
-	r1 := progressBarImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TProgressBar) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	progressBarAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TProgressBar) SetDragKind(AValue TDragKind) {
-	progressBarImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TProgressBar) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := progressBarAPI().SysCallN(3, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TProgressBar) DragMode() TDragMode {
-	r1 := progressBarImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TProgressBar) SetDragMode(AValue TDragMode) {
-	progressBarImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TProgressBar) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	progressBarAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TProgressBar) ParentColor() bool {
-	r1 := progressBarImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := progressBarAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TProgressBar) SetParentColor(AValue bool) {
-	progressBarImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TProgressBar) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	progressBarAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TProgressBar) ParentFont() bool {
-	r1 := progressBarImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := progressBarAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TProgressBar) SetParentFont(AValue bool) {
-	progressBarImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
+func (m *TProgressBar) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	progressBarAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TProgressBar) ParentShowHint() bool {
-	r1 := progressBarImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := progressBarAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TProgressBar) SetParentShowHint(AValue bool) {
-	progressBarImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
-}
-
-func ProgressBarClass() TClass {
-	ret := progressBarImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TProgressBar) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	progressBarAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TProgressBar) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(8, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 7, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(9, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 8, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(10, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 9, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(11, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 10, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(12, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 11, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(13, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(14, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 13, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(15, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 14, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(16, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 15, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(17, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 16, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(18, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 17, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(19, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 18, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnStartDock(fn TStartDockEvent) {
-	if m.startDockPtr != 0 {
-		RemoveEventElement(m.startDockPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDockPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(20, m.Instance(), m.startDockPtr)
+	cb := makeTStartDockEvent(fn)
+	base.SetEvent(m, 19, progressBarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TProgressBar) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	progressBarImportAPI().SysCallN(21, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 20, progressBarAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewProgressBar class constructor
+func NewProgressBar(owner IComponent) IProgressBar {
+	r := progressBarAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsProgressBar(r)
+}
+
+func TProgressBarClass() types.TClass {
+	r := progressBarAPI().SysCallN(21)
+	return types.TClass(r)
 }
 
 var (
-	progressBarImport       *imports.Imports = nil
-	progressBarImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("ProgressBar_Class", 0),
-		/*1*/ imports.NewTable("ProgressBar_Create", 0),
-		/*2*/ imports.NewTable("ProgressBar_DragCursor", 0),
-		/*3*/ imports.NewTable("ProgressBar_DragKind", 0),
-		/*4*/ imports.NewTable("ProgressBar_DragMode", 0),
-		/*5*/ imports.NewTable("ProgressBar_ParentColor", 0),
-		/*6*/ imports.NewTable("ProgressBar_ParentFont", 0),
-		/*7*/ imports.NewTable("ProgressBar_ParentShowHint", 0),
-		/*8*/ imports.NewTable("ProgressBar_SetOnContextPopup", 0),
-		/*9*/ imports.NewTable("ProgressBar_SetOnDragDrop", 0),
-		/*10*/ imports.NewTable("ProgressBar_SetOnDragOver", 0),
-		/*11*/ imports.NewTable("ProgressBar_SetOnEndDrag", 0),
-		/*12*/ imports.NewTable("ProgressBar_SetOnMouseDown", 0),
-		/*13*/ imports.NewTable("ProgressBar_SetOnMouseEnter", 0),
-		/*14*/ imports.NewTable("ProgressBar_SetOnMouseLeave", 0),
-		/*15*/ imports.NewTable("ProgressBar_SetOnMouseMove", 0),
-		/*16*/ imports.NewTable("ProgressBar_SetOnMouseUp", 0),
-		/*17*/ imports.NewTable("ProgressBar_SetOnMouseWheel", 0),
-		/*18*/ imports.NewTable("ProgressBar_SetOnMouseWheelDown", 0),
-		/*19*/ imports.NewTable("ProgressBar_SetOnMouseWheelUp", 0),
-		/*20*/ imports.NewTable("ProgressBar_SetOnStartDock", 0),
-		/*21*/ imports.NewTable("ProgressBar_SetOnStartDrag", 0),
-	}
+	progressBarOnce   base.Once
+	progressBarImport *imports.Imports = nil
 )
 
-func progressBarImportAPI() *imports.Imports {
-	if progressBarImport == nil {
-		progressBarImport = NewDefaultImports()
-		progressBarImport.SetImportTable(progressBarImportTables)
-		progressBarImportTables = nil
-	}
+func progressBarAPI() *imports.Imports {
+	progressBarOnce.Do(func() {
+		progressBarImport = api.NewDefaultImports()
+		progressBarImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TProgressBar_Create", 0), // constructor NewProgressBar
+			/* 1 */ imports.NewTable("TProgressBar_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TProgressBar_DragKind", 0), // property DragKind
+			/* 3 */ imports.NewTable("TProgressBar_DragMode", 0), // property DragMode
+			/* 4 */ imports.NewTable("TProgressBar_ParentColor", 0), // property ParentColor
+			/* 5 */ imports.NewTable("TProgressBar_ParentFont", 0), // property ParentFont
+			/* 6 */ imports.NewTable("TProgressBar_ParentShowHint", 0), // property ParentShowHint
+			/* 7 */ imports.NewTable("TProgressBar_OnContextPopup", 0), // event OnContextPopup
+			/* 8 */ imports.NewTable("TProgressBar_OnDragDrop", 0), // event OnDragDrop
+			/* 9 */ imports.NewTable("TProgressBar_OnDragOver", 0), // event OnDragOver
+			/* 10 */ imports.NewTable("TProgressBar_OnEndDrag", 0), // event OnEndDrag
+			/* 11 */ imports.NewTable("TProgressBar_OnMouseDown", 0), // event OnMouseDown
+			/* 12 */ imports.NewTable("TProgressBar_OnMouseEnter", 0), // event OnMouseEnter
+			/* 13 */ imports.NewTable("TProgressBar_OnMouseLeave", 0), // event OnMouseLeave
+			/* 14 */ imports.NewTable("TProgressBar_OnMouseMove", 0), // event OnMouseMove
+			/* 15 */ imports.NewTable("TProgressBar_OnMouseUp", 0), // event OnMouseUp
+			/* 16 */ imports.NewTable("TProgressBar_OnMouseWheel", 0), // event OnMouseWheel
+			/* 17 */ imports.NewTable("TProgressBar_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 18 */ imports.NewTable("TProgressBar_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 19 */ imports.NewTable("TProgressBar_OnStartDock", 0), // event OnStartDock
+			/* 20 */ imports.NewTable("TProgressBar_OnStartDrag", 0), // event OnStartDrag
+			/* 21 */ imports.NewTable("TProgressBar_TClass", 0), // function TProgressBarClass
+		}
+	})
 	return progressBarImport
 }

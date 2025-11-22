@@ -1,6 +1,6 @@
 //----------------------------------------
 //
-// Copyright © ying32. All Rights Reserved.
+// Copyright © yanghy. All Rights Reserved.
 //
 // Licensed under Apache License 2.0
 //
@@ -12,97 +12,87 @@
 package win
 
 import (
-	. "github.com/energye/lcl/types"
 	"syscall"
 	"unsafe"
+
+	. "github.com/energye/lcl/types"
 )
 
 var (
-	// user32.dll
-	user32dll         = syscall.NewLazyDLL("user32.dll")
-	_MessageBox       = user32dll.NewProc("MessageBoxW")
-	_LoadIcon         = user32dll.NewProc("LoadIconW")
-	_GetSystemMetrics = user32dll.NewProc("GetSystemMetrics")
+	user32dll = syscall.NewLazyDLL("user32.dll")
 
-	_DefWindowProcW = user32dll.NewProc("DefWindowProcW")
-	_CallWindowProc = user32dll.NewProc("CallWindowProcW")
-
-	_PostMessage = user32dll.NewProc("PostMessageW")
-	_SendMessage = user32dll.NewProc("SendMessageW")
-
-	// 两个未公开的api
-	// _ChangeWindowMessageFilter 适合于 Win Vista 系统，Win7及以上系统并使用下
-	_ChangeWindowMessageFilter = user32dll.NewProc("ChangeWindowMessageFilter")
-	// ChangeWindowMessageFilterEx 适合于 Win7 及以上系统, Vista 无此函数
-	_ChangeWindowMessageFilterEx = user32dll.NewProc("ChangeWindowMessageFilterEx")
-
-	_GetDC               = user32dll.NewProc("GetDC")
-	_ReleaseDC           = user32dll.NewProc("ReleaseDC")
-	_UpdateLayeredWindow = user32dll.NewProc("UpdateLayeredWindow")
-
-	_GetCapture     = user32dll.NewProc("GetCapture")
-	_SetCapture     = user32dll.NewProc("SetCapture")
-	_ReleaseCapture = user32dll.NewProc("ReleaseCapture")
-
-	_GetCursor                  = user32dll.NewProc("GetCursor")
-	_GetCursorInfo              = user32dll.NewProc("GetCursorInfo")
-	_GetCursorPos               = user32dll.NewProc("GetCursorPos")
-	_ShowCursor                 = user32dll.NewProc("ShowCursor")
-	_SetCursorPos               = user32dll.NewProc("SetCursorPos")
-	_WindowFromPoint            = user32dll.NewProc("WindowFromPoint")
-	_GetClassName               = user32dll.NewProc("GetClassNameW")
-	_FindWindow                 = user32dll.NewProc("FindWindowW")
-	_FindWindowEx               = user32dll.NewProc("FindWindowExW")
-	_GetClassInfo               = user32dll.NewProc("GetClassInfoW")
-	_RegisterWindowMessage      = user32dll.NewProc("RegisterWindowMessageW")
-	_GetWindowThreadProcessId   = user32dll.NewProc("GetWindowThreadProcessId")
-	_GetWindowRect              = user32dll.NewProc("GetWindowRect")
-	_GetClientRect              = user32dll.NewProc("GetClientRect")
-	_GetWindowText              = user32dll.NewProc("GetWindowTextW")
-	_GetWindowRgn               = user32dll.NewProc("GetWindowRgn")
-	_IsWindow                   = user32dll.NewProc("IsWindow")
-	_IsWindowEnabled            = user32dll.NewProc("IsWindowEnabled")
-	_IsWindowUnicode            = user32dll.NewProc("IsWindowUnicode")
-	_IsWindowVisible            = user32dll.NewProc("IsWindowVisible")
-	_EnableWindow               = user32dll.NewProc("EnableWindow")
-	_IsZoomed                   = user32dll.NewProc("IsZoomed")
-	_IsRectEmpty                = user32dll.NewProc("IsRectEmpty")
-	_IsMenu                     = user32dll.NewProc("IsMenu")
-	_IsIconic                   = user32dll.NewProc("IsIconic")
-	_OpenIcon                   = user32dll.NewProc("OpenIcon")
-	_CloseWindow                = user32dll.NewProc("CloseWindow")
-	_MoveWindow                 = user32dll.NewProc("MoveWindow")
-	_SetWindowPos               = user32dll.NewProc("SetWindowPos")
-	_FlashWindow                = user32dll.NewProc("FlashWindow")
-	_ShowWindow                 = user32dll.NewProc("ShowWindow")
-	_SetLayeredWindowAttributes = user32dll.NewProc("SetLayeredWindowAttributes")
-	_ScreenToClient             = user32dll.NewProc("ScreenToClient")
-	_ClientToScreen             = user32dll.NewProc("ClientToScreen")
-	_ClipCursor                 = user32dll.NewProc("ClipCursor")
-	_GetClipCursor              = user32dll.NewProc("GetClipCursor")
-	_WindowFromPhysicalPoint    = user32dll.NewProc("WindowFromPhysicalPoint")
-	_ChildWindowFromPoint       = user32dll.NewProc("ChildWindowFromPoint")
-	_GetWindowDC                = user32dll.NewProc("GetWindowDC")
-	_IsChild                    = user32dll.NewProc("IsChild")
-	_AnimateWindow              = user32dll.NewProc("AnimateWindow")
-	_ShowWindowAsync            = user32dll.NewProc("ShowWindowAsync")
-	_InvalidateRect             = user32dll.NewProc("InvalidateRect")
-	_InvalidateRgn              = user32dll.NewProc("InvalidateRgn")
-	_RedrawWindow               = user32dll.NewProc("RedrawWindow")
-
-	_SetForegroundWindow = user32dll.NewProc("SetForegroundWindow")
-
-	_EnumWindows      = user32dll.NewProc("EnumWindows")
-	_EnumChildWindows = user32dll.NewProc("EnumChildWindows")
-
-	_UnregisterHotKey = user32dll.NewProc("UnregisterHotKey")
-	_RegisterHotKey   = user32dll.NewProc("RegisterHotKey")
-
-	_DrawText         = user32dll.NewProc("DrawTextW")
-	_GetDesktopWindow = user32dll.NewProc("GetDesktopWindow")
-
-	_GetWindowPlacement = user32dll.NewProc("GetWindowPlacement")
-	_SetWindowPlacement = user32dll.NewProc("SetWindowPlacement")
+	_MessageBox                  = user32dll.NewProc("MessageBoxW")
+	_LoadIcon                    = user32dll.NewProc("LoadIconW")
+	_GetSystemMetrics            = user32dll.NewProc("GetSystemMetrics")
+	_DefWindowProcW              = user32dll.NewProc("DefWindowProcW")
+	_CallWindowProc              = user32dll.NewProc("CallWindowProcW")
+	_PostMessage                 = user32dll.NewProc("PostMessageW")
+	_SendMessage                 = user32dll.NewProc("SendMessageW")
+	_ChangeWindowMessageFilter   = user32dll.NewProc("ChangeWindowMessageFilter")   // _ChangeWindowMessageFilter 适合于 Win Vista 系统，Win7及以上系统并使用下
+	_ChangeWindowMessageFilterEx = user32dll.NewProc("ChangeWindowMessageFilterEx") // ChangeWindowMessageFilterEx 适合于 Win7 及以上系统, Vista 无此函数
+	_GetDC                       = user32dll.NewProc("GetDC")
+	_ReleaseDC                   = user32dll.NewProc("ReleaseDC")
+	_UpdateLayeredWindow         = user32dll.NewProc("UpdateLayeredWindow")
+	_GetCapture                  = user32dll.NewProc("GetCapture")
+	_SetCapture                  = user32dll.NewProc("SetCapture")
+	_ReleaseCapture              = user32dll.NewProc("ReleaseCapture")
+	_GetCursor                   = user32dll.NewProc("GetCursor")
+	_GetCursorInfo               = user32dll.NewProc("GetCursorInfo")
+	_GetCursorPos                = user32dll.NewProc("GetCursorPos")
+	_ShowCursor                  = user32dll.NewProc("ShowCursor")
+	_SetCursorPos                = user32dll.NewProc("SetCursorPos")
+	_WindowFromPoint             = user32dll.NewProc("WindowFromPoint")
+	_GetClassName                = user32dll.NewProc("GetClassNameW")
+	_FindWindow                  = user32dll.NewProc("FindWindowW")
+	_FindWindowEx                = user32dll.NewProc("FindWindowExW")
+	_GetClassInfo                = user32dll.NewProc("GetClassInfoW")
+	_RegisterWindowMessage       = user32dll.NewProc("RegisterWindowMessageW")
+	_GetWindowThreadProcessId    = user32dll.NewProc("GetWindowThreadProcessId")
+	_GetWindowRect               = user32dll.NewProc("GetWindowRect")
+	_GetClientRect               = user32dll.NewProc("GetClientRect")
+	_GetWindowText               = user32dll.NewProc("GetWindowTextW")
+	_GetWindowRgn                = user32dll.NewProc("GetWindowRgn")
+	_IsWindow                    = user32dll.NewProc("IsWindow")
+	_IsWindowEnabled             = user32dll.NewProc("IsWindowEnabled")
+	_IsWindowUnicode             = user32dll.NewProc("IsWindowUnicode")
+	_IsWindowVisible             = user32dll.NewProc("IsWindowVisible")
+	_EnableWindow                = user32dll.NewProc("EnableWindow")
+	_IsZoomed                    = user32dll.NewProc("IsZoomed")
+	_IsRectEmpty                 = user32dll.NewProc("IsRectEmpty")
+	_IsMenu                      = user32dll.NewProc("IsMenu")
+	_IsIconic                    = user32dll.NewProc("IsIconic")
+	_OpenIcon                    = user32dll.NewProc("OpenIcon")
+	_CloseWindow                 = user32dll.NewProc("CloseWindow")
+	_MoveWindow                  = user32dll.NewProc("MoveWindow")
+	_SetWindowPos                = user32dll.NewProc("SetWindowPos")
+	_FlashWindow                 = user32dll.NewProc("FlashWindow")
+	_ShowWindow                  = user32dll.NewProc("ShowWindow")
+	_SetLayeredWindowAttributes  = user32dll.NewProc("SetLayeredWindowAttributes")
+	_ScreenToClient              = user32dll.NewProc("ScreenToClient")
+	_ClientToScreen              = user32dll.NewProc("ClientToScreen")
+	_ClipCursor                  = user32dll.NewProc("ClipCursor")
+	_GetClipCursor               = user32dll.NewProc("GetClipCursor")
+	_WindowFromPhysicalPoint     = user32dll.NewProc("WindowFromPhysicalPoint")
+	_ChildWindowFromPoint        = user32dll.NewProc("ChildWindowFromPoint")
+	_GetWindowDC                 = user32dll.NewProc("GetWindowDC")
+	_IsChild                     = user32dll.NewProc("IsChild")
+	_AnimateWindow               = user32dll.NewProc("AnimateWindow")
+	_ShowWindowAsync             = user32dll.NewProc("ShowWindowAsync")
+	_InvalidateRect              = user32dll.NewProc("InvalidateRect")
+	_InvalidateRgn               = user32dll.NewProc("InvalidateRgn")
+	_RedrawWindow                = user32dll.NewProc("RedrawWindow")
+	_SetForegroundWindow         = user32dll.NewProc("SetForegroundWindow")
+	_EnumWindows                 = user32dll.NewProc("EnumWindows")
+	_EnumChildWindows            = user32dll.NewProc("EnumChildWindows")
+	_UnregisterHotKey            = user32dll.NewProc("UnregisterHotKey")
+	_RegisterHotKey              = user32dll.NewProc("RegisterHotKey")
+	_DrawText                    = user32dll.NewProc("DrawTextW")
+	_GetDesktopWindow            = user32dll.NewProc("GetDesktopWindow")
+	_GetWindowPlacement          = user32dll.NewProc("GetWindowPlacement")
+	_SetWindowPlacement          = user32dll.NewProc("SetWindowPlacement")
+	_MonitorFromRect             = user32dll.NewProc("MonitorFromRect")
+	_MonitorFromWindow           = user32dll.NewProc("MonitorFromWindow")
+	_GetMonitorInfoW             = user32dll.NewProc("GetMonitorInfoW")
 )
 
 // MessageBox 消息框
@@ -124,19 +114,19 @@ func LoadIcon2(hInstance uintptr, lpIconName string) HICON {
 }
 
 // GetSystemMetrics
-func GetSystemMetrics(nIndex int32) int32 {
+func GetSystemMetrics(nIndex int) int32 {
 	r, _, _ := _GetSystemMetrics.Call(uintptr(nIndex))
 	return int32(r)
 }
 
 // GetWindowLongPtr
-func GetWindowLongPtr(hWnd HWND, nIndex int32) int {
+func GetWindowLongPtr(hWnd HWND, nIndex int) int {
 	r, _, _ := _GetWindowLongPtr.Call(uintptr(hWnd), uintptr(nIndex))
 	return int(r)
 }
 
 // GetWindowLong
-func GetWindowLong(hWnd HWND, nIndex int32) int {
+func GetWindowLong(hWnd HWND, nIndex int) int {
 	return GetWindowLongPtr(hWnd, nIndex)
 }
 
@@ -538,4 +528,29 @@ func GetWindowPlacement(hWnd HWND, lpwndpl *WINDOWPLACEMENT) bool {
 func SetWindowPlacement(hWnd HWND, lpwndpl *WINDOWPLACEMENT) bool {
 	ret, _, _ := _SetWindowPlacement.Call(hWnd, uintptr(unsafe.Pointer(lpwndpl)))
 	return ret != 0
+}
+
+func MonitorFromRect(rc *TRect, dwFlags uint32) HMONITOR {
+	ret, _, _ := _MonitorFromRect.Call(uintptr(unsafe.Pointer(rc)), uintptr(dwFlags))
+	return HMONITOR(ret)
+}
+
+func MonitorFromWindow(hwnd HWND, dwFlags uint32) HMONITOR {
+	ret, _, _ := _MonitorFromWindow.Call(uintptr(hwnd), uintptr(dwFlags))
+	return HMONITOR(ret)
+}
+
+func GetMonitorInfo(hMonitor HMONITOR, lmpi *TMonitorInfo) bool {
+	ret, _, _ := _GetMonitorInfoW.Call(uintptr(hMonitor), uintptr(unsafe.Pointer(lmpi)))
+	return ret != 0
+}
+
+func SetClassLong(hwnd uintptr, param int32, val uintptr) bool {
+	ret, _, _ := _SetClassLongPtr.Call(hwnd, uintptr(param), val)
+	return ret != 0
+}
+
+func GetClassLong(hWnd HWND, nIndex int) uintptr {
+	ret, _, _ := _GetClassLongPtr.Call(uintptr(hWnd), uintptr(nIndex))
+	return ret
 }

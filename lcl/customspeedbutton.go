@@ -9,309 +9,441 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomSpeedButton Parent: IGraphicControl
 type ICustomSpeedButton interface {
 	IGraphicControl
-	Alignment() TAlignment                                    // property
-	SetAlignment(AValue TAlignment)                           // property
-	AllowAllUp() bool                                         // property
-	SetAllowAllUp(AValue bool)                                // property
-	DisabledImageIndex() TImageIndex                          // property
-	SetDisabledImageIndex(AValue TImageIndex)                 // property
-	Down() bool                                               // property
-	SetDown(AValue bool)                                      // property
-	Flat() bool                                               // property
-	SetFlat(AValue bool)                                      // property
-	Glyph() IBitmap                                           // property
-	SetGlyph(AValue IBitmap)                                  // property
-	GroupIndex() int32                                        // property
-	SetGroupIndex(AValue int32)                               // property
-	HotImageIndex() TImageIndex                               // property
-	SetHotImageIndex(AValue TImageIndex)                      // property
-	Images() ICustomImageList                                 // property
-	SetImages(AValue ICustomImageList)                        // property
-	ImageIndex() TImageIndex                                  // property
-	SetImageIndex(AValue TImageIndex)                         // property
-	ImageWidth() int32                                        // property
-	SetImageWidth(AValue int32)                               // property
-	Layout() TButtonLayout                                    // property
-	SetLayout(AValue TButtonLayout)                           // property
-	Margin() int32                                            // property
-	SetMargin(AValue int32)                                   // property
-	NumGlyphs() int32                                         // property
-	SetNumGlyphs(AValue int32)                                // property
-	PressedImageIndex() TImageIndex                           // property
-	SetPressedImageIndex(AValue TImageIndex)                  // property
-	SelectedImageIndex() TImageIndex                          // property
-	SetSelectedImageIndex(AValue TImageIndex)                 // property
-	ShowAccelChar() bool                                      // property
-	SetShowAccelChar(AValue bool)                             // property
-	ShowCaption() bool                                        // property
-	SetShowCaption(AValue bool)                               // property
-	Spacing() int32                                           // property
-	SetSpacing(AValue int32)                                  // property
-	Transparent() bool                                        // property
-	SetTransparent(AValue bool)                               // property
-	FindDownButton() ICustomSpeedButton                       // function
-	Click()                                                   // procedure
-	LoadGlyphFromResourceName(Instance THandle, AName string) // procedure
-	LoadGlyphFromLazarusResource(AName string)                // procedure
+	FindDownButton() ICustomSpeedButton                               // function
+	Click()                                                           // procedure
+	LoadGlyphFromResourceName(instance types.TLCLHandle, name string) // procedure
+	LoadGlyphFromLazarusResource(name string)                         // procedure
+	Alignment() types.TAlignment                                      // property Alignment Getter
+	SetAlignment(value types.TAlignment)                              // property Alignment Setter
+	AllowAllUp() bool                                                 // property AllowAllUp Getter
+	SetAllowAllUp(value bool)                                         // property AllowAllUp Setter
+	DisabledImageIndex() int32                                        // property DisabledImageIndex Getter
+	SetDisabledImageIndex(value int32)                                // property DisabledImageIndex Setter
+	Down() bool                                                       // property Down Getter
+	SetDown(value bool)                                               // property Down Setter
+	Flat() bool                                                       // property Flat Getter
+	SetFlat(value bool)                                               // property Flat Setter
+	Glyph() IBitmap                                                   // property Glyph Getter
+	SetGlyph(value IBitmap)                                           // property Glyph Setter
+	GroupIndex() int32                                                // property GroupIndex Getter
+	SetGroupIndex(value int32)                                        // property GroupIndex Setter
+	HotImageIndex() int32                                             // property HotImageIndex Getter
+	SetHotImageIndex(value int32)                                     // property HotImageIndex Setter
+	Images() ICustomImageList                                         // property Images Getter
+	SetImages(value ICustomImageList)                                 // property Images Setter
+	ImageIndex() int32                                                // property ImageIndex Getter
+	SetImageIndex(value int32)                                        // property ImageIndex Setter
+	ImageWidth() int32                                                // property ImageWidth Getter
+	SetImageWidth(value int32)                                        // property ImageWidth Setter
+	Layout() types.TButtonLayout                                      // property Layout Getter
+	SetLayout(value types.TButtonLayout)                              // property Layout Setter
+	Margin() int32                                                    // property Margin Getter
+	SetMargin(value int32)                                            // property Margin Setter
+	NumGlyphs() int32                                                 // property NumGlyphs Getter
+	SetNumGlyphs(value int32)                                         // property NumGlyphs Setter
+	PressedImageIndex() int32                                         // property PressedImageIndex Getter
+	SetPressedImageIndex(value int32)                                 // property PressedImageIndex Setter
+	SelectedImageIndex() int32                                        // property SelectedImageIndex Getter
+	SetSelectedImageIndex(value int32)                                // property SelectedImageIndex Setter
+	ShowAccelChar() bool                                              // property ShowAccelChar Getter
+	SetShowAccelChar(value bool)                                      // property ShowAccelChar Setter
+	ShowCaption() bool                                                // property ShowCaption Getter
+	SetShowCaption(value bool)                                        // property ShowCaption Setter
+	Spacing() int32                                                   // property Spacing Getter
+	SetSpacing(value int32)                                           // property Spacing Setter
+	Transparent() bool                                                // property Transparent Getter
+	SetTransparent(value bool)                                        // property Transparent Setter
 }
 
-// TCustomSpeedButton Parent: TGraphicControl
 type TCustomSpeedButton struct {
 	TGraphicControl
 }
 
-func NewCustomSpeedButton(AOwner IComponent) ICustomSpeedButton {
-	r1 := customSpeedButtonImportAPI().SysCallN(4, GetObjectUintptr(AOwner))
-	return AsCustomSpeedButton(r1)
-}
-
-func (m *TCustomSpeedButton) Alignment() TAlignment {
-	r1 := customSpeedButtonImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TAlignment(r1)
-}
-
-func (m *TCustomSpeedButton) SetAlignment(AValue TAlignment) {
-	customSpeedButtonImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) AllowAllUp() bool {
-	r1 := customSpeedButtonImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomSpeedButton) SetAllowAllUp(AValue bool) {
-	customSpeedButtonImportAPI().SysCallN(1, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomSpeedButton) DisabledImageIndex() TImageIndex {
-	r1 := customSpeedButtonImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *TCustomSpeedButton) SetDisabledImageIndex(AValue TImageIndex) {
-	customSpeedButtonImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) Down() bool {
-	r1 := customSpeedButtonImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomSpeedButton) SetDown(AValue bool) {
-	customSpeedButtonImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomSpeedButton) Flat() bool {
-	r1 := customSpeedButtonImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomSpeedButton) SetFlat(AValue bool) {
-	customSpeedButtonImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomSpeedButton) Glyph() IBitmap {
-	r1 := customSpeedButtonImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return AsBitmap(r1)
-}
-
-func (m *TCustomSpeedButton) SetGlyph(AValue IBitmap) {
-	customSpeedButtonImportAPI().SysCallN(9, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) GroupIndex() int32 {
-	r1 := customSpeedButtonImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomSpeedButton) SetGroupIndex(AValue int32) {
-	customSpeedButtonImportAPI().SysCallN(10, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) HotImageIndex() TImageIndex {
-	r1 := customSpeedButtonImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *TCustomSpeedButton) SetHotImageIndex(AValue TImageIndex) {
-	customSpeedButtonImportAPI().SysCallN(11, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) Images() ICustomImageList {
-	r1 := customSpeedButtonImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return AsCustomImageList(r1)
-}
-
-func (m *TCustomSpeedButton) SetImages(AValue ICustomImageList) {
-	customSpeedButtonImportAPI().SysCallN(14, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) ImageIndex() TImageIndex {
-	r1 := customSpeedButtonImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *TCustomSpeedButton) SetImageIndex(AValue TImageIndex) {
-	customSpeedButtonImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) ImageWidth() int32 {
-	r1 := customSpeedButtonImportAPI().SysCallN(13, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomSpeedButton) SetImageWidth(AValue int32) {
-	customSpeedButtonImportAPI().SysCallN(13, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) Layout() TButtonLayout {
-	r1 := customSpeedButtonImportAPI().SysCallN(15, 0, m.Instance(), 0)
-	return TButtonLayout(r1)
-}
-
-func (m *TCustomSpeedButton) SetLayout(AValue TButtonLayout) {
-	customSpeedButtonImportAPI().SysCallN(15, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) Margin() int32 {
-	r1 := customSpeedButtonImportAPI().SysCallN(18, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomSpeedButton) SetMargin(AValue int32) {
-	customSpeedButtonImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) NumGlyphs() int32 {
-	r1 := customSpeedButtonImportAPI().SysCallN(19, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomSpeedButton) SetNumGlyphs(AValue int32) {
-	customSpeedButtonImportAPI().SysCallN(19, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) PressedImageIndex() TImageIndex {
-	r1 := customSpeedButtonImportAPI().SysCallN(20, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *TCustomSpeedButton) SetPressedImageIndex(AValue TImageIndex) {
-	customSpeedButtonImportAPI().SysCallN(20, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) SelectedImageIndex() TImageIndex {
-	r1 := customSpeedButtonImportAPI().SysCallN(21, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *TCustomSpeedButton) SetSelectedImageIndex(AValue TImageIndex) {
-	customSpeedButtonImportAPI().SysCallN(21, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) ShowAccelChar() bool {
-	r1 := customSpeedButtonImportAPI().SysCallN(22, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomSpeedButton) SetShowAccelChar(AValue bool) {
-	customSpeedButtonImportAPI().SysCallN(22, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomSpeedButton) ShowCaption() bool {
-	r1 := customSpeedButtonImportAPI().SysCallN(23, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomSpeedButton) SetShowCaption(AValue bool) {
-	customSpeedButtonImportAPI().SysCallN(23, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TCustomSpeedButton) Spacing() int32 {
-	r1 := customSpeedButtonImportAPI().SysCallN(24, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TCustomSpeedButton) SetSpacing(AValue int32) {
-	customSpeedButtonImportAPI().SysCallN(24, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomSpeedButton) Transparent() bool {
-	r1 := customSpeedButtonImportAPI().SysCallN(25, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomSpeedButton) SetTransparent(AValue bool) {
-	customSpeedButtonImportAPI().SysCallN(25, 1, m.Instance(), PascalBool(AValue))
-}
-
 func (m *TCustomSpeedButton) FindDownButton() ICustomSpeedButton {
-	r1 := customSpeedButtonImportAPI().SysCallN(7, m.Instance())
-	return AsCustomSpeedButton(r1)
-}
-
-func CustomSpeedButtonClass() TClass {
-	ret := customSpeedButtonImportAPI().SysCallN(2)
-	return TClass(ret)
+	if !m.IsValid() {
+		return nil
+	}
+	r := customSpeedButtonAPI().SysCallN(1, m.Instance())
+	return AsCustomSpeedButton(r)
 }
 
 func (m *TCustomSpeedButton) Click() {
-	customSpeedButtonImportAPI().SysCallN(3, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(2, m.Instance())
 }
 
-func (m *TCustomSpeedButton) LoadGlyphFromResourceName(Instance THandle, AName string) {
-	customSpeedButtonImportAPI().SysCallN(17, m.Instance(), uintptr(Instance), PascalStr(AName))
+func (m *TCustomSpeedButton) LoadGlyphFromResourceName(instance types.TLCLHandle, name string) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(3, m.Instance(), uintptr(instance), api.PasStr(name))
 }
 
-func (m *TCustomSpeedButton) LoadGlyphFromLazarusResource(AName string) {
-	customSpeedButtonImportAPI().SysCallN(16, m.Instance(), PascalStr(AName))
+func (m *TCustomSpeedButton) LoadGlyphFromLazarusResource(name string) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(4, m.Instance(), api.PasStr(name))
+}
+
+func (m *TCustomSpeedButton) Alignment() types.TAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(5, 0, m.Instance())
+	return types.TAlignment(r)
+}
+
+func (m *TCustomSpeedButton) SetAlignment(value types.TAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) AllowAllUp() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customSpeedButtonAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomSpeedButton) SetAllowAllUp(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomSpeedButton) DisabledImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(7, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomSpeedButton) SetDisabledImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) Down() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customSpeedButtonAPI().SysCallN(8, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomSpeedButton) SetDown(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(8, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomSpeedButton) Flat() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customSpeedButtonAPI().SysCallN(9, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomSpeedButton) SetFlat(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(9, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomSpeedButton) Glyph() IBitmap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customSpeedButtonAPI().SysCallN(10, 0, m.Instance())
+	return AsBitmap(r)
+}
+
+func (m *TCustomSpeedButton) SetGlyph(value IBitmap) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(10, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCustomSpeedButton) GroupIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(11, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomSpeedButton) SetGroupIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) HotImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(12, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomSpeedButton) SetHotImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) Images() ICustomImageList {
+	if !m.IsValid() {
+		return nil
+	}
+	r := customSpeedButtonAPI().SysCallN(13, 0, m.Instance())
+	return AsCustomImageList(r)
+}
+
+func (m *TCustomSpeedButton) SetImages(value ICustomImageList) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(13, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+func (m *TCustomSpeedButton) ImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(14, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomSpeedButton) SetImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) ImageWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(15, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomSpeedButton) SetImageWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(15, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) Layout() types.TButtonLayout {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(16, 0, m.Instance())
+	return types.TButtonLayout(r)
+}
+
+func (m *TCustomSpeedButton) SetLayout(value types.TButtonLayout) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(16, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) Margin() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(17, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomSpeedButton) SetMargin(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(17, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) NumGlyphs() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(18, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomSpeedButton) SetNumGlyphs(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(18, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) PressedImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(19, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomSpeedButton) SetPressedImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(19, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) SelectedImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(20, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomSpeedButton) SetSelectedImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(20, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) ShowAccelChar() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customSpeedButtonAPI().SysCallN(21, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomSpeedButton) SetShowAccelChar(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(21, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomSpeedButton) ShowCaption() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customSpeedButtonAPI().SysCallN(22, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomSpeedButton) SetShowCaption(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(22, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TCustomSpeedButton) Spacing() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customSpeedButtonAPI().SysCallN(23, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TCustomSpeedButton) SetSpacing(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TCustomSpeedButton) Transparent() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customSpeedButtonAPI().SysCallN(24, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomSpeedButton) SetTransparent(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customSpeedButtonAPI().SysCallN(24, 1, m.Instance(), api.PasBool(value))
+}
+
+// NewCustomSpeedButton class constructor
+func NewCustomSpeedButton(owner IComponent) ICustomSpeedButton {
+	r := customSpeedButtonAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomSpeedButton(r)
+}
+
+func TCustomSpeedButtonClass() types.TClass {
+	r := customSpeedButtonAPI().SysCallN(25)
+	return types.TClass(r)
 }
 
 var (
-	customSpeedButtonImport       *imports.Imports = nil
-	customSpeedButtonImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomSpeedButton_Alignment", 0),
-		/*1*/ imports.NewTable("CustomSpeedButton_AllowAllUp", 0),
-		/*2*/ imports.NewTable("CustomSpeedButton_Class", 0),
-		/*3*/ imports.NewTable("CustomSpeedButton_Click", 0),
-		/*4*/ imports.NewTable("CustomSpeedButton_Create", 0),
-		/*5*/ imports.NewTable("CustomSpeedButton_DisabledImageIndex", 0),
-		/*6*/ imports.NewTable("CustomSpeedButton_Down", 0),
-		/*7*/ imports.NewTable("CustomSpeedButton_FindDownButton", 0),
-		/*8*/ imports.NewTable("CustomSpeedButton_Flat", 0),
-		/*9*/ imports.NewTable("CustomSpeedButton_Glyph", 0),
-		/*10*/ imports.NewTable("CustomSpeedButton_GroupIndex", 0),
-		/*11*/ imports.NewTable("CustomSpeedButton_HotImageIndex", 0),
-		/*12*/ imports.NewTable("CustomSpeedButton_ImageIndex", 0),
-		/*13*/ imports.NewTable("CustomSpeedButton_ImageWidth", 0),
-		/*14*/ imports.NewTable("CustomSpeedButton_Images", 0),
-		/*15*/ imports.NewTable("CustomSpeedButton_Layout", 0),
-		/*16*/ imports.NewTable("CustomSpeedButton_LoadGlyphFromLazarusResource", 0),
-		/*17*/ imports.NewTable("CustomSpeedButton_LoadGlyphFromResourceName", 0),
-		/*18*/ imports.NewTable("CustomSpeedButton_Margin", 0),
-		/*19*/ imports.NewTable("CustomSpeedButton_NumGlyphs", 0),
-		/*20*/ imports.NewTable("CustomSpeedButton_PressedImageIndex", 0),
-		/*21*/ imports.NewTable("CustomSpeedButton_SelectedImageIndex", 0),
-		/*22*/ imports.NewTable("CustomSpeedButton_ShowAccelChar", 0),
-		/*23*/ imports.NewTable("CustomSpeedButton_ShowCaption", 0),
-		/*24*/ imports.NewTable("CustomSpeedButton_Spacing", 0),
-		/*25*/ imports.NewTable("CustomSpeedButton_Transparent", 0),
-	}
+	customSpeedButtonOnce   base.Once
+	customSpeedButtonImport *imports.Imports = nil
 )
 
-func customSpeedButtonImportAPI() *imports.Imports {
-	if customSpeedButtonImport == nil {
-		customSpeedButtonImport = NewDefaultImports()
-		customSpeedButtonImport.SetImportTable(customSpeedButtonImportTables)
-		customSpeedButtonImportTables = nil
-	}
+func customSpeedButtonAPI() *imports.Imports {
+	customSpeedButtonOnce.Do(func() {
+		customSpeedButtonImport = api.NewDefaultImports()
+		customSpeedButtonImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomSpeedButton_Create", 0), // constructor NewCustomSpeedButton
+			/* 1 */ imports.NewTable("TCustomSpeedButton_FindDownButton", 0), // function FindDownButton
+			/* 2 */ imports.NewTable("TCustomSpeedButton_Click", 0), // procedure Click
+			/* 3 */ imports.NewTable("TCustomSpeedButton_LoadGlyphFromResourceName", 0), // procedure LoadGlyphFromResourceName
+			/* 4 */ imports.NewTable("TCustomSpeedButton_LoadGlyphFromLazarusResource", 0), // procedure LoadGlyphFromLazarusResource
+			/* 5 */ imports.NewTable("TCustomSpeedButton_Alignment", 0), // property Alignment
+			/* 6 */ imports.NewTable("TCustomSpeedButton_AllowAllUp", 0), // property AllowAllUp
+			/* 7 */ imports.NewTable("TCustomSpeedButton_DisabledImageIndex", 0), // property DisabledImageIndex
+			/* 8 */ imports.NewTable("TCustomSpeedButton_Down", 0), // property Down
+			/* 9 */ imports.NewTable("TCustomSpeedButton_Flat", 0), // property Flat
+			/* 10 */ imports.NewTable("TCustomSpeedButton_Glyph", 0), // property Glyph
+			/* 11 */ imports.NewTable("TCustomSpeedButton_GroupIndex", 0), // property GroupIndex
+			/* 12 */ imports.NewTable("TCustomSpeedButton_HotImageIndex", 0), // property HotImageIndex
+			/* 13 */ imports.NewTable("TCustomSpeedButton_Images", 0), // property Images
+			/* 14 */ imports.NewTable("TCustomSpeedButton_ImageIndex", 0), // property ImageIndex
+			/* 15 */ imports.NewTable("TCustomSpeedButton_ImageWidth", 0), // property ImageWidth
+			/* 16 */ imports.NewTable("TCustomSpeedButton_Layout", 0), // property Layout
+			/* 17 */ imports.NewTable("TCustomSpeedButton_Margin", 0), // property Margin
+			/* 18 */ imports.NewTable("TCustomSpeedButton_NumGlyphs", 0), // property NumGlyphs
+			/* 19 */ imports.NewTable("TCustomSpeedButton_PressedImageIndex", 0), // property PressedImageIndex
+			/* 20 */ imports.NewTable("TCustomSpeedButton_SelectedImageIndex", 0), // property SelectedImageIndex
+			/* 21 */ imports.NewTable("TCustomSpeedButton_ShowAccelChar", 0), // property ShowAccelChar
+			/* 22 */ imports.NewTable("TCustomSpeedButton_ShowCaption", 0), // property ShowCaption
+			/* 23 */ imports.NewTable("TCustomSpeedButton_Spacing", 0), // property Spacing
+			/* 24 */ imports.NewTable("TCustomSpeedButton_Transparent", 0), // property Transparent
+			/* 25 */ imports.NewTable("TCustomSpeedButton_TClass", 0), // function TCustomSpeedButtonClass
+		}
+	})
 	return customSpeedButtonImport
 }

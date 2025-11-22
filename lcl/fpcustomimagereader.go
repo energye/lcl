@@ -9,64 +9,88 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
-// IFPCustomImageReader Is Abstract Class Parent: IFPCustomImageHandler
+// IFPCustomImageReader Parent: IFPCustomImageHandler
 type IFPCustomImageReader interface {
 	IFPCustomImageHandler
-	DefaultImageClass() TFPCustomImageClass                   // property
-	SetDefaultImageClass(AValue TFPCustomImageClass)          // property
-	ImageRead(Str IStream, Img IFPCustomImage) IFPCustomImage // function
-	CheckContents(Str IStream) bool                           // function
+	ImageRead(str IStream, img IFPCustomImage) IFPCustomImage // function
+	// CheckContents
+	//  reads image
+	CheckContents(str IStream) bool // function
+	// DefaultImageClass
+	//  returns the size of image in stream without loading it completely. -1,-1 means this is not implemented.
+	DefaultImageClass() types.TFPCustomImageClass         // property DefaultImageClass Getter
+	SetDefaultImageClass(value types.TFPCustomImageClass) // property DefaultImageClass Setter
 }
 
-// TFPCustomImageReader Is Abstract Class Parent: TFPCustomImageHandler
 type TFPCustomImageReader struct {
 	TFPCustomImageHandler
 }
 
-func (m *TFPCustomImageReader) DefaultImageClass() TFPCustomImageClass {
-	r1 := fPCustomImageReaderImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TFPCustomImageClass(r1)
+func (m *TFPCustomImageReader) ImageRead(str IStream, img IFPCustomImage) IFPCustomImage {
+	if !m.IsValid() {
+		return nil
+	}
+	r := fPCustomImageReaderAPI().SysCallN(0, m.Instance(), base.GetObjectUintptr(str), base.GetObjectUintptr(img))
+	return AsFPCustomImage(r)
 }
 
-func (m *TFPCustomImageReader) SetDefaultImageClass(AValue TFPCustomImageClass) {
-	fPCustomImageReaderImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TFPCustomImageReader) CheckContents(str IStream) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := fPCustomImageReaderAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(str))
+	return api.GoBool(r)
 }
 
-func (m *TFPCustomImageReader) ImageRead(Str IStream, Img IFPCustomImage) IFPCustomImage {
-	r1 := fPCustomImageReaderImportAPI().SysCallN(3, m.Instance(), GetObjectUintptr(Str), GetObjectUintptr(Img))
-	return AsFPCustomImage(r1)
+func (m *TFPCustomImageReader) DefaultImageClass() types.TFPCustomImageClass {
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPCustomImageReaderAPI().SysCallN(3, 0, m.Instance())
+	return types.TFPCustomImageClass(r)
 }
 
-func (m *TFPCustomImageReader) CheckContents(Str IStream) bool {
-	r1 := fPCustomImageReaderImportAPI().SysCallN(0, m.Instance(), GetObjectUintptr(Str))
-	return GoBool(r1)
+func (m *TFPCustomImageReader) SetDefaultImageClass(value types.TFPCustomImageClass) {
+	if !m.IsValid() {
+		return
+	}
+	fPCustomImageReaderAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func FPCustomImageReaderClass() TClass {
-	ret := fPCustomImageReaderImportAPI().SysCallN(1)
-	return TClass(ret)
+// FPCustomImageReader  is static instance
+var FPCustomImageReader _FPCustomImageReaderClass
+
+// _FPCustomImageReaderClass is class type defined by TFPCustomImageReader
+type _FPCustomImageReaderClass uintptr
+
+// ImageSize
+//
+//	Returns true if the content is readable
+func (_FPCustomImageReaderClass) ImageSize(str IStream) (result types.TPoint) {
+	fPCustomImageReaderAPI().SysCallN(2, base.GetObjectUintptr(str), uintptr(base.UnsafePointer(&result)))
+	return
 }
 
 var (
-	fPCustomImageReaderImport       *imports.Imports = nil
-	fPCustomImageReaderImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FPCustomImageReader_CheckContents", 0),
-		/*1*/ imports.NewTable("FPCustomImageReader_Class", 0),
-		/*2*/ imports.NewTable("FPCustomImageReader_DefaultImageClass", 0),
-		/*3*/ imports.NewTable("FPCustomImageReader_ImageRead", 0),
-	}
+	fPCustomImageReaderOnce   base.Once
+	fPCustomImageReaderImport *imports.Imports = nil
 )
 
-func fPCustomImageReaderImportAPI() *imports.Imports {
-	if fPCustomImageReaderImport == nil {
-		fPCustomImageReaderImport = NewDefaultImports()
-		fPCustomImageReaderImport.SetImportTable(fPCustomImageReaderImportTables)
-		fPCustomImageReaderImportTables = nil
-	}
+func fPCustomImageReaderAPI() *imports.Imports {
+	fPCustomImageReaderOnce.Do(func() {
+		fPCustomImageReaderImport = api.NewDefaultImports()
+		fPCustomImageReaderImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFPCustomImageReader_ImageRead", 0), // function ImageRead
+			/* 1 */ imports.NewTable("TFPCustomImageReader_CheckContents", 0), // function CheckContents
+			/* 2 */ imports.NewTable("TFPCustomImageReader_ImageSize", 0), // static function ImageSize
+			/* 3 */ imports.NewTable("TFPCustomImageReader_DefaultImageClass", 0), // property DefaultImageClass
+		}
+	})
 	return fPCustomImageReaderImport
 }

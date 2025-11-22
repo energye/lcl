@@ -9,118 +9,147 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IFPPalette Parent: IObject
 type IFPPalette interface {
 	IObject
-	Color(Index int32) (resultFPColor TFPColor) // property
-	SetColor(Index int32, AValue *TFPColor)     // property
-	Count() int32                               // property
-	SetCount(AValue int32)                      // property
-	Capacity() int32                            // property
-	SetCapacity(AValue int32)                   // property
-	IndexOf(AColor *TFPColor) int32             // function
-	Add(Value *TFPColor) int32                  // function
-	Build(Img IFPCustomImage)                   // procedure
-	Copy(APalette IFPPalette)                   // procedure
-	Merge(pal IFPPalette)                       // procedure
-	Clear()                                     // procedure
+	IndexOf(color TFPColor) int32         // function
+	Add(value TFPColor) int32             // function
+	Build(img IFPCustomImage)             // procedure
+	Copy(palette IFPPalette)              // procedure
+	Merge(pal IFPPalette)                 // procedure
+	Clear()                               // procedure
+	Color(index int32) TFPColor           // property Color Getter
+	SetColor(index int32, value TFPColor) // property Color Setter
+	Count() int32                         // property Count Getter
+	SetCount(value int32)                 // property Count Setter
+	Capacity() int32                      // property Capacity Getter
+	SetCapacity(value int32)              // property Capacity Setter
 }
 
-// TFPPalette Parent: TObject
 type TFPPalette struct {
 	TObject
 }
 
-func NewFPPalette(ACount int32) IFPPalette {
-	r1 := fPPaletteImportAPI().SysCallN(8, uintptr(ACount))
-	return AsFPPalette(r1)
+func (m *TFPPalette) IndexOf(color TFPColor) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPPaletteAPI().SysCallN(1, m.Instance(), uintptr(base.UnsafePointer(&color)))
+	return int32(r)
 }
 
-func (m *TFPPalette) Color(Index int32) (resultFPColor TFPColor) {
-	r1 := fPPaletteImportAPI().SysCallN(5, 0, m.Instance(), uintptr(Index))
-	return *(*TFPColor)(getPointer(r1))
+func (m *TFPPalette) Add(value TFPColor) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPPaletteAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(&value)))
+	return int32(r)
 }
 
-func (m *TFPPalette) SetColor(Index int32, AValue *TFPColor) {
-	fPPaletteImportAPI().SysCallN(5, 1, m.Instance(), uintptr(Index), uintptr(unsafePointer(AValue)))
+func (m *TFPPalette) Build(img IFPCustomImage) {
+	if !m.IsValid() {
+		return
+	}
+	fPPaletteAPI().SysCallN(3, m.Instance(), base.GetObjectUintptr(img))
 }
 
-func (m *TFPPalette) Count() int32 {
-	r1 := fPPaletteImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TFPPalette) SetCount(AValue int32) {
-	fPPaletteImportAPI().SysCallN(7, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TFPPalette) Capacity() int32 {
-	r1 := fPPaletteImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *TFPPalette) SetCapacity(AValue int32) {
-	fPPaletteImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TFPPalette) IndexOf(AColor *TFPColor) int32 {
-	r1 := fPPaletteImportAPI().SysCallN(9, m.Instance(), uintptr(unsafePointer(AColor)))
-	return int32(r1)
-}
-
-func (m *TFPPalette) Add(Value *TFPColor) int32 {
-	r1 := fPPaletteImportAPI().SysCallN(0, m.Instance(), uintptr(unsafePointer(Value)))
-	return int32(r1)
-}
-
-func FPPaletteClass() TClass {
-	ret := fPPaletteImportAPI().SysCallN(3)
-	return TClass(ret)
-}
-
-func (m *TFPPalette) Build(Img IFPCustomImage) {
-	fPPaletteImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Img))
-}
-
-func (m *TFPPalette) Copy(APalette IFPPalette) {
-	fPPaletteImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(APalette))
+func (m *TFPPalette) Copy(palette IFPPalette) {
+	if !m.IsValid() {
+		return
+	}
+	fPPaletteAPI().SysCallN(4, m.Instance(), base.GetObjectUintptr(palette))
 }
 
 func (m *TFPPalette) Merge(pal IFPPalette) {
-	fPPaletteImportAPI().SysCallN(10, m.Instance(), GetObjectUintptr(pal))
+	if !m.IsValid() {
+		return
+	}
+	fPPaletteAPI().SysCallN(5, m.Instance(), base.GetObjectUintptr(pal))
 }
 
 func (m *TFPPalette) Clear() {
-	fPPaletteImportAPI().SysCallN(4, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	fPPaletteAPI().SysCallN(6, m.Instance())
+}
+
+func (m *TFPPalette) Color(index int32) (result TFPColor) {
+	if !m.IsValid() {
+		return
+	}
+	fPPaletteAPI().SysCallN(7, 0, m.Instance(), uintptr(index), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TFPPalette) SetColor(index int32, value TFPColor) {
+	if !m.IsValid() {
+		return
+	}
+	fPPaletteAPI().SysCallN(7, 1, m.Instance(), uintptr(index), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TFPPalette) Count() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPPaletteAPI().SysCallN(8, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TFPPalette) SetCount(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	fPPaletteAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TFPPalette) Capacity() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := fPPaletteAPI().SysCallN(9, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *TFPPalette) SetCapacity(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	fPPaletteAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
+}
+
+// NewFPPalette class constructor
+func NewFPPalette(count int32) IFPPalette {
+	r := fPPaletteAPI().SysCallN(0, uintptr(count))
+	return AsFPPalette(r)
 }
 
 var (
-	fPPaletteImport       *imports.Imports = nil
-	fPPaletteImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("FPPalette_Add", 0),
-		/*1*/ imports.NewTable("FPPalette_Build", 0),
-		/*2*/ imports.NewTable("FPPalette_Capacity", 0),
-		/*3*/ imports.NewTable("FPPalette_Class", 0),
-		/*4*/ imports.NewTable("FPPalette_Clear", 0),
-		/*5*/ imports.NewTable("FPPalette_Color", 0),
-		/*6*/ imports.NewTable("FPPalette_Copy", 0),
-		/*7*/ imports.NewTable("FPPalette_Count", 0),
-		/*8*/ imports.NewTable("FPPalette_Create", 0),
-		/*9*/ imports.NewTable("FPPalette_IndexOf", 0),
-		/*10*/ imports.NewTable("FPPalette_Merge", 0),
-	}
+	fPPaletteOnce   base.Once
+	fPPaletteImport *imports.Imports = nil
 )
 
-func fPPaletteImportAPI() *imports.Imports {
-	if fPPaletteImport == nil {
-		fPPaletteImport = NewDefaultImports()
-		fPPaletteImport.SetImportTable(fPPaletteImportTables)
-		fPPaletteImportTables = nil
-	}
+func fPPaletteAPI() *imports.Imports {
+	fPPaletteOnce.Do(func() {
+		fPPaletteImport = api.NewDefaultImports()
+		fPPaletteImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TFPPalette_Create", 0), // constructor NewFPPalette
+			/* 1 */ imports.NewTable("TFPPalette_IndexOf", 0), // function IndexOf
+			/* 2 */ imports.NewTable("TFPPalette_Add", 0), // function Add
+			/* 3 */ imports.NewTable("TFPPalette_Build", 0), // procedure Build
+			/* 4 */ imports.NewTable("TFPPalette_Copy", 0), // procedure Copy
+			/* 5 */ imports.NewTable("TFPPalette_Merge", 0), // procedure Merge
+			/* 6 */ imports.NewTable("TFPPalette_Clear", 0), // procedure Clear
+			/* 7 */ imports.NewTable("TFPPalette_Color", 0), // property Color
+			/* 8 */ imports.NewTable("TFPPalette_Count", 0), // property Count
+			/* 9 */ imports.NewTable("TFPPalette_Capacity", 0), // property Capacity
+		}
+	})
 	return fPPaletteImport
 }

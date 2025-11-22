@@ -9,28 +9,29 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IRichMemo Parent: ICustomRichMemo
 type IRichMemo interface {
 	ICustomRichMemo
-	DragCursor() TCursor                           // property
-	SetDragCursor(AValue TCursor)                  // property
-	DragKind() TDragKind                           // property
-	SetDragKind(AValue TDragKind)                  // property
-	DragMode() TDragMode                           // property
-	SetDragMode(AValue TDragMode)                  // property
-	ParentColor() bool                             // property
-	SetParentColor(AValue bool)                    // property
-	ParentFont() bool                              // property
-	SetParentFont(AValue bool)                     // property
-	ParentShowHint() bool                          // property
-	SetParentShowHint(AValue bool)                 // property
-	Rtf() string                                   // property
-	SetRtf(AValue string)                          // property
+	DragCursor() types.TCursor                     // property DragCursor Getter
+	SetDragCursor(value types.TCursor)             // property DragCursor Setter
+	DragKind() types.TDragKind                     // property DragKind Getter
+	SetDragKind(value types.TDragKind)             // property DragKind Setter
+	DragMode() types.TDragMode                     // property DragMode Getter
+	SetDragMode(value types.TDragMode)             // property DragMode Setter
+	ParentColor() bool                             // property ParentColor Getter
+	SetParentColor(value bool)                     // property ParentColor Setter
+	ParentFont() bool                              // property ParentFont Getter
+	SetParentFont(value bool)                      // property ParentFont Setter
+	ParentShowHint() bool                          // property ParentShowHint Getter
+	SetParentShowHint(value bool)                  // property ParentShowHint Setter
+	Rtf() string                                   // property Rtf Getter
+	SetRtf(value string)                           // property Rtf Setter
 	SetOnContextPopup(fn TContextPopupEvent)       // property event
 	SetOnDblClick(fn TNotifyEvent)                 // property event
 	SetOnDragDrop(fn TDragDropEvent)               // property event
@@ -48,254 +49,280 @@ type IRichMemo interface {
 	SetOnStartDrag(fn TStartDragEvent)             // property event
 }
 
-// TRichMemo Parent: TCustomRichMemo
 type TRichMemo struct {
 	TCustomRichMemo
-	contextPopupPtr   uintptr
-	dblClickPtr       uintptr
-	dragDropPtr       uintptr
-	dragOverPtr       uintptr
-	editingDonePtr    uintptr
-	endDragPtr        uintptr
-	mouseDownPtr      uintptr
-	mouseEnterPtr     uintptr
-	mouseLeavePtr     uintptr
-	mouseMovePtr      uintptr
-	mouseUpPtr        uintptr
-	mouseWheelPtr     uintptr
-	mouseWheelDownPtr uintptr
-	mouseWheelUpPtr   uintptr
-	startDragPtr      uintptr
 }
 
-func NewRichMemo(AOwner IComponent) IRichMemo {
-	r1 := richMemoImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsRichMemo(r1)
+func (m *TRichMemo) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := richMemoAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TRichMemo) DragCursor() TCursor {
-	r1 := richMemoImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TRichMemo) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	richMemoAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TRichMemo) SetDragCursor(AValue TCursor) {
-	richMemoImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TRichMemo) DragKind() types.TDragKind {
+	if !m.IsValid() {
+		return 0
+	}
+	r := richMemoAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragKind(r)
 }
 
-func (m *TRichMemo) DragKind() TDragKind {
-	r1 := richMemoImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragKind(r1)
+func (m *TRichMemo) SetDragKind(value types.TDragKind) {
+	if !m.IsValid() {
+		return
+	}
+	richMemoAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TRichMemo) SetDragKind(AValue TDragKind) {
-	richMemoImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TRichMemo) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := richMemoAPI().SysCallN(3, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TRichMemo) DragMode() TDragMode {
-	r1 := richMemoImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TRichMemo) SetDragMode(AValue TDragMode) {
-	richMemoImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TRichMemo) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	richMemoAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TRichMemo) ParentColor() bool {
-	r1 := richMemoImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := richMemoAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TRichMemo) SetParentColor(AValue bool) {
-	richMemoImportAPI().SysCallN(5, 1, m.Instance(), PascalBool(AValue))
+func (m *TRichMemo) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	richMemoAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TRichMemo) ParentFont() bool {
-	r1 := richMemoImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := richMemoAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TRichMemo) SetParentFont(AValue bool) {
-	richMemoImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
+func (m *TRichMemo) SetParentFont(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	richMemoAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TRichMemo) ParentShowHint() bool {
-	r1 := richMemoImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := richMemoAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TRichMemo) SetParentShowHint(AValue bool) {
-	richMemoImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
+func (m *TRichMemo) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	richMemoAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TRichMemo) Rtf() string {
-	r1 := richMemoImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := richMemoAPI().SysCallN(7, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TRichMemo) SetRtf(AValue string) {
-	richMemoImportAPI().SysCallN(8, 1, m.Instance(), PascalStr(AValue))
-}
-
-func RichMemoClass() TClass {
-	ret := richMemoImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TRichMemo) SetRtf(value string) {
+	if !m.IsValid() {
+		return
+	}
+	richMemoAPI().SysCallN(7, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TRichMemo) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(9, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 8, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(10, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 9, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(11, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 10, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(12, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 11, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnEditingDone(fn TNotifyEvent) {
-	if m.editingDonePtr != 0 {
-		RemoveEventElement(m.editingDonePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.editingDonePtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(13, m.Instance(), m.editingDonePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(14, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 13, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnMouseDown(fn TMouseEvent) {
-	if m.mouseDownPtr != 0 {
-		RemoveEventElement(m.mouseDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseDownPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(15, m.Instance(), m.mouseDownPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 14, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnMouseEnter(fn TNotifyEvent) {
-	if m.mouseEnterPtr != 0 {
-		RemoveEventElement(m.mouseEnterPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseEnterPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(16, m.Instance(), m.mouseEnterPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 15, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnMouseLeave(fn TNotifyEvent) {
-	if m.mouseLeavePtr != 0 {
-		RemoveEventElement(m.mouseLeavePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseLeavePtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(17, m.Instance(), m.mouseLeavePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 16, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnMouseMove(fn TMouseMoveEvent) {
-	if m.mouseMovePtr != 0 {
-		RemoveEventElement(m.mouseMovePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseMovePtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(18, m.Instance(), m.mouseMovePtr)
+	cb := makeTMouseMoveEvent(fn)
+	base.SetEvent(m, 17, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnMouseUp(fn TMouseEvent) {
-	if m.mouseUpPtr != 0 {
-		RemoveEventElement(m.mouseUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseUpPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(19, m.Instance(), m.mouseUpPtr)
+	cb := makeTMouseEvent(fn)
+	base.SetEvent(m, 18, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnMouseWheel(fn TMouseWheelEvent) {
-	if m.mouseWheelPtr != 0 {
-		RemoveEventElement(m.mouseWheelPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(20, m.Instance(), m.mouseWheelPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 19, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnMouseWheelDown(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelDownPtr != 0 {
-		RemoveEventElement(m.mouseWheelDownPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelDownPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(21, m.Instance(), m.mouseWheelDownPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 20, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnMouseWheelUp(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelUpPtr != 0 {
-		RemoveEventElement(m.mouseWheelUpPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelUpPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(22, m.Instance(), m.mouseWheelUpPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 21, richMemoAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TRichMemo) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	richMemoImportAPI().SysCallN(23, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 22, richMemoAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewRichMemo class constructor
+func NewRichMemo(owner IComponent) IRichMemo {
+	r := richMemoAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsRichMemo(r)
+}
+
+func TRichMemoClass() types.TClass {
+	r := richMemoAPI().SysCallN(23)
+	return types.TClass(r)
 }
 
 var (
-	richMemoImport       *imports.Imports = nil
-	richMemoImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("RichMemo_Class", 0),
-		/*1*/ imports.NewTable("RichMemo_Create", 0),
-		/*2*/ imports.NewTable("RichMemo_DragCursor", 0),
-		/*3*/ imports.NewTable("RichMemo_DragKind", 0),
-		/*4*/ imports.NewTable("RichMemo_DragMode", 0),
-		/*5*/ imports.NewTable("RichMemo_ParentColor", 0),
-		/*6*/ imports.NewTable("RichMemo_ParentFont", 0),
-		/*7*/ imports.NewTable("RichMemo_ParentShowHint", 0),
-		/*8*/ imports.NewTable("RichMemo_Rtf", 0),
-		/*9*/ imports.NewTable("RichMemo_SetOnContextPopup", 0),
-		/*10*/ imports.NewTable("RichMemo_SetOnDblClick", 0),
-		/*11*/ imports.NewTable("RichMemo_SetOnDragDrop", 0),
-		/*12*/ imports.NewTable("RichMemo_SetOnDragOver", 0),
-		/*13*/ imports.NewTable("RichMemo_SetOnEditingDone", 0),
-		/*14*/ imports.NewTable("RichMemo_SetOnEndDrag", 0),
-		/*15*/ imports.NewTable("RichMemo_SetOnMouseDown", 0),
-		/*16*/ imports.NewTable("RichMemo_SetOnMouseEnter", 0),
-		/*17*/ imports.NewTable("RichMemo_SetOnMouseLeave", 0),
-		/*18*/ imports.NewTable("RichMemo_SetOnMouseMove", 0),
-		/*19*/ imports.NewTable("RichMemo_SetOnMouseUp", 0),
-		/*20*/ imports.NewTable("RichMemo_SetOnMouseWheel", 0),
-		/*21*/ imports.NewTable("RichMemo_SetOnMouseWheelDown", 0),
-		/*22*/ imports.NewTable("RichMemo_SetOnMouseWheelUp", 0),
-		/*23*/ imports.NewTable("RichMemo_SetOnStartDrag", 0),
-	}
+	richMemoOnce   base.Once
+	richMemoImport *imports.Imports = nil
 )
 
-func richMemoImportAPI() *imports.Imports {
-	if richMemoImport == nil {
-		richMemoImport = NewDefaultImports()
-		richMemoImport.SetImportTable(richMemoImportTables)
-		richMemoImportTables = nil
-	}
+func richMemoAPI() *imports.Imports {
+	richMemoOnce.Do(func() {
+		richMemoImport = api.NewDefaultImports()
+		richMemoImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TRichMemo_Create", 0), // constructor NewRichMemo
+			/* 1 */ imports.NewTable("TRichMemo_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TRichMemo_DragKind", 0), // property DragKind
+			/* 3 */ imports.NewTable("TRichMemo_DragMode", 0), // property DragMode
+			/* 4 */ imports.NewTable("TRichMemo_ParentColor", 0), // property ParentColor
+			/* 5 */ imports.NewTable("TRichMemo_ParentFont", 0), // property ParentFont
+			/* 6 */ imports.NewTable("TRichMemo_ParentShowHint", 0), // property ParentShowHint
+			/* 7 */ imports.NewTable("TRichMemo_Rtf", 0), // property Rtf
+			/* 8 */ imports.NewTable("TRichMemo_OnContextPopup", 0), // event OnContextPopup
+			/* 9 */ imports.NewTable("TRichMemo_OnDblClick", 0), // event OnDblClick
+			/* 10 */ imports.NewTable("TRichMemo_OnDragDrop", 0), // event OnDragDrop
+			/* 11 */ imports.NewTable("TRichMemo_OnDragOver", 0), // event OnDragOver
+			/* 12 */ imports.NewTable("TRichMemo_OnEditingDone", 0), // event OnEditingDone
+			/* 13 */ imports.NewTable("TRichMemo_OnEndDrag", 0), // event OnEndDrag
+			/* 14 */ imports.NewTable("TRichMemo_OnMouseDown", 0), // event OnMouseDown
+			/* 15 */ imports.NewTable("TRichMemo_OnMouseEnter", 0), // event OnMouseEnter
+			/* 16 */ imports.NewTable("TRichMemo_OnMouseLeave", 0), // event OnMouseLeave
+			/* 17 */ imports.NewTable("TRichMemo_OnMouseMove", 0), // event OnMouseMove
+			/* 18 */ imports.NewTable("TRichMemo_OnMouseUp", 0), // event OnMouseUp
+			/* 19 */ imports.NewTable("TRichMemo_OnMouseWheel", 0), // event OnMouseWheel
+			/* 20 */ imports.NewTable("TRichMemo_OnMouseWheelDown", 0), // event OnMouseWheelDown
+			/* 21 */ imports.NewTable("TRichMemo_OnMouseWheelUp", 0), // event OnMouseWheelUp
+			/* 22 */ imports.NewTable("TRichMemo_OnStartDrag", 0), // event OnStartDrag
+			/* 23 */ imports.NewTable("TRichMemo_TClass", 0), // function TRichMemoClass
+		}
+	})
 	return richMemoImport
 }

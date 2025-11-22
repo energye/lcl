@@ -9,56 +9,62 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomGroupBox Parent: IWinControl
 type ICustomGroupBox interface {
 	IWinControl
-	ParentBackground() bool          // property
-	SetParentBackground(AValue bool) // property
+	ParentBackground() bool         // property ParentBackground Getter
+	SetParentBackground(value bool) // property ParentBackground Setter
 }
 
-// TCustomGroupBox Parent: TWinControl
 type TCustomGroupBox struct {
 	TWinControl
 }
 
-func NewCustomGroupBox(AOwner IComponent) ICustomGroupBox {
-	r1 := customGroupBoxImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsCustomGroupBox(r1)
-}
-
 func (m *TCustomGroupBox) ParentBackground() bool {
-	r1 := customGroupBoxImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customGroupBoxAPI().SysCallN(1, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomGroupBox) SetParentBackground(AValue bool) {
-	customGroupBoxImportAPI().SysCallN(2, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomGroupBox) SetParentBackground(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customGroupBoxAPI().SysCallN(1, 1, m.Instance(), api.PasBool(value))
 }
 
-func CustomGroupBoxClass() TClass {
-	ret := customGroupBoxImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewCustomGroupBox class constructor
+func NewCustomGroupBox(owner IComponent) ICustomGroupBox {
+	r := customGroupBoxAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomGroupBox(r)
+}
+
+func TCustomGroupBoxClass() types.TClass {
+	r := customGroupBoxAPI().SysCallN(2)
+	return types.TClass(r)
 }
 
 var (
-	customGroupBoxImport       *imports.Imports = nil
-	customGroupBoxImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomGroupBox_Class", 0),
-		/*1*/ imports.NewTable("CustomGroupBox_Create", 0),
-		/*2*/ imports.NewTable("CustomGroupBox_ParentBackground", 0),
-	}
+	customGroupBoxOnce   base.Once
+	customGroupBoxImport *imports.Imports = nil
 )
 
-func customGroupBoxImportAPI() *imports.Imports {
-	if customGroupBoxImport == nil {
-		customGroupBoxImport = NewDefaultImports()
-		customGroupBoxImport.SetImportTable(customGroupBoxImportTables)
-		customGroupBoxImportTables = nil
-	}
+func customGroupBoxAPI() *imports.Imports {
+	customGroupBoxOnce.Do(func() {
+		customGroupBoxImport = api.NewDefaultImports()
+		customGroupBoxImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomGroupBox_Create", 0), // constructor NewCustomGroupBox
+			/* 1 */ imports.NewTable("TCustomGroupBox_ParentBackground", 0), // property ParentBackground
+			/* 2 */ imports.NewTable("TCustomGroupBox_TClass", 0), // function TCustomGroupBoxClass
+		}
+	})
 	return customGroupBoxImport
 }

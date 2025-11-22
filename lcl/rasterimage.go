@@ -9,244 +9,352 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
-// IRasterImage Is Abstract Class Parent: IGraphic
+// IRasterImage Parent: IGraphic
 type IRasterImage interface {
 	IGraphic
-	Canvas() ICanvas                                            // property
-	BitmapHandle() HBITMAP                                      // property
-	SetBitmapHandle(AValue HBITMAP)                             // property
-	Masked() bool                                               // property
-	SetMasked(AValue bool)                                      // property
-	MaskHandle() HBITMAP                                        // property
-	SetMaskHandle(AValue HBITMAP)                               // property
-	PixelFormat() TPixelFormat                                  // property
-	SetPixelFormat(AValue TPixelFormat)                         // property
-	RawImage() (resultRawImage TRawImage)                       // property
-	ScanLine(Row int32) uintptr                                 // property
-	TransparentColor() TColor                                   // property
-	SetTransparentColor(AValue TColor)                          // property
-	TransparentMode() TTransparentMode                          // property
-	SetTransparentMode(AValue TTransparentMode)                 // property
-	BitmapHandleAllocated() bool                                // function Is Abstract
-	MaskHandleAllocated() bool                                  // function Is Abstract
-	PaletteAllocated() bool                                     // function Is Abstract
-	ReleaseBitmapHandle() HBITMAP                               // function
-	ReleaseMaskHandle() HBITMAP                                 // function
-	ReleasePalette() HPALETTE                                   // function
-	HandleAllocated() bool                                      // function
-	BeginUpdate(ACanvasOnly bool)                               // procedure
-	EndUpdate(AStreamIsValid bool)                              // procedure
-	FreeImage()                                                 // procedure
-	LoadFromBitmapHandles(ABitmap, AMask HBITMAP, ARect *TRect) // procedure
-	LoadFromDevice(DC HDC)                                      // procedure
-	LoadFromStreamForStream(AStream IStream, ASize uint32)      // procedure
-	LoadFromRawImage(AIMage *TRawImage, ADataOwner bool)        // procedure
-	GetSize(OutWidth, OutHeight *int32)                         // procedure
-	Mask(ATransparentColor TColor)                              // procedure
-	SetHandles(ABitmap, AMask HBITMAP)                          // procedure Is Abstract
+	BitmapHandleAllocated() bool                                                      // function
+	MaskHandleAllocated() bool                                                        // function
+	PaletteAllocated() bool                                                           // function
+	ReleaseBitmapHandle() types.HBitmap                                               // function
+	ReleaseMaskHandle() types.HBitmap                                                 // function
+	ReleasePalette() types.HPALETTE                                                   // function
+	CreateIntfImage() ILazIntfImage                                                   // function
+	HandleAllocated() bool                                                            // function
+	BeginUpdate(canvasOnly bool)                                                      // procedure
+	EndUpdate(streamIsValid bool)                                                     // procedure
+	FreeImage()                                                                       // procedure
+	LoadFromBitmapHandles(bitmap types.HBitmap, mask types.HBitmap, rect types.TRect) // procedure
+	LoadFromDevice(dC types.HDC)                                                      // procedure
+	LoadFromStreamWithStreamCardinal(stream IStream, size uint32)                     // procedure
+	LoadFromRawImage(iMage IRawImageWrap, dataOwner bool)                             // procedure
+	LoadFromIntfImage(intfImage ILazIntfImage)                                        // procedure
+	GetSize(outWidth *int32, outHeight *int32)                                        // procedure
+	Mask(transparentColor types.TColor)                                               // procedure
+	SetHandles(bitmap types.HBitmap, mask types.HBitmap)                              // procedure
+	Canvas() ICanvas                                                                  // property Canvas Getter
+	BitmapHandle() types.HBitmap                                                      // property BitmapHandle Getter
+	SetBitmapHandle(value types.HBitmap)                                              // property BitmapHandle Setter
+	Masked() bool                                                                     // property Masked Getter
+	SetMasked(value bool)                                                             // property Masked Setter
+	MaskHandle() types.HBitmap                                                        // property MaskHandle Getter
+	SetMaskHandle(value types.HBitmap)                                                // property MaskHandle Setter
+	PixelFormat() types.TPixelFormat                                                  // property PixelFormat Getter
+	SetPixelFormat(value types.TPixelFormat)                                          // property PixelFormat Setter
+	RawImage() IRawImageWrap                                                          // property RawImage Getter
+	ScanLine(row int32) uintptr                                                       // property ScanLine Getter
+	TransparentColor() types.TColor                                                   // property TransparentColor Getter
+	SetTransparentColor(value types.TColor)                                           // property TransparentColor Setter
+	TransparentMode() types.TTransparentMode                                          // property TransparentMode Getter
+	SetTransparentMode(value types.TTransparentMode)                                  // property TransparentMode Setter
 }
 
-// TRasterImage Is Abstract Class Parent: TGraphic
 type TRasterImage struct {
 	TGraphic
 }
 
-func (m *TRasterImage) Canvas() ICanvas {
-	r1 := rasterImageImportAPI().SysCallN(3, m.Instance())
-	return AsCanvas(r1)
-}
-
-func (m *TRasterImage) BitmapHandle() HBITMAP {
-	r1 := rasterImageImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return HBITMAP(r1)
-}
-
-func (m *TRasterImage) SetBitmapHandle(AValue HBITMAP) {
-	rasterImageImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TRasterImage) Masked() bool {
-	r1 := rasterImageImportAPI().SysCallN(16, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TRasterImage) SetMasked(AValue bool) {
-	rasterImageImportAPI().SysCallN(16, 1, m.Instance(), PascalBool(AValue))
-}
-
-func (m *TRasterImage) MaskHandle() HBITMAP {
-	r1 := rasterImageImportAPI().SysCallN(14, 0, m.Instance(), 0)
-	return HBITMAP(r1)
-}
-
-func (m *TRasterImage) SetMaskHandle(AValue HBITMAP) {
-	rasterImageImportAPI().SysCallN(14, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TRasterImage) PixelFormat() TPixelFormat {
-	r1 := rasterImageImportAPI().SysCallN(18, 0, m.Instance(), 0)
-	return TPixelFormat(r1)
-}
-
-func (m *TRasterImage) SetPixelFormat(AValue TPixelFormat) {
-	rasterImageImportAPI().SysCallN(18, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TRasterImage) RawImage() (resultRawImage TRawImage) {
-	r1 := rasterImageImportAPI().SysCallN(19, m.Instance())
-	return *(*TRawImage)(getPointer(r1))
-}
-
-func (m *TRasterImage) ScanLine(Row int32) uintptr {
-	r1 := rasterImageImportAPI().SysCallN(23, m.Instance(), uintptr(Row))
-	return uintptr(r1)
-}
-
-func (m *TRasterImage) TransparentColor() TColor {
-	r1 := rasterImageImportAPI().SysCallN(25, 0, m.Instance(), 0)
-	return TColor(r1)
-}
-
-func (m *TRasterImage) SetTransparentColor(AValue TColor) {
-	rasterImageImportAPI().SysCallN(25, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TRasterImage) TransparentMode() TTransparentMode {
-	r1 := rasterImageImportAPI().SysCallN(26, 0, m.Instance(), 0)
-	return TTransparentMode(r1)
-}
-
-func (m *TRasterImage) SetTransparentMode(AValue TTransparentMode) {
-	rasterImageImportAPI().SysCallN(26, 1, m.Instance(), uintptr(AValue))
-}
-
 func (m *TRasterImage) BitmapHandleAllocated() bool {
-	r1 := rasterImageImportAPI().SysCallN(2, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := rasterImageAPI().SysCallN(0, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TRasterImage) MaskHandleAllocated() bool {
-	r1 := rasterImageImportAPI().SysCallN(15, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := rasterImageAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
 func (m *TRasterImage) PaletteAllocated() bool {
-	r1 := rasterImageImportAPI().SysCallN(17, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := rasterImageAPI().SysCallN(2, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TRasterImage) ReleaseBitmapHandle() HBITMAP {
-	r1 := rasterImageImportAPI().SysCallN(20, m.Instance())
-	return HBITMAP(r1)
+func (m *TRasterImage) ReleaseBitmapHandle() types.HBitmap {
+	if !m.IsValid() {
+		return 0
+	}
+	r := rasterImageAPI().SysCallN(3, m.Instance())
+	return types.HBitmap(r)
 }
 
-func (m *TRasterImage) ReleaseMaskHandle() HBITMAP {
-	r1 := rasterImageImportAPI().SysCallN(21, m.Instance())
-	return HBITMAP(r1)
+func (m *TRasterImage) ReleaseMaskHandle() types.HBitmap {
+	if !m.IsValid() {
+		return 0
+	}
+	r := rasterImageAPI().SysCallN(4, m.Instance())
+	return types.HBitmap(r)
 }
 
-func (m *TRasterImage) ReleasePalette() HPALETTE {
-	r1 := rasterImageImportAPI().SysCallN(22, m.Instance())
-	return HPALETTE(r1)
+func (m *TRasterImage) ReleasePalette() types.HPALETTE {
+	if !m.IsValid() {
+		return 0
+	}
+	r := rasterImageAPI().SysCallN(5, m.Instance())
+	return types.HPALETTE(r)
+}
+
+func (m *TRasterImage) CreateIntfImage() ILazIntfImage {
+	if !m.IsValid() {
+		return nil
+	}
+	r := rasterImageAPI().SysCallN(6, m.Instance())
+	return AsLazIntfImage(r)
 }
 
 func (m *TRasterImage) HandleAllocated() bool {
-	r1 := rasterImageImportAPI().SysCallN(8, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := rasterImageAPI().SysCallN(7, m.Instance())
+	return api.GoBool(r)
 }
 
-func RasterImageClass() TClass {
-	ret := rasterImageImportAPI().SysCallN(4)
-	return TClass(ret)
+func (m *TRasterImage) BeginUpdate(canvasOnly bool) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(8, m.Instance(), api.PasBool(canvasOnly))
 }
 
-func (m *TRasterImage) BeginUpdate(ACanvasOnly bool) {
-	rasterImageImportAPI().SysCallN(0, m.Instance(), PascalBool(ACanvasOnly))
-}
-
-func (m *TRasterImage) EndUpdate(AStreamIsValid bool) {
-	rasterImageImportAPI().SysCallN(5, m.Instance(), PascalBool(AStreamIsValid))
+func (m *TRasterImage) EndUpdate(streamIsValid bool) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(9, m.Instance(), api.PasBool(streamIsValid))
 }
 
 func (m *TRasterImage) FreeImage() {
-	rasterImageImportAPI().SysCallN(6, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(10, m.Instance())
 }
 
-func (m *TRasterImage) LoadFromBitmapHandles(ABitmap, AMask HBITMAP, ARect *TRect) {
-	rasterImageImportAPI().SysCallN(9, m.Instance(), uintptr(ABitmap), uintptr(AMask), uintptr(unsafePointer(ARect)))
+func (m *TRasterImage) LoadFromBitmapHandles(bitmap types.HBitmap, mask types.HBitmap, rect types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(11, m.Instance(), uintptr(bitmap), uintptr(mask), uintptr(base.UnsafePointer(&rect)))
 }
 
-func (m *TRasterImage) LoadFromDevice(DC HDC) {
-	rasterImageImportAPI().SysCallN(10, m.Instance(), uintptr(DC))
+func (m *TRasterImage) LoadFromDevice(dC types.HDC) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(12, m.Instance(), uintptr(dC))
 }
 
-func (m *TRasterImage) LoadFromStreamForStream(AStream IStream, ASize uint32) {
-	rasterImageImportAPI().SysCallN(12, m.Instance(), GetObjectUintptr(AStream), uintptr(ASize))
+func (m *TRasterImage) LoadFromStreamWithStreamCardinal(stream IStream, size uint32) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(13, m.Instance(), base.GetObjectUintptr(stream), uintptr(size))
 }
 
-func (m *TRasterImage) LoadFromRawImage(AIMage *TRawImage, ADataOwner bool) {
-	rasterImageImportAPI().SysCallN(11, m.Instance(), uintptr(unsafePointer(AIMage)), PascalBool(ADataOwner))
+func (m *TRasterImage) LoadFromRawImage(iMage IRawImageWrap, dataOwner bool) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(14, m.Instance(), base.GetObjectUintptr(iMage), api.PasBool(dataOwner))
 }
 
-func (m *TRasterImage) GetSize(OutWidth, OutHeight *int32) {
-	var result0 uintptr
-	var result1 uintptr
-	rasterImageImportAPI().SysCallN(7, m.Instance(), uintptr(unsafePointer(&result0)), uintptr(unsafePointer(&result1)))
-	*OutWidth = int32(result0)
-	*OutHeight = int32(result1)
+func (m *TRasterImage) LoadFromIntfImage(intfImage ILazIntfImage) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(15, m.Instance(), base.GetObjectUintptr(intfImage))
 }
 
-func (m *TRasterImage) Mask(ATransparentColor TColor) {
-	rasterImageImportAPI().SysCallN(13, m.Instance(), uintptr(ATransparentColor))
+func (m *TRasterImage) GetSize(outWidth *int32, outHeight *int32) {
+	if !m.IsValid() {
+		return
+	}
+	var widthPtr uintptr
+	var heightPtr uintptr
+	rasterImageAPI().SysCallN(16, m.Instance(), uintptr(base.UnsafePointer(&widthPtr)), uintptr(base.UnsafePointer(&heightPtr)))
+	*outWidth = int32(widthPtr)
+	*outHeight = int32(heightPtr)
 }
 
-func (m *TRasterImage) SetHandles(ABitmap, AMask HBITMAP) {
-	rasterImageImportAPI().SysCallN(24, m.Instance(), uintptr(ABitmap), uintptr(AMask))
+func (m *TRasterImage) Mask(transparentColor types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(17, m.Instance(), uintptr(transparentColor))
+}
+
+func (m *TRasterImage) SetHandles(bitmap types.HBitmap, mask types.HBitmap) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(18, m.Instance(), uintptr(bitmap), uintptr(mask))
+}
+
+func (m *TRasterImage) Canvas() ICanvas {
+	if !m.IsValid() {
+		return nil
+	}
+	r := rasterImageAPI().SysCallN(19, m.Instance())
+	return AsCanvas(r)
+}
+
+func (m *TRasterImage) BitmapHandle() types.HBitmap {
+	if !m.IsValid() {
+		return 0
+	}
+	r := rasterImageAPI().SysCallN(20, 0, m.Instance())
+	return types.HBitmap(r)
+}
+
+func (m *TRasterImage) SetBitmapHandle(value types.HBitmap) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(20, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TRasterImage) Masked() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := rasterImageAPI().SysCallN(21, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TRasterImage) SetMasked(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(21, 1, m.Instance(), api.PasBool(value))
+}
+
+func (m *TRasterImage) MaskHandle() types.HBitmap {
+	if !m.IsValid() {
+		return 0
+	}
+	r := rasterImageAPI().SysCallN(22, 0, m.Instance())
+	return types.HBitmap(r)
+}
+
+func (m *TRasterImage) SetMaskHandle(value types.HBitmap) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TRasterImage) PixelFormat() types.TPixelFormat {
+	if !m.IsValid() {
+		return 0
+	}
+	r := rasterImageAPI().SysCallN(23, 0, m.Instance())
+	return types.TPixelFormat(r)
+}
+
+func (m *TRasterImage) SetPixelFormat(value types.TPixelFormat) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TRasterImage) RawImage() IRawImageWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := rasterImageAPI().SysCallN(24, m.Instance())
+	return AsRawImageWrap(r)
+}
+
+func (m *TRasterImage) ScanLine(row int32) uintptr {
+	if !m.IsValid() {
+		return 0
+	}
+	r := rasterImageAPI().SysCallN(25, m.Instance(), uintptr(row))
+	return uintptr(r)
+}
+
+func (m *TRasterImage) TransparentColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := rasterImageAPI().SysCallN(26, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TRasterImage) SetTransparentColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(26, 1, m.Instance(), uintptr(value))
+}
+
+func (m *TRasterImage) TransparentMode() types.TTransparentMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := rasterImageAPI().SysCallN(27, 0, m.Instance())
+	return types.TTransparentMode(r)
+}
+
+func (m *TRasterImage) SetTransparentMode(value types.TTransparentMode) {
+	if !m.IsValid() {
+		return
+	}
+	rasterImageAPI().SysCallN(27, 1, m.Instance(), uintptr(value))
 }
 
 var (
-	rasterImageImport       *imports.Imports = nil
-	rasterImageImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("RasterImage_BeginUpdate", 0),
-		/*1*/ imports.NewTable("RasterImage_BitmapHandle", 0),
-		/*2*/ imports.NewTable("RasterImage_BitmapHandleAllocated", 0),
-		/*3*/ imports.NewTable("RasterImage_Canvas", 0),
-		/*4*/ imports.NewTable("RasterImage_Class", 0),
-		/*5*/ imports.NewTable("RasterImage_EndUpdate", 0),
-		/*6*/ imports.NewTable("RasterImage_FreeImage", 0),
-		/*7*/ imports.NewTable("RasterImage_GetSize", 0),
-		/*8*/ imports.NewTable("RasterImage_HandleAllocated", 0),
-		/*9*/ imports.NewTable("RasterImage_LoadFromBitmapHandles", 0),
-		/*10*/ imports.NewTable("RasterImage_LoadFromDevice", 0),
-		/*11*/ imports.NewTable("RasterImage_LoadFromRawImage", 0),
-		/*12*/ imports.NewTable("RasterImage_LoadFromStreamForStream", 0),
-		/*13*/ imports.NewTable("RasterImage_Mask", 0),
-		/*14*/ imports.NewTable("RasterImage_MaskHandle", 0),
-		/*15*/ imports.NewTable("RasterImage_MaskHandleAllocated", 0),
-		/*16*/ imports.NewTable("RasterImage_Masked", 0),
-		/*17*/ imports.NewTable("RasterImage_PaletteAllocated", 0),
-		/*18*/ imports.NewTable("RasterImage_PixelFormat", 0),
-		/*19*/ imports.NewTable("RasterImage_RawImage", 0),
-		/*20*/ imports.NewTable("RasterImage_ReleaseBitmapHandle", 0),
-		/*21*/ imports.NewTable("RasterImage_ReleaseMaskHandle", 0),
-		/*22*/ imports.NewTable("RasterImage_ReleasePalette", 0),
-		/*23*/ imports.NewTable("RasterImage_ScanLine", 0),
-		/*24*/ imports.NewTable("RasterImage_SetHandles", 0),
-		/*25*/ imports.NewTable("RasterImage_TransparentColor", 0),
-		/*26*/ imports.NewTable("RasterImage_TransparentMode", 0),
-	}
+	rasterImageOnce   base.Once
+	rasterImageImport *imports.Imports = nil
 )
 
-func rasterImageImportAPI() *imports.Imports {
-	if rasterImageImport == nil {
-		rasterImageImport = NewDefaultImports()
-		rasterImageImport.SetImportTable(rasterImageImportTables)
-		rasterImageImportTables = nil
-	}
+func rasterImageAPI() *imports.Imports {
+	rasterImageOnce.Do(func() {
+		rasterImageImport = api.NewDefaultImports()
+		rasterImageImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TRasterImage_BitmapHandleAllocated", 0), // function BitmapHandleAllocated
+			/* 1 */ imports.NewTable("TRasterImage_MaskHandleAllocated", 0), // function MaskHandleAllocated
+			/* 2 */ imports.NewTable("TRasterImage_PaletteAllocated", 0), // function PaletteAllocated
+			/* 3 */ imports.NewTable("TRasterImage_ReleaseBitmapHandle", 0), // function ReleaseBitmapHandle
+			/* 4 */ imports.NewTable("TRasterImage_ReleaseMaskHandle", 0), // function ReleaseMaskHandle
+			/* 5 */ imports.NewTable("TRasterImage_ReleasePalette", 0), // function ReleasePalette
+			/* 6 */ imports.NewTable("TRasterImage_CreateIntfImage", 0), // function CreateIntfImage
+			/* 7 */ imports.NewTable("TRasterImage_HandleAllocated", 0), // function HandleAllocated
+			/* 8 */ imports.NewTable("TRasterImage_BeginUpdate", 0), // procedure BeginUpdate
+			/* 9 */ imports.NewTable("TRasterImage_EndUpdate", 0), // procedure EndUpdate
+			/* 10 */ imports.NewTable("TRasterImage_FreeImage", 0), // procedure FreeImage
+			/* 11 */ imports.NewTable("TRasterImage_LoadFromBitmapHandles", 0), // procedure LoadFromBitmapHandles
+			/* 12 */ imports.NewTable("TRasterImage_LoadFromDevice", 0), // procedure LoadFromDevice
+			/* 13 */ imports.NewTable("TRasterImage_LoadFromStreamWithStreamCardinal", 0), // procedure LoadFromStreamWithStreamCardinal
+			/* 14 */ imports.NewTable("TRasterImage_LoadFromRawImage", 0), // procedure LoadFromRawImage
+			/* 15 */ imports.NewTable("TRasterImage_LoadFromIntfImage", 0), // procedure LoadFromIntfImage
+			/* 16 */ imports.NewTable("TRasterImage_GetSize", 0), // procedure GetSize
+			/* 17 */ imports.NewTable("TRasterImage_Mask", 0), // procedure Mask
+			/* 18 */ imports.NewTable("TRasterImage_SetHandles", 0), // procedure SetHandles
+			/* 19 */ imports.NewTable("TRasterImage_Canvas", 0), // property Canvas
+			/* 20 */ imports.NewTable("TRasterImage_BitmapHandle", 0), // property BitmapHandle
+			/* 21 */ imports.NewTable("TRasterImage_Masked", 0), // property Masked
+			/* 22 */ imports.NewTable("TRasterImage_MaskHandle", 0), // property MaskHandle
+			/* 23 */ imports.NewTable("TRasterImage_PixelFormat", 0), // property PixelFormat
+			/* 24 */ imports.NewTable("TRasterImage_RawImage", 0), // property RawImage
+			/* 25 */ imports.NewTable("TRasterImage_ScanLine", 0), // property ScanLine
+			/* 26 */ imports.NewTable("TRasterImage_TransparentColor", 0), // property TransparentColor
+			/* 27 */ imports.NewTable("TRasterImage_TransparentMode", 0), // property TransparentMode
+		}
+	})
 	return rasterImageImport
 }

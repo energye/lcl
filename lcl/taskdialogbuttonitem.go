@@ -9,9 +9,9 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // ITaskDialogButtonItem Parent: ITaskDialogBaseButtonItem
@@ -19,34 +19,27 @@ type ITaskDialogButtonItem interface {
 	ITaskDialogBaseButtonItem
 }
 
-// TTaskDialogButtonItem Parent: TTaskDialogBaseButtonItem
 type TTaskDialogButtonItem struct {
 	TTaskDialogBaseButtonItem
 }
 
-func NewTaskDialogButtonItem(ACollection ICollection) ITaskDialogButtonItem {
-	r1 := askDialogButtonItemImportAPI().SysCallN(1, GetObjectUintptr(ACollection))
-	return AsTaskDialogButtonItem(r1)
-}
-
-func TaskDialogButtonItemClass() TClass {
-	ret := askDialogButtonItemImportAPI().SysCallN(0)
-	return TClass(ret)
+// NewTaskDialogButtonItem class constructor
+func NewTaskDialogButtonItem(collection ICollection) ITaskDialogButtonItem {
+	r := taskDialogButtonItemAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsTaskDialogButtonItem(r)
 }
 
 var (
-	askDialogButtonItemImport       *imports.Imports = nil
-	askDialogButtonItemImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("TaskDialogButtonItem_Class", 0),
-		/*1*/ imports.NewTable("TaskDialogButtonItem_Create", 0),
-	}
+	taskDialogButtonItemOnce   base.Once
+	taskDialogButtonItemImport *imports.Imports = nil
 )
 
-func askDialogButtonItemImportAPI() *imports.Imports {
-	if askDialogButtonItemImport == nil {
-		askDialogButtonItemImport = NewDefaultImports()
-		askDialogButtonItemImport.SetImportTable(askDialogButtonItemImportTables)
-		askDialogButtonItemImportTables = nil
-	}
-	return askDialogButtonItemImport
+func taskDialogButtonItemAPI() *imports.Imports {
+	taskDialogButtonItemOnce.Do(func() {
+		taskDialogButtonItemImport = api.NewDefaultImports()
+		taskDialogButtonItemImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TTaskDialogButtonItem_Create", 0), // constructor NewTaskDialogButtonItem
+		}
+	})
+	return taskDialogButtonItemImport
 }

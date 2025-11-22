@@ -12,10 +12,10 @@
 package win
 
 import (
+	"syscall"
+
 	. "github.com/energye/lcl/types"
 )
-
-import "syscall"
 
 const (
 	ole32 = "ole32.dll"

@@ -9,112 +9,80 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
-// IObject Root Interface
+// IObject Parent: base.IBase
 type IObject interface {
-	Instance() uintptr
-	UnsafeAddr() unsafePointer
-	IsValid() bool
-	Is() TIs
-	SetInstance(instance unsafePointer)
-	FreeAndNil()
-	Nil()
-	Equals(Obj IObject) bool           // function
-	GetHashCode() uint32               // function
-	ToString() string                  // function
-	InheritsFrom(AClass TClass) bool   // function
-	ClassType() TClass                 // function
-	ClassName() string                 // function
-	ClassParent() TClass               // function
-	InstanceSize() (resultInt64 int64) // function
-	Free()                             // procedure
+	base.IBase
+	Equals(obj IObject) bool // function
+	ToString() string        // function
+	Free()                   // procedure
+	// Dispatch
+	//  message handling routines
+	Dispatch(message *uintptr) // procedure
 }
 
-// TObject Root Object
 type TObject struct {
-	instance unsafePointer
+	base.TBase
 }
 
-func NewObject() IObject {
-	r1 := objectImportAPI().SysCallN(4)
-	return AsObject(r1)
-}
-
-func (m *TObject) Equals(Obj IObject) bool {
-	r1 := objectImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(Obj))
-	return GoBool(r1)
-}
-
-func (m *TObject) GetHashCode() uint32 {
-	r1 := objectImportAPI().SysCallN(7, m.Instance())
-	return uint32(r1)
-}
-
-func ObjectClass() TClass {
-	ret := objectImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TObject) Equals(obj IObject) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := objectAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(obj))
+	return api.GoBool(r)
 }
 
 func (m *TObject) ToString() string {
-	r1 := objectImportAPI().SysCallN(10, m.Instance())
-	return GoStr(r1)
-}
-
-func (m *TObject) InheritsFrom(AClass TClass) bool {
-	r1 := objectImportAPI().SysCallN(8, m.Instance(), uintptr(AClass))
-	return GoBool(r1)
-}
-
-func (m *TObject) ClassType() TClass {
-	r1 := objectImportAPI().SysCallN(3, m.Instance())
-	return TClass(r1)
-}
-
-func (m *TObject) ClassName() string {
-	r1 := objectImportAPI().SysCallN(1, m.Instance())
-	return GoStr(r1)
-}
-
-func (m *TObject) ClassParent() TClass {
-	r1 := objectImportAPI().SysCallN(2, m.Instance())
-	return TClass(r1)
-}
-
-func (m *TObject) InstanceSize() (resultInt64 int64) {
-	objectImportAPI().SysCallN(9, m.Instance(), uintptr(unsafePointer(&resultInt64)))
-	return
+	if !m.IsValid() {
+		return ""
+	}
+	r := objectAPI().SysCallN(2, m.Instance())
+	return api.GoStr(r)
 }
 
 func (m *TObject) Free() {
-	m.free(6)
+	if !m.IsValid() {
+		return
+	}
+	objectAPI().SysCallN(3, m.Instance())
+	m.TBase.Free()
+}
+
+func (m *TObject) Dispatch(message *uintptr) {
+	if !m.IsValid() {
+		return
+	}
+	messagePtr := uintptr(*message)
+	objectAPI().SysCallN(4, m.Instance(), uintptr(base.UnsafePointer(&messagePtr)))
+	*message = uintptr(messagePtr)
+}
+
+// NewObject class constructor
+func NewObject() IObject {
+	r := objectAPI().SysCallN(0)
+	return AsObject(r)
 }
 
 var (
-	objectImport       *imports.Imports = nil
-	objectImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Object_Class", 0),
-		/*1*/ imports.NewTable("Object_ClassName", 0),
-		/*2*/ imports.NewTable("Object_ClassParent", 0),
-		/*3*/ imports.NewTable("Object_ClassType", 0),
-		/*4*/ imports.NewTable("Object_Create", 0),
-		/*5*/ imports.NewTable("Object_Equals", 0),
-		/*6*/ imports.NewTable("Object_Free", 0),
-		/*7*/ imports.NewTable("Object_GetHashCode", 0),
-		/*8*/ imports.NewTable("Object_InheritsFrom", 0),
-		/*9*/ imports.NewTable("Object_InstanceSize", 0),
-		/*10*/ imports.NewTable("Object_ToString", 0),
-	}
+	objectOnce   base.Once
+	objectImport *imports.Imports = nil
 )
 
-func objectImportAPI() *imports.Imports {
-	if objectImport == nil {
-		objectImport = NewDefaultImports()
-		objectImport.SetImportTable(objectImportTables)
-		objectImportTables = nil
-	}
+func objectAPI() *imports.Imports {
+	objectOnce.Do(func() {
+		objectImport = api.NewDefaultImports()
+		objectImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TObject_Create", 0), // constructor NewObject
+			/* 1 */ imports.NewTable("TObject_Equals", 0), // function Equals
+			/* 2 */ imports.NewTable("TObject_ToString", 0), // function ToString
+			/* 3 */ imports.NewTable("TObject_Free", 0), // procedure Free
+			/* 4 */ imports.NewTable("TObject_Dispatch", 0), // procedure Dispatch
+		}
+	})
 	return objectImport
 }

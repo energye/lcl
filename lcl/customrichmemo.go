@@ -9,335 +9,469 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomRichMemo Parent: ICustomMemo
 type ICustomRichMemo interface {
 	ICustomMemo
-	ZoomFactor() (resultDouble float64)                                                                                                                                   // property
-	SetZoomFactor(AValue float64)                                                                                                                                         // property
-	CanRedo() bool                                                                                                                                                        // property
-	Transparent() bool                                                                                                                                                    // property
-	SetTransparent(AValue bool)                                                                                                                                           // property
-	CanPaste() bool                                                                                                                                                       // function
-	GetTextAttributes(TextStart int32, TextParams *TFontParams) bool                                                                                                      // function
-	GetStyleRange(CharOfs int32, RangeStart, RangeLen *int32) bool                                                                                                        // function
-	GetParaAlignment(TextStart int32, AAlign *TParaAlignment) bool                                                                                                        // function
-	GetParaAlignment1(TextStart int32) TParaAlignment                                                                                                                     // function
-	GetParaMetric(TextStart int32, AMetric *TParaMetric) bool                                                                                                             // function
-	GetParaNumbering(TextStart int32, ANumber *TParaNumbering) bool                                                                                                       // function
-	GetParaRange(CharOfs int32, ParaRange *TParaRange) bool                                                                                                               // function
-	GetParaRange1(CharOfs int32, TextStart, TextLength *int32) bool                                                                                                       // function
-	GetParaTabs(CharOfs int32, AStopList *TTabStopList) bool                                                                                                              // function
-	IsLink(TextStart int32) bool                                                                                                                                          // function
-	LoadRichText(Source IStream) bool                                                                                                                                     // function
-	SaveRichText(Dest IStream) bool                                                                                                                                       // function
-	InDelText(UTF8Text string, InsStartChar, ReplaceLength int32) int32                                                                                                   // function
-	InDelInline(inlineobj IRichMemoInline, InsStartChar, ReplaceLength int32, ASize *TSize) int32                                                                         // function
-	GetTextForString(TextStart, TextLength int32) string                                                                                                                  // function
-	GetUText(TextStart, TextLength int32) string                                                                                                                          // function
-	Search(ANiddle string, Start, Len int32, SearchOpt TSearchOptions) int32                                                                                              // function
-	Search1(ANiddle string, Start, Len int32, SearchOpt TSearchOptions, ATextStart, ATextLength *int32) bool                                                              // function
-	Print(params *TPrintParams) int32                                                                                                                                     // function
-	CharAtPos(x, y int32) int32                                                                                                                                           // function
-	SetTextAttributes(TextStart, TextLen int32, TextParams *TFontParams)                                                                                                  // procedure
-	SetParaAlignment(TextStart, TextLen int32, AAlign TParaAlignment)                                                                                                     // procedure
-	SetParaMetric(TextStart, TextLen int32, AMetric *TParaMetric)                                                                                                         // procedure
-	SetParaNumbering(TextStart, TextLen int32, ANumber *TParaNumbering)                                                                                                   // procedure
-	SetParaTabs(TextStart, TextLen int32, AStopList *TTabStopList)                                                                                                        // procedure
-	SetTextAttributes1(TextStart, TextLen int32, AFont IFont)                                                                                                             // procedure
-	SetRangeColor(TextStart, TextLength int32, FontColor TColor)                                                                                                          // procedure
-	SetRangeParams(TextStart, TextLength int32, ModifyMask TTextModifyMask, FontName string, FontSize int32, FontColor TColor, AddFontStyle, RemoveFontStyle TFontStyles) // procedure
-	SetRangeParams1(TextStart, TextLength int32, ModifyMask TTextModifyMask, fnt *TFontParams, AddFontStyle, RemoveFontStyle TFontStyles)                                 // procedure
-	SetRangeParaParams(TextStart, TextLength int32, ModifyMask TParaModifyMask, ParaMetric *TParaMetric)                                                                  // procedure
-	SetLink(TextStart, TextLength int32, AIsLink bool, ALinkRef string)                                                                                                   // procedure
-	SetSelLengthFor(aselstr string)                                                                                                                                       // procedure
-	Redo()                                                                                                                                                                // procedure
-	SetOnSelectionChange(fn TNotifyEvent)                                                                                                                                 // property event
+	CanPaste() bool                                                                                                                                                                                                                                               // function
+	GetTextAttributes(textStart int32, textParams *TFontParams) bool                                                                                                                                                                                              // function
+	GetStyleRange(charOfs int32, rangeStart *int32, rangeLen *int32) bool                                                                                                                                                                                         // function
+	GetParaAlignmentWithIntParaAlignment(textStart int32, align *types.TParaAlignment) bool                                                                                                                                                                       // function
+	GetParaAlignmentWithInt(textStart int32) types.TParaAlignment                                                                                                                                                                                                 // function
+	GetParaMetric(textStart int32, metric *TParaMetric) bool                                                                                                                                                                                                      // function
+	GetParaNumbering(textStart int32, number *TParaNumbering) bool                                                                                                                                                                                                // function
+	GetParaRangeWithIntParaRange(charOfs int32, paraRange *TParaRange) bool                                                                                                                                                                                       // function
+	GetParaRangeWithIntX3(charOfs int32, textStart *int32, textLength *int32) bool                                                                                                                                                                                // function
+	GetParaTabs(charOfs int32, stopList *TTabStopList) bool                                                                                                                                                                                                       // function
+	IsLink(textStart int32) bool                                                                                                                                                                                                                                  // function
+	LoadRichText(source IStream) bool                                                                                                                                                                                                                             // function
+	SaveRichText(dest IStream) bool                                                                                                                                                                                                                               // function
+	InDelText(uTF8Text string, insStartChar int32, replaceLength int32) int32                                                                                                                                                                                     // function
+	InDelInline(inlineobj IRichMemoInline, insStartChar int32, replaceLength int32, size types.TSize) int32                                                                                                                                                       // function
+	GetText(textStart int32, textLength int32) string                                                                                                                                                                                                             // function
+	GetUText(textStart int32, textLength int32) string                                                                                                                                                                                                            // function
+	SearchWithStringIntX2SearchOptions(niddle string, start int32, len int32, searchOpt types.TSearchOptions) int32                                                                                                                                               // function
+	SearchWithStringIntX4SearchOptions(niddle string, start int32, len int32, searchOpt types.TSearchOptions, textStart *int32, textLength *int32) bool                                                                                                           // function
+	Print(params TPrintParams) int32                                                                                                                                                                                                                              // function
+	CharAtPos(X int32, Y int32) int32                                                                                                                                                                                                                             // function
+	SetTextAttributesWithIntX2FontParams(textStart int32, textLen int32, textParams TFontParams)                                                                                                                                                                  // procedure
+	SetParaAlignment(textStart int32, textLen int32, align types.TParaAlignment)                                                                                                                                                                                  // procedure
+	SetParaMetric(textStart int32, textLen int32, metric TParaMetric)                                                                                                                                                                                             // procedure
+	SetParaNumbering(textStart int32, textLen int32, number TParaNumbering)                                                                                                                                                                                       // procedure
+	SetParaTabs(textStart int32, textLen int32, stopList TTabStopList)                                                                                                                                                                                            // procedure
+	SetTextAttributesWithIntX2Font(textStart int32, textLen int32, font IFont)                                                                                                                                                                                    // procedure
+	SetRangeColor(textStart int32, textLength int32, fontColor types.TColor)                                                                                                                                                                                      // procedure
+	SetRangeParamsWithIntX3TextModifyMaskStringColorFontStylesX2(textStart int32, textLength int32, modifyMask types.TTextModifyMask, fontName string, fontSize int32, fontColor types.TColor, addFontStyle types.TFontStyles, removeFontStyle types.TFontStyles) // procedure
+	SetRangeParamsWithIntX2TextModifyMaskFontParamsFontStylesX2(textStart int32, textLength int32, modifyMask types.TTextModifyMask, fnt TFontParams, addFontStyle types.TFontStyles, removeFontStyle types.TFontStyles)                                          // procedure
+	SetRangeParaParams(textStart int32, textLength int32, modifyMask types.TParaModifyMask, paraMetric TParaMetric)                                                                                                                                               // procedure
+	SetLink(textStart int32, textLength int32, isLink bool, linkRef string)                                                                                                                                                                                       // procedure
+	SetSelLengthFor(aselstr string)                                                                                                                                                                                                                               // procedure
+	Redo()                                                                                                                                                                                                                                                        // procedure
+	ZoomFactor() float64                                                                                                                                                                                                                                          // property ZoomFactor Getter
+	SetZoomFactor(value float64)                                                                                                                                                                                                                                  // property ZoomFactor Setter
+	CanRedo() bool                                                                                                                                                                                                                                                // property CanRedo Getter
+	Transparent() bool                                                                                                                                                                                                                                            // property Transparent Getter
+	SetTransparent(value bool)                                                                                                                                                                                                                                    // property Transparent Setter
+	SetOnSelectionChange(fn TNotifyEvent)                                                                                                                                                                                                                         // property event
+	SetOnPrintAction(fn TPrintActionEvent)                                                                                                                                                                                                                        // property event
+	SetOnLinkAction(fn TLinkActionEvent)                                                                                                                                                                                                                          // property event
 }
 
-// TCustomRichMemo Parent: TCustomMemo
 type TCustomRichMemo struct {
 	TCustomMemo
-	selectionChangePtr uintptr
-}
-
-func NewCustomRichMemo(AOwner IComponent) ICustomRichMemo {
-	r1 := customRichMemoImportAPI().SysCallN(4, GetObjectUintptr(AOwner))
-	return AsCustomRichMemo(r1)
-}
-
-func (m *TCustomRichMemo) ZoomFactor() (resultDouble float64) {
-	customRichMemoImportAPI().SysCallN(39, 0, m.Instance(), uintptr(unsafePointer(&resultDouble)), uintptr(unsafePointer(&resultDouble)))
-	return
-}
-
-func (m *TCustomRichMemo) SetZoomFactor(AValue float64) {
-	customRichMemoImportAPI().SysCallN(39, 1, m.Instance(), uintptr(unsafePointer(&AValue)), uintptr(unsafePointer(&AValue)))
-}
-
-func (m *TCustomRichMemo) CanRedo() bool {
-	r1 := customRichMemoImportAPI().SysCallN(1, m.Instance())
-	return GoBool(r1)
-}
-
-func (m *TCustomRichMemo) Transparent() bool {
-	r1 := customRichMemoImportAPI().SysCallN(38, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *TCustomRichMemo) SetTransparent(AValue bool) {
-	customRichMemoImportAPI().SysCallN(38, 1, m.Instance(), PascalBool(AValue))
 }
 
 func (m *TCustomRichMemo) CanPaste() bool {
-	r1 := customRichMemoImportAPI().SysCallN(0, m.Instance())
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customRichMemoAPI().SysCallN(1, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) GetTextAttributes(TextStart int32, TextParams *TFontParams) bool {
-	var result1 uintptr
-	r1 := customRichMemoImportAPI().SysCallN(13, m.Instance(), uintptr(TextStart), uintptr(unsafePointer(&result1)))
-	*TextParams = *(*TFontParams)(getPointer(result1))
-	return GoBool(r1)
+func (m *TCustomRichMemo) GetTextAttributes(textStart int32, textParams *TFontParams) bool {
+	if !m.IsValid() {
+		return false
+	}
+	textParamsPtr := textParams.ToPas()
+	r := customRichMemoAPI().SysCallN(2, m.Instance(), uintptr(textStart), uintptr(base.UnsafePointer(textParamsPtr)))
+	*textParams = textParamsPtr.ToGo()
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) GetStyleRange(CharOfs int32, RangeStart, RangeLen *int32) bool {
-	var result1 uintptr
-	var result2 uintptr
-	r1 := customRichMemoImportAPI().SysCallN(12, m.Instance(), uintptr(CharOfs), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
-	*RangeStart = int32(result1)
-	*RangeLen = int32(result2)
-	return GoBool(r1)
+func (m *TCustomRichMemo) GetStyleRange(charOfs int32, rangeStart *int32, rangeLen *int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	rangeStartPtr := uintptr(*rangeStart)
+	rangeLenPtr := uintptr(*rangeLen)
+	r := customRichMemoAPI().SysCallN(3, m.Instance(), uintptr(charOfs), uintptr(base.UnsafePointer(&rangeStartPtr)), uintptr(base.UnsafePointer(&rangeLenPtr)))
+	*rangeStart = int32(rangeStartPtr)
+	*rangeLen = int32(rangeLenPtr)
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) GetParaAlignment(TextStart int32, AAlign *TParaAlignment) bool {
-	var result1 uintptr
-	r1 := customRichMemoImportAPI().SysCallN(5, m.Instance(), uintptr(TextStart), uintptr(unsafePointer(&result1)))
-	*AAlign = TParaAlignment(result1)
-	return GoBool(r1)
+func (m *TCustomRichMemo) GetParaAlignmentWithIntParaAlignment(textStart int32, align *types.TParaAlignment) bool {
+	if !m.IsValid() {
+		return false
+	}
+	alignPtr := uintptr(*align)
+	r := customRichMemoAPI().SysCallN(4, m.Instance(), uintptr(textStart), uintptr(base.UnsafePointer(&alignPtr)))
+	*align = types.TParaAlignment(alignPtr)
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) GetParaAlignment1(TextStart int32) TParaAlignment {
-	r1 := customRichMemoImportAPI().SysCallN(6, m.Instance(), uintptr(TextStart))
-	return TParaAlignment(r1)
+func (m *TCustomRichMemo) GetParaAlignmentWithInt(textStart int32) types.TParaAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customRichMemoAPI().SysCallN(5, m.Instance(), uintptr(textStart))
+	return types.TParaAlignment(r)
 }
 
-func (m *TCustomRichMemo) GetParaMetric(TextStart int32, AMetric *TParaMetric) bool {
-	var result1 uintptr
-	r1 := customRichMemoImportAPI().SysCallN(7, m.Instance(), uintptr(TextStart), uintptr(unsafePointer(&result1)))
-	*AMetric = *(*TParaMetric)(getPointer(result1))
-	return GoBool(r1)
+func (m *TCustomRichMemo) GetParaMetric(textStart int32, metric *TParaMetric) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customRichMemoAPI().SysCallN(6, m.Instance(), uintptr(textStart), uintptr(base.UnsafePointer(metric)))
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) GetParaNumbering(TextStart int32, ANumber *TParaNumbering) bool {
-	var result1 uintptr
-	r1 := customRichMemoImportAPI().SysCallN(8, m.Instance(), uintptr(TextStart), uintptr(unsafePointer(&result1)))
-	*ANumber = *(*TParaNumbering)(getPointer(result1))
-	return GoBool(r1)
+func (m *TCustomRichMemo) GetParaNumbering(textStart int32, number *TParaNumbering) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customRichMemoAPI().SysCallN(7, m.Instance(), uintptr(textStart), uintptr(base.UnsafePointer(number)))
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) GetParaRange(CharOfs int32, ParaRange *TParaRange) bool {
-	var result1 uintptr
-	r1 := customRichMemoImportAPI().SysCallN(9, m.Instance(), uintptr(CharOfs), uintptr(unsafePointer(&result1)))
-	*ParaRange = *(*TParaRange)(getPointer(result1))
-	return GoBool(r1)
+func (m *TCustomRichMemo) GetParaRangeWithIntParaRange(charOfs int32, paraRange *TParaRange) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customRichMemoAPI().SysCallN(8, m.Instance(), uintptr(charOfs), uintptr(base.UnsafePointer(paraRange)))
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) GetParaRange1(CharOfs int32, TextStart, TextLength *int32) bool {
-	var result1 uintptr
-	var result2 uintptr
-	r1 := customRichMemoImportAPI().SysCallN(10, m.Instance(), uintptr(CharOfs), uintptr(unsafePointer(&result1)), uintptr(unsafePointer(&result2)))
-	*TextStart = int32(result1)
-	*TextLength = int32(result2)
-	return GoBool(r1)
+func (m *TCustomRichMemo) GetParaRangeWithIntX3(charOfs int32, textStart *int32, textLength *int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	textStartPtr := uintptr(*textStart)
+	textLengthPtr := uintptr(*textLength)
+	r := customRichMemoAPI().SysCallN(9, m.Instance(), uintptr(charOfs), uintptr(base.UnsafePointer(&textStartPtr)), uintptr(base.UnsafePointer(&textLengthPtr)))
+	*textStart = int32(textStartPtr)
+	*textLength = int32(textLengthPtr)
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) GetParaTabs(CharOfs int32, AStopList *TTabStopList) bool {
-	var result1 uintptr
-	r1 := customRichMemoImportAPI().SysCallN(11, m.Instance(), uintptr(CharOfs), uintptr(unsafePointer(&result1)))
-	*AStopList = *(*TTabStopList)(getPointer(result1))
-	return GoBool(r1)
+func (m *TCustomRichMemo) GetParaTabs(charOfs int32, stopList *TTabStopList) bool {
+	if !m.IsValid() {
+		return false
+	}
+	stopListPtr := stopList.ToPas()
+	r := customRichMemoAPI().SysCallN(10, m.Instance(), uintptr(charOfs), uintptr(base.UnsafePointer(stopListPtr)))
+	*stopList = stopListPtr.ToGo()
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) IsLink(TextStart int32) bool {
-	r1 := customRichMemoImportAPI().SysCallN(18, m.Instance(), uintptr(TextStart))
-	return GoBool(r1)
+func (m *TCustomRichMemo) IsLink(textStart int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customRichMemoAPI().SysCallN(11, m.Instance(), uintptr(textStart))
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) LoadRichText(Source IStream) bool {
-	r1 := customRichMemoImportAPI().SysCallN(19, m.Instance(), GetObjectUintptr(Source))
-	return GoBool(r1)
+func (m *TCustomRichMemo) LoadRichText(source IStream) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customRichMemoAPI().SysCallN(12, m.Instance(), base.GetObjectUintptr(source))
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) SaveRichText(Dest IStream) bool {
-	r1 := customRichMemoImportAPI().SysCallN(22, m.Instance(), GetObjectUintptr(Dest))
-	return GoBool(r1)
+func (m *TCustomRichMemo) SaveRichText(dest IStream) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customRichMemoAPI().SysCallN(13, m.Instance(), base.GetObjectUintptr(dest))
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) InDelText(UTF8Text string, InsStartChar, ReplaceLength int32) int32 {
-	r1 := customRichMemoImportAPI().SysCallN(17, m.Instance(), PascalStr(UTF8Text), uintptr(InsStartChar), uintptr(ReplaceLength))
-	return int32(r1)
+func (m *TCustomRichMemo) InDelText(uTF8Text string, insStartChar int32, replaceLength int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customRichMemoAPI().SysCallN(14, m.Instance(), api.PasStr(uTF8Text), uintptr(insStartChar), uintptr(replaceLength))
+	return int32(r)
 }
 
-func (m *TCustomRichMemo) InDelInline(inlineobj IRichMemoInline, InsStartChar, ReplaceLength int32, ASize *TSize) int32 {
-	r1 := customRichMemoImportAPI().SysCallN(16, m.Instance(), GetObjectUintptr(inlineobj), uintptr(InsStartChar), uintptr(ReplaceLength), uintptr(unsafePointer(ASize)))
-	return int32(r1)
+func (m *TCustomRichMemo) InDelInline(inlineobj IRichMemoInline, insStartChar int32, replaceLength int32, size types.TSize) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customRichMemoAPI().SysCallN(15, m.Instance(), base.GetObjectUintptr(inlineobj), uintptr(insStartChar), uintptr(replaceLength), uintptr(base.UnsafePointer(&size)))
+	return int32(r)
 }
 
-func (m *TCustomRichMemo) GetTextForString(TextStart, TextLength int32) string {
-	r1 := customRichMemoImportAPI().SysCallN(14, m.Instance(), uintptr(TextStart), uintptr(TextLength))
-	return GoStr(r1)
+func (m *TCustomRichMemo) GetText(textStart int32, textLength int32) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customRichMemoAPI().SysCallN(16, m.Instance(), uintptr(textStart), uintptr(textLength))
+	return api.GoStr(r)
 }
 
-func (m *TCustomRichMemo) GetUText(TextStart, TextLength int32) string {
-	r1 := customRichMemoImportAPI().SysCallN(15, m.Instance(), uintptr(TextStart), uintptr(TextLength))
-	return GoStr(r1)
+func (m *TCustomRichMemo) GetUText(textStart int32, textLength int32) string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := customRichMemoAPI().SysCallN(17, m.Instance(), uintptr(textStart), uintptr(textLength))
+	return api.GoStr(r)
 }
 
-func (m *TCustomRichMemo) Search(ANiddle string, Start, Len int32, SearchOpt TSearchOptions) int32 {
-	r1 := customRichMemoImportAPI().SysCallN(23, m.Instance(), PascalStr(ANiddle), uintptr(Start), uintptr(Len), uintptr(SearchOpt))
-	return int32(r1)
+func (m *TCustomRichMemo) SearchWithStringIntX2SearchOptions(niddle string, start int32, len int32, searchOpt types.TSearchOptions) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customRichMemoAPI().SysCallN(18, m.Instance(), api.PasStr(niddle), uintptr(start), uintptr(len), uintptr(searchOpt))
+	return int32(r)
 }
 
-func (m *TCustomRichMemo) Search1(ANiddle string, Start, Len int32, SearchOpt TSearchOptions, ATextStart, ATextLength *int32) bool {
-	var result3 uintptr
-	var result4 uintptr
-	r1 := customRichMemoImportAPI().SysCallN(24, m.Instance(), PascalStr(ANiddle), uintptr(Start), uintptr(Len), uintptr(SearchOpt), uintptr(unsafePointer(&result3)), uintptr(unsafePointer(&result4)))
-	*ATextStart = int32(result3)
-	*ATextLength = int32(result4)
-	return GoBool(r1)
+func (m *TCustomRichMemo) SearchWithStringIntX4SearchOptions(niddle string, start int32, len int32, searchOpt types.TSearchOptions, textStart *int32, textLength *int32) bool {
+	if !m.IsValid() {
+		return false
+	}
+	textStartPtr := uintptr(*textStart)
+	textLengthPtr := uintptr(*textLength)
+	r := customRichMemoAPI().SysCallN(19, m.Instance(), api.PasStr(niddle), uintptr(start), uintptr(len), uintptr(searchOpt), uintptr(base.UnsafePointer(&textStartPtr)), uintptr(base.UnsafePointer(&textLengthPtr)))
+	*textStart = int32(textStartPtr)
+	*textLength = int32(textLengthPtr)
+	return api.GoBool(r)
 }
 
-func (m *TCustomRichMemo) Print(params *TPrintParams) int32 {
-	r1 := customRichMemoImportAPI().SysCallN(20, m.Instance(), uintptr(unsafePointer(params)))
-	return int32(r1)
+func (m *TCustomRichMemo) Print(params TPrintParams) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	paramsPtr := params.ToPas()
+	r := customRichMemoAPI().SysCallN(20, m.Instance(), uintptr(base.UnsafePointer(paramsPtr)))
+	return int32(r)
 }
 
-func (m *TCustomRichMemo) CharAtPos(x, y int32) int32 {
-	r1 := customRichMemoImportAPI().SysCallN(2, m.Instance(), uintptr(x), uintptr(y))
-	return int32(r1)
+func (m *TCustomRichMemo) CharAtPos(X int32, Y int32) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customRichMemoAPI().SysCallN(21, m.Instance(), uintptr(X), uintptr(Y))
+	return int32(r)
 }
 
-func CustomRichMemoClass() TClass {
-	ret := customRichMemoImportAPI().SysCallN(3)
-	return TClass(ret)
+func (m *TCustomRichMemo) SetTextAttributesWithIntX2FontParams(textStart int32, textLen int32, textParams TFontParams) {
+	if !m.IsValid() {
+		return
+	}
+	textParamsPtr := textParams.ToPas()
+	customRichMemoAPI().SysCallN(22, m.Instance(), uintptr(textStart), uintptr(textLen), uintptr(base.UnsafePointer(textParamsPtr)))
 }
 
-func (m *TCustomRichMemo) SetTextAttributes(TextStart, TextLen int32, TextParams *TFontParams) {
-	customRichMemoImportAPI().SysCallN(36, m.Instance(), uintptr(TextStart), uintptr(TextLen), uintptr(unsafePointer(TextParams)))
+func (m *TCustomRichMemo) SetParaAlignment(textStart int32, textLen int32, align types.TParaAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(23, m.Instance(), uintptr(textStart), uintptr(textLen), uintptr(align))
 }
 
-func (m *TCustomRichMemo) SetParaAlignment(TextStart, TextLen int32, AAlign TParaAlignment) {
-	customRichMemoImportAPI().SysCallN(27, m.Instance(), uintptr(TextStart), uintptr(TextLen), uintptr(AAlign))
+func (m *TCustomRichMemo) SetParaMetric(textStart int32, textLen int32, metric TParaMetric) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(24, m.Instance(), uintptr(textStart), uintptr(textLen), uintptr(base.UnsafePointer(&metric)))
 }
 
-func (m *TCustomRichMemo) SetParaMetric(TextStart, TextLen int32, AMetric *TParaMetric) {
-	customRichMemoImportAPI().SysCallN(28, m.Instance(), uintptr(TextStart), uintptr(TextLen), uintptr(unsafePointer(AMetric)))
+func (m *TCustomRichMemo) SetParaNumbering(textStart int32, textLen int32, number TParaNumbering) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(25, m.Instance(), uintptr(textStart), uintptr(textLen), uintptr(base.UnsafePointer(&number)))
 }
 
-func (m *TCustomRichMemo) SetParaNumbering(TextStart, TextLen int32, ANumber *TParaNumbering) {
-	customRichMemoImportAPI().SysCallN(29, m.Instance(), uintptr(TextStart), uintptr(TextLen), uintptr(unsafePointer(ANumber)))
+func (m *TCustomRichMemo) SetParaTabs(textStart int32, textLen int32, stopList TTabStopList) {
+	if !m.IsValid() {
+		return
+	}
+	stopListPtr := stopList.ToPas()
+	customRichMemoAPI().SysCallN(26, m.Instance(), uintptr(textStart), uintptr(textLen), uintptr(base.UnsafePointer(stopListPtr)))
 }
 
-func (m *TCustomRichMemo) SetParaTabs(TextStart, TextLen int32, AStopList *TTabStopList) {
-	customRichMemoImportAPI().SysCallN(30, m.Instance(), uintptr(TextStart), uintptr(TextLen), uintptr(unsafePointer(AStopList)))
+func (m *TCustomRichMemo) SetTextAttributesWithIntX2Font(textStart int32, textLen int32, font IFont) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(27, m.Instance(), uintptr(textStart), uintptr(textLen), base.GetObjectUintptr(font))
 }
 
-func (m *TCustomRichMemo) SetTextAttributes1(TextStart, TextLen int32, AFont IFont) {
-	customRichMemoImportAPI().SysCallN(37, m.Instance(), uintptr(TextStart), uintptr(TextLen), GetObjectUintptr(AFont))
+func (m *TCustomRichMemo) SetRangeColor(textStart int32, textLength int32, fontColor types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(28, m.Instance(), uintptr(textStart), uintptr(textLength), uintptr(fontColor))
 }
 
-func (m *TCustomRichMemo) SetRangeColor(TextStart, TextLength int32, FontColor TColor) {
-	customRichMemoImportAPI().SysCallN(31, m.Instance(), uintptr(TextStart), uintptr(TextLength), uintptr(FontColor))
+func (m *TCustomRichMemo) SetRangeParamsWithIntX3TextModifyMaskStringColorFontStylesX2(textStart int32, textLength int32, modifyMask types.TTextModifyMask, fontName string, fontSize int32, fontColor types.TColor, addFontStyle types.TFontStyles, removeFontStyle types.TFontStyles) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(29, m.Instance(), uintptr(textStart), uintptr(textLength), uintptr(modifyMask), api.PasStr(fontName), uintptr(fontSize), uintptr(fontColor), uintptr(addFontStyle), uintptr(removeFontStyle))
 }
 
-func (m *TCustomRichMemo) SetRangeParams(TextStart, TextLength int32, ModifyMask TTextModifyMask, FontName string, FontSize int32, FontColor TColor, AddFontStyle, RemoveFontStyle TFontStyles) {
-	customRichMemoImportAPI().SysCallN(33, m.Instance(), uintptr(TextStart), uintptr(TextLength), uintptr(ModifyMask), PascalStr(FontName), uintptr(FontSize), uintptr(FontColor), uintptr(AddFontStyle), uintptr(RemoveFontStyle))
+func (m *TCustomRichMemo) SetRangeParamsWithIntX2TextModifyMaskFontParamsFontStylesX2(textStart int32, textLength int32, modifyMask types.TTextModifyMask, fnt TFontParams, addFontStyle types.TFontStyles, removeFontStyle types.TFontStyles) {
+	if !m.IsValid() {
+		return
+	}
+	fntPtr := fnt.ToPas()
+	customRichMemoAPI().SysCallN(30, m.Instance(), uintptr(textStart), uintptr(textLength), uintptr(modifyMask), uintptr(base.UnsafePointer(fntPtr)), uintptr(addFontStyle), uintptr(removeFontStyle))
 }
 
-func (m *TCustomRichMemo) SetRangeParams1(TextStart, TextLength int32, ModifyMask TTextModifyMask, fnt *TFontParams, AddFontStyle, RemoveFontStyle TFontStyles) {
-	customRichMemoImportAPI().SysCallN(34, m.Instance(), uintptr(TextStart), uintptr(TextLength), uintptr(ModifyMask), uintptr(unsafePointer(fnt)), uintptr(AddFontStyle), uintptr(RemoveFontStyle))
+func (m *TCustomRichMemo) SetRangeParaParams(textStart int32, textLength int32, modifyMask types.TParaModifyMask, paraMetric TParaMetric) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(31, m.Instance(), uintptr(textStart), uintptr(textLength), uintptr(modifyMask), uintptr(base.UnsafePointer(&paraMetric)))
 }
 
-func (m *TCustomRichMemo) SetRangeParaParams(TextStart, TextLength int32, ModifyMask TParaModifyMask, ParaMetric *TParaMetric) {
-	customRichMemoImportAPI().SysCallN(32, m.Instance(), uintptr(TextStart), uintptr(TextLength), uintptr(ModifyMask), uintptr(unsafePointer(ParaMetric)))
-}
-
-func (m *TCustomRichMemo) SetLink(TextStart, TextLength int32, AIsLink bool, ALinkRef string) {
-	customRichMemoImportAPI().SysCallN(25, m.Instance(), uintptr(TextStart), uintptr(TextLength), PascalBool(AIsLink), PascalStr(ALinkRef))
+func (m *TCustomRichMemo) SetLink(textStart int32, textLength int32, isLink bool, linkRef string) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(32, m.Instance(), uintptr(textStart), uintptr(textLength), api.PasBool(isLink), api.PasStr(linkRef))
 }
 
 func (m *TCustomRichMemo) SetSelLengthFor(aselstr string) {
-	customRichMemoImportAPI().SysCallN(35, m.Instance(), PascalStr(aselstr))
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(33, m.Instance(), api.PasStr(aselstr))
 }
 
 func (m *TCustomRichMemo) Redo() {
-	customRichMemoImportAPI().SysCallN(21, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(34, m.Instance())
+}
+
+func (m *TCustomRichMemo) ZoomFactor() (result float64) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(35, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
+}
+
+func (m *TCustomRichMemo) SetZoomFactor(value float64) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(35, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
+}
+
+func (m *TCustomRichMemo) CanRedo() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customRichMemoAPI().SysCallN(36, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomRichMemo) Transparent() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := customRichMemoAPI().SysCallN(37, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *TCustomRichMemo) SetTransparent(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customRichMemoAPI().SysCallN(37, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomRichMemo) SetOnSelectionChange(fn TNotifyEvent) {
-	if m.selectionChangePtr != 0 {
-		RemoveEventElement(m.selectionChangePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.selectionChangePtr = MakeEventDataPtr(fn)
-	customRichMemoImportAPI().SysCallN(26, m.Instance(), m.selectionChangePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 38, customRichMemoAPI(), api.MakeEventDataPtr(cb))
+}
+
+func (m *TCustomRichMemo) SetOnPrintAction(fn TPrintActionEvent) {
+	if !m.IsValid() {
+		return
+	}
+	cb := makeTPrintActionEvent(fn)
+	base.SetEvent(m, 39, customRichMemoAPI(), api.MakeEventDataPtr(cb))
+}
+
+func (m *TCustomRichMemo) SetOnLinkAction(fn TLinkActionEvent) {
+	if !m.IsValid() {
+		return
+	}
+	cb := makeTLinkActionEvent(fn)
+	base.SetEvent(m, 40, customRichMemoAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomRichMemo class constructor
+func NewCustomRichMemo(owner IComponent) ICustomRichMemo {
+	r := customRichMemoAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomRichMemo(r)
+}
+
+func TCustomRichMemoClass() types.TClass {
+	r := customRichMemoAPI().SysCallN(41)
+	return types.TClass(r)
 }
 
 var (
-	customRichMemoImport       *imports.Imports = nil
-	customRichMemoImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomRichMemo_CanPaste", 0),
-		/*1*/ imports.NewTable("CustomRichMemo_CanRedo", 0),
-		/*2*/ imports.NewTable("CustomRichMemo_CharAtPos", 0),
-		/*3*/ imports.NewTable("CustomRichMemo_Class", 0),
-		/*4*/ imports.NewTable("CustomRichMemo_Create", 0),
-		/*5*/ imports.NewTable("CustomRichMemo_GetParaAlignment", 0),
-		/*6*/ imports.NewTable("CustomRichMemo_GetParaAlignment1", 0),
-		/*7*/ imports.NewTable("CustomRichMemo_GetParaMetric", 0),
-		/*8*/ imports.NewTable("CustomRichMemo_GetParaNumbering", 0),
-		/*9*/ imports.NewTable("CustomRichMemo_GetParaRange", 0),
-		/*10*/ imports.NewTable("CustomRichMemo_GetParaRange1", 0),
-		/*11*/ imports.NewTable("CustomRichMemo_GetParaTabs", 0),
-		/*12*/ imports.NewTable("CustomRichMemo_GetStyleRange", 0),
-		/*13*/ imports.NewTable("CustomRichMemo_GetTextAttributes", 0),
-		/*14*/ imports.NewTable("CustomRichMemo_GetTextForString", 0),
-		/*15*/ imports.NewTable("CustomRichMemo_GetUText", 0),
-		/*16*/ imports.NewTable("CustomRichMemo_InDelInline", 0),
-		/*17*/ imports.NewTable("CustomRichMemo_InDelText", 0),
-		/*18*/ imports.NewTable("CustomRichMemo_IsLink", 0),
-		/*19*/ imports.NewTable("CustomRichMemo_LoadRichText", 0),
-		/*20*/ imports.NewTable("CustomRichMemo_Print", 0),
-		/*21*/ imports.NewTable("CustomRichMemo_Redo", 0),
-		/*22*/ imports.NewTable("CustomRichMemo_SaveRichText", 0),
-		/*23*/ imports.NewTable("CustomRichMemo_Search", 0),
-		/*24*/ imports.NewTable("CustomRichMemo_Search1", 0),
-		/*25*/ imports.NewTable("CustomRichMemo_SetLink", 0),
-		/*26*/ imports.NewTable("CustomRichMemo_SetOnSelectionChange", 0),
-		/*27*/ imports.NewTable("CustomRichMemo_SetParaAlignment", 0),
-		/*28*/ imports.NewTable("CustomRichMemo_SetParaMetric", 0),
-		/*29*/ imports.NewTable("CustomRichMemo_SetParaNumbering", 0),
-		/*30*/ imports.NewTable("CustomRichMemo_SetParaTabs", 0),
-		/*31*/ imports.NewTable("CustomRichMemo_SetRangeColor", 0),
-		/*32*/ imports.NewTable("CustomRichMemo_SetRangeParaParams", 0),
-		/*33*/ imports.NewTable("CustomRichMemo_SetRangeParams", 0),
-		/*34*/ imports.NewTable("CustomRichMemo_SetRangeParams1", 0),
-		/*35*/ imports.NewTable("CustomRichMemo_SetSelLengthFor", 0),
-		/*36*/ imports.NewTable("CustomRichMemo_SetTextAttributes", 0),
-		/*37*/ imports.NewTable("CustomRichMemo_SetTextAttributes1", 0),
-		/*38*/ imports.NewTable("CustomRichMemo_Transparent", 0),
-		/*39*/ imports.NewTable("CustomRichMemo_ZoomFactor", 0),
-	}
+	customRichMemoOnce   base.Once
+	customRichMemoImport *imports.Imports = nil
 )
 
-func customRichMemoImportAPI() *imports.Imports {
-	if customRichMemoImport == nil {
-		customRichMemoImport = NewDefaultImports()
-		customRichMemoImport.SetImportTable(customRichMemoImportTables)
-		customRichMemoImportTables = nil
-	}
+func customRichMemoAPI() *imports.Imports {
+	customRichMemoOnce.Do(func() {
+		customRichMemoImport = api.NewDefaultImports()
+		customRichMemoImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomRichMemo_Create", 0), // constructor NewCustomRichMemo
+			/* 1 */ imports.NewTable("TCustomRichMemo_CanPaste", 0), // function CanPaste
+			/* 2 */ imports.NewTable("TCustomRichMemo_GetTextAttributes", 0), // function GetTextAttributes
+			/* 3 */ imports.NewTable("TCustomRichMemo_GetStyleRange", 0), // function GetStyleRange
+			/* 4 */ imports.NewTable("TCustomRichMemo_GetParaAlignmentWithIntParaAlignment", 0), // function GetParaAlignmentWithIntParaAlignment
+			/* 5 */ imports.NewTable("TCustomRichMemo_GetParaAlignmentWithInt", 0), // function GetParaAlignmentWithInt
+			/* 6 */ imports.NewTable("TCustomRichMemo_GetParaMetric", 0), // function GetParaMetric
+			/* 7 */ imports.NewTable("TCustomRichMemo_GetParaNumbering", 0), // function GetParaNumbering
+			/* 8 */ imports.NewTable("TCustomRichMemo_GetParaRangeWithIntParaRange", 0), // function GetParaRangeWithIntParaRange
+			/* 9 */ imports.NewTable("TCustomRichMemo_GetParaRangeWithIntX3", 0), // function GetParaRangeWithIntX3
+			/* 10 */ imports.NewTable("TCustomRichMemo_GetParaTabs", 0), // function GetParaTabs
+			/* 11 */ imports.NewTable("TCustomRichMemo_isLink", 0), // function IsLink
+			/* 12 */ imports.NewTable("TCustomRichMemo_LoadRichText", 0), // function LoadRichText
+			/* 13 */ imports.NewTable("TCustomRichMemo_SaveRichText", 0), // function SaveRichText
+			/* 14 */ imports.NewTable("TCustomRichMemo_InDelText", 0), // function InDelText
+			/* 15 */ imports.NewTable("TCustomRichMemo_InDelInline", 0), // function InDelInline
+			/* 16 */ imports.NewTable("TCustomRichMemo_GetText", 0), // function GetText
+			/* 17 */ imports.NewTable("TCustomRichMemo_GetUText", 0), // function GetUText
+			/* 18 */ imports.NewTable("TCustomRichMemo_SearchWithStringIntX2SearchOptions", 0), // function SearchWithStringIntX2SearchOptions
+			/* 19 */ imports.NewTable("TCustomRichMemo_SearchWithStringIntX4SearchOptions", 0), // function SearchWithStringIntX4SearchOptions
+			/* 20 */ imports.NewTable("TCustomRichMemo_Print", 0), // function Print
+			/* 21 */ imports.NewTable("TCustomRichMemo_CharAtPos", 0), // function CharAtPos
+			/* 22 */ imports.NewTable("TCustomRichMemo_SetTextAttributesWithIntX2FontParams", 0), // procedure SetTextAttributesWithIntX2FontParams
+			/* 23 */ imports.NewTable("TCustomRichMemo_SetParaAlignment", 0), // procedure SetParaAlignment
+			/* 24 */ imports.NewTable("TCustomRichMemo_SetParaMetric", 0), // procedure SetParaMetric
+			/* 25 */ imports.NewTable("TCustomRichMemo_SetParaNumbering", 0), // procedure SetParaNumbering
+			/* 26 */ imports.NewTable("TCustomRichMemo_SetParaTabs", 0), // procedure SetParaTabs
+			/* 27 */ imports.NewTable("TCustomRichMemo_SetTextAttributesWithIntX2Font", 0), // procedure SetTextAttributesWithIntX2Font
+			/* 28 */ imports.NewTable("TCustomRichMemo_SetRangeColor", 0), // procedure SetRangeColor
+			/* 29 */ imports.NewTable("TCustomRichMemo_SetRangeParamsWithIntX3TextModifyMaskStringColorFontStylesX2", 0), // procedure SetRangeParamsWithIntX3TextModifyMaskStringColorFontStylesX2
+			/* 30 */ imports.NewTable("TCustomRichMemo_SetRangeParamsWithIntX2TextModifyMaskFontParamsFontStylesX2", 0), // procedure SetRangeParamsWithIntX2TextModifyMaskFontParamsFontStylesX2
+			/* 31 */ imports.NewTable("TCustomRichMemo_SetRangeParaParams", 0), // procedure SetRangeParaParams
+			/* 32 */ imports.NewTable("TCustomRichMemo_SetLink", 0), // procedure SetLink
+			/* 33 */ imports.NewTable("TCustomRichMemo_SetSelLengthFor", 0), // procedure SetSelLengthFor
+			/* 34 */ imports.NewTable("TCustomRichMemo_Redo", 0), // procedure Redo
+			/* 35 */ imports.NewTable("TCustomRichMemo_ZoomFactor", 0), // property ZoomFactor
+			/* 36 */ imports.NewTable("TCustomRichMemo_CanRedo", 0), // property CanRedo
+			/* 37 */ imports.NewTable("TCustomRichMemo_Transparent", 0), // property Transparent
+			/* 38 */ imports.NewTable("TCustomRichMemo_OnSelectionChange", 0), // event OnSelectionChange
+			/* 39 */ imports.NewTable("TCustomRichMemo_OnPrintAction", 0), // event OnPrintAction
+			/* 40 */ imports.NewTable("TCustomRichMemo_OnLinkAction", 0), // event OnLinkAction
+			/* 41 */ imports.NewTable("TCustomRichMemo_TClass", 0), // function TCustomRichMemoClass
+		}
+	})
 	return customRichMemoImport
 }

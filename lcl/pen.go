@@ -9,105 +9,129 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IPen Parent: IFPCustomPen
 type IPen interface {
 	IFPCustomPen
-	Color() TColor                                    // property
-	SetColor(AValue TColor)                           // property
-	Cosmetic() bool                                   // property
-	SetCosmetic(AValue bool)                          // property
-	EndCapForPenEndCap() TPenEndCap                   // property
-	SetEndCapForPenEndCap(AValue TPenEndCap)          // property
-	JoinStyleForPenJoinStyle() TPenJoinStyle          // property
-	SetJoinStyleForPenJoinStyle(AValue TPenJoinStyle) // property
-	GetPatternForUintptr() uintptr                    // function
-	SetPatternForPointer(APattern uintptr)            // procedure
+	GetPattern() IUint32ArrayWrap                         // function
+	SetPatternWithPenPattern(pattern IUint32ArrayWrap)    // procedure
+	Color() types.TColor                                  // property Color Getter
+	SetColor(value types.TColor)                          // property Color Setter
+	Cosmetic() bool                                       // property Cosmetic Getter
+	SetCosmetic(value bool)                               // property Cosmetic Setter
+	EndCapToPenEndCap() types.TPenEndCap                  // property EndCap Getter
+	SetEndCapToPenEndCap(value types.TPenEndCap)          // property EndCap Setter
+	JoinStyleToPenJoinStyle() types.TPenJoinStyle         // property JoinStyle Getter
+	SetJoinStyleToPenJoinStyle(value types.TPenJoinStyle) // property JoinStyle Setter
 }
 
-// TPen Parent: TFPCustomPen
 type TPen struct {
 	TFPCustomPen
 }
 
-func NewPen() IPen {
-	r1 := penImportAPI().SysCallN(3)
-	return AsPen(r1)
+func (m *TPen) GetPattern() IUint32ArrayWrap {
+	if !m.IsValid() {
+		return nil
+	}
+	r := penAPI().SysCallN(1, m.Instance())
+	return AsUint32ArrayWrap(r)
 }
 
-func (m *TPen) Color() TColor {
-	r1 := penImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TPen) SetPatternWithPenPattern(pattern IUint32ArrayWrap) {
+	if !m.IsValid() {
+		return
+	}
+	penAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(pattern))
 }
 
-func (m *TPen) SetColor(AValue TColor) {
-	penImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
+func (m *TPen) Color() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := penAPI().SysCallN(3, 0, m.Instance())
+	return types.TColor(r)
+}
+
+func (m *TPen) SetColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	penAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TPen) Cosmetic() bool {
-	r1 := penImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := penAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TPen) SetCosmetic(AValue bool) {
-	penImportAPI().SysCallN(2, 1, m.Instance(), PascalBool(AValue))
+func (m *TPen) SetCosmetic(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	penAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TPen) EndCapForPenEndCap() TPenEndCap {
-	r1 := penImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TPenEndCap(r1)
+func (m *TPen) EndCapToPenEndCap() types.TPenEndCap {
+	if !m.IsValid() {
+		return 0
+	}
+	r := penAPI().SysCallN(5, 0, m.Instance())
+	return types.TPenEndCap(r)
 }
 
-func (m *TPen) SetEndCapForPenEndCap(AValue TPenEndCap) {
-	penImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TPen) SetEndCapToPenEndCap(value types.TPenEndCap) {
+	if !m.IsValid() {
+		return
+	}
+	penAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TPen) JoinStyleForPenJoinStyle() TPenJoinStyle {
-	r1 := penImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return TPenJoinStyle(r1)
+func (m *TPen) JoinStyleToPenJoinStyle() types.TPenJoinStyle {
+	if !m.IsValid() {
+		return 0
+	}
+	r := penAPI().SysCallN(6, 0, m.Instance())
+	return types.TPenJoinStyle(r)
 }
 
-func (m *TPen) SetJoinStyleForPenJoinStyle(AValue TPenJoinStyle) {
-	penImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
+func (m *TPen) SetJoinStyleToPenJoinStyle(value types.TPenJoinStyle) {
+	if !m.IsValid() {
+		return
+	}
+	penAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TPen) GetPatternForUintptr() uintptr {
-	r1 := penImportAPI().SysCallN(5, m.Instance())
-	return uintptr(r1)
-}
-
-func PenClass() TClass {
-	ret := penImportAPI().SysCallN(0)
-	return TClass(ret)
-}
-
-func (m *TPen) SetPatternForPointer(APattern uintptr) {
-	penImportAPI().SysCallN(7, m.Instance(), uintptr(APattern))
+// NewPen class constructor
+func NewPen() IPen {
+	r := penAPI().SysCallN(0)
+	return AsPen(r)
 }
 
 var (
-	penImport       *imports.Imports = nil
-	penImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Pen_Class", 0),
-		/*1*/ imports.NewTable("Pen_Color", 0),
-		/*2*/ imports.NewTable("Pen_Cosmetic", 0),
-		/*3*/ imports.NewTable("Pen_Create", 0),
-		/*4*/ imports.NewTable("Pen_EndCapForPenEndCap", 0),
-		/*5*/ imports.NewTable("Pen_GetPatternForUintptr", 0),
-		/*6*/ imports.NewTable("Pen_JoinStyleForPenJoinStyle", 0),
-		/*7*/ imports.NewTable("Pen_SetPatternForPointer", 0),
-	}
+	penOnce   base.Once
+	penImport *imports.Imports = nil
 )
 
-func penImportAPI() *imports.Imports {
-	if penImport == nil {
-		penImport = NewDefaultImports()
-		penImport.SetImportTable(penImportTables)
-		penImportTables = nil
-	}
+func penAPI() *imports.Imports {
+	penOnce.Do(func() {
+		penImport = api.NewDefaultImports()
+		penImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPen_Create", 0), // constructor NewPen
+			/* 1 */ imports.NewTable("TPen_GetPattern", 0), // function GetPattern
+			/* 2 */ imports.NewTable("TPen_SetPatternWithPenPattern", 0), // procedure SetPatternWithPenPattern
+			/* 3 */ imports.NewTable("TPen_Color", 0), // property Color
+			/* 4 */ imports.NewTable("TPen_Cosmetic", 0), // property Cosmetic
+			/* 5 */ imports.NewTable("TPen_EndCapToPenEndCap", 0), // property EndCapToPenEndCap
+			/* 6 */ imports.NewTable("TPen_JoinStyleToPenJoinStyle", 0), // property JoinStyleToPenJoinStyle
+		}
+	})
 	return penImport
 }

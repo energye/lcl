@@ -9,86 +9,100 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IMainMenu Parent: IMenu
 type IMainMenu interface {
 	IMenu
-	Height() int32                   // property
-	WindowHandle() HWND              // property
-	SetWindowHandle(AValue HWND)     // property
-	Merge(Menu IMainMenu)            // procedure
-	Unmerge(Menu IMainMenu)          // procedure
-	SetOnChange(fn TMenuChangeEvent) // property event
+	Merge(menu IMainMenu)             // procedure
+	Unmerge(menu IMainMenu)           // procedure
+	Height() int32                    // property Height Getter
+	WindowHandle() types.HWND         // property WindowHandle Getter
+	SetWindowHandle(value types.HWND) // property WindowHandle Setter
+	SetOnChange(fn TMenuChangeEvent)  // property event
 }
 
-// TMainMenu Parent: TMenu
 type TMainMenu struct {
 	TMenu
-	changePtr uintptr
 }
 
-func NewMainMenu(AOwner IComponent) IMainMenu {
-	r1 := mainMenuImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsMainMenu(r1)
+func (m *TMainMenu) Merge(menu IMainMenu) {
+	if !m.IsValid() {
+		return
+	}
+	mainMenuAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(menu))
+}
+
+func (m *TMainMenu) Unmerge(menu IMainMenu) {
+	if !m.IsValid() {
+		return
+	}
+	mainMenuAPI().SysCallN(2, m.Instance(), base.GetObjectUintptr(menu))
 }
 
 func (m *TMainMenu) Height() int32 {
-	r1 := mainMenuImportAPI().SysCallN(2, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := mainMenuAPI().SysCallN(3, m.Instance())
+	return int32(r)
 }
 
-func (m *TMainMenu) WindowHandle() HWND {
-	r1 := mainMenuImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return HWND(r1)
+func (m *TMainMenu) WindowHandle() types.HWND {
+	if !m.IsValid() {
+		return 0
+	}
+	r := mainMenuAPI().SysCallN(4, 0, m.Instance())
+	return types.HWND(r)
 }
 
-func (m *TMainMenu) SetWindowHandle(AValue HWND) {
-	mainMenuImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
-}
-
-func MainMenuClass() TClass {
-	ret := mainMenuImportAPI().SysCallN(0)
-	return TClass(ret)
-}
-
-func (m *TMainMenu) Merge(Menu IMainMenu) {
-	mainMenuImportAPI().SysCallN(3, m.Instance(), GetObjectUintptr(Menu))
-}
-
-func (m *TMainMenu) Unmerge(Menu IMainMenu) {
-	mainMenuImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(Menu))
+func (m *TMainMenu) SetWindowHandle(value types.HWND) {
+	if !m.IsValid() {
+		return
+	}
+	mainMenuAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TMainMenu) SetOnChange(fn TMenuChangeEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	mainMenuImportAPI().SysCallN(4, m.Instance(), m.changePtr)
+	cb := makeTMenuChangeEvent(fn)
+	base.SetEvent(m, 5, mainMenuAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewMainMenu class constructor
+func NewMainMenu(owner IComponent) IMainMenu {
+	r := mainMenuAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsMainMenu(r)
+}
+
+func TMainMenuClass() types.TClass {
+	r := mainMenuAPI().SysCallN(6)
+	return types.TClass(r)
 }
 
 var (
-	mainMenuImport       *imports.Imports = nil
-	mainMenuImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("MainMenu_Class", 0),
-		/*1*/ imports.NewTable("MainMenu_Create", 0),
-		/*2*/ imports.NewTable("MainMenu_Height", 0),
-		/*3*/ imports.NewTable("MainMenu_Merge", 0),
-		/*4*/ imports.NewTable("MainMenu_SetOnChange", 0),
-		/*5*/ imports.NewTable("MainMenu_Unmerge", 0),
-		/*6*/ imports.NewTable("MainMenu_WindowHandle", 0),
-	}
+	mainMenuOnce   base.Once
+	mainMenuImport *imports.Imports = nil
 )
 
-func mainMenuImportAPI() *imports.Imports {
-	if mainMenuImport == nil {
-		mainMenuImport = NewDefaultImports()
-		mainMenuImport.SetImportTable(mainMenuImportTables)
-		mainMenuImportTables = nil
-	}
+func mainMenuAPI() *imports.Imports {
+	mainMenuOnce.Do(func() {
+		mainMenuImport = api.NewDefaultImports()
+		mainMenuImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TMainMenu_Create", 0), // constructor NewMainMenu
+			/* 1 */ imports.NewTable("TMainMenu_Merge", 0), // procedure Merge
+			/* 2 */ imports.NewTable("TMainMenu_Unmerge", 0), // procedure Unmerge
+			/* 3 */ imports.NewTable("TMainMenu_Height", 0), // property Height
+			/* 4 */ imports.NewTable("TMainMenu_WindowHandle", 0), // property WindowHandle
+			/* 5 */ imports.NewTable("TMainMenu_OnChange", 0), // event OnChange
+			/* 6 */ imports.NewTable("TMainMenu_TClass", 0), // function TMainMenuClass
+		}
+	})
 	return mainMenuImport
 }

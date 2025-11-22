@@ -9,106 +9,144 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ILazDockForm Parent: ICustomForm
 type ILazDockForm interface {
 	ICustomForm
-	MainControl() IControl                                       // property
-	SetMainControl(AValue IControl)                              // property
-	FindMainControlCandidate() IControl                          // function
-	FindHeader(x, y int32, OutPart *TLazDockHeaderPart) IControl // function
-	IsDockedControl(Control IControl) bool                       // function
-	ControlHasTitle(Control IControl) bool                       // function
-	GetTitleRect(Control IControl) (resultRect TRect)            // function
-	GetTitleOrientation(Control IControl) TDockOrientation       // function
-	UpdateCaption()                                              // procedure
+	FindMainControlCandidate() IControl                                      // function
+	FindHeader(X int32, Y int32, outPart *types.TLazDockHeaderPart) IControl // function
+	IsDockedControl(control IControl) bool                                   // function
+	ControlHasTitle(control IControl) bool                                   // function
+	GetTitleRect(control IControl) types.TRect                               // function
+	GetTitleOrientation(control IControl) types.TDockOrientation             // function
+	UpdateCaption()                                                          // procedure
+	MainControl() IControl                                                   // property MainControl Getter
+	SetMainControl(value IControl)                                           // property MainControl Setter
 }
 
-// TLazDockForm Parent: TCustomForm
 type TLazDockForm struct {
 	TCustomForm
 }
 
-func NewLazDockForm(AOwner IComponent) ILazDockForm {
-	r1 := lazDockFormImportAPI().SysCallN(2, GetObjectUintptr(AOwner))
-	return AsLazDockForm(r1)
-}
-
-func (m *TLazDockForm) MainControl() IControl {
-	r1 := lazDockFormImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return AsControl(r1)
-}
-
-func (m *TLazDockForm) SetMainControl(AValue IControl) {
-	lazDockFormImportAPI().SysCallN(8, 1, m.Instance(), GetObjectUintptr(AValue))
-}
-
 func (m *TLazDockForm) FindMainControlCandidate() IControl {
-	r1 := lazDockFormImportAPI().SysCallN(4, m.Instance())
-	return AsControl(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazDockFormAPI().SysCallN(1, m.Instance())
+	return AsControl(r)
 }
 
-func (m *TLazDockForm) FindHeader(x, y int32, OutPart *TLazDockHeaderPart) IControl {
-	var result1 uintptr
-	r1 := lazDockFormImportAPI().SysCallN(3, m.Instance(), uintptr(x), uintptr(y), uintptr(unsafePointer(&result1)))
-	*OutPart = TLazDockHeaderPart(result1)
-	return AsControl(r1)
+func (m *TLazDockForm) FindHeader(X int32, Y int32, outPart *types.TLazDockHeaderPart) IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	var partPtr uintptr
+	r := lazDockFormAPI().SysCallN(2, m.Instance(), uintptr(X), uintptr(Y), uintptr(base.UnsafePointer(&partPtr)))
+	*outPart = types.TLazDockHeaderPart(partPtr)
+	return AsControl(r)
 }
 
-func (m *TLazDockForm) IsDockedControl(Control IControl) bool {
-	r1 := lazDockFormImportAPI().SysCallN(7, m.Instance(), GetObjectUintptr(Control))
-	return GoBool(r1)
+func (m *TLazDockForm) IsDockedControl(control IControl) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := lazDockFormAPI().SysCallN(3, m.Instance(), base.GetObjectUintptr(control))
+	return api.GoBool(r)
 }
 
-func (m *TLazDockForm) ControlHasTitle(Control IControl) bool {
-	r1 := lazDockFormImportAPI().SysCallN(1, m.Instance(), GetObjectUintptr(Control))
-	return GoBool(r1)
+func (m *TLazDockForm) ControlHasTitle(control IControl) bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := lazDockFormAPI().SysCallN(4, m.Instance(), base.GetObjectUintptr(control))
+	return api.GoBool(r)
 }
 
-func (m *TLazDockForm) GetTitleRect(Control IControl) (resultRect TRect) {
-	lazDockFormImportAPI().SysCallN(6, m.Instance(), GetObjectUintptr(Control), uintptr(unsafePointer(&resultRect)))
+func (m *TLazDockForm) GetTitleRect(control IControl) (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	lazDockFormAPI().SysCallN(5, m.Instance(), base.GetObjectUintptr(control), uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TLazDockForm) GetTitleOrientation(Control IControl) TDockOrientation {
-	r1 := lazDockFormImportAPI().SysCallN(5, m.Instance(), GetObjectUintptr(Control))
-	return TDockOrientation(r1)
-}
-
-func LazDockFormClass() TClass {
-	ret := lazDockFormImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TLazDockForm) GetTitleOrientation(control IControl) types.TDockOrientation {
+	if !m.IsValid() {
+		return 0
+	}
+	r := lazDockFormAPI().SysCallN(6, m.Instance(), base.GetObjectUintptr(control))
+	return types.TDockOrientation(r)
 }
 
 func (m *TLazDockForm) UpdateCaption() {
-	lazDockFormImportAPI().SysCallN(9, m.Instance())
+	if !m.IsValid() {
+		return
+	}
+	lazDockFormAPI().SysCallN(7, m.Instance())
+}
+
+func (m *TLazDockForm) MainControl() IControl {
+	if !m.IsValid() {
+		return nil
+	}
+	r := lazDockFormAPI().SysCallN(9, 0, m.Instance())
+	return AsControl(r)
+}
+
+func (m *TLazDockForm) SetMainControl(value IControl) {
+	if !m.IsValid() {
+		return
+	}
+	lazDockFormAPI().SysCallN(9, 1, m.Instance(), base.GetObjectUintptr(value))
+}
+
+// LazDockForm  is static instance
+var LazDockForm _LazDockFormClass
+
+// _LazDockFormClass is class type defined by TLazDockForm
+type _LazDockFormClass uintptr
+
+func (_LazDockFormClass) UpdateMainControlInParents(startControl IControl) {
+	lazDockFormAPI().SysCallN(8, base.GetObjectUintptr(startControl))
+}
+
+// NewLazDockForm class constructor
+func NewLazDockForm(owner IComponent) ILazDockForm {
+	r := lazDockFormAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsLazDockForm(r)
+}
+
+func TLazDockFormClass() types.TClass {
+	r := lazDockFormAPI().SysCallN(10)
+	return types.TClass(r)
 }
 
 var (
-	lazDockFormImport       *imports.Imports = nil
-	lazDockFormImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("LazDockForm_Class", 0),
-		/*1*/ imports.NewTable("LazDockForm_ControlHasTitle", 0),
-		/*2*/ imports.NewTable("LazDockForm_Create", 0),
-		/*3*/ imports.NewTable("LazDockForm_FindHeader", 0),
-		/*4*/ imports.NewTable("LazDockForm_FindMainControlCandidate", 0),
-		/*5*/ imports.NewTable("LazDockForm_GetTitleOrientation", 0),
-		/*6*/ imports.NewTable("LazDockForm_GetTitleRect", 0),
-		/*7*/ imports.NewTable("LazDockForm_IsDockedControl", 0),
-		/*8*/ imports.NewTable("LazDockForm_MainControl", 0),
-		/*9*/ imports.NewTable("LazDockForm_UpdateCaption", 0),
-	}
+	lazDockFormOnce   base.Once
+	lazDockFormImport *imports.Imports = nil
 )
 
-func lazDockFormImportAPI() *imports.Imports {
-	if lazDockFormImport == nil {
-		lazDockFormImport = NewDefaultImports()
-		lazDockFormImport.SetImportTable(lazDockFormImportTables)
-		lazDockFormImportTables = nil
-	}
+func lazDockFormAPI() *imports.Imports {
+	lazDockFormOnce.Do(func() {
+		lazDockFormImport = api.NewDefaultImports()
+		lazDockFormImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TLazDockForm_Create", 0), // constructor NewLazDockForm
+			/* 1 */ imports.NewTable("TLazDockForm_FindMainControlCandidate", 0), // function FindMainControlCandidate
+			/* 2 */ imports.NewTable("TLazDockForm_FindHeader", 0), // function FindHeader
+			/* 3 */ imports.NewTable("TLazDockForm_IsDockedControl", 0), // function IsDockedControl
+			/* 4 */ imports.NewTable("TLazDockForm_ControlHasTitle", 0), // function ControlHasTitle
+			/* 5 */ imports.NewTable("TLazDockForm_GetTitleRect", 0), // function GetTitleRect
+			/* 6 */ imports.NewTable("TLazDockForm_GetTitleOrientation", 0), // function GetTitleOrientation
+			/* 7 */ imports.NewTable("TLazDockForm_UpdateCaption", 0), // procedure UpdateCaption
+			/* 8 */ imports.NewTable("TLazDockForm_UpdateMainControlInParents", 0), // static procedure UpdateMainControlInParents
+			/* 9 */ imports.NewTable("TLazDockForm_MainControl", 0), // property MainControl
+			/* 10 */ imports.NewTable("TLazDockForm_TClass", 0), // function TLazDockFormClass
+		}
+	})
 	return lazDockFormImport
 }

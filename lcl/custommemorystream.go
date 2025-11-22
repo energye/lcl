@@ -9,63 +9,65 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // ICustomMemoryStream Parent: IStream
 type ICustomMemoryStream interface {
 	IStream
-	Memory() uintptr             // property
-	SaveToStream(Stream IStream) // procedure
-	SaveToFile(FileName string)  // procedure
+	SaveToStream(stream IStream) // procedure
+	SaveToFile(fileName string)  // procedure
+	Memory() uintptr             // property Memory Getter
 }
 
-// TCustomMemoryStream Parent: TStream
 type TCustomMemoryStream struct {
 	TStream
 }
 
-func NewCustomMemoryStream() ICustomMemoryStream {
-	r1 := customMemoryStreamImportAPI().SysCallN(1)
-	return AsCustomMemoryStream(r1)
+func (m *TCustomMemoryStream) SaveToStream(stream IStream) {
+	if !m.IsValid() {
+		return
+	}
+	customMemoryStreamAPI().SysCallN(1, m.Instance(), base.GetObjectUintptr(stream))
+}
+
+func (m *TCustomMemoryStream) SaveToFile(fileName string) {
+	if !m.IsValid() {
+		return
+	}
+	customMemoryStreamAPI().SysCallN(2, m.Instance(), api.PasStr(fileName))
 }
 
 func (m *TCustomMemoryStream) Memory() uintptr {
-	r1 := customMemoryStreamImportAPI().SysCallN(2, m.Instance())
-	return uintptr(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := customMemoryStreamAPI().SysCallN(3, m.Instance())
+	return uintptr(r)
 }
 
-func CustomMemoryStreamClass() TClass {
-	ret := customMemoryStreamImportAPI().SysCallN(0)
-	return TClass(ret)
-}
-
-func (m *TCustomMemoryStream) SaveToStream(Stream IStream) {
-	customMemoryStreamImportAPI().SysCallN(4, m.Instance(), GetObjectUintptr(Stream))
-}
-
-func (m *TCustomMemoryStream) SaveToFile(FileName string) {
-	customMemoryStreamImportAPI().SysCallN(3, m.Instance(), PascalStr(FileName))
+// NewCustomMemoryStream class constructor
+func NewCustomMemoryStream() ICustomMemoryStream {
+	r := customMemoryStreamAPI().SysCallN(0)
+	return AsCustomMemoryStream(r)
 }
 
 var (
-	customMemoryStreamImport       *imports.Imports = nil
-	customMemoryStreamImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomMemoryStream_Class", 0),
-		/*1*/ imports.NewTable("CustomMemoryStream_Create", 0),
-		/*2*/ imports.NewTable("CustomMemoryStream_Memory", 0),
-		/*3*/ imports.NewTable("CustomMemoryStream_SaveToFile", 0),
-		/*4*/ imports.NewTable("CustomMemoryStream_SaveToStream", 0),
-	}
+	customMemoryStreamOnce   base.Once
+	customMemoryStreamImport *imports.Imports = nil
 )
 
-func customMemoryStreamImportAPI() *imports.Imports {
-	if customMemoryStreamImport == nil {
-		customMemoryStreamImport = NewDefaultImports()
-		customMemoryStreamImport.SetImportTable(customMemoryStreamImportTables)
-		customMemoryStreamImportTables = nil
-	}
+func customMemoryStreamAPI() *imports.Imports {
+	customMemoryStreamOnce.Do(func() {
+		customMemoryStreamImport = api.NewDefaultImports()
+		customMemoryStreamImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomMemoryStream_Create", 0), // constructor NewCustomMemoryStream
+			/* 1 */ imports.NewTable("TCustomMemoryStream_SaveToStream", 0), // procedure SaveToStream
+			/* 2 */ imports.NewTable("TCustomMemoryStream_SaveToFile", 0), // procedure SaveToFile
+			/* 3 */ imports.NewTable("TCustomMemoryStream_Memory", 0), // property Memory
+		}
+	})
 	return customMemoryStreamImport
 }

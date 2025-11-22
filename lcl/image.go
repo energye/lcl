@@ -9,20 +9,21 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IImage Parent: ICustomImage
 type IImage interface {
 	ICustomImage
-	DragCursor() TCursor                            // property
-	SetDragCursor(AValue TCursor)                   // property
-	DragMode() TDragMode                            // property
-	SetDragMode(AValue TDragMode)                   // property
-	ParentShowHint() bool                           // property
-	SetParentShowHint(AValue bool)                  // property
+	DragCursor() types.TCursor                      // property DragCursor Getter
+	SetDragCursor(value types.TCursor)              // property DragCursor Setter
+	DragMode() types.TDragMode                      // property DragMode Getter
+	SetDragMode(value types.TDragMode)              // property DragMode Setter
+	ParentShowHint() bool                           // property ParentShowHint Getter
+	SetParentShowHint(value bool)                   // property ParentShowHint Setter
 	SetOnContextPopup(fn TContextPopupEvent)        // property event
 	SetOnDblClick(fn TNotifyEvent)                  // property event
 	SetOnDragDrop(fn TDragDropEvent)                // property event
@@ -35,164 +36,171 @@ type IImage interface {
 	SetOnStartDrag(fn TStartDragEvent)              // property event
 }
 
-// TImage Parent: TCustomImage
 type TImage struct {
 	TCustomImage
-	contextPopupPtr    uintptr
-	dblClickPtr        uintptr
-	dragDropPtr        uintptr
-	dragOverPtr        uintptr
-	endDragPtr         uintptr
-	mouseWheelHorzPtr  uintptr
-	mouseWheelLeftPtr  uintptr
-	mouseWheelRightPtr uintptr
-	paintPtr           uintptr
-	startDragPtr       uintptr
 }
 
-func NewImage(AOwner IComponent) IImage {
-	r1 := mageImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsImage(r1)
+func (m *TImage) DragCursor() types.TCursor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := imageAPI().SysCallN(1, 0, m.Instance())
+	return types.TCursor(r)
 }
 
-func (m *TImage) DragCursor() TCursor {
-	r1 := mageImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TCursor(r1)
+func (m *TImage) SetDragCursor(value types.TCursor) {
+	if !m.IsValid() {
+		return
+	}
+	imageAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TImage) SetDragCursor(AValue TCursor) {
-	mageImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TImage) DragMode() types.TDragMode {
+	if !m.IsValid() {
+		return 0
+	}
+	r := imageAPI().SysCallN(2, 0, m.Instance())
+	return types.TDragMode(r)
 }
 
-func (m *TImage) DragMode() TDragMode {
-	r1 := mageImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDragMode(r1)
-}
-
-func (m *TImage) SetDragMode(AValue TDragMode) {
-	mageImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TImage) SetDragMode(value types.TDragMode) {
+	if !m.IsValid() {
+		return
+	}
+	imageAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TImage) ParentShowHint() bool {
-	r1 := mageImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := imageAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TImage) SetParentShowHint(AValue bool) {
-	mageImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
-}
-
-func ImageClass() TClass {
-	ret := mageImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TImage) SetParentShowHint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	imageAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TImage) SetOnContextPopup(fn TContextPopupEvent) {
-	if m.contextPopupPtr != 0 {
-		RemoveEventElement(m.contextPopupPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.contextPopupPtr = MakeEventDataPtr(fn)
-	mageImportAPI().SysCallN(5, m.Instance(), m.contextPopupPtr)
+	cb := makeTContextPopupEvent(fn)
+	base.SetEvent(m, 4, imageAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TImage) SetOnDblClick(fn TNotifyEvent) {
-	if m.dblClickPtr != 0 {
-		RemoveEventElement(m.dblClickPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dblClickPtr = MakeEventDataPtr(fn)
-	mageImportAPI().SysCallN(6, m.Instance(), m.dblClickPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 5, imageAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TImage) SetOnDragDrop(fn TDragDropEvent) {
-	if m.dragDropPtr != 0 {
-		RemoveEventElement(m.dragDropPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragDropPtr = MakeEventDataPtr(fn)
-	mageImportAPI().SysCallN(7, m.Instance(), m.dragDropPtr)
+	cb := makeTDragDropEvent(fn)
+	base.SetEvent(m, 6, imageAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TImage) SetOnDragOver(fn TDragOverEvent) {
-	if m.dragOverPtr != 0 {
-		RemoveEventElement(m.dragOverPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dragOverPtr = MakeEventDataPtr(fn)
-	mageImportAPI().SysCallN(8, m.Instance(), m.dragOverPtr)
+	cb := makeTDragOverEvent(fn)
+	base.SetEvent(m, 7, imageAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TImage) SetOnEndDrag(fn TEndDragEvent) {
-	if m.endDragPtr != 0 {
-		RemoveEventElement(m.endDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.endDragPtr = MakeEventDataPtr(fn)
-	mageImportAPI().SysCallN(9, m.Instance(), m.endDragPtr)
+	cb := makeTEndDragEvent(fn)
+	base.SetEvent(m, 8, imageAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TImage) SetOnMouseWheelHorz(fn TMouseWheelEvent) {
-	if m.mouseWheelHorzPtr != 0 {
-		RemoveEventElement(m.mouseWheelHorzPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelHorzPtr = MakeEventDataPtr(fn)
-	mageImportAPI().SysCallN(10, m.Instance(), m.mouseWheelHorzPtr)
+	cb := makeTMouseWheelEvent(fn)
+	base.SetEvent(m, 9, imageAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TImage) SetOnMouseWheelLeft(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelLeftPtr != 0 {
-		RemoveEventElement(m.mouseWheelLeftPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelLeftPtr = MakeEventDataPtr(fn)
-	mageImportAPI().SysCallN(11, m.Instance(), m.mouseWheelLeftPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 10, imageAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TImage) SetOnMouseWheelRight(fn TMouseWheelUpDownEvent) {
-	if m.mouseWheelRightPtr != 0 {
-		RemoveEventElement(m.mouseWheelRightPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.mouseWheelRightPtr = MakeEventDataPtr(fn)
-	mageImportAPI().SysCallN(12, m.Instance(), m.mouseWheelRightPtr)
+	cb := makeTMouseWheelUpDownEvent(fn)
+	base.SetEvent(m, 11, imageAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TImage) SetOnPaint(fn TNotifyEvent) {
-	if m.paintPtr != 0 {
-		RemoveEventElement(m.paintPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.paintPtr = MakeEventDataPtr(fn)
-	mageImportAPI().SysCallN(13, m.Instance(), m.paintPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, imageAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TImage) SetOnStartDrag(fn TStartDragEvent) {
-	if m.startDragPtr != 0 {
-		RemoveEventElement(m.startDragPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.startDragPtr = MakeEventDataPtr(fn)
-	mageImportAPI().SysCallN(14, m.Instance(), m.startDragPtr)
+	cb := makeTStartDragEvent(fn)
+	base.SetEvent(m, 13, imageAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewImage class constructor
+func NewImage(owner IComponent) IImage {
+	r := imageAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsImage(r)
+}
+
+func TImageClass() types.TClass {
+	r := imageAPI().SysCallN(14)
+	return types.TClass(r)
 }
 
 var (
-	mageImport       *imports.Imports = nil
-	mageImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Image_Class", 0),
-		/*1*/ imports.NewTable("Image_Create", 0),
-		/*2*/ imports.NewTable("Image_DragCursor", 0),
-		/*3*/ imports.NewTable("Image_DragMode", 0),
-		/*4*/ imports.NewTable("Image_ParentShowHint", 0),
-		/*5*/ imports.NewTable("Image_SetOnContextPopup", 0),
-		/*6*/ imports.NewTable("Image_SetOnDblClick", 0),
-		/*7*/ imports.NewTable("Image_SetOnDragDrop", 0),
-		/*8*/ imports.NewTable("Image_SetOnDragOver", 0),
-		/*9*/ imports.NewTable("Image_SetOnEndDrag", 0),
-		/*10*/ imports.NewTable("Image_SetOnMouseWheelHorz", 0),
-		/*11*/ imports.NewTable("Image_SetOnMouseWheelLeft", 0),
-		/*12*/ imports.NewTable("Image_SetOnMouseWheelRight", 0),
-		/*13*/ imports.NewTable("Image_SetOnPaint", 0),
-		/*14*/ imports.NewTable("Image_SetOnStartDrag", 0),
-	}
+	imageOnce   base.Once
+	imageImport *imports.Imports = nil
 )
 
-func mageImportAPI() *imports.Imports {
-	if mageImport == nil {
-		mageImport = NewDefaultImports()
-		mageImport.SetImportTable(mageImportTables)
-		mageImportTables = nil
-	}
-	return mageImport
+func imageAPI() *imports.Imports {
+	imageOnce.Do(func() {
+		imageImport = api.NewDefaultImports()
+		imageImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TImage_Create", 0), // constructor NewImage
+			/* 1 */ imports.NewTable("TImage_DragCursor", 0), // property DragCursor
+			/* 2 */ imports.NewTable("TImage_DragMode", 0), // property DragMode
+			/* 3 */ imports.NewTable("TImage_ParentShowHint", 0), // property ParentShowHint
+			/* 4 */ imports.NewTable("TImage_OnContextPopup", 0), // event OnContextPopup
+			/* 5 */ imports.NewTable("TImage_OnDblClick", 0), // event OnDblClick
+			/* 6 */ imports.NewTable("TImage_OnDragDrop", 0), // event OnDragDrop
+			/* 7 */ imports.NewTable("TImage_OnDragOver", 0), // event OnDragOver
+			/* 8 */ imports.NewTable("TImage_OnEndDrag", 0), // event OnEndDrag
+			/* 9 */ imports.NewTable("TImage_OnMouseWheelHorz", 0), // event OnMouseWheelHorz
+			/* 10 */ imports.NewTable("TImage_OnMouseWheelLeft", 0), // event OnMouseWheelLeft
+			/* 11 */ imports.NewTable("TImage_OnMouseWheelRight", 0), // event OnMouseWheelRight
+			/* 12 */ imports.NewTable("TImage_OnPaint", 0), // event OnPaint
+			/* 13 */ imports.NewTable("TImage_OnStartDrag", 0), // event OnStartDrag
+			/* 14 */ imports.NewTable("TImage_TClass", 0), // function TImageClass
+		}
+	})
+	return imageImport
 }

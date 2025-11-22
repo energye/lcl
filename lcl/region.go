@@ -9,62 +9,67 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IRegion Parent: IGraphicsObject
 type IRegion interface {
 	IGraphicsObject
-	ClipRect() (resultRect TRect)      // property
-	SetClipRect(AValue *TRect)         // property
-	AddRectangle(X1, Y1, X2, Y2 int32) // procedure
+	// AddRectangle
+	//  Convenience routines to add elements to the region
+	AddRectangle(x1 int32, y1 int32, x2 int32, y2 int32) // procedure
+	ClipRect() types.TRect                               // property ClipRect Getter
+	SetClipRect(value types.TRect)                       // property ClipRect Setter
 }
 
-// TRegion Parent: TGraphicsObject
 type TRegion struct {
 	TGraphicsObject
 }
 
-func NewRegion() IRegion {
-	r1 := regionImportAPI().SysCallN(3)
-	return AsRegion(r1)
+func (m *TRegion) AddRectangle(x1 int32, y1 int32, x2 int32, y2 int32) {
+	if !m.IsValid() {
+		return
+	}
+	regionAPI().SysCallN(1, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2))
 }
 
-func (m *TRegion) ClipRect() (resultRect TRect) {
-	regionImportAPI().SysCallN(2, 0, m.Instance(), uintptr(unsafePointer(&resultRect)), uintptr(unsafePointer(&resultRect)))
+func (m *TRegion) ClipRect() (result types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	regionAPI().SysCallN(2, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
 	return
 }
 
-func (m *TRegion) SetClipRect(AValue *TRect) {
-	regionImportAPI().SysCallN(2, 1, m.Instance(), uintptr(unsafePointer(AValue)), uintptr(unsafePointer(AValue)))
+func (m *TRegion) SetClipRect(value types.TRect) {
+	if !m.IsValid() {
+		return
+	}
+	regionAPI().SysCallN(2, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
-func RegionClass() TClass {
-	ret := regionImportAPI().SysCallN(1)
-	return TClass(ret)
-}
-
-func (m *TRegion) AddRectangle(X1, Y1, X2, Y2 int32) {
-	regionImportAPI().SysCallN(0, m.Instance(), uintptr(X1), uintptr(Y1), uintptr(X2), uintptr(Y2))
+// NewRegion class constructor
+func NewRegion() IRegion {
+	r := regionAPI().SysCallN(0)
+	return AsRegion(r)
 }
 
 var (
-	regionImport       *imports.Imports = nil
-	regionImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("Region_AddRectangle", 0),
-		/*1*/ imports.NewTable("Region_Class", 0),
-		/*2*/ imports.NewTable("Region_ClipRect", 0),
-		/*3*/ imports.NewTable("Region_Create", 0),
-	}
+	regionOnce   base.Once
+	regionImport *imports.Imports = nil
 )
 
-func regionImportAPI() *imports.Imports {
-	if regionImport == nil {
-		regionImport = NewDefaultImports()
-		regionImport.SetImportTable(regionImportTables)
-		regionImportTables = nil
-	}
+func regionAPI() *imports.Imports {
+	regionOnce.Do(func() {
+		regionImport = api.NewDefaultImports()
+		regionImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TRegion_Create", 0), // constructor NewRegion
+			/* 1 */ imports.NewTable("TRegion_AddRectangle", 0), // procedure AddRectangle
+			/* 2 */ imports.NewTable("TRegion_ClipRect", 0), // property ClipRect
+		}
+	})
 	return regionImport
 }

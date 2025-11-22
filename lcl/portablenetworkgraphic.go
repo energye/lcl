@@ -9,46 +9,37 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IPortableNetworkGraphic Parent: IFPImageBitmap
 type IPortableNetworkGraphic interface {
 	IFPImageBitmap
-	LoadFromBytes(data []byte)
-	LoadFromFSFile(Filename string) error
 }
 
-// TPortableNetworkGraphic Parent: TFPImageBitmap
 type TPortableNetworkGraphic struct {
 	TFPImageBitmap
 }
 
+// NewPortableNetworkGraphic class constructor
 func NewPortableNetworkGraphic() IPortableNetworkGraphic {
-	r1 := portableNetworkGraphicImportAPI().SysCallN(1)
-	return AsPortableNetworkGraphic(r1)
-}
-
-func PortableNetworkGraphicClass() TClass {
-	ret := portableNetworkGraphicImportAPI().SysCallN(0)
-	return TClass(ret)
+	r := portableNetworkGraphicAPI().SysCallN(0)
+	return AsPortableNetworkGraphic(r)
 }
 
 var (
-	portableNetworkGraphicImport       *imports.Imports = nil
-	portableNetworkGraphicImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("PortableNetworkGraphic_Class", 0),
-		/*1*/ imports.NewTable("PortableNetworkGraphic_Create", 0),
-	}
+	portableNetworkGraphicOnce   base.Once
+	portableNetworkGraphicImport *imports.Imports = nil
 )
 
-func portableNetworkGraphicImportAPI() *imports.Imports {
-	if portableNetworkGraphicImport == nil {
-		portableNetworkGraphicImport = NewDefaultImports()
-		portableNetworkGraphicImport.SetImportTable(portableNetworkGraphicImportTables)
-		portableNetworkGraphicImportTables = nil
-	}
+func portableNetworkGraphicAPI() *imports.Imports {
+	portableNetworkGraphicOnce.Do(func() {
+		portableNetworkGraphicImport = api.NewDefaultImports()
+		portableNetworkGraphicImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TPortableNetworkGraphic_Create", 0), // constructor NewPortableNetworkGraphic
+		}
+	})
 	return portableNetworkGraphicImport
 }

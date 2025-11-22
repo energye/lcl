@@ -9,174 +9,212 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomCalendar Parent: IWinControl
 type ICustomCalendar interface {
 	IWinControl
-	Date() string                               // property
-	SetDate(AValue string)                      // property
-	DateTime() TDateTime                        // property
-	SetDateTime(AValue TDateTime)               // property
-	DisplaySettings() TDisplaySettings          // property
-	SetDisplaySettings(AValue TDisplaySettings) // property
-	FirstDayOfWeek() TCalDayOfWeek              // property
-	SetFirstDayOfWeek(AValue TCalDayOfWeek)     // property
-	MaxDate() TDateTime                         // property
-	SetMaxDate(AValue TDateTime)                // property
-	MinDate() TDateTime                         // property
-	SetMinDate(AValue TDateTime)                // property
-	HitTest(APoint *TPoint) TCalendarPart       // function
-	GetCalendarView() TCalendarView             // function
-	SetOnChange(fn TNotifyEvent)                // property event
-	SetOnDayChanged(fn TNotifyEvent)            // property event
-	SetOnMonthChanged(fn TNotifyEvent)          // property event
-	SetOnYearChanged(fn TNotifyEvent)           // property event
+	HitTest(point types.TPoint) types.TCalendarPart  // function
+	GetCalendarView() types.TCalendarView            // function
+	Date() string                                    // property Date Getter
+	SetDate(value string)                            // property Date Setter
+	DateTime() types.TDateTime                       // property DateTime Getter
+	SetDateTime(value types.TDateTime)               // property DateTime Setter
+	DisplaySettings() types.TDisplaySettings         // property DisplaySettings Getter
+	SetDisplaySettings(value types.TDisplaySettings) // property DisplaySettings Setter
+	FirstDayOfWeek() types.TCalDayOfWeek             // property FirstDayOfWeek Getter
+	SetFirstDayOfWeek(value types.TCalDayOfWeek)     // property FirstDayOfWeek Setter
+	MaxDate() types.TDateTime                        // property MaxDate Getter
+	SetMaxDate(value types.TDateTime)                // property MaxDate Setter
+	MinDate() types.TDateTime                        // property MinDate Getter
+	SetMinDate(value types.TDateTime)                // property MinDate Setter
+	SetOnChange(fn TNotifyEvent)                     // property event
+	SetOnDayChanged(fn TNotifyEvent)                 // property event
+	SetOnMonthChanged(fn TNotifyEvent)               // property event
+	SetOnYearChanged(fn TNotifyEvent)                // property event
 }
 
-// TCustomCalendar Parent: TWinControl
 type TCustomCalendar struct {
 	TWinControl
-	changePtr       uintptr
-	dayChangedPtr   uintptr
-	monthChangedPtr uintptr
-	yearChangedPtr  uintptr
 }
 
-func NewCustomCalendar(AOwner IComponent) ICustomCalendar {
-	r1 := customCalendarImportAPI().SysCallN(1, GetObjectUintptr(AOwner))
-	return AsCustomCalendar(r1)
+func (m *TCustomCalendar) HitTest(point types.TPoint) types.TCalendarPart {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customCalendarAPI().SysCallN(1, m.Instance(), uintptr(base.UnsafePointer(&point)))
+	return types.TCalendarPart(r)
+}
+
+func (m *TCustomCalendar) GetCalendarView() types.TCalendarView {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customCalendarAPI().SysCallN(2, m.Instance())
+	return types.TCalendarView(r)
 }
 
 func (m *TCustomCalendar) Date() string {
-	r1 := customCalendarImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return GoStr(r1)
+	if !m.IsValid() {
+		return ""
+	}
+	r := customCalendarAPI().SysCallN(3, 0, m.Instance())
+	return api.GoStr(r)
 }
 
-func (m *TCustomCalendar) SetDate(AValue string) {
-	customCalendarImportAPI().SysCallN(2, 1, m.Instance(), PascalStr(AValue))
+func (m *TCustomCalendar) SetDate(value string) {
+	if !m.IsValid() {
+		return
+	}
+	customCalendarAPI().SysCallN(3, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomCalendar) DateTime() TDateTime {
-	r1 := customCalendarImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TDateTime(r1)
+func (m *TCustomCalendar) DateTime() (result types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	customCalendarAPI().SysCallN(4, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TCustomCalendar) SetDateTime(AValue TDateTime) {
-	customCalendarImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomCalendar) SetDateTime(value types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	customCalendarAPI().SysCallN(4, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
-func (m *TCustomCalendar) DisplaySettings() TDisplaySettings {
-	r1 := customCalendarImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TDisplaySettings(r1)
+func (m *TCustomCalendar) DisplaySettings() types.TDisplaySettings {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customCalendarAPI().SysCallN(5, 0, m.Instance())
+	return types.TDisplaySettings(r)
 }
 
-func (m *TCustomCalendar) SetDisplaySettings(AValue TDisplaySettings) {
-	customCalendarImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomCalendar) SetDisplaySettings(value types.TDisplaySettings) {
+	if !m.IsValid() {
+		return
+	}
+	customCalendarAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomCalendar) FirstDayOfWeek() TCalDayOfWeek {
-	r1 := customCalendarImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return TCalDayOfWeek(r1)
+func (m *TCustomCalendar) FirstDayOfWeek() types.TCalDayOfWeek {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customCalendarAPI().SysCallN(6, 0, m.Instance())
+	return types.TCalDayOfWeek(r)
 }
 
-func (m *TCustomCalendar) SetFirstDayOfWeek(AValue TCalDayOfWeek) {
-	customCalendarImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomCalendar) SetFirstDayOfWeek(value types.TCalDayOfWeek) {
+	if !m.IsValid() {
+		return
+	}
+	customCalendarAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomCalendar) MaxDate() TDateTime {
-	r1 := customCalendarImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return TDateTime(r1)
+func (m *TCustomCalendar) MaxDate() (result types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	customCalendarAPI().SysCallN(7, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TCustomCalendar) SetMaxDate(AValue TDateTime) {
-	customCalendarImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomCalendar) SetMaxDate(value types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	customCalendarAPI().SysCallN(7, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
-func (m *TCustomCalendar) MinDate() TDateTime {
-	r1 := customCalendarImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return TDateTime(r1)
+func (m *TCustomCalendar) MinDate() (result types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	customCalendarAPI().SysCallN(8, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&result)))
+	return
 }
 
-func (m *TCustomCalendar) SetMinDate(AValue TDateTime) {
-	customCalendarImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *TCustomCalendar) HitTest(APoint *TPoint) TCalendarPart {
-	r1 := customCalendarImportAPI().SysCallN(7, m.Instance(), uintptr(unsafePointer(APoint)))
-	return TCalendarPart(r1)
-}
-
-func (m *TCustomCalendar) GetCalendarView() TCalendarView {
-	r1 := customCalendarImportAPI().SysCallN(6, m.Instance())
-	return TCalendarView(r1)
-}
-
-func CustomCalendarClass() TClass {
-	ret := customCalendarImportAPI().SysCallN(0)
-	return TClass(ret)
+func (m *TCustomCalendar) SetMinDate(value types.TDateTime) {
+	if !m.IsValid() {
+		return
+	}
+	customCalendarAPI().SysCallN(8, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
 func (m *TCustomCalendar) SetOnChange(fn TNotifyEvent) {
-	if m.changePtr != 0 {
-		RemoveEventElement(m.changePtr)
+	if !m.IsValid() {
+		return
 	}
-	m.changePtr = MakeEventDataPtr(fn)
-	customCalendarImportAPI().SysCallN(10, m.Instance(), m.changePtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 9, customCalendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomCalendar) SetOnDayChanged(fn TNotifyEvent) {
-	if m.dayChangedPtr != 0 {
-		RemoveEventElement(m.dayChangedPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.dayChangedPtr = MakeEventDataPtr(fn)
-	customCalendarImportAPI().SysCallN(11, m.Instance(), m.dayChangedPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 10, customCalendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomCalendar) SetOnMonthChanged(fn TNotifyEvent) {
-	if m.monthChangedPtr != 0 {
-		RemoveEventElement(m.monthChangedPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.monthChangedPtr = MakeEventDataPtr(fn)
-	customCalendarImportAPI().SysCallN(12, m.Instance(), m.monthChangedPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 11, customCalendarAPI(), api.MakeEventDataPtr(cb))
 }
 
 func (m *TCustomCalendar) SetOnYearChanged(fn TNotifyEvent) {
-	if m.yearChangedPtr != 0 {
-		RemoveEventElement(m.yearChangedPtr)
+	if !m.IsValid() {
+		return
 	}
-	m.yearChangedPtr = MakeEventDataPtr(fn)
-	customCalendarImportAPI().SysCallN(13, m.Instance(), m.yearChangedPtr)
+	cb := makeTNotifyEvent(fn)
+	base.SetEvent(m, 12, customCalendarAPI(), api.MakeEventDataPtr(cb))
+}
+
+// NewCustomCalendar class constructor
+func NewCustomCalendar(owner IComponent) ICustomCalendar {
+	r := customCalendarAPI().SysCallN(0, base.GetObjectUintptr(owner))
+	return AsCustomCalendar(r)
+}
+
+func TCustomCalendarClass() types.TClass {
+	r := customCalendarAPI().SysCallN(13)
+	return types.TClass(r)
 }
 
 var (
-	customCalendarImport       *imports.Imports = nil
-	customCalendarImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomCalendar_Class", 0),
-		/*1*/ imports.NewTable("CustomCalendar_Create", 0),
-		/*2*/ imports.NewTable("CustomCalendar_Date", 0),
-		/*3*/ imports.NewTable("CustomCalendar_DateTime", 0),
-		/*4*/ imports.NewTable("CustomCalendar_DisplaySettings", 0),
-		/*5*/ imports.NewTable("CustomCalendar_FirstDayOfWeek", 0),
-		/*6*/ imports.NewTable("CustomCalendar_GetCalendarView", 0),
-		/*7*/ imports.NewTable("CustomCalendar_HitTest", 0),
-		/*8*/ imports.NewTable("CustomCalendar_MaxDate", 0),
-		/*9*/ imports.NewTable("CustomCalendar_MinDate", 0),
-		/*10*/ imports.NewTable("CustomCalendar_SetOnChange", 0),
-		/*11*/ imports.NewTable("CustomCalendar_SetOnDayChanged", 0),
-		/*12*/ imports.NewTable("CustomCalendar_SetOnMonthChanged", 0),
-		/*13*/ imports.NewTable("CustomCalendar_SetOnYearChanged", 0),
-	}
+	customCalendarOnce   base.Once
+	customCalendarImport *imports.Imports = nil
 )
 
-func customCalendarImportAPI() *imports.Imports {
-	if customCalendarImport == nil {
-		customCalendarImport = NewDefaultImports()
-		customCalendarImport.SetImportTable(customCalendarImportTables)
-		customCalendarImportTables = nil
-	}
+func customCalendarAPI() *imports.Imports {
+	customCalendarOnce.Do(func() {
+		customCalendarImport = api.NewDefaultImports()
+		customCalendarImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomCalendar_Create", 0), // constructor NewCustomCalendar
+			/* 1 */ imports.NewTable("TCustomCalendar_HitTest", 0), // function HitTest
+			/* 2 */ imports.NewTable("TCustomCalendar_GetCalendarView", 0), // function GetCalendarView
+			/* 3 */ imports.NewTable("TCustomCalendar_Date", 0), // property Date
+			/* 4 */ imports.NewTable("TCustomCalendar_DateTime", 0), // property DateTime
+			/* 5 */ imports.NewTable("TCustomCalendar_DisplaySettings", 0), // property DisplaySettings
+			/* 6 */ imports.NewTable("TCustomCalendar_FirstDayOfWeek", 0), // property FirstDayOfWeek
+			/* 7 */ imports.NewTable("TCustomCalendar_MaxDate", 0), // property MaxDate
+			/* 8 */ imports.NewTable("TCustomCalendar_MinDate", 0), // property MinDate
+			/* 9 */ imports.NewTable("TCustomCalendar_OnChange", 0), // event OnChange
+			/* 10 */ imports.NewTable("TCustomCalendar_OnDayChanged", 0), // event OnDayChanged
+			/* 11 */ imports.NewTable("TCustomCalendar_OnMonthChanged", 0), // event OnMonthChanged
+			/* 12 */ imports.NewTable("TCustomCalendar_OnYearChanged", 0), // event OnYearChanged
+			/* 13 */ imports.NewTable("TCustomCalendar_TClass", 0), // function TCustomCalendarClass
+		}
+	})
 	return customCalendarImport
 }

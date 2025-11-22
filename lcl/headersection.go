@@ -9,161 +9,214 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IHeaderSection Parent: ICollectionItem
 type IHeaderSection interface {
 	ICollectionItem
-	Left() int32                         // property
-	Right() int32                        // property
-	State() THeaderSectionState          // property
-	SetState(AValue THeaderSectionState) // property
-	Alignment() TAlignment               // property
-	SetAlignment(AValue TAlignment)      // property
-	ImageIndex() TImageIndex             // property
-	SetImageIndex(AValue TImageIndex)    // property
-	MaxWidth() int32                     // property
-	SetMaxWidth(AValue int32)            // property
-	MinWidth() int32                     // property
-	SetMinWidth(AValue int32)            // property
-	Text() string                        // property
-	SetText(AValue string)               // property
-	Width() int32                        // property
-	SetWidth(AValue int32)               // property
-	Visible() bool                       // property
-	SetVisible(AValue bool)              // property
-	OriginalIndex() int32                // property
+	Left() int32                              // property Left Getter
+	Right() int32                             // property Right Getter
+	State() types.THeaderSectionState         // property State Getter
+	SetState(value types.THeaderSectionState) // property State Setter
+	// OriginalIndex
+	//  index which doesn't change when the user reorders the sections
+	OriginalIndex() int32                // property OriginalIndex Getter
+	Alignment() types.TAlignment         // property Alignment Getter
+	SetAlignment(value types.TAlignment) // property Alignment Setter
+	ImageIndex() int32                   // property ImageIndex Getter
+	SetImageIndex(value int32)           // property ImageIndex Setter
+	MaxWidth() int32                     // property MaxWidth Getter
+	SetMaxWidth(value int32)             // property MaxWidth Setter
+	MinWidth() int32                     // property MinWidth Getter
+	SetMinWidth(value int32)             // property MinWidth Setter
+	Text() string                        // property Text Getter
+	SetText(value string)                // property Text Setter
+	Width() int32                        // property Width Getter
+	SetWidth(value int32)                // property Width Setter
+	Visible() bool                       // property Visible Getter
+	SetVisible(value bool)               // property Visible Setter
 }
 
-// THeaderSection Parent: TCollectionItem
 type THeaderSection struct {
 	TCollectionItem
 }
 
-func NewHeaderSection(ACollection ICollection) IHeaderSection {
-	r1 := headerSectionImportAPI().SysCallN(2, GetObjectUintptr(ACollection))
-	return AsHeaderSection(r1)
-}
-
 func (m *THeaderSection) Left() int32 {
-	r1 := headerSectionImportAPI().SysCallN(4, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := headerSectionAPI().SysCallN(1, m.Instance())
+	return int32(r)
 }
 
 func (m *THeaderSection) Right() int32 {
-	r1 := headerSectionImportAPI().SysCallN(8, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := headerSectionAPI().SysCallN(2, m.Instance())
+	return int32(r)
 }
 
-func (m *THeaderSection) State() THeaderSectionState {
-	r1 := headerSectionImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return THeaderSectionState(r1)
+func (m *THeaderSection) State() types.THeaderSectionState {
+	if !m.IsValid() {
+		return 0
+	}
+	r := headerSectionAPI().SysCallN(3, 0, m.Instance())
+	return types.THeaderSectionState(r)
 }
 
-func (m *THeaderSection) SetState(AValue THeaderSectionState) {
-	headerSectionImportAPI().SysCallN(9, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *THeaderSection) Alignment() TAlignment {
-	r1 := headerSectionImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TAlignment(r1)
-}
-
-func (m *THeaderSection) SetAlignment(AValue TAlignment) {
-	headerSectionImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *THeaderSection) ImageIndex() TImageIndex {
-	r1 := headerSectionImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TImageIndex(r1)
-}
-
-func (m *THeaderSection) SetImageIndex(AValue TImageIndex) {
-	headerSectionImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *THeaderSection) MaxWidth() int32 {
-	r1 := headerSectionImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *THeaderSection) SetMaxWidth(AValue int32) {
-	headerSectionImportAPI().SysCallN(5, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *THeaderSection) MinWidth() int32 {
-	r1 := headerSectionImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *THeaderSection) SetMinWidth(AValue int32) {
-	headerSectionImportAPI().SysCallN(6, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *THeaderSection) Text() string {
-	r1 := headerSectionImportAPI().SysCallN(10, 0, m.Instance(), 0)
-	return GoStr(r1)
-}
-
-func (m *THeaderSection) SetText(AValue string) {
-	headerSectionImportAPI().SysCallN(10, 1, m.Instance(), PascalStr(AValue))
-}
-
-func (m *THeaderSection) Width() int32 {
-	r1 := headerSectionImportAPI().SysCallN(12, 0, m.Instance(), 0)
-	return int32(r1)
-}
-
-func (m *THeaderSection) SetWidth(AValue int32) {
-	headerSectionImportAPI().SysCallN(12, 1, m.Instance(), uintptr(AValue))
-}
-
-func (m *THeaderSection) Visible() bool {
-	r1 := headerSectionImportAPI().SysCallN(11, 0, m.Instance(), 0)
-	return GoBool(r1)
-}
-
-func (m *THeaderSection) SetVisible(AValue bool) {
-	headerSectionImportAPI().SysCallN(11, 1, m.Instance(), PascalBool(AValue))
+func (m *THeaderSection) SetState(value types.THeaderSectionState) {
+	if !m.IsValid() {
+		return
+	}
+	headerSectionAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
 func (m *THeaderSection) OriginalIndex() int32 {
-	r1 := headerSectionImportAPI().SysCallN(7, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := headerSectionAPI().SysCallN(4, m.Instance())
+	return int32(r)
 }
 
-func HeaderSectionClass() TClass {
-	ret := headerSectionImportAPI().SysCallN(1)
-	return TClass(ret)
+func (m *THeaderSection) Alignment() types.TAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := headerSectionAPI().SysCallN(5, 0, m.Instance())
+	return types.TAlignment(r)
+}
+
+func (m *THeaderSection) SetAlignment(value types.TAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	headerSectionAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
+}
+
+func (m *THeaderSection) ImageIndex() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := headerSectionAPI().SysCallN(6, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *THeaderSection) SetImageIndex(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	headerSectionAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
+}
+
+func (m *THeaderSection) MaxWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := headerSectionAPI().SysCallN(7, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *THeaderSection) SetMaxWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	headerSectionAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
+}
+
+func (m *THeaderSection) MinWidth() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := headerSectionAPI().SysCallN(8, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *THeaderSection) SetMinWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	headerSectionAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
+}
+
+func (m *THeaderSection) Text() string {
+	if !m.IsValid() {
+		return ""
+	}
+	r := headerSectionAPI().SysCallN(9, 0, m.Instance())
+	return api.GoStr(r)
+}
+
+func (m *THeaderSection) SetText(value string) {
+	if !m.IsValid() {
+		return
+	}
+	headerSectionAPI().SysCallN(9, 1, m.Instance(), api.PasStr(value))
+}
+
+func (m *THeaderSection) Width() int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := headerSectionAPI().SysCallN(10, 0, m.Instance())
+	return int32(r)
+}
+
+func (m *THeaderSection) SetWidth(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	headerSectionAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
+}
+
+func (m *THeaderSection) Visible() bool {
+	if !m.IsValid() {
+		return false
+	}
+	r := headerSectionAPI().SysCallN(11, 0, m.Instance())
+	return api.GoBool(r)
+}
+
+func (m *THeaderSection) SetVisible(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	headerSectionAPI().SysCallN(11, 1, m.Instance(), api.PasBool(value))
+}
+
+// NewHeaderSection class constructor
+func NewHeaderSection(collection ICollection) IHeaderSection {
+	r := headerSectionAPI().SysCallN(0, base.GetObjectUintptr(collection))
+	return AsHeaderSection(r)
 }
 
 var (
-	headerSectionImport       *imports.Imports = nil
-	headerSectionImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("HeaderSection_Alignment", 0),
-		/*1*/ imports.NewTable("HeaderSection_Class", 0),
-		/*2*/ imports.NewTable("HeaderSection_Create", 0),
-		/*3*/ imports.NewTable("HeaderSection_ImageIndex", 0),
-		/*4*/ imports.NewTable("HeaderSection_Left", 0),
-		/*5*/ imports.NewTable("HeaderSection_MaxWidth", 0),
-		/*6*/ imports.NewTable("HeaderSection_MinWidth", 0),
-		/*7*/ imports.NewTable("HeaderSection_OriginalIndex", 0),
-		/*8*/ imports.NewTable("HeaderSection_Right", 0),
-		/*9*/ imports.NewTable("HeaderSection_State", 0),
-		/*10*/ imports.NewTable("HeaderSection_Text", 0),
-		/*11*/ imports.NewTable("HeaderSection_Visible", 0),
-		/*12*/ imports.NewTable("HeaderSection_Width", 0),
-	}
+	headerSectionOnce   base.Once
+	headerSectionImport *imports.Imports = nil
 )
 
-func headerSectionImportAPI() *imports.Imports {
-	if headerSectionImport == nil {
-		headerSectionImport = NewDefaultImports()
-		headerSectionImport.SetImportTable(headerSectionImportTables)
-		headerSectionImportTables = nil
-	}
+func headerSectionAPI() *imports.Imports {
+	headerSectionOnce.Do(func() {
+		headerSectionImport = api.NewDefaultImports()
+		headerSectionImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("THeaderSection_Create", 0), // constructor NewHeaderSection
+			/* 1 */ imports.NewTable("THeaderSection_Left", 0), // property Left
+			/* 2 */ imports.NewTable("THeaderSection_Right", 0), // property Right
+			/* 3 */ imports.NewTable("THeaderSection_State", 0), // property State
+			/* 4 */ imports.NewTable("THeaderSection_OriginalIndex", 0), // property OriginalIndex
+			/* 5 */ imports.NewTable("THeaderSection_Alignment", 0), // property Alignment
+			/* 6 */ imports.NewTable("THeaderSection_ImageIndex", 0), // property ImageIndex
+			/* 7 */ imports.NewTable("THeaderSection_MaxWidth", 0), // property MaxWidth
+			/* 8 */ imports.NewTable("THeaderSection_MinWidth", 0), // property MinWidth
+			/* 9 */ imports.NewTable("THeaderSection_Text", 0), // property Text
+			/* 10 */ imports.NewTable("THeaderSection_Width", 0), // property Width
+			/* 11 */ imports.NewTable("THeaderSection_Visible", 0), // property Visible
+		}
+	})
 	return headerSectionImport
 }

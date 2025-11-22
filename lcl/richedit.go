@@ -9,123 +9,162 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IRichEdit Parent: IRichMemo
 type IRichEdit interface {
 	IRichMemo
-	Zoom() int32                                                                             // property
-	SetZoom(AValue int32)                                                                    // property
-	HideScrollBars() bool                                                                    // property
-	SetHideScrollBars(AValue bool)                                                           // property
-	PlainText() bool                                                                         // property
-	SetPlainText(AValue bool)                                                                // property
-	DefAttributes() ITextAttributes                                                          // property
-	SetDefAttributes(AValue ITextAttributes)                                                 // property
-	SelAttributes() ITextAttributes                                                          // property
-	SetSelAttributes(AValue ITextAttributes)                                                 // property
-	Paragraph() IParaAttributes                                                              // property
-	SetParagraph(AValue IParaAttributes)                                                     // property
-	FindText(ASearchStr string, AStartPos int32, ALength int32, AOptions TSearchTypes) int32 // function
+	FindText(searchStr string, startPos int32, length int32, options types.TSearchTypes) int32 // function
+	Zoom() int32                                                                               // property Zoom Getter
+	SetZoom(value int32)                                                                       // property Zoom Setter
+	HideScrollBars() bool                                                                      // property HideScrollBars Getter
+	SetHideScrollBars(value bool)                                                              // property HideScrollBars Setter
+	PlainText() bool                                                                           // property PlainText Getter
+	SetPlainText(value bool)                                                                   // property PlainText Setter
+	DefAttributes() ITextAttributes                                                            // property DefAttributes Getter
+	SetDefAttributes(value ITextAttributes)                                                    // property DefAttributes Setter
+	SelAttributes() ITextAttributes                                                            // property SelAttributes Getter
+	SetSelAttributes(value ITextAttributes)                                                    // property SelAttributes Setter
+	Paragraph() IParaAttributes                                                                // property Paragraph Getter
+	SetParagraph(value IParaAttributes)                                                        // property Paragraph Setter
 }
 
-// TRichEdit Parent: TRichMemo
 type TRichEdit struct {
 	TRichMemo
 }
 
-func NewRichEdit(AOnwer IComponent) IRichEdit {
-	r1 := richEditImportAPI().SysCallN(1, GetObjectUintptr(AOnwer))
-	return AsRichEdit(r1)
+func (m *TRichEdit) FindText(searchStr string, startPos int32, length int32, options types.TSearchTypes) int32 {
+	if !m.IsValid() {
+		return 0
+	}
+	r := richEditAPI().SysCallN(1, m.Instance(), api.PasStr(searchStr), uintptr(startPos), uintptr(length), uintptr(options))
+	return int32(r)
 }
 
 func (m *TRichEdit) Zoom() int32 {
-	r1 := richEditImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := richEditAPI().SysCallN(2, 0, m.Instance())
+	return int32(r)
 }
 
-func (m *TRichEdit) SetZoom(AValue int32) {
-	richEditImportAPI().SysCallN(8, 1, m.Instance(), uintptr(AValue))
+func (m *TRichEdit) SetZoom(value int32) {
+	if !m.IsValid() {
+		return
+	}
+	richEditAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TRichEdit) HideScrollBars() bool {
-	r1 := richEditImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := richEditAPI().SysCallN(3, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TRichEdit) SetHideScrollBars(AValue bool) {
-	richEditImportAPI().SysCallN(4, 1, m.Instance(), PascalBool(AValue))
+func (m *TRichEdit) SetHideScrollBars(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	richEditAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TRichEdit) PlainText() bool {
-	r1 := richEditImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := richEditAPI().SysCallN(4, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TRichEdit) SetPlainText(AValue bool) {
-	richEditImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
+func (m *TRichEdit) SetPlainText(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	richEditAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TRichEdit) DefAttributes() ITextAttributes {
-	r1 := richEditImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return AsTextAttributes(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := richEditAPI().SysCallN(5, 0, m.Instance())
+	return AsTextAttributes(r)
 }
 
-func (m *TRichEdit) SetDefAttributes(AValue ITextAttributes) {
-	richEditImportAPI().SysCallN(2, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TRichEdit) SetDefAttributes(value ITextAttributes) {
+	if !m.IsValid() {
+		return
+	}
+	richEditAPI().SysCallN(5, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TRichEdit) SelAttributes() ITextAttributes {
-	r1 := richEditImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return AsTextAttributes(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := richEditAPI().SysCallN(6, 0, m.Instance())
+	return AsTextAttributes(r)
 }
 
-func (m *TRichEdit) SetSelAttributes(AValue ITextAttributes) {
-	richEditImportAPI().SysCallN(7, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TRichEdit) SetSelAttributes(value ITextAttributes) {
+	if !m.IsValid() {
+		return
+	}
+	richEditAPI().SysCallN(6, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
 func (m *TRichEdit) Paragraph() IParaAttributes {
-	r1 := richEditImportAPI().SysCallN(5, 0, m.Instance(), 0)
-	return AsParaAttributes(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := richEditAPI().SysCallN(7, 0, m.Instance())
+	return AsParaAttributes(r)
 }
 
-func (m *TRichEdit) SetParagraph(AValue IParaAttributes) {
-	richEditImportAPI().SysCallN(5, 1, m.Instance(), GetObjectUintptr(AValue))
+func (m *TRichEdit) SetParagraph(value IParaAttributes) {
+	if !m.IsValid() {
+		return
+	}
+	richEditAPI().SysCallN(7, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TRichEdit) FindText(ASearchStr string, AStartPos int32, ALength int32, AOptions TSearchTypes) int32 {
-	r1 := richEditImportAPI().SysCallN(3, m.Instance(), PascalStr(ASearchStr), uintptr(AStartPos), uintptr(ALength), uintptr(AOptions))
-	return int32(r1)
+// NewRichEdit class constructor
+func NewRichEdit(onwer IComponent) IRichEdit {
+	r := richEditAPI().SysCallN(0, base.GetObjectUintptr(onwer))
+	return AsRichEdit(r)
 }
 
-func RichEditClass() TClass {
-	ret := richEditImportAPI().SysCallN(0)
-	return TClass(ret)
+func TRichEditClass() types.TClass {
+	r := richEditAPI().SysCallN(8)
+	return types.TClass(r)
 }
 
 var (
-	richEditImport       *imports.Imports = nil
-	richEditImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("RichEdit_Class", 0),
-		/*1*/ imports.NewTable("RichEdit_Create", 0),
-		/*2*/ imports.NewTable("RichEdit_DefAttributes", 0),
-		/*3*/ imports.NewTable("RichEdit_FindText", 0),
-		/*4*/ imports.NewTable("RichEdit_HideScrollBars", 0),
-		/*5*/ imports.NewTable("RichEdit_Paragraph", 0),
-		/*6*/ imports.NewTable("RichEdit_PlainText", 0),
-		/*7*/ imports.NewTable("RichEdit_SelAttributes", 0),
-		/*8*/ imports.NewTable("RichEdit_Zoom", 0),
-	}
+	richEditOnce   base.Once
+	richEditImport *imports.Imports = nil
 )
 
-func richEditImportAPI() *imports.Imports {
-	if richEditImport == nil {
-		richEditImport = NewDefaultImports()
-		richEditImport.SetImportTable(richEditImportTables)
-		richEditImportTables = nil
-	}
+func richEditAPI() *imports.Imports {
+	richEditOnce.Do(func() {
+		richEditImport = api.NewDefaultImports()
+		richEditImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TRichEdit_Create", 0), // constructor NewRichEdit
+			/* 1 */ imports.NewTable("TRichEdit_FindText", 0), // function FindText
+			/* 2 */ imports.NewTable("TRichEdit_Zoom", 0), // property Zoom
+			/* 3 */ imports.NewTable("TRichEdit_HideScrollBars", 0), // property HideScrollBars
+			/* 4 */ imports.NewTable("TRichEdit_PlainText", 0), // property PlainText
+			/* 5 */ imports.NewTable("TRichEdit_DefAttributes", 0), // property DefAttributes
+			/* 6 */ imports.NewTable("TRichEdit_SelAttributes", 0), // property SelAttributes
+			/* 7 */ imports.NewTable("TRichEdit_Paragraph", 0), // property Paragraph
+			/* 8 */ imports.NewTable("TRichEdit_TClass", 0), // function TRichEditClass
+		}
+	})
 	return richEditImport
 }

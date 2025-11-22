@@ -9,72 +9,89 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
 )
 
 // IMergedMenuItems Parent: IObject
 type IMergedMenuItems interface {
 	IObject
-	VisibleCount() int32                  // property
-	VisibleItems(Index int32) IMenuItem   // property
-	InvisibleCount() int32                // property
-	InvisibleItems(Index int32) IMenuItem // property
+	VisibleCount() int32                  // property VisibleCount Getter
+	VisibleItems(index int32) IMenuItem   // property VisibleItems Getter
+	InvisibleCount() int32                // property InvisibleCount Getter
+	InvisibleItems(index int32) IMenuItem // property InvisibleItems Getter
 }
 
-// TMergedMenuItems Parent: TObject
 type TMergedMenuItems struct {
 	TObject
 }
 
-func NewMergedMenuItems(aParent IMenuItem) IMergedMenuItems {
-	r1 := mergedMenuItemsImportAPI().SysCallN(1, GetObjectUintptr(aParent))
-	return AsMergedMenuItems(r1)
-}
-
 func (m *TMergedMenuItems) VisibleCount() int32 {
-	r1 := mergedMenuItemsImportAPI().SysCallN(4, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := mergedMenuItemsAPI().SysCallN(2, m.Instance())
+	return int32(r)
 }
 
-func (m *TMergedMenuItems) VisibleItems(Index int32) IMenuItem {
-	r1 := mergedMenuItemsImportAPI().SysCallN(5, m.Instance(), uintptr(Index))
-	return AsMenuItem(r1)
+func (m *TMergedMenuItems) VisibleItems(index int32) IMenuItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := mergedMenuItemsAPI().SysCallN(3, m.Instance(), uintptr(index))
+	return AsMenuItem(r)
 }
 
 func (m *TMergedMenuItems) InvisibleCount() int32 {
-	r1 := mergedMenuItemsImportAPI().SysCallN(2, m.Instance())
-	return int32(r1)
+	if !m.IsValid() {
+		return 0
+	}
+	r := mergedMenuItemsAPI().SysCallN(4, m.Instance())
+	return int32(r)
 }
 
-func (m *TMergedMenuItems) InvisibleItems(Index int32) IMenuItem {
-	r1 := mergedMenuItemsImportAPI().SysCallN(3, m.Instance(), uintptr(Index))
-	return AsMenuItem(r1)
+func (m *TMergedMenuItems) InvisibleItems(index int32) IMenuItem {
+	if !m.IsValid() {
+		return nil
+	}
+	r := mergedMenuItemsAPI().SysCallN(5, m.Instance(), uintptr(index))
+	return AsMenuItem(r)
 }
 
-func MergedMenuItemsClass() TClass {
-	ret := mergedMenuItemsImportAPI().SysCallN(0)
-	return TClass(ret)
+// MergedMenuItems  is static instance
+var MergedMenuItems _MergedMenuItemsClass
+
+// _MergedMenuItemsClass is class type defined by TMergedMenuItems
+type _MergedMenuItemsClass uintptr
+
+func (_MergedMenuItemsClass) DefaultSort(item1 uintptr, item2 uintptr, parentItem uintptr) int32 {
+	r := mergedMenuItemsAPI().SysCallN(1, uintptr(item1), uintptr(item2), uintptr(parentItem))
+	return int32(r)
+}
+
+// NewMergedMenuItems class constructor
+func NewMergedMenuItems(parent IMenuItem) IMergedMenuItems {
+	r := mergedMenuItemsAPI().SysCallN(0, base.GetObjectUintptr(parent))
+	return AsMergedMenuItems(r)
 }
 
 var (
-	mergedMenuItemsImport       *imports.Imports = nil
-	mergedMenuItemsImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("MergedMenuItems_Class", 0),
-		/*1*/ imports.NewTable("MergedMenuItems_Create", 0),
-		/*2*/ imports.NewTable("MergedMenuItems_InvisibleCount", 0),
-		/*3*/ imports.NewTable("MergedMenuItems_InvisibleItems", 0),
-		/*4*/ imports.NewTable("MergedMenuItems_VisibleCount", 0),
-		/*5*/ imports.NewTable("MergedMenuItems_VisibleItems", 0),
-	}
+	mergedMenuItemsOnce   base.Once
+	mergedMenuItemsImport *imports.Imports = nil
 )
 
-func mergedMenuItemsImportAPI() *imports.Imports {
-	if mergedMenuItemsImport == nil {
-		mergedMenuItemsImport = NewDefaultImports()
-		mergedMenuItemsImport.SetImportTable(mergedMenuItemsImportTables)
-		mergedMenuItemsImportTables = nil
-	}
+func mergedMenuItemsAPI() *imports.Imports {
+	mergedMenuItemsOnce.Do(func() {
+		mergedMenuItemsImport = api.NewDefaultImports()
+		mergedMenuItemsImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TMergedMenuItems_Create", 0), // constructor NewMergedMenuItems
+			/* 1 */ imports.NewTable("TMergedMenuItems_DefaultSort", 0), // static function DefaultSort
+			/* 2 */ imports.NewTable("TMergedMenuItems_VisibleCount", 0), // property VisibleCount
+			/* 3 */ imports.NewTable("TMergedMenuItems_VisibleItems", 0), // property VisibleItems
+			/* 4 */ imports.NewTable("TMergedMenuItems_InvisibleCount", 0), // property InvisibleCount
+			/* 5 */ imports.NewTable("TMergedMenuItems_InvisibleItems", 0), // property InvisibleItems
+		}
+	})
 	return mergedMenuItemsImport
 }

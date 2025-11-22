@@ -9,87 +9,107 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // IIniFile Parent: ICustomIniFile
 type IIniFile interface {
 	ICustomIniFile
-	Stream() IStream                                 // property
-	CacheUpdates() bool                              // property
-	SetCacheUpdates(AValue bool)                     // property
-	WriteBOM() bool                                  // property
-	SetWriteBOM(AValue bool)                         // property
-	ReadSectionRaw(Section string, Strings IStrings) // procedure
+	ReadSectionRaw(section string, strings IStrings) // procedure
+	Stream() IStream                                 // property Stream Getter
+	CacheUpdates() bool                              // property CacheUpdates Getter
+	SetCacheUpdates(value bool)                      // property CacheUpdates Setter
+	WriteBOM() bool                                  // property WriteBOM Getter
+	SetWriteBOM(value bool)                          // property WriteBOM Setter
 }
 
-// TIniFile Parent: TCustomIniFile
 type TIniFile struct {
 	TCustomIniFile
 }
 
-func NewIniFile(AFileName string, AOptions TIniFileOptions) IIniFile {
-	r1 := niFileImportAPI().SysCallN(2, PascalStr(AFileName), uintptr(AOptions))
-	return AsIniFile(r1)
-}
-
-func NewIniFile1(AStream IStream, AOptions TIniFileOptions) IIniFile {
-	r1 := niFileImportAPI().SysCallN(3, GetObjectUintptr(AStream), uintptr(AOptions))
-	return AsIniFile(r1)
+func (m *TIniFile) ReadSectionRaw(section string, strings IStrings) {
+	if !m.IsValid() {
+		return
+	}
+	iniFileAPI().SysCallN(3, m.Instance(), api.PasStr(section), base.GetObjectUintptr(strings))
 }
 
 func (m *TIniFile) Stream() IStream {
-	r1 := niFileImportAPI().SysCallN(5, m.Instance())
-	return AsStream(r1)
+	if !m.IsValid() {
+		return nil
+	}
+	r := iniFileAPI().SysCallN(4, m.Instance())
+	return AsStream(r)
 }
 
 func (m *TIniFile) CacheUpdates() bool {
-	r1 := niFileImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := iniFileAPI().SysCallN(5, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TIniFile) SetCacheUpdates(AValue bool) {
-	niFileImportAPI().SysCallN(0, 1, m.Instance(), PascalBool(AValue))
+func (m *TIniFile) SetCacheUpdates(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	iniFileAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TIniFile) WriteBOM() bool {
-	r1 := niFileImportAPI().SysCallN(6, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := iniFileAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TIniFile) SetWriteBOM(AValue bool) {
-	niFileImportAPI().SysCallN(6, 1, m.Instance(), PascalBool(AValue))
+func (m *TIniFile) SetWriteBOM(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	iniFileAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
-func IniFileClass() TClass {
-	ret := niFileImportAPI().SysCallN(1)
-	return TClass(ret)
+// NewIniFile class constructor
+func NewIniFile(fileName string, options types.TIniFileOptions) IIniFile {
+	r := iniFileAPI().SysCallN(0, api.PasStr(fileName), uintptr(options))
+	return AsIniFile(r)
 }
 
-func (m *TIniFile) ReadSectionRaw(Section string, Strings IStrings) {
-	niFileImportAPI().SysCallN(4, m.Instance(), PascalStr(Section), GetObjectUintptr(Strings))
+// NewIniFileWithStreamIniFileoptions class constructor
+func NewIniFileWithStreamIniFileoptions(stream IStream, options types.TIniFileOptions) IIniFile {
+	r := iniFileAPI().SysCallN(1, base.GetObjectUintptr(stream), uintptr(options))
+	return AsIniFile(r)
+}
+
+// NewIniFileWithStreamBool class constructor
+func NewIniFileWithStreamBool(stream IStream, escapeLineFeeds bool) IIniFile {
+	r := iniFileAPI().SysCallN(2, base.GetObjectUintptr(stream), api.PasBool(escapeLineFeeds))
+	return AsIniFile(r)
 }
 
 var (
-	niFileImport       *imports.Imports = nil
-	niFileImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("IniFile_CacheUpdates", 0),
-		/*1*/ imports.NewTable("IniFile_Class", 0),
-		/*2*/ imports.NewTable("IniFile_Create", 0),
-		/*3*/ imports.NewTable("IniFile_Create1", 0),
-		/*4*/ imports.NewTable("IniFile_ReadSectionRaw", 0),
-		/*5*/ imports.NewTable("IniFile_Stream", 0),
-		/*6*/ imports.NewTable("IniFile_WriteBOM", 0),
-	}
+	iniFileOnce   base.Once
+	iniFileImport *imports.Imports = nil
 )
 
-func niFileImportAPI() *imports.Imports {
-	if niFileImport == nil {
-		niFileImport = NewDefaultImports()
-		niFileImport.SetImportTable(niFileImportTables)
-		niFileImportTables = nil
-	}
-	return niFileImport
+func iniFileAPI() *imports.Imports {
+	iniFileOnce.Do(func() {
+		iniFileImport = api.NewDefaultImports()
+		iniFileImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TIniFile_Create", 0), // constructor NewIniFile
+			/* 1 */ imports.NewTable("TIniFile_CreateWithStreamIniFileoptions", 0), // constructor NewIniFileWithStreamIniFileoptions
+			/* 2 */ imports.NewTable("TIniFile_CreateWithStreamBool", 0), // constructor NewIniFileWithStreamBool
+			/* 3 */ imports.NewTable("TIniFile_ReadSectionRaw", 0), // procedure ReadSectionRaw
+			/* 4 */ imports.NewTable("TIniFile_Stream", 0), // property Stream
+			/* 5 */ imports.NewTable("TIniFile_CacheUpdates", 0), // property CacheUpdates
+			/* 6 */ imports.NewTable("TIniFile_WriteBOM", 0), // property WriteBOM
+		}
+	})
+	return iniFileImport
 }

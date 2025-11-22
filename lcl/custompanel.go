@@ -9,140 +9,188 @@
 package lcl
 
 import (
-	. "github.com/energye/lcl/api"
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	. "github.com/energye/lcl/types"
+	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
 )
 
 // ICustomPanel Parent: ICustomControl
 type ICustomPanel interface {
 	ICustomControl
-	Alignment() TAlignment            // property
-	SetAlignment(AValue TAlignment)   // property
-	BevelColor() TColor               // property
-	SetBevelColor(AValue TColor)      // property
-	BevelInner() TPanelBevel          // property
-	SetBevelInner(AValue TPanelBevel) // property
-	BevelOuter() TPanelBevel          // property
-	SetBevelOuter(AValue TPanelBevel) // property
-	BevelWidth() TBevelWidth          // property
-	SetBevelWidth(AValue TBevelWidth) // property
-	FullRepaint() bool                // property
-	SetFullRepaint(AValue bool)       // property
-	ParentBackground() bool           // property
-	SetParentBackground(AValue bool)  // property
-	ParentColor() bool                // property
-	SetParentColor(AValue bool)       // property
+	Alignment() types.TAlignment           // property Alignment Getter
+	SetAlignment(value types.TAlignment)   // property Alignment Setter
+	BevelColor() types.TColor              // property BevelColor Getter
+	SetBevelColor(value types.TColor)      // property BevelColor Setter
+	BevelInner() types.TPanelBevel         // property BevelInner Getter
+	SetBevelInner(value types.TPanelBevel) // property BevelInner Setter
+	BevelOuter() types.TPanelBevel         // property BevelOuter Getter
+	SetBevelOuter(value types.TPanelBevel) // property BevelOuter Setter
+	BevelWidth() types.TBevelWidth         // property BevelWidth Getter
+	SetBevelWidth(value types.TBevelWidth) // property BevelWidth Setter
+	FullRepaint() bool                     // property FullRepaint Getter
+	SetFullRepaint(value bool)             // property FullRepaint Setter
+	ParentBackground() bool                // property ParentBackground Getter
+	SetParentBackground(value bool)        // property ParentBackground Setter
+	ParentColor() bool                     // property ParentColor Getter
+	SetParentColor(value bool)             // property ParentColor Setter
 }
 
-// TCustomPanel Parent: TCustomControl
 type TCustomPanel struct {
 	TCustomControl
 }
 
-func NewCustomPanel(TheOwner IComponent) ICustomPanel {
-	r1 := customPanelImportAPI().SysCallN(6, GetObjectUintptr(TheOwner))
-	return AsCustomPanel(r1)
+func (m *TCustomPanel) Alignment() types.TAlignment {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPanelAPI().SysCallN(1, 0, m.Instance())
+	return types.TAlignment(r)
 }
 
-func (m *TCustomPanel) Alignment() TAlignment {
-	r1 := customPanelImportAPI().SysCallN(0, 0, m.Instance(), 0)
-	return TAlignment(r1)
+func (m *TCustomPanel) SetAlignment(value types.TAlignment) {
+	if !m.IsValid() {
+		return
+	}
+	customPanelAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomPanel) SetAlignment(AValue TAlignment) {
-	customPanelImportAPI().SysCallN(0, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPanel) BevelColor() types.TColor {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPanelAPI().SysCallN(2, 0, m.Instance())
+	return types.TColor(r)
 }
 
-func (m *TCustomPanel) BevelColor() TColor {
-	r1 := customPanelImportAPI().SysCallN(1, 0, m.Instance(), 0)
-	return TColor(r1)
+func (m *TCustomPanel) SetBevelColor(value types.TColor) {
+	if !m.IsValid() {
+		return
+	}
+	customPanelAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomPanel) SetBevelColor(AValue TColor) {
-	customPanelImportAPI().SysCallN(1, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPanel) BevelInner() types.TPanelBevel {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPanelAPI().SysCallN(3, 0, m.Instance())
+	return types.TPanelBevel(r)
 }
 
-func (m *TCustomPanel) BevelInner() TPanelBevel {
-	r1 := customPanelImportAPI().SysCallN(2, 0, m.Instance(), 0)
-	return TPanelBevel(r1)
+func (m *TCustomPanel) SetBevelInner(value types.TPanelBevel) {
+	if !m.IsValid() {
+		return
+	}
+	customPanelAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomPanel) SetBevelInner(AValue TPanelBevel) {
-	customPanelImportAPI().SysCallN(2, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPanel) BevelOuter() types.TPanelBevel {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPanelAPI().SysCallN(4, 0, m.Instance())
+	return types.TPanelBevel(r)
 }
 
-func (m *TCustomPanel) BevelOuter() TPanelBevel {
-	r1 := customPanelImportAPI().SysCallN(3, 0, m.Instance(), 0)
-	return TPanelBevel(r1)
+func (m *TCustomPanel) SetBevelOuter(value types.TPanelBevel) {
+	if !m.IsValid() {
+		return
+	}
+	customPanelAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomPanel) SetBevelOuter(AValue TPanelBevel) {
-	customPanelImportAPI().SysCallN(3, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPanel) BevelWidth() types.TBevelWidth {
+	if !m.IsValid() {
+		return 0
+	}
+	r := customPanelAPI().SysCallN(5, 0, m.Instance())
+	return types.TBevelWidth(r)
 }
 
-func (m *TCustomPanel) BevelWidth() TBevelWidth {
-	r1 := customPanelImportAPI().SysCallN(4, 0, m.Instance(), 0)
-	return TBevelWidth(r1)
-}
-
-func (m *TCustomPanel) SetBevelWidth(AValue TBevelWidth) {
-	customPanelImportAPI().SysCallN(4, 1, m.Instance(), uintptr(AValue))
+func (m *TCustomPanel) SetBevelWidth(value types.TBevelWidth) {
+	if !m.IsValid() {
+		return
+	}
+	customPanelAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TCustomPanel) FullRepaint() bool {
-	r1 := customPanelImportAPI().SysCallN(7, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customPanelAPI().SysCallN(6, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomPanel) SetFullRepaint(AValue bool) {
-	customPanelImportAPI().SysCallN(7, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomPanel) SetFullRepaint(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customPanelAPI().SysCallN(6, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomPanel) ParentBackground() bool {
-	r1 := customPanelImportAPI().SysCallN(8, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customPanelAPI().SysCallN(7, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomPanel) SetParentBackground(AValue bool) {
-	customPanelImportAPI().SysCallN(8, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomPanel) SetParentBackground(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customPanelAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
 }
 
 func (m *TCustomPanel) ParentColor() bool {
-	r1 := customPanelImportAPI().SysCallN(9, 0, m.Instance(), 0)
-	return GoBool(r1)
+	if !m.IsValid() {
+		return false
+	}
+	r := customPanelAPI().SysCallN(8, 0, m.Instance())
+	return api.GoBool(r)
 }
 
-func (m *TCustomPanel) SetParentColor(AValue bool) {
-	customPanelImportAPI().SysCallN(9, 1, m.Instance(), PascalBool(AValue))
+func (m *TCustomPanel) SetParentColor(value bool) {
+	if !m.IsValid() {
+		return
+	}
+	customPanelAPI().SysCallN(8, 1, m.Instance(), api.PasBool(value))
 }
 
-func CustomPanelClass() TClass {
-	ret := customPanelImportAPI().SysCallN(5)
-	return TClass(ret)
+// NewCustomPanel class constructor
+func NewCustomPanel(theOwner IComponent) ICustomPanel {
+	r := customPanelAPI().SysCallN(0, base.GetObjectUintptr(theOwner))
+	return AsCustomPanel(r)
+}
+
+func TCustomPanelClass() types.TClass {
+	r := customPanelAPI().SysCallN(9)
+	return types.TClass(r)
 }
 
 var (
-	customPanelImport       *imports.Imports = nil
-	customPanelImportTables                  = []*imports.Table{
-		/*0*/ imports.NewTable("CustomPanel_Alignment", 0),
-		/*1*/ imports.NewTable("CustomPanel_BevelColor", 0),
-		/*2*/ imports.NewTable("CustomPanel_BevelInner", 0),
-		/*3*/ imports.NewTable("CustomPanel_BevelOuter", 0),
-		/*4*/ imports.NewTable("CustomPanel_BevelWidth", 0),
-		/*5*/ imports.NewTable("CustomPanel_Class", 0),
-		/*6*/ imports.NewTable("CustomPanel_Create", 0),
-		/*7*/ imports.NewTable("CustomPanel_FullRepaint", 0),
-		/*8*/ imports.NewTable("CustomPanel_ParentBackground", 0),
-		/*9*/ imports.NewTable("CustomPanel_ParentColor", 0),
-	}
+	customPanelOnce   base.Once
+	customPanelImport *imports.Imports = nil
 )
 
-func customPanelImportAPI() *imports.Imports {
-	if customPanelImport == nil {
-		customPanelImport = NewDefaultImports()
-		customPanelImport.SetImportTable(customPanelImportTables)
-		customPanelImportTables = nil
-	}
+func customPanelAPI() *imports.Imports {
+	customPanelOnce.Do(func() {
+		customPanelImport = api.NewDefaultImports()
+		customPanelImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TCustomPanel_Create", 0), // constructor NewCustomPanel
+			/* 1 */ imports.NewTable("TCustomPanel_Alignment", 0), // property Alignment
+			/* 2 */ imports.NewTable("TCustomPanel_BevelColor", 0), // property BevelColor
+			/* 3 */ imports.NewTable("TCustomPanel_BevelInner", 0), // property BevelInner
+			/* 4 */ imports.NewTable("TCustomPanel_BevelOuter", 0), // property BevelOuter
+			/* 5 */ imports.NewTable("TCustomPanel_BevelWidth", 0), // property BevelWidth
+			/* 6 */ imports.NewTable("TCustomPanel_FullRepaint", 0), // property FullRepaint
+			/* 7 */ imports.NewTable("TCustomPanel_ParentBackground", 0), // property ParentBackground
+			/* 8 */ imports.NewTable("TCustomPanel_ParentColor", 0), // property ParentColor
+			/* 9 */ imports.NewTable("TCustomPanel_TClass", 0), // function TCustomPanelClass
+		}
+	})
 	return customPanelImport
 }

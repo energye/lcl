@@ -355,10 +355,6 @@ const (
 	WM_TABLET_DELETED                  = WM_TABLET_DEFBASE + 9
 	WM_TABLET_FLICK                    = WM_TABLET_DEFBASE + 11
 	WM_TABLET_QUERYSYSTEMGESTURESTATUS = WM_TABLET_DEFBASE + 12
-
-	/* Private Window Messages Start Here */
-
-	WM_USER = 0x0400
 )
 
 // Window class styles
@@ -824,6 +820,7 @@ const (
 	CN_KEYDOWN           = CN_BASE + WM_KEYDOWN
 	CN_KEYUP             = CN_BASE + WM_KEYUP
 	CN_CHAR              = CN_BASE + WM_CHAR
+	CN_SYSKEYUP          = CN_BASE + LM_SYSKEYUP
 	CN_SYSKEYDOWN        = CN_BASE + WM_SYSKEYDOWN
 	CN_SYSCHAR           = CN_BASE + WM_SYSCHAR
 	CN_NOTIFY            = CN_BASE + WM_NOTIFY
@@ -844,4 +841,14 @@ const (
 
 	// PBT_POWERSETTINGCHANGE - A power setting change event has been received.
 	PBT_POWERSETTINGCHANGE = 32787
+)
+const (
+	WVR_ALIGNTOP    = 0x0010
+	WVR_ALIGNLEFT   = 0x0020
+	WVR_ALIGNBOTTOM = 0x0040
+	WVR_ALIGNRIGHT  = 0x0080
+	WVR_HREDRAW     = 0x0100
+	WVR_VREDRAW     = 0x0200
+	WVR_REDRAW      = WVR_HREDRAW | WVR_VREDRAW // 即 0x0300
+	WVR_VALIDRECTS  = 0x0400
 )
