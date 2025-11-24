@@ -36,7 +36,7 @@ func (_StreamHelper) ReadBuffer(stream IStream, count int) []byte {
 	return buffer
 }
 
-// ReadBuffer is IStream.Read helper func
+// Read is IStream.Read helper func
 func (_StreamHelper) Read(stream IStream, count int) []byte {
 	if stream == nil || count <= 0 {
 		return nil
@@ -55,7 +55,7 @@ func (_StreamHelper) WriteBuffer(stream IStream, buffer []byte) {
 	stream.WriteBuffer(uintptr(unsafe.Pointer(&buffer[0])), int32(len(buffer)))
 }
 
-// WriteBuffer is IStream.Write helper func
+// Write is IStream.Write helper func
 func (_StreamHelper) Write(stream IStream, buffer []byte) {
 	if stream == nil || len(buffer) == 0 {
 		return
