@@ -541,6 +541,16 @@ func NewInstanceByComponentClass(class types.TClass) uintptr {
 	return r
 }
 
+// CreateObjectByComponent 通过组件和所有者创建对象
+//
+//	component - 组件的指针地址
+//	owner - 所有者的指针地址
+//	uintptr - 创建的对象的指针地址
+func CreateObjectByComponent(component, owner uintptr) uintptr {
+	r := libPreDefAPI().SysCallN(_CreateObjectByComponent, component)
+	return r
+}
+
 var (
 	libPreDefOnce   sync.Once
 	libPreDefImport *imports.Imports
@@ -635,6 +645,7 @@ func libPreDefAPI() *imports.Imports {
 			/* iota */ imports.NewTable("LocalesUnitResourceStringsFormStream", 0),
 			/* iota */ imports.NewTable("LocalesSetDefaultLangFormStream", 0),
 			/* iota */ imports.NewTable("NewInstanceByComponentClass", 0),
+			/* iota */ imports.NewTable("CreateObjectByComponent", 0),
 		}
 	})
 	return libPreDefImport

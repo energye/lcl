@@ -93,4 +93,5 @@ const (
 	_LocalesUnitResourceStringsFormStream
 	_LocalesSetDefaultLangFormStream
 	_NewInstanceByComponentClass
+	_CreateObjectByComponent
 )
