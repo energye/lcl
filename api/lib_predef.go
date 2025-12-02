@@ -530,6 +530,17 @@ func LocalesSetDefaultLangFormStream(stream uintptr, localeUnitName string, forc
 	return GoBool(r)
 }
 
+// NewInstanceByComponentClass 通过组件类型创建新的实例
+// 该函数调用底层系统API来实例化指定类型的组件对象
+//
+//	typeClass - 组件类型的指针地址，用于标识要创建的组件类型
+//
+//	uintptr - 新创建实例的指针地址，如果创建失败则返回0
+func NewInstanceByComponentClass(typeClass uintptr) uintptr {
+	r := libPreDefAPI().SysCallN(_NewInstanceByComponentClass, typeClass)
+	return r
+}
+
 var (
 	libPreDefOnce   sync.Once
 	libPreDefImport *imports.Imports
@@ -623,6 +634,7 @@ func libPreDefAPI() *imports.Imports {
 			/* iota */ imports.NewTable("LocalesSetDefaultLang", 0),
 			/* iota */ imports.NewTable("LocalesUnitResourceStringsFormStream", 0),
 			/* iota */ imports.NewTable("LocalesSetDefaultLangFormStream", 0),
+			/* iota */ imports.NewTable("NewInstanceByComponentClass", 0),
 		}
 	})
 	return libPreDefImport

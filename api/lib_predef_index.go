@@ -92,4 +92,5 @@ const (
 	_LocalesSetDefaultLang
 	_LocalesUnitResourceStringsFormStream
 	_LocalesSetDefaultLangFormStream
+	_NewInstanceByComponentClass
 )
