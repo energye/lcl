@@ -547,7 +547,7 @@ func NewInstanceByComponentClass(class types.TClass) uintptr {
 //	owner - 所有者的指针地址
 //	uintptr - 创建的对象的指针地址
 func CreateObjectByComponent(component, owner uintptr) uintptr {
-	r := libPreDefAPI().SysCallN(_CreateObjectByComponent, component)
+	r := libPreDefAPI().SysCallN(_CreateObjectByComponent, component, owner)
 	return r
 }
 
