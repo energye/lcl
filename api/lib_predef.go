@@ -536,8 +536,8 @@ func LocalesSetDefaultLangFormStream(stream uintptr, localeUnitName string, forc
 //	typeClass - 组件类型的指针地址，用于标识要创建的组件类型
 //
 //	uintptr - 新创建实例的指针地址，如果创建失败则返回0
-func NewInstanceByComponentClass(typeClass uintptr) uintptr {
-	r := libPreDefAPI().SysCallN(_NewInstanceByComponentClass, typeClass)
+func NewInstanceByComponentClass(class types.TClass) uintptr {
+	r := libPreDefAPI().SysCallN(_NewInstanceByComponentClass, class)
 	return r
 }
 
