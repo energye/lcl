@@ -551,6 +551,11 @@ func CreateObjectByComponent(component, owner uintptr) uintptr {
 	return r
 }
 
+func IsObjectInstanceOf(object uintptr, targetClass types.TClass) bool {
+	r := libPreDefAPI().SysCallN(_IsObjectInstanceOf, object, targetClass)
+	return GoBool(r)
+}
+
 var (
 	libPreDefOnce   sync.Once
 	libPreDefImport *imports.Imports
@@ -646,6 +651,7 @@ func libPreDefAPI() *imports.Imports {
 			/* iota */ imports.NewTable("LocalesSetDefaultLangFormStream", 0),
 			/* iota */ imports.NewTable("NewInstanceByComponentClass", 0),
 			/* iota */ imports.NewTable("CreateObjectByComponent", 0),
+			/* iota */ imports.NewTable("IsObjectInstanceOf", 0),
 		}
 	})
 	return libPreDefImport
