@@ -74,3 +74,11 @@ type TLMContextMenu struct {
 	Hwnd  HWND
 	union [8]byte // 变体
 }
+
+// TLMSetFocus
+type TLMSetFocus struct {
+	Msg        Cardinal
+	FocusedWnd HWND
+	_Unused    LParam
+	Result     LRESULT
+}
