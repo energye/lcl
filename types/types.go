@@ -167,6 +167,10 @@ type TPoint struct {
 	Y int32
 }
 
+func Point(x, y int32) TPoint {
+	return TPoint{X: x, Y: y}
+}
+
 type TRect struct {
 	Left   int32
 	Top    int32
