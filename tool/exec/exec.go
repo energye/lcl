@@ -3,6 +3,8 @@ package exec
 import (
 	"os"
 	"path/filepath"
+	"runtime"
+	"strings"
 
 	"github.com/energye/lcl/tool/homedir"
 )
@@ -20,4 +22,16 @@ func init() {
 	Path, _ = os.Executable()
 	Dir, Name = filepath.Split(Path)
 	HomeDir, _ = homedir.Dir()
+}
+
+// AppDir 返回应用所在目录
+func AppDir() string {
+	tempDir := Dir
+	if runtime.GOOS != "darwin" {
+		return tempDir
+	}
+	if strings.Contains(tempDir, ".app/Contents/MacOS") {
+		return filepath.Join(tempDir, "../../../")
+	}
+	return tempDir
 }
