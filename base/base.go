@@ -39,6 +39,8 @@ type IBase interface {
 	Free()
 	// 设置事件
 	setEvent(apiIndex int, apiTable *imports.Imports, eventPtr uintptr)
+	ClassName() string
+	InstanceSize() int
 }
 
 // 事件列表
@@ -175,3 +177,34 @@ func (m *TBase) Free() {
 }
 
 // TODO 直接添加函数名实现 "ClassName", "InstanceSize", "InheritsFrom", "ClassType", "ClassParent"
+
+func (m *TBase) ClassName() string {
+	if m.instance != nil {
+		r := baseAPI().SysCallN(0, m.Instance())
+		return api.GoStr(r)
+	}
+	return ""
+}
+
+func (m *TBase) InstanceSize() (size int) {
+	if m.instance != nil {
+		baseAPI().SysCallN(1, m.Instance(), uintptr(UnsafePointer(&size)))
+	}
+	return
+}
+
+var (
+	baseOnce   Once
+	baseImport *imports.Imports = nil
+)
+
+func baseAPI() *imports.Imports {
+	baseOnce.Do(func() {
+		baseImport = api.NewDefaultImports()
+		baseImport.Table = []*imports.Table{
+			/* 0 */ imports.NewTable("TBase_ClassName", 0), // constructor NewObject
+			/* 1 */ imports.NewTable("TBase_InstanceSize", 0), // function Equals
+		}
+	})
+	return baseImport
+}
