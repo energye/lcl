@@ -256,7 +256,7 @@ func (m *macApp) runMacOSApp() {
 func (m *macApp) copyDylib() {
 	println("[INFO] copyDylib")
 	cfg := config.Get()
-	var libPath = filepath.Join(cfg.FrameworkPath(), libname.GetDLLName())
+	var libPath = filepath.Join(cfg.FrameworkPath(), "runtime", libname.GetDLLName())
 	println("[INFO] libPath src:", libPath, "dest:", m.lclLibFileName)
 	copyFile(libPath, m.lclLibFileName)
 }
