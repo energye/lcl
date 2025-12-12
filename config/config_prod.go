@@ -18,7 +18,7 @@ import (
 )
 
 func init() {
-	config = &Config{Framework: exec.Dir}
+	config = &Config{Framework: exec.AppDir()}
 }
 
 func (m *Config) FrameworkPath() string {

@@ -21,7 +21,6 @@ import (
 	"github.com/energye/lcl/config"
 	"github.com/energye/lcl/tool/command"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -153,9 +152,9 @@ func Init() {
 	// 创建 xxx.app
 	if MacApp.createMacOSApp(MacApp) {
 		MacApp.copyDylib() // 复制 dylib
-		if config.Get().IsCEF {
-			MacApp.createCEFHelper() // CEF 创建 helper 和复制 Framework
-		}
+		//if config.Get().IsCEF {
+		//	MacApp.createCEFHelper() // CEF 创建 helper 和复制 Framework
+		//}
 		// 最后 cmd 运行 xxx.app
 		MacApp.runMacOSApp()
 	}
@@ -278,7 +277,7 @@ func (*macApp) createMacOSApp(m *macApp) bool {
 	}
 	resName := fmt.Sprintf("%s/%s.icns", m.macResources, m.execName)
 	if !fileExists(resName) {
-		ioutil.WriteFile(resName, macOSAppIcon, 0666)
+		os.WriteFile(resName, macOSAppIcon, 0666)
 	}
 	if !fileExists(m.plistFileName) {
 		datas := map[string]string{
@@ -292,10 +291,10 @@ func (*macApp) createMacOSApp(m *macApp) bool {
 		tmp := template.New("file")
 		tmp.Parse(infoplist)
 		tmp.Execute(buff, datas)
-		ioutil.WriteFile(m.plistFileName, buff.Bytes(), 0666)
+		os.WriteFile(m.plistFileName, buff.Bytes(), 0666)
 	}
 	if !fileExists(m.pkgInfoFileName) {
-		ioutil.WriteFile(m.pkgInfoFileName, pkgInfo, 0666)
+		os.WriteFile(m.pkgInfoFileName, pkgInfo, 0666)
 	}
 	if m.browseSubprocessPath != "" && !m.isMain {
 		println("[INFO] createMacOSApp copy helper subprocess exe")
