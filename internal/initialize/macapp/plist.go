@@ -66,14 +66,13 @@ const (
 			<array>
 				<string>fold</string>
 				<string>disk</string>
-				<string>****</string>
 			</array>
 		</dict>
 	</array>
 	<key>NSHighResolutionCapable</key>
 	<true/>
     <key>NSHumanReadableCopyright</key>
-	<string>{{.copyright}}></string>
+	<string>{{.copyright}}</string>
 </dict>
 </plist>`
 )
