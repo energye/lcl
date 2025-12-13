@@ -63,10 +63,6 @@ func (m *TApp) Initialize() {
 
 func (m *TApp) NewForm(form IEngForm) {
 	var (
-		result uintptr
-		class  = AsComponent(TEngFormClass())
-	)
-	var (
 		mainForm        = Application.MainForm()
 		isMain          = mainForm == nil || mainForm.Instance() == 0 // 0 | nil = main
 		createParamsPtr uintptr
@@ -84,8 +80,7 @@ func (m *TApp) NewForm(form IEngForm) {
 		addRequestCreateParamsMap(createParamsPtr, form)
 	}
 	// Create new form
-	m.CreateForm(class, &result)
-	form.SetInstance(base.UnsafePointer(result))
+	form.SetInstance(base.UnsafePointer(api.Application_CreateForm(m.Instance())))
 	if !isMain {
 		form.SetGoPtr(createParamsPtr)
 	}
