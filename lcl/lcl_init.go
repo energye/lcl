@@ -46,7 +46,7 @@ func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 		}
 	}()
 	runtime.LockOSThread()
-	defer runtime.UnlockOSThread()
+	//defer runtime.UnlockOSThread()
 
 	// 初始化
 	initialize.Initialize(libs, resources)
