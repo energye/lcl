@@ -45,6 +45,10 @@ var (
 	loadLibCallback func() (imports.DLL, error) // 自定义加载 lib 回调函数
 )
 
+func LibLoaded() bool {
+	return lib != 0
+}
+
 // SetOnLoadLibCallback
 //
 //	设置用于加载lib动态库的回调函数
