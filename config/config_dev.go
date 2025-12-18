@@ -39,8 +39,7 @@ func init() {
 			}
 			err = os.WriteFile(configPath, data, 0644)
 			if err != nil {
-				println("[ERROR] Create .energy config WriteFile Error:", err.Error())
-				return
+				println("[Warning] Create .energy config WriteFile Error:", err.Error())
 			}
 			config = tempConfig
 			return
