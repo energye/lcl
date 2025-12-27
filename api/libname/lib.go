@@ -26,14 +26,15 @@ func GetDLLName() string {
 		ws = "cocoa"
 		ext = "dylib"
 	case "linux":
-		ws = "gtk2"
 		ext = "so"
+		if envws := os.Getenv("--ws"); envws != "" {
+			ws = envws
+		} else {
+			ws = "gtk2"
+		}
 	case "windows":
 		ws = "win32"
 		ext = "dll"
-	}
-	if envws := os.Getenv("--ws"); envws != "" {
-		ws = envws
 	}
 	name := fmt.Sprintf("libenergy-%s-%s-%s.%s", goos, goarch, ws, ext)
 	return name
