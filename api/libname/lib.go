@@ -10,6 +10,7 @@ package libname
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 )
 
@@ -17,10 +18,10 @@ var LibName string // 加载完成后该变量可被置空
 
 // GetDLLName 用于获取当前系统架构的 lib 库
 func GetDLLName() string {
-	os := runtime.GOOS
-	arch := runtime.GOARCH
+	goos := runtime.GOOS
+	goarch := runtime.GOARCH
 	ws, ext := "", ""
-	switch os {
+	switch goos {
 	case "darwin":
 		ws = "cocoa"
 		ext = "dylib"
@@ -31,7 +32,10 @@ func GetDLLName() string {
 		ws = "win32"
 		ext = "dll"
 	}
-	name := fmt.Sprintf("libenergy-%s-%s-%s.%s", os, arch, ws, ext)
+	if envws := os.Getenv("--ws"); envws != "" {
+		ws = envws
+	}
+	name := fmt.Sprintf("libenergy-%s-%s-%s.%s", goos, goarch, ws, ext)
 	return name
 }
 
