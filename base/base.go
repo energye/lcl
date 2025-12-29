@@ -41,6 +41,8 @@ type IBase interface {
 	setEvent(apiIndex int, apiTable *imports.Imports, eventPtr uintptr)
 	ClassName() string
 	InstanceSize() int
+	FreeAndNil()
+	Nil()
 }
 
 // 事件列表
@@ -191,6 +193,22 @@ func (m *TBase) InstanceSize() (size int) {
 		baseAPI().SysCallN(1, m.Instance(), uintptr(UnsafePointer(&size)))
 	}
 	return
+}
+
+// FreeAndNil Free and set nil, auto release memory and set pointer to nil
+func (m *TBase) FreeAndNil() {
+	if m.instance != nil {
+		api.FreeAndNil(m.Instance())
+		m.instance = nil
+	}
+}
+
+// Nil Set the current object instance to nil, similar to obj = nil
+func (m *TBase) Nil() {
+	if m.instance != nil {
+		api.SetNil(m.Instance())
+		m.instance = nil
+	}
 }
 
 var (
