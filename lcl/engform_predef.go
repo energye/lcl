@@ -38,3 +38,8 @@ type IOnCloseQuery interface {
 type IOnClose interface {
 	OnClose(sender IObject, closeAction *types.TCloseAction)
 }
+
+// IOnShow TForm OnShow
+type IOnShow interface {
+	OnShow(sender IObject)
+}

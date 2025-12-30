@@ -99,6 +99,11 @@ func (m *TApp) NewForm(form IEngForm) {
 			fn.OnClose(sender, closeAction)
 		})
 	}
+	if fn, ok := form.(IOnShow); ok {
+		form.SetOnShow(func(sender IObject) {
+			fn.OnShow(sender)
+		})
+	}
 }
 
 // AsApp Convert a pointer object to an existing class object
