@@ -40,7 +40,7 @@ const (
 var (
 	lib imports.DLL // 导入 API
 	// 释放回调函数
-	releaseCallback func()
+	releaseCallback []func()
 	// 加载Lib回调函数
 	loadLibCallback func() (imports.DLL, error) // 自定义加载 lib 回调函数
 )
@@ -98,17 +98,17 @@ func Init() {
 
 // LibRelease app run end
 func LibRelease() {
-	if releaseCallback != nil {
-		releaseCallback()
+	for _, fn := range releaseCallback {
+		fn()
 	}
 	WidgetSetFinalization()
 	// 运行结束后就结束close掉lib，不然他不会关掉的
 	closeLib()
 }
 
-// SetReleaseCallback 应用运行结束后释放资源之前执行
-func SetReleaseCallback(fn func()) {
+// SetOnReleaseCallback 应用运行结束后释放资源之前执行
+func SetOnReleaseCallback(fn func()) {
 	if releaseCallback == nil {
-		releaseCallback = fn
+		releaseCallback = append(releaseCallback, fn)
 	}
 }
