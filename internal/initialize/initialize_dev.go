@@ -42,7 +42,7 @@ func loadLibENERGY(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 		libPath := libname.LibName
 		if libPath != "" {
 			// 默认 自定义加载目录
-			lib, err = imports.NewDLL(libPath)
+			//lib, err = imports.NewDLL(libPath)
 		} else if tool.IsDarwin() {
 			// MacOS 固定加载目录
 			libPath = "@executable_path/../Frameworks/" + libname.GetDLLName()
