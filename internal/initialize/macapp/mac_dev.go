@@ -54,7 +54,7 @@ func initMapAPP() {
 	MacApp.plistFileName = MacApp.macContentsDir + "/Info.plist"
 	MacApp.pkgInfoFileName = MacApp.macContentsDir + "/PkgInfo"
 	MacApp.macAppFrameworksDir = MacApp.macContentsDir + "/Frameworks"
-	MacApp.lclLibFileName = MacApp.macContentsDir + "/Frameworks/libenergy.dylib" //libenergy to frameworks
+	MacApp.lclLibFileName = MacApp.macContentsDir + "/Frameworks/" + libname.GetDLLName() //libenergy to frameworks
 	MacApp.lsUIElement = "false"
 }
 
