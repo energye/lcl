@@ -68,3 +68,41 @@ func IsDarwin() bool {
 func IsPlan9() bool {
 	return isPlan9
 }
+
+func ToInt(value any) int {
+	switch v := value.(type) {
+	case int:
+		return v
+	case int8:
+		return int(v)
+	case int16:
+		return int(v)
+	case int32:
+		return int(v)
+	case int64:
+		return int(v)
+	case uint:
+		return int(v)
+	case uint8:
+		return int(v)
+	case uint16:
+		return int(v)
+	case uint32:
+		return int(v)
+	case uint64:
+		return int(v)
+	default:
+		return 0
+	}
+}
+
+func ToDouble(value any) float64 {
+	switch v := value.(type) {
+	case float32:
+		return float64(v)
+	case float64:
+		return v
+	default:
+		return 0
+	}
+}
