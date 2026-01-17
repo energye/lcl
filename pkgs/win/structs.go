@@ -11,7 +11,10 @@
 
 package win
 
-import "github.com/energye/lcl/types"
+import (
+	"github.com/energye/lcl/types"
+	"unsafe"
+)
 
 type TBlendFunction struct {
 	BlendOp             uint8
@@ -21,10 +24,6 @@ type TBlendFunction struct {
 }
 
 type TSystemInfo struct {
-
-	//0: (
-	//dwOemId: DWORD);
-	//1: (
 	ProcessorArchitecture uint16
 	Reserved              uint16
 
@@ -118,4 +117,23 @@ type WINDOWPOS struct {
 type NCCALCSIZE_PARAMS struct {
 	Rgrc  [3]types.TRect // 三个矩形区域
 	Lppos *WINDOWPOS     // 指向WINDOWPOS结构的指针
+}
+
+type WINDOWCOMPOSITIONATTRIBDATA struct {
+	Attrib WINDOWCOMPOSITIONATTRIB
+	PvData unsafe.Pointer
+	CbData uintptr
+}
+
+type ACCENT_POLICY struct {
+	AccentState   ACCENT_STATE
+	AccentFlags   types.DWORD
+	GradientColor types.DWORD
+	AnimationId   types.DWORD
+}
+
+type highContrast struct {
+	CbSize            uint32
+	DwFlags           uint32
+	LpszDefaultScheme *int16
 }

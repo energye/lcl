@@ -27,6 +27,24 @@ const DwmwaCaptionColor DWMWINDOWATTRIBUTE = 35
 const DwmwaTextColor DWMWINDOWATTRIBUTE = 36
 const DwmwaSystemBackdropType DWMWINDOWATTRIBUTE = 38
 
+const DWMSBT_ACRYLIC = 2         // 亚克力
+const DWMSBT_MAINWINDOW = 1      // 云母（主窗口）
+const DWMSBT_TRANSIENTWINDOW = 3 // 云母（临时窗口）
+const DWMWCP_ROUND = 2           // 强制圆角
+const DWMWCP_DONOTROUND = 1      // 禁止圆角
+const DWMWCP_DEFAULT = 0         // 系统默认圆角
+
+const (
+	DWM_BB_ENABLE                = 0x00000001
+	DWM_BB_BLURREGION            = 0x00000002
+	DWM_BB_TRANSITIONONMAXIMIZED = 0x00000004
+)
+const DWMWA_SYSTEMBACKDROP_TYPE = 38
+const DWMWA_MICA_EFFECT = 1029
+const DWMWA_WINDOW_CORNER_PREFERENCE = 33
+const DWMWA_USE_IMMERSIVE_DARK_MODE = 20
+const DWMWA_ALLOW_NCPAINT = 4
+
 type Margins struct {
 	CxLeftWidth, CxRightWidth, CyTopHeight, CyBottomHeight int32
 }
