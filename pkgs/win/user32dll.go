@@ -120,13 +120,13 @@ func GetSystemMetrics(nIndex int) int32 {
 }
 
 // GetWindowLongPtr
-func GetWindowLongPtr(hWnd HWND, nIndex int) int {
+func GetWindowLongPtr(hWnd HWND, nIndex int) uintptr {
 	r, _, _ := _GetWindowLongPtr.Call(uintptr(hWnd), uintptr(nIndex))
-	return int(r)
+	return r
 }
 
 // GetWindowLong
-func GetWindowLong(hWnd HWND, nIndex int) int {
+func GetWindowLong(hWnd HWND, nIndex int) uintptr {
 	return GetWindowLongPtr(hWnd, nIndex)
 }
 

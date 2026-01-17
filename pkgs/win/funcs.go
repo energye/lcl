@@ -12,6 +12,7 @@
 package win
 
 import (
+	"unicode/utf16"
 	"unsafe"
 
 	"fmt"
@@ -132,6 +133,20 @@ func CStr(str string) uintptr {
 // CStrToGoStr
 func GoStr(str []uint16) string {
 	return syscall.UTF16ToString(str)
+}
+
+func UTF16PtrToString(cStr *uint16) string {
+	if cStr != nil {
+		us := make([]uint16, 0, 256)
+		for ptr := uintptr(unsafe.Pointer(cStr)); ; ptr += 2 {
+			u := *(*uint16)(unsafe.Pointer(ptr))
+			if u == 0 { // null end
+				return string(utf16.Decode(us))
+			}
+			us = append(us, u)
+		}
+	}
+	return ""
 }
 
 // CStrToGoStr
