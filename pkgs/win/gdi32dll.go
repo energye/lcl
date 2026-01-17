@@ -12,6 +12,7 @@
 package win
 
 import (
+	"github.com/energye/lcl/types/colors"
 	"syscall"
 	"unsafe"
 
@@ -33,6 +34,7 @@ var (
 	_RestoreDC          = gdi32dll.NewProc("RestoreDC")
 	_SetBkMode          = gdi32dll.NewProc("SetBkMode")
 	_SetTextColor       = gdi32dll.NewProc("SetTextColor")
+	_CreateSolidBrush   = gdi32dll.NewProc("CreateSolidBrush")
 )
 
 func CreateCompatibleDC(dc HDC) HDC {
@@ -93,4 +95,10 @@ func RestoreDC(dC HDC, savedDC int32) bool {
 func SetTextColor(dC HDC, color uint32) uint32 {
 	r, _, _ := _SetTextColor.Call(uintptr(dC), uintptr(color))
 	return uint32(r)
+}
+
+func CreateSolidBrush(r, g, b byte) uintptr {
+	color := colors.RGB(r, g, b)
+	hBrush, _, _ := _CreateSolidBrush.Call(uintptr(color))
+	return hBrush
 }

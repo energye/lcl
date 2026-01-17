@@ -135,7 +135,7 @@ func GetWindowLong(hWnd HWND, nIndex int) uintptr {
 
 // SetWindowLongPtr
 func SetWindowLongPtr(hWnd HWND, nIndex int32, dwNewLong uintptr) uintptr {
-	r, _, _ := _SetWindowLongPtr.Call(uintptr(hWnd), uintptr(nIndex), dwNewLong)
+	r, _, _ := _SetWindowLongPtr.Call(hWnd, uintptr(nIndex), dwNewLong)
 	return r
 }
 
@@ -548,13 +548,16 @@ func GetMonitorInfo(hMonitor HMONITOR, lmpi *TMonitorInfo) bool {
 	return ret != 0
 }
 
-func SetClassLong(hwnd uintptr, param int32, val uintptr) bool {
-	ret, _, _ := _SetClassLongPtr.Call(hwnd, uintptr(param), val)
+func SetClassLongPtr(hwnd uintptr, param int32, val uintptr) bool {
+	ret, _, err := _SetClassLongPtr.Call(hwnd, uintptr(param), val)
+	if err != nil {
+		//println("SetClassLongPtr:", err.Error())
+	}
 	return ret != 0
 }
 
-func GetClassLong(hWnd HWND, nIndex int) uintptr {
-	ret, _, _ := _GetClassLongPtr.Call(uintptr(hWnd), uintptr(nIndex))
+func GetClassLongPtr(hWnd HWND, nIndex int) uintptr {
+	ret, _, _ := _GetClassLongPtr.Call(hWnd, uintptr(nIndex))
 	return ret
 }
 
@@ -571,9 +574,8 @@ func SetWindowDisplayAffinity(hwnd uintptr, affinity uint32) bool {
 func IsCurrentlyHighContrastMode() bool {
 	var result highContrast
 	result.CbSize = uint32(unsafe.Sizeof(result))
-	res, _, err := _SystemParametersInfoW.Call(SPI_GETHIGHCONTRAST, uintptr(result.CbSize), uintptr(unsafe.Pointer(&result)), 0)
+	res, _, _ := _SystemParametersInfoW.Call(SPI_GETHIGHCONTRAST, uintptr(result.CbSize), uintptr(unsafe.Pointer(&result)), 0)
 	if res == 0 {
-		_ = err
 		return false
 	}
 	r := result.DwFlags&HCF_HIGHCONTRASTON == HCF_HIGHCONTRASTON
