@@ -14,13 +14,13 @@ import (
 	"github.com/energye/lcl/types"
 )
 
-// IOnCreate TForm OnCreate
-type IOnCreate interface {
+// IOnFormCreate TForm OnCreate
+type IOnFormCreate interface {
 	FormCreate(sender IObject)
 }
 
-// IOnAfterCreate TForm OnAfterCreate
-type IOnAfterCreate interface {
+// IOnFormAfterCreate TForm OnAfterCreate
+type IOnFormAfterCreate interface {
 	FormAfterCreate(sender IObject)
 }
 

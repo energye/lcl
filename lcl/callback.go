@@ -20,9 +20,9 @@ import (
 )
 
 var (
-	createParamsMap sync.Map
-	newFormCreate   IForm
-	queueAsyncCall  = _QueueAsyncCall{id: 0, calls: sync.Map{}}
+	newFormCreateParams IForm
+	newFormCreate       IForm
+	queueAsyncCall      = _QueueAsyncCall{id: 0, calls: sync.Map{}}
 )
 
 // TMainThreadSyncProc 主线程运行回调函数
@@ -51,12 +51,12 @@ func (m *_QueueAsyncCall) next(fn TMainThreadAsyncProc) int {
 	return m.id
 }
 
-func addNewFormCreate(form IForm) {
+func setNewFormCreate(form IForm) {
 	newFormCreate = form
 }
 
-func addRequestCreateParamsMap(ptr uintptr, proc IForm) {
-	createParamsMap.Store(ptr, proc)
+func setNewCreateParams(form IForm) {
+	newFormCreateParams = form
 }
 
 func eventCallbackProc(f uintptr, args uintptr, _ int) uintptr {
@@ -120,13 +120,12 @@ func threadAsyncCallbackProc(data uintptr) uintptr {
 
 // 控件创建时 CreateParams 函数回调
 func createParamsCallbackProc(ptr uintptr, sender, params uintptr) uintptr {
-	if val, ok := createParamsMap.Load(ptr); ok {
-		createParamsMap.Delete(ptr)
-		if form, ok := val.(IForm); ok {
-			form.SetInstance(base.UnsafePointer(sender))
-			if impl, ok := form.(IOnCreateParams); ok {
-				impl.CreateParams((*types.TCreateParams)(base.UnsafePointer(params)))
-			}
+	if newFormCreateParams != nil {
+		currentForm := newFormCreateParams
+		newFormCreateParams = nil
+		//currentForm.SetInstance(base.UnsafePointer(sender))
+		if impl, ok := currentForm.(IOnCreateParams); ok {
+			impl.CreateParams((*types.TCreateParams)(base.UnsafePointer(params)))
 		}
 	}
 	return 0
@@ -138,7 +137,7 @@ func formCreateCallbackProc(ptr uintptr, sender uintptr) uintptr {
 		currentForm := newFormCreate
 		newFormCreate = nil
 		currentForm.SetInstance(base.UnsafePointer(sender))
-		if impl, ok := currentForm.(IOnCreate); ok {
+		if impl, ok := currentForm.(IOnFormCreate); ok {
 			impl.FormCreate(currentForm)
 		}
 	}

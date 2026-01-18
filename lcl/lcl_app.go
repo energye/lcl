@@ -11,14 +11,10 @@
 package lcl
 
 import (
-	"reflect"
-	"runtime"
-
 	"github.com/energye/lcl/api"
-
-	"github.com/energye/lcl/types"
-
 	"github.com/energye/lcl/base"
+	"github.com/energye/lcl/types"
+	"runtime"
 )
 
 type IApp interface {
@@ -63,29 +59,22 @@ func (m *TApp) Initialize() {
 
 func (m *TApp) NewForm(form IEngForm) {
 	var (
-		mainForm        = Application.MainForm()
-		isMain          = mainForm == nil || mainForm.Instance() == 0 // 0 | nil = main
-		createParamsPtr uintptr
+		mainForm = Application.MainForm()
+		isMain   = mainForm == nil || mainForm.Instance() == 0 // 0 | nil = main
 	)
-	if !isMain {
-		// CreateParamsCallback
-		createParamsPtr = reflect.ValueOf(form).Pointer()
-	}
+	_ = isMain
 	// OnCreate
-	if _, ok := form.(IOnCreate); ok {
-		addNewFormCreate(form)
+	if _, ok := form.(IOnFormCreate); ok {
+		setNewFormCreate(form)
 	}
 	// CreateParams
 	if _, ok := form.(IOnCreateParams); ok {
-		addRequestCreateParamsMap(createParamsPtr, form)
+		setNewCreateParams(form)
 	}
 	// Create new form
-	form.SetInstance(base.UnsafePointer(api.Application_CreateForm(m.Instance())))
-	if !isMain {
-		form.SetGoPtr(createParamsPtr)
-	}
+	api.Application_CreateForm(m.Instance())
 	// call OnAfterCreate
-	if fn, ok := form.(IOnAfterCreate); ok {
+	if fn, ok := form.(IOnFormAfterCreate); ok {
 		fn.FormAfterCreate(form)
 	}
 	// 注册一些默认事件
