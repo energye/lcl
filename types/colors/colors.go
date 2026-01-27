@@ -338,10 +338,10 @@ func RGBToBGR(rgb uint32) uint32 {
 type ARGB = uint32
 
 type TARGB struct {
-	A uint32
-	R uint32
-	G uint32
-	B uint32
+	A uint32 // 0 ~ 255
+	R uint32 // 0 ~ 255
+	G uint32 // 0 ~ 255
+	B uint32 // 0 ~ 255
 }
 
 func NewARGB(a, r, g, b uint32) *TARGB {
