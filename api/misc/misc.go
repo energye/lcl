@@ -36,9 +36,9 @@ func DrawGrid(dc types.HDC, rect types.TRect, DX, DY int32) {
 	miscAPI().Proc(4).Call(dc, uintptr(base.UnsafePointer(&rect)), uintptr(DX), uintptr(DY))
 }
 
-func Frame3d(dc types.HDC, rect *types.TRect, frameWidth int32, style types.TGraphicsBevelCut) bool {
-	r1, _, _ := miscAPI().Proc(5).Call(dc, uintptr(base.UnsafePointer(rect)), uintptr(frameWidth), uintptr(style))
-	return api.GoBool(r1)
+func TrayIconHandle(trayIconInstance uintptr) types.HWND {
+	r1, _, _ := miscAPI().Proc(6).Call(trayIconInstance)
+	return types.HWND(r1)
 }
 
 var (
@@ -56,6 +56,7 @@ func miscAPI() *imports.Imports {
 			imports.NewTable("LCLMisc_DrawDefaultDockImage", 0),
 			imports.NewTable("LCLMisc_DrawGrid", 0),
 			imports.NewTable("LCLMisc_Frame3d", 0),
+			imports.NewTable("TTrayIcon_Handle", 0),
 		}
 	})
 	return miscImport
