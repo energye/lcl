@@ -32,6 +32,7 @@ type IComponent interface {
 	InsertComponent(component IComponent)        // procedure
 	RemoveComponent(component IComponent)        // procedure
 	SetSubComponent(subComponent bool)           // procedure
+	ComObject() IUnknown                         // property ComObject Getter
 	Components(index int32) IComponent           // property Components Getter
 	ComponentCount() int32                       // property ComponentCount Getter
 	ComponentIndex() int32                       // property ComponentIndex Getter
@@ -157,11 +158,21 @@ func (m *TComponent) SetSubComponent(subComponent bool) {
 	componentAPI().SysCallN(14, m.Instance(), api.PasBool(subComponent))
 }
 
+func (m *TComponent) ComObject() (result IUnknown) {
+	if !m.IsValid() {
+		return
+	}
+	var resultPtr uintptr
+	componentAPI().SysCallN(15, m.Instance(), uintptr(base.UnsafePointer(&resultPtr)))
+	result = AsUnknown(resultPtr)
+	return
+}
+
 func (m *TComponent) Components(index int32) IComponent {
 	if !m.IsValid() {
 		return nil
 	}
-	r := componentAPI().SysCallN(15, m.Instance(), uintptr(index))
+	r := componentAPI().SysCallN(16, m.Instance(), uintptr(index))
 	return AsComponent(r)
 }
 
@@ -169,7 +180,7 @@ func (m *TComponent) ComponentCount() int32 {
 	if !m.IsValid() {
 		return 0
 	}
-	r := componentAPI().SysCallN(16, m.Instance())
+	r := componentAPI().SysCallN(17, m.Instance())
 	return int32(r)
 }
 
@@ -177,7 +188,7 @@ func (m *TComponent) ComponentIndex() int32 {
 	if !m.IsValid() {
 		return 0
 	}
-	r := componentAPI().SysCallN(17, 0, m.Instance())
+	r := componentAPI().SysCallN(18, 0, m.Instance())
 	return int32(r)
 }
 
@@ -185,14 +196,14 @@ func (m *TComponent) SetComponentIndex(value int32) {
 	if !m.IsValid() {
 		return
 	}
-	componentAPI().SysCallN(17, 1, m.Instance(), uintptr(value))
+	componentAPI().SysCallN(18, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TComponent) ComponentState() types.TComponentState {
 	if !m.IsValid() {
 		return 0
 	}
-	r := componentAPI().SysCallN(18, m.Instance())
+	r := componentAPI().SysCallN(19, m.Instance())
 	return types.TComponentState(r)
 }
 
@@ -200,7 +211,7 @@ func (m *TComponent) ComponentStyle() types.TComponentStyle {
 	if !m.IsValid() {
 		return 0
 	}
-	r := componentAPI().SysCallN(19, m.Instance())
+	r := componentAPI().SysCallN(20, m.Instance())
 	return types.TComponentStyle(r)
 }
 
@@ -208,7 +219,7 @@ func (m *TComponent) DesignInfo() int32 {
 	if !m.IsValid() {
 		return 0
 	}
-	r := componentAPI().SysCallN(20, 0, m.Instance())
+	r := componentAPI().SysCallN(21, 0, m.Instance())
 	return int32(r)
 }
 
@@ -216,14 +227,14 @@ func (m *TComponent) SetDesignInfo(value int32) {
 	if !m.IsValid() {
 		return
 	}
-	componentAPI().SysCallN(20, 1, m.Instance(), uintptr(value))
+	componentAPI().SysCallN(21, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TComponent) Owner() IComponent {
 	if !m.IsValid() {
 		return nil
 	}
-	r := componentAPI().SysCallN(21, m.Instance())
+	r := componentAPI().SysCallN(22, m.Instance())
 	return AsComponent(r)
 }
 
@@ -231,7 +242,7 @@ func (m *TComponent) VCLComObject() uintptr {
 	if !m.IsValid() {
 		return 0
 	}
-	r := componentAPI().SysCallN(22, 0, m.Instance())
+	r := componentAPI().SysCallN(23, 0, m.Instance())
 	return uintptr(r)
 }
 
@@ -239,14 +250,14 @@ func (m *TComponent) SetVCLComObject(value uintptr) {
 	if !m.IsValid() {
 		return
 	}
-	componentAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
+	componentAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
 }
 
 func (m *TComponent) Name() string {
 	if !m.IsValid() {
 		return ""
 	}
-	r := componentAPI().SysCallN(23, 0, m.Instance())
+	r := componentAPI().SysCallN(24, 0, m.Instance())
 	return api.GoStr(r)
 }
 
@@ -254,14 +265,14 @@ func (m *TComponent) SetName(value string) {
 	if !m.IsValid() {
 		return
 	}
-	componentAPI().SysCallN(23, 1, m.Instance(), api.PasStr(value))
+	componentAPI().SysCallN(24, 1, m.Instance(), api.PasStr(value))
 }
 
 func (m *TComponent) Tag() uintptr {
 	if !m.IsValid() {
 		return 0
 	}
-	r := componentAPI().SysCallN(24, 0, m.Instance())
+	r := componentAPI().SysCallN(25, 0, m.Instance())
 	return uintptr(r)
 }
 
@@ -269,7 +280,7 @@ func (m *TComponent) SetTag(value uintptr) {
 	if !m.IsValid() {
 		return
 	}
-	componentAPI().SysCallN(24, 1, m.Instance(), uintptr(value))
+	componentAPI().SysCallN(25, 1, m.Instance(), uintptr(value))
 }
 
 // NewComponent class constructor
@@ -302,16 +313,17 @@ func componentAPI() *imports.Imports {
 			/* 12 */ imports.NewTable("TComponent_InsertComponent", 0), // procedure InsertComponent
 			/* 13 */ imports.NewTable("TComponent_RemoveComponent", 0), // procedure RemoveComponent
 			/* 14 */ imports.NewTable("TComponent_SetSubComponent", 0), // procedure SetSubComponent
-			/* 15 */ imports.NewTable("TComponent_Components", 0), // property Components
-			/* 16 */ imports.NewTable("TComponent_ComponentCount", 0), // property ComponentCount
-			/* 17 */ imports.NewTable("TComponent_ComponentIndex", 0), // property ComponentIndex
-			/* 18 */ imports.NewTable("TComponent_ComponentState", 0), // property ComponentState
-			/* 19 */ imports.NewTable("TComponent_ComponentStyle", 0), // property ComponentStyle
-			/* 20 */ imports.NewTable("TComponent_DesignInfo", 0), // property DesignInfo
-			/* 21 */ imports.NewTable("TComponent_Owner", 0), // property Owner
-			/* 22 */ imports.NewTable("TComponent_VCLComObject", 0), // property VCLComObject
-			/* 23 */ imports.NewTable("TComponent_Name", 0), // property Name
-			/* 24 */ imports.NewTable("TComponent_Tag", 0), // property Tag
+			/* 15 */ imports.NewTable("TComponent_ComObject", 0), // property ComObject
+			/* 16 */ imports.NewTable("TComponent_Components", 0), // property Components
+			/* 17 */ imports.NewTable("TComponent_ComponentCount", 0), // property ComponentCount
+			/* 18 */ imports.NewTable("TComponent_ComponentIndex", 0), // property ComponentIndex
+			/* 19 */ imports.NewTable("TComponent_ComponentState", 0), // property ComponentState
+			/* 20 */ imports.NewTable("TComponent_ComponentStyle", 0), // property ComponentStyle
+			/* 21 */ imports.NewTable("TComponent_DesignInfo", 0), // property DesignInfo
+			/* 22 */ imports.NewTable("TComponent_Owner", 0), // property Owner
+			/* 23 */ imports.NewTable("TComponent_VCLComObject", 0), // property VCLComObject
+			/* 24 */ imports.NewTable("TComponent_Name", 0), // property Name
+			/* 25 */ imports.NewTable("TComponent_Tag", 0), // property Tag
 		}
 	})
 	return componentImport

@@ -11,10 +11,11 @@
 package lcl
 
 import (
+	"runtime"
+
 	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/base"
 	"github.com/energye/lcl/types"
-	"runtime"
 )
 
 type IApp interface {
