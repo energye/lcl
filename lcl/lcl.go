@@ -69,6 +69,10 @@ func FindDragTarget(position types.TPoint, allowDisabled bool) IControl {
 	return AsControl(api.FindDragTarget(position, allowDisabled))
 }
 
+type ICustomComponent interface {
+	Published() []ComponentProperties
+}
+
 type ComponentProperties struct {
 	Name    string `json:"name"`    // 属性名
 	Value   string `json:"value"`   // 属性值, 或默认值
