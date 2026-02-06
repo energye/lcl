@@ -91,6 +91,10 @@ func ToInt(value any) int {
 		return int(v)
 	case uint64:
 		return int(v)
+	case float64:
+		return int(v)
+	case float32:
+		return int(v)
 	default:
 		return 0
 	}
