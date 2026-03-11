@@ -18,7 +18,9 @@ import (
 	"github.com/energye/lcl/api/libname"
 	"github.com/energye/lcl/emfs"
 	"github.com/energye/lcl/tool"
+	"github.com/energye/lcl/tool/exec"
 	"os"
+	"path/filepath"
 )
 
 // 发布环境加载 libENERGY，不再依赖 .energy 配置文件
@@ -41,7 +43,7 @@ func loadLibENERGY(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 			}
 		} else {
 			// Windows, Linux
-			if currentPathLibPath := path.Join(exec.Dir, libname.GetDLLName()); tool.IsExist(currentPathLibPath) {
+			if currentPathLibPath := filepath.Join(exec.Dir, libname.GetDLLName()); tool.IsExist(currentPathLibPath) {
 				// 优先当前执行目录
 				libPath = currentPathLibPath
 			} else {
