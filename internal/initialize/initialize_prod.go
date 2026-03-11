@@ -9,19 +9,16 @@
 //----------------------------------------
 
 //go:build prod
-// +build prod
 
 package initialize
 
 import (
-	"path"
-
 	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
 	"github.com/energye/lcl/api/libname"
 	"github.com/energye/lcl/emfs"
 	"github.com/energye/lcl/tool"
-	"github.com/energye/lcl/tool/exec"
+	"os"
 )
 
 // 发布环境加载 libENERGY，不再依赖 .energy 配置文件
@@ -33,15 +30,19 @@ func loadLibENERGY(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 		libPath := libname.LibName
 		if libPath != "" {
 			// 自定义加载目录
-			lib, err = imports.NewDLL(libPath)
+			// lib, err = imports.NewDLL(libPath)
 		} else if tool.IsDarwin() {
 			// MacOS 固定加载目录
-			libPath = "@executable_path/../Frameworks/" + libname.GetDLLName()
+			isUniversal := os.Getenv("--universal-binary") == "universal"
+			if isUniversal {
+				libPath = "@executable_path/../Frameworks/libenergy-darwin-universal-cocoa.dylib"
+			} else {
+				libPath = "@executable_path/../Frameworks/" + libname.GetDLLName()
+			}
 		} else {
 			// Windows, Linux
-			// 优先当前执行目录
-			currentPathLibPath := path.Join(exec.Dir, libname.GetDLLName())
-			if tool.IsExist(currentPathLibPath) {
+			if currentPathLibPath := path.Join(exec.Dir, libname.GetDLLName()); tool.IsExist(currentPathLibPath) {
+				// 优先当前执行目录
 				libPath = currentPathLibPath
 			} else {
 				// 最后尝试相对目录
@@ -55,10 +56,11 @@ func loadLibENERGY(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 		}
 		if lib == 0 {
 			if err != nil {
-				println("Load LibENERGY Error:", err.Error())
+				println("[ERROR] Load LibENERGY", err.Error())
 			}
-			println("LibENERGY Path:", libname.LibName)
+			println("[ERROR] Path:", libname.LibName)
 			panic(`Failed initialize LibENERGY`)
+			os.Exit(1)
 		}
 		return
 	})
