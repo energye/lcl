@@ -39,6 +39,7 @@ type CMD struct {
 	IsPrint    bool
 	Dir        string
 	Console    func(data string, level Level)
+	BeforeRun  func(cmd *exec.Cmd)
 	Cmd        *exec.Cmd
 }
 
@@ -56,6 +57,9 @@ func (m *CMD) Command(name string, args ...string) {
 	}
 	cmd := exec.Command(name, args...)
 	m.Cmd = cmd
+	if m.BeforeRun != nil {
+		m.BeforeRun(m.Cmd)
+	}
 	if m.Dir != "" {
 		cmd.Dir = m.Dir
 	}
