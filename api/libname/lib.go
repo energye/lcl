@@ -14,6 +14,8 @@ import (
 	"runtime"
 )
 
+const DarwinUniversalBinaryName = "libenergy-darwin-universal-cocoa.dylib"
+
 var LibName string // 加载完成后该变量可被置空
 
 // GetDLLName 用于获取当前系统架构的 lib 库

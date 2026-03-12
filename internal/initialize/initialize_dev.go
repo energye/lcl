@@ -45,7 +45,7 @@ func loadLibENERGY(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 			// MacOS 固定加载目录
 			isUniversal := os.Getenv("--universal-binary") == "universal"
 			if isUniversal {
-				libPath = "@executable_path/../Frameworks/libenergy-darwin-universal-cocoa.dylib"
+				libPath = "@executable_path/../Frameworks/" + libname.DarwinUniversalBinaryName
 			} else {
 				libPath = "@executable_path/../Frameworks/" + libname.GetDLLName()
 			}

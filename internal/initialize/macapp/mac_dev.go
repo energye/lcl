@@ -341,7 +341,7 @@ func dllName() string {
 	name := libname.GetDLLName()
 	isUniversal := os.Getenv("--universal-binary") == "universal"
 	if isUniversal {
-		name = "libenergy-darwin-universal-cocoa.dylib"
+		name = libname.DarwinUniversalBinaryName
 	}
 	return name
 }
