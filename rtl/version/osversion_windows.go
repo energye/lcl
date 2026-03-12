@@ -39,6 +39,7 @@ const (
 	sWindows8            = "Windows 8"
 	sWindows8Point1      = "Windows 8.1"
 	sWindows10           = "Windows 10"
+	sWindows11           = "Windows 11"
 )
 
 func iifStr(b bool, aTrue, aFalse string) string {
@@ -49,7 +50,6 @@ func iifStr(b bool, aTrue, aFalse string) string {
 }
 
 func IsWindowsServer() bool {
-
 	var osvi win.TOSVersionInfoEx
 	osvi.ProductType = win.VER_NT_WORKSTATION
 
@@ -134,10 +134,14 @@ func initOSVersion() {
 	case 10:
 		switch OSVersion.Minor {
 		case 0:
-			if !IsWindowsServer() {
-				OSVersion.Name = sWindows10
+			if OSVersion.Build >= 22621 {
+				OSVersion.Name = sWindows11
 			} else {
-				OSVersion.Name = sWindowsServer2016
+				if !IsWindowsServer() {
+					OSVersion.Name = sWindows10
+				} else {
+					OSVersion.Name = sWindowsServer2016
+				}
 			}
 		}
 

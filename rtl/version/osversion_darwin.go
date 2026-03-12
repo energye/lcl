@@ -20,8 +20,7 @@ import (
 )
 
 const (
-	sVersionStr = "%s (Version %d.%d.%d)"
-	//sCName          = "hw.optional.x86_64"
+	sVersionStr     = "%s (Version %d.%d.%d)"
 	pListName       = "/System/Library/CoreServices/SystemVersion.plist"
 	pListServerName = "/System/Library/CoreServices/ServerVersion.plist"
 )
@@ -45,7 +44,7 @@ func openDataFromURL(listName string) (bool, []byte) {
 
 func initOSVersion() {
 	OSVersion.Platform = PfMacOS
-	OSVersion.Name = "Mac OS X"
+	OSVersion.Name = "Mac OS"
 
 	validData, lData := openDataFromURL(pListServerName)
 	if !validData {

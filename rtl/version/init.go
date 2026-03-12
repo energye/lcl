@@ -10,7 +10,13 @@ package version
 
 import "runtime"
 
+var isLoaded bool
+
 func Init() {
+	if isLoaded {
+		return
+	}
+	isLoaded = true
 	switch runtime.GOARCH {
 	case "386":
 		OSVersion.Architecture = ArIntelX86
