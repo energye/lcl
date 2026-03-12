@@ -54,7 +54,7 @@ func initMapAPP() {
 	MacApp.plistFileName = MacApp.macContentsDir + "/Info.plist"
 	MacApp.pkgInfoFileName = MacApp.macContentsDir + "/PkgInfo"
 	MacApp.macAppFrameworksDir = MacApp.macContentsDir + "/Frameworks"
-	MacApp.lclLibFileName = MacApp.macContentsDir + "/Frameworks/" + libname.GetDLLName() //libenergy to frameworks
+	MacApp.lclLibFileName = MacApp.macContentsDir + "/Frameworks/" + dllName() //libenergy to frameworks
 	MacApp.lsUIElement = "false"
 }
 
@@ -223,7 +223,7 @@ func (m *macApp) createCEFHelper() {
 		helper.macAppFrameworksDir = helper.macContentsDir + "/Frameworks"
 		helper.lsUIElement = "true"
 		helper.isLinked = m.isLinked
-		helper.lclLibFileName = helper.macAppFrameworksDir + "/libenergy.dylib"
+		helper.lclLibFileName = helper.macAppFrameworksDir + dllName()
 		// 创建 helper 进程
 		m.createMacOSApp(helper)
 
@@ -255,7 +255,7 @@ func (m *macApp) runMacOSApp() {
 func (m *macApp) copyDylib() {
 	println("[INFO] copyDylib")
 	cfg := config.Get()
-	var libPath = filepath.Join(cfg.FrameworkPath(), "runtime", libname.GetDLLName())
+	libPath := filepath.Join(cfg.FrameworkPath(), "runtime", dllName())
 	println("[INFO] libPath src:", libPath, "dest:", m.lclLibFileName)
 	copyFile(libPath, m.lclLibFileName)
 }
@@ -335,4 +335,13 @@ func createHelperExe(mainExec, execFile string, isLinked bool) {
 			os.Chmod(execFile, 0755)
 		}
 	}
+}
+
+func dllName() string {
+	name := libname.GetDLLName()
+	isUniversal := os.Getenv("--universal-binary") == "universal"
+	if isUniversal {
+		name = "libenergy-darwin-universal-cocoa.dylib"
+	}
+	return name
 }
