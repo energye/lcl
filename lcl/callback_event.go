@@ -260,6 +260,21 @@ func makeTCellProcessEvent(cb TCellProcessEvent) *callback {
 	}
 }
 
+func makeTChangeUpdatingEvent(cb TChangeUpdatingEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TChangeUpdatingEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(ASender: TObject; AnUpdating: Boolean);
+			sender := AsObject(getVal(0))
+			anUpdating := api.GoBool(getVal(1))
+			cb(sender, anUpdating)
+		},
+	}
+}
+
 func makeTCheckGroupClicked(cb TCheckGroupClicked) *callback {
 	if cb == nil {
 		return nil
@@ -346,6 +361,26 @@ func makeTCloseQueryEvent(cb TCloseQueryEvent) *callback {
 			sender := AsObject(getVal(0))
 			canClose := (*bool)(getPtr(getVal(1)))
 			cb(sender, canClose)
+		},
+	}
+}
+
+func makeTCodeCompletionEvent(cb TCodeCompletionEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TCodeCompletionEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(var Value: string; SourceValue: string; var SourceStart, SourceEnd: TPoint; KeyChar: TUTF8Char; Shift: TShiftState);
+			value := api.GoStr(*(*uintptr)(getPtr(getVal(0))))
+			sourceValue := api.GoStr(getVal(1))
+			sourceStart := (*types.TPoint)(getPtr(getVal(2)))
+			sourceEnd := (*types.TPoint)(getPtr(getVal(3)))
+			keyChar := api.GoStr(getVal(4))
+			shift := types.TShiftState(getVal(5))
+			cb(&value, sourceValue, sourceStart, sourceEnd, keyChar, shift)
+			*(*uintptr)(getPtr(getVal(0))) = api.PasStr(value)
 		},
 	}
 }
@@ -1072,6 +1107,24 @@ func makeTGetSiteInfoEvent(cb TGetSiteInfoEvent) *callback {
 	}
 }
 
+func makeTGutterClickEvent(cb TGutterClickEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TGutterClickEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; X, Y, Line: integer; mark: TSynEditMark);
+			sender := AsObject(getVal(0))
+			X := int32(getVal(1))
+			Y := int32(getVal(2))
+			line := int32(getVal(3))
+			mark := AsSynEditMark(getVal(4))
+			cb(sender, X, Y, line, mark)
+		},
+	}
+}
+
 func makeTHdrEvent(cb THdrEvent) *callback {
 	if cb == nil {
 		return nil
@@ -1182,6 +1235,21 @@ func makeTImagePaintBackgroundEvent(cb TImagePaintBackgroundEvent) *callback {
 			canvas := AsCanvas(getVal(1))
 			rect := *(*types.TRect)(getPtr(getVal(2)))
 			cb(sender, canvas, rect)
+		},
+	}
+}
+
+func makeTInvalidateLines(cb TInvalidateLines) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TInvalidateLines",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(FirstLine, LastLine: integer);
+			firstLine := int32(getVal(0))
+			lastLine := int32(getVal(1))
+			cb(firstLine, lastLine)
 		},
 	}
 }
@@ -1600,25 +1668,6 @@ func makeTLVSelectItemEvent(cb TLVSelectItemEvent) *callback {
 	}
 }
 
-func makeTLinkActionEvent(cb TLinkActionEvent) *callback {
-	if cb == nil {
-		return nil
-	}
-	return &callback{
-		name: "TLinkActionEvent",
-		cb: func(getVal func(i int) uintptr) {
-			// 5 : procedure (Sender: TObject; ALinkAction: TLinkAction; const info: TLinkMouseInfo; LinkStart, LinkLen: Integer);
-			sender := AsObject(getVal(0))
-			linkAction := types.TLinkAction(getVal(1))
-			infoPtr := (*tLinkMouseInfo)(getPtr(getVal(2)))
-			info := infoPtr.ToGo()
-			linkStart := int32(getVal(3))
-			linkLen := int32(getVal(4))
-			cb(sender, linkAction, info, linkStart, linkLen)
-		},
-	}
-}
-
 func makeTListCompareEvent(cb TListCompareEvent) *callback {
 	if cb == nil {
 		return nil
@@ -1632,6 +1681,20 @@ func makeTListCompareEvent(cb TListCompareEvent) *callback {
 			item2 := AsListControlItem(getVal(2))
 			ret := cb(list, item1, item2)
 			*(*int32)(getPtr(getVal(3))) = ret
+		},
+	}
+}
+
+func makeTMaxLeftCharFunc(cb TMaxLeftCharFunc) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TMaxLeftCharFunc",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): Integer;
+			ret := cb()
+			*(*int32)(getPtr(getVal(0))) = ret
 		},
 	}
 }
@@ -1839,6 +1902,44 @@ func makeTNotifyEvent(cb TNotifyEvent) *callback {
 	}
 }
 
+func makeTOnBeforeExecuteEvent(cb TOnBeforeExecuteEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TOnBeforeExecuteEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure( ASender: TSynBaseCompletion; var ACurrentString: String; var APosition: Integer; var AnX, AnY: Integer; var AnResult: TOnBeforeExeucteFlags );
+			sender := AsSynBaseCompletion(getVal(0))
+			currentString := api.GoStr(*(*uintptr)(getPtr(getVal(1))))
+			position := (*int32)(getPtr(getVal(2)))
+			anX := (*int32)(getPtr(getVal(3)))
+			anY := (*int32)(getPtr(getVal(4)))
+			anResult := (*types.TOnBeforeExeucteFlags)(getPtr(getVal(5)))
+			cb(sender, &currentString, position, anX, anY, anResult)
+			*(*uintptr)(getPtr(getVal(1))) = api.PasStr(currentString)
+		},
+	}
+}
+
+func makeTOnCheckMarker(cb TOnCheckMarker) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TOnCheckMarker",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; var StartPos, MarkerLen: Integer; var MarkerText: String);
+			sender := AsObject(getVal(0))
+			startPos := (*int32)(getPtr(getVal(1)))
+			markerLen := (*int32)(getPtr(getVal(2)))
+			markerText := api.GoStr(*(*uintptr)(getPtr(getVal(3))))
+			cb(sender, startPos, markerLen, &markerText)
+			*(*uintptr)(getPtr(getVal(3))) = api.PasStr(markerText)
+		},
+	}
+}
+
 func makeTOnCompareCells(cb TOnCompareCells) *callback {
 	if cb == nil {
 		return nil
@@ -1974,20 +2075,54 @@ func makeTOpenGlCtrlMakeCurrentEvent(cb TOpenGlCtrlMakeCurrentEvent) *callback {
 	}
 }
 
-func makeTPrintActionEvent(cb TPrintActionEvent) *callback {
+func makeTPaintEvent(cb TPaintEvent) *callback {
 	if cb == nil {
 		return nil
 	}
 	return &callback{
-		name: "TPrintActionEvent",
+		name: "TPaintEvent",
 		cb: func(getVal func(i int) uintptr) {
-			// 5 : procedure (Sender: TObject; APrintAction: TPrintAction; PrintCanvas: TCanvas; CurrentPage: Integer; var AbortPrint: Boolean);
+			// 2 : procedure(Sender: TObject; ACanvas: TCanvas);
 			sender := AsObject(getVal(0))
-			printAction := types.TPrintAction(getVal(1))
-			printCanvas := AsCanvas(getVal(2))
-			currentPage := int32(getVal(3))
-			abortPrint := (*bool)(getPtr(getVal(4)))
-			cb(sender, printAction, printCanvas, currentPage, abortPrint)
+			canvas := AsCanvas(getVal(1))
+			cb(sender, canvas)
+		},
+	}
+}
+
+func makeTPlaceMarkEvent(cb TPlaceMarkEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TPlaceMarkEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(Sender: TObject; var Mark: TSynEditMark);
+			sender := AsObject(getVal(0))
+			var mark ISynEditMark
+			mark = AsSynEditMark(*(*uintptr)(getPtr(getVal(1))))
+			cb(sender, &mark)
+			if mark != nil {
+				*(*uintptr)(getPtr(getVal(1))) = mark.Instance()
+			}
+		},
+	}
+}
+
+func makeTProcessCommandEvent(cb TProcessCommandEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TProcessCommandEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; var Command: TSynEditorCommand; var AChar: TUTF8Char; Data: pointer);
+			sender := AsObject(getVal(0))
+			command := (*types.TSynEditorCommand)(getPtr(getVal(1)))
+			char := api.GoStr(*(*uintptr)(getPtr(getVal(2))))
+			data := uintptr(getVal(3))
+			cb(sender, command, &char, data)
+			*(*uintptr)(getPtr(getVal(2))) = api.PasStr(char)
 		},
 	}
 }
@@ -2022,6 +2157,25 @@ func makeTQueryEndSessionEvent(cb TQueryEndSessionEvent) *callback {
 			// 1 : procedure (var Cancel: Boolean);
 			cancel := (*bool)(getPtr(getVal(0)))
 			cb(cancel)
+		},
+	}
+}
+
+func makeTReplaceTextEvent(cb TReplaceTextEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TReplaceTextEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : procedure(Sender: TObject; const ASearch, AReplace: string; Line, Column: integer; var ReplaceAction: TSynReplaceAction);
+			sender := AsObject(getVal(0))
+			search := api.GoStr(getVal(1))
+			replace := api.GoStr(getVal(2))
+			line := int32(getVal(3))
+			column := int32(getVal(4))
+			replaceAction := (*types.TSynReplaceAction)(getPtr(getVal(5)))
+			cb(sender, search, replace, line, column, replaceAction)
 		},
 	}
 }
@@ -2200,6 +2354,23 @@ func makeTShowHintEvent(cb TShowHintEvent) *callback {
 	}
 }
 
+func makeTSpecialLineMarkupEvent(cb TSpecialLineMarkupEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSpecialLineMarkupEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; Line: integer; var Special: boolean; Markup: TSynSelectedColor);
+			sender := AsObject(getVal(0))
+			line := int32(getVal(1))
+			special := (*bool)(getPtr(getVal(2)))
+			markup := AsSynSelectedColor(getVal(3))
+			cb(sender, line, special, markup)
+		},
+	}
+}
+
 func makeTStartDockEvent(cb TStartDockEvent) *callback {
 	if cb == nil {
 		return nil
@@ -2233,6 +2404,632 @@ func makeTStartDragEvent(cb TStartDragEvent) *callback {
 			cb(sender, &dragObject)
 			if dragObject != nil {
 				*(*uintptr)(getPtr(getVal(1))) = dragObject.Instance()
+			}
+		},
+	}
+}
+
+func makeTSynBaseCompletionMeasureItem(cb TSynBaseCompletionMeasureItem) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseCompletionMeasureItem",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : function(const AKey: string; ACanvas: TCanvas; Selected: boolean; Index: integer): TPoint;
+			key := api.GoStr(getVal(0))
+			canvas := AsCanvas(getVal(1))
+			selected := api.GoBool(getVal(2))
+			index := int32(getVal(3))
+			ret := cb(key, canvas, selected, index)
+			*(*types.TPoint)(getPtr(getVal(4))) = ret
+		},
+	}
+}
+
+func makeTSynBaseCompletionPaintItem(cb TSynBaseCompletionPaintItem) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseCompletionPaintItem",
+		cb: func(getVal func(i int) uintptr) {
+			// 6 : function(const AKey: string; ACanvas: TCanvas; X, Y: integer; Selected: boolean; Index: integer ): boolean;
+			key := api.GoStr(getVal(0))
+			canvas := AsCanvas(getVal(1))
+			X := int32(getVal(2))
+			Y := int32(getVal(3))
+			selected := api.GoBool(getVal(4))
+			index := int32(getVal(5))
+			ret := cb(key, canvas, X, Y, selected, index)
+			*(*bool)(getPtr(getVal(6))) = ret
+		},
+	}
+}
+
+func makeTSynBaseCompletionSearchPosition(cb TSynBaseCompletionSearchPosition) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseCompletionSearchPosition",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(var APosition :integer);
+			position := (*int32)(getPtr(getVal(0)))
+			cb(position)
+		},
+	}
+}
+
+func makeTSynBaseHighlighterEvent(cb TSynBaseHighlighterEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : procedure();
+			cb()
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIEsbRHrlCharEvent(cb TSynBaseHighlighterIEsbRHrlCharEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIEsbRHrlCharEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function(ALines: TSynEditStringsBase): TSynHighlighterRangeList;
+			lines := AsSynEditStringsBase(getVal(0))
+			ret := cb(lines)
+			if ret != nil {
+				*(*uintptr)(getPtr(getVal(1))) = ret.Instance()
+			}
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIHrlCharEvent(cb TSynBaseHighlighterIHrlCharEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIHrlCharEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(ARangeList: TSynHighlighterRangeList);
+			rangeList := AsSynHighlighterRangeList(getVal(0))
+			cb(rangeList)
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIIdeCharEvent(cb TSynBaseHighlighterIIdeCharEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIIdeCharEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(AChars: TSynIdentChars);
+			chars := types.TSynIdentChars(getVal(0))
+			cb(chars)
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIIntBoolRIntEvent(cb TSynBaseHighlighterIIntBoolRIntEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIIntBoolRIntEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : function(startIndex, endIndex: Integer; forceEndIndex: Boolean): Integer;
+			startIndex := int32(getVal(0))
+			endIndex := int32(getVal(1))
+			forceEndIndex := api.GoBool(getVal(2))
+			ret := cb(startIndex, endIndex, forceEndIndex)
+			*(*int32)(getPtr(getVal(3))) = ret
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIIntEvent(cb TSynBaseHighlighterIIntEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIIntEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(value: integer);
+			value := int32(getVal(0))
+			cb(value)
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIIntRBoolEvent(cb TSynBaseHighlighterIIntRBoolEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIIntRBoolEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function(const value: integer): boolean;
+			value := int32(getVal(0))
+			ret := cb(value)
+			*(*bool)(getPtr(getVal(1))) = ret
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIIntRDdcEvent(cb TSynBaseHighlighterIIntRDdcEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIIntRDdcEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function(index: integer): TSynDividerDrawConfig;
+			index := int32(getVal(0))
+			ret := cb(index)
+			if ret != nil {
+				*(*uintptr)(getPtr(getVal(1))) = ret.Instance()
+			}
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIIntRDdcsEvent(cb TSynBaseHighlighterIIntRDdcsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIIntRDdcsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function(index: integer): TSynDividerDrawConfigSetting;
+			index := int32(getVal(0))
+			ret := cb(index)
+			*(*TSynDividerDrawConfigSetting)(getPtr(getVal(1))) = ret
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIIntRHAttrEvent(cb TSynBaseHighlighterIIntRHAttrEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIIntRHAttrEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function(index: integer): TSynHighlighterAttributes;
+			index := int32(getVal(0))
+			ret := cb(index)
+			if ret != nil {
+				*(*uintptr)(getPtr(getVal(1))) = ret.Instance()
+			}
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIPtrEvent(cb TSynBaseHighlighterIPtrEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIPtrEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(Value: Pointer);
+			value := uintptr(getVal(0))
+			cb(value)
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIStrEvent(cb TSynBaseHighlighterIStrEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIStrEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(value: string);
+			value := api.GoStr(getVal(0))
+			cb(value)
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIStrIntEvent(cb TSynBaseHighlighterIStrIntEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIStrIntEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(const value: String; lineNumber:Integer);
+			value := api.GoStr(getVal(0))
+			lineNumber := int32(getVal(1))
+			cb(value, lineNumber)
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIStrRBoolEvent(cb TSynBaseHighlighterIStrRBoolEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIStrRBoolEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function(const value: string): boolean;
+			value := api.GoStr(getVal(0))
+			ret := cb(value)
+			*(*bool)(getPtr(getVal(1))) = ret
+		},
+	}
+}
+
+func makeTSynBaseHighlighterIStrsEvent(cb TSynBaseHighlighterIStrsEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterIStrsEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(strings: TStrings);
+			strings := AsStrings(getVal(0))
+			cb(strings)
+		},
+	}
+}
+
+func makeTSynBaseHighlighterOStrIntEvent(cb TSynBaseHighlighterOStrIntEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterOStrIntEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 2 : procedure(out TokenStart: string; out TokenLength: integer);
+			var tokenStart string
+			tokenLength := (*int32)(getPtr(getVal(1)))
+			cb(&tokenStart, tokenLength)
+			*(*uintptr)(getPtr(getVal(0))) = api.PasStr(tokenStart)
+		},
+	}
+}
+
+func makeTSynBaseHighlighterRBoolEvent(cb TSynBaseHighlighterRBoolEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterRBoolEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): boolean;
+			ret := cb()
+			*(*bool)(getPtr(getVal(0))) = ret
+		},
+	}
+}
+
+func makeTSynBaseHighlighterRHAttrEvent(cb TSynBaseHighlighterRHAttrEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterRHAttrEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): TSynHighlighterAttributes;
+			ret := cb()
+			if ret != nil {
+				*(*uintptr)(getPtr(getVal(0))) = ret.Instance()
+			}
+		},
+	}
+}
+
+func makeTSynBaseHighlighterRIdeCharEvent(cb TSynBaseHighlighterRIdeCharEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterRIdeCharEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): TSynIdentChars;
+			ret := cb()
+			*(*types.TSynIdentChars)(getPtr(getVal(0))) = ret
+		},
+	}
+}
+
+func makeTSynBaseHighlighterRIntEvent(cb TSynBaseHighlighterRIntEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterRIntEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): integer;
+			ret := cb()
+			*(*int32)(getPtr(getVal(0))) = ret
+		},
+	}
+}
+
+func makeTSynBaseHighlighterRPtrEvent(cb TSynBaseHighlighterRPtrEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterRPtrEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): Pointer;
+			ret := cb()
+			*(*uintptr)(getPtr(getVal(0))) = ret
+		},
+	}
+}
+
+func makeTSynBaseHighlighterRStrEvent(cb TSynBaseHighlighterRStrEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBaseHighlighterRStrEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): string;
+			ret := cb()
+			*(*uintptr)(getPtr(getVal(0))) = api.PasStr(ret)
+		},
+	}
+}
+
+func makeTSynBeautifierGetIndentEvent(cb TSynBeautifierGetIndentEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynBeautifierGetIndentEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 8 : function( Sender: TObject; Editor: TObject; LogCaret, OldLogCaret: TPoint; FirstLinePos, LastLinePos: Integer; Reason: TSynEditorCommand; SetIndentProc: TSynBeautifierSetIndentProc ): boolean;
+			sender := AsObject(getVal(0))
+			editor := AsObject(getVal(1))
+			logCaret := *(*types.TPoint)(getPtr(getVal(2)))
+			oldLogCaret := *(*types.TPoint)(getPtr(getVal(3)))
+			firstLinePos := int32(getVal(4))
+			lastLinePos := int32(getVal(5))
+			reason := types.TSynEditorCommand(getVal(6))
+			setIndentProc := AsBeautifierSetIndentCallback(getVal(7))
+			ret := cb(sender, editor, logCaret, oldLogCaret, firstLinePos, lastLinePos, reason, setIndentProc)
+			if setIndentProc != nil && setIndentProc.IsValid() {
+				setIndentProc.Free()
+			}
+			*(*bool)(getPtr(getVal(8))) = ret
+		},
+	}
+}
+
+func makeTSynCopyPasteEvent(cb TSynCopyPasteEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynCopyPasteEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 5 : procedure(Sender: TObject; var AText: String; var AMode: TSynSelectionMode; ALogStartPos: TPoint; var AnAction: TSynCopyPasteAction);
+			sender := AsObject(getVal(0))
+			text := api.GoStr(*(*uintptr)(getPtr(getVal(1))))
+			mode := (*types.TSynSelectionMode)(getPtr(getVal(2)))
+			logStartPos := *(*types.TPoint)(getPtr(getVal(3)))
+			anAction := (*types.TSynCopyPasteAction)(getPtr(getVal(4)))
+			cb(sender, &text, mode, logStartPos, anAction)
+			*(*uintptr)(getPtr(getVal(1))) = api.PasStr(text)
+		},
+	}
+}
+
+func makeTSynDropFilesEvent(cb TSynDropFilesEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynDropFilesEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TObject; X, Y: integer; AFiles: TStrings);
+			sender := AsObject(getVal(0))
+			X := int32(getVal(1))
+			Y := int32(getVal(2))
+			files := AsStrings(getVal(3))
+			cb(sender, X, Y, files)
+		},
+	}
+}
+
+func makeTSynEditGetGutterLineTextEvent(cb TSynEditGetGutterLineTextEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynEditGetGutterLineTextEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure(Sender: TSynGutterLineNumber; ALine: integer; out AText: string; const ALineInfo: TSynEditGutterLineInfo);
+			sender := AsSynGutterLineNumber(getVal(0))
+			line := int32(getVal(1))
+			var text string
+			lineInfo := *(*TSynEditGutterLineInfo)(getPtr(getVal(3)))
+			cb(sender, line, &text, lineInfo)
+			*(*uintptr)(getPtr(getVal(2))) = api.PasStr(text)
+		},
+	}
+}
+
+func makeTSynGetCaretUndoProc(cb TSynGetCaretUndoProc) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynGetCaretUndoProc",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): TSynEditUndoItem;
+			ret := cb()
+			if ret != nil {
+				*(*uintptr)(getPtr(getVal(0))) = ret.Instance()
+			}
+		},
+	}
+}
+
+func makeTSynMacroReaderEventCommandEvent(cb TSynMacroReaderEventCommandEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynMacroReaderEventCommandEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): TSynEditorCommand;
+			ret := cb()
+			*(*types.TSynEditorCommand)(getPtr(getVal(0))) = ret
+		},
+	}
+}
+
+func makeTSynMacroReaderGetParamAsIntEvent(cb TSynMacroReaderGetParamAsIntEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynMacroReaderGetParamAsIntEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function(Index: Integer): Integer;
+			index := int32(getVal(0))
+			ret := cb(index)
+			*(*int32)(getPtr(getVal(1))) = ret
+		},
+	}
+}
+
+func makeTSynMacroReaderGetParamAsStringEvent(cb TSynMacroReaderGetParamAsStringEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynMacroReaderGetParamAsStringEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function(Index: Integer): string;
+			index := int32(getVal(0))
+			ret := cb(index)
+			*(*uintptr)(getPtr(getVal(1))) = api.PasStr(ret)
+		},
+	}
+}
+
+func makeTSynMacroReaderGetParamTypeEvent(cb TSynMacroReaderGetParamTypeEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynMacroReaderGetParamTypeEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : function(Index: Integer): TSynEventParamType;
+			index := int32(getVal(0))
+			ret := cb(index)
+			*(*types.TSynEventParamType)(getPtr(getVal(1))) = ret
+		},
+	}
+}
+
+func makeTSynMacroReaderParamCountEvent(cb TSynMacroReaderParamCountEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynMacroReaderParamCountEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 0 : function(): Integer;
+			ret := cb()
+			*(*int32)(getPtr(getVal(0))) = ret
+		},
+	}
+}
+
+func makeTSynMacroWriteCommandEvent(cb TSynMacroWriteCommandEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynMacroWriteCommandEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(const ACmd: TSynEditorCommand);
+			cmd := types.TSynEditorCommand(getVal(0))
+			cb(cmd)
+		},
+	}
+}
+
+func makeTSynMacroWriteEventIntEvent(cb TSynMacroWriteEventIntEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynMacroWriteEventIntEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(const ACmd: integer);
+			cmd := int32(getVal(0))
+			cb(cmd)
+		},
+	}
+}
+
+func makeTSynMacroWriteEventStrEvent(cb TSynMacroWriteEventStrEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynMacroWriteEventStrEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 1 : procedure(const AParam: string);
+			param := api.GoStr(getVal(0))
+			cb(param)
+		},
+	}
+}
+
+func makeTSynMouseLinkEvent(cb TSynMouseLinkEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynMouseLinkEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 4 : procedure ( Sender: TObject; X, Y: Integer; var AllowMouseLink: Boolean);
+			sender := AsObject(getVal(0))
+			X := int32(getVal(1))
+			Y := int32(getVal(2))
+			allowMouseLink := (*bool)(getPtr(getVal(3)))
+			cb(sender, X, Y, allowMouseLink)
+		},
+	}
+}
+
+func makeTSynUserCommandEvent(cb TSynUserCommandEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TSynUserCommandEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure (aSender: TCustomSynMacroRecorder; aCmd: TSynEditorCommand; var aEvent: TSynMacroEvent);
+			sender := AsCustomSynMacroRecorder(getVal(0))
+			cmd := types.TSynEditorCommand(getVal(1))
+			var event ISynMacroEvent
+			event = AsSynMacroEvent(*(*uintptr)(getPtr(getVal(2))))
+			cb(sender, cmd, &event)
+			if event != nil {
+				*(*uintptr)(getPtr(getVal(2))) = event.Instance()
 			}
 		},
 	}
@@ -4612,6 +5409,22 @@ func makeTValidateEntryEvent(cb TValidateEntryEvent) *callback {
 			newValue := api.GoStr(*(*uintptr)(getPtr(getVal(4))))
 			cb(sender, col, row, oldValue, &newValue)
 			*(*uintptr)(getPtr(getVal(4))) = api.PasStr(newValue)
+		},
+	}
+}
+
+func makeTValidateEvent(cb TValidateEvent) *callback {
+	if cb == nil {
+		return nil
+	}
+	return &callback{
+		name: "TValidateEvent",
+		cb: func(getVal func(i int) uintptr) {
+			// 3 : procedure(Sender: TObject; KeyChar: TUTF8Char; Shift: TShiftState);
+			sender := AsObject(getVal(0))
+			keyChar := api.GoStr(getVal(1))
+			shift := types.TShiftState(getVal(2))
+			cb(sender, keyChar, shift)
 		},
 	}
 }

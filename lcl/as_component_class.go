@@ -879,39 +879,6 @@ func AsCalendarDialog(obj any) ICalendarDialog {
 	return result
 }
 
-// AsCustomRichMemo Convert a pointer object to an existing class object
-func AsCustomRichMemo(obj any) ICustomRichMemo {
-	instance := base.GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	result := new(TCustomRichMemo)
-	base.SetObjectInstance(result, instance)
-	return result
-}
-
-// AsRichMemo Convert a pointer object to an existing class object
-func AsRichMemo(obj any) IRichMemo {
-	instance := base.GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	result := new(TRichMemo)
-	base.SetObjectInstance(result, instance)
-	return result
-}
-
-// AsRichEdit Convert a pointer object to an existing class object
-func AsRichEdit(obj any) IRichEdit {
-	instance := base.GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	result := new(TRichEdit)
-	base.SetObjectInstance(result, instance)
-	return result
-}
-
 // AsCustomTrackBar Convert a pointer object to an existing class object
 func AsCustomTrackBar(obj any) ICustomTrackBar {
 	instance := base.GetInstance(obj)
@@ -1880,28 +1847,6 @@ func AsList(obj any) IList {
 	return result
 }
 
-// AsParaAttributes Convert a pointer object to an existing class object
-func AsParaAttributes(obj any) IParaAttributes {
-	instance := base.GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	result := new(TParaAttributes)
-	base.SetObjectInstance(result, instance)
-	return result
-}
-
-// AsTextAttributes Convert a pointer object to an existing class object
-func AsTextAttributes(obj any) ITextAttributes {
-	instance := base.GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	result := new(TTextAttributes)
-	base.SetObjectInstance(result, instance)
-	return result
-}
-
 // AsIconOptions Convert a pointer object to an existing class object
 func AsIconOptions(obj any) IIconOptions {
 	instance := base.GetInstance(obj)
@@ -2008,28 +1953,6 @@ func AsCheckListBox(obj any) ICheckListBox {
 		return nil
 	}
 	result := new(TCheckListBox)
-	base.SetObjectInstance(result, instance)
-	return result
-}
-
-// AsATGauge Convert a pointer object to an existing class object
-func AsATGauge(obj any) IATGauge {
-	instance := base.GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	result := new(TATGauge)
-	base.SetObjectInstance(result, instance)
-	return result
-}
-
-// AsGauge Convert a pointer object to an existing class object
-func AsGauge(obj any) IGauge {
-	instance := base.GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	result := new(TGauge)
 	base.SetObjectInstance(result, instance)
 	return result
 }
@@ -3211,17 +3134,6 @@ func AsThemeServices(obj any) IThemeServices {
 	return result
 }
 
-// AsRichMemoInline Convert a pointer object to an existing class object
-func AsRichMemoInline(obj any) IRichMemoInline {
-	instance := base.GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	result := new(TRichMemoInline)
-	base.SetObjectInstance(result, instance)
-	return result
-}
-
 // AsListEnumerator Convert a pointer object to an existing class object
 func AsListEnumerator(obj any) IListEnumerator {
 	instance := base.GetInstance(obj)
@@ -3977,6 +3889,1161 @@ func AsDesigner(obj any) IDesigner {
 		return nil
 	}
 	result := new(TDesigner)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditBase Convert a pointer object to an existing class object
+func AsSynEditBase(obj any) ISynEditBase {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditBase)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomSynEdit Convert a pointer object to an existing class object
+func AsCustomSynEdit(obj any) ICustomSynEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomSynEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEdit Convert a pointer object to an existing class object
+func AsSynEdit(obj any) ISynEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynBookMarkOpt Convert a pointer object to an existing class object
+func AsSynBookMarkOpt(obj any) ISynBookMarkOpt {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynBookMarkOpt)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazSynCustomTextAttributes Convert a pointer object to an existing class object
+func AsLazSynCustomTextAttributes(obj any) ILazSynCustomTextAttributes {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazSynCustomTextAttributes)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynHighlighterAttributes Convert a pointer object to an existing class object
+func AsSynHighlighterAttributes(obj any) ISynHighlighterAttributes {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynHighlighterAttributes)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynHighlighterAttributesModifier Convert a pointer object to an existing class object
+func AsSynHighlighterAttributesModifier(obj any) ISynHighlighterAttributesModifier {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynHighlighterAttributesModifier)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynSelectedColor Convert a pointer object to an existing class object
+func AsSynSelectedColor(obj any) ISynSelectedColor {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynSelectedColor)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditMouseActions Convert a pointer object to an existing class object
+func AsSynEditMouseActions(obj any) ISynEditMouseActions {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditMouseActions)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynTextViewsManager Convert a pointer object to an existing class object
+func AsSynTextViewsManager(obj any) ISynTextViewsManager {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynTextViewsManager)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditMarkList Convert a pointer object to an existing class object
+func AsSynEditMarkList(obj any) ISynEditMarkList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditMarkList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynScrollOnEditOptions Convert a pointer object to an existing class object
+func AsSynScrollOnEditOptions(obj any) ISynScrollOnEditOptions {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynScrollOnEditOptions)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditFriend Convert a pointer object to an existing class object
+func AsSynEditFriend(obj any) ISynEditFriend {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditFriend)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazSynEditPlugin Convert a pointer object to an existing class object
+func AsLazSynEditPlugin(obj any) ILazSynEditPlugin {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazSynEditPlugin)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditMarkup Convert a pointer object to an existing class object
+func AsSynEditMarkup(obj any) ISynEditMarkup {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditMarkup)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditMarkupManager Convert a pointer object to an existing class object
+func AsSynEditMarkupManager(obj any) ISynEditMarkupManager {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditMarkupManager)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynCustomBeautifier Convert a pointer object to an existing class object
+func AsSynCustomBeautifier(obj any) ISynCustomBeautifier {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynCustomBeautifier)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynCustomHighlighter Convert a pointer object to an existing class object
+func AsSynCustomHighlighter(obj any) ISynCustomHighlighter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynCustomHighlighter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterBase Convert a pointer object to an existing class object
+func AsSynGutterBase(obj any) ISynGutterBase {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterBase)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutter Convert a pointer object to an existing class object
+func AsSynGutter(obj any) ISynGutter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditKeyStrokes Convert a pointer object to an existing class object
+func AsSynEditKeyStrokes(obj any) ISynEditKeyStrokes {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditKeyStrokes)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditKeyStroke Convert a pointer object to an existing class object
+func AsSynEditKeyStroke(obj any) ISynEditKeyStroke {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditKeyStroke)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditMark Convert a pointer object to an existing class object
+func AsSynEditMark(obj any) ISynEditMark {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditMark)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditMouseAction Convert a pointer object to an existing class object
+func AsSynEditMouseAction(obj any) ISynEditMouseAction {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditMouseAction)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditPointBase Convert a pointer object to an existing class object
+func AsSynEditPointBase(obj any) ISynEditPointBase {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditPointBase)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditBaseCaret Convert a pointer object to an existing class object
+func AsSynEditBaseCaret(obj any) ISynEditBaseCaret {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditBaseCaret)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditCaret Convert a pointer object to an existing class object
+func AsSynEditCaret(obj any) ISynEditCaret {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditCaret)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditStringsBase Convert a pointer object to an existing class object
+func AsSynEditStringsBase(obj any) ISynEditStringsBase {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditStringsBase)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditStrings Convert a pointer object to an existing class object
+func AsSynEditStrings(obj any) ISynEditStrings {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditStrings)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditStringsLinked Convert a pointer object to an existing class object
+func AsSynEditStringsLinked(obj any) ISynEditStringsLinked {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditStringsLinked)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynSizedDifferentialAVLNode Convert a pointer object to an existing class object
+func AsSynSizedDifferentialAVLNode(obj any) ISynSizedDifferentialAVLNode {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynSizedDifferentialAVLNode)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditMarkLine Convert a pointer object to an existing class object
+func AsSynEditMarkLine(obj any) ISynEditMarkLine {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditMarkLine)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynSelectedColorMergeResult Convert a pointer object to an existing class object
+func AsSynSelectedColorMergeResult(obj any) ISynSelectedColorMergeResult {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynSelectedColorMergeResult)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsHeTextDrawer Convert a pointer object to an existing class object
+func AsHeTextDrawer(obj any) IheTextDrawer {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TheTextDrawer)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynObjectListItem Convert a pointer object to an existing class object
+func AsSynObjectListItem(obj any) ISynObjectListItem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynObjectListItem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterPartBase Convert a pointer object to an existing class object
+func AsSynGutterPartBase(obj any) ISynGutterPartBase {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterPartBase)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterLineOverview Convert a pointer object to an existing class object
+func AsSynGutterLineOverview(obj any) ISynGutterLineOverview {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterLineOverview)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterCodeFolding Convert a pointer object to an existing class object
+func AsSynGutterCodeFolding(obj any) ISynGutterCodeFolding {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterCodeFolding)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterLineNumber Convert a pointer object to an existing class object
+func AsSynGutterLineNumber(obj any) ISynGutterLineNumber {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterLineNumber)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditStorageMem Convert a pointer object to an existing class object
+func AsSynEditStorageMem(obj any) ISynEditStorageMem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditStorageMem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynManagedStorageMem Convert a pointer object to an existing class object
+func AsSynManagedStorageMem(obj any) ISynManagedStorageMem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynManagedStorageMem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditUndoItem Convert a pointer object to an existing class object
+func AsSynEditUndoItem(obj any) ISynEditUndoItem {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditUndoItem)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynLogicalPhysicalConvertor Convert a pointer object to an existing class object
+func AsSynLogicalPhysicalConvertor(obj any) ISynLogicalPhysicalConvertor {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynLogicalPhysicalConvertor)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditUndoList Convert a pointer object to an existing class object
+func AsSynEditUndoList(obj any) ISynEditUndoList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditUndoList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazSynDisplayView Convert a pointer object to an existing class object
+func AsLazSynDisplayView(obj any) ILazSynDisplayView {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazSynDisplayView)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynDividerDrawConfig Convert a pointer object to an existing class object
+func AsSynDividerDrawConfig(obj any) ISynDividerDrawConfig {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynDividerDrawConfig)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynObjectList Convert a pointer object to an existing class object
+func AsSynObjectList(obj any) ISynObjectList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynObjectList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterPartListBase Convert a pointer object to an existing class object
+func AsSynGutterPartListBase(obj any) ISynGutterPartListBase {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterPartListBase)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEtoBuffer Convert a pointer object to an existing class object
+func AsEtoBuffer(obj any) IEtoBuffer {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEtoBuffer)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterChanges Convert a pointer object to an existing class object
+func AsSynGutterChanges(obj any) ISynGutterChanges {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterChanges)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterMarks Convert a pointer object to an existing class object
+func AsSynGutterMarks(obj any) ISynGutterMarks {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterMarks)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterSeparator Convert a pointer object to an existing class object
+func AsSynGutterSeparator(obj any) ISynGutterSeparator {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterSeparator)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazSynSurface Convert a pointer object to an existing class object
+func AsLazSynSurface(obj any) ILazSynSurface {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazSynSurface)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazSynSurfaceWithText Convert a pointer object to an existing class object
+func AsLazSynSurfaceWithText(obj any) ILazSynSurfaceWithText {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazSynSurfaceWithText)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazSynGutterArea Convert a pointer object to an existing class object
+func AsLazSynGutterArea(obj any) ILazSynGutterArea {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazSynGutterArea)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterLOvMark Convert a pointer object to an existing class object
+func AsSynGutterLOvMark(obj any) ISynGutterLOvMark {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterLOvMark)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterLineOverviewProviderList Convert a pointer object to an existing class object
+func AsSynGutterLineOverviewProviderList(obj any) ISynGutterLineOverviewProviderList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterLineOverviewProviderList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynSizedDifferentialAVLTree Convert a pointer object to an existing class object
+func AsSynSizedDifferentialAVLTree(obj any) ISynSizedDifferentialAVLTree {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynSizedDifferentialAVLTree)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditMarkLineList Convert a pointer object to an existing class object
+func AsSynEditMarkLineList(obj any) ISynEditMarkLineList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditMarkLineList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynEditUndoGroup Convert a pointer object to an existing class object
+func AsSynEditUndoGroup(obj any) ISynEditUndoGroup {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynEditUndoGroup)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynGutterLineOverviewProvider Convert a pointer object to an existing class object
+func AsSynGutterLineOverviewProvider(obj any) ISynGutterLineOverviewProvider {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynGutterLineOverviewProvider)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazSynTextArea Convert a pointer object to an existing class object
+func AsLazSynTextArea(obj any) ILazSynTextArea {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazSynTextArea)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsByteArrayWrap Convert a pointer object to an existing class object
+func AsByteArrayWrap(obj any) IByteArrayWrap {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TByteArrayWrap)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsBeautifierSetIndentCallback Convert a pointer object to an existing class object
+func AsBeautifierSetIndentCallback(obj any) IBeautifierSetIndentCallback {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TBeautifierSetIndentCallback)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsNotifyEventDelegate Convert a pointer object to an existing class object
+func AsNotifyEventDelegate(obj any) INotifyEventDelegate {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TNotifyEventDelegate)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazSynMultiEditPlugin Convert a pointer object to an existing class object
+func AsLazSynMultiEditPlugin(obj any) ILazSynMultiEditPlugin {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazSynMultiEditPlugin)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynAutoComplete Convert a pointer object to an existing class object
+func AsSynAutoComplete(obj any) ISynAutoComplete {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynAutoComplete)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynBaseCompletion Convert a pointer object to an existing class object
+func AsSynBaseCompletion(obj any) ISynBaseCompletion {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynBaseCompletion)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynCompletion Convert a pointer object to an existing class object
+func AsSynCompletion(obj any) ISynCompletion {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynCompletion)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynAnySyn Convert a pointer object to an existing class object
+func AsSynAnySyn(obj any) ISynAnySyn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynAnySyn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynBaseCompletionForm Convert a pointer object to an existing class object
+func AsSynBaseCompletionForm(obj any) ISynBaseCompletionForm {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynBaseCompletionForm)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomSynMacroRecorder Convert a pointer object to an existing class object
+func AsCustomSynMacroRecorder(obj any) ICustomSynMacroRecorder {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomSynMacroRecorder)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynMacroRecorder Convert a pointer object to an existing class object
+func AsSynMacroRecorder(obj any) ISynMacroRecorder {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynMacroRecorder)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynPluginSyncronizedEditBase Convert a pointer object to an existing class object
+func AsSynPluginSyncronizedEditBase(obj any) ISynPluginSyncronizedEditBase {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynPluginSyncronizedEditBase)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynPluginCustomSyncroEdit Convert a pointer object to an existing class object
+func AsSynPluginCustomSyncroEdit(obj any) ISynPluginCustomSyncroEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynPluginCustomSyncroEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynPluginSyncroEdit Convert a pointer object to an existing class object
+func AsSynPluginSyncroEdit(obj any) ISynPluginSyncroEdit {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynPluginSyncroEdit)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynPopupMenu Convert a pointer object to an existing class object
+func AsSynPopupMenu(obj any) ISynPopupMenu {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynPopupMenu)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynCppSyn Convert a pointer object to an existing class object
+func AsSynCppSyn(obj any) ISynCppSyn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynCppSyn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynCssSyn Convert a pointer object to an existing class object
+func AsSynCssSyn(obj any) ISynCssSyn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynCssSyn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynCustomFoldHighlighter Convert a pointer object to an existing class object
+func AsSynCustomFoldHighlighter(obj any) ISynCustomFoldHighlighter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynCustomFoldHighlighter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynCustomXmlHighlighter Convert a pointer object to an existing class object
+func AsSynCustomXmlHighlighter(obj any) ISynCustomXmlHighlighter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynCustomXmlHighlighter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynHTMLSyn Convert a pointer object to an existing class object
+func AsSynHTMLSyn(obj any) ISynHTMLSyn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynHTMLSyn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynJavaSyn Convert a pointer object to an existing class object
+func AsSynJavaSyn(obj any) ISynJavaSyn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynJavaSyn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynJScriptSyn Convert a pointer object to an existing class object
+func AsSynJScriptSyn(obj any) ISynJScriptSyn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynJScriptSyn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynSQLSyn Convert a pointer object to an existing class object
+func AsSynSQLSyn(obj any) ISynSQLSyn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynSQLSyn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynXMLSyn Convert a pointer object to an existing class object
+func AsSynXMLSyn(obj any) ISynXMLSyn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynXMLSyn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynPythonSyn Convert a pointer object to an existing class object
+func AsSynPythonSyn(obj any) ISynPythonSyn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynPythonSyn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsLazSynFoldNodeInfoList Convert a pointer object to an existing class object
+func AsLazSynFoldNodeInfoList(obj any) ILazSynFoldNodeInfoList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TLazSynFoldNodeInfoList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynCustomFoldConfig Convert a pointer object to an existing class object
+func AsSynCustomFoldConfig(obj any) ISynCustomFoldConfig {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynCustomFoldConfig)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynMultiSyn Convert a pointer object to an existing class object
+func AsSynMultiSyn(obj any) ISynMultiSyn {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynMultiSyn)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynHLightMultiVirtualLines Convert a pointer object to an existing class object
+func AsSynHLightMultiVirtualLines(obj any) ISynHLightMultiVirtualLines {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynHLightMultiVirtualLines)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynHighlighterMultiSchemeList Convert a pointer object to an existing class object
+func AsSynHighlighterMultiSchemeList(obj any) ISynHighlighterMultiSchemeList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynHighlighterMultiSchemeList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynHighlighterMultiScheme Convert a pointer object to an existing class object
+func AsSynHighlighterMultiScheme(obj any) ISynHighlighterMultiScheme {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynHighlighterMultiScheme)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynHLightMultiSectionList Convert a pointer object to an existing class object
+func AsSynHLightMultiSectionList(obj any) ISynHLightMultiSectionList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynHLightMultiSectionList)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynMacroEvent Convert a pointer object to an existing class object
+func AsSynMacroEvent(obj any) ISynMacroEvent {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynMacroEvent)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynIgnoredEvent Convert a pointer object to an existing class object
+func AsSynIgnoredEvent(obj any) ISynIgnoredEvent {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynIgnoredEvent)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynBasicEvent Convert a pointer object to an existing class object
+func AsSynBasicEvent(obj any) ISynBasicEvent {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynBasicEvent)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynCharEvent Convert a pointer object to an existing class object
+func AsSynCharEvent(obj any) ISynCharEvent {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynCharEvent)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynStringEvent Convert a pointer object to an existing class object
+func AsSynStringEvent(obj any) ISynStringEvent {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynStringEvent)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynMacroEventWriter Convert a pointer object to an existing class object
+func AsSynMacroEventWriter(obj any) ISynMacroEventWriter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynMacroEventWriter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomSynMacroEventWriter Convert a pointer object to an existing class object
+func AsCustomSynMacroEventWriter(obj any) ICustomSynMacroEventWriter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomSynMacroEventWriter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynMacroEventReader Convert a pointer object to an existing class object
+func AsSynMacroEventReader(obj any) ISynMacroEventReader {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynMacroEventReader)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsCustomSynMacroEventReader Convert a pointer object to an existing class object
+func AsCustomSynMacroEventReader(obj any) ICustomSynMacroEventReader {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TCustomSynMacroEventReader)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynBaseHighlighter Convert a pointer object to an existing class object
+func AsSynBaseHighlighter(obj any) ISynBaseHighlighter {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynBaseHighlighter)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsSynHighlighterRangeList Convert a pointer object to an existing class object
+func AsSynHighlighterRangeList(obj any) ISynHighlighterRangeList {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TSynHighlighterRangeList)
 	base.SetObjectInstance(result, instance)
 	return result
 }

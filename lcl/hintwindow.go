@@ -21,8 +21,8 @@ type IHintWindow interface {
 	CalcHintRect(maxWidth int32, hint string, data uintptr) types.TRect                 // function
 	OffsetHintRect(offset types.TPoint, dy int32, keepWidth bool, keepHeight bool) bool // function
 	IsHintMsg(msg types.TMsg) bool                                                      // function
-	ActivateHintWithString(hint string)                                                 // procedure
-	ActivateHintWithRectString(rect types.TRect, hint string)                           // procedure
+	ActivateHintWithStr(hint string)                                                    // procedure
+	ActivateHintWithRectStr(rect types.TRect, hint string)                              // procedure
 	ActivateWithBounds(rect types.TRect, hint string)                                   // procedure
 	ActivateHintData(rect types.TRect, hint string, data uintptr)                       // procedure
 	InitializeWnd()                                                                     // procedure
@@ -75,14 +75,14 @@ func (m *THintWindow) IsHintMsg(msg types.TMsg) bool {
 	return api.GoBool(r)
 }
 
-func (m *THintWindow) ActivateHintWithString(hint string) {
+func (m *THintWindow) ActivateHintWithStr(hint string) {
 	if !m.IsValid() {
 		return
 	}
 	hintWindowAPI().SysCallN(4, m.Instance(), api.PasStr(hint))
 }
 
-func (m *THintWindow) ActivateHintWithRectString(rect types.TRect, hint string) {
+func (m *THintWindow) ActivateHintWithRectStr(rect types.TRect, hint string) {
 	if !m.IsValid() {
 		return
 	}
@@ -278,8 +278,8 @@ func hintWindowAPI() *imports.Imports {
 			/* 1 */ imports.NewTable("THintWindow_CalcHintRect", 0), // function CalcHintRect
 			/* 2 */ imports.NewTable("THintWindow_OffsetHintRect", 0), // function OffsetHintRect
 			/* 3 */ imports.NewTable("THintWindow_IsHintMsg", 0), // function IsHintMsg
-			/* 4 */ imports.NewTable("THintWindow_ActivateHintWithString", 0), // procedure ActivateHintWithString
-			/* 5 */ imports.NewTable("THintWindow_ActivateHintWithRectString", 0), // procedure ActivateHintWithRectString
+			/* 4 */ imports.NewTable("THintWindow_ActivateHintWithStr", 0), // procedure ActivateHintWithStr
+			/* 5 */ imports.NewTable("THintWindow_ActivateHintWithRectStr", 0), // procedure ActivateHintWithRectStr
 			/* 6 */ imports.NewTable("THintWindow_ActivateWithBounds", 0), // procedure ActivateWithBounds
 			/* 7 */ imports.NewTable("THintWindow_ActivateHintData", 0), // procedure ActivateHintData
 			/* 8 */ imports.NewTable("THintWindow_InitializeWnd", 0), // procedure InitializeWnd

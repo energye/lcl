@@ -20,15 +20,15 @@ type ICustomApplication interface {
 	IComponent
 	// FindOptionIndex
 	//  Extra methods.
-	FindOptionIndex(S string, longopt *bool, startAt int32) int32                                                                       // function
-	GetOptionValueWithString(S string) string                                                                                           // function
-	GetOptionValueWithCharString(C uint16, S string) string                                                                             // function
-	GetOptionValues(C uint16, S string) IStringArrayWrap                                                                                // function
-	HasOptionWithString(S string) bool                                                                                                  // function
-	HasOptionWithCharString(C uint16, S string) bool                                                                                    // function
-	CheckOptionsWithStringStringsX3Bool(shortOptions string, longopts IStrings, opts IStrings, nonOpts IStrings, allErrors bool) string // function
-	CheckOptionsWithStringStringsBool(shortOptions string, longopts IStrings, allErrors bool) string                                    // function
-	CheckOptionsWithStringX2Bool(shortOptions string, longOpts string, allErrors bool) string                                           // function
+	FindOptionIndex(S string, longopt *bool, startAt int32) int32                                                                    // function
+	GetOptionValueWithStr(S string) string                                                                                           // function
+	GetOptionValueWithCharStr(C uint16, S string) string                                                                             // function
+	GetOptionValues(C uint16, S string) IStringArrayWrap                                                                             // function
+	HasOptionWithStr(S string) bool                                                                                                  // function
+	HasOptionWithCharStr(C uint16, S string) bool                                                                                    // function
+	CheckOptionsWithStrStringsX3Bool(shortOptions string, longopts IStrings, opts IStrings, nonOpts IStrings, allErrors bool) string // function
+	CheckOptionsWithStrStringsBool(shortOptions string, longopts IStrings, allErrors bool) string                                    // function
+	CheckOptionsWithStrX2Bool(shortOptions string, longOpts string, allErrors bool) string                                           // function
 	// HandleException
 	//  Some Delphi methods.
 	HandleException(sender IObject)                                  // procedure
@@ -80,7 +80,7 @@ func (m *TCustomApplication) FindOptionIndex(S string, longopt *bool, startAt in
 	return int32(r)
 }
 
-func (m *TCustomApplication) GetOptionValueWithString(S string) string {
+func (m *TCustomApplication) GetOptionValueWithStr(S string) string {
 	if !m.IsValid() {
 		return ""
 	}
@@ -88,7 +88,7 @@ func (m *TCustomApplication) GetOptionValueWithString(S string) string {
 	return api.GoStr(r)
 }
 
-func (m *TCustomApplication) GetOptionValueWithCharString(C uint16, S string) string {
+func (m *TCustomApplication) GetOptionValueWithCharStr(C uint16, S string) string {
 	if !m.IsValid() {
 		return ""
 	}
@@ -104,7 +104,7 @@ func (m *TCustomApplication) GetOptionValues(C uint16, S string) IStringArrayWra
 	return AsStringArrayWrap(r)
 }
 
-func (m *TCustomApplication) HasOptionWithString(S string) bool {
+func (m *TCustomApplication) HasOptionWithStr(S string) bool {
 	if !m.IsValid() {
 		return false
 	}
@@ -112,7 +112,7 @@ func (m *TCustomApplication) HasOptionWithString(S string) bool {
 	return api.GoBool(r)
 }
 
-func (m *TCustomApplication) HasOptionWithCharString(C uint16, S string) bool {
+func (m *TCustomApplication) HasOptionWithCharStr(C uint16, S string) bool {
 	if !m.IsValid() {
 		return false
 	}
@@ -120,7 +120,7 @@ func (m *TCustomApplication) HasOptionWithCharString(C uint16, S string) bool {
 	return api.GoBool(r)
 }
 
-func (m *TCustomApplication) CheckOptionsWithStringStringsX3Bool(shortOptions string, longopts IStrings, opts IStrings, nonOpts IStrings, allErrors bool) string {
+func (m *TCustomApplication) CheckOptionsWithStrStringsX3Bool(shortOptions string, longopts IStrings, opts IStrings, nonOpts IStrings, allErrors bool) string {
 	if !m.IsValid() {
 		return ""
 	}
@@ -128,7 +128,7 @@ func (m *TCustomApplication) CheckOptionsWithStringStringsX3Bool(shortOptions st
 	return api.GoStr(r)
 }
 
-func (m *TCustomApplication) CheckOptionsWithStringStringsBool(shortOptions string, longopts IStrings, allErrors bool) string {
+func (m *TCustomApplication) CheckOptionsWithStrStringsBool(shortOptions string, longopts IStrings, allErrors bool) string {
 	if !m.IsValid() {
 		return ""
 	}
@@ -136,7 +136,7 @@ func (m *TCustomApplication) CheckOptionsWithStringStringsBool(shortOptions stri
 	return api.GoStr(r)
 }
 
-func (m *TCustomApplication) CheckOptionsWithStringX2Bool(shortOptions string, longOpts string, allErrors bool) string {
+func (m *TCustomApplication) CheckOptionsWithStrX2Bool(shortOptions string, longOpts string, allErrors bool) string {
 	if !m.IsValid() {
 		return ""
 	}
@@ -398,14 +398,14 @@ func customApplicationAPI() *imports.Imports {
 		customApplicationImport.Table = []*imports.Table{
 			/* 0 */ imports.NewTable("TCustomApplication_Create", 0), // constructor NewCustomApplication
 			/* 1 */ imports.NewTable("TCustomApplication_FindOptionIndex", 0), // function FindOptionIndex
-			/* 2 */ imports.NewTable("TCustomApplication_GetOptionValueWithString", 0), // function GetOptionValueWithString
-			/* 3 */ imports.NewTable("TCustomApplication_GetOptionValueWithCharString", 0), // function GetOptionValueWithCharString
+			/* 2 */ imports.NewTable("TCustomApplication_GetOptionValueWithStr", 0), // function GetOptionValueWithStr
+			/* 3 */ imports.NewTable("TCustomApplication_GetOptionValueWithCharStr", 0), // function GetOptionValueWithCharStr
 			/* 4 */ imports.NewTable("TCustomApplication_GetOptionValues", 0), // function GetOptionValues
-			/* 5 */ imports.NewTable("TCustomApplication_HasOptionWithString", 0), // function HasOptionWithString
-			/* 6 */ imports.NewTable("TCustomApplication_HasOptionWithCharString", 0), // function HasOptionWithCharString
-			/* 7 */ imports.NewTable("TCustomApplication_CheckOptionsWithStringStringsX3Bool", 0), // function CheckOptionsWithStringStringsX3Bool
-			/* 8 */ imports.NewTable("TCustomApplication_CheckOptionsWithStringStringsBool", 0), // function CheckOptionsWithStringStringsBool
-			/* 9 */ imports.NewTable("TCustomApplication_CheckOptionsWithStringX2Bool", 0), // function CheckOptionsWithStringX2Bool
+			/* 5 */ imports.NewTable("TCustomApplication_HasOptionWithStr", 0), // function HasOptionWithStr
+			/* 6 */ imports.NewTable("TCustomApplication_HasOptionWithCharStr", 0), // function HasOptionWithCharStr
+			/* 7 */ imports.NewTable("TCustomApplication_CheckOptionsWithStrStringsX3Bool", 0), // function CheckOptionsWithStrStringsX3Bool
+			/* 8 */ imports.NewTable("TCustomApplication_CheckOptionsWithStrStringsBool", 0), // function CheckOptionsWithStrStringsBool
+			/* 9 */ imports.NewTable("TCustomApplication_CheckOptionsWithStrX2Bool", 0), // function CheckOptionsWithStrX2Bool
 			/* 10 */ imports.NewTable("TCustomApplication_HandleException", 0), // procedure HandleException
 			/* 11 */ imports.NewTable("TCustomApplication_Initialize", 0), // procedure Initialize
 			/* 12 */ imports.NewTable("TCustomApplication_Run", 0), // procedure Run

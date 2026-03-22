@@ -36,9 +36,9 @@ type ILazAccessibleObject interface {
 	GetChildAccessibleObjectAtPos(pos types.TPoint) ILazAccessibleObject        // function
 	GetEnumerator() ILazAccessibleObjectEnumerator                              // function
 	InitializeHandle()                                                          // procedure
-	SetAccessibleNameWithString(name string)                                    // procedure
-	SetAccessibleDescriptionWithString(description string)                      // procedure
-	SetAccessibleValueWithString(value string)                                  // procedure
+	SetAccessibleNameWithStr(name string)                                       // procedure
+	SetAccessibleDescriptionWithStr(description string)                         // procedure
+	SetAccessibleValueWithStr(value string)                                     // procedure
 	SetAccessibleRoleWithLazAccessibilityRole(role types.TLazAccessibilityRole) // procedure
 	InsertChildAccessibleObject(object ILazAccessibleObject)                    // procedure
 	ClearChildAccessibleObjects()                                               // procedure
@@ -46,11 +46,11 @@ type ILazAccessibleObject interface {
 	// AccessibleName
 	//  Primary information
 	AccessibleName() string                                                    // property AccessibleName Getter
-	SetAccessibleNameToString(value string)                                    // property AccessibleName Setter
+	SetAccessibleNameToStr(value string)                                       // property AccessibleName Setter
 	AccessibleDescription() string                                             // property AccessibleDescription Getter
-	SetAccessibleDescriptionToString(value string)                             // property AccessibleDescription Setter
+	SetAccessibleDescriptionToStr(value string)                                // property AccessibleDescription Setter
 	AccessibleValue() string                                                   // property AccessibleValue Getter
-	SetAccessibleValueToString(value string)                                   // property AccessibleValue Setter
+	SetAccessibleValueToStr(value string)                                      // property AccessibleValue Setter
 	AccessibleRole() types.TLazAccessibilityRole                               // property AccessibleRole Getter
 	SetAccessibleRoleToLazAccessibilityRole(value types.TLazAccessibilityRole) // property AccessibleRole Setter
 	Position() types.TPoint                                                    // property Position Getter
@@ -160,21 +160,21 @@ func (m *TLazAccessibleObject) InitializeHandle() {
 	lazAccessibleObjectAPI().SysCallN(12, m.Instance())
 }
 
-func (m *TLazAccessibleObject) SetAccessibleNameWithString(name string) {
+func (m *TLazAccessibleObject) SetAccessibleNameWithStr(name string) {
 	if !m.IsValid() {
 		return
 	}
 	lazAccessibleObjectAPI().SysCallN(13, m.Instance(), api.PasStr(name))
 }
 
-func (m *TLazAccessibleObject) SetAccessibleDescriptionWithString(description string) {
+func (m *TLazAccessibleObject) SetAccessibleDescriptionWithStr(description string) {
 	if !m.IsValid() {
 		return
 	}
 	lazAccessibleObjectAPI().SysCallN(14, m.Instance(), api.PasStr(description))
 }
 
-func (m *TLazAccessibleObject) SetAccessibleValueWithString(value string) {
+func (m *TLazAccessibleObject) SetAccessibleValueWithStr(value string) {
 	if !m.IsValid() {
 		return
 	}
@@ -217,7 +217,7 @@ func (m *TLazAccessibleObject) AccessibleName() string {
 	return api.GoStr(r)
 }
 
-func (m *TLazAccessibleObject) SetAccessibleNameToString(value string) {
+func (m *TLazAccessibleObject) SetAccessibleNameToStr(value string) {
 	if !m.IsValid() {
 		return
 	}
@@ -232,7 +232,7 @@ func (m *TLazAccessibleObject) AccessibleDescription() string {
 	return api.GoStr(r)
 }
 
-func (m *TLazAccessibleObject) SetAccessibleDescriptionToString(value string) {
+func (m *TLazAccessibleObject) SetAccessibleDescriptionToStr(value string) {
 	if !m.IsValid() {
 		return
 	}
@@ -247,7 +247,7 @@ func (m *TLazAccessibleObject) AccessibleValue() string {
 	return api.GoStr(r)
 }
 
-func (m *TLazAccessibleObject) SetAccessibleValueToString(value string) {
+func (m *TLazAccessibleObject) SetAccessibleValueToStr(value string) {
 	if !m.IsValid() {
 		return
 	}
@@ -342,9 +342,9 @@ func lazAccessibleObjectAPI() *imports.Imports {
 			/* 10 */ imports.NewTable("TLazAccessibleObject_GetChildAccessibleObjectAtPos", 0), // function GetChildAccessibleObjectAtPos
 			/* 11 */ imports.NewTable("TLazAccessibleObject_GetEnumerator", 0), // function GetEnumerator
 			/* 12 */ imports.NewTable("TLazAccessibleObject_InitializeHandle", 0), // procedure InitializeHandle
-			/* 13 */ imports.NewTable("TLazAccessibleObject_SetAccessibleNameWithString", 0), // procedure SetAccessibleNameWithString
-			/* 14 */ imports.NewTable("TLazAccessibleObject_SetAccessibleDescriptionWithString", 0), // procedure SetAccessibleDescriptionWithString
-			/* 15 */ imports.NewTable("TLazAccessibleObject_SetAccessibleValueWithString", 0), // procedure SetAccessibleValueWithString
+			/* 13 */ imports.NewTable("TLazAccessibleObject_SetAccessibleNameWithStr", 0), // procedure SetAccessibleNameWithStr
+			/* 14 */ imports.NewTable("TLazAccessibleObject_SetAccessibleDescriptionWithStr", 0), // procedure SetAccessibleDescriptionWithStr
+			/* 15 */ imports.NewTable("TLazAccessibleObject_SetAccessibleValueWithStr", 0), // procedure SetAccessibleValueWithStr
 			/* 16 */ imports.NewTable("TLazAccessibleObject_SetAccessibleRoleWithLazAccessibilityRole", 0), // procedure SetAccessibleRoleWithLazAccessibilityRole
 			/* 17 */ imports.NewTable("TLazAccessibleObject_InsertChildAccessibleObject", 0), // procedure InsertChildAccessibleObject
 			/* 18 */ imports.NewTable("TLazAccessibleObject_ClearChildAccessibleObjects", 0), // procedure ClearChildAccessibleObjects

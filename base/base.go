@@ -9,9 +9,10 @@
 package base
 
 import (
+	"sync"
+
 	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
-	"sync"
 )
 
 // Once 别名

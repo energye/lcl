@@ -9,9 +9,10 @@
 package api
 
 import (
-	"github.com/energye/lcl/api/imports"
 	"sync"
 	"unsafe"
+
+	"github.com/energye/lcl/api/imports"
 
 	"github.com/energye/lcl/types"
 )
@@ -566,8 +567,8 @@ func libPreDefAPI() *imports.Imports {
 		libPreDefImport = NewDefaultImports()
 		libPreDefImport.Table = []*imports.Table{
 			/* iota */ imports.NewTable("DSysLocale", 0),
-			/* iota */ imports.NewTable("AddLazarusResources", 0),
-			/* iota */ imports.NewTable("AddLazarusResources2", 0),
+			///* iota */ imports.NewTable("AddLazarusResources", 0),
+			///* iota */ imports.NewTable("AddLazarusResources2", 0),
 			/* iota */ imports.NewTable("GetLCLVersion", 0),
 			/* iota */ imports.NewTable("GetLCLWidget", 0),
 			/* iota */ imports.NewTable("Application_Instance", 0),

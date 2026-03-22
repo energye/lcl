@@ -24,12 +24,14 @@ type TBandPaintEvent func(sender IObject, control IControl, canvas ICanvas, rect
 type TCanOffsetEvent func(sender IObject, newOffset *int32, accept *bool)
 type TCanResizeEvent func(sender IObject, newSize *int32, accept *bool)
 type TCellProcessEvent func(sender IObject, col int32, row int32, processType types.TCellProcessType, value *string)
+type TChangeUpdatingEvent func(sender IObject, anUpdating bool)
 type TCheckGroupClicked func(sender IObject, index int32)
 type TCheckItemChange func(sender IObject, index int32)
 type TCheckItemEvent func(item IObject) bool
 type TClipboardRequestEvent func(requestedFormatID types.TClipboardFormat, data IStream)
 type TCloseEvent func(sender IObject, closeAction *types.TCloseAction)
 type TCloseQueryEvent func(sender IObject, canClose *bool)
+type TCodeCompletionEvent func(value *string, sourceValue string, sourceStart *types.TPoint, sourceEnd *types.TPoint, keyChar string, shift types.TShiftState)
 type TColumnChangeEvent func(sender IBaseVirtualTree, column int32, visible bool)
 type TConstrainedResizeEvent func(sender IObject, minWidth *types.TConstraintSize, minHeight *types.TConstraintSize, maxWidth *types.TConstraintSize, maxHeight *types.TConstraintSize)
 type TContextPopupEvent func(sender IObject, mousePos types.TPoint, handled *bool)
@@ -75,6 +77,7 @@ type TGetEditEvent func(sender IObject, col int32, row int32, value *string)
 type TGetHandleEvent func(handle *types.HWND)
 type TGetPickListEvent func(sender IObject, keyName string, values IStrings)
 type TGetSiteInfoEvent func(sender IObject, dockClient IControl, influenceRect *types.TRect, mousePos types.TPoint, canDock *bool)
+type TGutterClickEvent func(sender IObject, X int32, Y int32, line int32, mark ISynEditMark)
 type THdrEvent func(sender IObject, isColumn bool, index int32)
 type THeaderSizingEvent func(sender IObject, isColumn bool, index int32, size int32)
 type THelpEvent func(command uint16, data uintptr, callHelp *bool) bool
@@ -82,6 +85,7 @@ type THintEvent func(hintStr *string, canShow *bool)
 type TIdleEvent func(sender IObject, done *bool)
 type TImageIndexEvent func(str string, data IObject, isEnabled *bool) int32
 type TImagePaintBackgroundEvent func(sender IObject, canvas ICanvas, rect types.TRect)
+type TInvalidateLines func(firstLine int32, lastLine int32)
 type TKeyEvent func(sender IObject, key *uint16, shift types.TShiftState)
 type TKeyPressEvent func(sender IObject, key *uint16)
 type TLBGetColorsEvent func(sender ICustomColorListBox, items IStrings)
@@ -107,8 +111,8 @@ type TLVEditedEvent func(sender IObject, item IListItem, value *string)
 type TLVEditingEvent func(sender IObject, item IListItem, allowEdit *bool)
 type TLVInsertEvent func(sender IObject, item IListItem)
 type TLVSelectItemEvent func(sender IObject, item IListItem, selected bool)
-type TLinkActionEvent func(sender IObject, linkAction types.TLinkAction, info TLinkMouseInfo, linkStart int32, linkLen int32)
 type TListCompareEvent func(list IListControlItems, item1 IListControlItem, item2 IListControlItem) int32
+type TMaxLeftCharFunc func() int32
 type TMeasureItemEvent func(control IWinControl, index int32, height *int32)
 type TMenuChangeEvent func(sender IObject, source IMenuItem, rebuild bool)
 type TMenuDrawItemEvent func(sender IObject, canvas ICanvas, rect types.TRect, state types.TOwnerDrawState)
@@ -121,6 +125,8 @@ type TMouseWheelUpDownEvent func(sender IObject, shift types.TShiftState, mouseP
 type TNotebookTabDragDropEvent func(sender IObject, source IObject, oldIndex int32, newIndex int32, copyDrag bool, done *bool)
 type TNotebookTabDragOverEvent func(sender IObject, source IObject, oldIndex int32, newIndex int32, copyDrag bool, accept *bool)
 type TNotifyEvent func(sender IObject)
+type TOnBeforeExecuteEvent func(sender ISynBaseCompletion, currentString *string, position *int32, anX *int32, anY *int32, anResult *types.TOnBeforeExeucteFlags)
+type TOnCheckMarker func(sender IObject, startPos *int32, markerLen *int32, markerText *string)
 type TOnCompareCells func(sender IObject, col int32, row int32, bCol int32, bRow int32, result *int32)
 type TOnDrawCell func(sender IObject, col int32, row int32, rect types.TRect, state types.TGridDrawState)
 type TOnPrepareCanvasEvent func(sender IObject, col int32, row int32, state types.TGridDrawState)
@@ -129,9 +135,12 @@ type TOnSelectEvent func(sender IObject, col int32, row int32)
 type TOnUserInputEvent func(sender IObject, msg uint32)
 type TOnValidateEvent func(sender IObject, col int32, row int32, keyName string, keyValue string)
 type TOpenGlCtrlMakeCurrentEvent func(sender IObject, allow *bool)
-type TPrintActionEvent func(sender IObject, printAction types.TPrintAction, printCanvas ICanvas, currentPage int32, abortPrint *bool)
+type TPaintEvent func(sender IObject, canvas ICanvas)
+type TPlaceMarkEvent func(sender IObject, mark *ISynEditMark)
+type TProcessCommandEvent func(sender IObject, command *types.TSynEditorCommand, char *string, data uintptr)
 type TProgressEvent func(sender IObject, stage types.TFPImgProgressStage, percentDone byte, redrawNow bool, R types.TRect, msg string, continue_ *bool)
 type TQueryEndSessionEvent func(cancel *bool)
+type TReplaceTextEvent func(sender IObject, search string, replace string, line int32, column int32, replaceAction *types.TSynReplaceAction)
 type TSBCreatePanelClassEvent func(sender IStatusBar, panelClass *types.TStatusPanelClass)
 type TScrollEvent func(sender IObject, scrollCode types.TScrollCode, scrollPos *int32)
 type TSectionDragEvent func(sender IObject, fromSection IHeaderSection, toSection IHeaderSection, allowDrag *bool)
@@ -142,8 +151,49 @@ type TSetEditEvent func(sender IObject, col int32, row int32, value string)
 type TShapePointsEvent func(sender IObject, points *IPointArrayWrap, winding *bool)
 type TShortcutEvent func(msg *types.TLMKey, handled *bool)
 type TShowHintEvent func(hintStr *string, canShow *bool, hintInfo *THintInfo)
+type TSpecialLineMarkupEvent func(sender IObject, line int32, special *bool, markup ISynSelectedColor)
 type TStartDockEvent func(sender IObject, dragObject *IDragDockObject)
 type TStartDragEvent func(sender IObject, dragObject *IDragObject)
+type TSynBaseCompletionMeasureItem func(key string, canvas ICanvas, selected bool, index int32) types.TPoint
+type TSynBaseCompletionPaintItem func(key string, canvas ICanvas, X int32, Y int32, selected bool, index int32) bool
+type TSynBaseCompletionSearchPosition func(position *int32)
+type TSynBaseHighlighterEvent func()
+type TSynBaseHighlighterIEsbRHrlCharEvent func(lines ISynEditStringsBase) ISynHighlighterRangeList
+type TSynBaseHighlighterIHrlCharEvent func(rangeList ISynHighlighterRangeList)
+type TSynBaseHighlighterIIdeCharEvent func(chars types.TSynIdentChars)
+type TSynBaseHighlighterIIntBoolRIntEvent func(startIndex int32, endIndex int32, forceEndIndex bool) int32
+type TSynBaseHighlighterIIntEvent func(value int32)
+type TSynBaseHighlighterIIntRBoolEvent func(value int32) bool
+type TSynBaseHighlighterIIntRDdcEvent func(index int32) ISynDividerDrawConfig
+type TSynBaseHighlighterIIntRDdcsEvent func(index int32) TSynDividerDrawConfigSetting
+type TSynBaseHighlighterIIntRHAttrEvent func(index int32) ISynHighlighterAttributes
+type TSynBaseHighlighterIPtrEvent func(value uintptr)
+type TSynBaseHighlighterIStrEvent func(value string)
+type TSynBaseHighlighterIStrIntEvent func(value string, lineNumber int32)
+type TSynBaseHighlighterIStrRBoolEvent func(value string) bool
+type TSynBaseHighlighterIStrsEvent func(strings IStrings)
+type TSynBaseHighlighterOStrIntEvent func(outTokenStart *string, outTokenLength *int32)
+type TSynBaseHighlighterRBoolEvent func() bool
+type TSynBaseHighlighterRHAttrEvent func() ISynHighlighterAttributes
+type TSynBaseHighlighterRIdeCharEvent func() types.TSynIdentChars
+type TSynBaseHighlighterRIntEvent func() int32
+type TSynBaseHighlighterRPtrEvent func() uintptr
+type TSynBaseHighlighterRStrEvent func() string
+type TSynBeautifierGetIndentEvent func(sender IObject, editor IObject, logCaret types.TPoint, oldLogCaret types.TPoint, firstLinePos int32, lastLinePos int32, reason types.TSynEditorCommand, setIndentProc IBeautifierSetIndentCallback) bool
+type TSynCopyPasteEvent func(sender IObject, text *string, mode *types.TSynSelectionMode, logStartPos types.TPoint, anAction *types.TSynCopyPasteAction)
+type TSynDropFilesEvent func(sender IObject, X int32, Y int32, files IStrings)
+type TSynEditGetGutterLineTextEvent func(sender ISynGutterLineNumber, line int32, outText *string, lineInfo TSynEditGutterLineInfo)
+type TSynGetCaretUndoProc func() ISynEditUndoItem
+type TSynMacroReaderEventCommandEvent func() types.TSynEditorCommand
+type TSynMacroReaderGetParamAsIntEvent func(index int32) int32
+type TSynMacroReaderGetParamAsStringEvent func(index int32) string
+type TSynMacroReaderGetParamTypeEvent func(index int32) types.TSynEventParamType
+type TSynMacroReaderParamCountEvent func() int32
+type TSynMacroWriteCommandEvent func(cmd types.TSynEditorCommand)
+type TSynMacroWriteEventIntEvent func(cmd int32)
+type TSynMacroWriteEventStrEvent func(param string)
+type TSynMouseLinkEvent func(sender IObject, X int32, Y int32, allowMouseLink *bool)
+type TSynUserCommandEvent func(sender ICustomSynMacroRecorder, cmd types.TSynEditorCommand, event *ISynMacroEvent)
 type TSysLinkEvent func(sender IObject, link string, linkType types.TSysLinkType)
 type TTVAdvancedCustomDrawEvent func(sender ICustomTreeView, rect types.TRect, stage types.TCustomDrawStage, defaultDraw *bool)
 type TTVAdvancedCustomDrawItemEvent func(sender ICustomTreeView, node ITreeNode, state types.TCustomDrawState, stage types.TCustomDrawStage, paintImages *bool, defaultDraw *bool)
@@ -285,4 +335,5 @@ type TVTStructureChangeEvent func(sender IBaseVirtualTree, node types.PVirtualNo
 type TVTTreeExportEvent func(sender IBaseVirtualTree, exportType types.TVTExportType)
 type TVTUpdatingEvent func(sender IBaseVirtualTree, state types.TVTUpdateState)
 type TValidateEntryEvent func(sender IObject, col int32, row int32, oldValue string, newValue *string)
+type TValidateEvent func(sender IObject, keyChar string, shift types.TShiftState)
 type TWndMethod func(theMessage *types.TLMessage)

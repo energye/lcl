@@ -49,14 +49,35 @@ const (
 // THelpContext ENUM
 type THelpContext = int32
 
+type TGraphicsFillStyle = int32
+
+const (
+	FsSurface TGraphicsFillStyle = iota // fill till the color (it fills all except this color)
+	FsBorder                            // fill this color (it fills only connected pixels of this color)
+)
+
 // TFillStyle ENUM
 type TFillStyle = TGraphicsFillStyle
+
+type TPredefinedClipboardFormat = int32
+
+const (
+	PcfText TPredefinedClipboardFormat = iota
+	PcfBitmap
+	PcfPixmap
+	PcfIcon
+	PcfPicture
+	PcfMetaFilePict
+	PcfObject
+	PcfComponent
+	PcfCustomData
+)
 
 // TMenuAutoFlag maAutomatic..maManual
 type TMenuAutoFlag = TMenuItemAutoFlag
 
 // TEventLogTypes SET TEventType
-type TEventLogTypes = TSet
+//type TEventLogTypes = TSet
 
 // TSearchType ENUM
 type TSearchType = int32
@@ -70,7 +91,7 @@ const (
 type TSearchTypes = TSet
 
 // TIniFileOptions SET TIniFileOption
-type TIniFileOptions = TSet
+//type TIniFileOptions = TSet
 
 // TAutoScrollInterval ENUM
 //
@@ -180,3 +201,24 @@ type TSynIdentChars = TSet
 type TSynEditorCommand = Word
 
 type TSynEditCaretType = TSynCaretType
+
+// TThreadPriority ENUM
+type TThreadPriority = int32
+
+const (
+	TpIdle TThreadPriority = iota
+	TpLowest
+	TpLower
+	TpNormal
+	TpHigher
+	TpHighest
+	TpTimeCritical
+)
+
+type TDockImageOperation = int32
+
+const (
+	DisShow TDockImageOperation = iota
+	DisMove
+	DisHide
+)

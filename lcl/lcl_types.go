@@ -40,16 +40,6 @@ type TFontData struct {
 	Orientation int32                 // Integer
 }
 
-type TFontParams struct {
-	Name       string            // String
-	Size       int32             // Integer
-	Color      types.TColor      // TColor
-	Style      types.TFontStyles // TFontStyles
-	HasBkClr   types.LongBool    // Boolean
-	BkColor    types.TColor      // TColor
-	VScriptPos types.TVScriptPos // TVScriptPos
-}
-
 type TFPColor struct {
 	Red   uint16 // word
 	Green uint16 // word
@@ -94,15 +84,41 @@ type THitInfo struct {
 	HitPoint     types.TPoint        // TPoint
 }
 
+type TLazSynDisplayRtlInfo struct {
+	IsRtl     types.LongBool // Boolean
+	PhysLeft  int32          // integer
+	PhysRight int32          // integer
+	LogFirst  int32          // integer
+	LogLast   int32          // integer
+}
+
+type TLazSynDisplayTokenBound struct {
+	Physical int32 // Integer
+	Logical  int32 // Integer
+	Offset   int32 // Integer
+}
+
+type TLazSynDisplayTokenInfo struct {
+	TokenStart  uintptr                   // PChar
+	TokenLength int32                     // integer
+	TokenAttr   ISynHighlighterAttributes // TSynHighlighterAttributes
+}
+
 type TLCLTextMetric struct {
 	Ascender  int32 // Integer
 	Descender int32 // Integer
 	Height    int32 // Integer
 }
 
-type TLinkMouseInfo struct {
-	Button  types.TMouseButton // TMouseButton
-	LinkRef string             // String
+type TLineRange struct {
+	Top    types.TLineIdx // TLineIdx
+	Bottom types.TLineIdx // TLineIdx
+}
+
+type TLogCaretPoint struct {
+	X    int32 // Integer
+	Y    int32 // Integer
+	Offs int32 // Integer
 }
 
 type TMethod struct {
@@ -110,47 +126,14 @@ type TMethod struct {
 	Data uintptr // Pointer
 }
 
-type TParaMetric struct {
-	FirstLine   float64 // Double
-	TailIndent  float64 // Double
-	HeadIndent  float64 // Double
-	SpaceBefore float64 // Double
-	SpaceAfter  float64 // Double
-	LineSpacing float64 // Double
-}
-
-type TParaNumbering struct {
-	Style       types.TParaNumStyle // TParaNumStyle
-	Indent      float64             // Double
-	CustomChar  uint16              // WideChar
-	NumberStart int32               // Integer
-	SepChar     uint16              // WideChar
-	ForceNewNum types.LongBool      // Boolean
-}
-
-type TParaRange struct {
-	Start      int32 // Integer
-	LengthNoBr int32 // Integer
-	Length     int32 // Integer
-}
-
-type TPrintParams struct {
-	JobTitle  string       // String
-	Margins   TRectOffsets // TRectOffsets
-	SelStart  int32        // Integer
-	SelLength int32        // Integer
+type TPaperRect struct {
+	PhysicalRect types.TRect // TRect
+	WorkRect     types.TRect // TRect
 }
 
 type TRawImagePosition struct {
 	Byte uintptr // PtrUInt
 	Bit  uint32  // cardinal
-}
-
-type TRectOffsets struct {
-	Left   float64 // Double
-	Top    float64 // Double
-	Right  float64 // Double
-	Bottom float64 // Double
 }
 
 type TRegDataInfo struct {
@@ -188,15 +171,64 @@ type TStatStg struct {
 	Reserved          types.DWORD // DWORD
 }
 
-type TTabStop struct {
-	Offset float64             // Double
-	Align  types.TTabAlignment // TTabAlignment
+type TSynDividerDrawConfigSetting struct {
+	Color types.TColor // TColor
 }
 
-type TTabStopList struct {
-	Count    int32   // Integer
-	Tabs     uintptr // array of TTabStop
-	TabsSize int32   // SizeOf: array of TTabStop
+type TSynEditGutterLineInfo struct {
+	ShowDot   types.LongBool // boolean
+	ViewLine  int32          // Integer
+	LineRange TLineRange     // TLineRange
+}
+
+type TSynEditMouseActionInfo struct {
+	NewCaret      ISynEditCaret             // TSynEditCaret
+	Button        types.TSynMouseButton     // TSynMouseButton
+	Shift         types.TShiftState         // TShiftState
+	MouseX        int32                     // Integer
+	MouseY        int32                     // Integer
+	WheelDelta    int32                     // Integer
+	CCount        types.TSynMAClickCount    // TSynMAClickCount
+	Dir           types.TSynMAClickDir      // TSynMAClickDir
+	CaretDone     types.LongBool            // Boolean
+	IgnoreUpClick types.LongBool            // Boolean
+	ActionResult  TSynEditMouseActionResult // TSynEditMouseActionResult
+}
+
+type TSynEditMouseActionResult struct {
+	DoPopUpEvent types.LongBool // Boolean
+	PopUpEventX  int32          // Integer
+	PopUpEventY  int32          // Integer
+	PopUpMenu    IPopupMenu     // TPopupMenu
+}
+
+type TSynFoldBlockFilter struct {
+	FoldGroup int32                          // integer
+	Flags     types.TSynFoldBlockFilterFlags // TSynFoldBlockFilterFlags
+}
+
+type TSynFoldNodeInfo struct {
+	LineIndex          int32                 // Integer
+	NodeIndex          int32                 // Integer
+	AllNodeIndex       int32                 // Integer
+	LogXStart          int32                 // Integer
+	LogXEnd            int32                 // Integer
+	FoldLvlStart       int32                 // Integer
+	FoldLvlEnd         int32                 // Integer
+	NestLvlStart       int32                 // Integer
+	NestLvlEnd         int32                 // Integer
+	FoldAction         types.TSynFoldActions // TSynFoldActions
+	FoldType           uintptr               // Pointer
+	FoldTypeCompatible uintptr               // Pointer
+	FoldGroup          int32                 // Integer
+}
+
+type TSynHLightMultiVirtualSection struct {
+	StartPos      types.TPoint // TPoint
+	EndPos        types.TPoint // TPoint
+	TokenStartPos int32        // Integer
+	TokenEndPos   int32        // Integer
+	VirtualLine   int32        // Integer
 }
 
 type TTextStyle struct {
@@ -217,6 +249,15 @@ type TThemedElementDetails struct {
 	Element types.TThemedElement // TThemedElement
 	Part    int32                // Integer
 	State   int32                // Integer
+}
+
+type TViewedXYInfo struct {
+	CorrectedViewedXY types.TRect    // TPhysPoint
+	PhysXY            types.TRect    // TPhysPoint
+	LogicalXY         TLogCaretPoint // TLogCaretPoint
+	PhysBoundOffset   int32          // Integer
+	LogEOLPos         int32          // Integer
+	FirstViewedX      types.IntPos   // IntPos
 }
 
 type TVTHeaderHitInfo struct {
@@ -323,45 +364,6 @@ func (m *tFontData) ToGo() TFontData {
 		Quality:     m.Quality,
 		Name:        api.GoStr(m.Name),
 		Orientation: m.Orientation,
-	}
-}
-func (m *TFontParams) ToPas() *tFontParams {
-	if m == nil {
-		return nil
-	}
-	return &tFontParams{
-		Name:       api.PasStr(m.Name),
-		Size:       m.Size,
-		Color:      m.Color,
-		Style:      m.Style,
-		HasBkClr:   m.HasBkClr,
-		BkColor:    m.BkColor,
-		VScriptPos: m.VScriptPos,
-	}
-}
-
-type tFontParams struct {
-	Name       uintptr           // String
-	Size       int32             // Integer
-	Color      types.TColor      // TColor
-	Style      types.TFontStyles // TFontStyles
-	HasBkClr   types.LongBool    // Boolean
-	BkColor    types.TColor      // TColor
-	VScriptPos types.TVScriptPos // TVScriptPos
-}
-
-func (m *tFontParams) ToGo() TFontParams {
-	if m == nil {
-		return TFontParams{}
-	}
-	return TFontParams{
-		Name:       api.GoStr(m.Name),
-		Size:       m.Size,
-		Color:      m.Color,
-		Style:      m.Style,
-		HasBkClr:   m.HasBkClr,
-		BkColor:    m.BkColor,
-		VScriptPos: m.VScriptPos,
 	}
 }
 func (m *THeaderPaintInfo) ToPas() *tHeaderPaintInfo {
@@ -472,58 +474,31 @@ func (m *tHintInfo) ToGo() THintInfo {
 		HintData:        m.HintData,
 	}
 }
-func (m *TLinkMouseInfo) ToPas() *tLinkMouseInfo {
+func (m *TLazSynDisplayTokenInfo) ToPas() *tLazSynDisplayTokenInfo {
 	if m == nil {
 		return nil
 	}
-	return &tLinkMouseInfo{
-		Button:  m.Button,
-		LinkRef: api.PasStr(m.LinkRef),
+	return &tLazSynDisplayTokenInfo{
+		TokenStart:  m.TokenStart,
+		TokenLength: m.TokenLength,
+		TokenAttr:   base.GetObjectUintptr(m.TokenAttr),
 	}
 }
 
-type tLinkMouseInfo struct {
-	Button  types.TMouseButton // TMouseButton
-	LinkRef uintptr            // String
+type tLazSynDisplayTokenInfo struct {
+	TokenStart  uintptr // PChar
+	TokenLength int32   // integer
+	TokenAttr   uintptr // TSynHighlighterAttributes
 }
 
-func (m *tLinkMouseInfo) ToGo() TLinkMouseInfo {
+func (m *tLazSynDisplayTokenInfo) ToGo() TLazSynDisplayTokenInfo {
 	if m == nil {
-		return TLinkMouseInfo{}
+		return TLazSynDisplayTokenInfo{}
 	}
-	return TLinkMouseInfo{
-		Button:  m.Button,
-		LinkRef: api.GoStr(m.LinkRef),
-	}
-}
-func (m *TPrintParams) ToPas() *tPrintParams {
-	if m == nil {
-		return nil
-	}
-	return &tPrintParams{
-		JobTitle:  api.PasStr(m.JobTitle),
-		Margins:   m.Margins,
-		SelStart:  m.SelStart,
-		SelLength: m.SelLength,
-	}
-}
-
-type tPrintParams struct {
-	JobTitle  uintptr      // String
-	Margins   TRectOffsets // TRectOffsets
-	SelStart  int32        // Integer
-	SelLength int32        // Integer
-}
-
-func (m *tPrintParams) ToGo() TPrintParams {
-	if m == nil {
-		return TPrintParams{}
-	}
-	return TPrintParams{
-		JobTitle:  api.GoStr(m.JobTitle),
-		Margins:   m.Margins,
-		SelStart:  m.SelStart,
-		SelLength: m.SelLength,
+	return TLazSynDisplayTokenInfo{
+		TokenStart:  m.TokenStart,
+		TokenLength: m.TokenLength,
+		TokenAttr:   AsSynHighlighterAttributes(m.TokenAttr),
 	}
 }
 func (m *TStatStg) ToPas() *tStatStg {
@@ -577,31 +552,85 @@ func (m *tStatStg) ToGo() TStatStg {
 		Reserved:          m.Reserved,
 	}
 }
-func (m *TTabStopList) ToPas() *tTabStopList {
+func (m *TSynEditMouseActionInfo) ToPas() *tSynEditMouseActionInfo {
 	if m == nil {
 		return nil
 	}
-	return &tTabStopList{
-		Count:    m.Count,
-		Tabs:     m.Tabs,
-		TabsSize: m.TabsSize,
+	return &tSynEditMouseActionInfo{
+		NewCaret:      base.GetObjectUintptr(m.NewCaret),
+		Button:        m.Button,
+		Shift:         m.Shift,
+		MouseX:        m.MouseX,
+		MouseY:        m.MouseY,
+		WheelDelta:    m.WheelDelta,
+		CCount:        m.CCount,
+		Dir:           m.Dir,
+		CaretDone:     m.CaretDone,
+		IgnoreUpClick: m.IgnoreUpClick,
+		ActionResult:  m.ActionResult,
 	}
 }
 
-type tTabStopList struct {
-	Count    int32   // Integer
-	Tabs     uintptr // array of TTabStop
-	TabsSize int32   // SizeOf: array of TTabStop
+type tSynEditMouseActionInfo struct {
+	NewCaret      uintptr                   // TSynEditCaret
+	Button        types.TSynMouseButton     // TSynMouseButton
+	Shift         types.TShiftState         // TShiftState
+	MouseX        int32                     // Integer
+	MouseY        int32                     // Integer
+	WheelDelta    int32                     // Integer
+	CCount        types.TSynMAClickCount    // TSynMAClickCount
+	Dir           types.TSynMAClickDir      // TSynMAClickDir
+	CaretDone     types.LongBool            // Boolean
+	IgnoreUpClick types.LongBool            // Boolean
+	ActionResult  TSynEditMouseActionResult // TSynEditMouseActionResult
 }
 
-func (m *tTabStopList) ToGo() TTabStopList {
+func (m *tSynEditMouseActionInfo) ToGo() TSynEditMouseActionInfo {
 	if m == nil {
-		return TTabStopList{}
+		return TSynEditMouseActionInfo{}
 	}
-	return TTabStopList{
-		Count:    m.Count,
-		Tabs:     m.Tabs,
-		TabsSize: m.TabsSize,
+	return TSynEditMouseActionInfo{
+		NewCaret:      AsSynEditCaret(m.NewCaret),
+		Button:        m.Button,
+		Shift:         m.Shift,
+		MouseX:        m.MouseX,
+		MouseY:        m.MouseY,
+		WheelDelta:    m.WheelDelta,
+		CCount:        m.CCount,
+		Dir:           m.Dir,
+		CaretDone:     m.CaretDone,
+		IgnoreUpClick: m.IgnoreUpClick,
+		ActionResult:  m.ActionResult,
+	}
+}
+func (m *TSynEditMouseActionResult) ToPas() *tSynEditMouseActionResult {
+	if m == nil {
+		return nil
+	}
+	return &tSynEditMouseActionResult{
+		DoPopUpEvent: m.DoPopUpEvent,
+		PopUpEventX:  m.PopUpEventX,
+		PopUpEventY:  m.PopUpEventY,
+		PopUpMenu:    base.GetObjectUintptr(m.PopUpMenu),
+	}
+}
+
+type tSynEditMouseActionResult struct {
+	DoPopUpEvent types.LongBool // Boolean
+	PopUpEventX  int32          // Integer
+	PopUpEventY  int32          // Integer
+	PopUpMenu    uintptr        // TPopupMenu
+}
+
+func (m *tSynEditMouseActionResult) ToGo() TSynEditMouseActionResult {
+	if m == nil {
+		return TSynEditMouseActionResult{}
+	}
+	return TSynEditMouseActionResult{
+		DoPopUpEvent: m.DoPopUpEvent,
+		PopUpEventX:  m.PopUpEventX,
+		PopUpEventY:  m.PopUpEventY,
+		PopUpMenu:    AsPopupMenu(m.PopUpMenu),
 	}
 }
 func (m *TVTImageInfo) ToPas() *tVTImageInfo {

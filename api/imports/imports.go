@@ -12,6 +12,8 @@ import (
 	"errors"
 	"sync/atomic"
 	"unsafe"
+
+	"github.com/energye/lcl/api/internal/exception"
 )
 
 // CallImport 调用导入表接口
@@ -63,16 +65,18 @@ func (m *Imports) Proc(index int) ProcAddr {
 func (m *Imports) SysCallN(index int, args ...uintptr) uintptr {
 	proc := m.internalGetImportFunc(index)
 	if proc > 0 {
-		defer func() {
-			//if err := recover(); err != nil {
-			//	println("[ERROR] SysCallN Name:", m.Table[index].Name(), "Message:", err.(error).Error())
-			//	// TODO 增加用户回调
-			//	//exception.GlobalException(m.table[index].Name(), err.(error).Error())
-			//}
-		}()
+		if !exception.Debug {
+			defer func() {
+				if err := recover(); err != nil {
+					if !exception.CallOnException(m.Table[index].Name(), err.(error).Error()) {
+						println("[ERROR] SysCallN Name:", m.Table[index].Name(), "Message:", err.(error).Error())
+					}
+				}
+			}()
+		}
 		r1, _, _ := proc.Call(args...)
 		//if err != 0 && err != 1400 {
-		//exception.CallException(m.table[index].Name(), err.Error())
+		//exception.CallException(m.Table[index].Name(), err.Error())
 		//	}
 		return r1
 	}
@@ -83,7 +87,7 @@ func (m *Imports) internalGetImportFunc(index int) ProcAddr {
 	item := m.Table[index]
 	if atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&item.addr))) == nil {
 		var err error
-		item.addr, err = m.Dll.GetProcAddr(item.name)
+		item.addr, err = m.Dll.Proc(item.name)
 		if err != nil {
 			println("[ERROR] GetImport Name:", item.name, "Message:", err.Error())
 			return 0

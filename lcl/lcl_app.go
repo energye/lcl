@@ -73,7 +73,7 @@ func (m *TApp) NewForm(form IEngForm) {
 		setNewCreateParams(form)
 	}
 	// Create new form
-	api.Application_CreateForm(m.Instance())
+	newForm := api.Application_CreateForm(m.Instance())
 	// call OnAfterCreate
 	if fn, ok := form.(IOnFormAfterCreate); ok {
 		fn.FormAfterCreate(form)
@@ -93,6 +93,9 @@ func (m *TApp) NewForm(form IEngForm) {
 		form.SetOnShow(func(sender IObject) {
 			fn.OnShow(sender)
 		})
+	}
+	if form.Instance() == 0 {
+		form.SetInstance(base.UnsafePointer(newForm))
 	}
 }
 

@@ -18,31 +18,31 @@ import (
 // ICustomStringGrid Parent: ICustomDrawGrid
 type ICustomStringGrid interface {
 	ICustomDrawGrid
-	AutoSizeColumn(col int32)                                                                                              // procedure
-	AutoSizeColumns()                                                                                                      // procedure
-	Clean()                                                                                                                // procedure
-	CleanWithGridZoneSet(cleanOptions types.TGridZoneSet)                                                                  // procedure
-	CleanWithRectGridZoneSet(rect types.TRect, cleanOptions types.TGridZoneSet)                                            // procedure
-	CleanWithIntX4GridZoneSet(startCol int32, startRow int32, endCol int32, endRow int32, cleanOptions types.TGridZoneSet) // procedure
-	CopyToClipboard(useSelection bool)                                                                                     // procedure
-	LoadFromCSVStream(stream IStream, delimiter uint16, useTitles bool, fromLine int32, skipEmptyLines bool)               // procedure
-	LoadFromCSVFile(filename string, delimiter uint16, useTitles bool, fromLine int32, skipEmptyLines bool)                // procedure
-	SaveToCSVStream(stream IStream, delimiter uint16, writeTitles bool, visibleColumnsOnly bool)                           // procedure
-	SaveToCSVFile(fileName string, delimiter uint16, writeTitles bool, visibleColumnsOnly bool)                            // procedure
-	Cells(col int32, row int32) string                                                                                     // property Cells Getter
-	SetCells(col int32, row int32, value string)                                                                           // property Cells Setter
-	Cols(index int32) IStrings                                                                                             // property Cols Getter
-	SetCols(index int32, value IStrings)                                                                                   // property Cols Setter
-	DefaultTextStyle() TTextStyle                                                                                          // property DefaultTextStyle Getter
-	SetDefaultTextStyle(value TTextStyle)                                                                                  // property DefaultTextStyle Setter
-	ExtendedSelect() bool                                                                                                  // property ExtendedSelect Getter
-	SetExtendedSelect(value bool)                                                                                          // property ExtendedSelect Setter
-	Objects(col int32, row int32) IObject                                                                                  // property Objects Getter
-	SetObjects(col int32, row int32, value IObject)                                                                        // property Objects Setter
-	Rows(index int32) IStrings                                                                                             // property Rows Getter
-	SetRows(index int32, value IStrings)                                                                                   // property Rows Setter
-	ValidateOnSetSelection() bool                                                                                          // property ValidateOnSetSelection Getter
-	SetValidateOnSetSelection(value bool)                                                                                  // property ValidateOnSetSelection Setter
+	AutoSizeColumn(col int32)                                                                                        // procedure
+	AutoSizeColumns()                                                                                                // procedure
+	Clean()                                                                                                          // procedure
+	CleanWithGridZoneSet(cleanOptions types.TGridZoneSet)                                                            // procedure
+	CleanWithRectGridZoneSet(rect types.TRect, cleanOptions types.TGridZoneSet)                                      // procedure
+	CleanWithIntX4GZSet(startCol int32, startRow int32, endCol int32, endRow int32, cleanOptions types.TGridZoneSet) // procedure
+	CopyToClipboard(useSelection bool)                                                                               // procedure
+	LoadFromCSVStream(stream IStream, delimiter uint16, useTitles bool, fromLine int32, skipEmptyLines bool)         // procedure
+	LoadFromCSVFile(filename string, delimiter uint16, useTitles bool, fromLine int32, skipEmptyLines bool)          // procedure
+	SaveToCSVStream(stream IStream, delimiter uint16, writeTitles bool, visibleColumnsOnly bool)                     // procedure
+	SaveToCSVFile(fileName string, delimiter uint16, writeTitles bool, visibleColumnsOnly bool)                      // procedure
+	Cells(col int32, row int32) string                                                                               // property Cells Getter
+	SetCells(col int32, row int32, value string)                                                                     // property Cells Setter
+	Cols(index int32) IStrings                                                                                       // property Cols Getter
+	SetCols(index int32, value IStrings)                                                                             // property Cols Setter
+	DefaultTextStyle() TTextStyle                                                                                    // property DefaultTextStyle Getter
+	SetDefaultTextStyle(value TTextStyle)                                                                            // property DefaultTextStyle Setter
+	ExtendedSelect() bool                                                                                            // property ExtendedSelect Getter
+	SetExtendedSelect(value bool)                                                                                    // property ExtendedSelect Setter
+	Objects(col int32, row int32) IObject                                                                            // property Objects Getter
+	SetObjects(col int32, row int32, value IObject)                                                                  // property Objects Setter
+	Rows(index int32) IStrings                                                                                       // property Rows Getter
+	SetRows(index int32, value IStrings)                                                                             // property Rows Setter
+	ValidateOnSetSelection() bool                                                                                    // property ValidateOnSetSelection Getter
+	SetValidateOnSetSelection(value bool)                                                                            // property ValidateOnSetSelection Setter
 }
 
 type TCustomStringGrid struct {
@@ -84,7 +84,7 @@ func (m *TCustomStringGrid) CleanWithRectGridZoneSet(rect types.TRect, cleanOpti
 	customStringGridAPI().SysCallN(5, m.Instance(), uintptr(base.UnsafePointer(&rect)), uintptr(cleanOptions))
 }
 
-func (m *TCustomStringGrid) CleanWithIntX4GridZoneSet(startCol int32, startRow int32, endCol int32, endRow int32, cleanOptions types.TGridZoneSet) {
+func (m *TCustomStringGrid) CleanWithIntX4GZSet(startCol int32, startRow int32, endCol int32, endRow int32, cleanOptions types.TGridZoneSet) {
 	if !m.IsValid() {
 		return
 	}
@@ -257,7 +257,7 @@ func customStringGridAPI() *imports.Imports {
 			/* 3 */ imports.NewTable("TCustomStringGrid_Clean", 0), // procedure Clean
 			/* 4 */ imports.NewTable("TCustomStringGrid_CleanWithGridZoneSet", 0), // procedure CleanWithGridZoneSet
 			/* 5 */ imports.NewTable("TCustomStringGrid_CleanWithRectGridZoneSet", 0), // procedure CleanWithRectGridZoneSet
-			/* 6 */ imports.NewTable("TCustomStringGrid_CleanWithIntX4GridZoneSet", 0), // procedure CleanWithIntX4GridZoneSet
+			/* 6 */ imports.NewTable("TCustomStringGrid_CleanWithIntX4GZSet", 0), // procedure CleanWithIntX4GZSet
 			/* 7 */ imports.NewTable("TCustomStringGrid_CopyToClipboard", 0), // procedure CopyToClipboard
 			/* 8 */ imports.NewTable("TCustomStringGrid_LoadFromCSVStream", 0), // procedure LoadFromCSVStream
 			/* 9 */ imports.NewTable("TCustomStringGrid_LoadFromCSVFile", 0), // procedure LoadFromCSVFile

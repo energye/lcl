@@ -269,8 +269,8 @@ func NewLazIntfImage(width int32, height int32) ILazIntfImage {
 	return AsLazIntfImage(r)
 }
 
-// NewLazIntfImageWithIntX2RawImageQueryFlags class constructor
-func NewLazIntfImageWithIntX2RawImageQueryFlags(width int32, height int32, flags types.TRawImageQueryFlags) ILazIntfImage {
+// NewLazIntfImageWithIntX2RIQFlags class constructor
+func NewLazIntfImageWithIntX2RIQFlags(width int32, height int32, flags types.TRawImageQueryFlags) ILazIntfImage {
 	r := lazIntfImageAPI().SysCallN(1, uintptr(width), uintptr(height), uintptr(flags))
 	return AsLazIntfImage(r)
 }
@@ -291,7 +291,7 @@ func lazIntfImageAPI() *imports.Imports {
 		lazIntfImageImport = api.NewDefaultImports()
 		lazIntfImageImport.Table = []*imports.Table{
 			/* 0 */ imports.NewTable("TLazIntfImage_Create", 0), // constructor NewLazIntfImage
-			/* 1 */ imports.NewTable("TLazIntfImage_CreateWithIntX2RawImageQueryFlags", 0), // constructor NewLazIntfImageWithIntX2RawImageQueryFlags
+			/* 1 */ imports.NewTable("TLazIntfImage_CreateWithIntX2RIQFlags", 0), // constructor NewLazIntfImageWithIntX2RIQFlags
 			/* 2 */ imports.NewTable("TLazIntfImage_CreateCompatible", 0), // constructor NewLazIntfImageCompatible
 			/* 3 */ imports.NewTable("TLazIntfImage_CheckDescription", 0), // function CheckDescription
 			/* 4 */ imports.NewTable("TLazIntfImage_GetDataLineStart", 0), // function GetDataLineStart

@@ -9,8 +9,8 @@ package api
 
 const (
 	_DSysLocale = iota
-	_AddLazarusResources
-	_AddLazarusResources2
+	//_AddLazarusResources
+	//_AddLazarusResources2
 	_GetLCLVersion
 	_GetLCLWidget
 	_Application_Instance

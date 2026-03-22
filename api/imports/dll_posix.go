@@ -59,7 +59,7 @@ func (h DLL) Release() error {
 	return nil
 }
 
-func (h DLL) GetProcAddr(name string) (ProcAddr, error) {
+func (h DLL) Proc(name string) (ProcAddr, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	return ProcAddr(C.dlsym(unsafe.Pointer(h), cName)), dlError()

@@ -1,0 +1,37 @@
+//----------------------------------------
+//
+// Copyright © yanghy. All Rights Reserved.
+//
+// Licensed under Apache License Version 2.0, January 2004
+//
+// https://www.apache.org/licenses/LICENSE-2.0
+//
+//----------------------------------------
+
+//go:build !windows && cgo
+// +build !windows,cgo
+
+package api
+
+// #cgo darwin CFLAGS: -mmacosx-version-min=10.15
+// #cgo darwin LDFLAGS: -mmacosx-version-min=10.15
+//
+// extern void* doExceptionHandlerProc(void* idType, void* message);
+// static void* doExceptionHandlerProcEventAddr() {
+//    return &doExceptionHandlerProc;
+// }
+import "C"
+
+import (
+	"unsafe"
+)
+
+//export doExceptionHandlerProc
+func doExceptionHandlerProc(idType, message unsafe.Pointer) unsafe.Pointer {
+	exceptionHandlerProc(uintptr(idType), uintptr(message))
+	return nil
+}
+
+var (
+	exceptionHandlerProcEventAddr = uintptr(C.doExceptionHandlerProcEventAddr())
+)

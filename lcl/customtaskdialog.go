@@ -43,12 +43,12 @@ type ICustomTaskDialog interface {
 	SetExpandedText(value string)                            // property ExpandedText Setter
 	Flags() types.TTaskDialogFlags                           // property Flags Getter
 	SetFlags(value types.TTaskDialogFlags)                   // property Flags Setter
-	FooterIcon() types.TTaskDialogIcon                       // property FooterIcon Getter
-	SetFooterIcon(value types.TTaskDialogIcon)               // property FooterIcon Setter
+	FooterIcon() types.DialogsTTaskDialogIcon                // property FooterIcon Getter
+	SetFooterIcon(value types.DialogsTTaskDialogIcon)        // property FooterIcon Setter
 	FooterText() string                                      // property FooterText Getter
 	SetFooterText(value string)                              // property FooterText Setter
-	MainIcon() types.TTaskDialogIcon                         // property MainIcon Getter
-	SetMainIcon(value types.TTaskDialogIcon)                 // property MainIcon Setter
+	MainIcon() types.DialogsTTaskDialogIcon                  // property MainIcon Getter
+	SetMainIcon(value types.DialogsTTaskDialogIcon)          // property MainIcon Setter
 	Handle() types.THandle                                   // property Handle Getter
 	ModalResult() types.TModalResult                         // property ModalResult Getter
 	SetModalResult(value types.TModalResult)                 // property ModalResult Setter
@@ -283,15 +283,15 @@ func (m *TCustomTaskDialog) SetFlags(value types.TTaskDialogFlags) {
 	customTaskDialogAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomTaskDialog) FooterIcon() types.TTaskDialogIcon {
+func (m *TCustomTaskDialog) FooterIcon() types.DialogsTTaskDialogIcon {
 	if !m.IsValid() {
 		return 0
 	}
 	r := customTaskDialogAPI().SysCallN(15, 0, m.Instance())
-	return types.TTaskDialogIcon(r)
+	return types.DialogsTTaskDialogIcon(r)
 }
 
-func (m *TCustomTaskDialog) SetFooterIcon(value types.TTaskDialogIcon) {
+func (m *TCustomTaskDialog) SetFooterIcon(value types.DialogsTTaskDialogIcon) {
 	if !m.IsValid() {
 		return
 	}
@@ -313,15 +313,15 @@ func (m *TCustomTaskDialog) SetFooterText(value string) {
 	customTaskDialogAPI().SysCallN(16, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomTaskDialog) MainIcon() types.TTaskDialogIcon {
+func (m *TCustomTaskDialog) MainIcon() types.DialogsTTaskDialogIcon {
 	if !m.IsValid() {
 		return 0
 	}
 	r := customTaskDialogAPI().SysCallN(17, 0, m.Instance())
-	return types.TTaskDialogIcon(r)
+	return types.DialogsTTaskDialogIcon(r)
 }
 
-func (m *TCustomTaskDialog) SetMainIcon(value types.TTaskDialogIcon) {
+func (m *TCustomTaskDialog) SetMainIcon(value types.DialogsTTaskDialogIcon) {
 	if !m.IsValid() {
 		return
 	}

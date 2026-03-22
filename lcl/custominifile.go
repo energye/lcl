@@ -18,41 +18,41 @@ import (
 // ICustomIniFile Parent: IObject
 type ICustomIniFile interface {
 	IObject
-	SectionExists(section string) bool                                                                                            // function
-	ReadString(section string, ident string, default_ string) string                                                              // function
-	ReadInteger(section string, ident string, default_ int32) int32                                                               // function
-	ReadInt64(section string, ident string, default_ int64) int64                                                                 // function
-	ReadBool(section string, ident string, default_ bool) bool                                                                    // function
-	ReadDate(section string, ident string, default_ types.TDateTime) types.TDateTime                                              // function
-	ReadDateTime(section string, ident string, default_ types.TDateTime) types.TDateTime                                          // function
-	ReadFloat(section string, ident string, default_ float64) float64                                                             // function
-	ReadTime(section string, ident string, default_ types.TDateTime) types.TDateTime                                              // function
-	ReadBinaryStream(section string, name string, value IStream) int32                                                            // function
-	ValueExists(section string, ident string) bool                                                                                // function
-	WriteString(section string, ident string, value string)                                                                       // procedure
-	WriteInteger(section string, ident string, value int32)                                                                       // procedure
-	WriteInt64(section string, ident string, value int64)                                                                         // procedure
-	WriteBool(section string, ident string, value bool)                                                                           // procedure
-	WriteDate(section string, ident string, value types.TDateTime)                                                                // procedure
-	WriteDateTime(section string, ident string, value types.TDateTime)                                                            // procedure
-	WriteFloat(section string, ident string, value float64)                                                                       // procedure
-	WriteTime(section string, ident string, value types.TDateTime)                                                                // procedure
-	WriteBinaryStream(section string, name string, value IStream)                                                                 // procedure
-	ReadSection(section string, strings IStrings)                                                                                 // procedure
-	ReadSections(strings IStrings)                                                                                                // procedure
-	ReadSectionValuesWithStringStringsSectionValuesOptions(section string, strings IStrings, options types.TSectionValuesOptions) // procedure
-	ReadSectionValuesWithStringStrings(section string, strings IStrings)                                                          // procedure
-	EraseSection(section string)                                                                                                  // procedure
-	DeleteKey(section string, ident string)                                                                                       // procedure
-	UpdateFile()                                                                                                                  // procedure
-	FileName() string                                                                                                             // property FileName Getter
-	Options() types.TIniFileOptions                                                                                               // property Options Getter
-	SetOptions(value types.TIniFileOptions)                                                                                       // property Options Setter
-	BoolTrueStrings() IStringArrayWrap                                                                                            // property BoolTrueStrings Getter
-	SetBoolTrueStrings(value IStringArrayWrap)                                                                                    // property BoolTrueStrings Setter
-	BoolFalseStrings() IStringArrayWrap                                                                                           // property BoolFalseStrings Getter
-	SetBoolFalseStrings(value IStringArrayWrap)                                                                                   // property BoolFalseStrings Setter
-	OwnsEncoding() bool                                                                                                           // property OwnsEncoding Getter
+	SectionExists(section string) bool                                                                              // function
+	ReadString(section string, ident string, default_ string) string                                                // function
+	ReadInteger(section string, ident string, default_ int32) int32                                                 // function
+	ReadInt64(section string, ident string, default_ int64) int64                                                   // function
+	ReadBool(section string, ident string, default_ bool) bool                                                      // function
+	ReadDate(section string, ident string, default_ types.TDateTime) types.TDateTime                                // function
+	ReadDateTime(section string, ident string, default_ types.TDateTime) types.TDateTime                            // function
+	ReadFloat(section string, ident string, default_ float64) float64                                               // function
+	ReadTime(section string, ident string, default_ types.TDateTime) types.TDateTime                                // function
+	ReadBinaryStream(section string, name string, value IStream) int32                                              // function
+	ValueExists(section string, ident string) bool                                                                  // function
+	WriteString(section string, ident string, value string)                                                         // procedure
+	WriteInteger(section string, ident string, value int32)                                                         // procedure
+	WriteInt64(section string, ident string, value int64)                                                           // procedure
+	WriteBool(section string, ident string, value bool)                                                             // procedure
+	WriteDate(section string, ident string, value types.TDateTime)                                                  // procedure
+	WriteDateTime(section string, ident string, value types.TDateTime)                                              // procedure
+	WriteFloat(section string, ident string, value float64)                                                         // procedure
+	WriteTime(section string, ident string, value types.TDateTime)                                                  // procedure
+	WriteBinaryStream(section string, name string, value IStream)                                                   // procedure
+	ReadSection(section string, strings IStrings)                                                                   // procedure
+	ReadSections(strings IStrings)                                                                                  // procedure
+	ReadSectionValuesWithStrStringsSVOptions(section string, strings IStrings, options types.TSectionValuesOptions) // procedure
+	ReadSectionValuesWithStrStrings(section string, strings IStrings)                                               // procedure
+	EraseSection(section string)                                                                                    // procedure
+	DeleteKey(section string, ident string)                                                                         // procedure
+	UpdateFile()                                                                                                    // procedure
+	FileName() string                                                                                               // property FileName Getter
+	Options() types.TIniFileOptions                                                                                 // property Options Getter
+	SetOptions(value types.TIniFileOptions)                                                                         // property Options Setter
+	BoolTrueStrings() IStringArrayWrap                                                                              // property BoolTrueStrings Getter
+	SetBoolTrueStrings(value IStringArrayWrap)                                                                      // property BoolTrueStrings Setter
+	BoolFalseStrings() IStringArrayWrap                                                                             // property BoolFalseStrings Getter
+	SetBoolFalseStrings(value IStringArrayWrap)                                                                     // property BoolFalseStrings Setter
+	OwnsEncoding() bool                                                                                             // property OwnsEncoding Getter
 }
 
 type TCustomIniFile struct {
@@ -224,14 +224,14 @@ func (m *TCustomIniFile) ReadSections(strings IStrings) {
 	customIniFileAPI().SysCallN(21, m.Instance(), base.GetObjectUintptr(strings))
 }
 
-func (m *TCustomIniFile) ReadSectionValuesWithStringStringsSectionValuesOptions(section string, strings IStrings, options types.TSectionValuesOptions) {
+func (m *TCustomIniFile) ReadSectionValuesWithStrStringsSVOptions(section string, strings IStrings, options types.TSectionValuesOptions) {
 	if !m.IsValid() {
 		return
 	}
 	customIniFileAPI().SysCallN(22, m.Instance(), api.PasStr(section), base.GetObjectUintptr(strings), uintptr(options))
 }
 
-func (m *TCustomIniFile) ReadSectionValuesWithStringStrings(section string, strings IStrings) {
+func (m *TCustomIniFile) ReadSectionValuesWithStrStrings(section string, strings IStrings) {
 	if !m.IsValid() {
 		return
 	}
@@ -351,8 +351,8 @@ func customIniFileAPI() *imports.Imports {
 			/* 19 */ imports.NewTable("TCustomIniFile_WriteBinaryStream", 0), // procedure WriteBinaryStream
 			/* 20 */ imports.NewTable("TCustomIniFile_ReadSection", 0), // procedure ReadSection
 			/* 21 */ imports.NewTable("TCustomIniFile_ReadSections", 0), // procedure ReadSections
-			/* 22 */ imports.NewTable("TCustomIniFile_ReadSectionValuesWithStringStringsSectionValuesOptions", 0), // procedure ReadSectionValuesWithStringStringsSectionValuesOptions
-			/* 23 */ imports.NewTable("TCustomIniFile_ReadSectionValuesWithStringStrings", 0), // procedure ReadSectionValuesWithStringStrings
+			/* 22 */ imports.NewTable("TCustomIniFile_ReadSectionValuesWithStrStringsSVOptions", 0), // procedure ReadSectionValuesWithStrStringsSVOptions
+			/* 23 */ imports.NewTable("TCustomIniFile_ReadSectionValuesWithStrStrings", 0), // procedure ReadSectionValuesWithStrStrings
 			/* 24 */ imports.NewTable("TCustomIniFile_EraseSection", 0), // procedure EraseSection
 			/* 25 */ imports.NewTable("TCustomIniFile_DeleteKey", 0), // procedure DeleteKey
 			/* 26 */ imports.NewTable("TCustomIniFile_UpdateFile", 0), // procedure UpdateFile

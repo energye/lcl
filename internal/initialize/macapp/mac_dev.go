@@ -17,15 +17,16 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/energye/lcl/api/libname"
-	"github.com/energye/lcl/config"
-	"github.com/energye/lcl/tool/command"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/energye/lcl/api/libname"
+	"github.com/energye/lcl/config"
+	"github.com/energye/lcl/tool/command"
 )
 
 const (

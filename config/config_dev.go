@@ -15,10 +15,11 @@ package config
 
 import (
 	"encoding/json"
-	"github.com/energye/lcl/tool"
-	"github.com/energye/lcl/tool/exec"
 	"os"
 	"path/filepath"
+
+	"github.com/energye/lcl/tool"
+	"github.com/energye/lcl/tool/exec"
 )
 
 func init() {

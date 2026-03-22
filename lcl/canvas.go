@@ -20,9 +20,9 @@ type ICanvas interface {
 	IFPCustomCanvas
 	TryLock() bool                                          // function
 	GetTextMetrics(outTM *TLCLTextMetric) bool              // function
-	TextExtentWithString(text string) types.TSize           // function
-	TextHeightWithString(text string) int32                 // function
-	TextWidthWithString(text string) int32                  // function
+	TextExtentWithStr(text string) types.TSize              // function
+	TextHeightWithStr(text string) int32                    // function
+	TextWidthWithStr(text string) int32                     // function
 	TextFitInfo(text string, maxWidth int32) int32          // function
 	HandleAllocated() bool                                  // function
 	GetUpdatedHandle(reqState types.TCanvasState) types.HDC // function
@@ -50,8 +50,8 @@ type ICanvas interface {
 	EllipseWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32)                                                                    // procedure
 	FillRectWithRect(rect types.TRect)                                                                                          // procedure
 	FillRectWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32)                                                                   // procedure
-	FloodFillWithIntX2ColorFillStyle(X int32, Y int32, fillColor types.TColor, fillStyle types.TFillStyle)                      // procedure
-	Frame3dWithRectIntGraphicsBevelCut(rect *types.TRect, frameWidth int32, style types.TGraphicsBevelCut)                      // procedure
+	FloodFillWithIntX2ColorFStyle(X int32, Y int32, fillColor types.TColor, fillStyle types.TFillStyle)                         // procedure
+	Frame3dWithRectIntGBCut(rect *types.TRect, frameWidth int32, style types.TGraphicsBevelCut)                                 // procedure
 	Frame3DWithRectColorX2Int(rect *types.TRect, topColor types.TColor, bottomColor types.TColor, frameWidth int32)             // procedure
 	FrameWithRect(rect types.TRect)                                                                                             // procedure
 	FrameWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32)                                                                      // procedure
@@ -67,9 +67,9 @@ type ICanvas interface {
 	RectangleWithRect(rect types.TRect)                                                                                         // procedure
 	RoundRectWithIntX6(x1 int32, y1 int32, x2 int32, y2 int32, rX int32, rY int32)                                              // procedure
 	RoundRectWithRectIntX2(rect types.TRect, rX int32, rY int32)                                                                // procedure
-	TextOutWithIntX2String(X int32, Y int32, text string)                                                                       // procedure
-	TextRectWithRectIntX2String(rect types.TRect, X int32, Y int32, text string)                                                // procedure
-	TextRectWithRectIntX2StringTextStyle(rect types.TRect, X int32, Y int32, text string, style TTextStyle)                     // procedure
+	TextOutWithIntX2Str(X int32, Y int32, text string)                                                                          // procedure
+	TextRectWithRectIntX2Str(rect types.TRect, X int32, Y int32, text string)                                                   // procedure
+	TextRectWithRectIntX2StrTStyle(rect types.TRect, X int32, Y int32, text string, style TTextStyle)                           // procedure
 	Pixels(X int32, Y int32) types.TColor                                                                                       // property Pixels Getter
 	SetPixels(X int32, Y int32, value types.TColor)                                                                             // property Pixels Setter
 	Handle() types.HDC                                                                                                          // property Handle Getter
@@ -114,7 +114,7 @@ func (m *TCanvas) GetTextMetrics(outTM *TLCLTextMetric) bool {
 	return api.GoBool(r)
 }
 
-func (m *TCanvas) TextExtentWithString(text string) (result types.TSize) {
+func (m *TCanvas) TextExtentWithStr(text string) (result types.TSize) {
 	if !m.IsValid() {
 		return
 	}
@@ -122,7 +122,7 @@ func (m *TCanvas) TextExtentWithString(text string) (result types.TSize) {
 	return
 }
 
-func (m *TCanvas) TextHeightWithString(text string) int32 {
+func (m *TCanvas) TextHeightWithStr(text string) int32 {
 	if !m.IsValid() {
 		return 0
 	}
@@ -130,7 +130,7 @@ func (m *TCanvas) TextHeightWithString(text string) int32 {
 	return int32(r)
 }
 
-func (m *TCanvas) TextWidthWithString(text string) int32 {
+func (m *TCanvas) TextWidthWithStr(text string) int32 {
 	if !m.IsValid() {
 		return 0
 	}
@@ -316,14 +316,14 @@ func (m *TCanvas) FillRectWithIntX4(x1 int32, y1 int32, x2 int32, y2 int32) {
 	canvasAPI().SysCallN(30, m.Instance(), uintptr(x1), uintptr(y1), uintptr(x2), uintptr(y2))
 }
 
-func (m *TCanvas) FloodFillWithIntX2ColorFillStyle(X int32, Y int32, fillColor types.TColor, fillStyle types.TFillStyle) {
+func (m *TCanvas) FloodFillWithIntX2ColorFStyle(X int32, Y int32, fillColor types.TColor, fillStyle types.TFillStyle) {
 	if !m.IsValid() {
 		return
 	}
 	canvasAPI().SysCallN(31, m.Instance(), uintptr(X), uintptr(Y), uintptr(fillColor), uintptr(fillStyle))
 }
 
-func (m *TCanvas) Frame3dWithRectIntGraphicsBevelCut(rect *types.TRect, frameWidth int32, style types.TGraphicsBevelCut) {
+func (m *TCanvas) Frame3dWithRectIntGBCut(rect *types.TRect, frameWidth int32, style types.TGraphicsBevelCut) {
 	if !m.IsValid() {
 		return
 	}
@@ -435,21 +435,21 @@ func (m *TCanvas) RoundRectWithRectIntX2(rect types.TRect, rX int32, rY int32) {
 	canvasAPI().SysCallN(47, m.Instance(), uintptr(base.UnsafePointer(&rect)), uintptr(rX), uintptr(rY))
 }
 
-func (m *TCanvas) TextOutWithIntX2String(X int32, Y int32, text string) {
+func (m *TCanvas) TextOutWithIntX2Str(X int32, Y int32, text string) {
 	if !m.IsValid() {
 		return
 	}
 	canvasAPI().SysCallN(48, m.Instance(), uintptr(X), uintptr(Y), api.PasStr(text))
 }
 
-func (m *TCanvas) TextRectWithRectIntX2String(rect types.TRect, X int32, Y int32, text string) {
+func (m *TCanvas) TextRectWithRectIntX2Str(rect types.TRect, X int32, Y int32, text string) {
 	if !m.IsValid() {
 		return
 	}
 	canvasAPI().SysCallN(49, m.Instance(), uintptr(base.UnsafePointer(&rect)), uintptr(X), uintptr(Y), api.PasStr(text))
 }
 
-func (m *TCanvas) TextRectWithRectIntX2StringTextStyle(rect types.TRect, X int32, Y int32, text string, style TTextStyle) {
+func (m *TCanvas) TextRectWithRectIntX2StrTStyle(rect types.TRect, X int32, Y int32, text string, style TTextStyle) {
 	if !m.IsValid() {
 		return
 	}
@@ -640,9 +640,9 @@ func canvasAPI() *imports.Imports {
 			/* 0 */ imports.NewTable("TCanvas_Create", 0), // constructor NewCanvas
 			/* 1 */ imports.NewTable("TCanvas_TryLock", 0), // function TryLock
 			/* 2 */ imports.NewTable("TCanvas_GetTextMetrics", 0), // function GetTextMetrics
-			/* 3 */ imports.NewTable("TCanvas_TextExtentWithString", 0), // function TextExtentWithString
-			/* 4 */ imports.NewTable("TCanvas_TextHeightWithString", 0), // function TextHeightWithString
-			/* 5 */ imports.NewTable("TCanvas_TextWidthWithString", 0), // function TextWidthWithString
+			/* 3 */ imports.NewTable("TCanvas_TextExtentWithStr", 0), // function TextExtentWithStr
+			/* 4 */ imports.NewTable("TCanvas_TextHeightWithStr", 0), // function TextHeightWithStr
+			/* 5 */ imports.NewTable("TCanvas_TextWidthWithStr", 0), // function TextWidthWithStr
 			/* 6 */ imports.NewTable("TCanvas_TextFitInfo", 0), // function TextFitInfo
 			/* 7 */ imports.NewTable("TCanvas_HandleAllocated", 0), // function HandleAllocated
 			/* 8 */ imports.NewTable("TCanvas_GetUpdatedHandle", 0), // function GetUpdatedHandle
@@ -668,8 +668,8 @@ func canvasAPI() *imports.Imports {
 			/* 28 */ imports.NewTable("TCanvas_EllipseWithIntX4", 0), // procedure EllipseWithIntX4
 			/* 29 */ imports.NewTable("TCanvas_FillRectWithRect", 0), // procedure FillRectWithRect
 			/* 30 */ imports.NewTable("TCanvas_FillRectWithIntX4", 0), // procedure FillRectWithIntX4
-			/* 31 */ imports.NewTable("TCanvas_FloodFillWithIntX2ColorFillStyle", 0), // procedure FloodFillWithIntX2ColorFillStyle
-			/* 32 */ imports.NewTable("TCanvas_Frame3dWithRectIntGraphicsBevelCut", 0), // procedure Frame3dWithRectIntGraphicsBevelCut
+			/* 31 */ imports.NewTable("TCanvas_FloodFillWithIntX2ColorFStyle", 0), // procedure FloodFillWithIntX2ColorFStyle
+			/* 32 */ imports.NewTable("TCanvas_Frame3dWithRectIntGBCut", 0), // procedure Frame3dWithRectIntGBCut
 			/* 33 */ imports.NewTable("TCanvas_Frame3DWithRectColorX2Int", 0), // procedure Frame3DWithRectColorX2Int
 			/* 34 */ imports.NewTable("TCanvas_FrameWithRect", 0), // procedure FrameWithRect
 			/* 35 */ imports.NewTable("TCanvas_FrameWithIntX4", 0), // procedure FrameWithIntX4
@@ -685,9 +685,9 @@ func canvasAPI() *imports.Imports {
 			/* 45 */ imports.NewTable("TCanvas_RectangleWithRect", 0), // procedure RectangleWithRect
 			/* 46 */ imports.NewTable("TCanvas_RoundRectWithIntX6", 0), // procedure RoundRectWithIntX6
 			/* 47 */ imports.NewTable("TCanvas_RoundRectWithRectIntX2", 0), // procedure RoundRectWithRectIntX2
-			/* 48 */ imports.NewTable("TCanvas_TextOutWithIntX2String", 0), // procedure TextOutWithIntX2String
-			/* 49 */ imports.NewTable("TCanvas_TextRectWithRectIntX2String", 0), // procedure TextRectWithRectIntX2String
-			/* 50 */ imports.NewTable("TCanvas_TextRectWithRectIntX2StringTextStyle", 0), // procedure TextRectWithRectIntX2StringTextStyle
+			/* 48 */ imports.NewTable("TCanvas_TextOutWithIntX2Str", 0), // procedure TextOutWithIntX2Str
+			/* 49 */ imports.NewTable("TCanvas_TextRectWithRectIntX2Str", 0), // procedure TextRectWithRectIntX2Str
+			/* 50 */ imports.NewTable("TCanvas_TextRectWithRectIntX2StrTStyle", 0), // procedure TextRectWithRectIntX2StrTStyle
 			/* 51 */ imports.NewTable("TCanvas_Pixels", 0), // property Pixels
 			/* 52 */ imports.NewTable("TCanvas_Handle", 0), // property Handle
 			/* 53 */ imports.NewTable("TCanvas_TextStyle", 0), // property TextStyle

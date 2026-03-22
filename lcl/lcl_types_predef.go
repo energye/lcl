@@ -17,6 +17,13 @@ import (
 
 type IDataObject uintptr
 
+// PPhysicalCharWidth
+//
+//	TPhysicalCharWidth = Byte;
+//	TPhysicalCharWidths = Array of TPhysicalCharWidth;
+//	PPhysicalCharWidth = ^TPhysicalCharWidth;
+type PPhysicalCharWidth = uintptr
+
 type TFormatEtc struct {
 	CfFormat types.Word // {TCLIPFORMAT};
 	Ptd      uintptr    // ^tagDVTARGETDEVICE

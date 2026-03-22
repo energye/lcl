@@ -19,8 +19,8 @@ import (
 type IImageButton interface {
 	IGraphicControl
 	Click()                                       // procedure
-	CaptionToString() string                      // property Caption Getter
-	SetCaptionToString(value string)              // property Caption Setter
+	CaptionToStr() string                         // property Caption Getter
+	SetCaptionToStr(value string)                 // property Caption Setter
 	DragCursor() types.TCursor                    // property DragCursor Getter
 	SetDragCursor(value types.TCursor)            // property DragCursor Setter
 	DragKind() types.TDragKind                    // property DragKind Getter
@@ -67,7 +67,7 @@ func (m *TImageButton) Click() {
 	imageButtonAPI().SysCallN(1, m.Instance())
 }
 
-func (m *TImageButton) CaptionToString() string {
+func (m *TImageButton) CaptionToStr() string {
 	if !m.IsValid() {
 		return ""
 	}
@@ -75,7 +75,7 @@ func (m *TImageButton) CaptionToString() string {
 	return api.GoStr(r)
 }
 
-func (m *TImageButton) SetCaptionToString(value string) {
+func (m *TImageButton) SetCaptionToStr(value string) {
 	if !m.IsValid() {
 		return
 	}
@@ -357,7 +357,7 @@ func imageButtonAPI() *imports.Imports {
 		imageButtonImport.Table = []*imports.Table{
 			/* 0 */ imports.NewTable("TImageButton_Create", 0), // constructor NewImageButton
 			/* 1 */ imports.NewTable("TImageButton_Click", 0), // procedure Click
-			/* 2 */ imports.NewTable("TImageButton_CaptionToString", 0), // property CaptionToString
+			/* 2 */ imports.NewTable("TImageButton_CaptionToStr", 0), // property CaptionToStr
 			/* 3 */ imports.NewTable("TImageButton_DragCursor", 0), // property DragCursor
 			/* 4 */ imports.NewTable("TImageButton_DragKind", 0), // property DragKind
 			/* 5 */ imports.NewTable("TImageButton_DragMode", 0), // property DragMode

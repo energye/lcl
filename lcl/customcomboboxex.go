@@ -18,25 +18,25 @@ import (
 // ICustomComboBoxEx Parent: ICustomComboBox
 type ICustomComboBoxEx interface {
 	ICustomComboBox
-	AddToInt() int32                                                                                                    // function
-	AddWithStringIntImageIndexX3(caption string, indent int32, imgIdx int32, overlayImgIdx int32, selectedImgIdx int32) // procedure
-	AssignItemsExWithStrings(items IStrings)                                                                            // procedure
-	AssignItemsExWithComboExItems(itemsEx IComboExItems)                                                                // procedure
-	Delete(index int32)                                                                                                 // procedure
-	DeleteSelected()                                                                                                    // procedure
-	Insert(index int32, caption string, indent int32, imgIdx int32, overlayImgIdx int32, selectedImgIdx int32)          // procedure
-	AutoCompleteOptions() types.TAutoCompleteOptions                                                                    // property AutoCompleteOptions Getter
-	SetAutoCompleteOptions(value types.TAutoCompleteOptions)                                                            // property AutoCompleteOptions Setter
-	Images() ICustomImageList                                                                                           // property Images Getter
-	SetImages(value ICustomImageList)                                                                                   // property Images Setter
-	ImagesWidth() int32                                                                                                 // property ImagesWidth Getter
-	SetImagesWidth(value int32)                                                                                         // property ImagesWidth Setter
-	ItemsEx() IComboExItems                                                                                             // property ItemsEx Getter
-	SetItemsEx(value IComboExItems)                                                                                     // property ItemsEx Setter
-	StyleToComboBoxExStyle() types.TComboBoxExStyle                                                                     // property Style Getter
-	SetStyleToComboBoxExStyle(value types.TComboBoxExStyle)                                                             // property Style Setter
-	StyleEx() types.TComboBoxExStyles                                                                                   // property StyleEx Getter
-	SetStyleEx(value types.TComboBoxExStyles)                                                                           // property StyleEx Setter
+	AddToInt() int32                                                                                             // function
+	AddWithStrIntIIndexX3(caption string, indent int32, imgIdx int32, overlayImgIdx int32, selectedImgIdx int32) // procedure
+	AssignItemsExWithStrings(items IStrings)                                                                     // procedure
+	AssignItemsExWithComboExItems(itemsEx IComboExItems)                                                         // procedure
+	Delete(index int32)                                                                                          // procedure
+	DeleteSelected()                                                                                             // procedure
+	Insert(index int32, caption string, indent int32, imgIdx int32, overlayImgIdx int32, selectedImgIdx int32)   // procedure
+	AutoCompleteOptions() types.TAutoCompleteOptions                                                             // property AutoCompleteOptions Getter
+	SetAutoCompleteOptions(value types.TAutoCompleteOptions)                                                     // property AutoCompleteOptions Setter
+	Images() ICustomImageList                                                                                    // property Images Getter
+	SetImages(value ICustomImageList)                                                                            // property Images Setter
+	ImagesWidth() int32                                                                                          // property ImagesWidth Getter
+	SetImagesWidth(value int32)                                                                                  // property ImagesWidth Setter
+	ItemsEx() IComboExItems                                                                                      // property ItemsEx Getter
+	SetItemsEx(value IComboExItems)                                                                              // property ItemsEx Setter
+	StyleToComboBoxExStyle() types.TComboBoxExStyle                                                              // property Style Getter
+	SetStyleToComboBoxExStyle(value types.TComboBoxExStyle)                                                      // property Style Setter
+	StyleEx() types.TComboBoxExStyles                                                                            // property StyleEx Getter
+	SetStyleEx(value types.TComboBoxExStyles)                                                                    // property StyleEx Setter
 }
 
 type TCustomComboBoxEx struct {
@@ -51,7 +51,7 @@ func (m *TCustomComboBoxEx) AddToInt() int32 {
 	return int32(r)
 }
 
-func (m *TCustomComboBoxEx) AddWithStringIntImageIndexX3(caption string, indent int32, imgIdx int32, overlayImgIdx int32, selectedImgIdx int32) {
+func (m *TCustomComboBoxEx) AddWithStrIntIIndexX3(caption string, indent int32, imgIdx int32, overlayImgIdx int32, selectedImgIdx int32) {
 	if !m.IsValid() {
 		return
 	}
@@ -205,7 +205,7 @@ func customComboBoxExAPI() *imports.Imports {
 		customComboBoxExImport.Table = []*imports.Table{
 			/* 0 */ imports.NewTable("TCustomComboBoxEx_Create", 0), // constructor NewCustomComboBoxEx
 			/* 1 */ imports.NewTable("TCustomComboBoxEx_AddToInt", 0), // function AddToInt
-			/* 2 */ imports.NewTable("TCustomComboBoxEx_AddWithStringIntImageIndexX3", 0), // procedure AddWithStringIntImageIndexX3
+			/* 2 */ imports.NewTable("TCustomComboBoxEx_AddWithStrIntIIndexX3", 0), // procedure AddWithStrIntIIndexX3
 			/* 3 */ imports.NewTable("TCustomComboBoxEx_AssignItemsExWithStrings", 0), // procedure AssignItemsExWithStrings
 			/* 4 */ imports.NewTable("TCustomComboBoxEx_AssignItemsExWithComboExItems", 0), // procedure AssignItemsExWithComboExItems
 			/* 5 */ imports.NewTable("TCustomComboBoxEx_Delete", 0), // procedure Delete

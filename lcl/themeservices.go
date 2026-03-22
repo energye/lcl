@@ -20,59 +20,59 @@ type IThemeServices interface {
 	IObject
 	// IsDisabled
 	//  state helpers
-	IsDisabled(details TThemedElementDetails) bool                                                                                                                                                          // function
-	IsPushed(details TThemedElementDetails) bool                                                                                                                                                            // function
-	IsHot(details TThemedElementDetails) bool                                                                                                                                                               // function
-	IsChecked(details TThemedElementDetails) bool                                                                                                                                                           // function
-	IsMixed(details TThemedElementDetails) bool                                                                                                                                                             // function
-	GetElementDetailsWithThemedButton(detail types.TThemedButton) TThemedElementDetails                                                                                                                     // function
-	GetElementDetailsWithThemedClock(detail types.TThemedClock) TThemedElementDetails                                                                                                                       // function
-	GetElementDetailsWithThemedComboBox(detail types.TThemedComboBox) TThemedElementDetails                                                                                                                 // function
-	GetElementDetailsWithThemedEdit(detail types.TThemedEdit) TThemedElementDetails                                                                                                                         // function
-	GetElementDetailsWithThemedExplorerBar(detail types.TThemedExplorerBar) TThemedElementDetails                                                                                                           // function
-	GetElementDetailsWithThemedHeader(detail types.TThemedHeader) TThemedElementDetails                                                                                                                     // function
-	GetElementDetailsWithThemedListView(detail types.TThemedListView) TThemedElementDetails                                                                                                                 // function
-	GetElementDetailsWithThemedMenu(detail types.TThemedMenu) TThemedElementDetails                                                                                                                         // function
-	GetElementDetailsWithThemedPage(detail types.TThemedPage) TThemedElementDetails                                                                                                                         // function
-	GetElementDetailsWithThemedProgress(detail types.TThemedProgress) TThemedElementDetails                                                                                                                 // function
-	GetElementDetailsWithThemedRebar(detail types.TThemedRebar) TThemedElementDetails                                                                                                                       // function
-	GetElementDetailsWithThemedScrollBar(detail types.TThemedScrollBar) TThemedElementDetails                                                                                                               // function
-	GetElementDetailsWithThemedSpin(detail types.TThemedSpin) TThemedElementDetails                                                                                                                         // function
-	GetElementDetailsWithThemedStartPanel(detail types.TThemedStartPanel) TThemedElementDetails                                                                                                             // function
-	GetElementDetailsWithThemedStatus(detail types.TThemedStatus) TThemedElementDetails                                                                                                                     // function
-	GetElementDetailsWithThemedTab(detail types.TThemedTab) TThemedElementDetails                                                                                                                           // function
-	GetElementDetailsWithThemedTaskBand(detail types.TThemedTaskBand) TThemedElementDetails                                                                                                                 // function
-	GetElementDetailsWithThemedTaskBar(detail types.TThemedTaskBar) TThemedElementDetails                                                                                                                   // function
-	GetElementDetailsWithThemedToolBar(detail types.TThemedToolBar) TThemedElementDetails                                                                                                                   // function
-	GetElementDetailsWithThemedToolTip(detail types.TThemedToolTip) TThemedElementDetails                                                                                                                   // function
-	GetElementDetailsWithThemedTrackBar(detail types.TThemedTrackBar) TThemedElementDetails                                                                                                                 // function
-	GetElementDetailsWithThemedTrayNotify(detail types.TThemedTrayNotify) TThemedElementDetails                                                                                                             // function
-	GetElementDetailsWithThemedTreeview(detail types.TThemedTreeview) TThemedElementDetails                                                                                                                 // function
-	GetElementDetailsWithThemedWindow(detail types.TThemedWindow) TThemedElementDetails                                                                                                                     // function
-	GetDetailSizeForWindow(details TThemedElementDetails, window types.HWND) types.TSize                                                                                                                    // function
-	GetDetailSizeForPPI(details TThemedElementDetails, pPI int32) types.TSize                                                                                                                               // function
-	GetDetailRegion(dC types.HDC, details TThemedElementDetails, R types.TRect) types.HRGN                                                                                                                  // function
-	GetStockImageWithIntHBitmapX2(stockID int32, outImage *types.HBitmap, outMask *types.HBitmap) bool                                                                                                      // function
-	GetStockImageWithIntX3HBitmapX2(stockID int32, width int32, height int32, outImage *types.HBitmap, outMask *types.HBitmap) bool                                                                         // function
-	GetOption(option types.TThemeOption) int32                                                                                                                                                              // function
-	GetTextExtent(dC types.HDC, details TThemedElementDetails, S string, flags uint32, boundingRect types.TRect) types.TRect                                                                                // function
-	ColorToRGB(color int32, details TThemedElementDetails) types.COLORREF                                                                                                                                   // function
-	ContentRect(dC types.HDC, details TThemedElementDetails, boundingRect types.TRect) types.TRect                                                                                                          // function
-	HasTransparentParts(details TThemedElementDetails) bool                                                                                                                                                 // function
-	IntfDoOnThemeChange()                                                                                                                                                                                   // procedure
-	DrawEdge(dC types.HDC, details TThemedElementDetails, R types.TRect, edge uint32, flags uint32, contentRect types.TRect)                                                                                // procedure
-	DrawElement(dC types.HDC, details TThemedElementDetails, R types.TRect, clipRect types.TRect)                                                                                                           // procedure
-	DrawIconWithHDCThemedElementDetailsRectHIMAGELISTInt(dC types.HDC, details TThemedElementDetails, R types.TRect, himl types.HIMAGELIST, index int32)                                                    // procedure
-	DrawIconWithPersistentX3ThemedElementDetailsPointIntX2(canvas IPersistent, details TThemedElementDetails, P types.TPoint, imageList IPersistent, index int32, imageWidth int32, refControl IPersistent) // procedure
-	DrawParentBackground(window types.HWND, target types.HDC, details TThemedElementDetails, onlyIfTransparent bool, bounds types.TRect)                                                                    // procedure
-	DrawTextWithHDCThemedElementDetailsStringRectCardinalX2(dC types.HDC, details TThemedElementDetails, S string, R types.TRect, flags uint32, flags2 uint32)                                              // procedure
-	DrawTextWithPersistentThemedElementDetailsStringRectCardinalX2(canvas IPersistent, details TThemedElementDetails, S string, R types.TRect, flags uint32, flags2 uint32)                                 // procedure
-	PaintBorder(control IObject, eraseLRCorner bool)                                                                                                                                                        // procedure
-	UpdateThemes()                                                                                                                                                                                          // procedure
-	DottedBrush() types.HBRUSH                                                                                                                                                                              // property DottedBrush Getter
-	ThemesAvailable() bool                                                                                                                                                                                  // property ThemesAvailable Getter
-	ThemesEnabled() bool                                                                                                                                                                                    // property ThemesEnabled Getter
-	SetOnThemeChange(fn TNotifyEvent)                                                                                                                                                                       // property event
+	IsDisabled(details TThemedElementDetails) bool                                                                                                                                               // function
+	IsPushed(details TThemedElementDetails) bool                                                                                                                                                 // function
+	IsHot(details TThemedElementDetails) bool                                                                                                                                                    // function
+	IsChecked(details TThemedElementDetails) bool                                                                                                                                                // function
+	IsMixed(details TThemedElementDetails) bool                                                                                                                                                  // function
+	GetElementDetailsWithThemedButton(detail types.TThemedButton) TThemedElementDetails                                                                                                          // function
+	GetElementDetailsWithThemedClock(detail types.TThemedClock) TThemedElementDetails                                                                                                            // function
+	GetElementDetailsWithThemedComboBox(detail types.TThemedComboBox) TThemedElementDetails                                                                                                      // function
+	GetElementDetailsWithThemedEdit(detail types.TThemedEdit) TThemedElementDetails                                                                                                              // function
+	GetElementDetailsWithThemedExplorerBar(detail types.TThemedExplorerBar) TThemedElementDetails                                                                                                // function
+	GetElementDetailsWithThemedHeader(detail types.TThemedHeader) TThemedElementDetails                                                                                                          // function
+	GetElementDetailsWithThemedListView(detail types.TThemedListView) TThemedElementDetails                                                                                                      // function
+	GetElementDetailsWithThemedMenu(detail types.TThemedMenu) TThemedElementDetails                                                                                                              // function
+	GetElementDetailsWithThemedPage(detail types.TThemedPage) TThemedElementDetails                                                                                                              // function
+	GetElementDetailsWithThemedProgress(detail types.TThemedProgress) TThemedElementDetails                                                                                                      // function
+	GetElementDetailsWithThemedRebar(detail types.TThemedRebar) TThemedElementDetails                                                                                                            // function
+	GetElementDetailsWithThemedScrollBar(detail types.TThemedScrollBar) TThemedElementDetails                                                                                                    // function
+	GetElementDetailsWithThemedSpin(detail types.TThemedSpin) TThemedElementDetails                                                                                                              // function
+	GetElementDetailsWithThemedStartPanel(detail types.TThemedStartPanel) TThemedElementDetails                                                                                                  // function
+	GetElementDetailsWithThemedStatus(detail types.TThemedStatus) TThemedElementDetails                                                                                                          // function
+	GetElementDetailsWithThemedTab(detail types.TThemedTab) TThemedElementDetails                                                                                                                // function
+	GetElementDetailsWithThemedTaskBand(detail types.TThemedTaskBand) TThemedElementDetails                                                                                                      // function
+	GetElementDetailsWithThemedTaskBar(detail types.TThemedTaskBar) TThemedElementDetails                                                                                                        // function
+	GetElementDetailsWithThemedToolBar(detail types.TThemedToolBar) TThemedElementDetails                                                                                                        // function
+	GetElementDetailsWithThemedToolTip(detail types.TThemedToolTip) TThemedElementDetails                                                                                                        // function
+	GetElementDetailsWithThemedTrackBar(detail types.TThemedTrackBar) TThemedElementDetails                                                                                                      // function
+	GetElementDetailsWithThemedTrayNotify(detail types.TThemedTrayNotify) TThemedElementDetails                                                                                                  // function
+	GetElementDetailsWithThemedTreeview(detail types.TThemedTreeview) TThemedElementDetails                                                                                                      // function
+	GetElementDetailsWithThemedWindow(detail types.TThemedWindow) TThemedElementDetails                                                                                                          // function
+	GetDetailSizeForWindow(details TThemedElementDetails, window types.HWND) types.TSize                                                                                                         // function
+	GetDetailSizeForPPI(details TThemedElementDetails, pPI int32) types.TSize                                                                                                                    // function
+	GetDetailRegion(dC types.HDC, details TThemedElementDetails, R types.TRect) types.HRGN                                                                                                       // function
+	GetStockImageWithIntHBitmapX2(stockID int32, outImage *types.HBitmap, outMask *types.HBitmap) bool                                                                                           // function
+	GetStockImageWithIntX3HBitmapX2(stockID int32, width int32, height int32, outImage *types.HBitmap, outMask *types.HBitmap) bool                                                              // function
+	GetOption(option types.TThemeOption) int32                                                                                                                                                   // function
+	GetTextExtent(dC types.HDC, details TThemedElementDetails, S string, flags uint32, boundingRect types.TRect) types.TRect                                                                     // function
+	ColorToRGB(color int32, details TThemedElementDetails) types.COLORREF                                                                                                                        // function
+	ContentRect(dC types.HDC, details TThemedElementDetails, boundingRect types.TRect) types.TRect                                                                                               // function
+	HasTransparentParts(details TThemedElementDetails) bool                                                                                                                                      // function
+	IntfDoOnThemeChange()                                                                                                                                                                        // procedure
+	DrawEdge(dC types.HDC, details TThemedElementDetails, R types.TRect, edge uint32, flags uint32, contentRect types.TRect)                                                                     // procedure
+	DrawElement(dC types.HDC, details TThemedElementDetails, R types.TRect, clipRect types.TRect)                                                                                                // procedure
+	DrawIconWithHDCTEDetailsRectHIMAGELISTInt(dC types.HDC, details TThemedElementDetails, R types.TRect, himl types.HIMAGELIST, index int32)                                                    // procedure
+	DrawIconWithPersistentX3TEDetailsPointIntX2(canvas IPersistent, details TThemedElementDetails, P types.TPoint, imageList IPersistent, index int32, imageWidth int32, refControl IPersistent) // procedure
+	DrawParentBackground(window types.HWND, target types.HDC, details TThemedElementDetails, onlyIfTransparent bool, bounds types.TRect)                                                         // procedure
+	DrawTextWithHDCTEDetailsStrRectCardinalX2(dC types.HDC, details TThemedElementDetails, S string, R types.TRect, flags uint32, flags2 uint32)                                                 // procedure
+	DrawTextWithPersistentTEDetailsStrRectCardinalX2(canvas IPersistent, details TThemedElementDetails, S string, R types.TRect, flags uint32, flags2 uint32)                                    // procedure
+	PaintBorder(control IObject, eraseLRCorner bool)                                                                                                                                             // procedure
+	UpdateThemes()                                                                                                                                                                               // procedure
+	DottedBrush() types.HBRUSH                                                                                                                                                                   // property DottedBrush Getter
+	ThemesAvailable() bool                                                                                                                                                                       // property ThemesAvailable Getter
+	ThemesEnabled() bool                                                                                                                                                                         // property ThemesEnabled Getter
+	SetOnThemeChange(fn TNotifyEvent)                                                                                                                                                            // property event
 }
 
 type TThemeServices struct {
@@ -420,14 +420,14 @@ func (m *TThemeServices) DrawElement(dC types.HDC, details TThemedElementDetails
 	themeServicesAPI().SysCallN(42, m.Instance(), uintptr(dC), uintptr(base.UnsafePointer(&details)), uintptr(base.UnsafePointer(&R)), uintptr(base.UnsafePointer(&clipRect)))
 }
 
-func (m *TThemeServices) DrawIconWithHDCThemedElementDetailsRectHIMAGELISTInt(dC types.HDC, details TThemedElementDetails, R types.TRect, himl types.HIMAGELIST, index int32) {
+func (m *TThemeServices) DrawIconWithHDCTEDetailsRectHIMAGELISTInt(dC types.HDC, details TThemedElementDetails, R types.TRect, himl types.HIMAGELIST, index int32) {
 	if !m.IsValid() {
 		return
 	}
 	themeServicesAPI().SysCallN(43, m.Instance(), uintptr(dC), uintptr(base.UnsafePointer(&details)), uintptr(base.UnsafePointer(&R)), uintptr(himl), uintptr(index))
 }
 
-func (m *TThemeServices) DrawIconWithPersistentX3ThemedElementDetailsPointIntX2(canvas IPersistent, details TThemedElementDetails, P types.TPoint, imageList IPersistent, index int32, imageWidth int32, refControl IPersistent) {
+func (m *TThemeServices) DrawIconWithPersistentX3TEDetailsPointIntX2(canvas IPersistent, details TThemedElementDetails, P types.TPoint, imageList IPersistent, index int32, imageWidth int32, refControl IPersistent) {
 	if !m.IsValid() {
 		return
 	}
@@ -441,14 +441,14 @@ func (m *TThemeServices) DrawParentBackground(window types.HWND, target types.HD
 	themeServicesAPI().SysCallN(45, m.Instance(), uintptr(window), uintptr(target), uintptr(base.UnsafePointer(&details)), api.PasBool(onlyIfTransparent), uintptr(base.UnsafePointer(&bounds)))
 }
 
-func (m *TThemeServices) DrawTextWithHDCThemedElementDetailsStringRectCardinalX2(dC types.HDC, details TThemedElementDetails, S string, R types.TRect, flags uint32, flags2 uint32) {
+func (m *TThemeServices) DrawTextWithHDCTEDetailsStrRectCardinalX2(dC types.HDC, details TThemedElementDetails, S string, R types.TRect, flags uint32, flags2 uint32) {
 	if !m.IsValid() {
 		return
 	}
 	themeServicesAPI().SysCallN(46, m.Instance(), uintptr(dC), uintptr(base.UnsafePointer(&details)), api.PasStr(S), uintptr(base.UnsafePointer(&R)), uintptr(flags), uintptr(flags2))
 }
 
-func (m *TThemeServices) DrawTextWithPersistentThemedElementDetailsStringRectCardinalX2(canvas IPersistent, details TThemedElementDetails, S string, R types.TRect, flags uint32, flags2 uint32) {
+func (m *TThemeServices) DrawTextWithPersistentTEDetailsStrRectCardinalX2(canvas IPersistent, details TThemedElementDetails, S string, R types.TRect, flags uint32, flags2 uint32) {
 	if !m.IsValid() {
 		return
 	}
@@ -559,11 +559,11 @@ func themeServicesAPI() *imports.Imports {
 			/* 40 */ imports.NewTable("TThemeServices_IntfDoOnThemeChange", 0), // procedure IntfDoOnThemeChange
 			/* 41 */ imports.NewTable("TThemeServices_DrawEdge", 0), // procedure DrawEdge
 			/* 42 */ imports.NewTable("TThemeServices_DrawElement", 0), // procedure DrawElement
-			/* 43 */ imports.NewTable("TThemeServices_DrawIconWithHDCThemedElementDetailsRectHIMAGELISTInt", 0), // procedure DrawIconWithHDCThemedElementDetailsRectHIMAGELISTInt
-			/* 44 */ imports.NewTable("TThemeServices_DrawIconWithPersistentX3ThemedElementDetailsPointIntX2", 0), // procedure DrawIconWithPersistentX3ThemedElementDetailsPointIntX2
+			/* 43 */ imports.NewTable("TThemeServices_DrawIconWithHDCTEDetailsRectHIMAGELISTInt", 0), // procedure DrawIconWithHDCTEDetailsRectHIMAGELISTInt
+			/* 44 */ imports.NewTable("TThemeServices_DrawIconWithPersistentX3TEDetailsPointIntX2", 0), // procedure DrawIconWithPersistentX3TEDetailsPointIntX2
 			/* 45 */ imports.NewTable("TThemeServices_DrawParentBackground", 0), // procedure DrawParentBackground
-			/* 46 */ imports.NewTable("TThemeServices_DrawTextWithHDCThemedElementDetailsStringRectCardinalX2", 0), // procedure DrawTextWithHDCThemedElementDetailsStringRectCardinalX2
-			/* 47 */ imports.NewTable("TThemeServices_DrawTextWithPersistentThemedElementDetailsStringRectCardinalX2", 0), // procedure DrawTextWithPersistentThemedElementDetailsStringRectCardinalX2
+			/* 46 */ imports.NewTable("TThemeServices_DrawTextWithHDCTEDetailsStrRectCardinalX2", 0), // procedure DrawTextWithHDCTEDetailsStrRectCardinalX2
+			/* 47 */ imports.NewTable("TThemeServices_DrawTextWithPersistentTEDetailsStrRectCardinalX2", 0), // procedure DrawTextWithPersistentTEDetailsStrRectCardinalX2
 			/* 48 */ imports.NewTable("TThemeServices_PaintBorder", 0), // procedure PaintBorder
 			/* 49 */ imports.NewTable("TThemeServices_UpdateThemes", 0), // procedure UpdateThemes
 			/* 50 */ imports.NewTable("TThemeServices_DottedBrush", 0), // property DottedBrush

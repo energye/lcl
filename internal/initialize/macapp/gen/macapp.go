@@ -4,8 +4,9 @@
 package gen
 
 import (
-	"github.com/energye/lcl/internal/initialize/macapp"
 	"os"
+
+	"github.com/energye/lcl/internal/initialize/macapp"
 )
 
 func GenMacOSApp(exeFileDir, cefSubProcess string) {

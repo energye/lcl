@@ -21,14 +21,14 @@ type IPicture interface {
 	Clear() // procedure
 	// LoadFromClipboardFormat
 	//  load methods
-	LoadFromClipboardFormat(formatID types.TClipboardFormat)                                                       // procedure
-	LoadFromClipboardFormatID(clipboardType types.TClipboardType, formatID types.TClipboardFormat)                 // procedure
-	LoadFromFile(filename string)                                                                                  // procedure
-	LoadFromResourceNameWithLCLHandleString(instance types.TLCLHandle, resName string)                             // procedure
-	LoadFromResourceNameWithLCLHandleStringGraphicClass(instance types.TLCLHandle, resName string, class IGraphic) // procedure
-	LoadFromLazarusResource(name string)                                                                           // procedure
-	LoadFromStream(stream IStream)                                                                                 // procedure
-	LoadFromStreamWithFileExt(stream IStream, fileExt string)                                                      // procedure
+	LoadFromClipboardFormat(formatID types.TClipboardFormat)                                              // procedure
+	LoadFromClipboardFormatID(clipboardType types.TClipboardType, formatID types.TClipboardFormat)        // procedure
+	LoadFromFile(filename string)                                                                         // procedure
+	LoadFromResourceNameWithLCLHandleStr(instance types.TLCLHandle, resName string)                       // procedure
+	LoadFromResourceNameWithLCLHandleStrGClass(instance types.TLCLHandle, resName string, class IGraphic) // procedure
+	LoadFromLazarusResource(name string)                                                                  // procedure
+	LoadFromStream(stream IStream)                                                                        // procedure
+	LoadFromStreamWithFileExt(stream IStream, fileExt string)                                             // procedure
 	// SaveToClipboardFormat
 	//  save methods
 	SaveToClipboardFormat(formatID types.TClipboardFormat)  // procedure
@@ -89,14 +89,14 @@ func (m *TPicture) LoadFromFile(filename string) {
 	pictureAPI().SysCallN(6, m.Instance(), api.PasStr(filename))
 }
 
-func (m *TPicture) LoadFromResourceNameWithLCLHandleString(instance types.TLCLHandle, resName string) {
+func (m *TPicture) LoadFromResourceNameWithLCLHandleStr(instance types.TLCLHandle, resName string) {
 	if !m.IsValid() {
 		return
 	}
 	pictureAPI().SysCallN(7, m.Instance(), uintptr(instance), api.PasStr(resName))
 }
 
-func (m *TPicture) LoadFromResourceNameWithLCLHandleStringGraphicClass(instance types.TLCLHandle, resName string, class IGraphic) {
+func (m *TPicture) LoadFromResourceNameWithLCLHandleStrGClass(instance types.TLCLHandle, resName string, class IGraphic) {
 	if !m.IsValid() {
 		return
 	}
@@ -339,8 +339,8 @@ func pictureAPI() *imports.Imports {
 			/* 4 */ imports.NewTable("TPicture_LoadFromClipboardFormat", 0), // procedure LoadFromClipboardFormat
 			/* 5 */ imports.NewTable("TPicture_LoadFromClipboardFormatID", 0), // procedure LoadFromClipboardFormatID
 			/* 6 */ imports.NewTable("TPicture_LoadFromFile", 0), // procedure LoadFromFile
-			/* 7 */ imports.NewTable("TPicture_LoadFromResourceNameWithLCLHandleString", 0), // procedure LoadFromResourceNameWithLCLHandleString
-			/* 8 */ imports.NewTable("TPicture_LoadFromResourceNameWithLCLHandleStringGraphicClass", 0), // procedure LoadFromResourceNameWithLCLHandleStringGraphicClass
+			/* 7 */ imports.NewTable("TPicture_LoadFromResourceNameWithLCLHandleStr", 0), // procedure LoadFromResourceNameWithLCLHandleStr
+			/* 8 */ imports.NewTable("TPicture_LoadFromResourceNameWithLCLHandleStrGClass", 0), // procedure LoadFromResourceNameWithLCLHandleStrGClass
 			/* 9 */ imports.NewTable("TPicture_LoadFromLazarusResource", 0), // procedure LoadFromLazarusResource
 			/* 10 */ imports.NewTable("TPicture_LoadFromStream", 0), // procedure LoadFromStream
 			/* 11 */ imports.NewTable("TPicture_LoadFromStreamWithFileExt", 0), // procedure LoadFromStreamWithFileExt

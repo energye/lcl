@@ -13,14 +13,15 @@
 package initialize
 
 import (
+	"os"
+	"path/filepath"
+
 	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
 	"github.com/energye/lcl/api/libname"
 	"github.com/energye/lcl/emfs"
 	"github.com/energye/lcl/tool"
 	"github.com/energye/lcl/tool/exec"
-	"os"
-	"path/filepath"
 )
 
 // 发布环境加载 libENERGY，不再依赖 .energy 配置文件

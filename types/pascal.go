@@ -42,6 +42,9 @@ type PUint32Array uintptr
 // PStringArray = ^TStringArray = array of string
 type PStringArray uintptr
 
+// PByteArray = ^TByteArray = array of byte
+type PByteArray uintptr
+
 // PBrushPattern = ^TBrushPattern = array[0..PatternBitCount-1] of TPenPattern;
 // PatternBitCount = SizeOf(uint32) * 8;
 type PBrushPattern uintptr
@@ -82,6 +85,9 @@ type PFormatEtc uintptr
 // PPointerList = ^TPointerList = array[0..MaxListSize - 1] of Pointer
 // MaxListSize = Maxint / 16
 type PPointerList uintptr
+
+// PInteger = PInteger = ^Integer
+type PInteger uintptr
 
 type TSysLocale struct {
 	//Delphi compat fields

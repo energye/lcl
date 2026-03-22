@@ -12,22 +12,21 @@ import (
 	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
 	"github.com/energye/lcl/base"
-	"github.com/energye/lcl/types"
 )
 
 // IPaperSize Parent: IObject
 type IPaperSize interface {
 	IObject
-	DefaultPapers() bool                      // property DefaultPapers Getter
-	Width() int32                             // property Width Getter
-	Height() int32                            // property Height Getter
-	PaperName() string                        // property PaperName Getter
-	SetPaperName(value string)                // property PaperName Setter
-	DefaultPaperName() string                 // property DefaultPaperName Getter
-	PaperRect() types.TPaperRect              // property PaperRect Getter
-	SetPaperRect(value types.TPaperRect)      // property PaperRect Setter
-	SupportedPapers() IStrings                // property SupportedPapers Getter
-	PaperRectOf(name string) types.TPaperRect // property PaperRectOf Getter
+	DefaultPapers() bool                // property DefaultPapers Getter
+	Width() int32                       // property Width Getter
+	Height() int32                      // property Height Getter
+	PaperName() string                  // property PaperName Getter
+	SetPaperName(value string)          // property PaperName Setter
+	DefaultPaperName() string           // property DefaultPaperName Getter
+	PaperRect() TPaperRect              // property PaperRect Getter
+	SetPaperRect(value TPaperRect)      // property PaperRect Setter
+	SupportedPapers() IStrings          // property SupportedPapers Getter
+	PaperRectOf(name string) TPaperRect // property PaperRectOf Getter
 }
 
 type TPaperSize struct {
@@ -81,7 +80,7 @@ func (m *TPaperSize) DefaultPaperName() string {
 	return api.GoStr(r)
 }
 
-func (m *TPaperSize) PaperRect() (result types.TPaperRect) {
+func (m *TPaperSize) PaperRect() (result TPaperRect) {
 	if !m.IsValid() {
 		return
 	}
@@ -89,7 +88,7 @@ func (m *TPaperSize) PaperRect() (result types.TPaperRect) {
 	return
 }
 
-func (m *TPaperSize) SetPaperRect(value types.TPaperRect) {
+func (m *TPaperSize) SetPaperRect(value TPaperRect) {
 	if !m.IsValid() {
 		return
 	}
@@ -104,7 +103,7 @@ func (m *TPaperSize) SupportedPapers() IStrings {
 	return AsStrings(r)
 }
 
-func (m *TPaperSize) PaperRectOf(name string) (result types.TPaperRect) {
+func (m *TPaperSize) PaperRectOf(name string) (result TPaperRect) {
 	if !m.IsValid() {
 		return
 	}

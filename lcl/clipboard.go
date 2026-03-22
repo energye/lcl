@@ -18,36 +18,36 @@ import (
 // IClipboard Parent: IPersistent
 type IClipboard interface {
 	IPersistent
-	AddFormatWithClipboardFormatStream(formatID types.TClipboardFormat, stream IStream) bool                  // function
-	AddFormatWithClipboardFormatPointerInt(formatID types.TClipboardFormat, buffer *uintptr, size int32) bool // function
-	FindPictureFormatID() types.TClipboardFormat                                                              // function
-	FindFormatID(formatName string) types.TClipboardFormat                                                    // function
-	GetAsHtml(extractFragmentOnly bool) string                                                                // function
-	GetComponentWithComponentX2(owner IComponent, parent IComponent) IComponent                               // function
-	GetFormat(formatID types.TClipboardFormat, stream IStream) bool                                           // function
-	GetTextBuf(buffer uintptr, bufSize int32) int32                                                           // function
-	HasFormat(formatID types.TClipboardFormat) bool                                                           // function
-	HasFormatName(formatName string) bool                                                                     // function
-	HasPictureFormat() bool                                                                                   // function
-	SetComponent(component IComponent) bool                                                                   // function
-	SetComponentAsText(component IComponent) bool                                                             // function
-	SetFormat(formatID types.TClipboardFormat, stream IStream) bool                                           // function
-	SetSupportedFormats(formatCount int32, formatList types.TClipboardFormat) bool                            // function
-	AssignTo(dest IPersistent)                                                                                // procedure
-	Clear()                                                                                                   // procedure
-	Close()                                                                                                   // procedure
-	SupportedFormatsWithStrings(list IStrings)                                                                // procedure
-	SupportedFormatsWithIntPClipboardFormat(formatCount *int32, formatList *types.TClipboardFormat)           // procedure
-	Open()                                                                                                    // procedure
-	SetAsHtmlWithString(html string)                                                                          // procedure
-	SetAsHtmlWithStringX2(html string, plainText string)                                                      // procedure
-	SetTextBuf(buffer uintptr)                                                                                // procedure
-	AsText() string                                                                                           // property AsText Getter
-	SetAsText(value string)                                                                                   // property AsText Setter
-	ClipboardType() types.TClipboardType                                                                      // property ClipboardType Getter
-	FormatCount() int32                                                                                       // property FormatCount Getter
-	Formats(index int32) types.TClipboardFormat                                                               // property Formats Getter
-	SetOnRequest(fn TClipboardRequestEvent)                                                                   // property event
+	AddFormatWithClipboardFormatStream(formatID types.TClipboardFormat, stream IStream) bool          // function
+	AddFormatWithCFormatPointerInt(formatID types.TClipboardFormat, buffer *uintptr, size int32) bool // function
+	FindPictureFormatID() types.TClipboardFormat                                                      // function
+	FindFormatID(formatName string) types.TClipboardFormat                                            // function
+	GetAsHtml(extractFragmentOnly bool) string                                                        // function
+	GetComponentWithComponentX2(owner IComponent, parent IComponent) IComponent                       // function
+	GetFormat(formatID types.TClipboardFormat, stream IStream) bool                                   // function
+	GetTextBuf(buffer uintptr, bufSize int32) int32                                                   // function
+	HasFormat(formatID types.TClipboardFormat) bool                                                   // function
+	HasFormatName(formatName string) bool                                                             // function
+	HasPictureFormat() bool                                                                           // function
+	SetComponent(component IComponent) bool                                                           // function
+	SetComponentAsText(component IComponent) bool                                                     // function
+	SetFormat(formatID types.TClipboardFormat, stream IStream) bool                                   // function
+	SetSupportedFormats(formatCount int32, formatList types.TClipboardFormat) bool                    // function
+	AssignTo(dest IPersistent)                                                                        // procedure
+	Clear()                                                                                           // procedure
+	Close()                                                                                           // procedure
+	SupportedFormatsWithStrings(list IStrings)                                                        // procedure
+	SupportedFormatsWithIntPClipboardFormat(formatCount *int32, formatList *types.TClipboardFormat)   // procedure
+	Open()                                                                                            // procedure
+	SetAsHtmlWithStr(html string)                                                                     // procedure
+	SetAsHtmlWithStrX2(html string, plainText string)                                                 // procedure
+	SetTextBuf(buffer uintptr)                                                                        // procedure
+	AsText() string                                                                                   // property AsText Getter
+	SetAsText(value string)                                                                           // property AsText Setter
+	ClipboardType() types.TClipboardType                                                              // property ClipboardType Getter
+	FormatCount() int32                                                                               // property FormatCount Getter
+	Formats(index int32) types.TClipboardFormat                                                       // property Formats Getter
+	SetOnRequest(fn TClipboardRequestEvent)                                                           // property event
 }
 
 type TClipboard struct {
@@ -62,7 +62,7 @@ func (m *TClipboard) AddFormatWithClipboardFormatStream(formatID types.TClipboar
 	return api.GoBool(r)
 }
 
-func (m *TClipboard) AddFormatWithClipboardFormatPointerInt(formatID types.TClipboardFormat, buffer *uintptr, size int32) bool {
+func (m *TClipboard) AddFormatWithCFormatPointerInt(formatID types.TClipboardFormat, buffer *uintptr, size int32) bool {
 	if !m.IsValid() {
 		return false
 	}
@@ -222,14 +222,14 @@ func (m *TClipboard) Open() {
 	clipboardAPI().SysCallN(22, m.Instance())
 }
 
-func (m *TClipboard) SetAsHtmlWithString(html string) {
+func (m *TClipboard) SetAsHtmlWithStr(html string) {
 	if !m.IsValid() {
 		return
 	}
 	clipboardAPI().SysCallN(23, m.Instance(), api.PasStr(html))
 }
 
-func (m *TClipboard) SetAsHtmlWithStringX2(html string, plainText string) {
+func (m *TClipboard) SetAsHtmlWithStrX2(html string, plainText string) {
 	if !m.IsValid() {
 		return
 	}
@@ -314,7 +314,7 @@ func clipboardAPI() *imports.Imports {
 			/* 0 */ imports.NewTable("TClipboard_Create", 0), // constructor NewClipboard
 			/* 1 */ imports.NewTable("TClipboard_CreateWithClipboardType", 0), // constructor NewClipboardWithClipboardType
 			/* 2 */ imports.NewTable("TClipboard_AddFormatWithClipboardFormatStream", 0), // function AddFormatWithClipboardFormatStream
-			/* 3 */ imports.NewTable("TClipboard_AddFormatWithClipboardFormatPointerInt", 0), // function AddFormatWithClipboardFormatPointerInt
+			/* 3 */ imports.NewTable("TClipboard_AddFormatWithCFormatPointerInt", 0), // function AddFormatWithCFormatPointerInt
 			/* 4 */ imports.NewTable("TClipboard_FindPictureFormatID", 0), // function FindPictureFormatID
 			/* 5 */ imports.NewTable("TClipboard_FindFormatID", 0), // function FindFormatID
 			/* 6 */ imports.NewTable("TClipboard_GetAsHtml", 0), // function GetAsHtml
@@ -334,8 +334,8 @@ func clipboardAPI() *imports.Imports {
 			/* 20 */ imports.NewTable("TClipboard_SupportedFormatsWithStrings", 0), // procedure SupportedFormatsWithStrings
 			/* 21 */ imports.NewTable("TClipboard_SupportedFormatsWithIntPClipboardFormat", 0), // procedure SupportedFormatsWithIntPClipboardFormat
 			/* 22 */ imports.NewTable("TClipboard_Open", 0), // procedure Open
-			/* 23 */ imports.NewTable("TClipboard_SetAsHtmlWithString", 0), // procedure SetAsHtmlWithString
-			/* 24 */ imports.NewTable("TClipboard_SetAsHtmlWithStringX2", 0), // procedure SetAsHtmlWithStringX2
+			/* 23 */ imports.NewTable("TClipboard_SetAsHtmlWithStr", 0), // procedure SetAsHtmlWithStr
+			/* 24 */ imports.NewTable("TClipboard_SetAsHtmlWithStrX2", 0), // procedure SetAsHtmlWithStrX2
 			/* 25 */ imports.NewTable("TClipboard_SetTextBuf", 0), // procedure SetTextBuf
 			/* 26 */ imports.NewTable("TClipboard_AsText", 0), // property AsText
 			/* 27 */ imports.NewTable("TClipboard_ClipboardType", 0), // property ClipboardType

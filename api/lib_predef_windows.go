@@ -12,8 +12,9 @@
 package api
 
 import (
-	"github.com/energye/lcl/api/imports"
 	"sync"
+
+	"github.com/energye/lcl/api/imports"
 )
 
 func CreateURLShortCut(aDestPath, aShortCutName, aURL string) {

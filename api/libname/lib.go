@@ -14,7 +14,7 @@ import (
 	"runtime"
 )
 
-const DarwinUniversalBinaryName = "libenergy-darwin-universal-cocoa.dylib"
+const DarwinUniversalBinaryName = "libenergy-universal.dylib"
 
 var LibName string // 加载完成后该变量可被置空
 
@@ -25,20 +25,23 @@ func GetDLLName() string {
 	ws, ext := "", ""
 	switch goos {
 	case "darwin":
-		ws = "cocoa"
 		ext = "dylib"
 	case "linux":
 		ext = "so"
 		if envws := os.Getenv("--ws"); envws != "" {
-			ws = envws
+			ws = envws // use gtk3
 		} else {
 			ws = "gtk2"
 		}
+		if len(ws) > 0 && ws[0] != '-' {
+			ws = "-" + ws // add first str "-"
+		}
 	case "windows":
-		ws = "win32"
 		ext = "dll"
 	}
-	name := fmt.Sprintf("libenergy-%s-%s-%s.%s", goos, goarch, ws, ext)
+	// windows, macOS: libenergy-[arch].xx
+	// linux:  libenergy-[arch]-[ws].xx
+	name := fmt.Sprintf("libenergy-%s%s.%s", goarch, ws, ext)
 	return name
 }
 

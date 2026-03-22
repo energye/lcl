@@ -48,7 +48,7 @@ type IUpDown interface {
 	SetWrap(value bool)                             // property Wrap Setter
 	SetOnChanging(fn TUDChangingEvent)              // property event
 	SetOnChangingEx(fn TUDChangingEventEx)          // property event
-	SetOnUDClick(fn TUDClickEvent)                  // property event
+	SetOnClickToUDClickEvent(fn TUDClickEvent)      // property event
 	SetOnContextPopup(fn TContextPopupEvent)        // property event
 	SetOnMouseDown(fn TMouseEvent)                  // property event
 	SetOnMouseEnter(fn TNotifyEvent)                // property event
@@ -293,7 +293,7 @@ func (m *TUpDown) SetOnChangingEx(fn TUDChangingEventEx) {
 	base.SetEvent(m, 16, upDownAPI(), api.MakeEventDataPtr(cb))
 }
 
-func (m *TUpDown) SetOnUDClick(fn TUDClickEvent) {
+func (m *TUpDown) SetOnClickToUDClickEvent(fn TUDClickEvent) {
 	if !m.IsValid() {
 		return
 	}
@@ -434,7 +434,7 @@ func upDownAPI() *imports.Imports {
 			/* 14 */ imports.NewTable("TUpDown_Wrap", 0), // property Wrap
 			/* 15 */ imports.NewTable("TUpDown_OnChanging", 0), // event OnChanging
 			/* 16 */ imports.NewTable("TUpDown_OnChangingEx", 0), // event OnChangingEx
-			/* 17 */ imports.NewTable("TUpDown_OnClickToUDClickEvent", 0), // event OnUDClick
+			/* 17 */ imports.NewTable("TUpDown_OnClickToUDClickEvent", 0), // event OnClick
 			/* 18 */ imports.NewTable("TUpDown_OnContextPopup", 0), // event OnContextPopup
 			/* 19 */ imports.NewTable("TUpDown_OnMouseDown", 0), // event OnMouseDown
 			/* 20 */ imports.NewTable("TUpDown_OnMouseEnter", 0), // event OnMouseEnter

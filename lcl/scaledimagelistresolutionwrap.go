@@ -25,7 +25,7 @@ type IScaledImageListResolutionWrap interface {
 	Count() int32                                                                                                                                                                                             // function
 	Valid() bool                                                                                                                                                                                              // function
 	GetBitmapWithIntCustomBitmap(index int32, image ICustomBitmap)                                                                                                                                            // procedure
-	GetBitmapWithIntCustomBitmapGraphicsDrawEffect(index int32, image ICustomBitmap, effect types.TGraphicsDrawEffect)                                                                                        // procedure
+	GetBitmapWithIntCBitmapGDEffect(index int32, image ICustomBitmap, effect types.TGraphicsDrawEffect)                                                                                                       // procedure
 	DrawXY(canvas ICanvas, X int32, Y int32, index int32, enabled bool)                                                                                                                                       // procedure
 	DrawXYEffect(canvas ICanvas, X int32, Y int32, index int32, drawEffect types.TGraphicsDrawEffect)                                                                                                         // procedure
 	DrawXYStyleType(canvas ICanvas, X int32, Y int32, index int32, drawingStyle types.TDrawingStyle, imageType types.TImageType, enabled bool)                                                                // procedure
@@ -95,7 +95,7 @@ func (m *TScaledImageListResolutionWrap) GetBitmapWithIntCustomBitmap(index int3
 	scaledImageListResolutionWrapAPI().SysCallN(7, m.Instance(), uintptr(index), base.GetObjectUintptr(image))
 }
 
-func (m *TScaledImageListResolutionWrap) GetBitmapWithIntCustomBitmapGraphicsDrawEffect(index int32, image ICustomBitmap, effect types.TGraphicsDrawEffect) {
+func (m *TScaledImageListResolutionWrap) GetBitmapWithIntCBitmapGDEffect(index int32, image ICustomBitmap, effect types.TGraphicsDrawEffect) {
 	if !m.IsValid() {
 		return
 	}
@@ -181,7 +181,7 @@ func scaledImageListResolutionWrapAPI() *imports.Imports {
 			/* 5 */ imports.NewTable("TScaledImageListResolutionWrap_Count", 0), // function Count
 			/* 6 */ imports.NewTable("TScaledImageListResolutionWrap_Valid", 0), // function Valid
 			/* 7 */ imports.NewTable("TScaledImageListResolutionWrap_GetBitmapWithIntCustomBitmap", 0), // procedure GetBitmapWithIntCustomBitmap
-			/* 8 */ imports.NewTable("TScaledImageListResolutionWrap_GetBitmapWithIntCustomBitmapGraphicsDrawEffect", 0), // procedure GetBitmapWithIntCustomBitmapGraphicsDrawEffect
+			/* 8 */ imports.NewTable("TScaledImageListResolutionWrap_GetBitmapWithIntCBitmapGDEffect", 0), // procedure GetBitmapWithIntCBitmapGDEffect
 			/* 9 */ imports.NewTable("TScaledImageListResolutionWrap_DrawXY", 0), // procedure DrawXY
 			/* 10 */ imports.NewTable("TScaledImageListResolutionWrap_DrawXYEffect", 0), // procedure DrawXYEffect
 			/* 11 */ imports.NewTable("TScaledImageListResolutionWrap_DrawXYStyleType", 0), // procedure DrawXYStyleType

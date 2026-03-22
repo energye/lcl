@@ -61,8 +61,8 @@ type IVTHeader interface {
 	SetPopupMenu(value IPopupMenu)                                                                                  // property PopupMenu Setter
 	SortColumn() int32                                                                                              // property SortColumn Getter
 	SetSortColumn(value int32)                                                                                      // property SortColumn Setter
-	SortDirection() types.TSortDirection                                                                            // property SortDirection Getter
-	SetSortDirection(value types.TSortDirection)                                                                    // property SortDirection Setter
+	SortDirection() types.LVTreesTSortDirection                                                                     // property SortDirection Getter
+	SetSortDirection(value types.LVTreesTSortDirection)                                                             // property SortDirection Setter
 	Style() types.TVTHeaderStyle                                                                                    // property Style Getter
 	SetStyle(value types.TVTHeaderStyle)                                                                            // property Style Setter
 }
@@ -395,15 +395,15 @@ func (m *TVTHeader) SetSortColumn(value int32) {
 	vTHeaderAPI().SysCallN(28, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVTHeader) SortDirection() types.TSortDirection {
+func (m *TVTHeader) SortDirection() types.LVTreesTSortDirection {
 	if !m.IsValid() {
 		return 0
 	}
 	r := vTHeaderAPI().SysCallN(29, 0, m.Instance())
-	return types.TSortDirection(r)
+	return types.LVTreesTSortDirection(r)
 }
 
-func (m *TVTHeader) SetSortDirection(value types.TSortDirection) {
+func (m *TVTHeader) SetSortDirection(value types.LVTreesTSortDirection) {
 	if !m.IsValid() {
 		return
 	}

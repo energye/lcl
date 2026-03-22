@@ -60,8 +60,8 @@ type IListView interface {
 	SetSmallImagesWidth(value int32)                                     // property SmallImagesWidth Setter
 	SortColumn() int32                                                   // property SortColumn Getter
 	SetSortColumn(value int32)                                           // property SortColumn Setter
-	SortDirection() types.TSortDirection                                 // property SortDirection Getter
-	SetSortDirection(value types.TSortDirection)                         // property SortDirection Setter
+	SortDirection() types.CCtrlsTSortDirection                           // property SortDirection Getter
+	SetSortDirection(value types.CCtrlsTSortDirection)                   // property SortDirection Setter
 	SortType() types.TSortType                                           // property SortType Getter
 	SetSortType(value types.TSortType)                                   // property SortType Setter
 	StateImages() ICustomImageList                                       // property StateImages Getter
@@ -434,15 +434,15 @@ func (m *TListView) SetSortColumn(value int32) {
 	listViewAPI().SysCallN(21, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TListView) SortDirection() types.TSortDirection {
+func (m *TListView) SortDirection() types.CCtrlsTSortDirection {
 	if !m.IsValid() {
 		return 0
 	}
 	r := listViewAPI().SysCallN(22, 0, m.Instance())
-	return types.TSortDirection(r)
+	return types.CCtrlsTSortDirection(r)
 }
 
-func (m *TListView) SetSortDirection(value types.TSortDirection) {
+func (m *TListView) SetSortDirection(value types.CCtrlsTSortDirection) {
 	if !m.IsValid() {
 		return
 	}

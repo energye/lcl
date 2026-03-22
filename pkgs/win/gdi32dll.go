@@ -12,9 +12,10 @@
 package win
 
 import (
-	"github.com/energye/lcl/types/colors"
 	"syscall"
 	"unsafe"
+
+	"github.com/energye/lcl/types/colors"
 
 	. "github.com/energye/lcl/types"
 )

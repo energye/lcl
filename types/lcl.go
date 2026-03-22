@@ -8,6 +8,18 @@
 
 package types
 
+// LPosFlag ENUM
+type LPosFlag = int32
+
+const (
+	LpAllowPastEol LPosFlag = iota
+	LpAdjustToNext
+	LpStopAtCodePoint
+)
+
+// LPosFlags SET: LPosFlag
+type LPosFlags = TSet
+
 // TAnchorKind ENUM
 type TAnchorKind = int32
 
@@ -169,6 +181,21 @@ const (
 
 // TComboBoxExStyles SET: TComboBoxExStyleEx
 type TComboBoxExStyles = TSet
+
+// TCommentStyle ENUM
+type TCommentStyle = int32
+
+const (
+	CsAnsiStyle TCommentStyle = iota
+	CsPasStyle
+	CsCStyle
+	CsAsmStyle
+	CsBasStyle
+	CsVBStyle
+)
+
+// CommentStyles SET: TCommentStyle
+type CommentStyles = TSet
 
 // TComponentStatee ENUM
 type TComponentStatee = int32
@@ -422,6 +449,20 @@ const (
 // TEdgeBorders SET: TEdgeBorder
 type TEdgeBorders = TSet
 
+// TEventType ENUM
+type TEventType = int32
+
+const (
+	EtNotify TEventType = iota
+	EtKey
+	EtKeyPress
+	EtMouseWheel
+	EtMouseUpDown
+)
+
+// TEventLogTypes SET: TEventType
+type TEventLogTypes = TSet
+
 // TFilterStringOption ENUM
 type TFilterStringOption = int32
 
@@ -499,11 +540,11 @@ const (
 	FsStrikeOut
 )
 
-// TFontStylesBase SET: TFontStyle
-type TFontStylesBase = TSet
-
 // TFontStyles SET: TFontStyle
 type TFontStyles = TSet
+
+// TFontStylesBase SET: TFontStyle
+type TFontStylesBase = TSet
 
 // TFormStateType ENUM
 type TFormStateType = int32
@@ -703,6 +744,35 @@ const (
 // THitTests SET: THitTest
 type THitTests = TSet
 
+// THookedCommandFlag ENUM
+type THookedCommandFlag = int32
+
+const (
+	HcfInit THookedCommandFlag = iota
+	HcfPreExec
+	HcfPostExec
+	HcfFinish
+)
+
+// THookedCommandFlags SET: THookedCommandFlag
+type THookedCommandFlags = TSet
+
+// TIniFileOption ENUM
+type TIniFileOption = int32
+
+const (
+	IfoStripComments TIniFileOption = iota
+	IfoStripInvalid
+	IfoEscapeLineFeeds
+	IfoCaseSensitive
+	IfoStripQuotes
+	IfoFormatSettingsActive
+	IfoWriteStringBoolean
+)
+
+// TIniFileOptions SET: TIniFileOption
+type TIniFileOptions = TSet
+
 // TKeyOption ENUM
 type TKeyOption = int32
 
@@ -808,6 +878,16 @@ const (
 
 // TNodeStates SET: TNodeState
 type TNodeStates = TSet
+
+// TOnBeforeExeucteFlag ENUM
+type TOnBeforeExeucteFlag = int32
+
+const (
+	BefAbort TOnBeforeExeucteFlag = iota
+)
+
+// TOnBeforeExeucteFlags SET: TOnBeforeExeucteFlag
+type TOnBeforeExeucteFlags = TSet
 
 // TOpenGLControlOption ENUM
 type TOpenGLControlOption = int32
@@ -931,21 +1011,6 @@ const (
 // TPanelParts SET: TPanelPart
 type TPanelParts = TSet
 
-// TParaModifyMaske ENUM
-type TParaModifyMaske = int32
-
-const (
-	Pmm_FirstLine TParaModifyMaske = iota
-	Pmm_HeadIndent
-	Pmm_TailIndent
-	Pmm_SpaceBefore
-	Pmm_SpaceAfter
-	Pmm_LineSpacing
-)
-
-// TParaModifyMask SET: TParaModifyMaske
-type TParaModifyMask = TSet
-
 // TPrintDialogOption ENUM
 type TPrintDialogOption = int32
 
@@ -977,18 +1042,6 @@ const (
 
 // TRawImageQueryFlags SET: TRawImageQueryFlag
 type TRawImageQueryFlags = TSet
-
-// TSearchOption ENUM
-type TSearchOption = int32
-
-const (
-	SoMatchCase TSearchOption = iota
-	SoWholeWord
-	SoBackward
-)
-
-// TSearchOptions SET: TSearchOption
-type TSearchOptions = TSet
 
 // TSectionValuesOption ENUM
 type TSectionValuesOption = int32
@@ -1058,6 +1111,319 @@ const (
 // TStringsOptions SET: TStringsOption
 type TStringsOptions = TSet
 
+// TSynCoordinateMappingFlag ENUM
+type TSynCoordinateMappingFlag = int32
+
+const (
+	ScmLimitToLines TSynCoordinateMappingFlag = iota
+	ScmIncludePartVisible
+	ScmForceLeftSidePos
+)
+
+// TSynCoordinateMappingFlags SET: TSynCoordinateMappingFlag
+type TSynCoordinateMappingFlags = TSet
+
+// TSynCustomFoldConfigMode ENUM
+type TSynCustomFoldConfigMode = int32
+
+const (
+	FmFold TSynCustomFoldConfigMode = iota
+	FmHide
+	FmMarkup
+	FmOutline
+)
+
+// TSynCustomFoldConfigModes SET: TSynCustomFoldConfigMode
+type TSynCustomFoldConfigModes = TSet
+
+// TSynEditHasTextFlag ENUM
+type TSynEditHasTextFlag = int32
+
+const (
+	ShtIncludeVirtual TSynEditHasTextFlag = iota
+)
+
+// TSynEditHasTextFlags SET: TSynEditHasTextFlag
+type TSynEditHasTextFlags = TSet
+
+// TSynEditorMouseOption ENUM
+type TSynEditorMouseOption = int32
+
+const (
+	EmUseMouseActions TSynEditorMouseOption = iota
+	EmAltSetsColumnMode
+	EmDragDropEditing
+	EmRightMouseMovesCursor
+	EmDoubleClickSelectsLine
+	EmShowCtrlMouseLinks
+	EmCtrlWheelZoom
+)
+
+// TSynEditorMouseOptions SET: TSynEditorMouseOption
+type TSynEditorMouseOptions = TSet
+
+// TSynEditorOption ENUM
+type TSynEditorOption = int32
+
+const (
+	EoAutoIndent TSynEditorOption = iota
+	EoBracketHighlight
+	EoEnhanceHomeKey
+	EoGroupUndo
+	EoHalfPageScroll
+	EoHideRightMargin
+	EoKeepCaretX
+	EoNoCaret
+	EoNoSelection
+	EoPersistentCaret
+	EoScrollByOneLess
+	EoScrollPastEof
+	EoScrollPastEol
+	EoScrollHintFollows
+	EoShowScrollHint
+	EoShowSpecialChars
+	EoSmartTabs
+	EoTabIndent
+	EoTabsToSpaces
+	EoTrimTrailingSpaces
+	EoAutoSizeMaxScrollWidth
+	EoDisableScrollArrows
+	EoHideShowScrollbars
+	EoDropFiles
+	EoSmartTabDelete
+	EoSpacesToTabs
+	EoAutoIndentOnPaste
+	EoAltSetsColumnMode
+	EoDragDropEditing
+	EoRightMouseMovesCursor
+	EoDoubleClickSelectsLine
+	EoShowCtrlMouseLinks
+)
+
+// TSynEditorOptions SET: TSynEditorOption
+type TSynEditorOptions = TSet
+
+// TSynEditorOption2 ENUM
+type TSynEditorOption2 = int32
+
+const (
+	EoCaretSkipsSelection TSynEditorOption2 = iota
+	EoCaretMoveEndsSelection
+	EoCaretSkipTab
+	EoAlwaysVisibleCaret
+	EoEnhanceEndKey
+	EoFoldedCopyPaste
+	EoPersistentBlock
+	EoOverwriteBlock
+	EoAutoHideCursor
+	EoColorSelectionTillEol
+	EoPersistentCaretStopBlink
+	EoNoScrollOnSelectRange
+	EoAcceptDragDropEditing
+	EoScrollPastEolAddPage
+	EoScrollPastEolAutoCaret
+	EoBookmarkRestoresScroll
+)
+
+// TSynEditorOptions2 SET: TSynEditorOption2
+type TSynEditorOptions2 = TSet
+
+// TSynEditorShareOption ENUM
+//
+//	options for textbuffersharing
+type TSynEditorShareOption = int32
+
+const (
+	EosShareMarks TSynEditorShareOption = iota
+)
+
+// TSynEditorShareOptions SET: TSynEditorShareOption
+type TSynEditorShareOptions = TSet
+
+// TSynEditTextFlag ENUM
+type TSynEditTextFlag = int32
+
+const (
+	SetSelect TSynEditTextFlag = iota
+	SetPersistentBlock
+	SetMoveBlock
+	SetExtendBlock
+)
+
+// TSynEditTextFlags SET: TSynEditTextFlag
+type TSynEditTextFlags = TSet
+
+// TSynFoldAction ENUM
+type TSynFoldAction = int32
+
+const (
+	SfaOpen TSynFoldAction = iota
+	SfaClose
+	SfaFold
+	SfaFoldFold
+	SfaFoldHide
+	SfaMultiLine
+	SfaSingleLine
+	SfaCloseForNextLine
+	SfaLastLineClose
+	SfaCloseAndOpen
+	SfaDefaultCollapsed
+	SfaMarkup
+	SfaOutline
+	SfaOutlineKeepLevel
+	SfaOutlineMergeParent
+	SfaOutlineForceIndent
+	SfaOutlineNoColor
+	SfaOutlineNoLine
+	SfaInvalid
+	SfaOpenFold
+	SfaCloseFold
+	SfaOneLineOpen
+	SfaOneLineClose
+)
+
+// TSynFoldActions SET: TSynFoldAction
+type TSynFoldActions = TSet
+
+// TSynFoldBlockFilterFlag ENUM
+//   - TSynFoldBlockFilter
+//     used to specify which folds to include for:
+//   - FoldOpenCount, FoldCloseCount, FoldNestCount
+//   - maybe in future TLazSynFoldNodeInfoList
+//     TLazSynFoldNodeInfoList has additional filters
+//     TLazSynFoldNodeInfoList always uses the full set (sfbIncludeDisabled)
+//     A Highlighter is not required to implement this, or can choose to implement
+//     a subset only. For any field/value a Highlighter may simple assume default.
+//   - Highlighter that have only one "FoldGroup" do not require this.
+//   - Highlighter that do not store foldblocks that are unavailable (e.g. off by
+//     config) always return the same set
+//     Using a record, as argument is the virtual methods, allows one to add further
+//     fields/values, without breaking inheritance.
+//     New fields values are expected to be ignored (handled as default) by existing
+//     highlighter.
+//     Callers of the method can:
+//   - use InitFoldBlockFilter to make sure all fields are set to default
+//   - use (none virtual) wrapper methods
+type TSynFoldBlockFilterFlag = int32
+
+const (
+	SfbIncludeDisabled TSynFoldBlockFilterFlag = iota
+)
+
+// TSynFoldBlockFilterFlags SET: TSynFoldBlockFilterFlag
+type TSynFoldBlockFilterFlags = TSet
+
+// TSynHighlighterCapability ENUM
+type TSynHighlighterCapability = int32
+
+const (
+	HcUserSettings TSynHighlighterCapability = iota
+	HcRegistry
+	HcCodeFolding
+)
+
+// TSynHighlighterCapabilities SET: TSynHighlighterCapability
+type TSynHighlighterCapabilities = TSet
+
+// TSynLogPhysFlag ENUM
+type TSynLogPhysFlag = int32
+
+const (
+	LpfAdjustToCharBegin TSynLogPhysFlag = iota
+	LpfAdjustToNextChar
+)
+
+// TSynLogPhysFlags SET: TSynLogPhysFlag
+type TSynLogPhysFlags = TSet
+
+// TSynMAUpRestriction ENUM
+type TSynMAUpRestriction = int32
+
+const (
+	CrLastDownPos TSynMAUpRestriction = iota
+	CrLastDownPosSameLine
+	CrLastDownPosSearchAll
+	CrLastDownButton
+	CrLastDownShift
+	CrAllowFallback
+)
+
+// TSynMAUpRestrictions SET: TSynMAUpRestriction
+type TSynMAUpRestrictions = TSet
+
+// TSynPluginSyncroScanMode ENUM
+//   - TSynPluginCustomSyncroEdit implements:
+//   - Locking of TrimTrailingSpace
+//   - CurrentCell follows Caret / LastCell
+//   - DeActivate if Edit outside Cell
+//   - DeActivate on undo/redo if needed
+//   - various helpers, to set the caret/block
+type TSynPluginSyncroScanMode = int32
+
+const (
+	SpssNoCase TSynPluginSyncroScanMode = iota
+	SpssWithCase
+	SpssCtxNoCase
+	SpssCtxWithCase
+)
+
+// TSynPluginSyncroScanModes SET: TSynPluginSyncroScanMode
+type TSynPluginSyncroScanModes = TSet
+
+// TSynSearchOption ENUM
+type TSynSearchOption = int32
+
+const (
+	SsoMatchCase TSynSearchOption = iota
+	SsoWholeWord
+	SsoBackwards
+	SsoEntireScope
+	SsoSelectedOnly
+	SsoReplace
+	SsoReplaceAll
+	SsoPrompt
+	SsoSearchInReplacement
+	SsoRegExpr
+	SsoRegExprMultiLine
+	SsoFindContinue
+)
+
+// TSynSearchOptions SET: TSynSearchOption
+type TSynSearchOptions = TSet
+
+// TSynStatusChange ENUM
+type TSynStatusChange = int32
+
+const (
+	ScCaretX TSynStatusChange = iota
+	ScCaretY
+	ScLeftChar
+	ScTopLine
+	ScLinesInWindow
+	ScCharsInWindow
+	ScInsertMode
+	ScModified
+	ScSelection
+	ScReadOnly
+	ScFocus
+	ScOptions
+)
+
+// TSynStatusChanges SET: TSynStatusChange
+type TSynStatusChanges = TSet
+
+// TSynVisibleSpecialChar ENUM
+type TSynVisibleSpecialChar = int32
+
+const (
+	VscSpace TSynVisibleSpecialChar = iota
+	VscTabAtFirst
+	VscTabAtLast
+)
+
+// TSynVisibleSpecialChars SET: TSynVisibleSpecialChar
+type TSynVisibleSpecialChars = TSet
+
 // TTaskDialogCommonButton ENUM
 type TTaskDialogCommonButton = int32
 
@@ -1074,57 +1440,37 @@ const (
 type TTaskDialogCommonButtons = TSet
 
 // TTaskDialogFlag ENUM
-//
-//	the available configuration flags for the Task Dialog
-//	- most are standard TDF_* flags used for Vista/Seven native API
-//	(see http://msdn.microsoft.com/en-us/library/bb787473(v=vs.85).aspx
-//	for TASKDIALOG_FLAGS)
-//	- tdfQuery and tdfQueryMasked are custom flags, implemented in pure Delphi
-//	code to handle input query
-//	- our emulation code will handle only tdfUseCommandLinks,
-//	tdfUseCommandLinksNoIcon, and tdfQuery options
 type TTaskDialogFlag = int32
 
 const (
-	TdfEnableHyperLinks TTaskDialogFlag = iota
-	TdfUseHIconMain
-	TdfUseHIconFooter
-	TdfAllowDialogCancellation
-	TdfUseCommandLinks
-	TdfUseCommandLinksNoIcon
-	TdfExpandFooterArea
-	TdfExpandByDefault
-	TdfVerificationFlagChecked
-	TdfShowProgressBar
-	TdfShowMarqueeProgressBar
-	TdfCallbackTimer
-	TdfPositionRelativeToWindow
-	TdfRtlLayout
-	TdfNoDefaultRadioButton
-	TdfCanBeMinimized
-	TdfNoSetForeGround
-	TdfSizeToContent
-	TdfQuery
-	TdfQueryMasked
-	TdfQueryFieldFocused
+	TfEnableHyperlinks TTaskDialogFlag = iota
+	TfUseHiconMain
+	TfUseHiconFooter
+	TfAllowDialogCancellation
+	TfUseCommandLinks
+	TfUseCommandLinksNoIcon
+	TfExpandFooterArea
+	TfExpandedByDefault
+	TfVerificationFlagChecked
+	TfShowProgressBar
+	TfShowMarqueeProgressBar
+	TfCallbackTimer
+	TfPositionRelativeToWindow
+	TfRtlLayout
+	TfNoDefaultRadioButton
+	TfCanBeMinimized
+	TfNoSetForeGround
+	TfSizeToContent
+	TfForceNonNative
+	TfEmulateClassicStyle
+	TfQuery
+	TfSimpleQuery
+	TfQueryFixedChoices
+	TfQueryFocused
 )
 
 // TTaskDialogFlags SET: TTaskDialogFlag
 type TTaskDialogFlags = TSet
-
-// TTextModifyMaske ENUM
-type TTextModifyMaske = int32
-
-const (
-	Tmm_Color TTextModifyMaske = iota
-	Tmm_Name
-	Tmm_Size
-	Tmm_Styles
-	Tmm_BackColor
-)
-
-// TTextModifyMask SET: TTextModifyMaske
-type TTextModifyMask = TSet
 
 // TTreeViewOption ENUM
 type TTreeViewOption = int32
@@ -1152,6 +1498,20 @@ const (
 
 // TTreeViewOptions SET: TTreeViewOption
 type TTreeViewOptions = TSet
+
+// TViewedXYInfoFlag ENUM
+type TViewedXYInfoFlag = int32
+
+const (
+	VifAdjustLogXYToNextChar TViewedXYInfoFlag = iota
+	VifReturnPhysXY
+	VifReturnLogXY
+	VifReturnLogEOL
+	VifReturnPhysOffset
+)
+
+// TViewedXYInfoFlags SET: TViewedXYInfoFlag
+type TViewedXYInfoFlags = TSet
 
 // TVirtualNodeInitState ENUM
 //
@@ -1509,241 +1869,321 @@ const (
 // TVTStringOptions SET: TVTStringOption
 type TVTStringOptions = TSet
 
-// CGLContextEnable ENUM
-//
-//	** Enable names for CGLEnable, CGLDisable, and CGLIsEnabled.
-type CGLContextEnable = int32
+// TSortDirection ENUM Rename: ComCtrls.TSortDirection
+type CCtrlsTSortDirection = int32
 
 const (
-	KCGLCESwapRectangle           = 201
-	KCGLCESwapLimit               = 203
-	KCGLCERasterization           = 221
-	KCGLCEStateValidation         = 301
-	KCGLCESurfaceBackingSize      = 305
-	KCGLCEDisplayListOptimization = 307
-	KCGLCEMPEngine                = 313
+	SdAscending CCtrlsTSortDirection = iota
+	SdDescending
 )
 
-// CGLContextParameter ENUM
-//
-//	** Parameter names for CGLSetParameter and CGLGetParameter.
-type CGLContextParameter = int32
+// TTaskDialogIcon ENUM Rename: Dialogs.TTaskDialogIcon
+type DialogsTTaskDialogIcon = int32
 
 const (
-	KCGLCPSwapRectangle          = 200
-	KCGLCPSwapInterval           = 222
-	KCGLCPDispatchTableSize      = 224
-	KCGLCPClientStorage          = 226
-	KCGLCPSurfaceTexture         = 228
-	KCGLCPSurfaceOrder           = 235
-	KCGLCPSurfaceOpacity         = 236
-	KCGLCPSurfaceBackingSize     = 304
-	KCGLCPSurfaceSurfaceVolatile = 306
-	KCGLCPReclaimResources       = 308
-	KCGLCPCurrentRendererID      = 309
-	KCGLCPGPUVertexProcessing    = 310
-	KCGLCPGPUFragmentProcessing  = 311
+	TdiNone DialogsTTaskDialogIcon = iota
+	TdiWarning
+	TdiError
+	TdiInformation
+	TdiShield
+	TdiQuestion
 )
 
-// CGLError ENUM
-//
-//	** Error return values from CGLGetError.
-type CGLError = int32
+// TSortDirection ENUM Rename: laz.VirtualTrees.TSortDirection
+type LVTreesTSortDirection = int32
 
 const (
-	KCGLNoError         CGLError = iota
-	KCGLBadAttribute             = 10000
-	KCGLBadProperty              = 10001
-	KCGLBadPixelFormat           = 10002
-	KCGLBadRendererInfo          = 10003
-	KCGLBadContext               = 10004
-	KCGLBadDrawable              = 10005
-	KCGLBadDisplay               = 10006
-	KCGLBadState                 = 10007
-	KCGLBadValue                 = 10008
-	KCGLBadMatch                 = 10009
-	KCGLBadEnumeration           = 10010
-	KCGLBadOffScreen             = 10011
-	KCGLBadFullScreen            = 10012
-	KCGLBadWindow                = 10013
-	KCGLBadAddress               = 10014
-	KCGLBadCodeModule            = 10015
-	KCGLBadAlloc                 = 10016
-	KCGLBadConnection            = 10017
+	LVTreesSdAscending LVTreesTSortDirection = iota
+	LVTreesSdDescending
 )
 
-// CGLGlobalOption ENUM
-//
-//	** Option names for CGLSetOption and CGLGetOption.
-type CGLGlobalOption = int32
+// TtkTokenKind ENUM Rename: SynHighlighterAny.TtkTokenKind
+type SHAnyTtkTokenKind = int32
 
 const (
-	KCGLGOFormatCacheSize  = 501
-	KCGLGOClearFormatCache = 502
-	KCGLGORetainRenderers  = 503
-	KCGLGOResetLibrary     = 504
-	KCGLGOUseErrorHandler  = 505
+	TkComment SHAnyTtkTokenKind = iota
+	TkIdentifier
+	TkKey
+	TkNull
+	TkNumber
+	TkPreprocessor
+	TkSpace
+	TkString
+	TkSymbol
+	TkUnknown
+	TkConstant
+	TkObject
+	TkEntity
+	TkDollarVariable
+	TkDot
 )
 
-// CGLPixelFormatAttribute ENUM
-//
-//	** Attribute names for CGLChoosePixelFormat and CGLDescribePixelFormat.
-type CGLPixelFormatAttribute = int32
+// TtkTokenKind ENUM Rename: SynHighlighterCpp.TtkTokenKind
+type SHCppTtkTokenKind = int32
 
 const (
-	KCGLPFAAllRenderers       = 1
-	KCGLPFADoubleBuffer       = 5
-	KCGLPFAStereo             = 6
-	KCGLPFAAuxBuffers         = 7
-	KCGLPFAColorSize          = 8
-	KCGLPFAAlphaSize          = 11
-	KCGLPFADepthSize          = 12
-	KCGLPFAStencilSize        = 13
-	KCGLPFAAccumSize          = 14
-	KCGLPFAMinimumPolicy      = 51
-	KCGLPFAMaximumPolicy      = 52
-	KCGLPFAOffScreen          = 53
-	KCGLPFAFullScreen         = 54
-	KCGLPFASampleBuffers      = 55
-	KCGLPFASamples            = 56
-	KCGLPFAAuxDepthStencil    = 57
-	KCGLPFAColorFloat         = 58
-	KCGLPFAMultisample        = 59
-	KCGLPFASupersample        = 60
-	KCGLPFASampleAlpha        = 61
-	KCGLPFARendererID         = 70
-	KCGLPFASingleRenderer     = 71
-	KCGLPFANoRecovery         = 72
-	KCGLPFAAccelerated        = 73
-	KCGLPFAClosestPolicy      = 74
-	KCGLPFARobust             = 75
-	KCGLPFABackingStore       = 76
-	KCGLPFAMPSafe             = 78
-	KCGLPFAWindow             = 80
-	KCGLPFAMultiScreen        = 81
-	KCGLPFACompliant          = 83
-	KCGLPFADisplayMask        = 84
-	KCGLPFAPBuffer            = 90
-	KCGLPFARemotePBuffer      = 91
-	KCGLPFAVirtualScreenCount = 128
+	TkAsm SHCppTtkTokenKind = iota
+	SHCppTkComment
+	TkDirective
+	SHCppTkIdentifier
+	SHCppTkKey
+	SHCppTkNull
+	SHCppTkNumber
+	SHCppTkSpace
+	SHCppTkString
+	SHCppTkSymbol
+	SHCppTkUnknown
 )
 
-// CGLRendererProperty ENUM
-//
-//	** Property names for CGLDescribeRenderer.
-type CGLRendererProperty = int32
+// TxtkTokenKind ENUM Rename: SynHighlighterCpp.TxtkTokenKind
+type SHCppTxtkTokenKind = int32
 
 const (
-	KCGLRPOffScreen          = 53
-	KCGLRPFullScreen         = 54
-	KCGLRPRendererID         = 70
-	KCGLRPAccelerated        = 73
-	KCGLRPRobust             = 75
-	KCGLRPBackingStore       = 76
-	KCGLRPMPSafe             = 78
-	KCGLRPWindow             = 80
-	KCGLRPMultiScreen        = 81
-	KCGLRPCompliant          = 83
-	KCGLRPDisplayMask        = 84
-	KCGLRPBufferModes        = 100
-	KCGLRPColorModes         = 103
-	KCGLRPAccumModes         = 104
-	KCGLRPDepthModes         = 105
-	KCGLRPStencilModes       = 106
-	KCGLRPMaxAuxBuffers      = 107
-	KCGLRPMaxSampleBuffers   = 108
-	KCGLRPMaxSamples         = 109
-	KCGLRPSampleModes        = 110
-	KCGLRPSampleAlpha        = 111
-	KCGLRPVideoMemory        = 120
-	KCGLRPTextureMemory      = 121
-	KCGLRPGPUVertProcCapable = 122
-	KCGLRPGPUFragProcCapable = 123
-	KCGLRPRendererCount      = 128
+	XtkAdd SHCppTxtkTokenKind = iota
+	XtkAddAssign
+	XtkAnd
+	XtkAndAssign
+	XtkArrow
+	XtkAssign
+	XtkBitComplement
+	XtkBraceClose
+	XtkBraceOpen
+	XtkColon
+	XtkComma
+	XtkDecrement
+	XtkDivide
+	XtkDivideAssign
+	XtkEllipse
+	XtkGreaterThan
+	XtkGreaterThanEqual
+	XtkIncOr
+	XtkIncOrAssign
+	XtkIncrement
+	XtkLessThan
+	XtkLessThanEqual
+	XtkLogAnd
+	XtkLogComplement
+	XtkLogEqual
+	XtkLogOr
+	XtkMod
+	XtkModAssign
+	XtkMultiplyAssign
+	XtkNotEqual
+	XtkPoint
+	XtkQuestion
+	XtkRoundClose
+	XtkRoundOpen
+	XtkScopeResolution
+	XtkSemiColon
+	XtkShiftLeft
+	XtkShiftLeftAssign
+	XtkShiftRight
+	XtkShiftRightAssign
+	XtkSquareClose
+	XtkSquareOpen
+	XtkStar
+	XtkSubtract
+	XtkSubtractAssign
+	XtkXor
+	XtkXorAssign
 )
 
-// LPosFlag ENUM
-type LPosFlag = int32
+// TtkTokenKind ENUM Rename: SynHighlighterCss.TtkTokenKind
+type SHCssTtkTokenKind = int32
 
 const (
-	LpAllowPastEol LPosFlag = iota
-	LpAdjustToNext
-	LpStopAtCodePoint
+	SHCssTkComment SHCssTtkTokenKind = iota
+	SHCssTkIdentifier
+	SHCssTkKey
+	SHCssTkNull
+	SHCssTkNumber
+	SHCssTkSpace
+	SHCssTkString
+	SHCssTkSymbol
+	TkMeasurementUnit
+	TkSelector
+	SHCssTkUnknown
 )
 
-// MONITOR_DPI_TYPE ENUM
-type MONITOR_DPI_TYPE = int32
+// TtkTokenKind ENUM Rename: SynHighlighterHTML.TtkTokenKind
+type SHHTMLTtkTokenKind = int32
 
 const (
-	MDT_EFFECTIVE_DPI MONITOR_DPI_TYPE = iota
-	MDT_ANGULAR_DPI                    = 1
-	MDT_RAW_DPI                        = 2
-	MDT_DEFAULT                        = MDT_EFFECTIVE_DPI
+	TkAmpersand SHHTMLTtkTokenKind = iota
+	TkASP
+	TkCDATA
+	SHHTMLTkComment
+	SHHTMLTkIdentifier
+	SHHTMLTkKey
+	SHHTMLTkNull
+	SHHTMLTkSpace
+	SHHTMLTkString
+	SHHTMLTkSymbol
+	TkText
+	TkUndefKey
+	TkValue
+	TkDOCTYPE
 )
 
-// taComponents ENUM
-type taComponents = int32
+// TtkTokenKind ENUM Rename: SynHighlighterJava.TtkTokenKind
+type SHJavaTtkTokenKind = int32
 
 const (
-	TacTarrow taComponents = iota
-	TacTbitbtn
-	TacTbutton
-	TacTbuttonpanel
-	TacTcalcedit
-	TacTcalendar
-	TacTcheckbox
-	TacTcheckcombobox
-	TacTcheckgroup
-	TacTchecklistbox
-	TacTcolorbox
-	TacTcolorbutton
-	TacTcolorlistbox
-	TacTcombobox
-	TacTcomboboxex
-	TacTcontrolbar
-	TacTcoolbar
-	TacTdateedit
-	TacTdirectoryedit
-	TacTedit
-	TacTeditbutton
-	TacTfilelistbox
-	TacTfilenameedit
-	TacTfiltercombobox
-	TacTfloatspinedit
-	TacTgroupbox
-	TacTheadercontrol
-	TacTimage
-	TacTlabel
-	TacTlabelededit
-	TacTlistbox
-	TacTlistview
-	TacTmaskedit
-	TacTmemo
-	TacTnotebook
-	TacTpagecontrol
-	TacTpaintbox
-	TacTpanel
-	TacTprogressbar
-	TacTradiobutton
-	TacTradiogroup
-	TacTshape
-	TacTshelllistview
-	TacTshelltreeview
-	TacTspeedbutton
-	TacTspinedit
-	TacTsplitter
-	TacTstacTictext
-	TacTstatusbar
-	TacTstringgrid
-	TacTtabcontrol
-	TacTtimeedit
-	TacTtimer
-	TacTtogglebox
-	TacTtoolbar
-	TacTtrackbar
-	TacTtreeview
-	TacTupdown
-	TacTvaluelisteditor
+	SHJavaTkComment SHJavaTtkTokenKind = iota
+	TkDocument
+	SHJavaTkIdentifier
+	TkInvalid
+	SHJavaTkKey
+	SHJavaTkNull
+	SHJavaTkNumber
+	SHJavaTkSpace
+	SHJavaTkString
+	SHJavaTkSymbol
+	SHJavaTkUnknown
+	TkAnnotation
+)
+
+// TxtkTokenKind ENUM Rename: SynHighlighterJava.TxtkTokenKind
+type SHJavaTxtkTokenKind = int32
+
+const (
+	SHJavaXtkAdd SHJavaTxtkTokenKind = iota
+	SHJavaXtkAddAssign
+	SHJavaXtkAnd
+	SHJavaXtkAndAssign
+	SHJavaXtkAssign
+	SHJavaXtkBitComplement
+	SHJavaXtkBraceClose
+	SHJavaXtkBraceOpen
+	SHJavaXtkColon
+	XtkCondAnd
+	XtkCondOr
+	SHJavaXtkDecrement
+	SHJavaXtkDivide
+	SHJavaXtkDivideAssign
+	SHJavaXtkGreaterThan
+	SHJavaXtkGreaterThanEqual
+	SHJavaXtkIncOr
+	SHJavaXtkIncOrAssign
+	SHJavaXtkIncrement
+	SHJavaXtkLessThan
+	SHJavaXtkLessThanEqual
+	SHJavaXtkLogComplement
+	SHJavaXtkLogEqual
+	XtkMultiply
+	SHJavaXtkMultiplyAssign
+	SHJavaXtkNotEqual
+	SHJavaXtkPoint
+	SHJavaXtkQuestion
+	XtkRemainder
+	XtkRemainderAssign
+	SHJavaXtkRoundClose
+	SHJavaXtkRoundOpen
+	SHJavaXtkSemiColon
+	SHJavaXtkShiftLeft
+	SHJavaXtkShiftLeftAssign
+	SHJavaXtkShiftRight
+	SHJavaXtkShiftRightAssign
+	SHJavaXtkSquareClose
+	SHJavaXtkSquareOpen
+	SHJavaXtkSubtract
+	SHJavaXtkSubtractAssign
+	XtkUnsignShiftRight
+	XtkUnsignShiftRightAssign
+	SHJavaXtkXor
+	SHJavaXtkXorAssign
+	SHJavaXtkComma
+	XtkNonSymbol
+)
+
+// TtkTokenKind ENUM Rename: SynHighlighterJScript.TtkTokenKind
+type SHJScriptTtkTokenKind = int32
+
+const (
+	SHJScriptTkComment SHJScriptTtkTokenKind = iota
+	SHJScriptTkIdentifier
+	SHJScriptTkKey
+	SHJScriptTkNull
+	SHJScriptTkNumber
+	SHJScriptTkSpace
+	SHJScriptTkString
+	SHJScriptTkSymbol
+	TkBracket
+	SHJScriptTkUnknown
+	TkNonReservedKey
+	TkEvent
+)
+
+// TtkTokenKind ENUM Rename: SynHighlighterPython.TtkTokenKind
+type SHPythonTtkTokenKind = int32
+
+const (
+	SHPythonTkComment SHPythonTtkTokenKind = iota
+	SHPythonTkIdentifier
+	SHPythonTkKey
+	SHPythonTkNull
+	SHPythonTkNumber
+	SHPythonTkSpace
+	SHPythonTkString
+	SHPythonTkSymbol
+	TkNonKeyword
+	TkTripleQuotedString
+	TkSystemDefined
+	TkHex
+	TkOct
+	TkFloat
+	SHPythonTkUnknown
+)
+
+// TtkTokenKind ENUM Rename: SynHighlighterSQL.TtkTokenKind
+type SHSQLTtkTokenKind = int32
+
+const (
+	SHSQLTkComment SHSQLTtkTokenKind = iota
+	TkDatatype
+	TkDefaultPackage
+	TkException
+	TkFunction
+	SHSQLTkIdentifier
+	SHSQLTkKey
+	SHSQLTkNull
+	SHSQLTkNumber
+	SHSQLTkSpace
+	TkPLSQL
+	TkSQLPlus
+	SHSQLTkString
+	SHSQLTkSymbol
+	TkTableName
+	SHSQLTkUnknown
+	TkVariable
+)
+
+// TtkTokenKind ENUM Rename: SynHighlighterXML.TtkTokenKind
+type SHXMLTtkTokenKind = int32
+
+const (
+	TkAposAttrValue SHXMLTtkTokenKind = iota
+	TkAposEntityRef
+	TkAttribute
+	SHXMLTkCDATA
+	SHXMLTkComment
+	TkElement
+	TkEntityRef
+	TkEqual
+	SHXMLTkNull
+	TkProcessingInstruction
+	TkQuoteAttrValue
+	TkQuoteEntityRef
+	SHXMLTkSpace
+	SHXMLTkSymbol
+	SHXMLTkText
+	TknsAposAttrValue
+	TknsAposEntityRef
+	TknsAttribute
+	TknsEqual
+	TknsQuoteAttrValue
+	TknsQuoteEntityRef
+	SHXMLTkDocType
 )
 
 // TActionListState ENUM
@@ -1755,25 +2195,6 @@ const (
 	AsSuspendedEnabled
 )
 
-// TActiveXRegType ENUM
-//
-//	Component registration handlers
-type TActiveXRegType = int32
-
-const (
-	AxrComponentOnly TActiveXRegType = iota
-	AxrIncludeDescendants
-)
-
-// TAddMode ENUM
-type TAddMode = int32
-
-const (
-	TaAddFirst TAddMode = iota
-	TaAdd
-	TaInsert
-)
-
 // TAddPopupItemType ENUM
 type TAddPopupItemType = int32
 
@@ -1781,25 +2202,6 @@ const (
 	ApNormal TAddPopupItemType = iota
 	ApDisabled
 	ApHidden
-)
-
-// taDialogs ENUM
-type taDialogs = int32
-
-const (
-	TadTcalculatordialog taDialogs = iota
-	TadTcalendardialog
-	TadTcolordialog
-	TadTfinddialog
-	TadTfontdialog
-	TadTMessageDialog
-	TadTopendialog
-	TadTopenpicturedialog
-	TadTreplacedialog
-	TadTsavedialog
-	TadTsavepicturedialog
-	TadTselectdirectorydialog
-	TadTQuestionDialog
 )
 
 // TAlign ENUM
@@ -1826,52 +2228,6 @@ const (
 	TaCenter
 )
 
-// TAnchorSideChangeOperation ENUM
-//
-//	TAnchorSide
-//	Class holding the reference sides of the anchors of a TControl.
-//	Every TControl has four AnchorSides:
-//	AnchorSide[akLeft], AnchorSide[akRight], AnchorSide[akTop] and
-//	AnchorSide[akBottom].
-//	Normally if Anchors contain akLeft, and the Parent is resized, the LCL
-//	tries to keep the distance between the left side of the control and the
-//	right side of its parent client area.
-//	With AnchorSide[akLeft] you can define a different reference side. The
-//	kept distance is defined by the BorderSpacing and Parent.ChildSizing.
-//	Example1:
-//	+-----+ +-----+
-//	| B | | C |
-//	| | +-----+
-//	+-----+
-//	If you want to have the top of B the same as the top of C use
-//	B.AnchorSide[akTop].Side:=asrTop;
-//	B.AnchorSide[akTop].Control:=C;
-//	If you want to keep a distance of 10 pixels between B and C use
-//	B.BorderSpacing.Right:=10;
-//	B.AnchorSide[akRight].Side:=asrLeft;
-//	B.AnchorSide[akRight].Control:=C;
-//	Do not setup in both directions, because this will create a circle, and
-//	circles are not allowed.
-//	Example2:
-//	+-------+
-//	+---+ | |
-//	| A | | B |
-//	+---+ | |
-//	+-------+
-//	Centering A relative to B:
-//	A.AnchorSide[akTop].Side:=arsCenter;
-//	A.AnchorSide[akTop].Control:=B;
-//	Or use this. It's equivalent:
-//	A.AnchorSide[akBottom].Side:=arsCenter;
-//	A.AnchorSide[akBottom].Control:=B;
-type TAnchorSideChangeOperation = int32
-
-const (
-	AscoAdd TAnchorSideChangeOperation = iota
-	AscoRemove
-	AscoChangeSide
-)
-
 // TAnchorSideReference ENUM
 type TAnchorSideReference = int32
 
@@ -1890,16 +2246,6 @@ const (
 	AmOff
 )
 
-// TAppHintTimerType ENUM
-type TAppHintTimerType = int32
-
-const (
-	AhttNone TAppHintTimerType = iota
-	AhttShowHint
-	AhttHideHint
-	AhttReshowHint
-)
-
 // TApplicationDoubleBuffered ENUM
 type TApplicationDoubleBuffered = int32
 
@@ -1915,33 +2261,6 @@ type TApplicationExceptionDlg = int32
 const (
 	AedOkCancelDialog TApplicationExceptionDlg = iota
 	AedOkMessageBox
-)
-
-// TApplicationHandlerType ENUM
-type TApplicationHandlerType = int32
-
-const (
-	AhtIdle TApplicationHandlerType = iota
-	AhtIdleEnd
-	AhtKeyDownBefore
-	AhtKeyDownAfter
-	AhtActivate
-	AhtDeactivate
-	AhtUserInput
-	AhtException
-	AhtEndSession
-	AhtQueryEndSession
-	AhtMinimize
-	AhtModalBegin
-	AhtModalEnd
-	AhtRestore
-	AhtDropFiles
-	AhtHelp
-	AhtHint
-	AhtShowHint
-	AhtGetMainFormHandle
-	AhtActionExecute
-	AhtActionUpdate
 )
 
 // TApplicationShowGlyphs ENUM
@@ -1982,46 +2301,6 @@ const (
 	AsTheme
 )
 
-// TArrowType ENUM
-type TArrowType = int32
-
-const (
-	AtUp TArrowType = iota
-	AtDown
-	AtLeft
-	AtRight
-)
-
-// TATButtonOverlayPosition ENUM
-type TATButtonOverlayPosition = int32
-
-const (
-	BopLeftTop TATButtonOverlayPosition = iota
-	BopRightTop
-	BopLeftBottom
-	BopRightBottom
-)
-
-// TATGaugeKind ENUM
-type TATGaugeKind = int32
-
-const (
-	GkText1 TATGaugeKind = iota
-	GkHorizontalBar1
-	GkVerticalBar1
-	GkPie1
-	GkNeedle1
-	GkHalfPie1
-)
-
-// TAttributeType ENUM
-type TAttributeType = int32
-
-const (
-	AtSelected TAttributeType = iota
-	AtDefaultText
-)
-
 // TAutoAdvance ENUM
 type TAutoAdvance = int32
 
@@ -2034,32 +2313,6 @@ const (
 	AaLeftDown
 	AaRightUp
 	AaLeftUp
-)
-
-// TAutoSizeBoxOrientation ENUM
-type TAutoSizeBoxOrientation = int32
-
-const (
-	AsboHorizontal TAutoSizeBoxOrientation = iota
-	AsboVertical
-)
-
-// TAutoSizeSideDataState ENUM
-type TAutoSizeSideDataState = int32
-
-const (
-	AssdfInvalid TAutoSizeSideDataState = iota
-	AssdfComputing
-	AssdfUncomputable
-	AssdfValid
-)
-
-// TAutoSizeSideDistDirection ENUM
-type TAutoSizeSideDistDirection = int32
-
-const (
-	AssddLeftTop TAutoSizeSideDistDirection = iota
-	AssddRightBottom
 )
 
 // TBalloonFlags ENUM
@@ -2082,15 +2335,6 @@ type TBandDrawingStyle = int32
 const (
 	DsNormal TBandDrawingStyle = iota
 	DsGradient
-)
-
-// TBandMove ENUM
-type TBandMove = int32
-
-const (
-	BmNone1 TBandMove = iota
-	BmReady1
-	BmMoving1
 )
 
 // TBevelShape ENUM
@@ -2161,25 +2405,6 @@ const (
 	BmDDB
 )
 
-// TBom ENUM
-type TBom = int32
-
-const (
-	BomUtf8 TBom = iota
-	BomUtf16BE
-	BomUtf16LE
-	BomUndefined
-)
-
-// TBookmarkedRecordEnumeratorOptions ENUM
-type TBookmarkedRecordEnumeratorOptions = int32
-
-const (
-	BreDisableDataset TBookmarkedRecordEnumeratorOptions = iota
-	BreStopOnInvalidBookmark
-	BreRestoreCurrent
-)
-
 // TButtonLayout ENUM
 type TButtonLayout = int32
 
@@ -2199,32 +2424,12 @@ const (
 	BoCloseOKCancel
 )
 
-// TButtonState ENUM
-type TButtonState = int32
-
-const (
-	BsUp TButtonState = iota
-	BsDisabled
-	BsDown
-	BsExclusive
-	BsHot
-)
-
 // TCalculatorLayout ENUM
 type TCalculatorLayout = int32
 
 const (
 	ClNormal TCalculatorLayout = iota
 	ClSimple
-)
-
-// TCalculatorState ENUM
-type TCalculatorState = int32
-
-const (
-	CsFirst TCalculatorState = iota
-	CsValid
-	CsError
 )
 
 // TCalDayOfWeek ENUM
@@ -2266,84 +2471,6 @@ const (
 	CvYear
 	CvDecade
 	CvCentury
-)
-
-// TCanvasOrientation ENUM
-type TCanvasOrientation = int32
-
-const (
-	CsLefttoRight TCanvasOrientation = iota
-	CoRighttoLeft
-)
-
-// TCarbonBitmapAlignment ENUM
-//
-//	TCarbonBitmap
-type TCarbonBitmapAlignment = int32
-
-const (
-	CbaByte TCarbonBitmapAlignment = iota
-	CbaWord
-	CbaDWord
-	CbaQWord
-	CbaDQWord
-)
-
-// TCarbonBitmapType ENUM
-type TCarbonBitmapType = int32
-
-const (
-	CbtMono TCarbonBitmapType = iota
-	CbtGray
-	CbtRGB
-	CbtARGB
-	CbtRGBA
-	CbtBGR
-	CbtBGRA
-)
-
-// TCarbonControlEvent ENUM
-type TCarbonControlEvent = int32
-
-const (
-	CceValueChanged TCarbonControlEvent = iota
-	CceIndicatorMoved
-	CceDoAction
-	CceDraw
-	CceHit
-)
-
-// TCarbonCursorType ENUM
-type TCarbonCursorType = int32
-
-const (
-	CctUnknown TCarbonCursorType = iota
-	CctQDHardware
-	CctQDColor
-	CctTheme
-	CctAnimated
-	CctWait
-)
-
-// TCarbonWidgetFlag ENUM
-type TCarbonWidgetFlag = int32
-
-const (
-	CwfNone TCarbonWidgetFlag = iota
-	CwdTToolBar
-	CwdTTabControl
-)
-
-// TCDWSEventCapability ENUM
-//
-//	TCommonDialog
-type TCDWSEventCapability = int32
-
-const (
-	CdecWSPerformsDoShow TCDWSEventCapability = iota
-	CdecWSPerformsDoCanClose
-	CdecWSPerformsDoClose
-	CdecWSNOCanCloseSupport
 )
 
 // TCellHintPriority ENUM
@@ -2512,14 +2639,6 @@ const (
 	CrsSameSize
 )
 
-// TChildExitReason ENUM
-type TChildExitReason = int32
-
-const (
-	CerExit TChildExitReason = iota
-	CerSignal
-)
-
 // TClipboardType ENUM
 type TClipboardType = int32
 
@@ -2537,112 +2656,6 @@ const (
 	CaHide
 	CaFree
 	CaMinimize
-)
-
-// TCocoaBitmapAlignment ENUM
-type TCocoaBitmapAlignment = int32
-
-const (
-	CbaByte1 TCocoaBitmapAlignment = iota
-	CbaWord1
-	CbaDWord1
-	CbaQWord1
-	CbaDQWord1
-)
-
-// TCocoaBitmapType ENUM
-type TCocoaBitmapType = int32
-
-const (
-	CbtMono1 TCocoaBitmapType = iota
-	CbtGray1
-	CbtRGB1
-	CbtARGB1
-	CbtRGBA1
-	CbtABGR1
-	CbtBGRA1
-)
-
-// TCocoaClipboardDataType ENUM
-type TCocoaClipboardDataType = int32
-
-const (
-	CcdtText TCocoaClipboardDataType = iota
-	CcdtCocoaStandard
-	CcdtBitmap
-	CcdtNonStandard
-)
-
-// TCocoaCombine ENUM
-type TCocoaCombine = int32
-
-const (
-	Cc_And TCocoaCombine = iota
-	Cc_Xor
-	Cc_Or
-	Cc_Diff
-	Cc_Copy
-)
-
-// TCocoaPatternColorMode ENUM
-type TCocoaPatternColorMode = int32
-
-const (
-	CpmBitmap TCocoaPatternColorMode = iota
-	CpmBrushColor
-	CpmContextColor
-)
-
-// TCocoaRegionType ENUM
-type TCocoaRegionType = int32
-
-const (
-	Crt_Error TCocoaRegionType = iota
-	Crt_Empty
-	Crt_Rectangle
-	Crt_Complex
-)
-
-// TCollectionNotification ENUM
-type TCollectionNotification = int32
-
-const (
-	CnAdded TCollectionNotification = iota
-	CnExtracting
-	CnDeleting
-)
-
-// TColorFormat ENUM
-type TColorFormat = int32
-
-const (
-	CfMono TColorFormat = iota
-	CfGray2
-	CfGray4
-	CfGray8
-	CfGray16
-	CfGray24
-	CfGrayA8
-	CfGrayA16
-	CfGrayA32
-	CfRGB15
-	CfRGB16
-	CfRGB24
-	CfRGB32
-	CfRGB48
-	CfRGBA8
-	CfRGBA16
-	CfRGBA32
-	CfRGBA64
-	CfBGR15
-	CfBGR16
-	CfBGR24
-	CfBGR32
-	CfBGR48
-	CfABGR8
-	CfABGR16
-	CfABGR32
-	CfABGR64
 )
 
 // TColumnButtonStyle ENUM
@@ -2668,14 +2681,6 @@ const (
 	ClVerticalThenHorizontal
 )
 
-// TColumnOrder ENUM
-type TColumnOrder = int32
-
-const (
-	CoDesignOrder TColumnOrder = iota
-	CoFieldIndexOrder
-)
-
 // TComboBoxExStyle ENUM
 type TComboBoxExStyle = int32
 
@@ -2698,29 +2703,6 @@ const (
 	CsOwnerDrawEditableVariable
 )
 
-// TCommonButton ENUM
-//
-//	the standard kind of common buttons handled by the Task Dialog
-type TCommonButton = int32
-
-const (
-	CbOK TCommonButton = iota
-	CbYes
-	CbNo
-	CbCancel
-	CbRetry
-	CbClose
-)
-
-// TComputeResult ENUM
-type TComputeResult = int32
-
-const (
-	CrSuccess TComputeResult = iota
-	CrCircle
-	CrFixedCircled
-)
-
 // TControlCellAlign ENUM
 type TControlCellAlign = int32
 
@@ -2740,45 +2722,6 @@ const (
 	CclTopToBottomThenLeftToRight
 )
 
-// TControlFlag ENUM
-type TControlFlag = int32
-
-const (
-	CfLoading TControlFlag = iota
-	CfAutoSizeNeeded
-	CfLeftLoaded
-	CfTopLoaded
-	CfWidthLoaded
-	CfHeightLoaded
-	CfClientWidthLoaded
-	CfClientHeightLoaded
-	CfBoundsRectForNewParentValid
-	CfBaseBoundsValid
-	CfPreferredSizeValid
-	CfPreferredMinSizeValid
-	CfOnChangeBoundsNeeded
-	CfProcessingWMPaint
-	CfKillChangeBounds
-	CfKillInvalidatePreferredSize
-	CfKillAdjustSize
-)
-
-// TControlHandlerType ENUM
-type TControlHandlerType = int32
-
-const (
-	ChtOnResize TControlHandlerType = iota
-	ChtOnChangeBounds
-	ChtOnVisibleChanging
-	ChtOnVisibleChanged
-	ChtOnEnabledChanging
-	ChtOnEnabledChanged
-	ChtOnKeyDown
-	ChtOnBeforeDestruction
-	ChtOnMouseWheel
-	ChtOnMouseWheelHorz
-)
-
 // TCoolBandMaximize ENUM
 //
 //	BandMaximize is not used now but is needed for Delphi compatibility.
@@ -2791,27 +2734,6 @@ const (
 	BmDblClick
 )
 
-// TCursorDesign ENUM
-type TCursorDesign = int32
-
-const (
-	CdDefault TCursorDesign = iota
-	CdGrabber
-	CdRestricted
-)
-
-// TCustomDrawResultFlag ENUM
-type TCustomDrawResultFlag = int32
-
-const (
-	CdrSkipDefault TCustomDrawResultFlag = iota
-	CdrNotifyPostpaint
-	CdrNotifyItemdraw
-	CdrNotifySubitemdraw
-	CdrNotifyPosterase
-	CdrNotifyItemerase
-)
-
 // TCustomDrawStage ENUM
 type TCustomDrawStage = int32
 
@@ -2820,17 +2742,6 @@ const (
 	CdPostPaint
 	CdPreErase
 	CdPostErase
-)
-
-// TCustomDrawTarget ENUM
-//
-//	Custom draw
-type TCustomDrawTarget = int32
-
-const (
-	DtControl TCustomDrawTarget = iota
-	DtItem
-	DtSubItem
 )
 
 // TDateDisplayOrder ENUM
@@ -2868,113 +2779,6 @@ const (
 	DtkDate TDateTimeKind = iota
 	DtkTime
 	DtkDateTime
-)
-
-// TDateTimePart ENUM
-type TDateTimePart = int32
-
-const (
-	DtpDay TDateTimePart = iota
-	DtpMonth
-	DtpYear
-	DtpHour
-	DtpMinute
-	DtpSecond
-	DtpMiliSec
-	DtpAMPM
-)
-
-// TDbGridExtraOption ENUM
-type TDbGridExtraOption = int32
-
-const (
-	DgeAutoColumns TDbGridExtraOption = iota
-	DgeCheckboxColumn
-)
-
-// TDBGridOption ENUM
-type TDBGridOption = int32
-
-const (
-	DgEditing TDBGridOption = iota
-	DgTitles
-	DgIndicator
-	DgColumnResize
-	DgColumnMove
-	DgColLines
-	DgRowLines
-	DgTabs
-	DgAlwaysShowEditor
-	DgRowSelect
-	DgAlwaysShowSelection
-	DgConfirmDelete
-	DgCancelOnExit
-	DgMultiselect
-	DgHeaderHotTracking
-	DgHeaderPushedLook
-	DgPersistentMultiSelect
-	DgAutoSizeColumns
-	DgAnyButtonCanSelect
-	DgDisableDelete
-	DgDisableInsert
-	DgCellHints
-	DgTruncCellHints
-	DgCellEllipsis
-	DgRowHighlight
-	DgThumbTracking
-	DgDblClickAutoSize
-	DgDisplayMemoText
-)
-
-// TDbGridStatusItem ENUM
-type TDbGridStatusItem = int32
-
-const (
-	GsUpdatingData TDbGridStatusItem = iota
-	GsAddingAutoColumns
-	GsRemovingAutoColumns
-	GsAutoSized
-	GsStartEditing
-	GsLoadingGrid
-)
-
-// TDBNavButtonDirection ENUM
-type TDBNavButtonDirection = int32
-
-const (
-	NbdHorizontal TDBNavButtonDirection = iota
-	NbdVertical
-)
-
-// TDBNavButtonType ENUM
-type TDBNavButtonType = int32
-
-const (
-	NbFirst TDBNavButtonType = iota
-	NbPrior
-	NbNext
-	NbLast
-	NbInsert
-	NbDelete
-	NbEdit
-	NbPost
-	NbCancel
-	NbRefresh
-)
-
-// TDBNavGlyph ENUM
-type TDBNavGlyph = int32
-
-const (
-	NgEnabled TDBNavGlyph = iota
-	NgDisabled
-)
-
-// TDBNavigatorOption ENUM
-type TDBNavigatorOption = int32
-
-const (
-	NavFocusableButtons TDBNavigatorOption = iota
 )
 
 // TDefaultColorType ENUM
@@ -3023,23 +2827,6 @@ const (
 	DrSelectBounds
 )
 
-// TDockHeaderImageKind ENUM
-type TDockHeaderImageKind = int32
-
-const (
-	DhiRestore TDockHeaderImageKind = iota
-	DhiClose
-)
-
-// TDockImageOperation ENUM
-type TDockImageOperation = int32
-
-const (
-	DisShow TDockImageOperation = iota
-	DisMove
-	DisHide
-)
-
 // TDockOrientation ENUM
 type TDockOrientation = int32
 
@@ -3050,40 +2837,12 @@ const (
 	DoPages
 )
 
-// TDockTreeFlag ENUM
-type TDockTreeFlag = int32
-
-const (
-	DtfUpdateAllNeeded TDockTreeFlag = iota
-)
-
-// TDragBand ENUM
-type TDragBand = int32
-
-const (
-	DbNone TDragBand = iota
-	DbMove
-	DbResize
-)
-
 // TDragKind ENUM
 type TDragKind = int32
 
 const (
 	DkDrag TDragKind = iota
 	DkDock
-)
-
-// TDragMessage ENUM
-type TDragMessage = int32
-
-const (
-	DmDragEnter TDragMessage = iota
-	DmDragLeave
-	DmDragMove
-	DmDragDrop
-	DmDragCancel
-	DmFindTarget
 )
 
 // TDragMode ENUM
@@ -3137,10 +2896,10 @@ const (
 type TDrawingStyle = int32
 
 const (
-	DsFocus1 TDrawingStyle = iota
-	DsSelected1
-	DsNormal1
-	DsTransparent1
+	DsFocus TDrawingStyle = iota
+	DsSelected
+	TDStyleDsNormal
+	DsTransparent
 )
 
 // TDropMode ENUM
@@ -3234,78 +2993,6 @@ const (
 	ThsChanging
 )
 
-// TEraseBkgndCommand ENUM
-type TEraseBkgndCommand = int32
-
-const (
-	EcDefault TEraseBkgndCommand = iota
-	EcDiscard
-	EcDiscardNoRemove
-	EcDoubleBufferNoRemove
-)
-
-// TEventType ENUM
-type TEventType = int32
-
-const (
-	EtNotify TEventType = iota
-	EtKey
-	EtKeyPress
-	EtMouseWheel
-	EtMouseUpDown
-)
-
-// TExpandCollapseMode ENUM
-type TExpandCollapseMode = int32
-
-const (
-	EcmRefreshedExpanding TExpandCollapseMode = iota
-	EcmKeepChildren
-	EcmCollapseAndClear
-)
-
-// TFileAttr ENUM
-//
-//	TCustomFileListBox
-type TFileAttr = int32
-
-const (
-	FtReadOnly TFileAttr = iota
-	FtHidden
-	FtSystem
-	FtVolumeID
-	FtDirectory
-	FtArchive
-	FtNormal
-)
-
-// TFilerFlag ENUM
-type TFilerFlag = int32
-
-const (
-	FfInherited TFilerFlag = iota
-	FfChildPos
-	FfInline
-)
-
-// TFileSortType ENUM
-type TFileSortType = int32
-
-const (
-	FstNone TFileSortType = iota
-	FstAlphabet
-	FstFoldersFirst
-	FstCustom
-)
-
-// TFillMode ENUM
-type TFillMode = int32
-
-const (
-	FmAlternate TFillMode = iota
-	FmWinding
-)
-
 // TFindItemKind ENUM
 //
 //	TMenu
@@ -3363,15 +3050,6 @@ const (
 	BsDialog
 	BsToolWindow
 	BsSizeToolWin
-)
-
-// TFormHandlerType ENUM
-type TFormHandlerType = int32
-
-const (
-	FhtFirstShow TFormHandlerType = iota
-	FhtClose
-	FhtCreate
 )
 
 // TFormStyle ENUM
@@ -3438,18 +3116,18 @@ const (
 type TFPPenEndCap = int32
 
 const (
-	PecRound1 TFPPenEndCap = iota
-	PecSquare1
-	PecFlat1
+	PecRound TFPPenEndCap = iota
+	PecSquare
+	PecFlat
 )
 
 // TFPPenJoinStyle ENUM
 type TFPPenJoinStyle = int32
 
 const (
-	PjsRound1 TFPPenJoinStyle = iota
-	PjsBevel1
-	PjsMiter1
+	PjsRound TFPPenJoinStyle = iota
+	PjsBevel
+	PjsMiter
 )
 
 // TFPPenMode ENUM
@@ -3488,20 +3166,6 @@ const (
 	PsClear
 )
 
-// TGaugeKind ENUM
-//
-//	重新定义，目的为了兼容ATGauge的
-type TGaugeKind = int32
-
-const (
-	GkText TGaugeKind = iota
-	GkHorizontalBar
-	GkVerticalBar
-	GkPie
-	GkNeedle
-	GkHalfPie
-)
-
 // TGlyphShowMode ENUM
 type TGlyphShowMode = int32
 
@@ -3510,17 +3174,6 @@ const (
 	GsmNever
 	GsmApplication
 	GsmSystem
-)
-
-// TGlyphTransparencyMode ENUM
-//
-//	TButtonGlyph
-type TGlyphTransparencyMode = int32
-
-const (
-	GtmGlyph TGlyphTransparencyMode = iota
-	GtmOpaque
-	GtmTransparent
 )
 
 // TGrabStyle ENUM
@@ -3566,14 +3219,6 @@ const (
 	Gde1Bit
 )
 
-// TGraphicsFillStyle ENUM
-type TGraphicsFillStyle = int32
-
-const (
-	FsSurface TGraphicsFillStyle = iota
-	FsBorder
-)
-
 // TGridCursorState ENUM
 type TGridCursorState = int32
 
@@ -3582,39 +3227,6 @@ const (
 	GcsColWidthChanging
 	GcsRowHeightChanging
 	GcsDragging
-)
-
-// TGridFlagsOption ENUM
-type TGridFlagsOption = int32
-
-const (
-	GfEditorUpdateLock TGridFlagsOption = iota
-	GfNeedsSelectActive
-	GfEditorTab
-	GfRevEditorTab
-	GfVisualChange
-	GfColumnsLocked
-	GfEditingDone
-	GfSizingStarted
-	GfPainting
-	GfUpdatingSize
-	GfClientRectChange
-	GfAutoEditPending
-	GfUpdatingScrollbar
-)
-
-// TGridState ENUM
-type TGridState = int32
-
-const (
-	GsNormal TGridState = iota
-	GsSelecting
-	GsRowSizing
-	GsColSizing
-	GsRowMoving
-	GsColMoving
-	GsHeaderClicking
-	GsButtonColumnClicking
 )
 
 // THeaderSectionState ENUM
@@ -3628,69 +3240,12 @@ const (
 	HsPressed
 )
 
-// THelpNodeType ENUM
-//
-//	THelpNode
-//	A help node is a position/place in a help database.
-//	For example it points to a Help file or to a Link on a HTML file.
-type THelpNodeType = int32
-
-const (
-	HntURLIDContext THelpNodeType = iota
-	HntURL
-	HntURLID
-	HntID
-	HntContext
-	HntURLContext
-)
-
 // THelpType ENUM
 type THelpType = int32
 
 const (
 	HtKeyword THelpType = iota
 	HtContext
-)
-
-// THookedCommandFlag ENUM
-type THookedCommandFlag = int32
-
-const (
-	HcfInit THookedCommandFlag = iota
-	HcfPreExec
-	HcfPostExec
-	HcfFinish
-)
-
-// TicnsIconType ENUM
-//
-//	from lower to higher
-type TicnsIconType = int32
-
-const (
-	IitNone TicnsIconType = iota
-	IitMini4BitData
-	IitMini8BitData
-	IitSmall4BitData
-	IitSmall8BitData
-	IitSmall32BitData
-	IitLarge4BitData
-	IitLarge8BitData
-	IitLarge32BitData
-	IitHuge4BitData
-	IitHuge8BitData
-	IitHuge32BitData
-	IitThumbnail32BitData
-	IitMini1BitMask
-	IitSmall1BitMask
-	IitSmall8BitMask
-	IitLarge1BitMask
-	IitLarge8BitMask
-	IitHuge1BitMask
-	IitHuge8BitMask
-	IitThumbnail8BitMask
-	Iit256PixelDataARGB
-	Iit512PixelDataARGB
 )
 
 // TIconArrangement ENUM
@@ -3701,25 +3256,6 @@ type TIconArrangement = int32
 const (
 	IaTop TIconArrangement = iota
 	IaLeft
-)
-
-// TIdleTimerAutoEvent ENUM
-//
-//	TIdleTimer
-//	For example:
-//	Do something after 2 seconds after user input and idle.
-//	AutoEnabled:=true;
-//	AutoStartEvent:=itaOnIdle; // start the timer on first idle
-//	AutoEndEvent:=itaOnUserInput; // end on any user input
-//	If the OnTimer event works in several chunks, set FireOnIdle:=true.
-//	The OnTimer event will then be called on idle until FireOnIdle is false.
-//	FireOnIdle is set to false on any user input.
-type TIdleTimerAutoEvent = int32
-
-const (
-	ItaOnIdle TIdleTimerAutoEvent = iota
-	ItaOnIdleEnd
-	ItaOnUserInput
 )
 
 // TImageOrientation ENUM
@@ -3738,34 +3274,6 @@ type TImageType = int32
 const (
 	ItImage TImageType = iota
 	ItMask
-)
-
-// TIniFileOption ENUM
-type TIniFileOption = int32
-
-const (
-	IfoStripComments TIniFileOption = iota
-	IfoStripInvalid
-	IfoEscapeLineFeeds
-	IfoCaseSensitive
-	IfoStripQuotes
-	IfoFormatSettingsActive
-	IfoWriteStringBoolean
-)
-
-// tinterfaceentrytype ENUM
-//
-//	This enumerate is found both in the rtl and compiler. Do not change the order of the fields.
-type tinterfaceentrytype = int32
-
-const (
-	EtStandard tinterfaceentrytype = iota
-	EtVirtualMethodResult
-	EtStaticMethodResult
-	EtFieldValue
-	EtVirtualMethodClass
-	EtStaticMethodClass
-	EtFieldValueClass
 )
 
 // TItemChange ENUM
@@ -3798,20 +3306,6 @@ const (
 	IfPartialString
 	IfExactString
 	IfNearest
-)
-
-// TItemType ENUM
-type TItemType = int32
-
-const (
-	ItNormal TItemType = iota
-	ItCell
-	ItColumn
-	ItRow
-	ItFixed
-	ItFixedColumn
-	ItFixedRow
-	ItSelected
 )
 
 // TLabelPosition ENUM
@@ -3878,31 +3372,6 @@ const (
 	LarWindow
 )
 
-// TLazCanvasImageFormat ENUM
-type TLazCanvasImageFormat = int32
-
-const (
-	ClfOther TLazCanvasImageFormat = iota
-	ClfRGB16_R5G6B5
-	ClfRGB24
-	ClfRGB24UpsideDown
-	ClfBGR24
-	ClfBGRA32
-	ClfRGBA32
-	ClfARGB32
-)
-
-// TLazDeviceMessageKind ENUM
-//
-//	TLazMessaging
-type TLazDeviceMessageKind = int32
-
-const (
-	DmkSMS TLazDeviceMessageKind = iota
-	DmkMMS
-	DmkEMail
-)
-
 // TLazDockHeaderPart ENUM
 type TLazDockHeaderPart = int32
 
@@ -3913,74 +3382,6 @@ const (
 	LdhpCloseButton
 )
 
-// TLazFileDialogKind ENUM
-type TLazFileDialogKind = int32
-
-const (
-	LdkOpenDesktop TLazFileDialogKind = iota
-	LdkSaveDesktop
-	LdkOpenPDA
-	LdkSavePDA
-	LdkSelectDirectory
-)
-
-// TLazMessagingStatus ENUM
-type TLazMessagingStatus = int32
-
-const (
-	MssSentSuccessfully TLazMessagingStatus = iota
-	MssSendingGeneralError
-	MssRadioOff
-	MssNoService
-	MssReceivedSuccessfully
-	MssReceivingGeneralError
-)
-
-// TLazPositionMethod ENUM
-//
-//	TLazPositionInfo
-type TLazPositionMethod = int32
-
-const (
-	PmGPS TLazPositionMethod = iota
-	PmNetwork
-)
-
-// TLazReaderDIBEncoding ENUM
-//
-//	(*) Note: when reading images with an alpha channel and the alpha channel
-//	has no influence on the mask (unless the maskcolor is transparent)
-type TLazReaderDIBEncoding = int32
-
-const (
-	LrdeRGB TLazReaderDIBEncoding = iota
-	LrdeRLE
-	LrdeBitfield
-	LrdeJpeg
-	LrdePng
-	LrdeHuffman
-)
-
-// TLazReaderMaskMode ENUM
-//
-//	TLazReaderDIB
-//	This is an imroved FPImage reader for dib images.
-type TLazReaderMaskMode = int32
-
-const (
-	LrmmNone TLazReaderMaskMode = iota
-	LrmmAuto
-	LrmmColor
-)
-
-// TLazRegionFillMode ENUM
-type TLazRegionFillMode = int32
-
-const (
-	RfmOddEven TLazRegionFillMode = iota
-	RfmWinding
-)
-
 // TLazSynBorderSide ENUM
 type TLazSynBorderSide = int32
 
@@ -3989,106 +3390,6 @@ const (
 	BsTop
 	BsRight
 	BsBottom
-)
-
-// TLazSynWordBoundary ENUM
-type TLazSynWordBoundary = int32
-
-const (
-	SwbWordBegin TLazSynWordBoundary = iota
-	SwbWordEnd
-	SwbTokenBegin
-	SwbTokenEnd
-	SwbCaseChange
-	SwbWordSmart
-)
-
-// TLCLCapability ENUM
-type TLCLCapability = int32
-
-const (
-	LcAsyncProcess TLCLCapability = iota
-	LcCanDrawOutsideOnPaint
-	LcNeedMininimizeAppWithMainForm
-	LcApplicationTitle
-	LcApplicationWindow
-	LcFormIcon
-	LcModalWindow
-	LcDragDockStartOnTitleClick
-	LcAntialiasingEnabledByDefault
-	LcLMHelpSupport
-	LcReceivesLMClearCutCopyPasteReliably
-	LcSendsUTF8KeyPress
-	LcAllowChildControlsInNativeControls
-	LcEmulatedMDI
-	LcAccessibilitySupport
-	LcRadialGradientBrush
-	LcTransparentWindow
-	LcTextHint
-	LcNativeTaskDialog
-	LcCanDrawHidden
-	LcAccelleratorKeys
-)
-
-// TLCLGlyphsMissingResources ENUM
-type TLCLGlyphsMissingResources = int32
-
-const (
-	GmrAllMustExist TLCLGlyphsMissingResources = iota
-	GmrOneMustExist
-	GmrIgnoreAll
-)
-
-// TLCLPlatform ENUM
-type TLCLPlatform = int32
-
-const (
-	LpGtk TLCLPlatform = iota
-	LpGtk2
-	LpGtk3
-	LpWin32
-	LpWinCE
-	LpCarbon
-	LpQT
-	LpQt5
-	LpQt6
-	LpfpGUI
-	LpNoGUI
-	LpCocoa
-	LpCustomDrawn
-	LpMUI
-)
-
-// TLCLTaskDialogFooterIcon ENUM
-type TLCLTaskDialogFooterIcon = int32
-
-const (
-	TfiBlank1 TLCLTaskDialogFooterIcon = iota
-	TfiWarning1
-	TfiQuestion1
-	TfiError1
-	TfiInformation1
-	TfiShield1
-)
-
-// TLCLTaskDialogIcon ENUM
-type TLCLTaskDialogIcon = int32
-
-const (
-	TiBlank1 TLCLTaskDialogIcon = iota
-	TiWarning1
-	TiQuestion1
-	TiError1
-	TiInformation1
-	TiNotUsed1
-	TiShield1
-)
-
-// TLinkAction ENUM
-type TLinkAction = int32
-
-const (
-	LaClick TLinkAction = iota
 )
 
 // TListAssignOp ENUM
@@ -4115,187 +3416,12 @@ const (
 	LbVirtual
 )
 
-// TListItemFlag ENUM
-type TListItemFlag = int32
-
-const (
-	LifDestroying TListItemFlag = iota
-	LifCreated
-)
-
-// TListNotification ENUM
-//
-//	TList class
-type TListNotification = int32
-
-const (
-	LnAdded TListNotification = iota
-	LnExtracted
-	LnDeleted
-)
-
-// TListViewFlag ENUM
-type TListViewFlag = int32
-
-const (
-	LffSelectedValid TListViewFlag = iota
-	LffItemsMoving
-	LffItemsSorting
-	LffPreparingSorting
-)
-
-// TListViewImageList ENUM
-type TListViewImageList = int32
-
-const (
-	LvilSmall TListViewImageList = iota
-	LvilLarge
-	LvilState
-)
-
-// TListViewProperty ENUM
-type TListViewProperty = int32
-
-const (
-	LvpAutoArrange TListViewProperty = iota
-	LvpCheckboxes
-	LvpColumnClick
-	LvpFlatScrollBars
-	LvpFullDrag
-	LvpGridLines
-	LvpHideSelection
-	LvpHotTrack
-	LvpMultiSelect
-	LvpOwnerDraw
-	LvpReadOnly
-	LvpRowSelect
-	LvpShowColumnHeaders
-	LvpShowWorkAreas
-	LvpWrapText
-	LvpToolTips
-)
-
-// TLRSItemType ENUM
-type TLRSItemType = int32
-
-const (
-	LrsitCollection TLRSItemType = iota
-	LrsitComponent
-	LrsitList
-	LrsitProperty
-)
-
-// TLRSOWStackItemState ENUM
-//
-//	TLRSOWStackItem
-//	The TLRSObjectWriter can find empty entries and omit writing them to stream.
-//	For example:
-//	inline ConditionalOptionsFrame: TCompOptsConditionalsFrame
-//	inherited COCTreeView: TTreeView
-//	end
-//	inherited COCPopupMenu: TPopupMenu
-//	end
-//	end
-//	The empty inherited child components will not be written if
-//	WriteEmptyInheritedChilds = false (default).
-//	Reason:
-//	This allows one to delete/rename controls in ancestors without the need
-//	to update all descendants.
-type TLRSOWStackItemState = int32
-
-const (
-	LrsowsisStarted TLRSOWStackItemState = iota
-	LrsowsisHeaderWritten
-	LrsowsisDataWritten
-)
-
-// TLRSStreamOriginalFormat ENUM
-type TLRSStreamOriginalFormat = int32
-
-const (
-	SofUnknown TLRSStreamOriginalFormat = iota
-	SofBinary
-	SofText
-)
-
-// TLVStyleType ENUM
-type TLVStyleType = int32
-
-const (
-	LsStyle TLVStyleType = iota
-	LsInvert
-	LsExStyle
-	LsNone
-)
-
-// TMaskCaseSensitivity ENUM
-type TMaskCaseSensitivity = int32
-
-const (
-	McsPlatformDefault TMaskCaseSensitivity = iota
-	McsCaseInsensitive
-	McsCaseSensitive
-)
-
-// TMaskeditTrimType ENUM
-type TMaskeditTrimType = int32
-
-const (
-	MetTrimLeft TMaskeditTrimType = iota
-	MetTrimRight
-)
-
 // TMaskEditValidationErrorMode ENUM
 type TMaskEditValidationErrorMode = int32
 
 const (
 	MvemException TMaskEditValidationErrorMode = iota
 	MvemEvent
-)
-
-// tMaskedType ENUM
-//
-//	Type for mask (internal)
-//	When adding more: make sure to add them in procedure InitcMaskToMaskedTypeArray if appropriate
-type tMaskedType = int32
-
-const (
-	Char_Invalid tMaskedType = iota
-	Char_IsLiteral
-	Char_Number
-	Char_NumberFixed
-	Char_NumberPlusMin
-	Char_Letter
-	Char_LetterFixed
-	Char_LetterUpCase
-	Char_LetterDownCase
-	Char_LetterFixedUpCase
-	Char_LetterFixedDownCase
-	Char_AlphaNum
-	Char_AlphaNumFixed
-	Char_AlphaNumUpCase
-	Char_AlphaNumDownCase
-	Char_AlphaNumFixedUpCase
-	Char_AlphaNumFixedDownCase
-	Char_All
-	Char_AllFixed
-	Char_AllUpCase
-	Char_AllDownCase
-	Char_AllFixedUpCase
-	Char_AllFixedDownCase
-	Char_HourSeparator
-	Char_DateSeparator
-	Char_Hex
-	Char_HexFixed
-	Char_HexUpCase
-	Char_HexDownCase
-	Char_HexFixedUpCase
-	Char_HexFixedDownCase
-	Char_Binary
-	Char_BinaryFixed
-	Char_Set
-	Char_SetFixed
-	Char_SetNegateFixed
 )
 
 // TMenuItemAutoFlag ENUM
@@ -4352,26 +3478,6 @@ const (
 	MwGrid
 )
 
-// TNativeCanvasType ENUM
-type TNativeCanvasType = int32
-
-const (
-	NctWindowsDC TNativeCanvasType = iota
-	NctLazCanvas
-)
-
-// TNativeHandleType ENUM
-//
-//	Types for native Handle integration
-type TNativeHandleType = int32
-
-const (
-	NhtWindowsHWND TNativeHandleType = iota
-	NhtX11TWindow
-	NhtCocoaNSWindow
-	NhtQtQWidget
-)
-
 // TNodeAttachMode ENUM
 type TNodeAttachMode = int32
 
@@ -4384,50 +3490,6 @@ const (
 	NaInsertBehind
 )
 
-// TNotifierXButtonButtonState ENUM
-//
-//	TNotifierXButton
-//	To avoid dependency on Buttons
-type TNotifierXButtonButtonState = int32
-
-const (
-	NbsUp TNotifierXButtonButtonState = iota
-	NbsDown
-	NbsHot
-)
-
-// TNumberingStyle ENUM
-type TNumberingStyle = int32
-
-const (
-	NsNone TNumberingStyle = iota
-	NsBullet
-)
-
-// TObjectTextEncoding ENUM
-type TObjectTextEncoding = int32
-
-const (
-	OteDFM TObjectTextEncoding = iota
-	OteLFM
-)
-
-// TObjectType ENUM
-type TObjectType = int32
-
-const (
-	OtFolders TObjectType = iota
-	OtNonFolders
-	OtHidden
-)
-
-// TOnBeforeExeucteFlag ENUM
-type TOnBeforeExeucteFlag = int32
-
-const (
-	BefAbort TOnBeforeExeucteFlag = iota
-)
-
 // TOperation ENUM
 //
 //	TComponent class
@@ -4436,18 +3498,6 @@ type TOperation = int32
 const (
 	OpInsert TOperation = iota
 	OpRemove
-)
-
-// TPageFlag ENUM
-//
-//	TCustomPage
-type TPageFlag = int32
-
-const (
-	PfAdded TPageFlag = iota
-	PfAdding
-	PfRemoving
-	PfInserting
 )
 
 // TPageMeasureUnits ENUM
@@ -4480,55 +3530,22 @@ const (
 	PbNone
 )
 
-// TParaAlignment ENUM
-type TParaAlignment = int32
-
-const (
-	PaLeft1 TParaAlignment = iota
-	PaRight1
-	PaCenter1
-	PaJustify1
-)
-
-// TParaNumStyle ENUM
-type TParaNumStyle = int32
-
-const (
-	PnNone TParaNumStyle = iota
-	PnBullet
-	PnNumber
-	PnLowLetter
-	PnLowRoman
-	PnUpLetter
-	PnUpRoman
-	PnCustomChar
-)
-
 // TPenEndCap ENUM
 type TPenEndCap = int32
 
 const (
-	PecRound TPenEndCap = iota
-	PecSquare
-	PecFlat
+	TPECapPecRound TPenEndCap = iota
+	TPECapPecSquare
+	TPECapPecFlat
 )
 
 // TPenJoinStyle ENUM
 type TPenJoinStyle = int32
 
 const (
-	PjsRound TPenJoinStyle = iota
-	PjsBevel
-	PjsMiter
-)
-
-// TPipeReason ENUM
-type TPipeReason = int32
-
-const (
-	PrDataAvailable TPipeReason = iota
-	PrBroken
-	PrCanWrite
+	TPJStylePjsRound TPenJoinStyle = iota
+	TPJStylePjsBevel
+	TPJStylePjsMiter
 )
 
 // TPixelFormat ENUM
@@ -4546,24 +3563,6 @@ const (
 	Pf24bit
 	Pf32bit
 	PfCustom
-)
-
-// TPlacementOperation ENUM
-type TPlacementOperation = int32
-
-const (
-	PoSave TPlacementOperation = iota
-	PoRestore
-)
-
-// TPluginState ENUM
-type TPluginState = int32
-
-const (
-	PsNone TPluginState = iota
-	PsExecuting
-	PsAccepting
-	PsCancelling
 )
 
 // TPopupAlignment ENUM
@@ -4603,57 +3602,12 @@ const (
 	PoWorkAreaCenter
 )
 
-// TPredefinedClipboardFormat ENUM
-type TPredefinedClipboardFormat = int32
-
-const (
-	PcfText TPredefinedClipboardFormat = iota
-	PcfBitmap
-	PcfPixmap
-	PcfIcon
-	PcfPicture
-	PcfMetaFilePict
-	PcfObject
-	PcfComponent
-	PcfCustomData
-)
-
 // TPrefixOption ENUM
 type TPrefixOption = int32
 
 const (
 	PoNone TPrefixOption = iota
 	PoHeaderClick
-)
-
-// TPrintAction ENUM
-type TPrintAction = int32
-
-const (
-	PaDocStart TPrintAction = iota
-	PaPageStart
-	PaPageEnd
-	PaDocEnd
-)
-
-// TPrinterCapability ENUM
-type TPrinterCapability = int32
-
-const (
-	PcCopies TPrinterCapability = iota
-	PcOrientation
-	PcCollation
-)
-
-// TPrinterFlags ENUM
-type TPrinterFlags = int32
-
-const (
-	PfPrinting TPrinterFlags = iota
-	PfAborted
-	PfDestroying
-	PfPrintersValid
-	PfRawMode
 )
 
 // TPrinterOrientation ENUM
@@ -4725,23 +3679,6 @@ const (
 	PbstMarquee
 )
 
-// TPsCanvasState ENUM
-type TPsCanvasState = int32
-
-const (
-	PcsPosValid TPsCanvasState = iota
-	PcsClipping
-	PcsClipSaved
-)
-
-// TPSPaintType ENUM
-type TPSPaintType = int32
-
-const (
-	PtColored TPSPaintType = iota
-	PtUncolored
-)
-
 // TRangeSelectMode ENUM
 //
 //	Option goRangeSelect: --> select a single range only, or multiple ranges
@@ -4770,6 +3707,8 @@ const (
 
 // TRawImageColorFormat ENUM
 //
+//	------------------------------------------------------------------------------
+//	raw image data
 //	Colorformat: Higher values means higher intensity.
 //	For example: Red=0 means no red, Alpha=0 means transparent
 type TRawImageColorFormat = int32
@@ -4818,25 +3757,6 @@ const (
 	RdInt64
 )
 
-// TRegionCombineMode ENUM
-type TRegionCombineMode = int32
-
-const (
-	RgnAnd TRegionCombineMode = iota
-	RgnCopy
-	RgnDiff
-	RgnOr
-	RgnXOR
-)
-
-// TRegionOperationType ENUM
-type TRegionOperationType = int32
-
-const (
-	RgnNewRect TRegionOperationType = iota
-	RgnCombine
-)
-
 // TReplacedChildSite ENUM
 type TReplacedChildSite = int32
 
@@ -4857,68 +3777,6 @@ const (
 	RsUpdate
 )
 
-// TRubberBandShape ENUM
-type TRubberBandShape = int32
-
-const (
-	RbsLine TRubberBandShape = iota
-	RbsRectangle
-)
-
-// TRuntimeError ENUM
-type TRuntimeError = int32
-
-const (
-	ReIntOverflow TRuntimeError = iota
-	ReInvalidOp
-	ReZeroDivide
-	ReOverflow
-	ReUnderflow
-	ReInvalidCast
-	ReAccessViolation
-	RePrivInstruction
-	ReControlBreak
-	ReStackOverflow
-	ReVarTypeCast
-	ReVarInvalidOp
-	ReVarDispatch
-	ReVarArrayCreate
-	ReVarNotArray
-	ReVarArrayBounds
-	ReAssertionFailed
-	ReExternalException
-	ReIntfCastError
-	ReSafeCallError
-	ReQuit
-	ReCodesetConversion
-	ReNoDynLibsSupport
-	ReThreadError
-)
-
-// TScreenNotification ENUM
-type TScreenNotification = int32
-
-const (
-	SnNewFormCreated TScreenNotification = iota
-	SnFormAdded
-	SnRemoveForm
-	SnActiveControlChanged
-	SnActiveFormChanged
-	SnFormVisibleChanged
-)
-
-// TScreenRotation ENUM
-//
-//	TLazDevice
-type TScreenRotation = int32
-
-const (
-	SrRotation_0 TScreenRotation = iota
-	SrRotation_90
-	SrRotation_180
-	SrRotation_270
-)
-
 // TScrollBarKind ENUM
 //
 //	TControlScrollBar
@@ -4927,15 +3785,6 @@ type TScrollBarKind = int32
 const (
 	SbHorizontal TScrollBarKind = iota
 	SbVertical
-)
-
-// TScrollBarStyle ENUM
-type TScrollBarStyle = int32
-
-const (
-	SsRegular TScrollBarStyle = iota
-	SsFlat
-	SsHotTrack
 )
 
 // TScrollCode ENUM
@@ -4997,37 +3846,6 @@ const (
 	SoEnd
 )
 
-// TSelectDirOpt ENUM
-type TSelectDirOpt = int32
-
-const (
-	SdAllowCreate TSelectDirOpt = iota
-	SdPerformCreate
-	SdPrompt
-)
-
-// TShadowType ENUM
-type TShadowType = int32
-
-const (
-	StNone TShadowType = iota
-	StIn
-	StOut
-	StEtchedIn
-	StEtchedOut
-	StFilled
-)
-
-// TShapeDirection ENUM
-type TShapeDirection = int32
-
-const (
-	AtUp1 TShapeDirection = iota
-	AtDown1
-	AtLeft1
-	AtRight1
-)
-
 // TShapeType ENUM
 //
 //	TShape
@@ -5051,21 +3869,6 @@ const (
 	StPolygon
 )
 
-// TShowHelpResult ENUM
-type TShowHelpResult = int32
-
-const (
-	ShrNone TShowHelpResult = iota
-	ShrSuccess
-	ShrCancel
-	ShrDatabaseNotFound
-	ShrContextNotFound
-	ShrViewerNotFound
-	ShrHelpNotFound
-	ShrViewerError
-	ShrSelectorError
-)
-
 // TShowInTaskBar ENUM
 type TShowInTaskBar = int32
 
@@ -5082,14 +3885,6 @@ const (
 	SmaAllColumns TSmartAutoFitType = iota
 	SmaNoColumn
 	SmaUseColumnOption
-)
-
-// TSortDirection ENUM
-type TSortDirection = int32
-
-const (
-	SdAscending TSortDirection = iota
-	SdDescending
 )
 
 // TSortIndicator ENUM
@@ -5113,10 +3908,29 @@ const (
 type TSortType = int32
 
 const (
-	StNone1 TSortType = iota
-	StData1
-	StText1
-	StBoth1
+	StNone TSortType = iota
+	StData
+	StText
+	StBoth
+)
+
+// TSQLDialect ENUM
+type TSQLDialect = int32
+
+const (
+	SqlStandard TSQLDialect = iota
+	SqlInterbase6
+	SqlMSSQL7
+	SqlMySQL
+	SqlOracle
+	SqlSybase
+	SqlIngres
+	SqlMSSQL2K
+	SqlPostgres
+	SqlSQLite
+	SqlFirebird25
+	SqlFirebird30
+	SqlFirebird40
 )
 
 // TStaticBorderStyle ENUM
@@ -5134,9 +3948,9 @@ const (
 type TStatusPanelBevel = int32
 
 const (
-	PbNone1 TStatusPanelBevel = iota
-	PbLowered1
-	PbRaised1
+	TSPBevelPbNone TStatusPanelBevel = iota
+	PbLowered
+	PbRaised
 )
 
 // TStatusPanelStyle ENUM
@@ -5145,18 +3959,6 @@ type TStatusPanelStyle = int32
 const (
 	PsText TStatusPanelStyle = iota
 	PsOwnerDraw
-)
-
-// TStockFont ENUM
-//
-//	enum to use with InitStockFont
-type TStockFont = int32
-
-const (
-	SfSystem TStockFont = iota
-	SfHint
-	SfIcon
-	SfMenu
 )
 
 // TStreamOwnership ENUM
@@ -5169,6 +3971,14 @@ const (
 	SoOwned
 )
 
+// TStringDelim ENUM
+type TStringDelim = int32
+
+const (
+	SdSingleQuote TStringDelim = iota
+	SdDoubleQuote
+)
+
 // TStringsSortStyle ENUM
 type TStringsSortStyle = int32
 
@@ -5176,34 +3986,6 @@ const (
 	SslNone TStringsSortStyle = iota
 	SslUser
 	SslAuto
-)
-
-// TSubItemUpdate ENUM
-type TSubItemUpdate = int32
-
-const (
-	SiuText TSubItemUpdate = iota
-	SiuImage
-)
-
-// TSynBeautifierIndentType ENUM
-type TSynBeautifierIndentType = int32
-
-const (
-	SbitSpace TSynBeautifierIndentType = iota
-	SbitCopySpaceTab
-	SbitPositionCaret
-	SbitConvertToTabSpace
-	SbitConvertToTabOnly
-)
-
-// TSynBlockPersistMode ENUM
-type TSynBlockPersistMode = int32
-
-const (
-	SbpDefault TSynBlockPersistMode = iota
-	SbpWeak
-	SbpStrong
 )
 
 // TSynCaretAdjustMode ENUM
@@ -5228,70 +4010,6 @@ const (
 	CtCostum
 )
 
-// TSynCommentContineMode ENUM
-type TSynCommentContineMode = int32
-
-const (
-	SccNoPrefix TSynCommentContineMode = iota
-	SccPrefixAlways
-	SccPrefixMatch
-)
-
-// TSynCommentExtendMode ENUM
-type TSynCommentExtendMode = int32
-
-const (
-	SceNever TSynCommentExtendMode = iota
-	SceAlways
-	SceSplitLine
-	SceMatching
-	SceMatchingSplitLine
-)
-
-// TSynCommentIndentFlag ENUM
-type TSynCommentIndentFlag = int32
-
-const (
-	SciNone TSynCommentIndentFlag = iota
-	SciAlignOpen
-	SciAlignOpenOnce
-	SciAlignOpenSkipBOL
-	SciAddTokenLen
-	SciAddPastTokenIndent
-	SciMatchOnlyTokenLen
-	SciMatchOnlyPastTokenIndent
-	SciAlignOnlyTokenLen
-	SciAlignOnlyPastTokenIndent
-	SciApplyIndentForNoMatch
-)
-
-// TSynCommentMatchLine ENUM
-type TSynCommentMatchLine = int32
-
-const (
-	SclMatchFirst TSynCommentMatchLine = iota
-	SclMatchPrev
-)
-
-// TSynCommentMatchMode ENUM
-type TSynCommentMatchMode = int32
-
-const (
-	ScmMatchAfterOpening TSynCommentMatchMode = iota
-	ScmMatchOpening
-	ScmMatchWholeLine
-	ScmMatchAtAsterisk
-)
-
-// TSynCommentType ENUM
-type TSynCommentType = int32
-
-const (
-	SctAnsi TSynCommentType = iota
-	SctBor
-	SctSlash
-)
-
 // TSynCompletionLongHintType ENUM
 type TSynCompletionLongHintType = int32
 
@@ -5300,15 +4018,6 @@ const (
 	SclpExtendRightOnly
 	SclpExtendHalfLeft
 	SclpExtendUnlimitedLeft
-)
-
-// TSynCoordinateMappingFlag ENUM
-type TSynCoordinateMappingFlag = int32
-
-const (
-	ScmLimitToLines TSynCoordinateMappingFlag = iota
-	ScmIncludePartVisible
-	ScmForceLeftSidePos
 )
 
 // TSynCopyPasteAction ENUM
@@ -5320,16 +4029,13 @@ const (
 	ScaAbort
 )
 
-// TSynCustomCaretSizeFlag ENUM
-//
-//	relative dimensions in percent from 0 to 1024 (=100%)
-type TSynCustomCaretSizeFlag = int32
+// TSynDefaultPopupMenu ENUM
+type TSynDefaultPopupMenu = int32
 
 const (
-	CcsRelativeLeft TSynCustomCaretSizeFlag = iota
-	CcsRelativeTop
-	CcsRelativeWidth
-	CcsRelativeHeight
+	DpmDisabled TSynDefaultPopupMenu = iota
+	DpmBefore
+	DpmAfter
 )
 
 // TSynEditBracketHighlightStyle ENUM
@@ -5339,46 +4045,6 @@ const (
 	SbhsLeftOfCursor TSynEditBracketHighlightStyle = iota
 	SbhsRightOfCursor
 	SbhsBoth
-)
-
-// TSynEditCaretFlag ENUM
-//
-//	TSynEditCaret
-type TSynEditCaretFlag = int32
-
-const (
-	ScCharPosValid TSynEditCaretFlag = iota
-	ScBytePosValid
-	ScViewedPosValid
-	ScHasLineMapHandler
-	ScfUpdateLastCaretX
-)
-
-// TSynEditCaretUpdateFlag ENUM
-type TSynEditCaretUpdateFlag = int32
-
-const (
-	ScuForceSet TSynEditCaretUpdateFlag = iota
-	ScuChangedX
-	ScuChangedY
-	ScuNoInvalidate
-)
-
-// TSynEditHasTextFlag ENUM
-type TSynEditHasTextFlag = int32
-
-const (
-	ShtIncludeVirtual TSynEditHasTextFlag = iota
-)
-
-// TSynEditMarkChangeReason ENUM
-type TSynEditMarkChangeReason = int32
-
-const (
-	SmcrLine TSynEditMarkChangeReason = iota
-	SmcrColumn
-	SmcrVisible
-	SmcrChanged
 )
 
 // TSynEditMarkSortOrder ENUM
@@ -5419,88 +4085,6 @@ const (
 	SenrEndUndoRedo
 )
 
-// TSynEditorMouseOption ENUM
-type TSynEditorMouseOption = int32
-
-const (
-	EmUseMouseActions TSynEditorMouseOption = iota
-	EmAltSetsColumnMode
-	EmDragDropEditing
-	EmRightMouseMovesCursor
-	EmDoubleClickSelectsLine
-	EmShowCtrlMouseLinks
-	EmCtrlWheelZoom
-)
-
-// TSynEditorOption ENUM
-type TSynEditorOption = int32
-
-const (
-	EoAutoIndent TSynEditorOption = iota
-	EoBracketHighlight
-	EoEnhanceHomeKey
-	EoGroupUndo
-	EoHalfPageScroll
-	EoHideRightMargin
-	EoKeepCaretX
-	EoNoCaret
-	EoNoSelection
-	EoPersistentCaret
-	EoScrollByOneLess
-	EoScrollPastEof
-	EoScrollPastEol
-	EoScrollHintFollows
-	EoShowScrollHint
-	EoShowSpecialChars
-	EoSmartTabs
-	EoTabIndent
-	EoTabsToSpaces
-	EoTrimTrailingSpaces
-	EoAutoSizeMaxScrollWidth
-	EoDisableScrollArrows
-	EoHideShowScrollbars
-	EoDropFiles
-	EoSmartTabDelete
-	EoSpacesToTabs
-	EoAutoIndentOnPaste
-	EoAltSetsColumnMode
-	EoDragDropEditing
-	EoRightMouseMovesCursor
-	EoDoubleClickSelectsLine
-	EoShowCtrlMouseLinks
-)
-
-// TSynEditorOption2 ENUM
-type TSynEditorOption2 = int32
-
-const (
-	EoCaretSkipsSelection TSynEditorOption2 = iota
-	EoCaretMoveEndsSelection
-	EoCaretSkipTab
-	EoAlwaysVisibleCaret
-	EoEnhanceEndKey
-	EoFoldedCopyPaste
-	EoPersistentBlock
-	EoOverwriteBlock
-	EoAutoHideCursor
-	EoColorSelectionTillEol
-	EoPersistentCaretStopBlink
-	EoNoScrollOnSelectRange
-	EoAcceptDragDropEditing
-	EoScrollPastEolAddPage
-	EoScrollPastEolAutoCaret
-	EoBookmarkRestoresScroll
-)
-
-// TSynEditorShareOption ENUM
-//
-//	options for textbuffersharing
-type TSynEditorShareOption = int32
-
-const (
-	EosShareMarks TSynEditorShareOption = iota
-)
-
 // TSynEditStringTrimmingType ENUM
 type TSynEditStringTrimmingType = int32
 
@@ -5511,14 +4095,12 @@ const (
 	SettIgnoreAll
 )
 
-// TSynEditTextFlag ENUM
-type TSynEditTextFlag = int32
+// TSynEventParamType ENUM
+type TSynEventParamType = int32
 
 const (
-	SetSelect TSynEditTextFlag = iota
-	SetPersistentBlock
-	SetMoveBlock
-	SetExtendBlock
+	PtString TSynEventParamType = iota
+	PtInteger
 )
 
 // TSynFrameEdges ENUM
@@ -5531,21 +4113,22 @@ const (
 	SfeLeft
 )
 
-// TSynHighlighterCapability ENUM
-type TSynHighlighterCapability = int32
+// TSynGutterSide ENUM
+//
+//	TSynGutterBase
+type TSynGutterSide = int32
 
 const (
-	HcUserSettings TSynHighlighterCapability = iota
-	HcRegistry
-	HcCodeFolding
+	GsLeft TSynGutterSide = iota
+	GsRight
 )
 
-// TSynHomeMode ENUM
-type TSynHomeMode = int32
+// TSynHTMLSynMode ENUM
+type TSynHTMLSynMode = int32
 
 const (
-	SynhmDefault TSynHomeMode = iota
-	SynhmFirstWord
+	ShmHtml TSynHTMLSynMode = iota
+	ShmXHtml
 )
 
 // TSynLineState ENUM
@@ -5577,14 +4160,6 @@ const (
 	CslFollowRtl
 )
 
-// TSynLogPhysFlag ENUM
-type TSynLogPhysFlag = int32
-
-const (
-	LpfAdjustToCharBegin TSynLogPhysFlag = iota
-	LpfAdjustToNextChar
-)
-
 // TSynMAClickCount ENUM
 type TSynMAClickCount = int32
 
@@ -5604,6 +4179,16 @@ const (
 	CdDown
 )
 
+// TSynMacroState ENUM
+type TSynMacroState = int32
+
+const (
+	MsStopped TSynMacroState = iota
+	MsRecording
+	MsPlaying
+	MsPaused
+)
+
 // TSynMarksAdjustMode ENUM
 //   - This is used, if text is *replaced*.
 //     What to do with marks in text that is deleted/replaced
@@ -5614,24 +4199,23 @@ const (
 	SmaKeep
 )
 
-// TSynMAUpRestriction ENUM
-type TSynMAUpRestriction = int32
+// TSynMouseButton ENUM
+//   - For streaming compatibility the enum members of TSynMouseButton must have the
+//     same names as Controls.TMouseButton
+//     To avoid conflicts the definiton will be hidden here and aliases be defind for
+//     common usage
+type TSynMouseButton = int32
 
 const (
-	CrLastDownPos TSynMAUpRestriction = iota
-	CrLastDownPosSameLine
-	CrLastDownPosSearchAll
-	CrLastDownButton
-	CrLastDownShift
-	CrAllowFallback
-)
-
-// TSynPaintEvent ENUM
-type TSynPaintEvent = int32
-
-const (
-	PeBeforePaint TSynPaintEvent = iota
-	PeAfterPaint
+	TSMButtonMbLeft TSynMouseButton = iota
+	TSMButtonMbRight
+	TSMButtonMbMiddle
+	TSMButtonMbExtra1
+	TSMButtonMbExtra2
+	MbWheelUp
+	MbWheelDown
+	MbWheelLeft
+	MbWheelRight
 )
 
 // TSynPhysCharSide ENUM
@@ -5654,43 +4238,6 @@ const (
 	RaReplaceAll
 )
 
-// TSynScrollEvent ENUM
-type TSynScrollEvent = int32
-
-const (
-	PeBeforeScroll TSynScrollEvent = iota
-	PeAfterScroll
-	PeAfterScrollFailed
-)
-
-// TSynSearchOption ENUM
-type TSynSearchOption = int32
-
-const (
-	SsoBackwards TSynSearchOption = iota
-	SsoEntireScope
-	SsoSelectedOnly
-	SsoReplace
-	SsoReplaceAll
-	SsoPrompt
-	SsoSearchInReplacement
-	SsoRegExpr
-	SsoRegExprMultiLine
-	SsoFindContinue
-)
-
-// TSynSelectedColorEnum ENUM
-type TSynSelectedColorEnum = int32
-
-const (
-	SscBack TSynSelectedColorEnum = iota
-	SscFore
-	SscFrameLeft
-	SscFrameRight
-	SscFrameTop
-	SscFrameBottom
-)
-
 // TSynSelectionMode ENUM
 type TSynSelectionMode = int32
 
@@ -5711,90 +4258,12 @@ const (
 	AfmNext
 )
 
-// TSynStateFlag ENUM
-type TSynStateFlag = int32
-
-const (
-	SfCaretChanged TSynStateFlag = iota
-	SfHideCursor
-	SfEnsureCursorPos
-	SfEnsureCursorPosAtResize
-	SfEnsureCursorPosForEditRight
-	SfEnsureCursorPosForEditLeft
-	SfExplicitTopLine
-	SfExplicitLeftChar
-	SfPreventScrollAfterSelect
-	SfIgnoreNextChar
-	SfPainting
-	SfHasPainted
-	SfHasScrolled
-	SfScrollbarChanged
-	SfHorizScrollbarVisible
-	SfVertScrollbarVisible
-	SfGutterResized
-	SfAfterLoadFromFileNeeded
-	SfAfterHandleCreatedNeeded
-	SfLeftGutterClick
-	SfRightGutterClick
-	SfInClick
-	SfDblClicked
-	SfTripleClicked
-	SfQuadClicked
-	SfWaitForDragging
-	SfWaitForDraggingNoCaret
-	SfIsDragging
-	SfDraggingOver
-	SfWaitForMouseSelecting
-	SfMouseSelecting
-	SfMouseDoneSelecting
-	SfIgnoreUpClick
-	SfSelChanged
-)
-
-// TSynStatusChange ENUM
-type TSynStatusChange = int32
-
-const (
-	ScCaretX TSynStatusChange = iota
-	ScCaretY
-	ScLeftChar
-	ScTopLine
-	ScLinesInWindow
-	ScCharsInWindow
-	ScInsertMode
-	ScModified
-	ScSelection
-	ScReadOnly
-	ScFocus
-	ScOptions
-)
-
-// TSynVisibleSpecialChar ENUM
-type TSynVisibleSpecialChar = int32
-
-const (
-	VscSpace TSynVisibleSpecialChar = iota
-	VscTabAtFirst
-	VscTabAtLast
-)
-
 // TSysLinkType ENUM
 type TSysLinkType = int32
 
 const (
 	SltURL TSysLinkType = iota
 	SltID
-)
-
-// TTabAlignment ENUM
-type TTabAlignment = int32
-
-const (
-	TabLeft TTabAlignment = iota
-	TabCenter
-	TabRight
-	TabDecimal
-	TabWordBar
 )
 
 // TTabPosition ENUM
@@ -5825,47 +4294,6 @@ const (
 	TbSingleButton
 )
 
-// TTaskDialogElement ENUM
-type TTaskDialogElement = int32
-
-const (
-	TdeContent TTaskDialogElement = iota
-	TdeExpandedInfo
-	TdeFooter
-	TdeMainInstruction
-	TdeEdit
-	TdeVerif
-)
-
-// TTaskDialogFooterIcon ENUM
-//
-//	the available footer icons for the Task Dialog
-type TTaskDialogFooterIcon = int32
-
-const (
-	TfiBlank TTaskDialogFooterIcon = iota
-	TfiWarning
-	TfiQuestion
-	TfiError
-	TfiInformation
-	TfiShield
-)
-
-// TTaskDialogIcon ENUM
-//
-//	the available main icons for the Task Dialog
-type TTaskDialogIcon = int32
-
-const (
-	TiBlank TTaskDialogIcon = iota
-	TiWarning
-	TiQuestion
-	TiError
-	TiInformation
-	TiNotUsed
-	TiShield
-)
-
 // TTextLayout ENUM
 //
 //	Reflects text style when drawn in a rectangle
@@ -5884,13 +4312,6 @@ const (
 	TlbsLF TTextLineBreakStyle = iota
 	TlbsCRLF
 	TlbsCR
-)
-
-// TTextUIFeature ENUM
-type TTextUIFeature = int32
-
-const (
-	UiLink TTextUIFeature = iota
 )
 
 // TThemedButton ENUM
@@ -6681,19 +5102,6 @@ const (
 	ToUseGlyphEffects
 )
 
-// TThreadPriority ENUM
-type TThreadPriority = int32
-
-const (
-	TpIdle TThreadPriority = iota
-	TpLowest
-	TpLower
-	TpNormal
-	TpHigher
-	TpHighest
-	TpTimeCritical
-)
-
 // TTickMark ENUM
 type TTickMark = int32
 
@@ -6710,18 +5118,6 @@ const (
 	TsNone TTickStyle = iota
 	TsAuto
 	TsManual
-)
-
-// TTiffUnit ENUM
-//
-//	TTiffImage
-type TTiffUnit = int32
-
-const (
-	TuUnknown TTiffUnit = iota
-	TuNone
-	TuInch
-	TuCentimeter
 )
 
 // TTimeDisplay ENUM
@@ -6748,24 +5144,6 @@ const (
 	TsLazarus TTitleStyle = iota
 	TsStandard
 	TsNative
-)
-
-// TToolBarFlag ENUM
-type TToolBarFlag = int32
-
-const (
-	TbfUpdateVisibleBarNeeded TToolBarFlag = iota
-	TbfPlacingControls
-)
-
-// TToolButtonFlag ENUM
-type TToolButtonFlag = int32
-
-const (
-	TbfPressed TToolButtonFlag = iota
-	TbfArrowPressed
-	TbfMouseInArrow
-	TbfDropDownMenuShown
 )
 
 // TToolButtonStyle ENUM
@@ -6854,43 +5232,6 @@ const (
 	TvimAsPrevSibling
 )
 
-// TTreeViewState ENUM
-//
-//	TCustomTreeView
-type TTreeViewState = int32
-
-const (
-	TvsScrollbarChanged TTreeViewState = iota
-	TvsMaxRightNeedsUpdate
-	TvsTopsNeedsUpdate
-	TvsMaxLvlNeedsUpdate
-	TvsTopItemNeedsUpdate
-	TvsBottomItemNeedsUpdate
-	TvsCanvasChanged
-	TvsDragged
-	TvsIsEditing
-	TvsStateChanging
-	TvsManualNotify
-	TvsUpdating
-	TvsPainting
-	TvoFocusedPainting
-	TvsDblClicked
-	TvsTripleClicked
-	TvsQuadClicked
-	TvsSelectionChanged
-	TvsEditOnMouseUp
-	TvsSingleSelectOnMouseUp
-)
-
-// TTriPts ENUM
-type TTriPts = int32
-
-const (
-	PtA TTriPts = iota
-	PtB
-	PtC
-)
-
 // TUDAlignButton ENUM
 type TUDAlignButton = int32
 
@@ -6926,37 +5267,6 @@ const (
 	UpdDown
 )
 
-// TValueType ENUM
-//
-//	TFiler
-type TValueType = int32
-
-const (
-	VaNull TValueType = iota
-	VaList
-	VaInt8
-	VaInt16
-	VaInt32
-	VaExtended
-	VaString
-	VaIdent
-	VaFalse
-	VaTrue
-	VaBinary
-	VaSet
-	VaLString
-	VaNil
-	VaCollection
-	VaSingle
-	VaCurrency
-	VaDate
-	VaWString
-	VaInt64
-	VaUTF8String
-	VaUString
-	VaQWord
-)
-
 // TVerticalAlignment ENUM
 type TVerticalAlignment = int32
 
@@ -6964,17 +5274,6 @@ const (
 	TaAlignTop TVerticalAlignment = iota
 	TaAlignBottom
 	TaVerticalCenter
-)
-
-// TViewedXYInfoFlag ENUM
-type TViewedXYInfoFlag = int32
-
-const (
-	VifAdjustLogXYToNextChar TViewedXYInfoFlag = iota
-	VifReturnPhysXY
-	VifReturnLogXY
-	VifReturnLogEOL
-	VifReturnPhysOffset
 )
 
 // TViewStyle ENUM
@@ -7001,15 +5300,6 @@ type TVleSortCol = int32
 const (
 	ColKey TVleSortCol = iota
 	ColValue
-)
-
-// TVScriptPos ENUM
-type TVScriptPos = int32
-
-const (
-	VpNormal TVScriptPos = iota
-	VpSubScript
-	VpSuperScript
 )
 
 // TVSTTextSourceType ENUM
@@ -7056,17 +5346,6 @@ type TVTButtonStyle = int32
 const (
 	BsRectangle TVTButtonStyle = iota
 	BsTriangle
-)
-
-// TVTCellContentMarginType ENUM
-//
-//	Determines which sides of the cell content margin should be considered.
-type TVTCellContentMarginType = int32
-
-const (
-	CcmtAllSides TVTCellContentMarginType = iota
-	CcmtTopLeftOnly
-	CcmtBottomRightOnly
 )
 
 // TVTCellPaintMode ENUM
@@ -7163,10 +5442,10 @@ const (
 type TVTHeaderColumnLayout = int32
 
 const (
-	BlGlyphLeft1 TVTHeaderColumnLayout = iota
-	BlGlyphRight1
-	BlGlyphTop1
-	BlGlyphBottom1
+	TVTHCLayoutBlGlyphLeft TVTHeaderColumnLayout = iota
+	TVTHCLayoutBlGlyphRight
+	TVTHCLayoutBlGlyphTop
+	TVTHCLayoutBlGlyphBottom
 )
 
 // TVTHeaderStyle ENUM
@@ -7194,16 +5473,6 @@ const (
 	HmHint
 	HmHintAndDefault
 	HmTooltip
-)
-
-// TVTImageInfoIndex ENUM
-type TVTImageInfoIndex = int32
-
-const (
-	IiNormal TVTImageInfoIndex = iota
-	IiState
-	IiCheck
-	IiOverlay
 )
 
 // TVTImageKind ENUM
@@ -7245,22 +5514,6 @@ const (
 	LsCustomStyle TVTLineStyle = iota
 	LsDotted
 	LsSolid
-)
-
-// TVTLineType ENUM
-//
-//	TVTLineType is used during painting a tree
-type TVTLineType = int32
-
-const (
-	LtNone TVTLineType = iota
-	LtBottomRight
-	LtTopDown
-	LtTopDownRight
-	LtRight
-	LtTopRight
-	LtLeft
-	LtLeftBottom
 )
 
 // TVTNodeAlignment ENUM
@@ -7353,78 +5606,6 @@ const (
 	UsEndSynch
 )
 
-// TVZVirtualNodeEnumerationMode ENUM
-type TVZVirtualNodeEnumerationMode = int32
-
-const (
-	VneAll TVZVirtualNodeEnumerationMode = iota
-	VneChecked
-	VneChild
-	VneCutCopy
-	VneInitialized
-	VneLeaf
-	VneLevel
-	VneNoInit
-	VneSelected
-	VneVisible
-	VneVisibleChild
-	VneVisibleNoInitChild
-	VneVisibleNoInit
-)
-
-// TWinCETitlePolicy ENUM
-//
-//	Policy for using the "OK" close button in the title instead of
-//	the default "X" minimize button
-type TWinCETitlePolicy = int32
-
-const (
-	TpAlwaysUseOKButton TWinCETitlePolicy = iota
-	TpOKButtonOnlyOnDialogs
-	TpControlWithBorderIcons
-)
-
-// TWinCEVersion ENUM
-type TWinCEVersion = int32
-
-const (
-	Wince_1 TWinCEVersion = iota
-	Wince_2
-	Wince_3
-	Wince_4
-	Wince_5
-	Wince_6
-	Wince_6_1
-	Wince_6_5
-	Wince_7
-	Wince_other
-)
-
-// TWinControlFlag ENUM
-//
-//	TWinControl
-type TWinControlFlag = int32
-
-const (
-	WcfClientRectNeedsUpdate TWinControlFlag = iota
-	WcfColorChanged
-	WcfFontChanged
-	WcfAllAutoSizing
-	WcfAligningControls
-	WcfEraseBackground
-	WcfCreatingHandle
-	WcfInitializing
-	WcfCreatingChildHandles
-	WcfRealizingBounds
-	WcfBoundsRealized
-	WcfUpdateShowing
-	WcfHandleVisible
-	WcfAdjustedLogicalClientRectValid
-	WcfKillIntfSetBounds
-	WcfDesignerDeleting
-	WcfSpecialSubControl
-)
-
 // TWindowState ENUM
 type TWindowState = int32
 
@@ -7435,27 +5616,6 @@ const (
 	WsFullScreen
 )
 
-// TWindowsVersion ENUM
-type TWindowsVersion = int32
-
-const (
-	WvUnknown TWindowsVersion = iota
-	Wv95
-	WvNT4
-	Wv98
-	WvMe
-	Wv2000
-	WvXP
-	WvServer2003
-	WvVista
-	Wv7
-	Wv8
-	Wv8_1
-	Wv10
-	Wv11
-	WvLater
-)
-
 // TWrapAfter ENUM
 type TWrapAfter = int32
 
@@ -7464,43 +5624,4 @@ const (
 	WaForce
 	WaAvoid
 	WaForbid
-)
-
-// TWSListViewItemChange ENUM
-//
-//	TWSCustomListView
-type TWSListViewItemChange = int32
-
-const (
-	LvicText TWSListViewItemChange = iota
-	LvicImage
-)
-
-// TWSZPosition ENUM
-//
-//	TWSWinControl
-type TWSZPosition = int32
-
-const (
-	WszpBack TWSZPosition = iota
-	WszpFront
-)
-
-// TXButtonState ENUM
-type TXButtonState = int32
-
-const (
-	XbsNone TXButtonState = iota
-	XbsHot
-	XbsDown
-	XbsDisabled
-)
-
-// TXPMRange ENUM
-type TXPMRange = int32
-
-const (
-	XrCode TXPMRange = iota
-	XrStaticKeyWord
-	XrCharKeyWord
 )

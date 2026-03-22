@@ -13,6 +13,10 @@
 package initialize
 
 import (
+	"os"
+	"path"
+	"path/filepath"
+
 	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"
 	"github.com/energye/lcl/api/libname"
@@ -21,9 +25,6 @@ import (
 	"github.com/energye/lcl/internal/initialize/macapp"
 	"github.com/energye/lcl/tool"
 	"github.com/energye/lcl/tool/exec"
-	"os"
-	"path"
-	"path/filepath"
 )
 
 // 开发环境加载 lib，在程序启动后读取用户目录/.energy 配置文件

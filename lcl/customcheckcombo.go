@@ -18,30 +18,30 @@ import (
 // ICustomCheckCombo Parent: ICustomComboBox
 type ICustomCheckCombo interface {
 	ICustomComboBox
-	AddItemWithStringCheckBoxStateBool(item string, state types.TCheckBoxState, enabled bool) // procedure
-	AssignItems(items IStrings)                                                               // procedure
-	DeleteItem(index int32)                                                                   // procedure
-	CheckAll(state types.TCheckBoxState, allowGrayed bool, allowDisabled bool)                // procedure
-	Toggle(index int32)                                                                       // procedure
-	AllowGrayed() bool                                                                        // property AllowGrayed Getter
-	SetAllowGrayed(value bool)                                                                // property AllowGrayed Setter
-	Count() int32                                                                             // property Count Getter
-	Checked(index int32) bool                                                                 // property Checked Getter
-	SetChecked(index int32, value bool)                                                       // property Checked Setter
-	ItemEnabled(index int32) bool                                                             // property ItemEnabled Getter
-	SetItemEnabled(index int32, value bool)                                                   // property ItemEnabled Setter
-	Objects(index int32) IObject                                                              // property Objects Getter
-	SetObjects(index int32, value IObject)                                                    // property Objects Setter
-	State(index int32) types.TCheckBoxState                                                   // property State Getter
-	SetState(index int32, value types.TCheckBoxState)                                         // property State Setter
-	SetOnItemChange(fn TCheckItemChange)                                                      // property event
+	AddItemWithStrCBStateBool(item string, state types.TCheckBoxState, enabled bool) // procedure
+	AssignItems(items IStrings)                                                      // procedure
+	DeleteItem(index int32)                                                          // procedure
+	CheckAll(state types.TCheckBoxState, allowGrayed bool, allowDisabled bool)       // procedure
+	Toggle(index int32)                                                              // procedure
+	AllowGrayed() bool                                                               // property AllowGrayed Getter
+	SetAllowGrayed(value bool)                                                       // property AllowGrayed Setter
+	Count() int32                                                                    // property Count Getter
+	Checked(index int32) bool                                                        // property Checked Getter
+	SetChecked(index int32, value bool)                                              // property Checked Setter
+	ItemEnabled(index int32) bool                                                    // property ItemEnabled Getter
+	SetItemEnabled(index int32, value bool)                                          // property ItemEnabled Setter
+	Objects(index int32) IObject                                                     // property Objects Getter
+	SetObjects(index int32, value IObject)                                           // property Objects Setter
+	State(index int32) types.TCheckBoxState                                          // property State Getter
+	SetState(index int32, value types.TCheckBoxState)                                // property State Setter
+	SetOnItemChange(fn TCheckItemChange)                                             // property event
 }
 
 type TCustomCheckCombo struct {
 	TCustomComboBox
 }
 
-func (m *TCustomCheckCombo) AddItemWithStringCheckBoxStateBool(item string, state types.TCheckBoxState, enabled bool) {
+func (m *TCustomCheckCombo) AddItemWithStrCBStateBool(item string, state types.TCheckBoxState, enabled bool) {
 	if !m.IsValid() {
 		return
 	}
@@ -188,7 +188,7 @@ func customCheckComboAPI() *imports.Imports {
 		customCheckComboImport = api.NewDefaultImports()
 		customCheckComboImport.Table = []*imports.Table{
 			/* 0 */ imports.NewTable("TCustomCheckCombo_Create", 0), // constructor NewCustomCheckCombo
-			/* 1 */ imports.NewTable("TCustomCheckCombo_AddItemWithStringCheckBoxStateBool", 0), // procedure AddItemWithStringCheckBoxStateBool
+			/* 1 */ imports.NewTable("TCustomCheckCombo_AddItemWithStrCBStateBool", 0), // procedure AddItemWithStrCBStateBool
 			/* 2 */ imports.NewTable("TCustomCheckCombo_AssignItems", 0), // procedure AssignItems
 			/* 3 */ imports.NewTable("TCustomCheckCombo_DeleteItem", 0), // procedure DeleteItem
 			/* 4 */ imports.NewTable("TCustomCheckCombo_CheckAll", 0), // procedure CheckAll

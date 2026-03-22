@@ -18,153 +18,153 @@ import (
 // IBaseVirtualTree Parent: ICustomControl
 type IBaseVirtualTree interface {
 	ICustomControl
-	AbsoluteIndex(node types.PVirtualNode) uint32                                                                                                                                   // function
-	AddChild(parent types.PVirtualNode, userData uintptr) types.PVirtualNode                                                                                                        // function
-	CancelEditNode() bool                                                                                                                                                           // function
-	CanEdit(node types.PVirtualNode, column int32) bool                                                                                                                             // function
-	CopyToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool(source types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode // function
-	CopyToWithPVirtualNodeX2VTNodeAttachModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode          // function
-	DraggingToBool() bool                                                                                                                                                           // function
-	EditNode(node types.PVirtualNode, column int32) bool                                                                                                                            // function
-	EndEditNode() bool                                                                                                                                                              // function
-	GetDisplayRect(node types.PVirtualNode, column int32, textOnly bool, unclipped bool, applyCellContentMargin bool) types.TRect                                                   // function
-	GetEffectivelyFiltered(node types.PVirtualNode) bool                                                                                                                            // function
-	GetEffectivelyVisible(node types.PVirtualNode) bool                                                                                                                             // function
-	GetFirst(considerChildrenAbove bool) types.PVirtualNode                                                                                                                         // function
-	GetFirstChecked(state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode                                                                                         // function
-	GetFirstChild(node types.PVirtualNode) types.PVirtualNode                                                                                                                       // function
-	GetFirstChildNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                                                 // function
-	GetFirstCutCopy(considerChildrenAbove bool) types.PVirtualNode                                                                                                                  // function
-	GetFirstInitialized(considerChildrenAbove bool) types.PVirtualNode                                                                                                              // function
-	GetFirstLeaf() types.PVirtualNode                                                                                                                                               // function
-	GetFirstLevel(nodeLevel uint32) types.PVirtualNode                                                                                                                              // function
-	GetFirstNoInit(considerChildrenAbove bool) types.PVirtualNode                                                                                                                   // function
-	GetFirstSelected(considerChildrenAbove bool) types.PVirtualNode                                                                                                                 // function
-	GetFirstVisible(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                                                   // function
-	GetFirstVisibleChild(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                          // function
-	GetFirstVisibleChildNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                    // function
-	GetFirstVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                                             // function
-	GetLast(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                                 // function
-	GetLastInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                      // function
-	GetLastNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                           // function
-	GetLastChild(node types.PVirtualNode) types.PVirtualNode                                                                                                                        // function
-	GetLastChildNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                                                  // function
-	GetLastVisible(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                                                    // function
-	GetLastVisibleChild(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                           // function
-	GetLastVisibleChildNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                     // function
-	GetLastVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                                              // function
-	GetMaxColumnWidth(column int32, useSmartColumnWidth bool) int32                                                                                                                 // function
-	GetNext(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                                 // function
-	GetNextCheckedWithPVirtualNodeCheckStateBool(node types.PVirtualNode, state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode                                   // function
-	GetNextCheckedWithPVirtualNodeBool(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                      // function
-	GetNextCutCopy(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                          // function
-	GetNextInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                      // function
-	GetNextLeaf(node types.PVirtualNode) types.PVirtualNode                                                                                                                         // function
-	GetNextLevel(node types.PVirtualNode, nodeLevel uint32) types.PVirtualNode                                                                                                      // function
-	GetNextNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                           // function
-	GetNextSelected(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                         // function
-	GetNextSibling(node types.PVirtualNode) types.PVirtualNode                                                                                                                      // function
-	GetNextSiblingNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                                                // function
-	GetNextVisible(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                          // function
-	GetNextVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                    // function
-	GetNextVisibleSibling(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                         // function
-	GetNextVisibleSiblingNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                   // function
-	GetNodeAtWithPoint(P types.TPoint) types.PVirtualNode                                                                                                                           // function
-	GetNodeAtWithIntX2(X int32, Y int32) types.PVirtualNode                                                                                                                         // function
-	GetNodeAtWithIntX3Bool(X int32, Y int32, relative bool, nodeTop *int32) types.PVirtualNode                                                                                      // function
-	GetNodeData(node types.PVirtualNode) uintptr                                                                                                                                    // function
-	GetNodeLevel(node types.PVirtualNode) uint32                                                                                                                                    // function
-	GetPrevious(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                             // function
-	GetPreviousChecked(node types.PVirtualNode, state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode                                                             // function
-	GetPreviousCutCopy(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                      // function
-	GetPreviousInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                  // function
-	GetPreviousLeaf(node types.PVirtualNode) types.PVirtualNode                                                                                                                     // function
-	GetPreviousLevel(node types.PVirtualNode, nodeLevel uint32) types.PVirtualNode                                                                                                  // function
-	GetPreviousNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                       // function
-	GetPreviousSelected(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                     // function
-	GetPreviousSibling(node types.PVirtualNode) types.PVirtualNode                                                                                                                  // function
-	GetPreviousSiblingNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                                            // function
-	GetPreviousVisible(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                      // function
-	GetPreviousVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                                // function
-	GetPreviousVisibleSibling(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                     // function
-	GetPreviousVisibleSiblingNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                               // function
-	GetSortedCutCopySet(resolve bool) types.TNodeArray                                                                                                                              // function
-	GetSortedSelection(resolve bool) types.TNodeArray                                                                                                                               // function
-	GetTreeRect() types.TRect                                                                                                                                                       // function
-	GetVisibleParent(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                                              // function
-	HasAsParent(node types.PVirtualNode, potentialParent types.PVirtualNode) bool                                                                                                   // function
-	InsertNode(node types.PVirtualNode, mode types.TVTNodeAttachMode, userData uintptr) types.PVirtualNode                                                                          // function
-	InvalidateNode(node types.PVirtualNode) types.TRect                                                                                                                             // function
-	IsEditing() bool                                                                                                                                                                // function
-	IsMouseSelecting() bool                                                                                                                                                         // function
-	IsEmpty() bool                                                                                                                                                                  // function
-	PasteFromClipboard() bool                                                                                                                                                       // function
-	ScrollIntoViewWithPVirtualNodeBoolX2(node types.PVirtualNode, center bool, horizontally bool) bool                                                                              // function
-	ScrollIntoViewWithColumnIndexBool(column int32, center bool) bool                                                                                                               // function
+	AbsoluteIndex(node types.PVirtualNode) uint32                                                                                                            // function
+	AddChild(parent types.PVirtualNode, userData uintptr) types.PVirtualNode                                                                                 // function
+	CancelEditNode() bool                                                                                                                                    // function
+	CanEdit(node types.PVirtualNode, column int32) bool                                                                                                      // function
+	CopyToWithPVNodeBVTreeVTNAModeBool(source types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode // function
+	CopyToWithPVNodeX2VTNAModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode // function
+	DraggingToBool() bool                                                                                                                                    // function
+	EditNode(node types.PVirtualNode, column int32) bool                                                                                                     // function
+	EndEditNode() bool                                                                                                                                       // function
+	GetDisplayRect(node types.PVirtualNode, column int32, textOnly bool, unclipped bool, applyCellContentMargin bool) types.TRect                            // function
+	GetEffectivelyFiltered(node types.PVirtualNode) bool                                                                                                     // function
+	GetEffectivelyVisible(node types.PVirtualNode) bool                                                                                                      // function
+	GetFirst(considerChildrenAbove bool) types.PVirtualNode                                                                                                  // function
+	GetFirstChecked(state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode                                                                  // function
+	GetFirstChild(node types.PVirtualNode) types.PVirtualNode                                                                                                // function
+	GetFirstChildNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                          // function
+	GetFirstCutCopy(considerChildrenAbove bool) types.PVirtualNode                                                                                           // function
+	GetFirstInitialized(considerChildrenAbove bool) types.PVirtualNode                                                                                       // function
+	GetFirstLeaf() types.PVirtualNode                                                                                                                        // function
+	GetFirstLevel(nodeLevel uint32) types.PVirtualNode                                                                                                       // function
+	GetFirstNoInit(considerChildrenAbove bool) types.PVirtualNode                                                                                            // function
+	GetFirstSelected(considerChildrenAbove bool) types.PVirtualNode                                                                                          // function
+	GetFirstVisible(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                            // function
+	GetFirstVisibleChild(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                   // function
+	GetFirstVisibleChildNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                             // function
+	GetFirstVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                      // function
+	GetLast(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                          // function
+	GetLastInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                               // function
+	GetLastNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                    // function
+	GetLastChild(node types.PVirtualNode) types.PVirtualNode                                                                                                 // function
+	GetLastChildNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                           // function
+	GetLastVisible(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                             // function
+	GetLastVisibleChild(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                    // function
+	GetLastVisibleChildNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                              // function
+	GetLastVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) types.PVirtualNode                                       // function
+	GetMaxColumnWidth(column int32, useSmartColumnWidth bool) int32                                                                                          // function
+	GetNext(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                          // function
+	GetNextCheckedWithPVNodeCStateBool(node types.PVirtualNode, state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode                      // function
+	GetNextCheckedWithPVirtualNodeBool(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                               // function
+	GetNextCutCopy(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                   // function
+	GetNextInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                               // function
+	GetNextLeaf(node types.PVirtualNode) types.PVirtualNode                                                                                                  // function
+	GetNextLevel(node types.PVirtualNode, nodeLevel uint32) types.PVirtualNode                                                                               // function
+	GetNextNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                    // function
+	GetNextSelected(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                  // function
+	GetNextSibling(node types.PVirtualNode) types.PVirtualNode                                                                                               // function
+	GetNextSiblingNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                         // function
+	GetNextVisible(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                   // function
+	GetNextVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                             // function
+	GetNextVisibleSibling(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                  // function
+	GetNextVisibleSiblingNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                            // function
+	GetNodeAtWithPoint(P types.TPoint) types.PVirtualNode                                                                                                    // function
+	GetNodeAtWithIntX2(X int32, Y int32) types.PVirtualNode                                                                                                  // function
+	GetNodeAtWithIntX3Bool(X int32, Y int32, relative bool, nodeTop *int32) types.PVirtualNode                                                               // function
+	GetNodeData(node types.PVirtualNode) uintptr                                                                                                             // function
+	GetNodeLevel(node types.PVirtualNode) uint32                                                                                                             // function
+	GetPrevious(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                      // function
+	GetPreviousChecked(node types.PVirtualNode, state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode                                      // function
+	GetPreviousCutCopy(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                               // function
+	GetPreviousInitialized(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                           // function
+	GetPreviousLeaf(node types.PVirtualNode) types.PVirtualNode                                                                                              // function
+	GetPreviousLevel(node types.PVirtualNode, nodeLevel uint32) types.PVirtualNode                                                                           // function
+	GetPreviousNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                                // function
+	GetPreviousSelected(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                              // function
+	GetPreviousSibling(node types.PVirtualNode) types.PVirtualNode                                                                                           // function
+	GetPreviousSiblingNoInit(node types.PVirtualNode) types.PVirtualNode                                                                                     // function
+	GetPreviousVisible(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                               // function
+	GetPreviousVisibleNoInit(node types.PVirtualNode, considerChildrenAbove bool) types.PVirtualNode                                                         // function
+	GetPreviousVisibleSibling(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                              // function
+	GetPreviousVisibleSiblingNoInit(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                        // function
+	GetSortedCutCopySet(resolve bool) types.TNodeArray                                                                                                       // function
+	GetSortedSelection(resolve bool) types.TNodeArray                                                                                                        // function
+	GetTreeRect() types.TRect                                                                                                                                // function
+	GetVisibleParent(node types.PVirtualNode, includeFiltered bool) types.PVirtualNode                                                                       // function
+	HasAsParent(node types.PVirtualNode, potentialParent types.PVirtualNode) bool                                                                            // function
+	InsertNode(node types.PVirtualNode, mode types.TVTNodeAttachMode, userData uintptr) types.PVirtualNode                                                   // function
+	InvalidateNode(node types.PVirtualNode) types.TRect                                                                                                      // function
+	IsEditing() bool                                                                                                                                         // function
+	IsMouseSelecting() bool                                                                                                                                  // function
+	IsEmpty() bool                                                                                                                                           // function
+	PasteFromClipboard() bool                                                                                                                                // function
+	ScrollIntoViewWithPVNodeBoolX2(node types.PVirtualNode, center bool, horizontally bool) bool                                                             // function
+	ScrollIntoViewWithColumnIndexBool(column int32, center bool) bool                                                                                        // function
 	// Nodes
 	//  Enumerations
-	Nodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                            // function
-	CheckedNodes(state types.TCheckState, considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                            // function
-	ChildNodes(node types.PVirtualNode) IVTVirtualNodeEnumerationWrap                                                                                          // function
-	CutCopyNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                     // function
-	InitializedNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                 // function
-	LeafNodes() IVTVirtualNodeEnumerationWrap                                                                                                                  // function
-	LevelNodes(nodeLevel uint32) IVTVirtualNodeEnumerationWrap                                                                                                 // function
-	NoInitNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                      // function
-	SelectedNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                    // function
-	VisibleNodes(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                      // function
-	VisibleChildNodes(node types.PVirtualNode, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                                             // function
-	VisibleChildNoInitNodes(node types.PVirtualNode, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                                       // function
-	VisibleNoInitNodes(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                // function
-	AddFromStream(stream IStream, targetNode types.PVirtualNode)                                                                                               // procedure
-	BeginDragWithBoolInt(immediate bool, threshold int32)                                                                                                      // procedure
-	BeginSynch()                                                                                                                                               // procedure
-	BeginUpdate()                                                                                                                                              // procedure
-	CancelCutOrCopy()                                                                                                                                          // procedure
-	CancelOperation()                                                                                                                                          // procedure
-	Clear()                                                                                                                                                    // procedure
-	ClearChecked()                                                                                                                                             // procedure
-	ClearSelection()                                                                                                                                           // procedure
-	CopyToClipboard()                                                                                                                                          // procedure
-	CutToClipboard()                                                                                                                                           // procedure
-	DeleteChildren(node types.PVirtualNode, resetHasChildren bool)                                                                                             // procedure
-	DeleteNode(node types.PVirtualNode, reindex bool)                                                                                                          // procedure
-	DeleteSelectedNodes()                                                                                                                                      // procedure
-	EndSynch()                                                                                                                                                 // procedure
-	EndUpdate()                                                                                                                                                // procedure
-	EnsureNodeSelected()                                                                                                                                       // procedure
-	FinishCutOrCopy()                                                                                                                                          // procedure
-	FlushClipboard()                                                                                                                                           // procedure
-	FullCollapse(node types.PVirtualNode)                                                                                                                      // procedure
-	FullExpand(node types.PVirtualNode)                                                                                                                        // procedure
-	GetHitTestInfoAt(X int32, Y int32, relative bool, hitInfo *THitInfo)                                                                                       // procedure
-	GetTextInfo(node types.PVirtualNode, column int32, font IFont, R *types.TRect, outText *string)                                                            // procedure
-	InvalidateChildren(node types.PVirtualNode, recursive bool)                                                                                                // procedure
-	InvalidateColumn(column int32)                                                                                                                             // procedure
-	InvalidateToBottom(node types.PVirtualNode)                                                                                                                // procedure
-	InvertSelection(visibleOnly bool)                                                                                                                          // procedure
-	LoadFromFile(fileName string)                                                                                                                              // procedure
-	LoadFromStream(stream IStream)                                                                                                                             // procedure
-	MeasureItemHeight(canvas ICanvas, node types.PVirtualNode)                                                                                                 // procedure
-	MoveToWithPVirtualNodeX2VTNodeAttachModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool)        // procedure
-	MoveToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool(node types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) // procedure
-	PaintTree(targetCanvas ICanvas, window types.TRect, target types.TPoint, paintOptions types.TVTInternalPaintOptions, pixelFormat types.TPixelFormat)       // procedure
-	RepaintNode(node types.PVirtualNode)                                                                                                                       // procedure
-	ReinitChildren(node types.PVirtualNode, recursive bool)                                                                                                    // procedure
-	ReinitNode(node types.PVirtualNode, recursive bool)                                                                                                        // procedure
-	ResetNode(node types.PVirtualNode)                                                                                                                         // procedure
-	SaveToFile(fileName string)                                                                                                                                // procedure
-	SaveToStream(stream IStream, node types.PVirtualNode)                                                                                                      // procedure
-	SelectAll(visibleOnly bool)                                                                                                                                // procedure
-	Sort(node types.PVirtualNode, column int32, direction types.TSortDirection, doInit bool)                                                                   // procedure
-	SortTree(column int32, direction types.TSortDirection, doInit bool)                                                                                        // procedure
-	ToggleNode(node types.PVirtualNode)                                                                                                                        // procedure
-	UpdateHorizontalRange()                                                                                                                                    // procedure
-	UpdateHorizontalScrollBar(doRepaint bool)                                                                                                                  // procedure
-	UpdateRanges()                                                                                                                                             // procedure
-	UpdateScrollBars(doRepaint bool)                                                                                                                           // procedure
-	UpdateVerticalRange()                                                                                                                                      // procedure
-	UpdateVerticalScrollBar(doRepaint bool)                                                                                                                    // procedure
+	Nodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                      // function
+	CheckedNodes(state types.TCheckState, considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                      // function
+	ChildNodes(node types.PVirtualNode) IVTVirtualNodeEnumerationWrap                                                                                    // function
+	CutCopyNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                               // function
+	InitializedNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                           // function
+	LeafNodes() IVTVirtualNodeEnumerationWrap                                                                                                            // function
+	LevelNodes(nodeLevel uint32) IVTVirtualNodeEnumerationWrap                                                                                           // function
+	NoInitNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                                // function
+	SelectedNodes(considerChildrenAbove bool) IVTVirtualNodeEnumerationWrap                                                                              // function
+	VisibleNodes(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                // function
+	VisibleChildNodes(node types.PVirtualNode, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                                       // function
+	VisibleChildNoInitNodes(node types.PVirtualNode, includeFiltered bool) IVTVirtualNodeEnumerationWrap                                                 // function
+	VisibleNoInitNodes(node types.PVirtualNode, considerChildrenAbove bool, includeFiltered bool) IVTVirtualNodeEnumerationWrap                          // function
+	AddFromStream(stream IStream, targetNode types.PVirtualNode)                                                                                         // procedure
+	BeginDragWithBoolInt(immediate bool, threshold int32)                                                                                                // procedure
+	BeginSynch()                                                                                                                                         // procedure
+	BeginUpdate()                                                                                                                                        // procedure
+	CancelCutOrCopy()                                                                                                                                    // procedure
+	CancelOperation()                                                                                                                                    // procedure
+	Clear()                                                                                                                                              // procedure
+	ClearChecked()                                                                                                                                       // procedure
+	ClearSelection()                                                                                                                                     // procedure
+	CopyToClipboard()                                                                                                                                    // procedure
+	CutToClipboard()                                                                                                                                     // procedure
+	DeleteChildren(node types.PVirtualNode, resetHasChildren bool)                                                                                       // procedure
+	DeleteNode(node types.PVirtualNode, reindex bool)                                                                                                    // procedure
+	DeleteSelectedNodes()                                                                                                                                // procedure
+	EndSynch()                                                                                                                                           // procedure
+	EndUpdate()                                                                                                                                          // procedure
+	EnsureNodeSelected()                                                                                                                                 // procedure
+	FinishCutOrCopy()                                                                                                                                    // procedure
+	FlushClipboard()                                                                                                                                     // procedure
+	FullCollapse(node types.PVirtualNode)                                                                                                                // procedure
+	FullExpand(node types.PVirtualNode)                                                                                                                  // procedure
+	GetHitTestInfoAt(X int32, Y int32, relative bool, hitInfo *THitInfo)                                                                                 // procedure
+	GetTextInfo(node types.PVirtualNode, column int32, font IFont, R *types.TRect, outText *string)                                                      // procedure
+	InvalidateChildren(node types.PVirtualNode, recursive bool)                                                                                          // procedure
+	InvalidateColumn(column int32)                                                                                                                       // procedure
+	InvalidateToBottom(node types.PVirtualNode)                                                                                                          // procedure
+	InvertSelection(visibleOnly bool)                                                                                                                    // procedure
+	LoadFromFile(fileName string)                                                                                                                        // procedure
+	LoadFromStream(stream IStream)                                                                                                                       // procedure
+	MeasureItemHeight(canvas ICanvas, node types.PVirtualNode)                                                                                           // procedure
+	MoveToWithPVNodeX2VTNAModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool)                // procedure
+	MoveToWithPVNodeBVTreeVTNAModeBool(node types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool)                  // procedure
+	PaintTree(targetCanvas ICanvas, window types.TRect, target types.TPoint, paintOptions types.TVTInternalPaintOptions, pixelFormat types.TPixelFormat) // procedure
+	RepaintNode(node types.PVirtualNode)                                                                                                                 // procedure
+	ReinitChildren(node types.PVirtualNode, recursive bool)                                                                                              // procedure
+	ReinitNode(node types.PVirtualNode, recursive bool)                                                                                                  // procedure
+	ResetNode(node types.PVirtualNode)                                                                                                                   // procedure
+	SaveToFile(fileName string)                                                                                                                          // procedure
+	SaveToStream(stream IStream, node types.PVirtualNode)                                                                                                // procedure
+	SelectAll(visibleOnly bool)                                                                                                                          // procedure
+	Sort(node types.PVirtualNode, column int32, direction types.LVTreesTSortDirection, doInit bool)                                                      // procedure
+	SortTree(column int32, direction types.LVTreesTSortDirection, doInit bool)                                                                           // procedure
+	ToggleNode(node types.PVirtualNode)                                                                                                                  // procedure
+	UpdateHorizontalRange()                                                                                                                              // procedure
+	UpdateHorizontalScrollBar(doRepaint bool)                                                                                                            // procedure
+	UpdateRanges()                                                                                                                                       // procedure
+	UpdateScrollBars(doRepaint bool)                                                                                                                     // procedure
+	UpdateVerticalRange()                                                                                                                                // procedure
+	UpdateVerticalScrollBar(doRepaint bool)                                                                                                              // procedure
 	// ValidateChildren
 	//  lcl: reenable in case TControl implementation change to match Delphi
 	//  function UseRightToLeftReading: Boolean;
@@ -277,7 +277,7 @@ func (m *TBaseVirtualTree) CanEdit(node types.PVirtualNode, column int32) bool {
 	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) CopyToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool(source types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode {
+func (m *TBaseVirtualTree) CopyToWithPVNodeBVTreeVTNAModeBool(source types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode {
 	if !m.IsValid() {
 		return 0
 	}
@@ -285,7 +285,7 @@ func (m *TBaseVirtualTree) CopyToWithPVirtualNodeBaseVirtualTreeVTNodeAttachMode
 	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) CopyToWithPVirtualNodeX2VTNodeAttachModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode {
+func (m *TBaseVirtualTree) CopyToWithPVNodeX2VTNAModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool) types.PVirtualNode {
 	if !m.IsValid() {
 		return 0
 	}
@@ -541,7 +541,7 @@ func (m *TBaseVirtualTree) GetNext(node types.PVirtualNode, considerChildrenAbov
 	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) GetNextCheckedWithPVirtualNodeCheckStateBool(node types.PVirtualNode, state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode {
+func (m *TBaseVirtualTree) GetNextCheckedWithPVNodeCStateBool(node types.PVirtualNode, state types.TCheckState, considerChildrenAbove bool) types.PVirtualNode {
 	if !m.IsValid() {
 		return 0
 	}
@@ -895,7 +895,7 @@ func (m *TBaseVirtualTree) PasteFromClipboard() bool {
 	return api.GoBool(r)
 }
 
-func (m *TBaseVirtualTree) ScrollIntoViewWithPVirtualNodeBoolX2(node types.PVirtualNode, center bool, horizontally bool) bool {
+func (m *TBaseVirtualTree) ScrollIntoViewWithPVNodeBoolX2(node types.PVirtualNode, center bool, horizontally bool) bool {
 	if !m.IsValid() {
 		return false
 	}
@@ -1227,14 +1227,14 @@ func (m *TBaseVirtualTree) MeasureItemHeight(canvas ICanvas, node types.PVirtual
 	baseVirtualTreeAPI().SysCallN(126, m.Instance(), base.GetObjectUintptr(canvas), uintptr(node))
 }
 
-func (m *TBaseVirtualTree) MoveToWithPVirtualNodeX2VTNodeAttachModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool) {
+func (m *TBaseVirtualTree) MoveToWithPVNodeX2VTNAModeBool(source types.PVirtualNode, target types.PVirtualNode, mode types.TVTNodeAttachMode, childrenOnly bool) {
 	if !m.IsValid() {
 		return
 	}
 	baseVirtualTreeAPI().SysCallN(127, m.Instance(), uintptr(source), uintptr(target), uintptr(mode), api.PasBool(childrenOnly))
 }
 
-func (m *TBaseVirtualTree) MoveToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool(node types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) {
+func (m *TBaseVirtualTree) MoveToWithPVNodeBVTreeVTNAModeBool(node types.PVirtualNode, tree IBaseVirtualTree, mode types.TVTNodeAttachMode, childrenOnly bool) {
 	if !m.IsValid() {
 		return
 	}
@@ -1297,14 +1297,14 @@ func (m *TBaseVirtualTree) SelectAll(visibleOnly bool) {
 	baseVirtualTreeAPI().SysCallN(136, m.Instance(), api.PasBool(visibleOnly))
 }
 
-func (m *TBaseVirtualTree) Sort(node types.PVirtualNode, column int32, direction types.TSortDirection, doInit bool) {
+func (m *TBaseVirtualTree) Sort(node types.PVirtualNode, column int32, direction types.LVTreesTSortDirection, doInit bool) {
 	if !m.IsValid() {
 		return
 	}
 	baseVirtualTreeAPI().SysCallN(137, m.Instance(), uintptr(node), uintptr(column), uintptr(direction), api.PasBool(doInit))
 }
 
-func (m *TBaseVirtualTree) SortTree(column int32, direction types.TSortDirection, doInit bool) {
+func (m *TBaseVirtualTree) SortTree(column int32, direction types.LVTreesTSortDirection, doInit bool) {
 	if !m.IsValid() {
 		return
 	}
@@ -1929,8 +1929,8 @@ func baseVirtualTreeAPI() *imports.Imports {
 			/* 2 */ imports.NewTable("TBaseVirtualTree_AddChild", 0), // function AddChild
 			/* 3 */ imports.NewTable("TBaseVirtualTree_CancelEditNode", 0), // function CancelEditNode
 			/* 4 */ imports.NewTable("TBaseVirtualTree_CanEdit", 0), // function CanEdit
-			/* 5 */ imports.NewTable("TBaseVirtualTree_CopyToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool", 0), // function CopyToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool
-			/* 6 */ imports.NewTable("TBaseVirtualTree_CopyToWithPVirtualNodeX2VTNodeAttachModeBool", 0), // function CopyToWithPVirtualNodeX2VTNodeAttachModeBool
+			/* 5 */ imports.NewTable("TBaseVirtualTree_CopyToWithPVNodeBVTreeVTNAModeBool", 0), // function CopyToWithPVNodeBVTreeVTNAModeBool
+			/* 6 */ imports.NewTable("TBaseVirtualTree_CopyToWithPVNodeX2VTNAModeBool", 0), // function CopyToWithPVNodeX2VTNAModeBool
 			/* 7 */ imports.NewTable("TBaseVirtualTree_DraggingToBool", 0), // function DraggingToBool
 			/* 8 */ imports.NewTable("TBaseVirtualTree_EditNode", 0), // function EditNode
 			/* 9 */ imports.NewTable("TBaseVirtualTree_EndEditNode", 0), // function EndEditNode
@@ -1962,7 +1962,7 @@ func baseVirtualTreeAPI() *imports.Imports {
 			/* 35 */ imports.NewTable("TBaseVirtualTree_GetLastVisibleNoInit", 0), // function GetLastVisibleNoInit
 			/* 36 */ imports.NewTable("TBaseVirtualTree_GetMaxColumnWidth", 0), // function GetMaxColumnWidth
 			/* 37 */ imports.NewTable("TBaseVirtualTree_GetNext", 0), // function GetNext
-			/* 38 */ imports.NewTable("TBaseVirtualTree_GetNextCheckedWithPVirtualNodeCheckStateBool", 0), // function GetNextCheckedWithPVirtualNodeCheckStateBool
+			/* 38 */ imports.NewTable("TBaseVirtualTree_GetNextCheckedWithPVNodeCStateBool", 0), // function GetNextCheckedWithPVNodeCStateBool
 			/* 39 */ imports.NewTable("TBaseVirtualTree_GetNextCheckedWithPVirtualNodeBool", 0), // function GetNextCheckedWithPVirtualNodeBool
 			/* 40 */ imports.NewTable("TBaseVirtualTree_GetNextCutCopy", 0), // function GetNextCutCopy
 			/* 41 */ imports.NewTable("TBaseVirtualTree_GetNextInitialized", 0), // function GetNextInitialized
@@ -2006,7 +2006,7 @@ func baseVirtualTreeAPI() *imports.Imports {
 			/* 79 */ imports.NewTable("TBaseVirtualTree_IsMouseSelecting", 0), // function IsMouseSelecting
 			/* 80 */ imports.NewTable("TBaseVirtualTree_IsEmpty", 0), // function IsEmpty
 			/* 81 */ imports.NewTable("TBaseVirtualTree_PasteFromClipboard", 0), // function PasteFromClipboard
-			/* 82 */ imports.NewTable("TBaseVirtualTree_ScrollIntoViewWithPVirtualNodeBoolX2", 0), // function ScrollIntoViewWithPVirtualNodeBoolX2
+			/* 82 */ imports.NewTable("TBaseVirtualTree_ScrollIntoViewWithPVNodeBoolX2", 0), // function ScrollIntoViewWithPVNodeBoolX2
 			/* 83 */ imports.NewTable("TBaseVirtualTree_ScrollIntoViewWithColumnIndexBool", 0), // function ScrollIntoViewWithColumnIndexBool
 			/* 84 */ imports.NewTable("TBaseVirtualTree_Nodes", 0), // function Nodes
 			/* 85 */ imports.NewTable("TBaseVirtualTree_CheckedNodes", 0), // function CheckedNodes
@@ -2051,8 +2051,8 @@ func baseVirtualTreeAPI() *imports.Imports {
 			/* 124 */ imports.NewTable("TBaseVirtualTree_LoadFromFile", 0), // procedure LoadFromFile
 			/* 125 */ imports.NewTable("TBaseVirtualTree_LoadFromStream", 0), // procedure LoadFromStream
 			/* 126 */ imports.NewTable("TBaseVirtualTree_MeasureItemHeight", 0), // procedure MeasureItemHeight
-			/* 127 */ imports.NewTable("TBaseVirtualTree_MoveToWithPVirtualNodeX2VTNodeAttachModeBool", 0), // procedure MoveToWithPVirtualNodeX2VTNodeAttachModeBool
-			/* 128 */ imports.NewTable("TBaseVirtualTree_MoveToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool", 0), // procedure MoveToWithPVirtualNodeBaseVirtualTreeVTNodeAttachModeBool
+			/* 127 */ imports.NewTable("TBaseVirtualTree_MoveToWithPVNodeX2VTNAModeBool", 0), // procedure MoveToWithPVNodeX2VTNAModeBool
+			/* 128 */ imports.NewTable("TBaseVirtualTree_MoveToWithPVNodeBVTreeVTNAModeBool", 0), // procedure MoveToWithPVNodeBVTreeVTNAModeBool
 			/* 129 */ imports.NewTable("TBaseVirtualTree_PaintTree", 0), // procedure PaintTree
 			/* 130 */ imports.NewTable("TBaseVirtualTree_RepaintNode", 0), // procedure RepaintNode
 			/* 131 */ imports.NewTable("TBaseVirtualTree_ReinitChildren", 0), // procedure ReinitChildren

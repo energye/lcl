@@ -18,58 +18,58 @@ import (
 // IVirtualTreeColumn Parent: ICollectionItem
 type IVirtualTreeColumn interface {
 	ICollectionItem
-	GetRect() types.TRect                               // function
-	UseRightToLeftReading() bool                        // function
-	LoadFromStream(stream IStream, version int32)       // procedure
-	ParentBiDiModeChanged()                             // procedure
-	ParentColorChanged()                                // procedure
-	RestoreLastWidth()                                  // procedure
-	SaveToStream(stream IStream)                        // procedure
-	Left() int32                                        // property Left Getter
-	Owner() IVirtualTreeColumns                         // property Owner Getter
-	Alignment() types.TAlignment                        // property Alignment Getter
-	SetAlignment(value types.TAlignment)                // property Alignment Setter
-	BiDiMode() types.TBiDiMode                          // property BiDiMode Getter
-	SetBiDiMode(value types.TBiDiMode)                  // property BiDiMode Setter
-	CaptionAlignment() types.TAlignment                 // property CaptionAlignment Getter
-	SetCaptionAlignment(value types.TAlignment)         // property CaptionAlignment Setter
-	CaptionText() string                                // property CaptionText Getter
-	CheckType() types.TCheckType                        // property CheckType Getter
-	SetCheckType(value types.TCheckType)                // property CheckType Setter
-	CheckState() types.TCheckState                      // property CheckState Getter
-	SetCheckState(value types.TCheckState)              // property CheckState Setter
-	CheckBox() bool                                     // property CheckBox Getter
-	SetCheckBox(value bool)                             // property CheckBox Setter
-	Color() types.TColor                                // property Color Getter
-	SetColor(value types.TColor)                        // property Color Setter
-	DefaultSortDirection() types.TSortDirection         // property DefaultSortDirection Getter
-	SetDefaultSortDirection(value types.TSortDirection) // property DefaultSortDirection Setter
-	Hint() string                                       // property Hint Getter
-	SetHint(value string)                               // property Hint Setter
-	ImageIndex() int32                                  // property ImageIndex Getter
-	SetImageIndex(value int32)                          // property ImageIndex Setter
-	Layout() types.TVTHeaderColumnLayout                // property Layout Getter
-	SetLayout(value types.TVTHeaderColumnLayout)        // property Layout Setter
-	Margin() int32                                      // property Margin Getter
-	SetMargin(value int32)                              // property Margin Setter
-	MaxWidth() int32                                    // property MaxWidth Getter
-	SetMaxWidth(value int32)                            // property MaxWidth Setter
-	MinWidth() int32                                    // property MinWidth Getter
-	SetMinWidth(value int32)                            // property MinWidth Setter
-	Options() types.TVTColumnOptions                    // property Options Getter
-	SetOptions(value types.TVTColumnOptions)            // property Options Setter
-	Position() uint32                                   // property Position Getter
-	SetPosition(value uint32)                           // property Position Setter
-	Spacing() int32                                     // property Spacing Getter
-	SetSpacing(value int32)                             // property Spacing Setter
-	Style() types.TVirtualTreeColumnStyle               // property Style Getter
-	SetStyle(value types.TVirtualTreeColumnStyle)       // property Style Setter
-	Tag() uint32                                        // property Tag Getter
-	SetTag(value uint32)                                // property Tag Setter
-	Text() string                                       // property Text Getter
-	SetText(value string)                               // property Text Setter
-	Width() int32                                       // property Width Getter
-	SetWidth(value int32)                               // property Width Setter
+	GetRect() types.TRect                                      // function
+	UseRightToLeftReading() bool                               // function
+	LoadFromStream(stream IStream, version int32)              // procedure
+	ParentBiDiModeChanged()                                    // procedure
+	ParentColorChanged()                                       // procedure
+	RestoreLastWidth()                                         // procedure
+	SaveToStream(stream IStream)                               // procedure
+	Left() int32                                               // property Left Getter
+	Owner() IVirtualTreeColumns                                // property Owner Getter
+	Alignment() types.TAlignment                               // property Alignment Getter
+	SetAlignment(value types.TAlignment)                       // property Alignment Setter
+	BiDiMode() types.TBiDiMode                                 // property BiDiMode Getter
+	SetBiDiMode(value types.TBiDiMode)                         // property BiDiMode Setter
+	CaptionAlignment() types.TAlignment                        // property CaptionAlignment Getter
+	SetCaptionAlignment(value types.TAlignment)                // property CaptionAlignment Setter
+	CaptionText() string                                       // property CaptionText Getter
+	CheckType() types.TCheckType                               // property CheckType Getter
+	SetCheckType(value types.TCheckType)                       // property CheckType Setter
+	CheckState() types.TCheckState                             // property CheckState Getter
+	SetCheckState(value types.TCheckState)                     // property CheckState Setter
+	CheckBox() bool                                            // property CheckBox Getter
+	SetCheckBox(value bool)                                    // property CheckBox Setter
+	Color() types.TColor                                       // property Color Getter
+	SetColor(value types.TColor)                               // property Color Setter
+	DefaultSortDirection() types.LVTreesTSortDirection         // property DefaultSortDirection Getter
+	SetDefaultSortDirection(value types.LVTreesTSortDirection) // property DefaultSortDirection Setter
+	Hint() string                                              // property Hint Getter
+	SetHint(value string)                                      // property Hint Setter
+	ImageIndex() int32                                         // property ImageIndex Getter
+	SetImageIndex(value int32)                                 // property ImageIndex Setter
+	Layout() types.TVTHeaderColumnLayout                       // property Layout Getter
+	SetLayout(value types.TVTHeaderColumnLayout)               // property Layout Setter
+	Margin() int32                                             // property Margin Getter
+	SetMargin(value int32)                                     // property Margin Setter
+	MaxWidth() int32                                           // property MaxWidth Getter
+	SetMaxWidth(value int32)                                   // property MaxWidth Setter
+	MinWidth() int32                                           // property MinWidth Getter
+	SetMinWidth(value int32)                                   // property MinWidth Setter
+	Options() types.TVTColumnOptions                           // property Options Getter
+	SetOptions(value types.TVTColumnOptions)                   // property Options Setter
+	Position() uint32                                          // property Position Getter
+	SetPosition(value uint32)                                  // property Position Setter
+	Spacing() int32                                            // property Spacing Getter
+	SetSpacing(value int32)                                    // property Spacing Setter
+	Style() types.TVirtualTreeColumnStyle                      // property Style Getter
+	SetStyle(value types.TVirtualTreeColumnStyle)              // property Style Setter
+	Tag() uint32                                               // property Tag Getter
+	SetTag(value uint32)                                       // property Tag Setter
+	Text() string                                              // property Text Getter
+	SetText(value string)                                      // property Text Setter
+	Width() int32                                              // property Width Getter
+	SetWidth(value int32)                                      // property Width Setter
 }
 
 type TVirtualTreeColumn struct {
@@ -256,15 +256,15 @@ func (m *TVirtualTreeColumn) SetColor(value types.TColor) {
 	virtualTreeColumnAPI().SysCallN(17, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVirtualTreeColumn) DefaultSortDirection() types.TSortDirection {
+func (m *TVirtualTreeColumn) DefaultSortDirection() types.LVTreesTSortDirection {
 	if !m.IsValid() {
 		return 0
 	}
 	r := virtualTreeColumnAPI().SysCallN(18, 0, m.Instance())
-	return types.TSortDirection(r)
+	return types.LVTreesTSortDirection(r)
 }
 
-func (m *TVirtualTreeColumn) SetDefaultSortDirection(value types.TSortDirection) {
+func (m *TVirtualTreeColumn) SetDefaultSortDirection(value types.LVTreesTSortDirection) {
 	if !m.IsValid() {
 		return
 	}

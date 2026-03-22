@@ -12,10 +12,11 @@
 package api
 
 import (
-	"github.com/energye/lcl/api/imports"
-	"github.com/energye/lcl/types"
 	"sync"
 	"unsafe"
+
+	"github.com/energye/lcl/api/imports"
+	"github.com/energye/lcl/types"
 )
 
 type TGdkWindowEdge int32

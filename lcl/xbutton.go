@@ -20,8 +20,8 @@ type IXButton interface {
 	IGraphicControl
 	Paint()                                 // procedure
 	Resize()                                // procedure
-	CaptionToString() string                // property Caption Getter
-	SetCaptionToString(value string)        // property Caption Setter
+	CaptionToStr() string                   // property Caption Getter
+	SetCaptionToStr(value string)           // property Caption Setter
 	ShowCaption() bool                      // property ShowCaption Getter
 	SetShowCaption(value bool)              // property ShowCaption Setter
 	BackColor() types.TColor                // property BackColor Getter
@@ -74,7 +74,7 @@ func (m *TXButton) Resize() {
 	xButtonAPI().SysCallN(2, m.Instance())
 }
 
-func (m *TXButton) CaptionToString() string {
+func (m *TXButton) CaptionToStr() string {
 	if !m.IsValid() {
 		return ""
 	}
@@ -82,7 +82,7 @@ func (m *TXButton) CaptionToString() string {
 	return api.GoStr(r)
 }
 
-func (m *TXButton) SetCaptionToString(value string) {
+func (m *TXButton) SetCaptionToStr(value string) {
 	if !m.IsValid() {
 		return
 	}
@@ -355,7 +355,7 @@ func xButtonAPI() *imports.Imports {
 			/* 0 */ imports.NewTable("TXButton_Create", 0), // constructor NewXButton
 			/* 1 */ imports.NewTable("TXButton_Paint", 0), // procedure Paint
 			/* 2 */ imports.NewTable("TXButton_Resize", 0), // procedure Resize
-			/* 3 */ imports.NewTable("TXButton_CaptionToString", 0), // property CaptionToString
+			/* 3 */ imports.NewTable("TXButton_CaptionToStr", 0), // property CaptionToStr
 			/* 4 */ imports.NewTable("TXButton_ShowCaption", 0), // property ShowCaption
 			/* 5 */ imports.NewTable("TXButton_BackColor", 0), // property BackColor
 			/* 6 */ imports.NewTable("TXButton_HoverColor", 0), // property HoverColor

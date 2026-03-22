@@ -18,52 +18,52 @@ import (
 // ICustomComboBox Parent: IWinControl
 type ICustomComboBox interface {
 	IWinControl
-	MatchListItem(value string) int32                                                                                                 // function
-	IntfGetItems()                                                                                                                    // procedure
-	AddItem(item string, anObject IObject)                                                                                            // procedure
-	AddHistoryItemWithStringIntBoolX2(item string, maxHistoryCount int32, setAsText bool, caseSensitive bool)                         // procedure
-	AddHistoryItemWithStringObjectIntBoolX2(item string, anObject IObject, maxHistoryCount int32, setAsText bool, caseSensitive bool) // procedure
-	Clear()                                                                                                                           // procedure
-	ClearSelection()                                                                                                                  // procedure
-	SelectAll()                                                                                                                       // procedure
-	CharCase() types.TEditCharCase                                                                                                    // property CharCase Getter
-	SetCharCase(value types.TEditCharCase)                                                                                            // property CharCase Setter
-	DroppedDown() bool                                                                                                                // property DroppedDown Getter
-	SetDroppedDown(value bool)                                                                                                        // property DroppedDown Setter
-	AutoComplete() bool                                                                                                               // property AutoComplete Getter
-	SetAutoComplete(value bool)                                                                                                       // property AutoComplete Setter
-	AutoCompleteText() types.TComboBoxAutoCompleteText                                                                                // property AutoCompleteText Getter
-	SetAutoCompleteText(value types.TComboBoxAutoCompleteText)                                                                        // property AutoCompleteText Setter
-	AutoDropDown() bool                                                                                                               // property AutoDropDown Getter
-	SetAutoDropDown(value bool)                                                                                                       // property AutoDropDown Setter
-	AutoSelect() bool                                                                                                                 // property AutoSelect Getter
-	SetAutoSelect(value bool)                                                                                                         // property AutoSelect Setter
-	AutoSelected() bool                                                                                                               // property AutoSelected Getter
-	SetAutoSelected(value bool)                                                                                                       // property AutoSelected Setter
-	ArrowKeysTraverseList() bool                                                                                                      // property ArrowKeysTraverseList Getter
-	SetArrowKeysTraverseList(value bool)                                                                                              // property ArrowKeysTraverseList Setter
-	Canvas() ICanvas                                                                                                                  // property Canvas Getter
-	DropDownCount() int32                                                                                                             // property DropDownCount Getter
-	SetDropDownCount(value int32)                                                                                                     // property DropDownCount Setter
-	EmulatedTextHintStatus() types.TEmulatedTextHintStatus                                                                            // property EmulatedTextHintStatus Getter
-	Items() IStrings                                                                                                                  // property Items Getter
-	SetItems(value IStrings)                                                                                                          // property Items Setter
-	ItemIndex() int32                                                                                                                 // property ItemIndex Getter
-	SetItemIndex(value int32)                                                                                                         // property ItemIndex Setter
-	ReadOnly() bool                                                                                                                   // property ReadOnly Getter
-	SetReadOnly(value bool)                                                                                                           // property ReadOnly Setter
-	SelLength() int32                                                                                                                 // property SelLength Getter
-	SetSelLength(value int32)                                                                                                         // property SelLength Setter
-	SelStart() int32                                                                                                                  // property SelStart Getter
-	SetSelStart(value int32)                                                                                                          // property SelStart Setter
-	SelText() string                                                                                                                  // property SelText Getter
-	SetSelText(value string)                                                                                                          // property SelText Setter
-	Style() types.TComboBoxStyle                                                                                                      // property Style Getter
-	SetStyle(value types.TComboBoxStyle)                                                                                              // property Style Setter
-	Text() string                                                                                                                     // property Text Getter
-	SetText(value string)                                                                                                             // property Text Setter
-	TextHint() string                                                                                                                 // property TextHint Getter
-	SetTextHint(value string)                                                                                                         // property TextHint Setter
+	MatchListItem(value string) int32                                                                                              // function
+	IntfGetItems()                                                                                                                 // procedure
+	AddItem(item string, anObject IObject)                                                                                         // procedure
+	AddHistoryItemWithStrIntBoolX2(item string, maxHistoryCount int32, setAsText bool, caseSensitive bool)                         // procedure
+	AddHistoryItemWithStrObjectIntBoolX2(item string, anObject IObject, maxHistoryCount int32, setAsText bool, caseSensitive bool) // procedure
+	Clear()                                                                                                                        // procedure
+	ClearSelection()                                                                                                               // procedure
+	SelectAll()                                                                                                                    // procedure
+	CharCase() types.TEditCharCase                                                                                                 // property CharCase Getter
+	SetCharCase(value types.TEditCharCase)                                                                                         // property CharCase Setter
+	DroppedDown() bool                                                                                                             // property DroppedDown Getter
+	SetDroppedDown(value bool)                                                                                                     // property DroppedDown Setter
+	AutoComplete() bool                                                                                                            // property AutoComplete Getter
+	SetAutoComplete(value bool)                                                                                                    // property AutoComplete Setter
+	AutoCompleteText() types.TComboBoxAutoCompleteText                                                                             // property AutoCompleteText Getter
+	SetAutoCompleteText(value types.TComboBoxAutoCompleteText)                                                                     // property AutoCompleteText Setter
+	AutoDropDown() bool                                                                                                            // property AutoDropDown Getter
+	SetAutoDropDown(value bool)                                                                                                    // property AutoDropDown Setter
+	AutoSelect() bool                                                                                                              // property AutoSelect Getter
+	SetAutoSelect(value bool)                                                                                                      // property AutoSelect Setter
+	AutoSelected() bool                                                                                                            // property AutoSelected Getter
+	SetAutoSelected(value bool)                                                                                                    // property AutoSelected Setter
+	ArrowKeysTraverseList() bool                                                                                                   // property ArrowKeysTraverseList Getter
+	SetArrowKeysTraverseList(value bool)                                                                                           // property ArrowKeysTraverseList Setter
+	Canvas() ICanvas                                                                                                               // property Canvas Getter
+	DropDownCount() int32                                                                                                          // property DropDownCount Getter
+	SetDropDownCount(value int32)                                                                                                  // property DropDownCount Setter
+	EmulatedTextHintStatus() types.TEmulatedTextHintStatus                                                                         // property EmulatedTextHintStatus Getter
+	Items() IStrings                                                                                                               // property Items Getter
+	SetItems(value IStrings)                                                                                                       // property Items Setter
+	ItemIndex() int32                                                                                                              // property ItemIndex Getter
+	SetItemIndex(value int32)                                                                                                      // property ItemIndex Setter
+	ReadOnly() bool                                                                                                                // property ReadOnly Getter
+	SetReadOnly(value bool)                                                                                                        // property ReadOnly Setter
+	SelLength() int32                                                                                                              // property SelLength Getter
+	SetSelLength(value int32)                                                                                                      // property SelLength Setter
+	SelStart() int32                                                                                                               // property SelStart Getter
+	SetSelStart(value int32)                                                                                                       // property SelStart Setter
+	SelText() string                                                                                                               // property SelText Getter
+	SetSelText(value string)                                                                                                       // property SelText Setter
+	Style() types.TComboBoxStyle                                                                                                   // property Style Getter
+	SetStyle(value types.TComboBoxStyle)                                                                                           // property Style Setter
+	Text() string                                                                                                                  // property Text Getter
+	SetText(value string)                                                                                                          // property Text Setter
+	TextHint() string                                                                                                              // property TextHint Getter
+	SetTextHint(value string)                                                                                                      // property TextHint Setter
 }
 
 type TCustomComboBox struct {
@@ -92,14 +92,14 @@ func (m *TCustomComboBox) AddItem(item string, anObject IObject) {
 	customComboBoxAPI().SysCallN(3, m.Instance(), api.PasStr(item), base.GetObjectUintptr(anObject))
 }
 
-func (m *TCustomComboBox) AddHistoryItemWithStringIntBoolX2(item string, maxHistoryCount int32, setAsText bool, caseSensitive bool) {
+func (m *TCustomComboBox) AddHistoryItemWithStrIntBoolX2(item string, maxHistoryCount int32, setAsText bool, caseSensitive bool) {
 	if !m.IsValid() {
 		return
 	}
 	customComboBoxAPI().SysCallN(4, m.Instance(), api.PasStr(item), uintptr(maxHistoryCount), api.PasBool(setAsText), api.PasBool(caseSensitive))
 }
 
-func (m *TCustomComboBox) AddHistoryItemWithStringObjectIntBoolX2(item string, anObject IObject, maxHistoryCount int32, setAsText bool, caseSensitive bool) {
+func (m *TCustomComboBox) AddHistoryItemWithStrObjectIntBoolX2(item string, anObject IObject, maxHistoryCount int32, setAsText bool, caseSensitive bool) {
 	if !m.IsValid() {
 		return
 	}
@@ -437,8 +437,8 @@ func customComboBoxAPI() *imports.Imports {
 			/* 1 */ imports.NewTable("TCustomComboBox_MatchListItem", 0), // function MatchListItem
 			/* 2 */ imports.NewTable("TCustomComboBox_IntfGetItems", 0), // procedure IntfGetItems
 			/* 3 */ imports.NewTable("TCustomComboBox_AddItem", 0), // procedure AddItem
-			/* 4 */ imports.NewTable("TCustomComboBox_AddHistoryItemWithStringIntBoolX2", 0), // procedure AddHistoryItemWithStringIntBoolX2
-			/* 5 */ imports.NewTable("TCustomComboBox_AddHistoryItemWithStringObjectIntBoolX2", 0), // procedure AddHistoryItemWithStringObjectIntBoolX2
+			/* 4 */ imports.NewTable("TCustomComboBox_AddHistoryItemWithStrIntBoolX2", 0), // procedure AddHistoryItemWithStrIntBoolX2
+			/* 5 */ imports.NewTable("TCustomComboBox_AddHistoryItemWithStrObjectIntBoolX2", 0), // procedure AddHistoryItemWithStrObjectIntBoolX2
 			/* 6 */ imports.NewTable("TCustomComboBox_Clear", 0), // procedure Clear
 			/* 7 */ imports.NewTable("TCustomComboBox_ClearSelection", 0), // procedure ClearSelection
 			/* 8 */ imports.NewTable("TCustomComboBox_SelectAll", 0), // procedure SelectAll

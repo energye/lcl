@@ -9,6 +9,7 @@ package locales
 
 import (
 	"embed"
+
 	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/lcl"
 )

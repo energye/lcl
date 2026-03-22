@@ -17,16 +17,16 @@ import (
 // IFPCustomImage Parent: IPersistent
 type IFPCustomImage interface {
 	IPersistent
-	LoadFromFileWithString(filename string) bool // function
-	SaveToFileWithString(filename string) bool   // function
-	ExtraCount() int32                           // function
+	LoadFromFileWithStr(filename string) bool // function
+	SaveToFileWithStr(filename string) bool   // function
+	ExtraCount() int32                        // function
 	// LoadFromStreamWithStreamFPCustomImageReader
 	//  Saving and loading
-	LoadFromStreamWithStreamFPCustomImageReader(str IStream, handler IFPCustomImageReader)   // procedure
-	LoadFromStreamWithStream(str IStream)                                                    // procedure
-	LoadFromFileWithStringFPCustomImageReader(filename string, handler IFPCustomImageReader) // procedure
-	SaveToStream(str IStream, handler IFPCustomImageWriter)                                  // procedure
-	SaveToFileWithStringFPCustomImageWriter(filename string, handler IFPCustomImageWriter)   // procedure
+	LoadFromStreamWithStreamFPCustomImageReader(str IStream, handler IFPCustomImageReader) // procedure
+	LoadFromStreamWithStream(str IStream)                                                  // procedure
+	LoadFromFileWithStrFPCustomImageReader(filename string, handler IFPCustomImageReader)  // procedure
+	SaveToStream(str IStream, handler IFPCustomImageWriter)                                // procedure
+	SaveToFileWithStrFPCustomImageWriter(filename string, handler IFPCustomImageWriter)    // procedure
 	// SetSize
 	//  Size and data
 	SetSize(width int32, height int32)          // procedure
@@ -59,7 +59,7 @@ type TFPCustomImage struct {
 	TPersistent
 }
 
-func (m *TFPCustomImage) LoadFromFileWithString(filename string) bool {
+func (m *TFPCustomImage) LoadFromFileWithStr(filename string) bool {
 	if !m.IsValid() {
 		return false
 	}
@@ -67,7 +67,7 @@ func (m *TFPCustomImage) LoadFromFileWithString(filename string) bool {
 	return api.GoBool(r)
 }
 
-func (m *TFPCustomImage) SaveToFileWithString(filename string) bool {
+func (m *TFPCustomImage) SaveToFileWithStr(filename string) bool {
 	if !m.IsValid() {
 		return false
 	}
@@ -97,7 +97,7 @@ func (m *TFPCustomImage) LoadFromStreamWithStream(str IStream) {
 	fPCustomImageAPI().SysCallN(4, m.Instance(), base.GetObjectUintptr(str))
 }
 
-func (m *TFPCustomImage) LoadFromFileWithStringFPCustomImageReader(filename string, handler IFPCustomImageReader) {
+func (m *TFPCustomImage) LoadFromFileWithStrFPCustomImageReader(filename string, handler IFPCustomImageReader) {
 	if !m.IsValid() {
 		return
 	}
@@ -111,7 +111,7 @@ func (m *TFPCustomImage) SaveToStream(str IStream, handler IFPCustomImageWriter)
 	fPCustomImageAPI().SysCallN(6, m.Instance(), base.GetObjectUintptr(str), base.GetObjectUintptr(handler))
 }
 
-func (m *TFPCustomImage) SaveToFileWithStringFPCustomImageWriter(filename string, handler IFPCustomImageWriter) {
+func (m *TFPCustomImage) SaveToFileWithStrFPCustomImageWriter(filename string, handler IFPCustomImageWriter) {
 	if !m.IsValid() {
 		return
 	}
@@ -277,14 +277,14 @@ func fPCustomImageAPI() *imports.Imports {
 	fPCustomImageOnce.Do(func() {
 		fPCustomImageImport = api.NewDefaultImports()
 		fPCustomImageImport.Table = []*imports.Table{
-			/* 0 */ imports.NewTable("TFPCustomImage_LoadFromFileWithString", 0), // function LoadFromFileWithString
-			/* 1 */ imports.NewTable("TFPCustomImage_SaveToFileWithString", 0), // function SaveToFileWithString
+			/* 0 */ imports.NewTable("TFPCustomImage_LoadFromFileWithStr", 0), // function LoadFromFileWithStr
+			/* 1 */ imports.NewTable("TFPCustomImage_SaveToFileWithStr", 0), // function SaveToFileWithStr
 			/* 2 */ imports.NewTable("TFPCustomImage_ExtraCount", 0), // function ExtraCount
 			/* 3 */ imports.NewTable("TFPCustomImage_LoadFromStreamWithStreamFPCustomImageReader", 0), // procedure LoadFromStreamWithStreamFPCustomImageReader
 			/* 4 */ imports.NewTable("TFPCustomImage_LoadFromStreamWithStream", 0), // procedure LoadFromStreamWithStream
-			/* 5 */ imports.NewTable("TFPCustomImage_LoadFromFileWithStringFPCustomImageReader", 0), // procedure LoadFromFileWithStringFPCustomImageReader
+			/* 5 */ imports.NewTable("TFPCustomImage_LoadFromFileWithStrFPCustomImageReader", 0), // procedure LoadFromFileWithStrFPCustomImageReader
 			/* 6 */ imports.NewTable("TFPCustomImage_SaveToStream", 0), // procedure SaveToStream
-			/* 7 */ imports.NewTable("TFPCustomImage_SaveToFileWithStringFPCustomImageWriter", 0), // procedure SaveToFileWithStringFPCustomImageWriter
+			/* 7 */ imports.NewTable("TFPCustomImage_SaveToFileWithStrFPCustomImageWriter", 0), // procedure SaveToFileWithStrFPCustomImageWriter
 			/* 8 */ imports.NewTable("TFPCustomImage_SetSize", 0), // procedure SetSize
 			/* 9 */ imports.NewTable("TFPCustomImage_RemoveExtra", 0), // procedure RemoveExtra
 			/* 10 */ imports.NewTable("TFPCustomImage_Height", 0), // property Height
