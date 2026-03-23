@@ -1,4 +1,4 @@
-module github.com/energye/lcl/v3
+module github.com/energye/lcl
 
 go 1.20
 
