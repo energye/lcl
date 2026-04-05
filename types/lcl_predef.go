@@ -107,8 +107,25 @@ type TVTScrollIncrement = int32
 // TLeftRight = TAlignment.taLeftJustify..TAlignment.taRightJustify;
 type TLeftRight = int32
 
-// TDateTimeParts SET: TDateTimePart
+// TDateTimeParts SET: TDateTimeHidePart
 type TDateTimeParts = TSet
+
+// TDateTimeHidePart ENUM dtpDay..dtpMiliSec
+type TDateTimeHidePart = TDateTimePart
+
+// TDateTimePart ENUM
+type TDateTimePart = int32
+
+const (
+	DtpDay TDateTimePart = iota
+	DtpMonth
+	DtpYear
+	DtpHour
+	DtpMinute
+	DtpSecond
+	DtpMiliSec
+	DtpAMPM
+)
 
 // TScrollBarInc = 1..32767;
 type TScrollBarInc int32
