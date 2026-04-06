@@ -36,8 +36,10 @@ func NewDLL(name string) (DLL, error) {
 
 	var h DLL
 	if C.realpath(cRelName, cPath) == nil {
+		println("[DEBUG] dlopen:", C.GoString(cRelName))
 		h = DLL(C.dlopen(cRelName, C.RTLD_LAZY|C.RTLD_GLOBAL))
 	} else {
+		println("[DEBUG] dlopen:", C.GoString(cPath))
 		h = DLL(C.dlopen(cPath, C.RTLD_LAZY|C.RTLD_GLOBAL))
 	}
 	return h, dlError()
