@@ -9,9 +9,9 @@
 package imports
 
 type (
-	// DLL 类型
+	// DLL Type
 	DLL uintptr
 
-	// ProcAddr 函数/过程指针
+	// ProcAddr function pointer
 	ProcAddr uintptr
 )

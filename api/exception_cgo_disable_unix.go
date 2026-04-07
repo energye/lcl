@@ -8,13 +8,11 @@
 //
 //----------------------------------------
 
-//go:build windows
+//go:build !windows && !cgo
 
 package api
 
-import (
-	"github.com/energye/lcl/api/imports"
-)
+import "github.com/energye/lcl/api/imports"
 
 var (
 	exceptionHandlerProcEventAddr = imports.NewCallback(exceptionHandlerProc)

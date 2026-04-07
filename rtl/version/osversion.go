@@ -22,10 +22,9 @@ type TPlatform uint32
 const (
 	PfWindows TPlatform = iota + 0
 	PfMacOS
-	PfiOS
-	PfAndroid
-	PfWinRT
 	PfLinux
+	PfIOS
+	PfAndroid
 )
 
 type TOSVersion struct {
@@ -37,13 +36,7 @@ type TOSVersion struct {
 	ServicePackMinor int
 	Architecture     TArchitecture
 	Platform         TPlatform
-
-	// linux: PrettyName, LibCVersionMajor, LibCVersionMinor
-	PrettyName       string
-	LibCVersionMajor int
-	LibCVersionMinor int
-
-	fmtVerString string
+	fmtVerString     string
 }
 
 var OSVersion TOSVersion

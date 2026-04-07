@@ -8,6 +8,8 @@
 
 // 移植来自Delphi
 
+//go:build darwin
+
 package version
 
 import (

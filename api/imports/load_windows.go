@@ -7,13 +7,10 @@
 //----------------------------------------
 
 //go:build windows
-// +build windows
 
 package imports
 
-import (
-	"syscall"
-)
+import "syscall"
 
 func NewDLL(name string) (DLL, error) {
 	h, err := syscall.LoadLibrary(name)
@@ -41,4 +38,8 @@ func SyscallN(addr uintptr, args ...uintptr) (r1, r2 uintptr, err syscall.Errno)
 		return 0, 0, syscall.ERROR_PROC_NOT_FOUND
 	}
 	return syscall.SyscallN(addr, args...)
+}
+
+func NewCallback(fn any) uintptr {
+	return syscall.NewCallback(fn)
 }

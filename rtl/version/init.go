@@ -26,7 +26,6 @@ func Init() {
 		OSVersion.Architecture = ArARM32
 	case "arm64":
 		OSVersion.Architecture = ArARM64
-	default:
 	}
 	initOSVersion()
 }

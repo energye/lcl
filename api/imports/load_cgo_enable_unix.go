@@ -6,8 +6,7 @@
 //
 //----------------------------------------
 
-//go:build !windows
-// +build !windows
+//go:build !windows && cgo
 
 package imports
 
@@ -18,7 +17,7 @@ package imports
 	#include <stdlib.h>
 	#include <stdint.h>
 	#include <stdio.h>
-    #include "posix_syscall.h"
+    #include "load_cgo_enable_unix_syscall.h"
 */
 import "C"
 import (
@@ -36,10 +35,8 @@ func NewDLL(name string) (DLL, error) {
 
 	var h DLL
 	if C.realpath(cRelName, cPath) == nil {
-		println("[DEBUG] dlopen:", C.GoString(cRelName))
 		h = DLL(C.dlopen(cRelName, C.RTLD_LAZY|C.RTLD_GLOBAL))
 	} else {
-		println("[DEBUG] dlopen:", C.GoString(cPath))
 		h = DLL(C.dlopen(cPath, C.RTLD_LAZY|C.RTLD_GLOBAL))
 	}
 	return h, dlError()
@@ -124,4 +121,9 @@ func SyscallN(addr uintptr, args ...uintptr) (r1, r2 uintptr, err error) {
 		return 0, 0, errors.New("the number of invalid parameters")
 	}
 	return uintptr(ret), uintptr(ret >> 32), nil
+}
+
+func NewCallback(fn any) uintptr {
+	// Need to customize export callback function
+	panic("CGO_ENABLED=1 Need to customize export callback function")
 }

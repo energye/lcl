@@ -7,21 +7,19 @@
 //----------------------------------------
 
 //go:build windows
-// +build windows
 
 // Package version 改自Delphi TOSVersion
 package version
 
 import (
 	"fmt"
-	"unsafe"
-
 	"github.com/energye/lcl/pkgs/win"
+	"unsafe"
 )
 
 const (
-	sVersionStr          = "%s (Version %d.%d, Build %d, %s)"
-	sSPVersionStr        = "%s Service Pack %d (Version %d.%d, Build %d, %s)"
+	sVersionStr          = "%s (Version %d.%d, Build %d)"
+	sSPVersionStr        = "%s Service Pack %d (Version %d.%d, Build %d)"
 	sVersion32           = "32-bit Edition"
 	sVersion64           = "64-bit Edition"
 	sWindows             = "Windows"
@@ -41,13 +39,6 @@ const (
 	sWindows10           = "Windows 10"
 	sWindows11           = "Windows 11"
 )
-
-func iifStr(b bool, aTrue, aFalse string) string {
-	if b {
-		return aTrue
-	}
-	return aFalse
-}
 
 func IsWindowsServer() bool {
 	var osvi win.TOSVersionInfoEx
@@ -111,11 +102,6 @@ func initOSVersion() {
 	if OSVersion.CheckMajorMinor(5, 1) {
 		win.GetNativeSystemInfo(&sysInfo)
 	} // GetNativeSystemInfo not supported on Windows 2000
-
-	OSVersion.Architecture = ArIntelX86
-	if sysInfo.ProcessorArchitecture == win.PROCESSOR_ARCHITECTURE_AMD64 {
-		OSVersion.Architecture = ArIntelX64
-	}
 
 	var majorNum, minorNum, buildNum uint32
 	if OSVersion.Major > 6 || (OSVersion.Major == 6 && OSVersion.Minor > 1) {
@@ -182,7 +168,7 @@ func initOSVersion() {
 		case 1:
 			OSVersion.Name = sWindowsXP
 		case 2:
-			if verInfo.ProductType == win.VER_NT_WORKSTATION && sysInfo.ProcessorArchitecture == win.PROCESSOR_ARCHITECTURE_AMD64 {
+			if verInfo.ProductType == win.VER_NT_WORKSTATION {
 				OSVersion.Name = sWindowsXP
 			} else {
 				if win.GetSystemMetrics(win.SM_SERVERR2) == 0 {
@@ -195,13 +181,9 @@ func initOSVersion() {
 	}
 
 	if OSVersion.ServicePackMinor != 0 {
-		OSVersion.fmtVerString = fmt.Sprintf(sSPVersionStr,
-			OSVersion.Name, OSVersion.Major, OSVersion.Minor, OSVersion.Build, OSVersion.ServicePackMinor,
-			iifStr(OSVersion.Architecture == ArIntelX64, sVersion64, sVersion32))
+		OSVersion.fmtVerString = fmt.Sprintf(sSPVersionStr, OSVersion.Name, OSVersion.Major, OSVersion.Minor, OSVersion.Build, OSVersion.ServicePackMinor)
 	} else {
-		OSVersion.fmtVerString = fmt.Sprintf(sVersionStr,
-			OSVersion.Name, OSVersion.Major, OSVersion.Minor, OSVersion.Build,
-			iifStr(OSVersion.Architecture == ArIntelX64, sVersion64, sVersion32))
+		OSVersion.fmtVerString = fmt.Sprintf(sVersionStr, OSVersion.Name, OSVersion.Major, OSVersion.Minor, OSVersion.Build)
 	}
 
 }
