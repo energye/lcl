@@ -37,6 +37,10 @@ var (
 	Printer     IPrinter   // 打印机
 )
 
+func init() {
+	runtime.LockOSThread()
+}
+
 // Init LCL
 func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 	defer func() {
@@ -45,8 +49,6 @@ func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 			os.Exit(1)
 		}
 	}()
-	runtime.LockOSThread()
-	//defer runtime.UnlockOSThread()
 
 	// 初始化
 	initialize.Initialize(libs, resources)
