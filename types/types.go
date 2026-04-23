@@ -35,7 +35,9 @@ type Byte = uint8
 type TSpacingSize = int32
 type TClass = uintptr
 type TThreadID = uintptr
-type TClipboardFormat = uintptr
+
+// TClipboardFormat = TPredefinedClipboardFormat
+type TClipboardFormat = int32
 type Single = float32
 type Char = uint16   // Char Unicode 主要用于keymap, 参见types/keys包
 type PChar = uintptr // ^Char
