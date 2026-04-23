@@ -5047,3 +5047,135 @@ func AsSynHighlighterRangeList(obj any) ISynHighlighterRangeList {
 	base.SetObjectInstance(result, instance)
 	return result
 }
+
+// AsEditAction Convert a pointer object to an existing class object
+func AsEditAction(obj any) IEditAction {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEditAction)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEditCut Convert a pointer object to an existing class object
+func AsEditCut(obj any) IEditCut {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEditCut)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEditCopy Convert a pointer object to an existing class object
+func AsEditCopy(obj any) IEditCopy {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEditCopy)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEditPaste Convert a pointer object to an existing class object
+func AsEditPaste(obj any) IEditPaste {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEditPaste)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEditSelectAll Convert a pointer object to an existing class object
+func AsEditSelectAll(obj any) IEditSelectAll {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEditSelectAll)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEditUndo Convert a pointer object to an existing class object
+func AsEditUndo(obj any) IEditUndo {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEditUndo)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsEditDelete Convert a pointer object to an existing class object
+func AsEditDelete(obj any) IEditDelete {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(TEditDelete)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsHelpAction Convert a pointer object to an existing class object
+func AsHelpAction(obj any) IHelpAction {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(THelpAction)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsHelpContents Convert a pointer object to an existing class object
+func AsHelpContents(obj any) IHelpContents {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(THelpContents)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsHelpTopicSearch Convert a pointer object to an existing class object
+func AsHelpTopicSearch(obj any) IHelpTopicSearch {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(THelpTopicSearch)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsHelpOnHelp Convert a pointer object to an existing class object
+func AsHelpOnHelp(obj any) IHelpOnHelp {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(THelpOnHelp)
+	base.SetObjectInstance(result, instance)
+	return result
+}
+
+// AsHelpContextAction Convert a pointer object to an existing class object
+func AsHelpContextAction(obj any) IHelpContextAction {
+	instance := base.GetInstance(obj)
+	if instance == nil {
+		return nil
+	}
+	result := new(THelpContextAction)
+	base.SetObjectInstance(result, instance)
+	return result
+}
