@@ -9,6 +9,7 @@
 package base
 
 import (
+	"github.com/energye/lcl/types"
 	"sync"
 
 	"github.com/energye/lcl/api"
@@ -42,6 +43,7 @@ type IBase interface {
 	setEvent(apiIndex int, apiTable *imports.Imports, eventPtr uintptr)
 	ClassName() string
 	InstanceSize() int
+	IsObjectInstanceOf(class types.TClass) bool
 	FreeAndNil()
 	Nil()
 }
@@ -179,8 +181,6 @@ func (m *TBase) Free() {
 	}
 }
 
-// TODO 直接添加函数名实现 "ClassName", "InstanceSize", "InheritsFrom", "ClassType", "ClassParent"
-
 func (m *TBase) ClassName() string {
 	if m.instance != nil {
 		r := baseAPI().SysCallN(0, m.Instance())
@@ -195,6 +195,31 @@ func (m *TBase) InstanceSize() (size int) {
 	}
 	return
 }
+
+func (m *TBase) IsObjectInstanceOf(class types.TClass) bool {
+	if m.instance != nil {
+		return api.IsObjectInstanceOf(m.Instance(), class)
+	}
+	return false
+}
+
+// TODO 直接添加函数名实现 "ClassName", "InstanceSize", "InheritsFrom", "ClassType", "ClassParent"
+
+//func (m *TBase) InheritsFrom(class types.TClass) bool {
+//	if m.instance != nil {
+//		r := baseAPI().SysCallN(2, m.Instance(), class)
+//		return api.GoBool(r)
+//	}
+//	return false
+//}
+//
+//func (m *TBase) ClassType(class types.TClass) types.TClass {
+//	if m.instance != nil {
+//		r := baseAPI().SysCallN(3, m.Instance(), class)
+//		return types.TClass(r)
+//	}
+//	return 0
+//}
 
 // FreeAndNil Free and set nil, auto release memory and set pointer to nil
 func (m *TBase) FreeAndNil() {
@@ -223,6 +248,8 @@ func baseAPI() *imports.Imports {
 		baseImport.Table = []*imports.Table{
 			/* 0 */ imports.NewTable("TBase_ClassName", 0), // constructor NewObject
 			/* 1 */ imports.NewTable("TBase_InstanceSize", 0), // function Equals
+			///* 2 */ imports.NewTable("TBase_InheritsFrom", 0), // function InheritsFrom
+			///* 3 */ imports.NewTable("TBase_ClassType", 0), // function ClassType
 		}
 	})
 	return baseImport
