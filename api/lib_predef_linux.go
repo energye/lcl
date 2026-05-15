@@ -62,6 +62,14 @@ func Gtk3Widget_Widget(handle types.HWND) uintptr {
 	return platformPreDefAPI().SysCallN(6, handle)
 }
 
+// Gtk3Widget_DeliverMessage(Ah: HWND; var Msg: TLMessage; const isInputEvent: LongBool): LRESULT;
+func Gtk3Widget_DeliverMessage(handle types.HWND, msg *types.TLMessage, isInputEvent bool) uintptr {
+	if handle == 0 || msg == nil {
+		return 0
+	}
+	return platformPreDefAPI().SysCallN(7, handle, uintptr(unsafe.Pointer(msg)), PasBool(isInputEvent))
+}
+
 var (
 	libPlatformPreDefOnce   sync.Once
 	libPlatformPreDefImport *imports.Imports
@@ -78,6 +86,7 @@ func platformPreDefAPI() *imports.Imports {
 			imports.NewTable("GtkWindow_Drag", 0),
 			imports.NewTable("Gtk3Widget_GtkWindow", 0),
 			imports.NewTable("Gtk3Widget_Widget", 0),
+			imports.NewTable("Gtk3Widget_DeliverMessage", 0),
 		}
 	})
 	return libPlatformPreDefImport
