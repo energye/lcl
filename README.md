@@ -33,6 +33,9 @@
 >
 >> LCL 开发原生图形用户界面(GUI)应用. 轻量级, 丰富的系统原生控件
 
+### NO CGO
+
+> 可选纯 `Go` 开发, 无需 `CGO` 编译
 
 ### 特点
 
@@ -57,10 +60,11 @@
 
 
 ### 相关项目
+* [Energy Designer](https://github.com/energye/designer)
+* [Energy](https://github.com/energye/energy)
 * [LCL](https://github.com/energye/lcl)
 * [Webview](https://github.com/energye/wv)
 * [CEF](https://github.com/energye/cef)
-* [Energy Designer](https://github.com/energye/designer)
 * [WebView4Delphi](https://github.com/salvadordf/WebView4Delphi)
 * [CEF](https://github.com/chromiumembedded/cef)
 * [CEF4Delphi](https://github.com/salvadordf/CEF4Delphi)
