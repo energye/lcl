@@ -21,7 +21,6 @@ import (
 	"github.com/energye/lcl/api/imports"
 	"github.com/energye/lcl/api/libname"
 	"github.com/energye/lcl/config"
-	"github.com/energye/lcl/emfs"
 	"github.com/energye/lcl/internal/initialize/macapp"
 	"github.com/energye/lcl/tool"
 	"github.com/energye/lcl/tool/exec"
@@ -31,7 +30,7 @@ import (
 // 不同操作系统加载方式也不同
 // 优先级: 1. 自定义, 2. 当前执行目录, 3. .energy 配置文件 4. 相对目录
 // 完整目录: [root]+energy+[framework]
-func loadLibENERGY(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
+func loadLibENERGY() {
 	if tool.IsDarwin() {
 		// 开发模式 自动生成 xxx.app
 		macapp.Init()
@@ -82,7 +81,6 @@ func loadLibENERGY(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 			}
 			println("[ERROR] Path:", libname.LibName)
 			panic(`Failed initialize LibENERGY`)
-			os.Exit(1)
 		}
 		return
 	})

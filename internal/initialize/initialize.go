@@ -13,18 +13,15 @@
 package initialize
 
 import (
-	"github.com/energye/lcl/emfs"
 	"github.com/energye/lcl/rtl"
 	"github.com/energye/lcl/rtl/version"
 )
 
 // Initialize
 // 初始化，运行时加载 LibENERGY
-func Initialize(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
+func Initialize() {
 	// 加载 lib dll
-	loadLibENERGY(libs, resources)
-	// 内嵌资源
-	emfs.SetEMFS(libs, resources)
+	loadLibENERGY()
 	// rtl
 	rtl.Init()
 	// version

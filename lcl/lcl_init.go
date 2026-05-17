@@ -16,7 +16,6 @@ import (
 	"sync"
 
 	"github.com/energye/lcl/api"
-	"github.com/energye/lcl/emfs"
 	"github.com/energye/lcl/internal/initialize"
 )
 
@@ -44,7 +43,7 @@ func init() {
 }
 
 // Init LCL
-func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
+func Init() {
 	initOnce.Do(func() {
 		defer func() {
 			if err := recover(); err != nil {
@@ -54,7 +53,7 @@ func Init(libs emfs.IEmbedFS, resources emfs.IEmbedFS) {
 		}()
 
 		// 初始化
-		initialize.Initialize(libs, resources)
+		initialize.Initialize()
 
 		// 注册 LCL 对象事件回调
 		api.SetEventCallback(eventCallback, api.EctLCL)
