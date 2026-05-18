@@ -37,3 +37,32 @@ func GoStr(str uintptr) string {
 	}
 	return string(unsafe.Slice((*byte)(unsafe.Pointer(str)), int(l)))
 }
+
+type StringBuffer struct {
+	Data uintptr
+	Size uintptr
+}
+
+func NewStringBuffer(data, size uintptr) *StringBuffer {
+	return &StringBuffer{Data: data, Size: size}
+}
+
+func (m *StringBuffer) Bytes() []byte {
+	if m.Data == 0 || m.Size == 0 {
+		return nil
+	}
+	return unsafe.Slice((*byte)(unsafe.Pointer(m.Data)), m.Size)
+}
+
+func (m *StringBuffer) String() string {
+	return string(m.Bytes())
+}
+
+func (m *StringBuffer) Release() {
+	if m.Data == 0 {
+		return
+	}
+	FreePointer(m.Data)
+	m.Data = 0
+	m.Size = 0
+}
