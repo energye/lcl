@@ -25,12 +25,15 @@ type TSynCharEvent struct {
 	TSynMacroEvent
 }
 
-func (m *TSynCharEvent) Key() string {
+func (m *TSynCharEvent) Key() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synCharEventAPI().SysCallN(1, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synCharEventAPI().SysCallN(1, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynCharEvent) SetKey(value string) {

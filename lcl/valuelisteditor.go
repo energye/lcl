@@ -190,12 +190,15 @@ func (m *TValueListEditor) SetModified(value bool) {
 	valueListEditorAPI().SysCallN(12, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TValueListEditor) Keys(index int32) string {
+func (m *TValueListEditor) Keys(index int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := valueListEditorAPI().SysCallN(13, 0, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	valueListEditorAPI().SysCallN(13, 0, m.Instance(), uintptr(index), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TValueListEditor) SetKeys(index int32, value string) {
@@ -205,12 +208,15 @@ func (m *TValueListEditor) SetKeys(index int32, value string) {
 	valueListEditorAPI().SysCallN(13, 1, m.Instance(), uintptr(index), api.PasStr(value))
 }
 
-func (m *TValueListEditor) Values(key string) string {
+func (m *TValueListEditor) Values(key string) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := valueListEditorAPI().SysCallN(14, 0, m.Instance(), api.PasStr(key))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	valueListEditorAPI().SysCallN(14, 0, m.Instance(), api.PasStr(key), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TValueListEditor) SetValues(key string, value string) {

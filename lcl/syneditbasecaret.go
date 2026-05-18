@@ -238,12 +238,15 @@ func (m *TSynEditBaseCaret) SetViewedLinePos(value types.TLinePos) {
 	synEditBaseCaretAPI().SysCallN(16, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TSynEditBaseCaret) LineText() string {
+func (m *TSynEditBaseCaret) LineText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synEditBaseCaretAPI().SysCallN(17, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synEditBaseCaretAPI().SysCallN(17, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynEditBaseCaret) SetLineText(value string) {

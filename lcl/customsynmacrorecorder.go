@@ -270,12 +270,15 @@ func (m *TCustomSynMacroRecorder) SetSaveMarkerPos(value bool) {
 	customSynMacroRecorderAPI().SysCallN(26, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomSynMacroRecorder) AsString() string {
+func (m *TCustomSynMacroRecorder) AsString() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customSynMacroRecorderAPI().SysCallN(27, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customSynMacroRecorderAPI().SysCallN(27, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomSynMacroRecorder) SetAsString(value string) {
@@ -285,12 +288,15 @@ func (m *TCustomSynMacroRecorder) SetAsString(value string) {
 	customSynMacroRecorderAPI().SysCallN(27, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomSynMacroRecorder) MacroName() string {
+func (m *TCustomSynMacroRecorder) MacroName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customSynMacroRecorderAPI().SysCallN(28, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customSynMacroRecorderAPI().SysCallN(28, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomSynMacroRecorder) SetMacroName(value string) {

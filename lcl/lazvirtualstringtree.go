@@ -556,12 +556,15 @@ func (m *TLazVirtualStringTree) SetDefaultPasteMode(value types.TVTNodeAttachMod
 	lazVirtualStringTreeAPI().SysCallN(20, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TLazVirtualStringTree) DefaultText() string {
+func (m *TLazVirtualStringTree) DefaultText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := lazVirtualStringTreeAPI().SysCallN(21, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	lazVirtualStringTreeAPI().SysCallN(21, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TLazVirtualStringTree) SetDefaultText(value string) {

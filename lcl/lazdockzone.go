@@ -32,12 +32,15 @@ type TLazDockZone struct {
 	TDockZone
 }
 
-func (m *TLazDockZone) GetCaption() string {
+func (m *TLazDockZone) GetCaption() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := lazDockZoneAPI().SysCallN(1, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	lazDockZoneAPI().SysCallN(1, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TLazDockZone) GetParentControl() IWinControl {

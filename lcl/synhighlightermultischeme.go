@@ -113,12 +113,15 @@ func (m *TSynHighlighterMultiScheme) SetCaseSensitive(value bool) {
 	synHighlighterMultiSchemeAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TSynHighlighterMultiScheme) StartExpr() string {
+func (m *TSynHighlighterMultiScheme) StartExpr() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synHighlighterMultiSchemeAPI().SysCallN(8, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synHighlighterMultiSchemeAPI().SysCallN(8, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynHighlighterMultiScheme) SetStartExpr(value string) {
@@ -128,12 +131,15 @@ func (m *TSynHighlighterMultiScheme) SetStartExpr(value string) {
 	synHighlighterMultiSchemeAPI().SysCallN(8, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TSynHighlighterMultiScheme) EndExpr() string {
+func (m *TSynHighlighterMultiScheme) EndExpr() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synHighlighterMultiSchemeAPI().SysCallN(9, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synHighlighterMultiSchemeAPI().SysCallN(9, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynHighlighterMultiScheme) SetEndExpr(value string) {
@@ -173,12 +179,15 @@ func (m *TSynHighlighterMultiScheme) SetMarkerAttri(value ISynHighlighterAttribu
 	synHighlighterMultiSchemeAPI().SysCallN(11, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TSynHighlighterMultiScheme) SchemeName() string {
+func (m *TSynHighlighterMultiScheme) SchemeName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synHighlighterMultiSchemeAPI().SysCallN(12, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synHighlighterMultiSchemeAPI().SysCallN(12, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynHighlighterMultiScheme) SetSchemeName(value string) {

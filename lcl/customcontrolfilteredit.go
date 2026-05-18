@@ -85,12 +85,15 @@ type TCustomControlFilterEdit struct {
 	TCustomEditButton
 }
 
-func (m *TCustomControlFilterEdit) ForceFilter(filter string) string {
+func (m *TCustomControlFilterEdit) ForceFilter(filter string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customControlFilterEditAPI().SysCallN(0, m.Instance(), api.PasStr(filter))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customControlFilterEditAPI().SysCallN(0, m.Instance(), api.PasStr(filter), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomControlFilterEdit) InvalidateFilter() {
@@ -121,12 +124,15 @@ func (m *TCustomControlFilterEdit) RestoreSelection() {
 	customControlFilterEditAPI().SysCallN(4, m.Instance())
 }
 
-func (m *TCustomControlFilterEdit) Filter() string {
+func (m *TCustomControlFilterEdit) Filter() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customControlFilterEditAPI().SysCallN(5, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customControlFilterEditAPI().SysCallN(5, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomControlFilterEdit) SetFilter(value string) {
@@ -136,12 +142,15 @@ func (m *TCustomControlFilterEdit) SetFilter(value string) {
 	customControlFilterEditAPI().SysCallN(5, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomControlFilterEdit) FilterLowercase() string {
+func (m *TCustomControlFilterEdit) FilterLowercase() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customControlFilterEditAPI().SysCallN(6, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customControlFilterEditAPI().SysCallN(6, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomControlFilterEdit) IdleConnected() bool {
@@ -204,12 +213,15 @@ func (m *TCustomControlFilterEdit) SetFilterOptions(value types.TFilterStringOpt
 	customControlFilterEditAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomControlFilterEdit) ButtonCaption() string {
+func (m *TCustomControlFilterEdit) ButtonCaption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customControlFilterEditAPI().SysCallN(11, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customControlFilterEditAPI().SysCallN(11, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomControlFilterEdit) SetButtonCaption(value string) {
@@ -234,12 +246,15 @@ func (m *TCustomControlFilterEdit) SetButtonCursor(value types.TCursor) {
 	customControlFilterEditAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomControlFilterEdit) ButtonHint() string {
+func (m *TCustomControlFilterEdit) ButtonHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customControlFilterEditAPI().SysCallN(13, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customControlFilterEditAPI().SysCallN(13, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomControlFilterEdit) SetButtonHint(value string) {

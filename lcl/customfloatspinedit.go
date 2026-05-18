@@ -49,12 +49,15 @@ func (m *TCustomFloatSpinEdit) GetLimitedValue(value float64) (result float64) {
 	return
 }
 
-func (m *TCustomFloatSpinEdit) ValueToStr(value float64) string {
+func (m *TCustomFloatSpinEdit) ValueToStr(value float64) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customFloatSpinEditAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(&value)))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customFloatSpinEditAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(&value)), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomFloatSpinEdit) StrToValue(S string) (result float64) {

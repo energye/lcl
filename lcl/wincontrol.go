@@ -231,12 +231,15 @@ func (m *TWinControl) GetEnumeratorControlsReverse() IWinControlEnumerator {
 	return AsWinControlEnumerator(r)
 }
 
-func (m *TWinControl) GetDockCaption(control IControl) string {
+func (m *TWinControl) GetDockCaption(control IControl) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := winControlAPI().SysCallN(16, m.Instance(), base.GetObjectUintptr(control))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	winControlAPI().SysCallN(16, m.Instance(), base.GetObjectUintptr(control), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TWinControl) HandleAllocated() bool {

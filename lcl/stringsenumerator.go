@@ -26,12 +26,15 @@ type TStringsEnumerator struct {
 	TObject
 }
 
-func (m *TStringsEnumerator) GetCurrent() string {
+func (m *TStringsEnumerator) GetCurrent() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := stringsEnumeratorAPI().SysCallN(1, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsEnumeratorAPI().SysCallN(1, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStringsEnumerator) MoveNext() bool {
@@ -42,12 +45,15 @@ func (m *TStringsEnumerator) MoveNext() bool {
 	return api.GoBool(r)
 }
 
-func (m *TStringsEnumerator) Current() string {
+func (m *TStringsEnumerator) Current() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := stringsEnumeratorAPI().SysCallN(3, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsEnumeratorAPI().SysCallN(3, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 // NewStringsEnumerator class constructor

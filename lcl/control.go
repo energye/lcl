@@ -431,12 +431,15 @@ func (m *TControl) AutoSizeDelayed() bool {
 	return api.GoBool(r)
 }
 
-func (m *TControl) AutoSizeDelayedReport() string {
+func (m *TControl) AutoSizeDelayedReport() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := controlAPI().SysCallN(22, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	controlAPI().SysCallN(22, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TControl) AutoSizeDelayedHandle() bool {
@@ -1110,12 +1113,15 @@ func (m *TControl) BaseParentClientSize() (result types.TSize) {
 	return
 }
 
-func (m *TControl) AccessibleName() string {
+func (m *TControl) AccessibleName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := controlAPI().SysCallN(112, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	controlAPI().SysCallN(112, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TControl) SetAccessibleName(value string) {
@@ -1125,12 +1131,15 @@ func (m *TControl) SetAccessibleName(value string) {
 	controlAPI().SysCallN(112, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TControl) AccessibleDescription() string {
+func (m *TControl) AccessibleDescription() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := controlAPI().SysCallN(113, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	controlAPI().SysCallN(113, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TControl) SetAccessibleDescription(value string) {
@@ -1140,12 +1149,15 @@ func (m *TControl) SetAccessibleDescription(value string) {
 	controlAPI().SysCallN(113, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TControl) AccessibleValue() string {
+func (m *TControl) AccessibleValue() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := controlAPI().SysCallN(114, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	controlAPI().SysCallN(114, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TControl) SetAccessibleValue(value string) {
@@ -1283,12 +1295,15 @@ func (m *TControl) SetBoundsRectForNewParent(value types.TRect) {
 	controlAPI().SysCallN(123, 1, m.Instance(), uintptr(base.UnsafePointer(&value)))
 }
 
-func (m *TControl) Caption() string {
+func (m *TControl) Caption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := controlAPI().SysCallN(124, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	controlAPI().SysCallN(124, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TControl) SetCaption(value string) {
@@ -1788,12 +1803,15 @@ func (m *TControl) SetHeight(value int32) {
 	controlAPI().SysCallN(159, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TControl) Hint() string {
+func (m *TControl) Hint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := controlAPI().SysCallN(160, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	controlAPI().SysCallN(160, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TControl) SetHint(value string) {
@@ -1848,12 +1866,15 @@ func (m *TControl) SetHelpType(value types.THelpType) {
 	controlAPI().SysCallN(163, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TControl) HelpKeyword() string {
+func (m *TControl) HelpKeyword() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := controlAPI().SysCallN(164, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	controlAPI().SysCallN(164, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TControl) SetHelpKeyword(value string) {

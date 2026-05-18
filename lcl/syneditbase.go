@@ -178,12 +178,15 @@ func (m *TSynEditBase) TextXYToScreenXY(physTextXY types.TRect) (result types.TR
 	return
 }
 
-func (m *TSynEditBase) GetWordAtRowCol(xY types.TPoint) string {
+func (m *TSynEditBase) GetWordAtRowCol(xY types.TPoint) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := synEditBaseAPI().SysCallN(5, m.Instance(), uintptr(base.UnsafePointer(&xY)))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synEditBaseAPI().SysCallN(5, m.Instance(), uintptr(base.UnsafePointer(&xY)), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynEditBase) FindMatchingBracketWithPointBoolX4(physStartBracket types.TPoint, startIncludeNeighborChars bool, moveCaret bool, selectBrackets bool, onlyVisible bool) (result types.TPoint) {
@@ -686,12 +689,15 @@ func (m *TSynEditBase) IsBackwardSel() bool {
 	return api.GoBool(r)
 }
 
-func (m *TSynEditBase) SelText() string {
+func (m *TSynEditBase) SelText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synEditBaseAPI().SysCallN(54, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synEditBaseAPI().SysCallN(54, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynEditBase) SetSelText(value string) {

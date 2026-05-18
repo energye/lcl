@@ -111,12 +111,15 @@ func (m *TEditButton) SetAutoSelect(value bool) {
 	editButtonAPI().SysCallN(4, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TEditButton) ButtonCaption() string {
+func (m *TEditButton) ButtonCaption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := editButtonAPI().SysCallN(5, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	editButtonAPI().SysCallN(5, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TEditButton) SetButtonCaption(value string) {
@@ -141,12 +144,15 @@ func (m *TEditButton) SetButtonCursor(value types.TCursor) {
 	editButtonAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TEditButton) ButtonHint() string {
+func (m *TEditButton) ButtonHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := editButtonAPI().SysCallN(7, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	editButtonAPI().SysCallN(7, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TEditButton) SetButtonHint(value string) {

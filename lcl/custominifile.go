@@ -67,12 +67,15 @@ func (m *TCustomIniFile) SectionExists(section string) bool {
 	return api.GoBool(r)
 }
 
-func (m *TCustomIniFile) ReadString(section string, ident string, default_ string) string {
+func (m *TCustomIniFile) ReadString(section string, ident string, default_ string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customIniFileAPI().SysCallN(1, m.Instance(), api.PasStr(section), api.PasStr(ident), api.PasStr(default_))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customIniFileAPI().SysCallN(1, m.Instance(), api.PasStr(section), api.PasStr(ident), api.PasStr(default_), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomIniFile) ReadInteger(section string, ident string, default_ int32) int32 {
@@ -259,12 +262,15 @@ func (m *TCustomIniFile) UpdateFile() {
 	customIniFileAPI().SysCallN(26, m.Instance())
 }
 
-func (m *TCustomIniFile) FileName() string {
+func (m *TCustomIniFile) FileName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customIniFileAPI().SysCallN(27, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customIniFileAPI().SysCallN(27, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomIniFile) Options() types.TIniFileOptions {

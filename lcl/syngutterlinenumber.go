@@ -35,12 +35,15 @@ type TSynGutterLineNumber struct {
 	TSynGutterPartBase
 }
 
-func (m *TSynGutterLineNumber) FormatLineNumber(line int32, isDot bool) string {
+func (m *TSynGutterLineNumber) FormatLineNumber(line int32, isDot bool) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := synGutterLineNumberAPI().SysCallN(1, m.Instance(), uintptr(line), api.PasBool(isDot))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synGutterLineNumberAPI().SysCallN(1, m.Instance(), uintptr(line), api.PasBool(isDot), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynGutterLineNumber) PaintWithCanvasRectIntX2(canvas ICanvas, clip types.TRect, firstLine int32, lastLine int32) {

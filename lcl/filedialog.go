@@ -78,12 +78,15 @@ func (m *TFileDialog) SetHistoryList(value IStrings) {
 	fileDialogAPI().SysCallN(6, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TFileDialog) DefaultExt() string {
+func (m *TFileDialog) DefaultExt() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileDialogAPI().SysCallN(7, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileDialogAPI().SysCallN(7, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileDialog) SetDefaultExt(value string) {
@@ -93,12 +96,15 @@ func (m *TFileDialog) SetDefaultExt(value string) {
 	fileDialogAPI().SysCallN(7, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TFileDialog) FileName() string {
+func (m *TFileDialog) FileName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileDialogAPI().SysCallN(8, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileDialogAPI().SysCallN(8, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileDialog) SetFileName(value string) {
@@ -108,12 +114,15 @@ func (m *TFileDialog) SetFileName(value string) {
 	fileDialogAPI().SysCallN(8, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TFileDialog) Filter() string {
+func (m *TFileDialog) Filter() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileDialogAPI().SysCallN(9, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileDialogAPI().SysCallN(9, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileDialog) SetFilter(value string) {
@@ -138,12 +147,15 @@ func (m *TFileDialog) SetFilterIndex(value int32) {
 	fileDialogAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TFileDialog) InitialDir() string {
+func (m *TFileDialog) InitialDir() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileDialogAPI().SysCallN(11, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileDialogAPI().SysCallN(11, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileDialog) SetInitialDir(value string) {

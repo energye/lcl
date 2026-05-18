@@ -78,12 +78,15 @@ func (m *TFPCustomFont) GetTextSize(text string, W *int32, H *int32) {
 	*H = int32(HPtr)
 }
 
-func (m *TFPCustomFont) Name() string {
+func (m *TFPCustomFont) Name() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fPCustomFontAPI().SysCallN(5, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fPCustomFontAPI().SysCallN(5, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFPCustomFont) SetName(value string) {

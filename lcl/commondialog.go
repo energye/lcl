@@ -164,12 +164,15 @@ func (m *TCommonDialog) SetHelpContext(value types.THelpContext) {
 	commonDialogAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCommonDialog) Title() string {
+func (m *TCommonDialog) Title() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := commonDialogAPI().SysCallN(12, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	commonDialogAPI().SysCallN(12, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCommonDialog) SetTitle(value string) {

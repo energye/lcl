@@ -111,12 +111,15 @@ func (m *TCustomListBox) GetIndexAtY(Y int32) int32 {
 	return int32(r)
 }
 
-func (m *TCustomListBox) GetSelectedText() string {
+func (m *TCustomListBox) GetSelectedText() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customListBoxAPI().SysCallN(3, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customListBoxAPI().SysCallN(3, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomListBox) ItemAtPos(pos types.TPoint, existing bool) int32 {

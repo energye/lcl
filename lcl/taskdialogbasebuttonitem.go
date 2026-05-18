@@ -47,12 +47,15 @@ func (m *TTaskDialogBaseButtonItem) SetModalResult(value types.TModalResult) {
 	taskDialogBaseButtonItemAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TTaskDialogBaseButtonItem) CommandLinkHint() string {
+func (m *TTaskDialogBaseButtonItem) CommandLinkHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := taskDialogBaseButtonItemAPI().SysCallN(2, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	taskDialogBaseButtonItemAPI().SysCallN(2, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTaskDialogBaseButtonItem) SetCommandLinkHint(value string) {
@@ -62,12 +65,15 @@ func (m *TTaskDialogBaseButtonItem) SetCommandLinkHint(value string) {
 	taskDialogBaseButtonItemAPI().SysCallN(2, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TTaskDialogBaseButtonItem) Caption() string {
+func (m *TTaskDialogBaseButtonItem) Caption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := taskDialogBaseButtonItemAPI().SysCallN(3, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	taskDialogBaseButtonItemAPI().SysCallN(3, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTaskDialogBaseButtonItem) SetCaption(value string) {

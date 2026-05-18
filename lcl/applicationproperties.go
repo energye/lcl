@@ -100,12 +100,15 @@ func (m *TApplicationProperties) SetExceptionDialog(value types.TApplicationExce
 	applicationPropertiesAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TApplicationProperties) HelpFile() string {
+func (m *TApplicationProperties) HelpFile() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := applicationPropertiesAPI().SysCallN(3, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	applicationPropertiesAPI().SysCallN(3, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TApplicationProperties) SetHelpFile(value string) {
@@ -115,12 +118,15 @@ func (m *TApplicationProperties) SetHelpFile(value string) {
 	applicationPropertiesAPI().SysCallN(3, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TApplicationProperties) Hint() string {
+func (m *TApplicationProperties) Hint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := applicationPropertiesAPI().SysCallN(4, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	applicationPropertiesAPI().SysCallN(4, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TApplicationProperties) SetHint(value string) {
@@ -265,12 +271,15 @@ func (m *TApplicationProperties) SetShowMainForm(value bool) {
 	applicationPropertiesAPI().SysCallN(13, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TApplicationProperties) Title() string {
+func (m *TApplicationProperties) Title() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := applicationPropertiesAPI().SysCallN(14, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	applicationPropertiesAPI().SysCallN(14, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TApplicationProperties) SetTitle(value string) {

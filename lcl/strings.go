@@ -191,12 +191,15 @@ func (m *TStrings) EqualsWithStrings(theStrings IStrings) bool {
 	return api.GoBool(r)
 }
 
-func (m *TStrings) ExtractName(S string) string {
+func (m *TStrings) ExtractName(S string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := stringsAPI().SysCallN(9, m.Instance(), api.PasStr(S))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(9, m.Instance(), api.PasStr(S), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) GetEnumerator() IStringsEnumerator {
@@ -263,12 +266,15 @@ func (m *TStrings) LastIndexOfWithStr(S string) int32 {
 	return int32(r)
 }
 
-func (m *TStrings) Pop() string {
+func (m *TStrings) Pop() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := stringsAPI().SysCallN(18, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(18, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) Reverse() IStrings {
@@ -279,12 +285,15 @@ func (m *TStrings) Reverse() IStrings {
 	return AsStrings(r)
 }
 
-func (m *TStrings) Shift() string {
+func (m *TStrings) Shift() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := stringsAPI().SysCallN(20, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(20, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) Slice(fromIndex int32) IStrings {
@@ -518,12 +527,15 @@ func (m *TStrings) SetCapacity(value int32) {
 	stringsAPI().SysCallN(50, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStrings) CommaText() string {
+func (m *TStrings) CommaText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := stringsAPI().SysCallN(51, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(51, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) SetCommaText(value string) {
@@ -541,12 +553,15 @@ func (m *TStrings) Count() int32 {
 	return int32(r)
 }
 
-func (m *TStrings) DelimitedText() string {
+func (m *TStrings) DelimitedText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := stringsAPI().SysCallN(53, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(53, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) SetDelimitedText(value string) {
@@ -571,12 +586,15 @@ func (m *TStrings) SetDelimiter(value uint16) {
 	stringsAPI().SysCallN(54, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStrings) LineBreak() string {
+func (m *TStrings) LineBreak() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := stringsAPI().SysCallN(55, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(55, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) SetLineBreak(value string) {
@@ -601,12 +619,15 @@ func (m *TStrings) SetMissingNameValueSeparatorAction(value types.TMissingNameVa
 	stringsAPI().SysCallN(56, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStrings) Names(index int32) string {
+func (m *TStrings) Names(index int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := stringsAPI().SysCallN(57, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(57, m.Instance(), uintptr(index), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) NameValueSeparator() uint16 {
@@ -714,12 +735,15 @@ func (m *TStrings) SetStrictDelimiter(value bool) {
 	stringsAPI().SysCallN(64, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TStrings) Strings(index int32) string {
+func (m *TStrings) Strings(index int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := stringsAPI().SysCallN(65, 0, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(65, 0, m.Instance(), uintptr(index), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) SetStringsWithIntToStr(index int32, value string) {
@@ -729,12 +753,15 @@ func (m *TStrings) SetStringsWithIntToStr(index int32, value string) {
 	stringsAPI().SysCallN(65, 1, m.Instance(), uintptr(index), api.PasStr(value))
 }
 
-func (m *TStrings) Text() string {
+func (m *TStrings) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := stringsAPI().SysCallN(66, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(66, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) SetTextToStr(value string) {
@@ -774,12 +801,15 @@ func (m *TStrings) SetUseLocale(value bool) {
 	stringsAPI().SysCallN(68, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TStrings) ValueFromIndex(index int32) string {
+func (m *TStrings) ValueFromIndex(index int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := stringsAPI().SysCallN(69, 0, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(69, 0, m.Instance(), uintptr(index), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) SetValueFromIndex(index int32, value string) {
@@ -789,12 +819,15 @@ func (m *TStrings) SetValueFromIndex(index int32, value string) {
 	stringsAPI().SysCallN(69, 1, m.Instance(), uintptr(index), api.PasStr(value))
 }
 
-func (m *TStrings) Values(name string) string {
+func (m *TStrings) Values(name string) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := stringsAPI().SysCallN(70, 0, m.Instance(), api.PasStr(name))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringsAPI().SysCallN(70, 0, m.Instance(), api.PasStr(name), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStrings) SetValues(name string, value string) {

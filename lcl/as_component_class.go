@@ -1253,17 +1253,6 @@ func AsMemoryStream(obj any) IMemoryStream {
 	return result
 }
 
-// AsStringWrap Convert a pointer object to an existing class object
-func AsStringWrap(obj any) IStringWrap {
-	instance := base.GetInstance(obj)
-	if instance == nil {
-		return nil
-	}
-	result := new(TStringWrap)
-	base.SetObjectInstance(result, instance)
-	return result
-}
-
 // AsStrings Convert a pointer object to an existing class object
 func AsStrings(obj any) IStrings {
 	instance := base.GetInstance(obj)

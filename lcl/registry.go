@@ -247,12 +247,15 @@ func (m *TRegistry) ReadInt64(name string) (result int64) {
 	return
 }
 
-func (m *TRegistry) ReadString(name string) string {
+func (m *TRegistry) ReadString(name string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := registryAPI().SysCallN(22, m.Instance(), api.PasStr(name))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	registryAPI().SysCallN(22, m.Instance(), api.PasStr(name), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TRegistry) ReadStringArray(name string) IStringArrayWrap {
@@ -489,12 +492,15 @@ func (m *TRegistry) CurrentKey() types.HKEY {
 	return types.HKEY(r)
 }
 
-func (m *TRegistry) CurrentPath() string {
+func (m *TRegistry) CurrentPath() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := registryAPI().SysCallN(54, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	registryAPI().SysCallN(54, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TRegistry) LazyWrite() bool {
@@ -543,12 +549,15 @@ func (m *TRegistry) LastError() int32 {
 	return int32(r)
 }
 
-func (m *TRegistry) LastErrorMsg() string {
+func (m *TRegistry) LastErrorMsg() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := registryAPI().SysCallN(59, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	registryAPI().SysCallN(59, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 // NewRegistry class constructor

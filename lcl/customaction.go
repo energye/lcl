@@ -81,12 +81,15 @@ func (m *TCustomAction) SetAutoCheck(value bool) {
 	customActionAPI().SysCallN(2, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomAction) Caption() string {
+func (m *TCustomAction) Caption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customActionAPI().SysCallN(3, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customActionAPI().SysCallN(3, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomAction) SetCaption(value string) {
@@ -186,12 +189,15 @@ func (m *TCustomAction) SetHelpContext(value types.THelpContext) {
 	customActionAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomAction) HelpKeyword() string {
+func (m *TCustomAction) HelpKeyword() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customActionAPI().SysCallN(10, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customActionAPI().SysCallN(10, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomAction) SetHelpKeyword(value string) {
@@ -216,12 +222,15 @@ func (m *TCustomAction) SetHelpType(value types.THelpType) {
 	customActionAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomAction) Hint() string {
+func (m *TCustomAction) Hint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customActionAPI().SysCallN(12, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customActionAPI().SysCallN(12, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomAction) SetHint(value string) {

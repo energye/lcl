@@ -303,12 +303,15 @@ func (m *TCoolBand) SetParentBitmap(value bool) {
 	coolBandAPI().SysCallN(19, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCoolBand) Text() string {
+func (m *TCoolBand) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := coolBandAPI().SysCallN(20, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	coolBandAPI().SysCallN(20, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCoolBand) SetText(value string) {

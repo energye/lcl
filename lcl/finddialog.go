@@ -89,12 +89,15 @@ func (m *TFindDialog) SetTop(value int32) {
 	findDialogAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TFindDialog) FindText() string {
+func (m *TFindDialog) FindText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := findDialogAPI().SysCallN(5, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	findDialogAPI().SysCallN(5, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFindDialog) SetFindText(value string) {

@@ -215,12 +215,15 @@ func (m *TFPCustomImage) SetPixels(X int32, Y int32, value int32) {
 	fPCustomImageAPI().SysCallN(15, 1, m.Instance(), uintptr(X), uintptr(Y), uintptr(value))
 }
 
-func (m *TFPCustomImage) Extra(key string) string {
+func (m *TFPCustomImage) Extra(key string) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fPCustomImageAPI().SysCallN(16, 0, m.Instance(), api.PasStr(key))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fPCustomImageAPI().SysCallN(16, 0, m.Instance(), api.PasStr(key), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFPCustomImage) SetExtra(key string, value string) {
@@ -230,12 +233,15 @@ func (m *TFPCustomImage) SetExtra(key string, value string) {
 	fPCustomImageAPI().SysCallN(16, 1, m.Instance(), api.PasStr(key), api.PasStr(value))
 }
 
-func (m *TFPCustomImage) ExtraValue(index int32) string {
+func (m *TFPCustomImage) ExtraValue(index int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fPCustomImageAPI().SysCallN(17, 0, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fPCustomImageAPI().SysCallN(17, 0, m.Instance(), uintptr(index), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFPCustomImage) SetExtraValue(index int32, value string) {
@@ -245,12 +251,15 @@ func (m *TFPCustomImage) SetExtraValue(index int32, value string) {
 	fPCustomImageAPI().SysCallN(17, 1, m.Instance(), uintptr(index), api.PasStr(value))
 }
 
-func (m *TFPCustomImage) ExtraKey(index int32) string {
+func (m *TFPCustomImage) ExtraKey(index int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fPCustomImageAPI().SysCallN(18, 0, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fPCustomImageAPI().SysCallN(18, 0, m.Instance(), uintptr(index), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFPCustomImage) SetExtraKey(index int32, value string) {

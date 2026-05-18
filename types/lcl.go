@@ -540,11 +540,11 @@ const (
 	FsStrikeOut
 )
 
-// TFontStyles SET: TFontStyle
-type TFontStyles = TSet
-
 // TFontStylesBase SET: TFontStyle
 type TFontStylesBase = TSet
+
+// TFontStyles SET: TFontStyle
+type TFontStyles = TSet
 
 // TFormStateType ENUM
 type TFormStateType = int32

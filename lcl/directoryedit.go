@@ -103,12 +103,15 @@ func (m *TDirectoryEdit) SetAutoSelected(value bool) {
 	directoryEditAPI().SysCallN(2, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDirectoryEdit) Directory() string {
+func (m *TDirectoryEdit) Directory() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := directoryEditAPI().SysCallN(3, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	directoryEditAPI().SysCallN(3, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDirectoryEdit) SetDirectory(value string) {
@@ -118,12 +121,15 @@ func (m *TDirectoryEdit) SetDirectory(value string) {
 	directoryEditAPI().SysCallN(3, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TDirectoryEdit) RootDir() string {
+func (m *TDirectoryEdit) RootDir() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := directoryEditAPI().SysCallN(4, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	directoryEditAPI().SysCallN(4, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDirectoryEdit) SetRootDir(value string) {
@@ -133,12 +139,15 @@ func (m *TDirectoryEdit) SetRootDir(value string) {
 	directoryEditAPI().SysCallN(4, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TDirectoryEdit) DialogTitle() string {
+func (m *TDirectoryEdit) DialogTitle() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := directoryEditAPI().SysCallN(5, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	directoryEditAPI().SysCallN(5, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDirectoryEdit) SetDialogTitle(value string) {
@@ -178,12 +187,15 @@ func (m *TDirectoryEdit) SetShowHidden(value bool) {
 	directoryEditAPI().SysCallN(7, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDirectoryEdit) ButtonCaption() string {
+func (m *TDirectoryEdit) ButtonCaption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := directoryEditAPI().SysCallN(8, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	directoryEditAPI().SysCallN(8, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDirectoryEdit) SetButtonCaption(value string) {
@@ -208,12 +220,15 @@ func (m *TDirectoryEdit) SetButtonCursor(value types.TCursor) {
 	directoryEditAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDirectoryEdit) ButtonHint() string {
+func (m *TDirectoryEdit) ButtonHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := directoryEditAPI().SysCallN(10, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	directoryEditAPI().SysCallN(10, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDirectoryEdit) SetButtonHint(value string) {

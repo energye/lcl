@@ -121,12 +121,15 @@ func (m *TFileNameEdit) DialogFiles() IStrings {
 	return AsStrings(r)
 }
 
-func (m *TFileNameEdit) FileName() string {
+func (m *TFileNameEdit) FileName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileNameEditAPI().SysCallN(4, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileNameEditAPI().SysCallN(4, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileNameEdit) SetFileName(value string) {
@@ -136,12 +139,15 @@ func (m *TFileNameEdit) SetFileName(value string) {
 	fileNameEditAPI().SysCallN(4, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TFileNameEdit) InitialDir() string {
+func (m *TFileNameEdit) InitialDir() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileNameEditAPI().SysCallN(5, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileNameEditAPI().SysCallN(5, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileNameEdit) SetInitialDir(value string) {
@@ -166,12 +172,15 @@ func (m *TFileNameEdit) SetDialogKind(value types.TDialogKind) {
 	fileNameEditAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TFileNameEdit) DialogTitle() string {
+func (m *TFileNameEdit) DialogTitle() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileNameEditAPI().SysCallN(7, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileNameEditAPI().SysCallN(7, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileNameEdit) SetDialogTitle(value string) {
@@ -196,12 +205,15 @@ func (m *TFileNameEdit) SetDialogOptions(value types.TOpenOptions) {
 	fileNameEditAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TFileNameEdit) Filter() string {
+func (m *TFileNameEdit) Filter() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileNameEditAPI().SysCallN(9, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileNameEditAPI().SysCallN(9, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileNameEdit) SetFilter(value string) {
@@ -226,12 +238,15 @@ func (m *TFileNameEdit) SetFilterIndex(value int32) {
 	fileNameEditAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TFileNameEdit) DefaultExt() string {
+func (m *TFileNameEdit) DefaultExt() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileNameEditAPI().SysCallN(11, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileNameEditAPI().SysCallN(11, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileNameEdit) SetDefaultExt(value string) {
@@ -256,12 +271,15 @@ func (m *TFileNameEdit) SetHideDirectories(value bool) {
 	fileNameEditAPI().SysCallN(12, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TFileNameEdit) ButtonCaption() string {
+func (m *TFileNameEdit) ButtonCaption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileNameEditAPI().SysCallN(13, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileNameEditAPI().SysCallN(13, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileNameEdit) SetButtonCaption(value string) {
@@ -286,12 +304,15 @@ func (m *TFileNameEdit) SetButtonCursor(value types.TCursor) {
 	fileNameEditAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TFileNameEdit) ButtonHint() string {
+func (m *TFileNameEdit) ButtonHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fileNameEditAPI().SysCallN(15, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fileNameEditAPI().SysCallN(15, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFileNameEdit) SetButtonHint(value string) {

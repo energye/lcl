@@ -37,12 +37,15 @@ func (m *TObject) Equals(obj IObject) bool {
 	return api.GoBool(r)
 }
 
-func (m *TObject) ToString() string {
+func (m *TObject) ToString() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := objectAPI().SysCallN(2, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	objectAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TObject) Free() {

@@ -125,12 +125,15 @@ func (m *TSynHighlighterAttributes) SetIntegerStyleMask(value int32) {
 	synHighlighterAttributesAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TSynHighlighterAttributes) Name() string {
+func (m *TSynHighlighterAttributes) Name() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synHighlighterAttributesAPI().SysCallN(11, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synHighlighterAttributesAPI().SysCallN(11, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynHighlighterAttributes) Caption() string {
@@ -141,12 +144,15 @@ func (m *TSynHighlighterAttributes) Caption() string {
 	return api.GoStr(r)
 }
 
-func (m *TSynHighlighterAttributes) StoredName() string {
+func (m *TSynHighlighterAttributes) StoredName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synHighlighterAttributesAPI().SysCallN(13, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synHighlighterAttributesAPI().SysCallN(13, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynHighlighterAttributes) SetStoredName(value string) {

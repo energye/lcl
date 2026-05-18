@@ -27,12 +27,15 @@ type TReplaceDialog struct {
 	TFindDialog
 }
 
-func (m *TReplaceDialog) ReplaceText() string {
+func (m *TReplaceDialog) ReplaceText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := replaceDialogAPI().SysCallN(1, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	replaceDialogAPI().SysCallN(1, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TReplaceDialog) SetReplaceText(value string) {

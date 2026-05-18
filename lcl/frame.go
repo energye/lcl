@@ -121,12 +121,15 @@ func (m *TFrame) SetDragMode(value types.TDragMode) {
 	frameAPI().SysCallN(4, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TFrame) LCLVersion() string {
+func (m *TFrame) LCLVersion() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := frameAPI().SysCallN(5, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	frameAPI().SysCallN(5, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFrame) SetLCLVersion(value string) {

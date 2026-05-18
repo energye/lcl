@@ -193,12 +193,15 @@ func (m *TRawImageDescriptionWrap) MaskBitsPerLine() uintptr {
 	return uintptr(r)
 }
 
-func (m *TRawImageDescriptionWrap) AsString() string {
+func (m *TRawImageDescriptionWrap) AsString() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := rawImageDescriptionWrapAPI().SysCallN(8, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	rawImageDescriptionWrapAPI().SysCallN(8, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TRawImageDescriptionWrap) IsEqual(desc IRawImageDescriptionWrap) bool {

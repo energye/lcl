@@ -88,12 +88,15 @@ func (m *TClipboard) FindFormatID(formatName string) types.TClipboardFormat {
 	return types.TClipboardFormat(r)
 }
 
-func (m *TClipboard) GetAsHtml(extractFragmentOnly bool) string {
+func (m *TClipboard) GetAsHtml(extractFragmentOnly bool) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := clipboardAPI().SysCallN(6, m.Instance(), api.PasBool(extractFragmentOnly))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	clipboardAPI().SysCallN(6, m.Instance(), api.PasBool(extractFragmentOnly), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TClipboard) GetComponentWithComponentX2(owner IComponent, parent IComponent) IComponent {
@@ -243,12 +246,15 @@ func (m *TClipboard) SetTextBuf(buffer uintptr) {
 	clipboardAPI().SysCallN(25, m.Instance(), uintptr(buffer))
 }
 
-func (m *TClipboard) AsText() string {
+func (m *TClipboard) AsText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := clipboardAPI().SysCallN(26, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	clipboardAPI().SysCallN(26, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TClipboard) SetAsText(value string) {

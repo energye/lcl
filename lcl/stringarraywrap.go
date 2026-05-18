@@ -44,12 +44,15 @@ func (m *TStringArrayWrap) Size() int32 {
 	return int32(r)
 }
 
-func (m *TStringArrayWrap) GetValue(index int32) string {
+func (m *TStringArrayWrap) GetValue(index int32) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := stringArrayWrapAPI().SysCallN(3, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	stringArrayWrapAPI().SysCallN(3, m.Instance(), uintptr(index), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStringArrayWrap) SetValue(index int32, value string) {

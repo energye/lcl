@@ -115,12 +115,15 @@ type TTreeView struct {
 	TCustomTreeView
 }
 
-func (m *TTreeView) PathDelimiter() string {
+func (m *TTreeView) PathDelimiter() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := treeViewAPI().SysCallN(1, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	treeViewAPI().SysCallN(1, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTreeView) SetPathDelimiter(value string) {

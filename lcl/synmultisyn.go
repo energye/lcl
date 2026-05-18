@@ -78,12 +78,15 @@ func (m *TSynMultiSyn) SetDefaultHighlighter(value ISynCustomHighlighter) {
 	synMultiSynAPI().SysCallN(4, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TSynMultiSyn) DefaultLanguageName() string {
+func (m *TSynMultiSyn) DefaultLanguageName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synMultiSynAPI().SysCallN(5, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synMultiSynAPI().SysCallN(5, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynMultiSyn) SetDefaultLanguageName(value string) {

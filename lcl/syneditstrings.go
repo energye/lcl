@@ -247,20 +247,26 @@ func (m *TSynEditStrings) TextXYToViewXY(physTextXY types.TRect) (result types.T
 	return
 }
 
-func (m *TSynEditStrings) EditDelete(logX int32, logY int32, byteLen int32) string {
+func (m *TSynEditStrings) EditDelete(logX int32, logY int32, byteLen int32) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := synEditStringsAPI().SysCallN(18, m.Instance(), uintptr(logX), uintptr(logY), uintptr(byteLen))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synEditStringsAPI().SysCallN(18, m.Instance(), uintptr(logX), uintptr(logY), uintptr(byteLen), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TSynEditStrings) EditReplace(logX int32, logY int32, byteLen int32, text string) string {
+func (m *TSynEditStrings) EditReplace(logX int32, logY int32, byteLen int32, text string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := synEditStringsAPI().SysCallN(19, m.Instance(), uintptr(logX), uintptr(logY), uintptr(byteLen), api.PasStr(text))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synEditStringsAPI().SysCallN(19, m.Instance(), uintptr(logX), uintptr(logY), uintptr(byteLen), api.PasStr(text), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynEditStrings) BeginUpdateWithObject(sender IObject) {
@@ -494,12 +500,15 @@ func (m *TSynEditStrings) LengthOfLongestLine() int32 {
 	return int32(r)
 }
 
-func (m *TSynEditStrings) ViewedLines(index int32) string {
+func (m *TSynEditStrings) ViewedLines(index int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synEditStringsAPI().SysCallN(48, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synEditStringsAPI().SysCallN(48, m.Instance(), uintptr(index), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynEditStrings) ViewedCount() int32 {

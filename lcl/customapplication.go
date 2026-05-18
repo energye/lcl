@@ -80,20 +80,26 @@ func (m *TCustomApplication) FindOptionIndex(S string, longopt *bool, startAt in
 	return int32(r)
 }
 
-func (m *TCustomApplication) GetOptionValueWithStr(S string) string {
+func (m *TCustomApplication) GetOptionValueWithStr(S string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customApplicationAPI().SysCallN(2, m.Instance(), api.PasStr(S))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(2, m.Instance(), api.PasStr(S), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomApplication) GetOptionValueWithCharStr(C uint16, S string) string {
+func (m *TCustomApplication) GetOptionValueWithCharStr(C uint16, S string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customApplicationAPI().SysCallN(3, m.Instance(), uintptr(C), api.PasStr(S))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(3, m.Instance(), uintptr(C), api.PasStr(S), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomApplication) GetOptionValues(C uint16, S string) IStringArrayWrap {
@@ -120,28 +126,37 @@ func (m *TCustomApplication) HasOptionWithCharStr(C uint16, S string) bool {
 	return api.GoBool(r)
 }
 
-func (m *TCustomApplication) CheckOptionsWithStrStringsX3Bool(shortOptions string, longopts IStrings, opts IStrings, nonOpts IStrings, allErrors bool) string {
+func (m *TCustomApplication) CheckOptionsWithStrStringsX3Bool(shortOptions string, longopts IStrings, opts IStrings, nonOpts IStrings, allErrors bool) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customApplicationAPI().SysCallN(7, m.Instance(), api.PasStr(shortOptions), base.GetObjectUintptr(longopts), base.GetObjectUintptr(opts), base.GetObjectUintptr(nonOpts), api.PasBool(allErrors))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(7, m.Instance(), api.PasStr(shortOptions), base.GetObjectUintptr(longopts), base.GetObjectUintptr(opts), base.GetObjectUintptr(nonOpts), api.PasBool(allErrors), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomApplication) CheckOptionsWithStrStringsBool(shortOptions string, longopts IStrings, allErrors bool) string {
+func (m *TCustomApplication) CheckOptionsWithStrStringsBool(shortOptions string, longopts IStrings, allErrors bool) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customApplicationAPI().SysCallN(8, m.Instance(), api.PasStr(shortOptions), base.GetObjectUintptr(longopts), api.PasBool(allErrors))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(8, m.Instance(), api.PasStr(shortOptions), base.GetObjectUintptr(longopts), api.PasBool(allErrors), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomApplication) CheckOptionsWithStrX2Bool(shortOptions string, longOpts string, allErrors bool) string {
+func (m *TCustomApplication) CheckOptionsWithStrX2Bool(shortOptions string, longOpts string, allErrors bool) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customApplicationAPI().SysCallN(9, m.Instance(), api.PasStr(shortOptions), api.PasStr(longOpts), api.PasBool(allErrors))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(9, m.Instance(), api.PasStr(shortOptions), api.PasStr(longOpts), api.PasBool(allErrors), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomApplication) HandleException(sender IObject) {
@@ -200,20 +215,26 @@ func (m *TCustomApplication) Log(eventType types.TEventType, msg string) {
 	customApplicationAPI().SysCallN(17, m.Instance(), uintptr(eventType), api.PasStr(msg))
 }
 
-func (m *TCustomApplication) ExeName() string {
+func (m *TCustomApplication) ExeName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customApplicationAPI().SysCallN(18, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(18, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomApplication) HelpFile() string {
+func (m *TCustomApplication) HelpFile() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customApplicationAPI().SysCallN(19, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(19, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomApplication) SetHelpFile(value string) {
@@ -231,12 +252,15 @@ func (m *TCustomApplication) Terminated() bool {
 	return api.GoBool(r)
 }
 
-func (m *TCustomApplication) Title() string {
+func (m *TCustomApplication) Title() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customApplicationAPI().SysCallN(21, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(21, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomApplication) SetTitle(value string) {
@@ -254,20 +278,26 @@ func (m *TCustomApplication) ConsoleApplication() bool {
 	return api.GoBool(r)
 }
 
-func (m *TCustomApplication) Location() string {
+func (m *TCustomApplication) Location() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customApplicationAPI().SysCallN(23, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(23, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomApplication) Params(index int32) string {
+func (m *TCustomApplication) Params(index int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customApplicationAPI().SysCallN(24, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(24, m.Instance(), uintptr(index), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomApplication) ParamCount() int32 {
@@ -278,12 +308,15 @@ func (m *TCustomApplication) ParamCount() int32 {
 	return int32(r)
 }
 
-func (m *TCustomApplication) EnvironmentVariable(envName string) string {
+func (m *TCustomApplication) EnvironmentVariable(envName string) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customApplicationAPI().SysCallN(26, m.Instance(), api.PasStr(envName))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customApplicationAPI().SysCallN(26, m.Instance(), api.PasStr(envName), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomApplication) OptionChar() uint16 {

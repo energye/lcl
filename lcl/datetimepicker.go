@@ -285,12 +285,15 @@ func (m *TDateTimePicker) SetParentColor(value bool) {
 	dateTimePickerAPI().SysCallN(12, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDateTimePicker) DateSeparator() string {
+func (m *TDateTimePicker) DateSeparator() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := dateTimePickerAPI().SysCallN(13, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	dateTimePickerAPI().SysCallN(13, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDateTimePicker) SetDateSeparator(value string) {
@@ -315,12 +318,15 @@ func (m *TDateTimePicker) SetTrailingSeparator(value bool) {
 	dateTimePickerAPI().SysCallN(14, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDateTimePicker) TextForNullDate() string {
+func (m *TDateTimePicker) TextForNullDate() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := dateTimePickerAPI().SysCallN(15, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	dateTimePickerAPI().SysCallN(15, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDateTimePicker) SetTextForNullDate(value string) {
@@ -390,12 +396,15 @@ func (m *TDateTimePicker) SetKind(value types.TDateTimeKind) {
 	dateTimePickerAPI().SysCallN(19, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateTimePicker) TimeSeparator() string {
+func (m *TDateTimePicker) TimeSeparator() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := dateTimePickerAPI().SysCallN(20, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	dateTimePickerAPI().SysCallN(20, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDateTimePicker) SetTimeSeparator(value string) {
@@ -405,12 +414,15 @@ func (m *TDateTimePicker) SetTimeSeparator(value string) {
 	dateTimePickerAPI().SysCallN(20, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TDateTimePicker) DecimalSeparator() string {
+func (m *TDateTimePicker) DecimalSeparator() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := dateTimePickerAPI().SysCallN(21, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	dateTimePickerAPI().SysCallN(21, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDateTimePicker) SetDecimalSeparator(value string) {

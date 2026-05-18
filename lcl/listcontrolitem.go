@@ -45,12 +45,15 @@ func (m *TListControlItem) SetData(value types.TCustomData) {
 	listControlItemAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TListControlItem) Caption() string {
+func (m *TListControlItem) Caption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := listControlItemAPI().SysCallN(2, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	listControlItemAPI().SysCallN(2, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TListControlItem) SetCaption(value string) {

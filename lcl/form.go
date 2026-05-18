@@ -144,12 +144,15 @@ func (m *TForm) SetDragMode(value types.TDragMode) {
 	formAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TForm) SessionProperties() string {
+func (m *TForm) SessionProperties() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := formAPI().SysCallN(9, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	formAPI().SysCallN(9, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TForm) SetSessionProperties(value string) {
@@ -159,12 +162,15 @@ func (m *TForm) SetSessionProperties(value string) {
 	formAPI().SysCallN(9, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TForm) LCLVersion() string {
+func (m *TForm) LCLVersion() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := formAPI().SysCallN(10, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	formAPI().SysCallN(10, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TForm) SetLCLVersion(value string) {

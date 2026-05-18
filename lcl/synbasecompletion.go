@@ -114,12 +114,15 @@ func (m *TSynBaseCompletion) Deactivate() {
 	synBaseCompletionAPI().SysCallN(6, m.Instance())
 }
 
-func (m *TSynBaseCompletion) CurrentString() string {
+func (m *TSynBaseCompletion) CurrentString() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synBaseCompletionAPI().SysCallN(7, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synBaseCompletionAPI().SysCallN(7, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynBaseCompletion) SetCurrentString(value string) {

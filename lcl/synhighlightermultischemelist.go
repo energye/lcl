@@ -53,20 +53,26 @@ func (m *TSynHighlighterMultiSchemeList) SetItemsWithIntToSynHighlighterMultiSch
 	synHighlighterMultiSchemeListAPI().SysCallN(2, 1, m.Instance(), uintptr(index), base.GetObjectUintptr(value))
 }
 
-func (m *TSynHighlighterMultiSchemeList) ConvertedCurrentLine() string {
+func (m *TSynHighlighterMultiSchemeList) ConvertedCurrentLine() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synHighlighterMultiSchemeListAPI().SysCallN(3, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synHighlighterMultiSchemeListAPI().SysCallN(3, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TSynHighlighterMultiSchemeList) CurrentLine() string {
+func (m *TSynHighlighterMultiSchemeList) CurrentLine() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synHighlighterMultiSchemeListAPI().SysCallN(4, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synHighlighterMultiSchemeListAPI().SysCallN(4, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynHighlighterMultiSchemeList) SetCurrentLine(value string) {

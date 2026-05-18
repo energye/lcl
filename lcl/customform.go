@@ -551,12 +551,15 @@ func (m *TCustomForm) SetFormStyle(value types.TFormStyle) {
 	customFormAPI().SysCallN(44, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomForm) HelpFile() string {
+func (m *TCustomForm) HelpFile() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customFormAPI().SysCallN(45, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customFormAPI().SysCallN(45, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomForm) SetHelpFile(value string) {

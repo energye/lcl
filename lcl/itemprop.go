@@ -38,12 +38,15 @@ type TItemProp struct {
 	TPersistent
 }
 
-func (m *TItemProp) EditMask() string {
+func (m *TItemProp) EditMask() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := itemPropAPI().SysCallN(1, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	itemPropAPI().SysCallN(1, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TItemProp) SetEditMask(value string) {
@@ -68,12 +71,15 @@ func (m *TItemProp) SetEditStyle(value types.TEditStyle) {
 	itemPropAPI().SysCallN(2, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TItemProp) KeyDesc() string {
+func (m *TItemProp) KeyDesc() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := itemPropAPI().SysCallN(3, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	itemPropAPI().SysCallN(3, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TItemProp) SetKeyDesc(value string) {

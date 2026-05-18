@@ -328,12 +328,15 @@ func (m *TCustomEdit) SetSelStart(value int32) {
 	customEditAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomEdit) SelText() string {
+func (m *TCustomEdit) SelText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customEditAPI().SysCallN(23, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customEditAPI().SysCallN(23, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomEdit) SetSelText(value string) {
@@ -343,12 +346,15 @@ func (m *TCustomEdit) SetSelText(value string) {
 	customEditAPI().SysCallN(23, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomEdit) Text() string {
+func (m *TCustomEdit) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customEditAPI().SysCallN(24, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customEditAPI().SysCallN(24, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomEdit) SetText(value string) {
@@ -358,12 +364,15 @@ func (m *TCustomEdit) SetText(value string) {
 	customEditAPI().SysCallN(24, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomEdit) TextHint() string {
+func (m *TCustomEdit) TextHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customEditAPI().SysCallN(25, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customEditAPI().SysCallN(25, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomEdit) SetTextHint(value string) {

@@ -44,20 +44,26 @@ func (m *TSynAutoComplete) EditorsCount() int32 {
 	return int32(r)
 }
 
-func (m *TSynAutoComplete) GetTokenList() string {
+func (m *TSynAutoComplete) GetTokenList() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := synAutoCompleteAPI().SysCallN(2, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synAutoCompleteAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TSynAutoComplete) GetTokenValue(token string) string {
+func (m *TSynAutoComplete) GetTokenValue(token string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := synAutoCompleteAPI().SysCallN(3, m.Instance(), api.PasStr(token))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synAutoCompleteAPI().SysCallN(3, m.Instance(), api.PasStr(token), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynAutoComplete) Execute(token string, editor ICustomSynEdit) {
@@ -82,12 +88,15 @@ func (m *TSynAutoComplete) SetAutoCompleteList(value IStrings) {
 	synAutoCompleteAPI().SysCallN(5, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TSynAutoComplete) EndOfTokenChr() string {
+func (m *TSynAutoComplete) EndOfTokenChr() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synAutoCompleteAPI().SysCallN(6, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synAutoCompleteAPI().SysCallN(6, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynAutoComplete) SetEndOfTokenChr(value string) {

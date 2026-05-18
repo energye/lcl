@@ -253,12 +253,15 @@ func (m *TComponent) SetVCLComObject(value uintptr) {
 	componentAPI().SysCallN(23, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TComponent) Name() string {
+func (m *TComponent) Name() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := componentAPI().SysCallN(24, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	componentAPI().SysCallN(24, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TComponent) SetName(value string) {

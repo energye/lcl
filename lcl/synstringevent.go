@@ -25,12 +25,15 @@ type TSynStringEvent struct {
 	TSynMacroEvent
 }
 
-func (m *TSynStringEvent) Value() string {
+func (m *TSynStringEvent) Value() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synStringEventAPI().SysCallN(1, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synStringEventAPI().SysCallN(1, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynStringEvent) SetValue(value string) {

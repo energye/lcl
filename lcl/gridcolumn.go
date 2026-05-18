@@ -369,12 +369,15 @@ func (m *TGridColumn) SetVisible(value bool) {
 	gridColumnAPI().SysCallN(24, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TGridColumn) ValueChecked() string {
+func (m *TGridColumn) ValueChecked() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := gridColumnAPI().SysCallN(25, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	gridColumnAPI().SysCallN(25, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TGridColumn) SetValueChecked(value string) {
@@ -384,12 +387,15 @@ func (m *TGridColumn) SetValueChecked(value string) {
 	gridColumnAPI().SysCallN(25, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TGridColumn) ValueUnchecked() string {
+func (m *TGridColumn) ValueUnchecked() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := gridColumnAPI().SysCallN(26, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	gridColumnAPI().SysCallN(26, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TGridColumn) SetValueUnchecked(value string) {

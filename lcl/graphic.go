@@ -208,12 +208,15 @@ func (m *TGraphic) SetModified(value bool) {
 	graphicAPI().SysCallN(20, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TGraphic) MimeType() string {
+func (m *TGraphic) MimeType() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := graphicAPI().SysCallN(21, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	graphicAPI().SysCallN(21, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TGraphic) Palette() types.HPALETTE {

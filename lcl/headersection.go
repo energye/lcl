@@ -144,12 +144,15 @@ func (m *THeaderSection) SetMinWidth(value int32) {
 	headerSectionAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *THeaderSection) Text() string {
+func (m *THeaderSection) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := headerSectionAPI().SysCallN(9, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	headerSectionAPI().SysCallN(9, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *THeaderSection) SetText(value string) {

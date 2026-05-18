@@ -656,12 +656,15 @@ func (m *TCustomSynEdit) SetCaretTypeSize(type_ types.TSynCaretType, width int32
 	customSynEditAPI().SysCallN(58, m.Instance(), uintptr(type_), uintptr(width), uintptr(height), uintptr(xOffs), uintptr(yOffs))
 }
 
-func (m *TCustomSynEdit) LineText() string {
+func (m *TCustomSynEdit) LineText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customSynEditAPI().SysCallN(59, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customSynEditAPI().SysCallN(59, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomSynEdit) SetLineText(value string) {
@@ -671,12 +674,15 @@ func (m *TCustomSynEdit) SetLineText(value string) {
 	customSynEditAPI().SysCallN(59, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomSynEdit) Text() string {
+func (m *TCustomSynEdit) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customSynEditAPI().SysCallN(60, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customSynEditAPI().SysCallN(60, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomSynEdit) SetText(value string) {
@@ -686,12 +692,15 @@ func (m *TCustomSynEdit) SetText(value string) {
 	customSynEditAPI().SysCallN(60, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomSynEdit) TextBetweenPoints(startPoint types.TPoint, endPoint types.TPoint) string {
+func (m *TCustomSynEdit) TextBetweenPoints(startPoint types.TPoint, endPoint types.TPoint) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customSynEditAPI().SysCallN(61, 0, m.Instance(), uintptr(base.UnsafePointer(&startPoint)), uintptr(base.UnsafePointer(&endPoint)))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customSynEditAPI().SysCallN(61, 0, m.Instance(), uintptr(base.UnsafePointer(&startPoint)), uintptr(base.UnsafePointer(&endPoint)), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomSynEdit) SetTextBetweenPointsWithPointX2ToStr(startPoint types.TPoint, endPoint types.TPoint, value string) {
@@ -724,12 +733,15 @@ func (m *TCustomSynEdit) CanPaste() bool {
 	return api.GoBool(r)
 }
 
-func (m *TCustomSynEdit) FoldState() string {
+func (m *TCustomSynEdit) FoldState() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customSynEditAPI().SysCallN(65, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customSynEditAPI().SysCallN(65, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomSynEdit) SetFoldState(value string) {

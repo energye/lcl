@@ -148,12 +148,15 @@ func (m *TCustomTaskDialog) SetButtons(value ITaskDialogButtons) {
 	customTaskDialogAPI().SysCallN(5, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TCustomTaskDialog) Caption() string {
+func (m *TCustomTaskDialog) Caption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(6, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(6, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) SetCaption(value string) {
@@ -208,12 +211,15 @@ func (m *TCustomTaskDialog) SetCommonButtons(value types.TTaskDialogCommonButton
 	customTaskDialogAPI().SysCallN(9, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomTaskDialog) CollapseButtonCaption() string {
+func (m *TCustomTaskDialog) CollapseButtonCaption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(10, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(10, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) SetCollapseButtonCaption(value string) {
@@ -238,12 +244,15 @@ func (m *TCustomTaskDialog) SetDefaultButton(value types.TTaskDialogCommonButton
 	customTaskDialogAPI().SysCallN(11, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomTaskDialog) ExpandButtonCaption() string {
+func (m *TCustomTaskDialog) ExpandButtonCaption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(12, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(12, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) SetExpandButtonCaption(value string) {
@@ -253,12 +262,15 @@ func (m *TCustomTaskDialog) SetExpandButtonCaption(value string) {
 	customTaskDialogAPI().SysCallN(12, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomTaskDialog) ExpandedText() string {
+func (m *TCustomTaskDialog) ExpandedText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(13, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(13, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) SetExpandedText(value string) {
@@ -298,12 +310,15 @@ func (m *TCustomTaskDialog) SetFooterIcon(value types.DialogsTTaskDialogIcon) {
 	customTaskDialogAPI().SysCallN(15, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomTaskDialog) FooterText() string {
+func (m *TCustomTaskDialog) FooterText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(16, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(16, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) SetFooterText(value string) {
@@ -396,12 +411,15 @@ func (m *TCustomTaskDialog) SetQueryItemIndex(value int32) {
 	customTaskDialogAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomTaskDialog) QueryResult() string {
+func (m *TCustomTaskDialog) QueryResult() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(23, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(23, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) SetQueryResult(value string) {
@@ -434,12 +452,15 @@ func (m *TCustomTaskDialog) SetRadioButtons(value ITaskDialogButtons) {
 	customTaskDialogAPI().SysCallN(25, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TCustomTaskDialog) SimpleQuery() string {
+func (m *TCustomTaskDialog) SimpleQuery() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(26, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(26, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) SetSimpleQuery(value string) {
@@ -464,12 +485,15 @@ func (m *TCustomTaskDialog) SetSimpleQueryPasswordChar(value uint16) {
 	customTaskDialogAPI().SysCallN(27, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomTaskDialog) Text() string {
+func (m *TCustomTaskDialog) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(28, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(28, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) SetText(value string) {
@@ -479,12 +503,15 @@ func (m *TCustomTaskDialog) SetText(value string) {
 	customTaskDialogAPI().SysCallN(28, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomTaskDialog) Title() string {
+func (m *TCustomTaskDialog) Title() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(29, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(29, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) SetTitle(value string) {
@@ -494,12 +521,15 @@ func (m *TCustomTaskDialog) SetTitle(value string) {
 	customTaskDialogAPI().SysCallN(29, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomTaskDialog) VerificationText() string {
+func (m *TCustomTaskDialog) VerificationText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(30, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(30, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) SetVerificationText(value string) {
@@ -524,12 +554,15 @@ func (m *TCustomTaskDialog) SetWidth(value int32) {
 	customTaskDialogAPI().SysCallN(31, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomTaskDialog) URL() string {
+func (m *TCustomTaskDialog) URL() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTaskDialogAPI().SysCallN(32, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTaskDialogAPI().SysCallN(32, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTaskDialog) Expanded() bool {

@@ -107,12 +107,15 @@ func (m *TListItem) MakeVisible(partialOK bool) {
 	listItemAPI().SysCallN(6, m.Instance(), api.PasBool(partialOK))
 }
 
-func (m *TListItem) Caption() string {
+func (m *TListItem) Caption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := listItemAPI().SysCallN(7, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	listItemAPI().SysCallN(7, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TListItem) SetCaption(value string) {

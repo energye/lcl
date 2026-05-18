@@ -83,12 +83,15 @@ func (m *TListColumn) SetAutoSize(value bool) {
 	listColumnAPI().SysCallN(3, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TListColumn) Caption() string {
+func (m *TListColumn) Caption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := listColumnAPI().SysCallN(4, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	listColumnAPI().SysCallN(4, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TListColumn) SetCaption(value string) {

@@ -53,12 +53,15 @@ func (m *TSynMacroEventReader) ParamType(index int32) types.TSynEventParamType {
 	return types.TSynEventParamType(r)
 }
 
-func (m *TSynMacroEventReader) ParamAsString(index int32) string {
+func (m *TSynMacroEventReader) ParamAsString(index int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synMacroEventReaderAPI().SysCallN(3, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synMacroEventReaderAPI().SysCallN(3, m.Instance(), uintptr(index), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynMacroEventReader) ParamAsInt(index int32) int32 {

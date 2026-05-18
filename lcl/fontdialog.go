@@ -103,12 +103,15 @@ func (m *TFontDialog) SetOptions(value types.TFontDialogOptions) {
 	fontDialogAPI().SysCallN(5, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TFontDialog) PreviewText() string {
+func (m *TFontDialog) PreviewText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := fontDialogAPI().SysCallN(6, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	fontDialogAPI().SysCallN(6, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TFontDialog) SetPreviewText(value string) {

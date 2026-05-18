@@ -93,12 +93,15 @@ func (m *TPopupNotifier) SetIcon(value IPicture) {
 	popupNotifierAPI().SysCallN(5, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TPopupNotifier) Text() string {
+func (m *TPopupNotifier) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := popupNotifierAPI().SysCallN(6, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	popupNotifierAPI().SysCallN(6, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TPopupNotifier) SetText(value string) {
@@ -123,12 +126,15 @@ func (m *TPopupNotifier) SetTextFont(value IFont) {
 	popupNotifierAPI().SysCallN(7, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TPopupNotifier) Title() string {
+func (m *TPopupNotifier) Title() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := popupNotifierAPI().SysCallN(8, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	popupNotifierAPI().SysCallN(8, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TPopupNotifier) SetTitle(value string) {

@@ -145,12 +145,15 @@ func (m *TCustomTrayIcon) SetBalloonFlags(value types.TBalloonFlags) {
 	customTrayIconAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomTrayIcon) BalloonHint() string {
+func (m *TCustomTrayIcon) BalloonHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTrayIconAPI().SysCallN(9, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTrayIconAPI().SysCallN(9, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTrayIcon) SetBalloonHint(value string) {
@@ -175,12 +178,15 @@ func (m *TCustomTrayIcon) SetBalloonTimeout(value int32) {
 	customTrayIconAPI().SysCallN(10, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomTrayIcon) BalloonTitle() string {
+func (m *TCustomTrayIcon) BalloonTitle() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTrayIconAPI().SysCallN(11, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTrayIconAPI().SysCallN(11, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTrayIcon) SetBalloonTitle(value string) {
@@ -243,12 +249,15 @@ func (m *TCustomTrayIcon) SetIcons(value ICustomImageList) {
 	customTrayIconAPI().SysCallN(15, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TCustomTrayIcon) Hint() string {
+func (m *TCustomTrayIcon) Hint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customTrayIconAPI().SysCallN(16, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customTrayIconAPI().SysCallN(16, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomTrayIcon) SetHint(value string) {

@@ -83,12 +83,15 @@ func (m *TCalendarDialog) SetFirstDayOfWeek(value types.TCalDayOfWeek) {
 	calendarDialogAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCalendarDialog) OKCaption() string {
+func (m *TCalendarDialog) OKCaption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := calendarDialogAPI().SysCallN(4, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	calendarDialogAPI().SysCallN(4, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCalendarDialog) SetOKCaption(value string) {
@@ -98,12 +101,15 @@ func (m *TCalendarDialog) SetOKCaption(value string) {
 	calendarDialogAPI().SysCallN(4, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCalendarDialog) CancelCaption() string {
+func (m *TCalendarDialog) CancelCaption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := calendarDialogAPI().SysCallN(5, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	calendarDialogAPI().SysCallN(5, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCalendarDialog) SetCancelCaption(value string) {

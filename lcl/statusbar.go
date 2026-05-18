@@ -247,12 +247,15 @@ func (m *TStatusBar) SetParentShowHint(value bool) {
 	statusBarAPI().SysCallN(15, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TStatusBar) SimpleText() string {
+func (m *TStatusBar) SimpleText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := statusBarAPI().SysCallN(16, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	statusBarAPI().SysCallN(16, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStatusBar) SetSimpleText(value string) {

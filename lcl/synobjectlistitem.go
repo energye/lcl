@@ -42,12 +42,15 @@ func (m *TSynObjectListItem) SetIndex(value int32) {
 	synObjectListItemAPI().SysCallN(1, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TSynObjectListItem) DisplayName() string {
+func (m *TSynObjectListItem) DisplayName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synObjectListItemAPI().SysCallN(2, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synObjectListItemAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 // NewSynObjectListItem class constructor

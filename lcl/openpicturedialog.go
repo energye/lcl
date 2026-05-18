@@ -26,20 +26,26 @@ type TOpenPictureDialog struct {
 	TPreviewFileDialog
 }
 
-func (m *TOpenPictureDialog) GetFilterExt() string {
+func (m *TOpenPictureDialog) GetFilterExt() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := openPictureDialogAPI().SysCallN(1, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	openPictureDialogAPI().SysCallN(1, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TOpenPictureDialog) DefaultFilter() string {
+func (m *TOpenPictureDialog) DefaultFilter() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := openPictureDialogAPI().SysCallN(2, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	openPictureDialogAPI().SysCallN(2, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 // NewOpenPictureDialog class constructor

@@ -357,12 +357,15 @@ func (m *TCustomAbstractGroupedEdit) SetSelStart(value int32) {
 	customAbstractGroupedEditAPI().SysCallN(22, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomAbstractGroupedEdit) SelText() string {
+func (m *TCustomAbstractGroupedEdit) SelText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customAbstractGroupedEditAPI().SysCallN(23, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customAbstractGroupedEditAPI().SysCallN(23, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomAbstractGroupedEdit) SetSelText(value string) {
@@ -372,12 +375,15 @@ func (m *TCustomAbstractGroupedEdit) SetSelText(value string) {
 	customAbstractGroupedEditAPI().SysCallN(23, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomAbstractGroupedEdit) Text() string {
+func (m *TCustomAbstractGroupedEdit) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customAbstractGroupedEditAPI().SysCallN(24, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customAbstractGroupedEditAPI().SysCallN(24, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomAbstractGroupedEdit) SetText(value string) {
@@ -387,12 +393,15 @@ func (m *TCustomAbstractGroupedEdit) SetText(value string) {
 	customAbstractGroupedEditAPI().SysCallN(24, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomAbstractGroupedEdit) TextHint() string {
+func (m *TCustomAbstractGroupedEdit) TextHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customAbstractGroupedEditAPI().SysCallN(25, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customAbstractGroupedEditAPI().SysCallN(25, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomAbstractGroupedEdit) SetTextHint(value string) {

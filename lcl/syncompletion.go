@@ -64,12 +64,15 @@ func (m *TSynCompletion) SetShortCut(value types.TShortCut) {
 	synCompletionAPI().SysCallN(3, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TSynCompletion) EndOfTokenChr() string {
+func (m *TSynCompletion) EndOfTokenChr() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synCompletionAPI().SysCallN(4, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synCompletionAPI().SysCallN(4, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynCompletion) SetEndOfTokenChr(value string) {

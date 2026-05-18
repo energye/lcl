@@ -167,12 +167,15 @@ func (m *TSynAnySyn) SetIdentifierAttri(value ISynHighlighterAttributes) {
 	synAnySynAPI().SysCallN(8, 1, m.Instance(), base.GetObjectUintptr(value))
 }
 
-func (m *TSynAnySyn) IdentifierChars() string {
+func (m *TSynAnySyn) IdentifierChars() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synAnySynAPI().SysCallN(9, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synAnySynAPI().SysCallN(9, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynAnySyn) SetIdentifierChars(value string) {

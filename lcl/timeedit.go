@@ -134,12 +134,15 @@ func (m *TTimeEdit) SetDefaultNow(value bool) {
 	timeEditAPI().SysCallN(5, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TTimeEdit) ButtonCaption() string {
+func (m *TTimeEdit) ButtonCaption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := timeEditAPI().SysCallN(6, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	timeEditAPI().SysCallN(6, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTimeEdit) SetButtonCaption(value string) {
@@ -164,12 +167,15 @@ func (m *TTimeEdit) SetButtonCursor(value types.TCursor) {
 	timeEditAPI().SysCallN(7, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TTimeEdit) ButtonHint() string {
+func (m *TTimeEdit) ButtonHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := timeEditAPI().SysCallN(8, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	timeEditAPI().SysCallN(8, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTimeEdit) SetButtonHint(value string) {
@@ -419,12 +425,15 @@ func (m *TTimeEdit) SetSpacing(value int32) {
 	timeEditAPI().SysCallN(24, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TTimeEdit) TimeAMString() string {
+func (m *TTimeEdit) TimeAMString() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := timeEditAPI().SysCallN(25, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	timeEditAPI().SysCallN(25, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTimeEdit) SetTimeAMString(value string) {
@@ -434,12 +443,15 @@ func (m *TTimeEdit) SetTimeAMString(value string) {
 	timeEditAPI().SysCallN(25, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TTimeEdit) TimeFormat() string {
+func (m *TTimeEdit) TimeFormat() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := timeEditAPI().SysCallN(26, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	timeEditAPI().SysCallN(26, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTimeEdit) SetTimeFormat(value string) {
@@ -449,12 +461,15 @@ func (m *TTimeEdit) SetTimeFormat(value string) {
 	timeEditAPI().SysCallN(26, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TTimeEdit) TimeSeparator() string {
+func (m *TTimeEdit) TimeSeparator() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := timeEditAPI().SysCallN(27, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	timeEditAPI().SysCallN(27, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTimeEdit) SetTimeSeparator(value string) {
@@ -464,12 +479,15 @@ func (m *TTimeEdit) SetTimeSeparator(value string) {
 	timeEditAPI().SysCallN(27, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TTimeEdit) TimePMString() string {
+func (m *TTimeEdit) TimePMString() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := timeEditAPI().SysCallN(28, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	timeEditAPI().SysCallN(28, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTimeEdit) SetTimePMString(value string) {

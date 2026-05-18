@@ -57,12 +57,15 @@ func (m *TPaperSize) Height() int32 {
 	return int32(r)
 }
 
-func (m *TPaperSize) PaperName() string {
+func (m *TPaperSize) PaperName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := paperSizeAPI().SysCallN(4, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	paperSizeAPI().SysCallN(4, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TPaperSize) SetPaperName(value string) {
@@ -72,12 +75,15 @@ func (m *TPaperSize) SetPaperName(value string) {
 	paperSizeAPI().SysCallN(4, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TPaperSize) DefaultPaperName() string {
+func (m *TPaperSize) DefaultPaperName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := paperSizeAPI().SysCallN(5, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	paperSizeAPI().SysCallN(5, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TPaperSize) PaperRect() (result TPaperRect) {

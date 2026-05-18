@@ -67,12 +67,15 @@ func (m *TImageButton) Click() {
 	imageButtonAPI().SysCallN(1, m.Instance())
 }
 
-func (m *TImageButton) CaptionToStr() string {
+func (m *TImageButton) CaptionToStr() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := imageButtonAPI().SysCallN(2, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	imageButtonAPI().SysCallN(2, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TImageButton) SetCaptionToStr(value string) {

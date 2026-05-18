@@ -69,12 +69,15 @@ func (m *TMaskEdit) IsMasked() bool {
 	return api.GoBool(r)
 }
 
-func (m *TMaskEdit) EditText() string {
+func (m *TMaskEdit) EditText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := maskEditAPI().SysCallN(2, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	maskEditAPI().SysCallN(2, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TMaskEdit) SetEditText(value string) {
@@ -189,12 +192,15 @@ func (m *TMaskEdit) SetParentShowHint(value bool) {
 	maskEditAPI().SysCallN(9, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TMaskEdit) EditMask() string {
+func (m *TMaskEdit) EditMask() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := maskEditAPI().SysCallN(10, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	maskEditAPI().SysCallN(10, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TMaskEdit) SetEditMask(value string) {

@@ -353,12 +353,15 @@ func (m *TCustomComboBox) SetSelStart(value int32) {
 	customComboBoxAPI().SysCallN(24, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomComboBox) SelText() string {
+func (m *TCustomComboBox) SelText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customComboBoxAPI().SysCallN(25, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customComboBoxAPI().SysCallN(25, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomComboBox) SetSelText(value string) {
@@ -383,12 +386,15 @@ func (m *TCustomComboBox) SetStyle(value types.TComboBoxStyle) {
 	customComboBoxAPI().SysCallN(26, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TCustomComboBox) Text() string {
+func (m *TCustomComboBox) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customComboBoxAPI().SysCallN(27, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customComboBoxAPI().SysCallN(27, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomComboBox) SetText(value string) {
@@ -398,12 +404,15 @@ func (m *TCustomComboBox) SetText(value string) {
 	customComboBoxAPI().SysCallN(27, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomComboBox) TextHint() string {
+func (m *TCustomComboBox) TextHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customComboBoxAPI().SysCallN(28, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customComboBoxAPI().SysCallN(28, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomComboBox) SetTextHint(value string) {

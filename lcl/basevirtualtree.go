@@ -1509,12 +1509,15 @@ func (m *TBaseVirtualTree) EditLink() (result IVTEditLink) {
 	return
 }
 
-func (m *TBaseVirtualTree) EmptyListMessage() string {
+func (m *TBaseVirtualTree) EmptyListMessage() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := baseVirtualTreeAPI().SysCallN(160, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	baseVirtualTreeAPI().SysCallN(160, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TBaseVirtualTree) SetEmptyListMessage(value string) {
@@ -1774,12 +1777,15 @@ func (m *TBaseVirtualTree) RootNode() types.PVirtualNode {
 	return types.PVirtualNode(r)
 }
 
-func (m *TBaseVirtualTree) SearchBuffer() string {
+func (m *TBaseVirtualTree) SearchBuffer() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := baseVirtualTreeAPI().SysCallN(180, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	baseVirtualTreeAPI().SysCallN(180, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TBaseVirtualTree) Selected(node types.PVirtualNode) bool {

@@ -435,12 +435,15 @@ func (m *TTreeNode) GetPrevVisibleSibling(enabledOnly bool) ITreeNode {
 	return AsTreeNode(r)
 }
 
-func (m *TTreeNode) GetTextPath() string {
+func (m *TTreeNode) GetTextPath() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := treeNodeAPI().SysCallN(39, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	treeNodeAPI().SysCallN(39, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTreeNode) HasAsParent(value ITreeNode) bool {
@@ -886,12 +889,15 @@ func (m *TTreeNode) SubTreeCount() int32 {
 	return int32(r)
 }
 
-func (m *TTreeNode) Text() string {
+func (m *TTreeNode) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := treeNodeAPI().SysCallN(83, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	treeNodeAPI().SysCallN(83, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TTreeNode) SetText(value string) {

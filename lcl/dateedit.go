@@ -85,12 +85,15 @@ type TDateEdit struct {
 	TCustomEditButton
 }
 
-func (m *TDateEdit) GetDateFormat() string {
+func (m *TDateEdit) GetDateFormat() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := dateEditAPI().SysCallN(1, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	dateEditAPI().SysCallN(1, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDateEdit) AutoSelected() bool {
@@ -184,12 +187,15 @@ func (m *TDateEdit) SetDateOrder(value types.TDateOrder) {
 	dateEditAPI().SysCallN(8, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateEdit) DateFormat() string {
+func (m *TDateEdit) DateFormat() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := dateEditAPI().SysCallN(9, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	dateEditAPI().SysCallN(9, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDateEdit) SetDateFormat(value string) {
@@ -244,12 +250,15 @@ func (m *TDateEdit) SetButtonOnlyWhenFocused(value bool) {
 	dateEditAPI().SysCallN(12, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TDateEdit) ButtonCaption() string {
+func (m *TDateEdit) ButtonCaption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := dateEditAPI().SysCallN(13, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	dateEditAPI().SysCallN(13, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDateEdit) SetButtonCaption(value string) {
@@ -274,12 +283,15 @@ func (m *TDateEdit) SetButtonCursor(value types.TCursor) {
 	dateEditAPI().SysCallN(14, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TDateEdit) ButtonHint() string {
+func (m *TDateEdit) ButtonHint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := dateEditAPI().SysCallN(15, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	dateEditAPI().SysCallN(15, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TDateEdit) SetButtonHint(value string) {

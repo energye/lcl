@@ -144,12 +144,15 @@ func (m *TStream) ReadQWord() uintptr {
 	return uintptr(r)
 }
 
-func (m *TStream) ReadAnsiString() string {
+func (m *TStream) ReadAnsiString() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := streamAPI().SysCallN(12, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	streamAPI().SysCallN(12, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStream) ReadBuffer(buffer *uintptr, count int32) {

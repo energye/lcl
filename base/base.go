@@ -9,8 +9,9 @@
 package base
 
 import (
-	"github.com/energye/lcl/types"
 	"sync"
+
+	"github.com/energye/lcl/types"
 
 	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/api/imports"

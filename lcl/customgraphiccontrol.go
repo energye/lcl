@@ -235,12 +235,15 @@ func (m *TCustomGraphicControl) SetParentShowHint(value bool) {
 	customGraphicControlAPI().SysCallN(11, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TCustomGraphicControl) SessionProperties() string {
+func (m *TCustomGraphicControl) SessionProperties() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customGraphicControlAPI().SysCallN(12, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customGraphicControlAPI().SysCallN(12, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomGraphicControl) SetSessionProperties(value string) {
@@ -250,12 +253,15 @@ func (m *TCustomGraphicControl) SetSessionProperties(value string) {
 	customGraphicControlAPI().SysCallN(12, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TCustomGraphicControl) Text() string {
+func (m *TCustomGraphicControl) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customGraphicControlAPI().SysCallN(13, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customGraphicControlAPI().SysCallN(13, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomGraphicControl) SetText(value string) {

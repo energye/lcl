@@ -106,12 +106,15 @@ func (m *TSynCustomHighlighter) GetRange() uintptr {
 	return uintptr(r)
 }
 
-func (m *TSynCustomHighlighter) GetToken() string {
+func (m *TSynCustomHighlighter) GetToken() (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := synCustomHighlighterAPI().SysCallN(5, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synCustomHighlighterAPI().SysCallN(5, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynCustomHighlighter) GetEndOfLineAttribute() ISynHighlighterAttributes {
@@ -396,12 +399,15 @@ func (m *TSynCustomHighlighter) SetWordBreakChars(value types.TSynIdentChars) {
 	synCustomHighlighterAPI().SysCallN(40, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TSynCustomHighlighter) LanguageName() string {
+func (m *TSynCustomHighlighter) LanguageName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synCustomHighlighterAPI().SysCallN(41, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synCustomHighlighterAPI().SysCallN(41, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynCustomHighlighter) AttrCount() int32 {
@@ -428,12 +434,15 @@ func (m *TSynCustomHighlighter) Capabilities() types.TSynHighlighterCapabilities
 	return types.TSynHighlighterCapabilities(r)
 }
 
-func (m *TSynCustomHighlighter) SampleSource() string {
+func (m *TSynCustomHighlighter) SampleSource() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synCustomHighlighterAPI().SysCallN(45, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synCustomHighlighterAPI().SysCallN(45, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynCustomHighlighter) SetSampleSource(value string) {
@@ -459,12 +468,15 @@ func (m *TSynCustomHighlighter) DividerDrawConfigCount() int32 {
 	return int32(r)
 }
 
-func (m *TSynCustomHighlighter) DefaultFilter() string {
+func (m *TSynCustomHighlighter) DefaultFilter() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := synCustomHighlighterAPI().SysCallN(48, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	synCustomHighlighterAPI().SysCallN(48, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TSynCustomHighlighter) SetDefaultFilter(value string) {

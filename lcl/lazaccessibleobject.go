@@ -209,12 +209,15 @@ func (m *TLazAccessibleObject) RemoveChildAccessibleObject(object ILazAccessible
 	lazAccessibleObjectAPI().SysCallN(19, m.Instance(), base.GetObjectUintptr(object), api.PasBool(freeObject))
 }
 
-func (m *TLazAccessibleObject) AccessibleName() string {
+func (m *TLazAccessibleObject) AccessibleName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := lazAccessibleObjectAPI().SysCallN(20, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	lazAccessibleObjectAPI().SysCallN(20, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TLazAccessibleObject) SetAccessibleNameToStr(value string) {
@@ -224,12 +227,15 @@ func (m *TLazAccessibleObject) SetAccessibleNameToStr(value string) {
 	lazAccessibleObjectAPI().SysCallN(20, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TLazAccessibleObject) AccessibleDescription() string {
+func (m *TLazAccessibleObject) AccessibleDescription() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := lazAccessibleObjectAPI().SysCallN(21, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	lazAccessibleObjectAPI().SysCallN(21, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TLazAccessibleObject) SetAccessibleDescriptionToStr(value string) {
@@ -239,12 +245,15 @@ func (m *TLazAccessibleObject) SetAccessibleDescriptionToStr(value string) {
 	lazAccessibleObjectAPI().SysCallN(21, 1, m.Instance(), api.PasStr(value))
 }
 
-func (m *TLazAccessibleObject) AccessibleValue() string {
+func (m *TLazAccessibleObject) AccessibleValue() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := lazAccessibleObjectAPI().SysCallN(22, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	lazAccessibleObjectAPI().SysCallN(22, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TLazAccessibleObject) SetAccessibleValueToStr(value string) {

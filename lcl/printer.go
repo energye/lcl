@@ -165,12 +165,15 @@ func (m *TPrinter) SetPrinterIndex(value int32) {
 	printerAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TPrinter) PrinterName() string {
+func (m *TPrinter) PrinterName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := printerAPI().SysCallN(13, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	printerAPI().SysCallN(13, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TPrinter) PaperSize() IPaperSize {
@@ -227,12 +230,15 @@ func (m *TPrinter) Printers() IStrings {
 	return AsStrings(r)
 }
 
-func (m *TPrinter) FileName() string {
+func (m *TPrinter) FileName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := printerAPI().SysCallN(19, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	printerAPI().SysCallN(19, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TPrinter) SetFileName(value string) {
@@ -313,12 +319,15 @@ func (m *TPrinter) Printing() bool {
 	return api.GoBool(r)
 }
 
-func (m *TPrinter) Title() string {
+func (m *TPrinter) Title() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := printerAPI().SysCallN(28, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	printerAPI().SysCallN(28, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TPrinter) SetTitle(value string) {
@@ -383,20 +392,26 @@ func (m *TPrinter) SetRawMode(value bool) {
 	printerAPI().SysCallN(34, 1, m.Instance(), api.PasBool(value))
 }
 
-func (m *TPrinter) DefaultBinName() string {
+func (m *TPrinter) DefaultBinName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := printerAPI().SysCallN(35, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	printerAPI().SysCallN(35, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TPrinter) BinName() string {
+func (m *TPrinter) BinName() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := printerAPI().SysCallN(36, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	printerAPI().SysCallN(36, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TPrinter) SetBinName(value string) {

@@ -539,12 +539,15 @@ func (m *TMenuItem) SetAutoLineReduction(value types.TMenuItemAutoFlag) {
 	menuItemAPI().SysCallN(50, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TMenuItem) Caption() string {
+func (m *TMenuItem) Caption() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := menuItemAPI().SysCallN(51, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	menuItemAPI().SysCallN(51, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TMenuItem) SetCaption(value string) {
@@ -659,12 +662,15 @@ func (m *TMenuItem) SetHelpContext(value types.THelpContext) {
 	menuItemAPI().SysCallN(58, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TMenuItem) Hint() string {
+func (m *TMenuItem) Hint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := menuItemAPI().SysCallN(59, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	menuItemAPI().SysCallN(59, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TMenuItem) SetHint(value string) {

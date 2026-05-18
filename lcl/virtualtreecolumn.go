@@ -188,12 +188,15 @@ func (m *TVirtualTreeColumn) SetCaptionAlignment(value types.TAlignment) {
 	virtualTreeColumnAPI().SysCallN(12, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVirtualTreeColumn) CaptionText() string {
+func (m *TVirtualTreeColumn) CaptionText() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := virtualTreeColumnAPI().SysCallN(13, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	virtualTreeColumnAPI().SysCallN(13, m.Instance(), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TVirtualTreeColumn) CheckType() types.TCheckType {
@@ -271,12 +274,15 @@ func (m *TVirtualTreeColumn) SetDefaultSortDirection(value types.LVTreesTSortDir
 	virtualTreeColumnAPI().SysCallN(18, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVirtualTreeColumn) Hint() string {
+func (m *TVirtualTreeColumn) Hint() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := virtualTreeColumnAPI().SysCallN(19, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	virtualTreeColumnAPI().SysCallN(19, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TVirtualTreeColumn) SetHint(value string) {
@@ -436,12 +442,15 @@ func (m *TVirtualTreeColumn) SetTag(value uint32) {
 	virtualTreeColumnAPI().SysCallN(29, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TVirtualTreeColumn) Text() string {
+func (m *TVirtualTreeColumn) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := virtualTreeColumnAPI().SysCallN(30, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	virtualTreeColumnAPI().SysCallN(30, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TVirtualTreeColumn) SetText(value string) {

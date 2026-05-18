@@ -102,12 +102,15 @@ func (m *TCustomColorListBox) SetColors(index int32, value types.TColor) {
 	customColorListBoxAPI().SysCallN(4, 1, m.Instance(), uintptr(index), uintptr(value))
 }
 
-func (m *TCustomColorListBox) ColorNames(index int32) string {
+func (m *TCustomColorListBox) ColorNames(index int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customColorListBoxAPI().SysCallN(5, m.Instance(), uintptr(index))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customColorListBoxAPI().SysCallN(5, m.Instance(), uintptr(index), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomColorListBox) SelectedToColor() types.TColor {

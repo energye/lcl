@@ -122,12 +122,15 @@ func (m *TStatusPanel) SetStyle(value types.TStatusPanelStyle) {
 	statusPanelAPI().SysCallN(6, 1, m.Instance(), uintptr(value))
 }
 
-func (m *TStatusPanel) Text() string {
+func (m *TStatusPanel) Text() (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := statusPanelAPI().SysCallN(7, 0, m.Instance())
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	statusPanelAPI().SysCallN(7, 0, m.Instance(), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TStatusPanel) SetText(value string) {

@@ -58,68 +58,92 @@ func (m *TCustomVirtualStringTree) ContentToClipboard(format types.TClipboardFor
 	return types.HGLOBAL(r)
 }
 
-func (m *TCustomVirtualStringTree) ContentToHTML(source types.TVSTTextSourceType, caption string) string {
+func (m *TCustomVirtualStringTree) ContentToHTML(source types.TVSTTextSourceType, caption string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customVirtualStringTreeAPI().SysCallN(3, m.Instance(), uintptr(source), api.PasStr(caption))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(3, m.Instance(), uintptr(source), api.PasStr(caption), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomVirtualStringTree) ContentToRTF(source types.TVSTTextSourceType) string {
+func (m *TCustomVirtualStringTree) ContentToRTF(source types.TVSTTextSourceType) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customVirtualStringTreeAPI().SysCallN(4, m.Instance(), uintptr(source))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(4, m.Instance(), uintptr(source), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomVirtualStringTree) ContentToAnsi(source types.TVSTTextSourceType, separator string) string {
+func (m *TCustomVirtualStringTree) ContentToAnsi(source types.TVSTTextSourceType, separator string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customVirtualStringTreeAPI().SysCallN(5, m.Instance(), uintptr(source), api.PasStr(separator))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(5, m.Instance(), uintptr(source), api.PasStr(separator), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomVirtualStringTree) ContentToText(source types.TVSTTextSourceType, separator string) string {
+func (m *TCustomVirtualStringTree) ContentToText(source types.TVSTTextSourceType, separator string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customVirtualStringTreeAPI().SysCallN(6, m.Instance(), uintptr(source), api.PasStr(separator))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(6, m.Instance(), uintptr(source), api.PasStr(separator), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomVirtualStringTree) ContentToUnicode(source types.TVSTTextSourceType, separator string) string {
+func (m *TCustomVirtualStringTree) ContentToUnicode(source types.TVSTTextSourceType, separator string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customVirtualStringTreeAPI().SysCallN(7, m.Instance(), uintptr(source), api.PasStr(separator))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(7, m.Instance(), uintptr(source), api.PasStr(separator), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomVirtualStringTree) ContentToUTF16(source types.TVSTTextSourceType, separator string) string {
+func (m *TCustomVirtualStringTree) ContentToUTF16(source types.TVSTTextSourceType, separator string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customVirtualStringTreeAPI().SysCallN(8, m.Instance(), uintptr(source), api.PasStr(separator))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(8, m.Instance(), uintptr(source), api.PasStr(separator), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomVirtualStringTree) ContentToUTF8(source types.TVSTTextSourceType, separator string) string {
+func (m *TCustomVirtualStringTree) ContentToUTF8(source types.TVSTTextSourceType, separator string) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customVirtualStringTreeAPI().SysCallN(9, m.Instance(), uintptr(source), api.PasStr(separator))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(9, m.Instance(), uintptr(source), api.PasStr(separator), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomVirtualStringTree) Path(node types.PVirtualNode, column int32, textType types.TVSTTextType, delimiter uint16) string {
+func (m *TCustomVirtualStringTree) Path(node types.PVirtualNode, column int32, textType types.TVSTTextType, delimiter uint16) (result string) {
 	if !m.IsValid() {
 		return ""
 	}
-	r := customVirtualStringTreeAPI().SysCallN(10, m.Instance(), uintptr(node), uintptr(column), uintptr(textType), uintptr(delimiter))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(10, m.Instance(), uintptr(node), uintptr(column), uintptr(textType), uintptr(delimiter), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomVirtualStringTree) SaveToCSVFile(fileNameWithPath string, includeHeading bool) bool {
@@ -151,28 +175,37 @@ func (m *TCustomVirtualStringTree) RemoveFromSelection(node types.PVirtualNode) 
 	customVirtualStringTreeAPI().SysCallN(14, m.Instance(), uintptr(node))
 }
 
-func (m *TCustomVirtualStringTree) ImageText(node types.PVirtualNode, kind types.TVTImageKind, column int32) string {
+func (m *TCustomVirtualStringTree) ImageText(node types.PVirtualNode, kind types.TVTImageKind, column int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customVirtualStringTreeAPI().SysCallN(15, m.Instance(), uintptr(node), uintptr(kind), uintptr(column))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(15, m.Instance(), uintptr(node), uintptr(kind), uintptr(column), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomVirtualStringTree) StaticText(node types.PVirtualNode, column int32) string {
+func (m *TCustomVirtualStringTree) StaticText(node types.PVirtualNode, column int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customVirtualStringTreeAPI().SysCallN(16, m.Instance(), uintptr(node), uintptr(column))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(16, m.Instance(), uintptr(node), uintptr(column), uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
-func (m *TCustomVirtualStringTree) Text(node types.PVirtualNode, column int32) string {
+func (m *TCustomVirtualStringTree) Text(node types.PVirtualNode, column int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customVirtualStringTreeAPI().SysCallN(17, 0, m.Instance(), uintptr(node), uintptr(column))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customVirtualStringTreeAPI().SysCallN(17, 0, m.Instance(), uintptr(node), uintptr(column), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomVirtualStringTree) SetText(node types.PVirtualNode, column int32, value string) {

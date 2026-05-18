@@ -126,12 +126,15 @@ func (m *TCustomStringGrid) SaveToCSVFile(fileName string, delimiter uint16, wri
 	customStringGridAPI().SysCallN(11, m.Instance(), api.PasStr(fileName), uintptr(delimiter), api.PasBool(writeTitles), api.PasBool(visibleColumnsOnly))
 }
 
-func (m *TCustomStringGrid) Cells(col int32, row int32) string {
+func (m *TCustomStringGrid) Cells(col int32, row int32) (result string) {
 	if !m.IsValid() {
-		return ""
+		return
 	}
-	r := customStringGridAPI().SysCallN(12, 0, m.Instance(), uintptr(col), uintptr(row))
-	return api.GoStr(r)
+	strBuf := api.NewStringBuffer(0, 0)
+	customStringGridAPI().SysCallN(12, 0, m.Instance(), uintptr(col), uintptr(row), 0, uintptr(base.UnsafePointer(&strBuf.Data)), uintptr(base.UnsafePointer(&strBuf.Size)))
+	defer strBuf.Release()
+	result = strBuf.String()
+	return
 }
 
 func (m *TCustomStringGrid) SetCells(col int32, row int32, value string) {
