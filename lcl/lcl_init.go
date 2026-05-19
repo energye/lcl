@@ -39,11 +39,12 @@ var (
 )
 
 func init() {
-	runtime.LockOSThread()
+	//runtime.LockOSThread() // macOS
 }
 
 // Init LCL
 func Init() {
+	runtime.LockOSThread()
 	initOnce.Do(func() {
 		defer func() {
 			if err := recover(); err != nil {
