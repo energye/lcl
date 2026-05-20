@@ -18,6 +18,12 @@ import (
 	"github.com/energye/lcl/types"
 )
 
+var beforeRun []func()
+
+func SetOnBeforeRun(fn func()) {
+	beforeRun = append(beforeRun, fn)
+}
+
 type IApp interface {
 	IApplication
 	Initialize()
@@ -28,6 +34,17 @@ type IApp interface {
 
 type TApp struct {
 	TApplication
+}
+
+func Run(forms ...IEngForm) {
+	Application.Initialize()
+	Application.SetMainFormOnTaskBar(true)
+	Application.SetScaled(true)
+	for _, fn := range beforeRun {
+		fn()
+	}
+	Application.NewForms(forms...)
+	Application.Run()
 }
 
 func (m *TApp) NewForms(forms ...IEngForm) {
