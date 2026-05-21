@@ -39,13 +39,13 @@ func GetDLLName() string {
 	case "windows":
 		ext = "dll"
 	}
-	// windows, macOS: libenergy-[arch].xx
-	// linux:  libenergy-[arch]-[ws].xx
+	// windows, macOS: dev - libenergy-[arch].xx | prod - libenergy.xx
+	// linux: dev - libenergy-[arch]-[ws].xx | prod - libenergy-[ws].xx
 	var name string
 	if IsDev {
 		name = fmt.Sprintf("libenergy-%s%s.%s", goarch, ws, ext)
 	} else {
-		name = fmt.Sprintf("libenergy-%s.%s", ws, ext)
+		name = fmt.Sprintf("libenergy%s.%s", ws, ext)
 	}
 	return name
 }
