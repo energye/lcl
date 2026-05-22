@@ -43,8 +43,7 @@ func loadLibENERGY() {
 			//lib, err = imports.NewDLL(libPath)
 		} else if tool.IsDarwin() {
 			// MacOS 固定加载目录
-			isUniversal := os.Getenv("--universal-binary") == "universal"
-			if isUniversal {
+			if libname.EnableUniversalBinary {
 				libPath = "@executable_path/../Frameworks/" + libname.DarwinUniversalBinaryName
 			} else {
 				libPath = "@executable_path/../Frameworks/" + libname.GetDLLName()

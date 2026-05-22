@@ -340,8 +340,7 @@ func createHelperExe(mainExec, execFile string, isLinked bool) {
 
 func dllName() string {
 	name := libname.GetDLLName()
-	isUniversal := os.Getenv("--universal-binary") == "universal"
-	if isUniversal {
+	if libname.EnableUniversalBinary {
 		name = libname.DarwinUniversalBinaryName
 	}
 	return name

@@ -10,13 +10,16 @@ package libname
 
 import (
 	"fmt"
-	"os"
 	"runtime"
 )
 
-const DarwinUniversalBinaryName = "libenergy-universal.dylib"
+const DarwinUniversalBinaryName = "libenergy-universal.dylib" // macOS 通用二进制库名称
 
-var LibName string // 加载完成后该变量可被置空
+var (
+	LibName               string // 加载完成后该变量可被置空
+	UseWS                 string // 用于控制后台组件: win32/cocoa/gtk2/gtk3
+	EnableUniversalBinary bool   // 用于启用通用二进制库: macOS 10.15.x
+)
 
 // GetDLLName 用于获取当前系统架构的 lib 库
 func GetDLLName() string {
@@ -28,8 +31,8 @@ func GetDLLName() string {
 		ext = "dylib"
 	case "linux":
 		ext = "so"
-		if envws := os.Getenv("--ws"); envws != "" {
-			ws = envws // use gtk3
+		if UseWS == "gtk3" {
+			ws = "gtk3" // use gtk3
 		} else {
 			ws = "gtk2"
 		}
