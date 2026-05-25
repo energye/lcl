@@ -7,7 +7,6 @@
 //----------------------------------------
 
 //go:build darwin
-// +build darwin
 
 package command
 
@@ -15,4 +14,8 @@ import "syscall"
 
 func HideWindow(bool bool) *syscall.SysProcAttr {
 	return nil
+}
+
+func (m *CMD) Kill() error {
+	return m.Cmd.Process.Kill()
 }

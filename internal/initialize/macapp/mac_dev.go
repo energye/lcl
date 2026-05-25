@@ -232,7 +232,6 @@ func (m *macApp) createCEFHelper() {
 		if m.isLinked {
 			cmd := command.NewCMD()
 			cmd.Dir = helper.macAppFrameworksDir
-			cmd.IsPrint = false
 			cmd.Command("ln", "-shf", "../../../libenergy.dylib", "libenergy.dylib")
 		} else {
 			helper.copyDylib()
@@ -329,7 +328,6 @@ func createHelperExe(mainExec, execFile string, isLinked bool) {
 		lnSource := fmt.Sprintf("../../../../MacOS/%s", mainExec)
 		cmd := command.NewCMD()
 		cmd.Dir = workDir
-		cmd.IsPrint = false
 		cmd.Command("ln", "-s", lnSource, lnDest)
 	} else {
 		if _, err := copyFile(mainExec, execFile); err == nil {

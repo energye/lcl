@@ -7,12 +7,18 @@
 //----------------------------------------
 
 //go:build windows
-// +build windows
 
 package command
 
-import "syscall"
+import (
+	"syscall"
+)
 
 func HideWindow(bool bool) *syscall.SysProcAttr {
 	return &syscall.SysProcAttr{HideWindow: bool}
+}
+
+func (m *CMD) Kill() error {
+	return m.Cmd.Process.Kill()
+	//return exec.Command("taskkill", "/T", "/F", "/PID", strconv.Itoa(m.Cmd.Process.Pid)).Run()
 }

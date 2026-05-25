@@ -10,10 +10,9 @@ package command
 
 import (
 	"bufio"
-	"fmt"
+	"context"
 	"os/exec"
 	"runtime"
-	"strings"
 )
 
 // Level 消息类型等级
@@ -36,7 +35,6 @@ func (m Level) String() string {
 
 type CMD struct {
 	HideWindow bool
-	IsPrint    bool
 	Dir        string
 	Console    func(data string, level Level)
 	BeforeRun  func(cmd *exec.Cmd)
@@ -44,28 +42,39 @@ type CMD struct {
 }
 
 func NewCMD() *CMD {
-	return &CMD{IsPrint: true}
+	return &CMD{}
 }
 
 func IsWindows() bool {
 	return runtime.GOOS == "windows"
 }
 
-func (m *CMD) Command(name string, args ...string) {
-	if m.IsPrint {
-		fmt.Println("run command:", name, strings.Join(args, " "))
+func (m *CMD) CommandContext(ctx context.Context, name string, args ...string) error {
+	if ctx == nil {
+		ctx = context.Background()
 	}
-	cmd := exec.Command(name, args...)
-	m.Cmd = cmd
+	m.Cmd = exec.CommandContext(ctx, name, args...)
+	m.Cmd.Cancel = func() error {
+		return m.Kill()
+	}
+	return m.waitRun()
+}
+
+func (m *CMD) Command(name string, args ...string) error {
+	m.Cmd = exec.Command(name, args...)
+	return m.waitRun()
+}
+
+func (m *CMD) waitRun() error {
 	if m.BeforeRun != nil {
 		m.BeforeRun(m.Cmd)
 	}
 	if m.Dir != "" {
-		cmd.Dir = m.Dir
+		m.Cmd.Dir = m.Dir
 	}
 	//隐藏调用外部命令窗口
 	if m.HideWindow && IsWindows() {
-		cmd.SysProcAttr = HideWindow(true)
+		m.Cmd.SysProcAttr = HideWindow(true)
 	}
 
 	console := func(data string, level Level) {
@@ -74,21 +83,18 @@ func (m *CMD) Command(name string, args ...string) {
 		}
 	}
 
-	stdout, err := cmd.StdoutPipe()
+	stdout, err := m.Cmd.StdoutPipe()
 	if err != nil {
-		console(err.Error(), LError)
-		return
+		return err
 	}
-	stderr, err := cmd.StderrPipe()
+	stderr, err := m.Cmd.StderrPipe()
 	if err != nil {
-		console(err.Error(), LError)
-		return
+		return err
 	}
 
-	err = cmd.Start()
+	err = m.Cmd.Start()
 	if err != nil {
-		console(err.Error(), LError)
-		return
+		return err
 	}
 
 	// 处理标准输出
@@ -100,9 +106,6 @@ func (m *CMD) Command(name string, args ...string) {
 
 		for scanner.Scan() {
 			data := string(scanner.Bytes())
-			if m.IsPrint {
-				fmt.Println(data)
-			}
 			console(data, LInfo)
 		}
 		if err := scanner.Err(); err != nil {
@@ -117,18 +120,11 @@ func (m *CMD) Command(name string, args ...string) {
 		scanner.Buffer(buf, 1024*1024)
 		for scanner.Scan() {
 			data := string(scanner.Bytes())
-			if m.IsPrint {
-				fmt.Println(data)
-			}
 			console(data, LInfo)
 		}
 		if err := scanner.Err(); err != nil {
 			console(err.Error(), LError)
 		}
 	}()
-
-	err = cmd.Wait()
-	if err != nil {
-		console(err.Error(), LError)
-	}
+	return m.Cmd.Wait()
 }
