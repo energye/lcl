@@ -120,7 +120,7 @@ func (m *CMD) waitRun() error {
 		scanner.Buffer(buf, 1024*1024)
 		for scanner.Scan() {
 			data := string(scanner.Bytes())
-			console(data, LInfo)
+			console(data, LError)
 		}
 		if err := scanner.Err(); err != nil {
 			console(err.Error(), LError)
