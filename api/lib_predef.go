@@ -531,6 +531,24 @@ func LocalesSetDefaultLangFormStream(stream uintptr, localeUnitName string, forc
 	return GoBool(r)
 }
 
+// SwitchLocalesI18n
+//
+//	切换本地国际化语言
+//	参数: jsonData 扁平 key=value
+//	数据结构 : key=value
+//	key: 组件名+属性名
+//  value: 翻译值
+//	panel1.caption=title text
+//	submitbtn.caption=ok submit
+func SwitchLocalesI18n(i18nData string) bool {
+	if i18nData == "" {
+		return false
+	}
+	data := []byte(i18nData)
+	r := libPreDefAPI().SysCallN(_SwitchLocalesI18n, uintptr(unsafe.Pointer(&data[0])), uintptr(int32(len(data))))
+	return GoBool(r)
+}
+
 // NewInstanceByComponentClass 通过组件类型创建新的实例
 // 该函数调用底层系统API来实例化指定类型的组件对象
 //
@@ -650,6 +668,7 @@ func libPreDefAPI() *imports.Imports {
 			/* iota */ imports.NewTable("LocalesSetDefaultLang", 0),
 			/* iota */ imports.NewTable("LocalesUnitResourceStringsFormStream", 0),
 			/* iota */ imports.NewTable("LocalesSetDefaultLangFormStream", 0),
+			/* iota */ imports.NewTable("SwitchLocalesI18n", 0),
 			/* iota */ imports.NewTable("NewInstanceByComponentClass", 0),
 			/* iota */ imports.NewTable("CreateObjectByComponent", 0),
 			/* iota */ imports.NewTable("IsObjectInstanceOf", 0),

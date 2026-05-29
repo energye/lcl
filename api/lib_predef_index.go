@@ -92,6 +92,7 @@ const (
 	_LocalesSetDefaultLang
 	_LocalesUnitResourceStringsFormStream
 	_LocalesSetDefaultLangFormStream
+	_SwitchLocalesI18n
 	_NewInstanceByComponentClass
 	_CreateObjectByComponent
 	_IsObjectInstanceOf

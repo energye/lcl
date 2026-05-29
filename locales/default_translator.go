@@ -7,9 +7,9 @@
 
 package locales
 
+import "C"
 import (
 	"embed"
-
 	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/lcl"
 )
@@ -47,7 +47,7 @@ func SwitchLCLLang(lang string) bool {
 }
 
 // SwitchDefaultLang
-// 切换默认语言
+// 切换默认语言（使用嵌入的LCL翻译文件）
 // lang: de, fr, ja, ko, ru, zh_CN
 // forceUpdate: 强制更新组件语言
 func SwitchDefaultLang(lang string, forceUpdate bool) bool {
@@ -64,4 +64,28 @@ func SwitchDefaultLang(lang string, forceUpdate bool) bool {
 	lcl.StreamHelper.Write(mem, data)
 	mem.SetPosition(0)
 	return api.LocalesSetDefaultLangFormStream(mem.Instance(), "", forceUpdate)
+}
+
+func SwitchAppLang(lang string, dir string, localeFileName string, forceUpdate bool) string {
+	return api.LocalesSetDefaultLang(lang, dir, localeFileName, forceUpdate)
+}
+
+func SwitchAppLangFromStream(data []byte, forceUpdate bool) bool {
+	mem := lcl.NewMemoryStream()
+	defer mem.Free()
+	lcl.StreamHelper.Write(mem, data)
+	mem.SetPosition(0)
+	return api.LocalesSetDefaultLangFormStream(mem.Instance(), "", forceUpdate)
+}
+
+// SwitchI18nLang
+//
+//	切换本地国际化语言
+//	数据结构 : key=value
+//		key: 组件名+属性名
+//		value: 翻译值
+//		panel1.caption=title text
+//		submitbtn.caption=ok submit
+func SwitchI18nLang(data string) bool {
+	return api.SwitchLocalesI18n(data)
 }
