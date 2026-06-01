@@ -31,11 +31,11 @@ var (
 	//  TApplicationProperties
 	//  component to provide design-time configuration settings for properties (including event handlers) which are automatically applied to Application at run-time.
 	Application IApp
-	Screen      IScreen    // 屏幕
-	Mouse       IMouse     // 鼠标
-	Clipboard   IClipboard // 剪切板
-	Printer     IPrinter   // 打印机
-	initOnce    sync.Once
+	Screen      IScreen    // Screen
+	Mouse       IMouse     // Mouse
+	Clipboard   IClipboard // Clipboard
+	Printer     IPrinter   // Printer
+	initOnce    sync.Once  //
 )
 
 func init() {
@@ -53,25 +53,25 @@ func Init() {
 			}
 		}()
 
-		// 初始化
+		// Initialize runtime libenergy
 		initialize.Initialize()
 
-		// 注册 LCL 对象事件回调
+		// Register LCL object event callbacks
 		api.SetEventCallback(eventCallback, api.EctLCL)
-		// 注册 LCL 对象事件回调移除
+		// Unregister LCL object event callbacks
 		api.SetEventCallback(removeEventCallback, api.EctLCLRemove)
-		// 注册 消息事件回调
+		// Register message event callbacks
 		api.SetEventCallback(messageCallback, api.EctMessage)
-		// 注册 窗口创建时回调
+		// Register window creation callback
 		api.SetEventCallback(createParamsCallback, api.EctCreateParams)
-		// 注册 创建窗口参数回调
+		// Register window creation parameters callback
 		api.SetEventCallback(formCreateCallback, api.EctFormCreate)
-		// 注册 主线程同步 回调
+		// Register main thread synchronization callback
 		api.SetEventCallback(threadSyncCallback, api.EctUIThreadSync)
-		// 注册 主线程回调 异步
+		// Register asynchronous main thread callback
 		api.SetEventCallback(threadAsyncCallback, api.EctUIThreadAsync)
 
-		// 获取固定全局实例
+		// Get fixed global instance
 		Application = AsApp(api.Application_Instance())
 		Screen = AsScreen(api.Screen_Instance())
 		Mouse = AsMouse(api.Mouse_Instance())
