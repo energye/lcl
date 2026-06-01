@@ -13,15 +13,16 @@
 package initialize
 
 import (
+	"github.com/energye/lcl/api"
 	"github.com/energye/lcl/rtl"
 	"github.com/energye/lcl/rtl/version"
 )
 
 // Initialize
-// 初始化，运行时加载 LibENERGY
+// runtime libenergy
 func Initialize() {
-	// 加载 lib dll
 	loadLibENERGY()
+	api.Init()
 	// rtl
 	rtl.Init()
 	// version

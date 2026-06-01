@@ -23,14 +23,13 @@ import (
 )
 
 func loadLibENERGY() {
-	// LCL 初始化时回调， 返回 lib 地址
 	api.SetOnLoadLibCallback(func() (lib imports.DLL, err error) {
 		libPath := libname.LibName
 		if libPath != "" {
-			// 自定义加载目录
+			// Custom Load Directory
 			// lib, err = imports.NewDLL(libPath)
 		} else if tool.IsDarwin() {
-			// MacOS 固定加载目录
+			// MacOS Fixed Load Directory
 			if libname.EnableUniversalBinary {
 				libPath = "@executable_path/../Frameworks/" + libname.DarwinUniversalBinaryName
 			} else {
@@ -39,27 +38,24 @@ func loadLibENERGY() {
 		} else {
 			// Windows, Linux
 			if currentPathLibPath := filepath.Join(exec.Dir, libname.GetDLLName()); tool.IsExist(currentPathLibPath) {
-				// 优先当前执行目录
+				// Prioritize Current Execution Directory
 				libPath = currentPathLibPath
 			} else {
-				// 最后尝试相对目录
+				// Finally Try Relative Directory
 				libPath = libname.GetDLLName()
 			}
 		}
-		// 加载 LibENERGY
 		if libPath != "" {
 			libname.LibName = libPath
 			lib, err = imports.NewDLL(libPath)
 		}
 		if lib == 0 {
 			if err != nil {
-				println("[ERROR] Load LibENERGY", err.Error())
+				println("[ERROR] Load runtime libenergy", err.Error())
 			}
 			println("[ERROR] Path:", libname.LibName)
-			panic(`Failed initialize LibENERGY`)
+			panic(`Failed initialize runtime libenergy`)
 		}
 		return
 	})
-	// 加载 lib dll
-	api.Init()
 }
