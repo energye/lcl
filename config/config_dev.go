@@ -30,8 +30,7 @@ func init() {
 		tempConfig := &Config{}
 
 		if !tool.IsExist(configPath) {
-			// 不存在创建 config.json
-			tempConfig.Framework = filepath.Join(exec.AppDir(), "frameworks")
+			tempConfig.Framework = filepath.Join(homeDIR, ".energy")
 			data, err := json.MarshalIndent(tempConfig, "", "\t")
 			if err != nil {
 				println("[ERROR] Create .energy config MarshalIndent Error:", err.Error())
@@ -44,7 +43,6 @@ func init() {
 			config = tempConfig
 			return
 		}
-		// 存在读取 config.json
 		data, err := os.ReadFile(configPath)
 		if err != nil {
 			println("[ERROR] ReadFile .energy Error:", err.Error())
