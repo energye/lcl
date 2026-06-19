@@ -8,7 +8,10 @@
 
 package types
 
-import "github.com/energye/lcl/types/colors"
+import (
+	"github.com/energye/lcl/types/colors"
+	"time"
+)
 
 // PByte = ^Byte = *uintptr
 type PByte = uintptr
@@ -117,7 +120,11 @@ type TFPJPEGCompressionQuality = uint8
 type TJPEGQualityRange = TFPJPEGCompressionQuality
 
 // TDateTime Double
-type TDateTime = float64
+type TDateTime float64
+
+func (m TDateTime) ToTime() time.Time {
+	return time.UnixMilli(int64(m))
+}
 
 // TDate TDateTime
 type TDate = TDateTime
