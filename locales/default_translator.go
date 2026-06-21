@@ -7,7 +7,6 @@
 
 package locales
 
-import "C"
 import (
 	"embed"
 	"github.com/energye/lcl/api"
