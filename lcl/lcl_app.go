@@ -30,10 +30,12 @@ type IApp interface {
 	NewForms(forms ...IEngForm)
 	NewForm(form IEngForm)
 	Run()
+	Initialed() bool
 }
 
 type TApp struct {
 	TApplication
+	initialed bool
 }
 
 func Run(forms ...IEngForm) {
@@ -73,6 +75,11 @@ func (m *TApp) Initialize() {
 	}
 	m.TApplication.Initialize()
 	api.Application_Initialize(m.Instance())
+	m.initialed = true
+}
+
+func (m *TApp) Initialed() bool {
+	return m.initialed
 }
 
 func (m *TApp) NewForm(form IEngForm) {

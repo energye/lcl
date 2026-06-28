@@ -16,16 +16,25 @@ import (
 
 // RunOnMainThreadAsync
 //
-//	主线程中执行, 异步
+//	Execute in main thread, async queue.
 func RunOnMainThreadAsync(callback TMainThreadAsyncProc) int {
-	id := queueAsyncCall.next(callback)
-	api.RunOnMainAsyncCall(id)
-	return id
+	if Application.Initialed() {
+		id := queueAsyncCall.next(callback)
+		api.RunOnMainAsyncCall(id)
+		return id
+	} else {
+		callback(0)
+	}
+	return 0
 }
 
 // RunOnMainThreadSync
 //
-//	主线程中执行, 同步
+//	Execute in main thread, synchronous.
 func RunOnMainThreadSync(callback TMainThreadSyncProc) {
-	api.RunOnMainSyncCall(callback)
+	if Application.Initialed() {
+		api.RunOnMainSyncCall(callback)
+	} else {
+		callback()
+	}
 }
