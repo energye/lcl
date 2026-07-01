@@ -45,6 +45,9 @@ func init() {
 // Init LCL
 func Init() {
 	runtime.LockOSThread()
+	api.SetOnReleaseCallback(func() {
+		runtime.UnlockOSThread()
+	})
 	initOnce.Do(func() {
 		defer func() {
 			if err := recover(); err != nil {

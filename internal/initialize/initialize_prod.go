@@ -37,7 +37,7 @@ func loadLibENERGY() {
 			}
 		} else {
 			// Windows, Linux
-			if currentPathLibPath := filepath.Join(exec.Dir, libname.GetDLLName()); tool.IsExist(currentPathLibPath) {
+			if currentPathLibPath := filepath.Join(exec.AppDir(), libname.GetDLLName()); tool.IsExist(currentPathLibPath) {
 				// Prioritize Current Execution Directory
 				libPath = currentPathLibPath
 			} else {
