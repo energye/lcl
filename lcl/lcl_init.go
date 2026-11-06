@@ -11,6 +11,7 @@
 package lcl
 
 import (
+	"github.com/energye/lcl/tool"
 	"os"
 	"runtime"
 	"sync"
@@ -39,12 +40,16 @@ var (
 )
 
 func init() {
-	//runtime.LockOSThread() // macOS
+	if tool.IsDarwin() {
+		runtime.LockOSThread() // macOS
+	}
 }
 
 // Init LCL
 func Init() {
-	runtime.LockOSThread()
+	if !tool.IsDarwin() {
+		runtime.LockOSThread()
+	}
 	api.SetOnReleaseCallback(func() {
 		runtime.UnlockOSThread()
 	})
