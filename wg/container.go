@@ -19,6 +19,7 @@ import (
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
 	"github.com/energye/lcl/wg/theme"
+	"github.com/energye/lcl/wg/ui"
 )
 
 // Painter 是"把一帧的内容录进 Canvas"的回调。
@@ -77,10 +78,16 @@ type Container struct {
 	// 内容树（M2 起是主路径；M1 的 Painter 仍然可用，两者可叠加）
 	scene   *scene.Node // 组合根：内容 + 浮层根
 	content *scene.Node
-	ov      *overlay.Host
-	focus   *input.FocusManager
-	disp    *input.Dispatcher
-	th      *theme.Data
+	// widget 是声明式内容源；widgetNode 是它最近一次 Build 出的节点。
+	// 只支持一个根 widget（表单页就是一棵树），与 Mount(*scene.Node) 二选一。
+	widget     ui.Widget
+	widgetNode *scene.Node
+	ov         *overlay.Host
+	focus      *input.FocusManager
+	disp       *input.Dispatcher
+	th         *theme.Data
+	// inherited 是沿组件树向下传的配置（BuildContext.Inherited 的数据源）。
+	inherited map[any]any
 	// layoutAll 表示下一帧必须整树重排（挂载/换主题/resize）。
 	layoutAll bool
 
@@ -204,18 +211,127 @@ func (c *Container) SetBackend(b raster.Backend) {
 // 挂载后下一次出帧会整树重排。重复挂载会替换旧根，旧树的脏标记不再生效。
 func (c *Container) Mount(root *scene.Node) {
 	c.mu.Lock()
-	old := c.content
-	c.content = root
-	c.layoutAll = true
-	c.rebuildScene()
-	if c.disp != nil && c.scene != nil {
-		c.disp.SetRoot(c.scene)
-	}
+	c.widget, c.widgetNode = nil, nil // 直接式树替换声明式树
+	c.swapContent(root)
 	c.mu.Unlock()
-	if old != nil && old != root {
+	c.RequestFrame()
+}
+
+// MountWidget 挂载一棵声明式组件树。
+//
+// 与 Mount(*scene.Node) 的关系：两者共用同一个内容槽，后挂的替换先挂的。
+// 直接式节点（图表/画布）仍可走 Mount；表单页这类有状态的界面走这里。
+//
+// SetState 之后组件由帧循环自动重建——不需要调用方手动 Mount 第二次。
+// 重建发生在帧内、布局之前，因此新节点的尺寸当帧就能生效。
+func (c *Container) MountWidget(w ui.Widget) {
+	if w == nil {
+		c.mu.Lock()
+		c.widget, c.widgetNode = nil, nil
+		c.mu.Unlock()
+		c.Mount(nil)
+		return
+	}
+	c.mu.Lock()
+	c.ensureScene()
+	ctx := c.buildContext()
+	node := w.Build(ctx)
+	if r, ok := w.(interface{ Rebuild() }); ok {
+		r.Rebuild() // 首次 Build 也要记账，否则诊断计数比实际少一次
+	}
+	if a, ok := w.(interface{ Attach(func()) }); ok {
+		a.Attach(c.requestFrame)
+	}
+	c.widget, c.widgetNode = w, node
+	c.swapContent(node)
+	c.mu.Unlock()
+	c.RequestFrame()
+}
+
+// SetInherited 设置沿组件树向下传递的值（主题之外的配置）。
+// key 用私有类型的值，避免不同组件包之间撞键。
+func (c *Container) SetInherited(key, value any) {
+	c.mu.Lock()
+	if c.inherited == nil {
+		c.inherited = make(map[any]any)
+	}
+	c.inherited[key] = value
+	c.mu.Unlock()
+}
+
+// Widget 返回当前挂载的组件（未挂载时为 nil）。
+func (c *Container) Widget() ui.Widget {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.widget
+}
+
+// buildContext 组装 Build 环境（调用方持锁）。
+func (c *Container) buildContext() *ui.BuildContext {
+	scale := c.opts.Scale
+	if scale <= 0 {
+		scale = 1
+	}
+	th := c.th
+	if th == nil {
+		th = c.opts.Theme
+	}
+	if th == nil {
+		th = theme.Default()
+	}
+	inherited := c.inherited
+	return &ui.BuildContext{
+		Theme: th,
+		Media: ui.MediaQuery{
+			DPI:   geom.Size{W: 96 * scale, H: 96 * scale},
+			Scale: scale, TextScale: 1,
+		},
+		Focus: c.focus, Overlay: c.ov, Scheduler: c.sched,
+		Inherited: func(key any) any {
+			if inherited == nil {
+				return nil
+			}
+			return inherited[key]
+		},
+	}
+}
+
+// rebuildDirtyWidget 在帧首重建脏组件（调用方持锁）。
+//
+// 直接在这里换 c.content 而不调 Mount：Mount 会抢 c.mu，而本方法运行在
+// FrameOnce 的锁内。两条路径的"换树后要做什么"因此抽到 swapContent 里共用。
+func (c *Container) rebuildDirtyWidget() bool {
+	if c.widget == nil {
+		return false
+	}
+	d, ok := c.widget.(interface{ Dirty() bool })
+	if !ok || !d.Dirty() {
+		return false
+	}
+	ctx := c.buildContext()
+	node := c.widget.Build(ctx)
+	if r, ok := c.widget.(interface{ Rebuild() }); ok {
+		r.Rebuild()
+	}
+	c.widgetNode = node
+	c.swapContent(node)
+	return true
+}
+
+// swapContent 替换内容槽并同步组合根/分发器（调用方持锁）。
+func (c *Container) swapContent(node *scene.Node) {
+	old := c.content
+	c.content = node
+	c.layoutAll = true
+	if c.scene != nil {
+		c.rebuildScene()
+		if c.disp != nil {
+			c.disp.SetRoot(c.scene)
+		}
+	}
+	if old != nil && old != node {
 		old.ClearDirtyTree()
 	}
-	c.RequestFrame()
 }
 
 // Content 返回内容树根（未挂载时为 nil）。
@@ -364,6 +480,10 @@ func (c *Container) SetTheme(t *theme.Data) {
 	c.th = t
 	c.opts.Theme = t
 	c.layoutAll = true
+	// 字号/行高/内边距都是度量，换主题必须让组件重新 Build。
+	if m, ok := c.widget.(interface{ MarkDirty() }); ok {
+		m.MarkDirty()
+	}
 	if c.scene != nil {
 		c.scene.Relayout(c.rootConstraints())
 	}
@@ -533,6 +653,10 @@ func (c *Container) Resize(w, h int) {
 		c.scene.SetSize2(float32(w), float32(h))
 		c.layoutAll = true
 	}
+	// 组件可能按 MediaQuery 分支（窄屏换布局），尺寸变了就得重建。
+	if m, ok := c.widget.(interface{ MarkDirty() }); ok {
+		m.MarkDirty()
+	}
 }
 
 // RequestFrame 请求在下一帧处理（无 damage 的场景，如异步结果回填）。
@@ -638,6 +762,11 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 	}
 
 	began := time.Now()
+	// 组件重建要在布局之前：SetState 改了内容，当帧就得用新尺寸排版，
+	// 否则界面会晚一帧才跟上状态（肉眼见"点一下慢半拍"）。
+	if c.rebuildDirtyWidget() {
+		c.requested = true
+	}
 	now := c.clock.Now()
 	var st frame.Stats
 	st.Index = c.index

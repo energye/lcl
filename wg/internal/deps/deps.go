@@ -104,7 +104,9 @@ var rules = map[string]ruleSet{
 	"input":   {allow: set("geom", "frame", "render", "scene", "text")},
 	"overlay": {allow: set("geom", "host", "input", "scene", "theme")},
 	"ui":      {allow: set("geom", "frame", "input", "overlay", "render", "scene", "text", "theme")},
-	"widgets": {allow: set("geom", "input", "scene", "theme", "ui")},
+	// widgets 需要 text 排版文本标签（Label/Input 的占位符与选区几何），
+	// 但只能经过 text 的纯排版 API，不得碰 GDI 句柄。
+	"widgets": {allow: set("geom", "input", "scene", "text", "theme", "ui")},
 	"compat":  {allow: set("geom", "scene", "ui", "widgets")},
 	"diag":    {allowAll: true, allowLCL: true},
 	"contracts": {
