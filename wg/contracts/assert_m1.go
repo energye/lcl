@@ -335,12 +335,27 @@ func assertDamageBubbles() error {
 
 func assertExplicitDegrade() error {
 	img := render.NewImageRef(2, 2)
+	// 必须填可见像素：全透明位图即使被正确执行，像素统计也是 0。
+	for i := range img.Pix {
+		img.Pix[i] = geom.RGBA(200, 60, 60).PremulBGRA()
+	}
 	dl := recordDL(func(c *render.Recorder) {
 		c.DrawImage(img, geom.RectXYWH(0, 0, 8, 8), render.ImageBilinear)
 	})
 	b := raster.NewBacking(16, 16)
-	st := software.New(software.Options{}).Draw(b, dl, b.Bounds())
-	if st.Degraded != 1 {
+	be := software.New(software.Options{})
+	st := be.Draw(b, dl, b.Bounds())
+	// C22 的正确形式是"要么执行、要么显式降级"，具体走哪条由后端 Caps 决定：
+	// 声明支持位图就必须真的画出像素，声明不支持就必须计数降级，
+	// 两种都不允许静默丢弃。
+	if be.Caps().Image {
+		if st.Degraded != 0 {
+			return fmt.Errorf("后端声明支持位图却计了降级: %d", st.Degraded)
+		}
+		if st.Pixels == 0 {
+			return fmt.Errorf("后端声明支持位图但没有画出任何像素")
+		}
+	} else if st.Degraded != 1 {
 		return fmt.Errorf("不支持位图时 degraded = %d，应为 1（不得静默丢弃）", st.Degraded)
 	}
 	// 支持的指令不得计入 degraded

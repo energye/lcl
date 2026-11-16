@@ -104,6 +104,8 @@ type Command struct {
 	Text int32
 	// Image 是图片 side table 索引（-1 表示无）。
 	Image int32
+	// Quality 是位图采样质量（仅 OpDrawImage 有效）。
+	Quality ImageQuality
 }
 
 // hasPath 表示该指令引用路径。

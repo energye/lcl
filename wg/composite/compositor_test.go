@@ -151,11 +151,28 @@ func TestTextWithoutPainterIsReported(t *testing.T) {
 	}
 }
 
+// degradeBackend 是"永远降级"的后端桩：用来验证 Compositor 把后端的
+// degraded 计数如实透传，而不是验证某个具体能力缺失。
+type degradeBackend struct{}
+
+func (degradeBackend) Name() string          { return "stub-degrade" }
+func (degradeBackend) Caps() raster.Caps     { return raster.Caps{} }
+func (degradeBackend) Draw(*raster.Backing, *render.DisplayList, geom.Rect) raster.Stats {
+	return raster.Stats{Degraded: 1}
+}
+
 func TestDegradedIsPropagated(t *testing.T) {
-	c := newComp(t, 40, 40)
-	img := render.NewImageRef(4, 4)
+	c, err := New(Options{
+		Backend:    degradeBackend{},
+		Width:      40,
+		Height:     40,
+		Background: geom.RGBA(255, 255, 255),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
 	dl := dlOf(func(r *render.Recorder) {
-		r.DrawImage(img, geom.RectXYWH(0, 0, 10, 10), render.ImageBilinear)
+		r.FillRect(geom.RectXYWH(0, 0, 10, 10), render.Fill(geom.RGBA(0, 0, 0)))
 	})
 	st, err := c.Draw(dl)
 	if err != nil {

@@ -259,15 +259,54 @@ func TestNoAAGivesHardEdges(t *testing.T) {
 	}
 }
 
-func TestDegradedImage(t *testing.T) {
+// TestDrawImagePaints：位图绘制必须真的落像素，且不是降级。
+// 曾经后端把 OpDrawImage 一律计 degraded，导致只画文字的场景"看起来通过"，
+// 位图本身完全不可见（真窗表现为空白框）。
+func TestDrawImagePaints(t *testing.T) {
 	b := newDst(20, 20)
 	img := render.NewImageRef(4, 4)
+	for i := range img.Pix {
+		img.Pix[i] = geom.RGBA(220, 40, 40).PremulBGRA()
+	}
 	dl := rec(func(c *render.Recorder) {
-		c.DrawImage(img, geom.RectXYWH(0, 0, 10, 10), render.ImageBilinear)
+		c.DrawImage(img, geom.RectXYWH(2, 2, 10, 10), render.ImageBilinear)
 	})
 	st := draw(dl, b)
-	if st.Degraded != 1 {
-		t.Fatalf("位图指令应计入 degraded，实际 %d", st.Degraded)
+	if st.Degraded != 0 {
+		t.Fatalf("位图绘制不应降级，实际 degraded=%d", st.Degraded)
+	}
+	if st.Pixels < 90 {
+		t.Fatalf("位图覆盖像素过少: %d", st.Pixels)
+	}
+	// 采样中心应为不透明红。
+	p := b.Pix()[7*20+7]
+	if r := (p >> 16) & 0xFF; r < 200 {
+		t.Fatalf("位图像素颜色不对: %08X", p)
+	}
+	if a := p >> 24; a != 255 {
+		t.Fatalf("不透明位图 alpha 应为 255，实际 %d", a)
+	}
+	// 目标矩形外必须干净。
+	if p := b.Pix()[0]; p != 0 {
+		t.Fatalf("位图溢出到目标矩形外: %08X", p)
+	}
+}
+
+// TestDrawImageNearestVsBilinear：三档采样都要能画，且 Nearest 保持硬边。
+func TestDrawImageNearestVsBilinear(t *testing.T) {
+	img := render.NewImageRef(2, 1)
+	img.Pix[0] = geom.RGBA(255, 0, 0).PremulBGRA()
+	img.Pix[1] = geom.RGBA(0, 0, 255).PremulBGRA()
+
+	for _, q := range []render.ImageQuality{render.ImageNearest, render.ImageBilinear, render.ImageMipmap} {
+		b := newDst(16, 8)
+		dl := rec(func(c *render.Recorder) {
+			c.DrawImage(img, geom.RectXYWH(0, 0, 16, 8), q)
+		})
+		st := draw(dl, b)
+		if st.Degraded != 0 || st.Pixels == 0 {
+			t.Fatalf("quality=%d degraded=%d pixels=%d", q, st.Degraded, st.Pixels)
+		}
 	}
 }
 

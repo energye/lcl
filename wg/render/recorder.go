@@ -341,7 +341,7 @@ func (r *Recorder) DrawImage(img *ImageRef, dst geom.Rect, q ImageQuality) {
 	}
 	r.dl.images = append(r.dl.images, img)
 	r.dl.append(Command{
-		Op: OpDrawImage, Rect: dev, Matrix: r.matrix,
+		Op: OpDrawImage, Rect: dev, Matrix: r.matrix, Quality: q,
 		Path: -1, Paint: -1, Text: -1, Image: int32(len(r.dl.images) - 1),
 	})
 }

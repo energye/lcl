@@ -73,7 +73,7 @@ func (b *Backend) Caps() raster.Caps {
 		ClipRect:       true,
 		ClipPath:       false, // M1 降级为包围盒
 		Text:           false, // 文字走 GDI 文字通道
-		Image:          false, // M2
+		Image:          true,
 		Transform:      true,
 	}
 }
@@ -153,8 +153,13 @@ func (b *Backend) Draw(dst *raster.Backing, dl *render.DisplayList, clip geom.Re
 			b.textOps++
 
 		case render.OpDrawImage:
-			// M1 未实现位图绘制：显式计数，不静默丢弃（C22）
-			total.Degraded++
+			img := dl.Image(cmd.Image)
+			if img == nil {
+				total.Degraded++
+				continue
+			}
+			st := b.drawImage(dst, img, cmd.Rect, cmd.Quality, cur)
+			total.Add(st)
 		}
 	}
 	return total
