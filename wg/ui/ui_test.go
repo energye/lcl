@@ -101,12 +101,14 @@ func TestResolveStyleVariants(t *testing.T) {
 		t.Fatal("hover 背景与常态相同")
 	}
 
+	// M8 对齐 antd：禁用不再用透明度降维，改用 disabled 专色
+	//（bg=fillQuaternary 等价、文字 rgba(0,0,0,.25) 实色等价）。
 	disabled := ResolveStyle(th, VariantSolid, StatusDisabled)
-	if disabled.Opacity >= 1 {
-		t.Fatal("禁用应降低不透明度")
+	if disabled.Opacity != 1 {
+		t.Fatal("antd 禁用态不降不透明度（用专色）")
 	}
-	if disabled.Foreground != c.TextFaint {
-		t.Fatal("禁用文字色应为 TextFaint")
+	if disabled.Background != c.SurfaceHover || disabled.Foreground != c.BorderStrong {
+		t.Fatalf("禁用专色错误: %+v", disabled)
 	}
 
 	outline := ResolveStyle(th, VariantOutline, StatusNormal)
@@ -140,8 +142,9 @@ func TestStyleOfCombines(t *testing.T) {
 	if st.Radius != th.Radius.SM {
 		t.Fatalf("小尺寸圆角 = %v", st.Radius)
 	}
-	if st.Background != th.Color.SurfaceHover {
-		t.Fatal("hover 底色未生效")
+	// M8 对齐 antd：default 按钮 hover 是文字/边框转主色，底色不变。
+	if st.Border != th.Color.Primary || st.Foreground != th.Color.Primary {
+		t.Fatalf("outline hover 应转主色: %+v", st)
 	}
 }
 

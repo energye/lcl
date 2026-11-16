@@ -29,9 +29,9 @@ func main() {
 		ID: "input", Title: "Input 输入框", Group: doc.GroupControl,
 		What: []string{
 			"单行/多行文本输入：TextEditor 持有文本/选区/撤销栈，跨重建不丢",
-			"IME 走 C28 链路：组合串经 SetComposingRegion 写入 Composing 区间，提交时替换选区",
-			"编辑键（Backspace/Delete/Ctrl+A/Ctrl+←→）由 TextKeyHandler 统一处理，Enter/Tab 是语义动作",
-			"计划（M8）：对齐 antd v5——variant/status/prefix/suffix/addon/字数统计",
+			"对齐 antd：variant（outlined/filled/borderless）、status（error/warning）、prefix/suffix、addonBefore/addonAfter、count、allowClear、三档尺寸",
+			"IME 走 C28 链路：组合串提交时替换选区；编辑键由 TextKeyHandler 统一处理",
+			"未实现：status 反馈图标、autosize",
 		},
 		Demos: []doc.Demo{
 			{Title: "受控输入与 IME", Note: "真窗里点输入框并切换中文输入法；OnChanged 实时回显", Build: func(ctx *ui.BuildContext) ui.Widget {
@@ -49,22 +49,63 @@ func main() {
 				col.Add(row)
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
 			}},
+			{Title: "三种 variant", Note: "outlined（默认）/ filled（灰底）/ borderless（无框）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				o := widgets.NewInput("outlined")
+				o.Width = 260
+				f := widgets.NewInput("filled")
+				f.Width, f.Variant = 260, widgets.InputFilled
+				bl := widgets.NewInput("borderless")
+				bl.Width, bl.Variant = 260, widgets.InputBorderless
+				return widgets.Column{Gap: 8, Children: []ui.Widget{o, f, bl}}
+			}},
+			{Title: "status 与尺寸", Note: "error 红边 / warning 黄边；small/middle/large", Build: func(ctx *ui.BuildContext) ui.Widget {
+				err := widgets.NewInput("error 状态")
+				err.Width, err.Status = 260, widgets.InputStatusError
+				warn := widgets.NewInput("warning 状态")
+				warn.Width, warn.Status = 260, widgets.InputStatusWarning
+				sm := widgets.NewInput("small")
+				sm.Width, sm.Size = 260, ui.SizeSmall
+				lg := widgets.NewInput("large")
+				lg.Width, lg.Size = 260, ui.SizeLarge
+				return widgets.Column{Gap: 8, Children: []ui.Widget{err, warn, sm, lg}}
+			}},
+			{Title: "前后缀与清除", Note: "prefix 图标 + suffix 图标；输入后 hover 显示 allowClear 清除", Build: func(ctx *ui.BuildContext) ui.Widget {
+				prefixed := widgets.NewInput("站内搜索")
+				prefixed.Width, prefixed.AllowClear = 300, true
+				prefixed.Prefix = &widgets.Icon{Name: "search", Size: 14}
+				suffixed := widgets.NewInput("金额")
+				suffixed.Width = 300
+				suffixed.Suffix = &widgets.Icon{Name: "info-circle", Size: 14}
+				return widgets.Column{Gap: 8, Children: []ui.Widget{prefixed, suffixed}}
+			}},
+			{Title: "addon 与 count", Note: "addonBefore/addonAfter 灰块；Count 右下角字数", Build: func(ctx *ui.BuildContext) ui.Widget {
+				withAddon := widgets.NewInput("example.com 前缀")
+				withAddon.Width = 300
+				withAddon.AddonAfter = doc.Node(func(ctx *ui.BuildContext) *scene.Node {
+					return (&widgets.Label{Text: ".com", Size: 13, Color: ctx.ThemeOr().Color.TextMuted}).Build(ctx)
+				})
+				counted := widgets.NewInput("看右下角字数")
+				counted.Width, counted.Count = 300, true
+				return widgets.Column{Gap: 12, Children: []ui.Widget{withAddon, counted}}
+			}},
 			{Title: "文本编辑按键", Note: "编辑键统一处理；Enter/Tab 是语义动作不进入文本", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return edit
 			}},
 		},
 		API: []doc.APIRow{
 			{Name: "NewInput", Type: "func(placeholder string) *Input", Desc: "构造"},
-			{Name: "Placeholder", Type: "string", Desc: "占位文字"},
-			{Name: "Value", Type: "string", Desc: "当前文本（与 Editor 同步）"},
-			{Name: "Multiline", Type: "bool", Default: "false", Desc: "多行模式"},
-			{Name: "Width/Height", Type: "float32", Default: "主题控件尺寸", Desc: "显式尺寸"},
-			{Name: "MaxLines", Type: "int", Default: "1", Desc: "多行最大行数"},
-			{Name: "Disabled", Type: "bool", Default: "false", Desc: "禁用态"},
-			{Name: "OnChanged", Type: "func(string)", Desc: "文本变化回调"},
-			{Name: "OnSubmit", Type: "func(string)", Desc: "Enter 提交（单行）"},
-			{Name: "Editor", Type: "func() *input.TextEditor", Desc: "取文本编辑器（选区/组合/撤销）"},
-			{Name: "FocusNode", Type: "字段", Desc: "焦点节点，供 FocusManager 定位"},
+			{Name: "Variant", Type: "widgets.InputVariant", Default: "InputOutlined", Desc: "outlined/filled/borderless（antd variant）"},
+			{Name: "Status", Type: "widgets.InputStatus", Default: "StatusOK", Desc: "error 红边 / warning 黄边（antd status）"},
+			{Name: "Size", Type: "ui.Size", Default: "SizeMedium", Desc: "控件高 24/32/40"},
+			{Name: "Prefix/Suffix", Type: "ui.Widget", Desc: "框内左右装饰"},
+			{Name: "AddonBefore/AddonAfter", Type: "ui.Widget", Desc: "框外灰块"},
+			{Name: "AllowClear", Type: "bool", Default: "false", Desc: "有值时显示清除图标"},
+			{Name: "Count", Type: "bool", Default: "false", Desc: "右下角字数（rune 计数）"},
+			{Name: "Placeholder/Value", Type: "string", Desc: "占位 / 当前文本"},
+			{Name: "Multiline/MaxLines", Type: "bool / int", Desc: "多行模式与最大行数"},
+			{Name: "Disabled", Type: "bool", Default: "false", Desc: "禁用态（antd disabled 专色）"},
+			{Name: "OnChanged/OnSubmit", Type: "func(string)", Desc: "变化 / Enter 提交"},
+			{Name: "Editor/FocusNode", Type: "取模型", Desc: "编辑器与焦点节点"},
 		},
 	})
 }

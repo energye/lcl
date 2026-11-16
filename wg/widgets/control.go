@@ -7,6 +7,7 @@ import (
 	"github.com/energye/lcl/wg/text"
 	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
+	"time"
 )
 
 // ── 控件公共基座 ───────────────────────────────────────────────────
@@ -103,78 +104,18 @@ func (b *controlBase) tapHandler(ctx *ui.BuildContext, disabled bool, onTap func
 	return h
 }
 
-// ── Button ─────────────────────────────────────────────────────────
-
-// Button 是按钮。点击与 Enter/Space 走同一个 OnClick。
-type Button struct {
-	controlBase
-	Text     string
-	Variant  ui.Variant
-	Size     ui.Size
-	Disabled bool
-	OnClick  func()
-}
-
-// NewButton 创建按钮。
-func NewButton(text string) *Button { return &Button{Text: text, Size: ui.SizeMedium} }
-
-// Build 实现 ui.Widget。
-func (b *Button) Build(ctx *ui.BuildContext) *scene.Node {
-	th := ctx.ThemeOr()
-	st := ui.StyleOf(th, b.Variant, b.Size, b.states(b.Disabled))
-	m := ui.MetricsFor(th, b.Size)
-	font := text.DefaultFont(m.Font)
-	layout := text.LayoutText(b.Text, font, text.Options{})
-
-	w := layout.Size.W + m.Padding.Min.X + m.Padding.Max.X
-	if w < m.Height {
-		w = m.Height
-	}
-	spec := scene.BoxSpec{Fill: scene.Solid(st.Background), Radius: st.Radius}
-	if st.BorderWidth > 0 {
-		spec.Border = scene.Stroke(st.Border, st.BorderWidth)
-	}
-	n := scene.Box(spec).SetSize2(w, m.Height)
-	n.SetOpacity(st.Opacity)
-	n.SetHit(scene.HitSpec{
-		Behavior: scene.HitOpaque, Label: "button", Cursor: scene.CursorPointer,
-	})
-	label := scene.Text(scene.TextSpec{Src: b.Text, Layout: layout, Color: st.Foreground})
-	label.SetMargin(geom.InLTRB(m.Padding.Min.X, (m.Height-layout.Size.H)/2, 0, 0))
-	n.Add(label)
-
-	activate := func() {
-		if !b.Disabled && b.OnClick != nil {
-			b.OnClick()
-		}
-	}
-	h := b.tapHandler(ctx, b.Disabled, activate)
-	h.Key = func(e *input.KeyEvent) bool {
-		if e.Kind == input.KeyUp || b.Disabled {
-			return false
-		}
-		if e.Code == input.CodeEnter || e.Code == input.CodeSpace {
-			activate()
-			return true
-		}
-		if ctx.Focus != nil {
-			return ctx.Focus.HandleKey(e)
-		}
-		return false
-	}
-	b.attach(ctx, n, h, !b.Disabled)
-	return n
-}
+// ── Button：见 button.go（M8 对齐 antd type 体系） ─────────────────
 
 // ── Checkbox / Radio / Switch ──────────────────────────────────────
 
-// Checkbox 是复选框。
+// Checkbox 是复选框（M8 对齐 antd：indeterminate 半选态）。
 type Checkbox struct {
 	controlBase
-	Checked  bool
-	Disabled bool
-	Label    string
-	OnChange func(bool)
+	Checked       bool
+	Indeterminate bool // 半选：横杠代替勾（父级聚合状态用）
+	Disabled      bool
+	Label         string
+	OnChange      func(bool)
 }
 
 // NewCheckbox 创建复选框。
@@ -186,15 +127,29 @@ func NewCheckbox(label string, checked bool) *Checkbox {
 func (b *Checkbox) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	st := ui.StyleOf(th, ui.VariantOutline, ui.SizeSmall, b.states(b.Disabled))
+	active := b.Checked || b.Indeterminate
+	var boxFill, markColor geom.Color
+	switch {
+	case active && b.Disabled:
+		boxFill, markColor = th.Color.SurfaceHover, th.Color.BorderStrong
+	case active:
+		boxFill, markColor = th.Color.Primary, th.Color.OnPrimary
+	default:
+		boxFill, markColor = th.Color.Surface, th.Color.Primary
+	}
 	box := scene.Box(scene.BoxSpec{
-		Fill:   scene.Solid(th.Color.Surface),
+		Fill:   scene.Solid(boxFill),
 		Border: scene.Stroke(st.Border, 1),
 		Radius: th.Radius.SM,
 	}).SetSize2(16, 16)
-	if b.Checked {
-		mark := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary), Radius: 2}).SetSize2(8, 8)
-		mark.SetPositionKeepSize(true).SetStackPosition(geom.Pt(4, 4))
-		box.Add(mark)
+	if b.Indeterminate {
+		dash := scene.Box(scene.BoxSpec{Fill: scene.Solid(markColor)}).SetSize2(8, 2)
+		dash.SetPositionKeepSize(true).SetStackPosition(geom.Pt(4, 7))
+		box.Add(dash)
+	} else if b.Checked {
+		check := (&Icon{Name: "check", Size: 12, Color: markColor}).Build(ctx)
+		check.SetPositionKeepSize(true).SetStackPosition(geom.Pt(2, 2))
+		box.Add(check)
 	}
 	box.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "checkbox", Cursor: scene.CursorPointer})
 	box.SetOpacity(st.Opacity)
@@ -267,12 +222,17 @@ func (b *Radio) Build(ctx *ui.BuildContext) *scene.Node {
 	return n
 }
 
-// Switch 是开关。
+// Switch 是开关（M8 对齐 antd：checkedChildren/unCheckedChildren 文案、
+// loading 态、small 尺寸）。
 type Switch struct {
 	controlBase
-	On       bool
-	Disabled bool
-	OnChange func(bool)
+	On                bool
+	CheckedChildren   string // 开态文案（显示在滑块外侧）
+	UnCheckedChildren string // 关态文案
+	Loading           bool   // 加载中：旋转指示并忽略点击
+	Small             bool   // antd size="small"（24×12）
+	Disabled          bool
+	OnChange          func(bool)
 }
 
 // NewSwitch 创建开关。
@@ -281,28 +241,58 @@ func NewSwitch(on bool) *Switch { return &Switch{On: on} }
 // Build 实现 ui.Widget。
 func (b *Switch) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
-	st := ui.StyleOf(th, ui.VariantSoft, ui.SizeSmall, b.states(b.Disabled))
-	const (
-		trackW = float32(36)
-		trackH = float32(20)
-		knob   = float32(16)
-	)
+	st := ui.StyleOf(th, ui.VariantSoft, ui.SizeSmall, b.states(b.Disabled || b.Loading))
+	trackW, trackH, knob := float32(36), float32(20), float32(16)
+	if b.Small {
+		trackW, trackH, knob = 24, 12, 8
+	}
 	track := scene.Box(scene.BoxSpec{
 		Fill:   scene.Solid(bgOf(th, st, b.On)),
 		Radius: trackH / 2,
 	}).SetSize2(trackW, trackH)
+
+	// 文案：显示在滑块对侧（antd checkedChildren/unCheckedChildren）。
+	labelText := ""
+	if b.On && b.CheckedChildren != "" {
+		labelText = b.CheckedChildren
+	} else if !b.On && b.UnCheckedChildren != "" {
+		labelText = b.UnCheckedChildren
+	}
+	if labelText != "" && !b.Small {
+		font := text.DefaultFont(11)
+		lay := text.LayoutText(labelText, font, text.Options{})
+		t := scene.Text(scene.TextSpec{Src: labelText, Layout: lay, Color: th.Color.OnPrimary})
+		tx := float32(4)
+		if b.On {
+			tx = 2 // 滑块在右，文字靠左
+		} else {
+			tx = trackW - 2 - lay.Size.W - 2 // 滑块在左，文字靠右
+		}
+		t.SetPositionKeepSize(true).SetStackPosition(geom.Pt(tx, (trackH-lay.Size.H)/2))
+		track.Add(t)
+	}
+
 	knobX := float32(2)
 	if b.On {
 		knobX = trackW - knob - 2
 	}
-	k := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface), Radius: knob / 2}).SetSize2(knob, knob)
-	k.SetPositionKeepSize(true).SetStackPosition(geom.Pt(knobX, 2))
-	track.Add(k)
+	if b.Loading {
+		ic := (&Icon{Name: "loading", Size: knob - 4, Color: th.Color.Primary, Spin: true}).Build(ctx)
+		ic.SetPositionKeepSize(true).SetStackPosition(geom.Pt(knobX+2, 2))
+		track.Add(ic)
+		if ctx.Scheduler != nil {
+			ctx.Scheduler.RequestFrameIn(33 * time.Millisecond)
+		}
+	} else {
+		k := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface), Radius: knob / 2}).SetSize2(knob, knob)
+		k.SetPositionKeepSize(true).SetStackPosition(geom.Pt(knobX, (trackH-knob)/2))
+		track.Add(k)
+	}
 	track.SetOpacity(st.Opacity)
 	track.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "switch", Cursor: scene.CursorPointer})
 
 	toggle := func() {
-		if b.Disabled {
+		if b.Disabled || b.Loading {
 			return
 		}
 		b.On = !b.On
@@ -311,7 +301,7 @@ func (b *Switch) Build(ctx *ui.BuildContext) *scene.Node {
 			b.OnChange(b.On)
 		}
 	}
-	h := b.tapHandler(ctx, b.Disabled, toggle)
+	h := b.tapHandler(ctx, b.Disabled || b.Loading, toggle)
 	b.attach(ctx, track, h, !b.Disabled)
 	return track
 }

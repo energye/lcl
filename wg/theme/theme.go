@@ -127,13 +127,16 @@ type ColorTokens struct {
 	OnDark    geom.Color
 
 	// 语义
-	Danger    geom.Color
-	OnDanger  geom.Color
-	Warning   geom.Color
-	Success   geom.Color
-	Info      geom.Color
-	FocusRing geom.Color
-	Selection geom.Color
+	Danger       geom.Color
+	DangerHover  geom.Color // antd colorErrorHover #FF7875
+	DangerActive geom.Color // antd colorErrorActive #D9363E
+	DangerBg     geom.Color // antd colorErrorBg #FFF1F0（default-danger 悬停底）
+	OnDanger     geom.Color
+	Warning      geom.Color
+	Success      geom.Color
+	Info         geom.Color
+	FocusRing    geom.Color
+	Selection    geom.Color
 
 	// Overlay 是模态遮罩色（带 alpha）
 	Overlay geom.Color
@@ -282,13 +285,16 @@ func Light() *Data {
 			OnDark:    geom.RGBA(255, 255, 255),
 
 			// #52C41A / #FAAD14 / #FF4D4F / #1677FF
-			Danger:    geom.RGBA(255, 77, 79),
-			OnDanger:  geom.RGBA(255, 255, 255),
-			Warning:   geom.RGBA(250, 173, 20),
-			Success:   geom.RGBA(82, 196, 26),
-			Info:      geom.RGBA(22, 119, 255),
-			FocusRing: geom.RGBA(22, 119, 255),
-			Selection: geom.RGBA(186, 224, 255), // antd blue-2 #BAE0FF
+			Danger:       geom.RGBA(255, 77, 79),
+			DangerHover:  geom.RGBA(255, 120, 117), // #FF7875
+			DangerActive: geom.RGBA(217, 54, 62),   // #D9363E
+			DangerBg:     geom.RGBA(255, 241, 240), // #FFF1F0
+			OnDanger:     geom.RGBA(255, 255, 255),
+			Warning:      geom.RGBA(250, 173, 20),
+			Success:      geom.RGBA(82, 196, 26),
+			Info:         geom.RGBA(22, 119, 255),
+			FocusRing:    geom.RGBA(22, 119, 255),
+			Selection:    geom.RGBA(186, 224, 255), // antd blue-2 #BAE0FF
 
 			Overlay: geom.RGBAa(0, 0, 0, 115), // colorBgMask rgba(0,0,0,.45)
 			Shadow:  geom.RGBAa(0, 0, 0, 40),  // boxShadow 色
@@ -339,13 +345,16 @@ func Dark() *Data {
 			OnDark:    geom.RGBA(255, 255, 255),
 
 			// dark 算法：#49AA19 / #D89614 / #DC4446 / #1668DC
-			Danger:    geom.RGBA(220, 68, 70),
-			OnDanger:  geom.RGBA(255, 255, 255),
-			Warning:   geom.RGBA(216, 150, 20),
-			Success:   geom.RGBA(73, 170, 25),
-			Info:      geom.RGBA(22, 104, 220),
-			FocusRing: geom.RGBA(22, 104, 220),
-			Selection: geom.RGBA(20, 41, 70), // primary 25% 实色等价
+			Danger:       geom.RGBA(220, 68, 70),
+			DangerHover:  geom.RGBA(228, 96, 97), // dark colorErrorHover
+			DangerActive: geom.RGBA(166, 39, 40), // dark colorErrorActive
+			DangerBg:     geom.RGBA(61, 31, 32),  // dark colorErrorBg（实色等价）
+			OnDanger:     geom.RGBA(255, 255, 255),
+			Warning:      geom.RGBA(216, 150, 20),
+			Success:      geom.RGBA(73, 170, 25),
+			Info:         geom.RGBA(22, 104, 220),
+			FocusRing:    geom.RGBA(22, 104, 220),
+			Selection:    geom.RGBA(20, 41, 70), // primary 25% 实色等价
 
 			Overlay: geom.RGBAa(0, 0, 0, 166), // colorBgMask rgba(0,0,0,.65)
 			Shadow:  geom.RGBAa(0, 0, 0, 102),
