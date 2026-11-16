@@ -37,6 +37,7 @@ func main() {
 		layoutF   = flag.Bool("layout", false, "20 组约束布局断言")
 		layersF   = flag.Bool("layers", false, "16 组层树/缓存断言")
 		schedF    = flag.Bool("schedtest", false, "14 组帧调度断言")
+		hitF      = flag.Bool("hit", false, "16 组命中断言（变换/裁剪/重叠）")
 		showCtr   = flag.Bool("contracts", false, "打印契约表")
 		headless  = flag.Bool("headless", false, "无窗口确定性出帧")
 		frames    = flag.Int("frames", 60, "--headless 的帧数")
@@ -206,6 +207,34 @@ func main() {
 			fmt.Println(res.String())
 			if !res.OK() {
 				fmt.Fprintf(os.Stderr, "schedtest 门禁未通过（需 ≥14 组全绿）\n")
+				exit = 1
+			}
+		}
+	}
+
+	if *hitF {
+		ran = true
+		res, err := diag.Hit()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "wg-diag --hit:", err)
+			exit = 1
+		} else {
+			if !*quiet {
+				for _, d := range res.Details {
+					mark := "ok  "
+					if !d.OK {
+						mark = "FAIL"
+					}
+					fmt.Printf("%s %-32s %s", mark, d.Name, d.Got)
+					if d.Note != "" {
+						fmt.Printf("  ← %s", d.Note)
+					}
+					fmt.Println()
+				}
+			}
+			fmt.Println(res.String())
+			if !res.OK() {
+				fmt.Fprintf(os.Stderr, "hit 门禁未通过（需 ≥12 组全绿）\n")
 				exit = 1
 			}
 		}
