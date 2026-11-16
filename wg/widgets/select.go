@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/energye/lcl/wg/geom"
+	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/overlay"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
@@ -32,18 +33,18 @@ type SelectOption struct {
 // 用 Items + Multiple + ShowSearch。Selected=-1 表示未选。
 type Select struct {
 	controlBase
-	Options   []string
-	Items     []SelectOption // 设置后优先于 Options
-	Selected  int            // 单选语义
-	Values    []string       // 多选语义（Multiple=true）
-	Multiple  bool
-	ShowSearch bool
-	Width     float32
-	MaxHeight float32
+	Options     []string
+	Items       []SelectOption // 设置后优先于 Options
+	Selected    int            // 单选语义
+	Values      []string       // 多选语义（Multiple=true）
+	Multiple    bool
+	ShowSearch  bool
+	Width       float32
+	MaxHeight   float32
 	Placeholder string
-	Disabled  bool
-	OnChange  func(int)   // 单选回调
-	OnValues  func([]string) // 多选回调
+	Disabled    bool
+	OnChange    func(int)      // 单选回调
+	OnValues    func([]string) // 多选回调
 
 	handle overlay.Handle
 	taps   []*ui.GestureDetector // 跨 Build 存活
@@ -114,31 +115,103 @@ func (s *Select) caption() (string, bool) {
 // Build 实现 ui.Widget。
 func (s *Select) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
-	h := float32(34)
 	n := scene.Box(scene.BoxSpec{
 		Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(th.Color.Border, 1),
 		Radius: th.Radius.Base,
-	}).SetSize2(s.Width, h)
+	})
+	arrow := "▾"
+	if s.handle != 0 {
+		arrow = "▴"
+	}
 
+	// 多选：触发框内渲染可删除 tag（视觉对齐 antd select-demo-multiple：
+	// 灰底圆角 tag + × 删除；按宽度换行、触发框高度自适应）。
+	if s.Multiple && len(s.Values) > 0 {
+		const (
+			tagH      = float32(22)
+			tagPad    = float32(6)
+			tagGap    = float32(6)
+			innerPad  = float32(6)
+			arrowZone = float32(26)
+		)
+		avail := s.Width - innerPad*2 - arrowZone
+		x, y := innerPad, innerPad
+		rows := 1
+		for _, v := range s.Values {
+			lv := text.LayoutText(v, text.DefaultFont(th.Font.SizeXS), text.Options{})
+			tagW := lv.Size.W + tagPad*2 + 12            // 文本 + 左右内边距 + ×
+			if x+tagW > innerPad+avail && x > innerPad { // 换行（首个超宽 tag 强放首行）
+				x = innerPad
+				y += tagH + 4
+				rows++
+			}
+			tag := scene.Box(scene.BoxSpec{
+				Fill:   scene.Solid(th.Color.SurfaceSunken),
+				Radius: th.Radius.SM,
+			}).SetSize2(tagW, tagH)
+			tag.SetPositionKeepSize(true).SetStackPosition(geom.Pt(x, y))
+			tv := scene.Text(scene.TextSpec{Src: v, Layout: lv, Color: th.Color.TextMuted})
+			tv.SetMargin(geom.InLTRB(tagPad, (tagH-lv.Size.H)/2, 0, 0))
+			tag.Add(tv)
+			// × 删除（可点击的独立命中区）。
+			xx := (&Icon{Name: "close", Size: 10, Color: th.Color.TextFaint}).Build(ctx)
+			xx.SetPositionKeepSize(true).SetStackPosition(geom.Pt(tagW-14, (tagH-10)/2))
+			xx.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "select-tag-x", Cursor: scene.CursorPointer})
+			removed := v
+			if ctx.Input != nil {
+				ctx.Input.Set(xx, input.Handler{
+					Pointer: func(ev *input.PointerEvent) bool {
+						if !ev.Down() {
+							return false
+						}
+						next := make([]string, 0, len(s.Values))
+						for _, cur := range s.Values {
+							if cur != removed {
+								next = append(next, cur)
+							}
+						}
+						s.SetValues(next)
+						return true
+					},
+				})
+			}
+			tag.Add(xx)
+			tag.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "select-tag", Cursor: scene.CursorPointer})
+			n.Add(tag)
+			x += tagW + tagGap
+		}
+		h := y + tagH + innerPad
+		if h < 34 {
+			h = 34
+		}
+		n.SetSize2(s.Width, h)
+		al := text.LayoutText(arrow, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		at := scene.Text(scene.TextSpec{Src: arrow, Layout: al, Color: th.Color.TextMuted})
+		at.SetPositionKeepSize(true).SetStackPosition(geom.Pt(s.Width-20, 8))
+		n.Add(at)
+		n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "select", Cursor: scene.CursorPointer})
+		g := &ui.GestureDetector{OnTap: func(geom.Point) {
+			if !s.Disabled {
+				s.show(ctx, n)
+			}
+		}}
+		s.taps = append(s.taps[:0], g)
+		s.attach(ctx, n, g.Handler(), false)
+		s.node = n
+		return n
+	}
+
+	h := float32(34)
+	n.SetSize2(s.Width, h)
 	caption, picked := s.caption()
 	fg := th.Color.Text
 	if !picked {
 		fg = th.Color.TextFaint
 	}
-	var l *text.Layout
-	if s.Multiple && len(s.Values) > 0 {
-		l = text.LayoutText(caption, text.DefaultFont(th.Font.SizeSM),
-			text.Options{MaxWidth: s.Width - 40, MaxLines: 1, Ellipsis: "…"})
-	} else {
-		l = text.LayoutText(caption, text.DefaultFont(th.Font.SizeSM), text.Options{})
-	}
+	l := text.LayoutText(caption, text.DefaultFont(th.Font.SizeSM), text.Options{})
 	tv := scene.Text(scene.TextSpec{Src: caption, Layout: l, Color: fg})
 	tv.SetMargin(geom.InLTRB(10, (h-l.Size.H)/2, 0, 0))
 	n.Add(tv)
-	arrow := "▾"
-	if s.handle != 0 {
-		arrow = "▴"
-	}
 	al := text.LayoutText(arrow, text.DefaultFont(th.Font.SizeSM), text.Options{})
 	at := scene.Text(scene.TextSpec{Src: arrow, Layout: al, Color: th.Color.TextMuted})
 	at.SetPositionKeepSize(true).SetStackPosition(geom.Pt(s.Width-20, (h-al.Size.H)/2))

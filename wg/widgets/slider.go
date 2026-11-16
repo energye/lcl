@@ -130,16 +130,30 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 		track.Add(k)
 	}
 
-	// marks：值→刻度线+文字（antd 的 marks）。
+	// marks：值→刻度圆点+文字（视觉对齐 antd 官方 slider-demo-mark：
+	// 每个 mark 在轨道上是一个小圆点——选中范围内主色实心、范围外白底灰框；
+	// 落在选中范围内的文字变主色）。
 	if hasMarks {
+		inSelected := func(mv float32) bool {
+			if b.Range {
+				return mv >= math32min(b.Value, b.Value2) && mv <= math32max(b.Value, b.Value2)
+			}
+			return mv <= b.Value
+		}
 		for mv, label := range b.Marks {
 			x := w * ratio(mv)
 			if x < 0 || x > w {
 				continue
 			}
-			tick := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary)}).SetSize2(2, 6)
-			tick.SetPositionKeepSize(true).SetStackPosition(geom.Pt(x-1, bodyH/2+2))
-			body.Add(tick)
+			dot := float32(8)
+			var dotNode *scene.Node
+			if inSelected(mv) {
+				dotNode = scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary), Radius: dot / 2}).SetSize2(dot, dot)
+			} else {
+				dotNode = scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(th.Color.Border, 1), Radius: dot / 2}).SetSize2(dot, dot)
+			}
+			dotNode.SetPositionKeepSize(true).SetStackPosition(geom.Pt(x-dot/2, bodyH/2-dot/2))
+			body.Add(dotNode)
 			lx := x - 14
 			if lx < 0 {
 				lx = 0
@@ -147,15 +161,21 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 			if lx > w-28 {
 				lx = w - 28
 			}
-			lbl := (&Label{Text: label, Size: th.Font.SizeXS, Color: th.Color.TextMuted}).Build(ctx)
+			txtColor := th.Color.TextMuted
+			if inSelected(mv) {
+				txtColor = th.Color.Primary
+			}
+			lbl := (&Label{Text: label, Size: th.Font.SizeXS, Color: txtColor}).Build(ctx)
 			lbl.SetPositionKeepSize(true)
 			lbl.SetStackPosition(geom.Pt(lx, bodyH/2+8))
 			body.Add(lbl)
 		}
 	}
 
-	// 取值：按点击/拖动位置换算；range 模式就近端。
-	apply := func(pos geom.Point) {
+	// 取值：按点击/拖动位置换算。range 模式在**按下瞬间锁定手柄**
+	// （antd 语义：拖哪端就动哪端，中途不翻转）。
+	activeEnd := 0 // 0=未锁定 1=左端 2=右端
+	apply := func(pos geom.Point, lock bool) {
 		if b.Disabled {
 			return
 		}
@@ -178,44 +198,50 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 			}
 			return
 		}
-		// 就近端：与两端等距时不动右端。
-		d1 := raw - b.Value
-		if d1 < 0 {
-			d1 = -d1
+		if lock && activeEnd == 0 {
+			d1 := raw - b.Value
+			if d1 < 0 {
+				d1 = -d1
+			}
+			d2 := raw - b.Value2
+			if d2 < 0 {
+				d2 = -d2
+			}
+			if d1 <= d2 {
+				activeEnd = 1
+			} else {
+				activeEnd = 2
+			}
 		}
-		d2 := raw - b.Value2
-		if d2 < 0 {
-			d2 = -d2
-		}
-		if d1 <= d2 {
-			if raw == b.Value {
+		if activeEnd == 2 {
+			if raw < b.Value {
+				raw = b.Value
+			}
+			if raw == b.Value2 {
 				return
 			}
-			if raw > b.Value2 {
-				raw = b.Value2
-			}
-			b.Value = raw
+			b.Value2 = raw
 			b.MarkDirty()
-			if b.OnChange != nil {
-				b.OnChange(raw)
+			if b.OnChange2 != nil {
+				b.OnChange2(raw)
 			}
 			return
 		}
-		if raw == b.Value2 {
+		if raw > b.Value2 {
+			raw = b.Value2
+		}
+		if raw == b.Value {
 			return
 		}
-		if raw < b.Value {
-			raw = b.Value
-		}
-		b.Value2 = raw
+		b.Value = raw
 		b.MarkDirty()
-		if b.OnChange2 != nil {
-			b.OnChange2(raw)
+		if b.OnChange != nil {
+			b.OnChange(raw)
 		}
 	}
 	g := &ui.GestureDetector{
-		OnPanStart: func(pos geom.Point) { apply(pos) },
-		OnPan:      func(pos, _ geom.Point) { apply(pos) },
+		OnPanStart: func(pos geom.Point) { activeEnd = 0; apply(pos, true) },
+		OnPan:      func(pos, _ geom.Point) { apply(pos, false) },
 	}
 	b.tap = g
 	h := g.Handler()
@@ -229,10 +255,10 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		switch e.Code {
 		case input.CodeLeft:
-			apply(geom.Pt((b.Value-step-lo)/(hi-lo)*w, 0))
+			apply(geom.Pt((b.Value-step-lo)/(hi-lo)*w, 0), false)
 			return true
 		case input.CodeRight:
-			apply(geom.Pt((b.Value+step-lo)/(hi-lo)*w, 0))
+			apply(geom.Pt((b.Value+step-lo)/(hi-lo)*w, 0), false)
 			return true
 		}
 		return ctx.Focus != nil && ctx.Focus.HandleKey(e)
@@ -241,4 +267,19 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 	b.attach(ctx, body, h, !b.Disabled)
 	_ = fmt.Sprintf
 	return body
+}
+
+// math32min/math32max 是 float32 的极值助手（避免引入 math 包的 float64 转换噪音）。
+func math32min(a, b float32) float32 {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func math32max(a, b float32) float32 {
+	if a > b {
+		return a
+	}
+	return b
 }

@@ -37,25 +37,24 @@ func (r *Rate) Build(ctx *ui.BuildContext) *scene.Node {
 	if count <= 0 {
 		count = 5
 	}
-	row := scene.Flex(scene.Horizontal, 4).SetCrossAlign(scene.CrossCenter)
+	row := scene.Flex(scene.Horizontal, 8).SetCrossAlign(scene.CrossCenter)
 	shown := int(r.Value)
 	if r.hoverAt > 0 && !r.Disabled {
 		shown = r.hoverAt
 	}
 	for i := 1; i <= count; i++ {
-		color := th.Color.Border // 未选中灰
-		if i <= shown {
-			color = th.Color.Warning // antd rate 主色是 warning 黄
-		}
+		// 视觉对齐 antd（官方 rate-demo-basic 对照）：
+		// 选中 = warning 黄实心；未选 = 淡灰实心（无描边）。
 		idx := i
-		fill := i <= shown
+		on := i <= shown
+		color := th.Color.SurfaceActive // #F0F0F0 淡灰填充
+		if on {
+			color = th.Color.Warning
+		}
 		star := scene.CustomPaintNode(func(cv render.Canvas, sz geom.Size) {
 			p := render.NewPath()
 			drawStar(p, sz.W/2, sz.H/2, sz.W*0.42)
-			if fill {
-				cv.FillPath(p, render.Fill(color))
-			}
-			cv.StrokePath(p, render.Stroke(color, 1.5).WithJoin(render.JoinRound))
+			cv.FillPath(p, render.Fill(color))
 		}).SetSize2(20, 20)
 		star.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "rate-star", Cursor: scene.CursorPointer})
 		if ctx.Input != nil {

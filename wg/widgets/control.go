@@ -3,6 +3,7 @@ package widgets
 import (
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/input"
+	"github.com/energye/lcl/wg/render"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
 	"github.com/energye/lcl/wg/theme"
@@ -124,22 +125,30 @@ func NewCheckbox(label string, checked bool) *Checkbox {
 }
 
 // Build 实现 ui.Widget。
+//
+// 视觉对齐 antd（官方 checkbox-demo-check-all 对照）：
+//   - 勾选：主色实底 + 白对勾；
+//   - 半选 indeterminate：**白底 + 主色框 + 主色横杠**（不是主色实底）；
+//   - 禁用：底/记号整体转 disabled 专色。
 func (b *Checkbox) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	st := ui.StyleOf(th, ui.VariantOutline, ui.SizeSmall, b.states(b.Disabled))
-	active := b.Checked || b.Indeterminate
-	var boxFill, markColor geom.Color
+	var boxFill, markColor, borderColor geom.Color
 	switch {
-	case active && b.Disabled:
-		boxFill, markColor = th.Color.SurfaceHover, th.Color.BorderStrong
-	case active:
-		boxFill, markColor = th.Color.Primary, th.Color.OnPrimary
+	case b.Indeterminate && b.Disabled:
+		boxFill, markColor, borderColor = th.Color.SurfaceHover, th.Color.BorderStrong, th.Color.Border
+	case b.Indeterminate:
+		boxFill, markColor, borderColor = th.Color.Surface, th.Color.Primary, th.Color.Primary
+	case b.Checked && b.Disabled:
+		boxFill, markColor, borderColor = th.Color.SurfaceHover, th.Color.BorderStrong, th.Color.Border
+	case b.Checked:
+		boxFill, markColor, borderColor = th.Color.Primary, th.Color.OnPrimary, th.Color.Primary
 	default:
-		boxFill, markColor = th.Color.Surface, th.Color.Primary
+		boxFill, markColor, borderColor = th.Color.Surface, th.Color.Primary, st.Border
 	}
 	box := scene.Box(scene.BoxSpec{
 		Fill:   scene.Solid(boxFill),
-		Border: scene.Stroke(st.Border, 1),
+		Border: scene.Stroke(borderColor, 1),
 		Radius: th.Radius.SM,
 	}).SetSize2(16, 16)
 	if b.Indeterminate {
@@ -147,12 +156,28 @@ func (b *Checkbox) Build(ctx *ui.BuildContext) *scene.Node {
 		dash.SetPositionKeepSize(true).SetStackPosition(geom.Pt(4, 7))
 		box.Add(dash)
 	} else if b.Checked {
-		check := (&Icon{Name: "check", Size: 12, Color: markColor}).Build(ctx)
-		check.SetPositionKeepSize(true).SetStackPosition(geom.Pt(2, 2))
+		// 自绘白对勾（两条线段）：Icon 缩放到 12px 后笔画只剩 1px 看不清。
+		check := scene.CustomPaintNode(func(cv render.Canvas, sz geom.Size) {
+			p := render.NewPath()
+			p.MoveTo(2.5, 8).LineTo(6.5, 12).LineTo(13.5, 3.5)
+			cv.StrokePath(p, render.Stroke(markColor, 2).WithCap(render.CapRound).WithJoin(render.JoinRound))
+		}).SetSize2(16, 16)
+		check.SetPositionKeepSize(true).SetStackPosition(geom.Pt(0, 0))
 		box.Add(check)
 	}
-	box.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "checkbox", Cursor: scene.CursorPointer})
 	box.SetOpacity(st.Opacity)
+
+	// Label 文字必须渲染（修复：Label 字段此前从未画出来）；整行可点。
+	root := scene.Flex(scene.Horizontal, 8).SetCrossAlign(scene.CrossCenter)
+	root.Add(box)
+	if b.Label != "" {
+		lc := th.Color.Text
+		if b.Disabled {
+			lc = th.Color.TextFaint
+		}
+		root.Add((&Label{Text: b.Label, Size: th.Font.SizeBase, Color: lc}).Build(ctx))
+	}
+	root.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "checkbox", Cursor: scene.CursorPointer})
 
 	toggle := func() {
 		if b.Disabled {
@@ -172,8 +197,8 @@ func (b *Checkbox) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		return ctx.Focus != nil && ctx.Focus.HandleKey(e)
 	}
-	b.attach(ctx, box, h, !b.Disabled)
-	return box
+	b.attach(ctx, root, h, !b.Disabled)
+	return root
 }
 
 // Radio 是单选钮（同一组的互斥由调用方的 OnChange 负责）。
@@ -194,18 +219,37 @@ func NewRadio(label string, checked bool) *Radio {
 func (b *Radio) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	st := ui.StyleOf(th, ui.VariantOutline, ui.SizeSmall, b.states(b.Disabled))
+	// 选中/悬停时圆点与外框转主色（antd 视觉）。
+	border, dotColor := st.Border, th.Color.Primary
+	if b.Checked {
+		border = th.Color.Primary
+	}
+	if b.Disabled {
+		border, dotColor = th.Color.Border, th.Color.BorderStrong
+	}
 	n := scene.Box(scene.BoxSpec{
 		Fill:   scene.Solid(th.Color.Surface),
-		Border: scene.Stroke(st.Border, 1),
+		Border: scene.Stroke(border, 1),
 		Radius: 8,
 	}).SetSize2(16, 16)
 	if b.Checked {
-		dot := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary), Radius: 4}).SetSize2(8, 8)
+		dot := scene.Box(scene.BoxSpec{Fill: scene.Solid(dotColor), Radius: 4}).SetSize2(8, 8)
 		dot.SetPositionKeepSize(true).SetStackPosition(geom.Pt(4, 4))
 		n.Add(dot)
 	}
 	n.SetOpacity(st.Opacity)
-	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "radio", Cursor: scene.CursorPointer})
+
+	// Label 文字（修复同 Checkbox 的丢字 bug）；整行可点。
+	root := scene.Flex(scene.Horizontal, 8).SetCrossAlign(scene.CrossCenter)
+	root.Add(n)
+	if b.Label != "" {
+		lc := th.Color.Text
+		if b.Disabled {
+			lc = th.Color.TextFaint
+		}
+		root.Add((&Label{Text: b.Label, Size: th.Font.SizeBase, Color: lc}).Build(ctx))
+	}
+	root.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "radio", Cursor: scene.CursorPointer})
 
 	selectIt := func() {
 		if b.Disabled || b.Checked {
@@ -218,8 +262,8 @@ func (b *Radio) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 	}
 	h := b.tapHandler(ctx, b.Disabled, selectIt)
-	b.attach(ctx, n, h, !b.Disabled)
-	return n
+	b.attach(ctx, root, h, !b.Disabled)
+	return root
 }
 
 // Switch 是开关（M8 对齐 antd：checkedChildren/unCheckedChildren 文案、
