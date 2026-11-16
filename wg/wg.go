@@ -7,11 +7,11 @@ import (
 	"github.com/energye/lcl/wg/theme"
 )
 
-// Version 是引擎版本。M0 期间用里程碑后缀标识能力边界。
-const Version = "0.1.0-m2"
+// Version 是引擎版本。里程碑后缀标识能力边界。
+const Version = "0.1.0-m3"
 
 // Stage 是当前里程碑名（与 contracts.Stage 对应，这里用字符串避免上层依赖）。
-const Stage = "M2"
+const Stage = "M3"
 
 // Options 是容器选项。
 //

@@ -90,19 +90,25 @@ func TestM1GateGreen(t *testing.T) {
 	}
 }
 
-// TestM3GateIsRed 保护契约机制本身：把门禁提到还没实现断言的里程碑时，
-// 必须报 MISSING 而不是静默通过——否则"契约与断言同生共死"就形同虚设。
+// TestMissingGateIsRed 保护契约机制本身：把门禁提到一条"没有断言"的
+// 未来契约时，必须报 MISSING 而不是静默通过——否则"契约与断言同生共死"
+// 就形同虚设。
 //
-// M2 的 11 条到期契约在 M2-6 全部转绿，因此这里改用 M3 当"未来门禁"的样本；
-// M3 的 C28（文本与按键分离）尚未落地。
-func TestM3GateIsRed(t *testing.T) {
-	rs := Run(M3)
-	s := Summarize(rs)
-	if s.Missing == 0 {
-		t.Fatalf("M3 门禁下应有 MISSING 项，实际 %s", s)
+// 不复用某个真实契约当样本：C1–C28 在 M3 已全部到期，若把其中一条
+// 故意留空来测门禁，就等于给引擎留了一个永远不写断言的死角。
+// 这里在**测试内**临时插入一条 Since=M5 的契约，跑完立刻还原。
+func TestMissingGateIsRed(t *testing.T) {
+	saved := table
+	defer func() { table = saved }()
+	table = append(append([]Contract{}, saved...), Contract{
+		ID: "C99", Title: "测试用未来契约", Owner: "③", Gate: "--future", Since: M5,
+	})
+	s := Summarize(Run(M5))
+	if s.Missing != 1 {
+		t.Fatalf("M5 门禁下应有 1 个 MISSING，实际 %s", s)
 	}
 	if s.OK() {
-		t.Fatal("M3 门禁不应为绿")
+		t.Fatal("含无断言契约的门禁不应为绿")
 	}
 }
 
@@ -111,6 +117,14 @@ func TestM2GateGreen(t *testing.T) {
 	s := Summarize(Run(M2))
 	if s.Missing != 0 || s.Fail != 0 {
 		t.Fatalf("M2 门禁应为绿，实际 %s", s)
+	}
+}
+
+// TestM3GateGreen 确认全部 28 条契约在 M3 门禁下为绿。
+func TestM3GateGreen(t *testing.T) {
+	s := Summarize(Run(M3))
+	if s.Missing != 0 || s.Fail != 0 || s.Pass != 28 {
+		t.Fatalf("M3 门禁应为 28 条全绿，实际 %s", s)
 	}
 }
 

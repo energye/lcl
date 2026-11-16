@@ -44,6 +44,7 @@ func main() {
 		resizeF   = flag.Bool("resizetest", false, "7 次尺寸切换断言（去抖 + 池释放顺序）")
 		ovlF      = flag.Bool("overlaytest", false, "16 组浮层/组件基座断言（定位/关闭/遮罩/样式/动画）")
 		idleF     = flag.Bool("idle", false, "1000 节点静止 0 帧（C14 门禁）")
+		keysF     = flag.Bool("keyselftest", false, "14 项文本/按键分离断言（C28；中文上屏）")
 		showCtr   = flag.Bool("contracts", false, "打印契约表")
 		headless  = flag.Bool("headless", false, "无窗口确定性出帧")
 		frames    = flag.Int("frames", 60, "--headless 的帧数")
@@ -371,6 +372,29 @@ func main() {
 			exit = 1
 		} else if !res.OK() {
 			fmt.Fprintf(os.Stderr, "idle 门禁未通过（需 1000 节点静止 0 帧）\n")
+			exit = 1
+		}
+	}
+
+	if *keysF {
+		ran = true
+		res, err := diag.KeyTest()
+		if !*quiet {
+			for _, d := range res.Details {
+				mark := "ok  "
+				if !d.OK {
+					mark = "FAIL"
+				}
+				fmt.Printf("%s %-28s %s", mark, d.Name, d.Got)
+				if d.Note != "" {
+					fmt.Printf("  ← %s", d.Note)
+				}
+				fmt.Println()
+			}
+		}
+		fmt.Println(res.String())
+		if err != nil || !res.OK() {
+			fmt.Fprintln(os.Stderr, "keyselftest 门禁未通过（C28：文本与按键分离）")
 			exit = 1
 		}
 	}

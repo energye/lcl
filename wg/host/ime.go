@@ -87,6 +87,11 @@ type Composition struct {
 	Cursor int32
 	// Start 是组合串在编辑文本中的起始位置（rune 偏移）。
 	Start int32
+	// First 表示还没有把第一次 Update 写进文本。
+	// 有选区时第一次 Update 要覆盖整个选区，不是从光标末尾追加。
+	First bool
+	// Replaced 是第一次 Update 覆盖掉的原文，取消组合时必须还回去。
+	Replaced string
 }
 
 // IMEStats 是 IME 桥的统计。
@@ -145,7 +150,10 @@ func (b *IMEBridge) Handle(ev IMFEvent) []input.Event {
 	switch ev.Kind {
 	case IMFStartComposition:
 		b.stats.Starts++
-		b.comp = Composition{Active: true, Start: b.editor.Value().Cursor()}
+		// 有选区时从选区**起点**开始组合，而不是 Cursor（=选区末端）。
+		// 否则"选中 ab 后打中文"会得到 "ab好"：拼音追加在末尾，选区纹丝不动。
+		v := b.editor.Value()
+		b.comp = Composition{Active: true, Start: v.Selection.Start, First: true}
 		return nil
 
 	case IMFUpdateComposition:
@@ -154,15 +162,24 @@ func (b *IMEBridge) Handle(ev IMFEvent) []input.Event {
 		if !b.comp.Active {
 			// 有些输入法不发 START 直接发 UPDATE：补一次开始。
 			b.stats.Starts++
-			b.comp = Composition{Active: true, Start: b.editor.Value().Cursor()}
+			b.comp = Composition{Active: true, Start: b.editor.Value().Selection.Start, First: true}
 		}
 		cur, fixed := utf16CursorToRune(text, ev.Cursor)
 		if fixed {
 			b.stats.UTF16Fix++
 		}
-		// 组合区间 = 上一次起始位置 + 旧组合串长度（若尚未写入则为光标处）
+		// 组合区间 = 上一次起始位置 + 旧组合串长度（若尚未写入则为光标处）。
+		// 第一次写入时若编辑器有选区，改为覆盖整个选区，并记下原文以便取消时回滚。
 		start := b.comp.Start
 		end := start + input.RuneLen(b.comp.Text)
+		if b.comp.First && b.comp.Text == "" {
+			if v := b.editor.Value(); !v.Selection.IsEmpty() {
+				sel := v.Selection.Clamp(v.Len())
+				start, end = sel.Start, sel.End
+				runes := []rune(v.Text)
+				b.comp.Replaced = string(runes[sel.Start:sel.End])
+			}
+		}
 		b.editor.SetComposingRegion(start, end, text)
 
 		v := b.editor.Value()
@@ -172,6 +189,7 @@ func (b *IMEBridge) Handle(ev IMFEvent) []input.Event {
 		b.comp.Text = text
 		b.comp.Cursor = cur
 		b.comp.Start = newStart
+		b.comp.First = false
 		return []input.Event{&input.IMEEvent{
 			Kind: input.IMEComposition, Text: text, Cursor: cur,
 			Rect: b.candidatesRect(), Time: b.stamp(ev.Time),
@@ -198,6 +216,13 @@ func (b *IMEBridge) Handle(ev IMFEvent) []input.Event {
 		if b.comp.Active {
 			if b.comp.Text != "" {
 				b.editor.CancelComposing()
+			}
+			// 组合期间顶掉的选中文本要还回去：用户按 Esc 取消输入，
+			// 不该连原先选中的内容一起丢掉。
+			if b.comp.Replaced != "" {
+				b.editor.InsertText(b.comp.Replaced)
+			}
+			if b.comp.Text != "" || b.comp.Replaced != "" {
 				b.stats.Cancels++
 			} else {
 				b.stats.Empty++

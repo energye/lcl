@@ -166,5 +166,6 @@ var table = []Contract{
 	{
 		ID: "C28", Title: "文本与按键分离，控制字符不进 Text", Owner: "③⓪",
 		Gate: "--keyselftest", Since: M3,
+		Assert: assertTextKeySeparation,
 	},
 }

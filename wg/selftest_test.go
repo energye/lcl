@@ -98,10 +98,10 @@ func TestRequestFrameMarksDirty(t *testing.T) {
 }
 
 func TestContractStageDefaults(t *testing.T) {
-	if contracts.Current != contracts.M2 {
-		t.Fatalf("默认门禁 = %v，应为 M2", contracts.Current)
+	if contracts.Current != contracts.M3 {
+		t.Fatalf("默认门禁 = %v，应为 M3", contracts.Current)
 	}
-	if Version != "0.1.0-m2" || Stage != "M2" {
+	if Version != "0.1.0-m3" || Stage != "M3" {
 		t.Fatalf("版本/阶段 = %s/%s", Version, Stage)
 	}
 }

@@ -106,9 +106,11 @@ func (r Result) String() string {
 
 // Current 是当前里程碑，决定哪些契约必须为绿。
 //
-// 跟着引擎实现走：到了 M2，M2 的 11 条契约就都是"必须绿"，
-// 未实现会被 CheckAll 报 MISSING（而不是静默跳过）。
-var Current = M2
+// 跟着引擎实现走：到了 M3，C1–C28 全部到期，任何一条没有断言
+// 都会被 CheckAll 报 MISSING（而不是静默跳过）。M3 收口后
+// "未来门禁必须报红"由 TestMissingGateIsRed 用临时契约验证，
+// 不再依赖某个真实契约恰好还没实现。
+var Current = M3
 
 // SetStage 设置当前里程碑（diag 用命令行参数覆盖）。
 func SetStage(s Stage) { Current = s }
