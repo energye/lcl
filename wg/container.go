@@ -85,6 +85,7 @@ type Container struct {
 	ov         *overlay.Host
 	focus      *input.FocusManager
 	disp       *input.Dispatcher
+	ime        *host.IMEBridge // 平台输入法桥；当前编辑模型由聚焦的输入框切换
 	th         *theme.Data
 	// inherited 是沿组件树向下传的配置（BuildContext.Inherited 的数据源）。
 	inherited map[any]any
@@ -118,6 +119,7 @@ func NewContainer(form lcl.IEngForm, opts Options) *Container {
 		form:  form,
 		opts:  opts.normalized(),
 		clock: frame.NewWallClock(),
+		ime:   host.NewIMEBridge(nil),
 		st:    stateCreated,
 	}
 	c.host = host.New(form)
@@ -286,7 +288,8 @@ func (c *Container) buildContext() *ui.BuildContext {
 			DPI:   geom.Size{W: 96 * scale, H: 96 * scale},
 			Scale: scale, TextScale: 1,
 		},
-		Focus: c.focus, Overlay: c.ov, Scheduler: c.sched,
+		Focus: c.focus, Input: c.disp, Overlay: c.ov, Scheduler: c.sched,
+		SetTextEditor: func(e *input.TextEditor) { c.ime.SetEditor(e) },
 		Inherited: func(key any) any {
 			if inherited == nil {
 				return nil
@@ -434,6 +437,14 @@ func (c *Container) Focus() *input.FocusManager {
 		return nil
 	}
 	return c.focus
+}
+
+// IME 返回输入法桥。聚焦的输入框通过 BuildContext.SetTextEditor 切换它，
+// 平台消息经宿主路由进入这里；headless 下可以直接 Handle 注入消息做门禁。
+func (c *Container) IME() *host.IMEBridge {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.ime
 }
 
 // Dispatcher 返回事件分发器（给节点挂处理器用）。
@@ -944,6 +955,20 @@ func (c *Container) Run() error {
 	c.sched = sched
 	c.st = stateRunning
 	c.mu.Unlock()
+
+	// 平台消息必须在消息循环启动前接管。此前 Run 只跑了帧泵，
+	// 窗口消息仍走 LCL 默认处理：鼠标键盘到不了分发器，输入法更是完全失联。
+	binder := host.NewBinder(c.host, c)
+	binder.SetIMEBridge(c.ime)
+	if err := binder.Install(); err != nil {
+		c.mu.Lock()
+		c.sched = nil
+		c.st = stateCreated
+		c.mu.Unlock()
+		sched.Stop()
+		return err
+	}
+	defer binder.Uninstall()
 
 	sched.RequestFrame()
 	// 进入平台消息循环：帧闹钟在别的 goroutine 上触发，消息循环负责

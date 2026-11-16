@@ -464,9 +464,13 @@ type dragRec struct {
 	tracker *VelocityTracker
 	down    geom.Point
 	last    geom.Point
-	live    bool
-	won     bool
-	done    bool
+	// start 是越过 slop、真正宣布拖动时的位置。用按下位置会让滑块
+	// 在拖动开始瞬间跳回按下点（而不是跟手），所以两者必须分开。
+	start    geom.Point
+	hasStart bool
+	live     bool
+	won      bool
+	done     bool
 }
 
 // Drag 创建拖动识别器。
@@ -480,6 +484,8 @@ func Drag(a *Arena, cfg GestureConfig,
 func (r *dragRec) AddPointer(ev *PointerEvent) {
 	r.down = ev.Pos
 	r.last = ev.Pos
+	r.start = geom.Point{}
+	r.hasStart = false
 	r.live = true
 	r.tracker.Reset().Add(ev.Pos, ev.Time)
 }
@@ -503,6 +509,7 @@ func (r *dragRec) Handle(ev *PointerEvent) {
 				r.done = true
 				return
 			}
+			r.start, r.hasStart = ev.Pos, true
 			if !r.arena.Resolve(r) {
 				r.done = true
 				return
@@ -554,7 +561,11 @@ func (r *dragRec) Accept() {
 	}
 	r.won = true
 	if r.onStart != nil {
-		r.onStart(r.down)
+		p := r.down
+		if r.hasStart {
+			p = r.start
+		}
+		r.onStart(p)
 	}
 }
 

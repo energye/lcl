@@ -46,8 +46,13 @@ type BuildContext struct {
 	Theme     *theme.Data
 	Media     MediaQuery
 	Focus     *input.FocusManager
-	Overlay   *overlay.Host
-	Scheduler *frame.Scheduler
+	// Input 是事件分发器：组件用它注册自己的 Handler。
+	Input *input.Dispatcher
+	// SetTextEditor 在输入框获得/失去焦点时通知平台 IME。
+	// nil 表示没有平台输入法（headless 或还没绑定窗体）。
+	SetTextEditor func(*input.TextEditor)
+	Overlay       *overlay.Host
+	Scheduler     *frame.Scheduler
 	// Inherited 读取祖先提供的配置（主题/媒体/滚动）。
 	Inherited func(key any) any
 }

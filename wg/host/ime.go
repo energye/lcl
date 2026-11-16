@@ -128,6 +128,28 @@ func (b *IMEBridge) SetClock(fn func() time.Time) {
 	}
 }
 
+// SetEditor 切换当前接收输入法的编辑模型。
+//
+// 焦点从一个输入框跳到另一个时，旧框的组合串必须先撤掉——
+// 否则用户打了一半的拼音会落在前一个框里。
+// 传 nil 表示当前没有可编辑控件（输入法结果会被忽略）。
+func (b *IMEBridge) SetEditor(e *input.TextEditor) {
+	if b.editor == e {
+		return
+	}
+	if b.editor != nil && b.comp.Active {
+		if b.comp.Text != "" {
+			b.editor.CancelComposing()
+		}
+		if b.comp.Replaced != "" {
+			b.editor.InsertText(b.comp.Replaced)
+		}
+		b.stats.Cancels++
+	}
+	b.editor = e
+	b.comp = Composition{}
+}
+
 // Composition 返回当前组合状态。
 func (b *IMEBridge) Composition() Composition { return b.comp }
 

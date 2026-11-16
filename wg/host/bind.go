@@ -3,7 +3,6 @@
 package host
 
 import (
-	"errors"
 	"syscall"
 	"time"
 	"unsafe"
@@ -13,9 +12,6 @@ import (
 	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/scene"
 )
-
-// ErrNoForm 表示宿主没有绑定窗体，无法接管消息。
-var ErrNoForm = errors.New("wg/host: 窗体未绑定，无法接管消息")
 
 // ── LCL 事件绑定 ────────────────────────────────────────────────────
 //
@@ -60,6 +56,7 @@ type Binder struct {
 	router *Router
 	form   lcl.IEngForm
 	hwnd   uintptr
+	ime    *IMEBridge
 
 	installed bool
 	tracking  bool
@@ -79,15 +76,30 @@ func NewBinder(h *Host, sink EventSink) *Binder {
 		b.norm.SetDPI(d)
 		b.host.RefreshScale()
 	}
+	b.ime = NewIMEBridge(nil)
 	if b.form != nil {
 		b.hwnd = uintptr(b.form.Handle())
-		r.SetIME(newPlatformIME(b.hwnd, NewIMEBridge(nil)), nil)
+		r.SetIME(newPlatformIME(b.hwnd, b.ime), b.ime)
 	}
 	return b
 }
 
 // Router 返回消息路由。
 func (b *Binder) Router() *Router { return b.router }
+
+// IME 返回桥实例；容器把当前聚焦输入框的 TextEditor 交给它。
+func (b *Binder) IME() *IMEBridge { return b.ime }
+
+// SetIMEBridge 替换桥实例（容器持有长期实例，Binder 只在安装时借用）。
+func (b *Binder) SetIMEBridge(br *IMEBridge) {
+	if br == nil {
+		return
+	}
+	b.ime = br
+	if b.form != nil {
+		b.router.SetIME(newPlatformIME(b.hwnd, br), br)
+	}
+}
 
 // Normalizer 返回归一化器。
 func (b *Binder) Normalizer() *Normalizer { return b.norm }

@@ -10,4 +10,7 @@ var (
 	ErrSurfaceCycle = errors.New("wg/host: 挂接会形成环")
 	// ErrSurfaceAttached 表示该画布已经挂在另一个父上，必须先 Detach。
 	ErrSurfaceAttached = errors.New("wg/host: 画布已挂在其它父上")
+	// ErrNoForm 表示宿主没有绑定窗体，无法接管消息。
+	// 放这里而不是 bind.go：非 Windows 的 Binder stub 也要返回同一个哨兵值。
+	ErrNoForm = errors.New("wg/host: 窗体未绑定，无法接管消息")
 )
