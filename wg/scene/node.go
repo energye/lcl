@@ -671,13 +671,13 @@ func (n *Node) ContentSize() geom.Size {
 // 之所以要冒泡：子节点变大后父节点的尺寸可能与内容不符（shrink-wrap），
 // 但冒泡必须停在布局边界，否则"改一个叶子就重排整棵树"。
 func (n *Node) MarkNeedsLayout() {
+	n.signature++
 	if n.needsLayout {
 		return
 	}
 	n.needsLayout = true
 	n.needsPaint = true
 	n.needsComposite = true
-	n.signature++
 	if n.layoutBoundary {
 		return
 	}
@@ -687,22 +687,28 @@ func (n *Node) MarkNeedsLayout() {
 }
 
 // MarkNeedsPaint 只标绘制脏（颜色、文本内容变化）。
+//
+// signature **无条件**递增：它是"视觉版本号"，参与合成层的缓存键
+// （见 compositor 的 CacheKey）。脏标记的幂等去重只作用于标记与传播，
+// 不能作用于版本号——否则"同一帧里改两次属性"会让缓存认为内容没变，
+// 于是贴出上一帧的图。这一条在 --layers 的 cache-invalidates 上挂着。
 func (n *Node) MarkNeedsPaint() {
+	n.signature++
 	if n.needsPaint {
 		return
 	}
 	n.needsPaint = true
-	n.signature++
 	n.invalidate()
 }
 
 // MarkNeedsComposite 标记合成脏（opacity/transform/clip/层级变化）。
+// signature 无条件递增，理由同 MarkNeedsPaint。
 func (n *Node) MarkNeedsComposite() {
+	n.signature++
 	if n.needsComposite {
 		return
 	}
 	n.needsComposite = true
-	n.signature++
 	n.invalidate()
 }
 
@@ -799,6 +805,30 @@ func (n *Node) SetClip(spec *ClipSpec) *Node {
 	n.MarkNeedsComposite()
 	return n
 }
+
+// Transform 返回仿射变换。
+func (n *Node) Transform() geom.Matrix { return n.transform }
+
+// TransformOrigin 返回变换支点（节点局部坐标，默认节点中心）。
+//
+// 合成层构建要用它复现边帧；不在那里硬编码"sized/2"是因为
+// SetTransformOrigin 可以改，两处各算一遍迟早会分叉。
+func (n *Node) TransformOrigin() geom.Point {
+	a := n.transformOriginAlign()
+	return a.AlignChild(n.size.W, n.size.H, 0, 0)
+}
+
+// Clip 返回裁剪描述；nil 表示不裁剪。
+func (n *Node) Clip() *ClipSpec { return n.clip }
+
+// Effect 返回组效果描述；nil 表示无效果。
+func (n *Node) Effect() *EffectSpec { return n.effect }
+
+// RepaintBoundary 表示该节点要求独立重绘与独立缓存。
+func (n *Node) RepaintBoundary() bool { return n.repaintBoundary }
+
+// Overflow 表示允许子树超出自身边界绘制（不自动裁剪）。
+func (n *Node) Overflow() bool { return n.overflow }
 
 // SetAlign 设置子节点对齐（Box/Stack 生效）。
 func (n *Node) SetAlign(a Alignment) *Node {

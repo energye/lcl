@@ -14,11 +14,27 @@ import (
 //
 // 变换以**节点中心**为支点（旋转/缩放符合直觉）；要改支点用 SetTransformOrigin。
 func (n *Node) Record(c render.Canvas) {
-	if c == nil || !n.visible || n.opacity <= 0 {
+	if !n.PaintFrame(c) {
 		return
 	}
-	c.Save()
+	n.PaintSelf(c)
+	for _, ch := range n.children {
+		ch.Record(c)
+	}
+	n.EndFrame(c)
+}
 
+// PaintFrame 应用节点的边帧（offset、以支点为中心的 transform、clip）。
+//
+// 返回 false 表示该子树整体不可见，调用方必须**跳过整棵子树**且不要调
+// EndFrame。这是给外部合成器（composite 的层树构建）准备的入口：它需要
+// 自己递归子节点，以便在遇到层边界时把录制流切开，而 Record 会一口气
+// 录完整个子树、没有切分点。
+func (n *Node) PaintFrame(c render.Canvas) bool {
+	if c == nil || !n.visible || n.opacity <= 0 {
+		return false
+	}
+	c.Save()
 	if n.offset.X != 0 || n.offset.Y != 0 {
 		c.Translate(n.offset.X, n.offset.Y)
 	}
@@ -31,15 +47,40 @@ func (n *Node) Record(c render.Canvas) {
 	if n.clip != nil {
 		n.recordClip(c)
 	}
-
-	n.recordSelf(c)
-
-	for _, ch := range n.children {
-		ch.Record(c)
-	}
-
-	c.Restore()
+	return true
 }
+
+// EndFrame 与 PaintFrame 配对出栈。
+func (n *Node) EndFrame(c render.Canvas) {
+	if c != nil {
+		c.Restore()
+	}
+}
+
+// PaintSelf 只画节点自身的视觉，**不**递归子节点、不应用边帧。
+func (n *Node) PaintSelf(c render.Canvas) {
+	if c == nil || !n.visible {
+		return
+	}
+	n.recordSelf(c)
+}
+
+// FrameMatrix 返回 parent ∘ 节点边帧 的矩阵（offset + 以支点为中心的 transform）。
+//
+// 与 PaintFrame 是同一份数学，只是以矩阵形式返回：合成层需要"先知道
+// 节点在设备空间的落点，再决定离屏缓冲开多大"，而 Canvas 的 Save/Translate
+// 只能顺序施加、拿不到中间结果。
+func (n *Node) FrameMatrix(parent geom.Matrix) geom.Matrix {
+	m := parent.Concat(geom.Translate(n.offset.X, n.offset.Y))
+	if n.transform.IsIdentity() {
+		return m
+	}
+	px, py := n.transformOrigin()
+	return m.Concat(geom.Translate(px, py)).
+		Concat(n.transform).
+		Concat(geom.Translate(-px, -py))
+}
+
 
 // 组透明度（opacity<1）**不在这里处理**：把子树逐指令乘 alpha 会在
 // 重叠处重复变暗，是错的。正确做法是离屏合成——composite 会为 opacity<1
@@ -210,6 +251,14 @@ func (n *Node) LocalHit(p geom.Point) bool {
 	default:
 		return geom.RectXYWH(0, 0, n.size.W, n.size.H).Contains(p)
 	}
+}
+
+// PointInRRect 判定点是否落在 0..size 的圆角矩形内。
+//
+// 导出是为了让合成层的离屏蒙版与命中测试共用**同一份**圆角几何：
+// 蒙版自己算一遍圆角，迟早会出现"点不进的地方画出来了"。
+func PointInRRect(p geom.Point, s geom.Size, radius float32) bool {
+	return pointInRRect(p, s, radius)
 }
 
 // pointInRRect 判定点是否落在圆角矩形内（四角用圆判定）。

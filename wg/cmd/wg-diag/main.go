@@ -35,6 +35,7 @@ func main() {
 		benchFlag = flag.Bool("bench", false, "1440×880 无窗口性能基准")
 		damage    = flag.Bool("damage", false, "局部重绘面积断言")
 		layoutF   = flag.Bool("layout", false, "20 组约束布局断言")
+		layersF   = flag.Bool("layers", false, "18 组层树/缓存断言")
 		showCtr   = flag.Bool("contracts", false, "打印契约表")
 		headless  = flag.Bool("headless", false, "无窗口确定性出帧")
 		frames    = flag.Int("frames", 60, "--headless 的帧数")
@@ -148,6 +149,34 @@ func main() {
 			fmt.Println(res.String())
 			if !res.OK() {
 				fmt.Fprintf(os.Stderr, "layout 门禁未通过（需 ≥20 组全绿）\n")
+				exit = 1
+			}
+		}
+	}
+
+	if *layersF {
+		ran = true
+		res, err := diag.Layers()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "wg-diag --layers:", err)
+			exit = 1
+		} else {
+			if !*quiet {
+				for _, d := range res.Details {
+					mark := "ok  "
+					if !d.OK {
+						mark = "FAIL"
+					}
+					fmt.Printf("%s %-34s %s", mark, d.Name, d.Got)
+					if d.Note != "" {
+						fmt.Printf("  ← %s", d.Note)
+					}
+					fmt.Println()
+				}
+			}
+			fmt.Println(res.String())
+			if !res.OK() {
+				fmt.Fprintf(os.Stderr, "layers 门禁未通过（需 ≥16 组全绿）\n")
 				exit = 1
 			}
 		}

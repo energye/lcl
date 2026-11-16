@@ -29,11 +29,18 @@ type Options struct {
 	Width, Height int
 	// Background 是清屏色（默认不透明白）。
 	Background geom.Color
+	// RasterCacheBytes 是层离屏缓存预算（0 = 默认 8MiB）。
+	RasterCacheBytes int64
+	// DisableRasterCache 关掉层缓存（只保留离屏与回收池）。
+	//
+	// 这是 A/B 对照开关：`--layers` 用它验证"开/关缓存像素完全一致"。
+	// 关掉不等于关掉离屏——opacity/clip 层没有离屏就是错的。
+	DisableRasterCache bool
 }
 
 // Stats 是一帧的合成统计。
 type Stats struct {
-	// Raster 是后端统计。
+	// Raster 是后端统计（形状光栅）。
 	Raster raster.Stats
 	// TextLines 是文字通道绘制的行数。
 	TextLines int
@@ -49,7 +56,26 @@ type Stats struct {
 	Duration time.Duration
 	// Frame 是帧序号。
 	Frame int
+
+	// ── 层与缓存（M2 新增） ──
+	//
+	// Layers 是层总数，LayerGroups 是其中需要合并语义的组层数。
+	// 这两个数字是"扁平化是否生效"的直接指标：1000 节点 0 特效时
+	// 应该是 1 组 + N 个指令切片，而不是 1000 层。
+	Layers      int
+	LayerGroups int
+	// LayerRasters 是本帧真正栅格化的离屏层数（缓存未命中）。
+	LayerRasters int
+	// LayerCacheHits 是本帧直接复用缓存图层的层数。
+	LayerCacheHits int
+	// LayerSkipped 是因超出脏区而整层跳过的层数。
+	LayerSkipped int
+	// LayerDowngraded 是"有理由建层但被降级"的次数（C22：降级必须计数）。
+	LayerDowngraded int
+	// BlendedPixels 是离屏层混合写过的像素数。
+	BlendedPixels int
 }
+
 
 // Compositor 负责"把指令表变成像素"并维护 damage。
 //
@@ -68,6 +94,25 @@ type Compositor struct {
 	last     Region
 	frame    int
 	lastSize geom.Size
+
+	// cache 是层离屏缓存（C7：只有合成器持有它）。
+	cache   *RasterCache
+	cacheOn bool
+
+	// st 是本帧的累加统计（drawLayer 逐层往里加）。
+	st frameAcc
+}
+
+// frameAcc 是帧内累加统计。
+type frameAcc struct {
+	ops         int
+	degraded    int
+	textLines   int
+	textSkipped bool
+	layerRaster int
+	layerHits   int
+	layerSkip   int
+	blended     int
 }
 
 // New 创建合成器。
@@ -86,12 +131,26 @@ func New(opts Options) (*Compositor, error) {
 		backend: opts.Backend,
 		text:    opts.Text,
 		bg:      bg,
+		cache:   NewRasterCache(opts.RasterCacheBytes),
+		cacheOn: !opts.DisableRasterCache,
 	}
 	if err := c.Resize(opts.Width, opts.Height); err != nil {
 		return nil, err
 	}
 	return c, nil
 }
+
+// Cache 返回层缓存（诊断与调优用）。
+func (c *Compositor) Cache() *RasterCache { return c.cache }
+
+// SetRasterCache 开/关层缓存（A/B 对照用）。
+func (c *Compositor) SetRasterCache(on bool) {
+	c.cacheOn = on
+	if !on && c.cache != nil {
+		c.cache.Clear()
+	}
+}
+
 
 // Backing 返回合成目标（32bpp 预乘 BGRA）。调用方只读，不得修改。
 func (c *Compositor) Backing() *raster.Backing { return c.dst }
@@ -116,6 +175,10 @@ func (c *Compositor) Resize(w, h int) error {
 	c.damage.Clear()
 	c.damage.Add(dst.Bounds())
 	c.last.Clear()
+	// 尺寸变了，所有离屏层的落点与尺寸都变了：缓存必须整体作废。
+	if c.cache != nil {
+		c.cache.Clear()
+	}
 	return nil
 }
 
@@ -151,7 +214,7 @@ func (c *Compositor) Draw(dl *render.DisplayList) (Stats, error) {
 	if c.dst == nil {
 		return st, errors.New("wg/composite: 合成目标未初始化")
 	}
-	st.Frame = c.frame
+	c.beginFrame(&st)
 
 	// 注意：这里**不**把 dl.Bounds() 自动并入脏区。
 	//
@@ -162,16 +225,14 @@ func (c *Compositor) Draw(dl *render.DisplayList) (Stats, error) {
 
 	if c.damage.IsEmpty() {
 		// 静止帧：不提交（C14）
-		st.Duration = time.Since(began)
-		c.frame++
+		c.endFrame(&st, began, false)
 		return st, nil
 	}
 
 	clip := c.damage.Bounds().Intersect(c.dst.Bounds())
 	if clip.IsEmpty() {
 		c.damage.Clear()
-		st.Duration = time.Since(began)
-		c.frame++
+		c.endFrame(&st, began, false)
 		return st, nil
 	}
 
@@ -188,21 +249,96 @@ func (c *Compositor) Draw(dl *render.DisplayList) (Stats, error) {
 	// 3) 文字回放（像素已就位，设备空间）
 	if dl != nil && dl.HasText() {
 		if c.text != nil {
-			st.TextLines = c.text.PaintText(c.dst, dl, clip)
+			c.st.textLines += c.text.PaintText(c.dst, dl, clip)
 		} else {
-			st.TextSkipped = true
+			c.st.textSkipped = true
 		}
 	}
 
-	// 4) 提交：记录本帧区域后清空 damage（一次提交，C13）
-	c.last.Clear()
-	c.last.AddRegion(&c.damage)
-	st.DamageArea = c.damage.Area()
-	st.DamageRects = c.damage.Len()
-	st.Presented = true
-	c.damage.Clear()
+	// 4) 提交
+	c.endFrame(&st, began, true)
+	return st, nil
+}
 
+// DrawTree 用层树执行一帧（M2 的主路径）。
+//
+// 与 Draw 的区别是"怎么画"：Draw 把一张扁平指令表丢给后端；
+// DrawTree 按层序走——指令切片直接画，需要合并的组（透明/裁剪/缓存边界）
+// 先进离屏再整体混合，缓存命中的层连指令都不回放。
+//
+// damage 语义完全一致：脏区为空即静止帧，不提交（C14）。
+// 层裁剪用的是**脏区外包矩形**，所以脏区越碎收益越低；
+// 按矩形分别走层（多矩形 × 多层的笛卡尔积）留给 M3 的 damage 细化。
+func (c *Compositor) DrawTree(t *Tree) (Stats, error) {
+	began := time.Now()
+	var st Stats
+	if c.dst == nil {
+		return st, errors.New("wg/composite: 合成目标未初始化")
+	}
+	c.beginFrame(&st)
+
+	if t != nil {
+		st.Layers = t.Layers()
+		st.LayerGroups = t.Groups()
+		st.LayerDowngraded = t.Stats().Downgraded
+		// 清上一帧的命中标记，否则 --layers 会把陈旧的"已缓存"当成事实。
+		t.Walk(func(l *Layer) bool {
+			l.cached = false
+			return true
+		})
+	}
+
+	if c.damage.IsEmpty() {
+		c.endFrame(&st, began, false)
+		return st, nil
+	}
+	clip := c.damage.Bounds().Intersect(c.dst.Bounds())
+	if clip.IsEmpty() {
+		c.damage.Clear()
+		c.endFrame(&st, began, false)
+		return st, nil
+	}
+
+	for _, rc := range c.damage.Rects() {
+		c.dst.FillRect(rc, c.bg)
+	}
+
+	if root := t.Root(); root != nil {
+		c.drawLayer(root, c.dst, 0, 0, clip, 1)
+	}
+
+	c.endFrame(&st, began, true)
+	return st, nil
+}
+
+// beginFrame 复位帧内状态。
+func (c *Compositor) beginFrame(st *Stats) {
+	c.st = frameAcc{}
+	st.Frame = c.frame
+	if c.cache != nil {
+		c.cache.BeginFrame()
+	}
+}
+
+// endFrame 填写统计并推进帧号。
+func (c *Compositor) endFrame(st *Stats, began time.Time, presented bool) {
+	st.TextLines = c.st.textLines
+	st.TextSkipped = c.st.textSkipped
+	st.LayerRasters = c.st.layerRaster
+	st.LayerCacheHits = c.st.layerHits
+	st.LayerSkipped = c.st.layerSkip
+	st.BlendedPixels = c.st.blended
+	if presented {
+		st.Raster.Ops += c.st.ops
+		st.Raster.Degraded += c.st.degraded
+		// 4) 提交：记录本帧区域后清空 damage（一次提交，C13）
+		c.last.Clear()
+		c.last.AddRegion(&c.damage)
+		st.DamageArea = c.damage.Area()
+		st.DamageRects = c.damage.Len()
+		st.Presented = true
+		c.damage.Clear()
+	}
 	st.Duration = time.Since(began)
 	c.frame++
-	return st, nil
 }

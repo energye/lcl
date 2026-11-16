@@ -70,6 +70,70 @@ func (r *Recorder) Reset() {
 	r.clip, r.clipValid = geom.ZeroRect, false
 }
 
+// NewRecorderAt 创建录制器并把初始状态设为 (m, clip)，**不产生任何指令**。
+//
+// 为什么需要它：层树构建时要把一条录制流在层边界处切成两条，新的那条
+// 必须从分叉点的矩阵与裁剪继续，否则层内指令整体偏移。用 Concat 设置
+// 矩阵会多出一条 OpConcat（虽然当前后端忽略它，但那是实现细节，
+// 不能拿来兜底）。
+func NewRecorderAt(dl *DisplayList, m geom.Matrix, clip geom.Rect, hasClip bool) *Recorder {
+	r := NewRecorder(dl)
+	r.matrix = m
+	r.clip, r.clipValid = clip, hasClip
+	return r
+}
+
+// Fork 以当前状态（矩阵、裁剪、Save 深度）开一条新的录制流。
+//
+// 复制 Save 深度是关键：分叉点常常位于若干层祖先的 Save 之内，
+// 缺了栈之后第一个 Restore 就会变成空操作，后续兄弟节点会带着
+// 错误矩阵继续录。
+func (r *Recorder) Fork(dl *DisplayList) *Recorder {
+	nr := NewRecorderAt(dl, r.matrix, r.clip, r.clipValid)
+	if len(r.stack) > 0 {
+		nr.stack = append(make([]recState, 0, len(r.stack)), r.stack...)
+	}
+	return nr
+}
+
+// Restart 交出已录内容并**原地**从同一状态继续录制，返回冻结后的指令表。
+//
+// 与"Finish 再新建"的区别只有一点，但那一点是致命的：Finish 会清空
+// 矩阵/裁剪/Save 栈，之后新建的录制器等于从零开始，Restore 就配不上对。
+// 层树切分录制流时（父层 picture 关闭、插入子层、再开新 picture）
+// 走的就是这条路径，所以需要"交出内容但保留状态"这一原子操作。
+//
+// 当前指令表为空时返回 (nil, false)，调用方据此跳过空 picture 层。
+func (r *Recorder) Restart() (*DisplayList, bool) {
+	if r.dl.Len() == 0 {
+		return nil, false
+	}
+	m, clip, hasClip := r.matrix, r.clip, r.clipValid
+	stack := r.stack[:len(r.stack):len(r.stack)]
+	frozen := r.dl.Freeze()
+	r.dl = NewDisplayList(cap(frozen.cmds))
+	r.matrix, r.clip, r.clipValid = m, clip, hasClip
+	r.stack = stack
+	return frozen, true
+}
+
+// Rebase 把当前矩阵的平移分量并进裁剪后清零，返回被清零的**设备原点**。
+//
+// 这是"层局部坐标"的开关：进入一个合成层时调用，之后录进该层的指令
+// 原点是层自己的 (0,0)。带来两个直接好处：
+//   - 层内容签名与"层在屏幕上的位置"解耦，滚动/拖拽整层移动时缓存照样命中；
+//   - 离屏缓冲只需层自身尺寸，不需要把屏幕坐标搬来搬去。
+//
+// 旋转/缩放分量保留：层空间是"节点自己的空间"，斜着的内容进去还是斜的。
+func (r *Recorder) Rebase() geom.Point {
+	origin := geom.Pt(r.matrix.E, r.matrix.F)
+	r.matrix.E, r.matrix.F = 0, 0
+	if r.clipValid {
+		r.clip = r.clip.Offset(-origin.X, -origin.Y)
+	}
+	return origin
+}
+
 // Tolerance 设置扁平化容差（DIP）。
 func (r *Recorder) Tolerance(v float32) { r.tolerance = v }
 
