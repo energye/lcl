@@ -114,6 +114,9 @@ var rules = map[string]ruleSet{
 	"compat": {allow: set("geom", "scene", "ui", "widgets")},
 	// migration 是示例组合层：把三个旧示例重建为组件场景，允许依赖组件与渲染基础。
 	"migration": {allow: set("geom", "input", "render", "scene", "theme", "ui", "widgets", "widgets/chart")},
+	// examples 是示例组合层：每个示例要同时触达组件、场景、绘制、输入与主题，
+	// 与 migration 同性质；不碰 lcl（真窗入口在 cmd/wg-examples，走 cmd 规则）。
+	"examples": {allow: set("geom", "input", "render", "scene", "text", "theme", "ui", "widgets", "widgets/chart")},
 	"diag":    {allowAll: true, allowLCL: true},
 	"contracts": {
 		// 契约包只做断言，不参与渲染；C17 的断言实现需要调用检查器本身，
