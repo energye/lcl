@@ -101,15 +101,19 @@ func TestRectClipDoesNotCreateLayer(t *testing.T) {
 	}
 }
 
-func TestFilterDowngradesAndCounts(t *testing.T) {
+// 组滤镜（模糊/发光）现在真的建层，不再降级。
+func TestFilterCreatesLayer(t *testing.T) {
 	root := scene.Effect(scene.EffectSpec{BlurSigma: 3}, solid(10, 10, geom.RGBA(1, 2, 3)))
 	root.Layout(scene.Unbounded())
 	tr := buildOnly(root)
-	if tr.Groups() != 1 {
-		t.Fatalf("M2 不实现组模糊，不该建层: %d", tr.Groups())
+	if tr.Groups() != 2 {
+		t.Fatalf("组模糊应建滤镜层（根 + filter）: %d", tr.Groups())
 	}
-	if tr.Stats().Downgraded != 1 {
-		t.Fatalf("组模糊必须计数降级（C22）: %+v", tr.Stats())
+	if tr.Stats().Filter != 1 {
+		t.Fatalf("滤镜层统计未记录: %+v", tr.Stats())
+	}
+	if tr.Stats().Downgraded != 0 {
+		t.Fatalf("组模糊不应再降级: %+v", tr.Stats())
 	}
 }
 

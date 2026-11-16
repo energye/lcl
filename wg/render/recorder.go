@@ -188,7 +188,10 @@ func (r *Recorder) ClipRect(rc geom.Rect) {
 	r.dl.append(Command{Op: OpClipRect, Rect: dev, Matrix: r.matrix, Path: -1, Paint: -1, Text: -1, Image: -1})
 }
 
-// ClipPath 按路径包围盒裁剪，并计入 degraded（M1 限制，见 03-ENGINE.md §8）。
+// ClipPath 按路径裁剪。
+//
+// 指令同时携带路径与设备空间包围盒：包围盒先收 scissor（省像素），
+// 路径由后端做精确蒙版。早期只记包围盒并计 degraded，异形裁剪会画出去。
 func (r *Recorder) ClipPath(p *Path) {
 	if p == nil || p.IsEmpty() {
 		return
@@ -198,8 +201,9 @@ func (r *Recorder) ClipPath(p *Path) {
 		dev = dev.Intersect(r.clip)
 	}
 	r.clip, r.clipValid = dev, true
-	r.dl.append(Command{Op: OpClipPath, Rect: dev, Matrix: r.matrix, Path: -1, Paint: -1, Text: -1, Image: -1})
-	r.dl.degraded++
+	r.dl.paths = append(r.dl.paths, p)
+	r.dl.append(Command{Op: OpClipPath, Rect: dev, Matrix: r.matrix,
+		Path: int32(len(r.dl.paths) - 1), Paint: -1, Text: -1, Image: -1})
 }
 
 // FillRect 填充矩形。旋转/斜切时退化为路径填充，保证形状正确。

@@ -95,6 +95,8 @@ type Container struct {
 	// layoutAll 表示下一帧必须整树重排（挂载/换主题/resize）。
 	layoutAll bool
 
+	// layerTree 是当前帧的层树（缓存命中的层跨帧复用）。
+	layerTree *composite.Tree
 	// presenter 是呈现链路的最后一公里：把合成出的 Backing 提交到窗口 DC。
 	// headless 容器为 nil（合成结果只在内存里，供出图/自检读取）。
 	presenter *host.Presenter
@@ -925,19 +927,33 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 		}
 	}
 
-	var dl *render.DisplayList
+	// 两条绘制路径：
+	//   - 场景树 → Build 层树 → DrawTree：组透明/路径裁剪/滤镜/层缓存都在这条；
+	//   - 外部 Painter（c.paint）→ 扁平指令表 → Draw：兼容逃生舱，不带层。
+	// 早期这里只走扁平路径，导致层能力（阴影模糊、组透明度、蒙版裁剪）
+	// 在真窗里从未生效——单测与真窗表现不一致的根源。
+	var (
+		cs  composite.Stats
+		err error
+	)
 	if dirty {
-		c.rec.Reset()
-		if c.scene != nil {
-			c.scene.Record(c.rec)
+		if c.paint == nil && c.scene != nil {
+			tree := composite.Build(c.scene, composite.BuildOptions{Cache: true})
+			c.layerTree = tree
+			cs, err = c.comp.DrawTree(tree)
+		} else {
+			c.rec.Reset()
+			if c.scene != nil {
+				c.scene.Record(c.rec)
+			}
+			if c.paint != nil {
+				c.paint(c.rec)
+			}
+			cs, err = c.comp.Draw(c.rec.Finish())
 		}
-		if c.paint != nil {
-			c.paint(c.rec)
-		}
-		dl = c.rec.Finish()
+	} else {
+		cs, err = c.comp.Draw(nil)
 	}
-
-	cs, err := c.comp.Draw(dl)
 	if err != nil {
 		return st, err
 	}

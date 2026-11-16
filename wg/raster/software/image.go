@@ -69,6 +69,18 @@ func (b *Backend) drawImage(dst *raster.Backing, img *render.ImageRef, dstRect g
 			if ca == 0 {
 				continue
 			}
+			if b.mask != nil {
+				ma := maskCoverage(b.mask, b.maskW, x, y)
+				if ma == 0 {
+					continue
+				}
+				if ma != 255 {
+					cr, cg, cb, ca = cr*ma/255, cg*ma/255, cb*ma/255, ca*ma/255
+					if ca == 0 {
+						continue
+					}
+				}
+			}
 			row[x] = blendPremul(row[x], cr, cg, cb, ca)
 			st.Pixels++
 		}
@@ -129,4 +141,39 @@ func sampleBox2(img *render.ImageRef, u, v float32) (r, g, b, a uint32) {
 		(g00 + g10 + g01 + g11 + 2) / 4,
 		(b00 + b10 + b01 + b11 + 2) / 4,
 		(a00 + a10 + a01 + a11 + 2) / 4
+}
+
+// buildPathMask 把一条裁剪路径光栅化成覆盖率蒙版（0..255）。
+//
+// 为什么复用 filler：路径裁剪的覆盖率语义必须和填充完全一致（同样的
+// 子扫描线与填充规则），否则"填出来的形状"和"裁出来的形状"会在边缘
+// 差半像素，表现为一圈毛边。这里渲染到一张临时缓冲再取 alpha。
+//
+// 代价是每次 OpClipPath 一次全屏分配 + 一次填充；路径裁剪本来就少，
+// 且包围盒已经先收过 scissor，实际填充面积通常只有几十像素。
+func (b *Backend) buildPathMask(p *render.Path, m geom.Matrix, w, h int, clip geom.Rect) []uint8 {
+	if p == nil || w <= 0 || h <= 0 {
+		return nil
+	}
+	box := m.MapRect(p.Bounds()).Intersect(clip).RoundOut()
+	if box.IsEmpty() {
+		// 完全在裁剪外：返回全 0 蒙版（等价于什么都不画）。
+		return make([]uint8, w*h)
+	}
+	tmp := raster.NewBacking(w, h)
+	f := newFiller()
+	f.aa = true
+	f.mask = nil
+	polys := p.Flatten(b.tol, nil)
+	for _, pl := range polys {
+		f.addPolyline(b.transform(pl.Pts, m))
+	}
+	paint := render.Fill(geom.RGBA(255, 255, 255))
+	f.fill(tmp, box, render.NonZero, &paint, geom.Identity)
+
+	out := make([]uint8, w*h)
+	for i, px := range tmp.Pix() {
+		out[i] = uint8(px >> 24)
+	}
+	return out
 }

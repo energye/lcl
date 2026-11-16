@@ -46,7 +46,7 @@ func (c *Compositor) drawPicture(dst *raster.Backing, dl *render.DisplayList, dx
 		dl = dl.OffsetBy(float32(dx), float32(dy))
 	}
 	st := c.backend.Draw(dst, dl, clip)
-	if dl.HasText() {
+	if dl.HasText() && c.noText == 0 {
 		if c.text != nil {
 			c.st.textLines += c.text.PaintText(dst, dl, clip)
 		} else {
@@ -58,11 +58,14 @@ func (c *Compositor) drawPicture(dst *raster.Backing, dl *render.DisplayList, dx
 
 // drawGroup 把需要离屏的组渲染到一块缓冲里再整体混合。
 func (c *Compositor) drawGroup(l *Layer, dst *raster.Backing, ox, oy int, clip geom.Rect) {
-	w, h := l.backingSize()
-	if w <= 0 || h <= 0 {
+	bw, bh := l.backingSize()
+	if bw <= 0 || bh <= 0 {
 		return
 	}
-	base := l.bounds.RoundOut().Min
+	// 滤镜（阴影/发光/模糊）需要向外扩，否则会被离屏缓冲切掉边缘。
+	pad := filterPad(l)
+	w, h := bw+pad*2, bh+pad*2
+	base := l.bounds.RoundOut().Min.Add(geom.Pt(-float32(pad), -float32(pad)))
 	dx := ox + int(base.X)
 	dy := oy + int(base.Y)
 
@@ -87,25 +90,82 @@ func (c *Compositor) drawGroup(l *Layer, dst *raster.Backing, ox, oy int, clip g
 		return
 	}
 	off.Clear()
+
+	// 有滤镜时先把内容画进独立缓冲，滤镜处理完再压进 off：
+	// 这样"模糊只作用于内容"、"阴影不被二次模糊"两件事能同时成立。
+	target := off
+	content := off
+	if pad > 0 {
+		content = c.cache.Lease(w, h)
+		if content == nil {
+			c.cache.Release(off)
+			return
+		}
+		content.Clear()
+		target = content
+	}
+
+	// 滤镜层：文字不进离屏（GDI 文字通道只写 RGB，画在透明底上会丢 alpha），
+	// 形状先进离屏做卷积，合成后再把文字按设备坐标补画上去。
+	skipText := pad > 0 && l.hasText
+	if skipText {
+		c.noText++
+	}
 	for _, ch := range l.children {
-		// 子层的 origin 在**本层局部空间**，离屏的 (0,0) 是 bounds.Min，
+		// 子层的 origin 在**本层局部空间**，离屏的 (0,0) 是 base，
 		// 所以减掉 base 才是离屏像素坐标。
 		cx := roundf(ch.origin.X - base.X)
 		cy := roundf(ch.origin.Y - base.Y)
-		c.drawLayer(ch, off, cx, cy, off.Bounds(), 1)
+		c.drawLayer(ch, target, cx, cy, target.Bounds(), 1)
+	}
+	if skipText {
+		c.noText--
+	}
+
+	if pad > 0 {
+		applyFilters(l, pad, content, off)
+		c.cache.Release(content)
 	}
 
 	var mask []uint8
 	if l.clip != ClipNone && l.clip != ClipRect {
-		mask = buildMask(l, w, h)
+		mask = buildMaskAt(l, w, h, base)
 	}
 	c.st.layerRaster++
 	c.st.blended += blendBacking(dst, off, dx, dy, l.opacity, mask)
+
+	if skipText {
+		c.drawTextLayer(l, dst, ox, oy, clip)
+	}
 
 	if c.cacheOn && l.cacheable && c.cache != nil {
 		c.cache.Store(key, off, mask)
 	} else {
 		c.cache.Release(off)
+	}
+}
+
+// drawTextLayer 把一层里的文字按设备坐标补画到 dst（滤镜层专用）。
+//
+// 只处理文字指令：形状已经在离屏里处理完并参与了滤镜。这样"卡片有阴影
+// 也有文字"能同时成立，代价是文字本身不参与模糊（阴影场景这正是想要的）。
+func (c *Compositor) drawTextLayer(l *Layer, dst *raster.Backing, ox, oy int, clip geom.Rect) {
+	if c.text == nil {
+		return
+	}
+	for _, ch := range l.children {
+		if ch.kind == LayerPicture {
+			dl := ch.picture
+			if dl == nil || !dl.HasText() {
+				continue
+			}
+			if ox != 0 || oy != 0 {
+				dl = dl.OffsetBy(float32(ox), float32(oy))
+			}
+			c.st.textLines += c.text.PaintText(dst, dl, clip)
+			continue
+		}
+		c.drawTextLayer(ch, dst, ox+roundf(ch.origin.X), oy+roundf(ch.origin.Y), clip)
 	}
 }
 

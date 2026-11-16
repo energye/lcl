@@ -139,9 +139,10 @@ func (n *Node) recordBox(c render.Canvas) {
 	}
 	r := geom.RectXYWH(0, 0, n.size.W, n.size.H)
 
-	// 阴影：M2 是硬阴影（偏移 + 半透明）。模糊需要离屏 + 3× box 卷积，
-	// 排在 M4 的 blur pass；在那之前 EffectSpec.BlurSigma>0 会计 degraded。
-	if b.Shadow != nil && b.Shadow.Color.A > 0 {
+	// 阴影：Blur<=0 走硬阴影（偏移 + 半透明，零成本）；
+	// Blur>0 交给 composite 的滤镜层做离屏卷积——这里**不能**同时画，
+	// 否则硬影和软影会叠成两层。
+	if b.Shadow != nil && b.Shadow.Color.A > 0 && b.Shadow.Blur <= 0 {
 		c.FillRRect(r.Offset(b.Shadow.Dx, b.Shadow.Dy), b.Radius, render.Fill(b.Shadow.Color))
 	}
 	if b.Fill.Shader != nil || !b.Fill.Color.IsTransparent() {

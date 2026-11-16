@@ -320,3 +320,45 @@ func TestEmptyDisplayList(t *testing.T) {
 		t.Fatalf("空指令表不应画出内容: %v", got)
 	}
 }
+
+// TestClipPathIsExact：路径裁剪必须精确，不能退化成包围盒。
+// 曾经 ClipPath 只记包围盒并计 degraded，异形裁剪会把内容画到路径外。
+func TestClipPathIsExact(t *testing.T) {
+	b := newDst(40, 40)
+	tri := render.NewPath().MoveTo(20, 2).LineTo(38, 38).LineTo(2, 38).Close()
+	dl := rec(func(c *render.Recorder) {
+		c.Save()
+		c.ClipPath(tri)
+		c.FillRect(geom.RectXYWH(0, 0, 40, 40), render.Fill(geom.RGBA(0, 0, 0)))
+		c.Restore()
+	})
+	st := draw(dl, b)
+	if st.Degraded != 0 {
+		t.Fatalf("路径裁剪不应再降级: %d", st.Degraded)
+	}
+	// 左上角在三角形之外。
+	if a := b.Pix()[3*40+3] >> 24; a != 0 {
+		t.Fatalf("路径外像素未裁掉: alpha=%d", a)
+	}
+	// 三角形重心附近必须在。
+	if a := b.Pix()[30*40+20] >> 24; a < 200 {
+		t.Fatalf("路径内像素被误裁: alpha=%d", a)
+	}
+}
+
+// TestClipPathRestoresOnRestore：Save/Restore 必须恢复蒙版，
+// 否则一次路径裁剪会污染后续所有指令。
+func TestClipPathRestoresOnRestore(t *testing.T) {
+	b := newDst(40, 40)
+	tri := render.NewPath().MoveTo(20, 2).LineTo(38, 38).LineTo(2, 38).Close()
+	dl := rec(func(c *render.Recorder) {
+		c.Save()
+		c.ClipPath(tri)
+		c.Restore()
+		c.FillRect(geom.RectXYWH(0, 0, 40, 40), render.Fill(geom.RGBA(0, 0, 0)))
+	})
+	draw(dl, b)
+	if a := b.Pix()[3*40+3] >> 24; a < 200 {
+		t.Fatalf("Restore 后蒙版未清除: alpha=%d", a)
+	}
+}

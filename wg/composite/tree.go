@@ -53,6 +53,8 @@ type treeStats struct {
 	Opacity    int
 	Clip       int
 	Boundary   int
+	Filter     int
+	Surface    int
 	MaxDepth   int
 	Downgraded int // 有理由但 M2 不建层的次数（Filter/Surface/超深度）
 	TextFlat   int // 因含文字而不能离屏的层数（见 noteTextOnLayer）
@@ -215,6 +217,10 @@ func Build(root *scene.Node, opts BuildOptions) *Tree {
 				t.stats.Clip++
 			case ReasonRepaintBoundary:
 				t.stats.Boundary++
+			case ReasonFilter:
+				t.stats.Filter++
+			case ReasonSurface:
+				t.stats.Surface++
 			}
 		} else {
 			t.stats.Pictures++
@@ -276,15 +282,17 @@ func (b *builder) walk(n *scene.Node) uint64 {
 // 这样做的理由：把 opacity 与 clip 拆成两层会让离屏嵌套，
 // 而它们作用在同一个内容上，一层就能同时表达，没有拆的必要。
 func (b *builder) reasonOf(n *scene.Node) Reason {
-	// 组滤镜：模糊/发光在 M2 没有实现，显式降级并计数（C22 允许降级，禁止静默）。
-	if e := n.Effect(); e != nil && (e.BlurSigma > 0 || e.GlowRadius > 0) {
-		b.t.stats.Downgraded++
-		return ReasonNone
+	// 组滤镜：模糊/发光/组阴影需要离屏卷积，必须开层。
+	if e := n.Effect(); e != nil && (e.BlurSigma > 0 || e.GlowRadius > 0 || e.Shadow != nil) {
+		return ReasonFilter
 	}
-	// 子表面：M3 随 host 落地，M2 扁平化。
+	// 盒阴影带模糊半径时同样要走离屏卷积（硬阴影仍在指令流里直接画）。
+	if bs := n.Box(); bs != nil && bs.Shadow != nil && bs.Shadow.Blur > 0 && bs.Shadow.Color.A > 0 {
+		return ReasonFilter
+	}
+	// 子表面：当作隔离组处理（独立离屏 + 独立合成），不再扁平化。
 	if n.Kind() == scene.KindSurface {
-		b.t.stats.Downgraded++
-		return ReasonNone
+		return ReasonSurface
 	}
 	if n.Opacity() < 1 {
 		return ReasonOpacity
@@ -327,6 +335,14 @@ func (b *builder) boundary(n *scene.Node, reason Reason) uint64 {
 		absOrigin: c.group.absOrigin.Add(origin),
 		opacity:   clamp01(n.Opacity()),
 		depth:     c.depth + 1,
+		nodeSize:  n.Size(),
+	}
+	if e := n.Effect(); e != nil {
+		layer.filter = e
+	}
+	if bs := n.Box(); bs != nil && bs.Shadow != nil && bs.Shadow.Blur > 0 && bs.Shadow.Color.A > 0 {
+		layer.boxShadow = bs.Shadow
+		layer.boxRadius = bs.Radius
 	}
 
 	// 2) 局部裁剪 = (父裁剪 - 层原点) ∩ 自身裁剪
@@ -380,17 +396,19 @@ func (b *builder) boundary(n *scene.Node, reason Reason) uint64 {
 	layer.computeBounds()
 
 	// 4) 决定合成方式
-	needOff := layer.opacity < 1 || layer.clip != ClipNone
+	needOff := layer.opacity < 1 || layer.clip != ClipNone ||
+		reason == ReasonFilter || reason == ReasonSurface
 	layer.hasText = layer.pictureHasText()
 	if reason == ReasonRepaintBoundary && b.opts.Cache {
 		needOff = true
 	}
-	if needOff && layer.hasText {
-		// GDI 文字通道画在**透明**离屏上会把 alpha 一起抹掉（它只写 RGB）。
-		// M2 对此没有正确解法，于是选择"宁可少一层，不要文字消失"：
+	// 滤镜层：文字不进离屏，合成后按设备坐标补画（见 drawTextLayer），
+	// 因此不需要为了文字放弃离屏——阴影与文字可以同时成立。
+	if needOff && layer.hasText && reason != ReasonFilter {
+		// 其余离屏层（opacity/clip）仍有同样的问题：GDI 文字通道只写 RGB，
+		// 画在透明离屏上会把 alpha 一起抹掉。宁可少一层，不要文字消失：
 		// 降级为扁平化并计数，组透明度会退化成逐指令乘 alpha（重叠处偏暗）。
-		// 这是明面上的已知缺陷，`--layers` 会把它暴露出来；M3 引入
-		// 不透明 scratch + 颜色反推 coverage 的文字离屏通道后移除。
+		// `--layers` 会把它暴露出来。
 		needOff = false
 		b.t.stats.TextFlat++
 	}

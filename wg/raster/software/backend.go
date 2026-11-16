@@ -45,6 +45,13 @@ type Backend struct {
 
 	// textOps 记录本次绘制遇到的文字指令数（由文字通道执行，不计 degraded）。
 	textOps int
+
+	// mask 是路径裁剪蒙版（nil 表示无路径裁剪）；maskW 是行宽。
+	// 矩形裁剪走 scissor，不进这里——只有 OpClipPath 才会建蒙版。
+	mask  []uint8
+	maskW int
+	// maskStack 保存 Save/Restore 之间的蒙版（nil 也要能压栈）。
+	maskStack [][]uint8
 }
 
 // New 创建软件后端。
@@ -107,10 +114,15 @@ func (b *Backend) Draw(dst *raster.Backing, dl *render.DisplayList, clip geom.Re
 		switch cmd.Op {
 		case render.OpSave:
 			clips = append(clips, cur)
+			b.maskStack = append(b.maskStack, b.mask)
 		case render.OpRestore:
 			if n := len(clips); n > 0 {
 				cur = clips[n-1]
 				clips = clips[:n-1]
+			}
+			if n := len(b.maskStack); n > 0 {
+				b.mask = b.maskStack[n-1]
+				b.maskStack = b.maskStack[:n-1]
 			}
 		case render.OpConcat:
 			// 矩阵已固化在每条指令里，这里无需处理
@@ -118,8 +130,12 @@ func (b *Backend) Draw(dst *raster.Backing, dl *render.DisplayList, clip geom.Re
 		case render.OpClipRect:
 			cur = cur.Intersect(cmd.Rect)
 		case render.OpClipPath:
-			// 录制期已降级成包围盒；这里同样按矩形裁剪
+			// 包围盒先收 scissor（省掉大量无用像素），再叠一层精确路径蒙版。
 			cur = cur.Intersect(cmd.Rect)
+			if p := dl.Path(cmd.Path); p != nil {
+				b.mask = b.buildPathMask(p, cmd.Matrix, dst.W(), dst.H(), cur)
+				b.maskW = dst.W()
+			}
 
 		case render.OpFillRect:
 			paint := dl.Paint(cmd.Paint)
@@ -173,6 +189,7 @@ func (b *Backend) fillPath(dst *raster.Backing, path *render.Path, m geom.Matrix
 
 	b.fill.reset()
 	b.fill.aa = b.aa && paint.AntiAlias
+	b.fill.mask, b.fill.maskW = b.mask, b.maskW
 	for _, pl := range polys {
 		b.fill.addPolyline(b.transform(pl.Pts, m))
 	}
@@ -194,6 +211,7 @@ func (b *Backend) strokePath(dst *raster.Backing, path *render.Path, m geom.Matr
 
 	b.fill.reset()
 	b.fill.aa = b.aa && paint.AntiAlias
+	b.fill.mask, b.fill.maskW = b.mask, b.maskW
 	for _, poly := range b.outline {
 		b.fill.addPolyline(b.transform(poly, m))
 	}
@@ -236,6 +254,12 @@ func (b *Backend) fillRect(dst *raster.Backing, r geom.Rect, paint *render.Paint
 	}
 	if x0 >= x1 || y0 >= y1 {
 		return raster.Stats{Ops: 1}
+	}
+
+	// 有路径蒙版时不能走"批量铺内接块"的快速路径：逐像素覆盖率要乘蒙版。
+	if b.mask != nil {
+		p := render.NewPath().AddRect(r)
+		return b.fillPath(dst, p, geom.Identity, paint, clip)
 	}
 
 	var st raster.Stats

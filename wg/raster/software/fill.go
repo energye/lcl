@@ -46,10 +46,27 @@ type filler struct {
 	aa     bool
 	stats  raster.Stats
 	pixTol float32
+
+	// mask 是路径裁剪蒙版（nil 表示无）；maskW 是它的行宽。
+	// 只在有 OpClipPath 的指令流里非 nil，热路径用一次判空挡住。
+	mask  []uint8
+	maskW int
 }
 
 func newFiller() *filler {
 	return &filler{wmul: 1, aa: true}
+}
+
+// maskCoverage 取蒙版覆盖率；越界视为 0（裁掉了）。
+func maskCoverage(m []uint8, w, x, y int) uint32 {
+	if w <= 0 {
+		return 0
+	}
+	i := y*w + x
+	if i < 0 || i >= len(m) {
+		return 0
+	}
+	return uint32(m[i])
 }
 
 func (f *filler) reset() {
@@ -269,6 +286,19 @@ func (f *filler) fill(dst *raster.Backing, clip geom.Rect, rule render.FillRule,
 				continue
 			}
 			px := x0 + i
+			// 路径裁剪：覆盖率再乘蒙版（矩形裁剪不会走到这里，mask 为 nil）。
+			if f.mask != nil {
+				ma := maskCoverage(f.mask, f.maskW, px, y)
+				if ma == 0 {
+					continue
+				}
+				if ma != 255 {
+					a = a * ma / 255
+					if a == 0 {
+						continue
+					}
+				}
+			}
 			if hasShader {
 				// 渐变：逐像素采样（设备中心 → 用户空间）
 				lp := inv.MapPoint(geom.Point{X: float32(px) + 0.5, Y: rowTop + 0.5})

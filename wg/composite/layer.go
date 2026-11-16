@@ -168,6 +168,16 @@ type Layer struct {
 	cacheable bool
 	// cached 表示本帧的内容直接来自缓存（没有重新栅格化）。
 	cached bool
+	// filter 是组滤镜（模糊/发光/组阴影）；nil 表示无。
+	filter *scene.EffectSpec
+	// boxShadow 是节点自身盒阴影；仅当 Blur>0 时存在（硬阴影仍在
+	// scene 的指令流里直接画，不需要开层）。
+	boxShadow *scene.ShadowSpec
+	// boxRadius 是盒阴影对应的圆角半径。
+	boxRadius float32
+	// nodeSize 是节点尺寸（盒阴影的形状来源）。
+	nodeSize geom.Size
+
 	// hasText 表示本层指令含文字。M2 的 GDI 文字通道画在透明离屏上会丢 alpha，
 	// 因此这类层**不**走离屏（降级为扁平化并计数，见 tree.go 的 noteTextOnLayer）。
 	hasText bool

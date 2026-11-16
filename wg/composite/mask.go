@@ -20,11 +20,20 @@ const maskSamples = 4
 // 先减去 bounds.Min 才对得上像素下标。这一步错了会表现为"圆角跑到外面"，
 // 而且只在层有偏移时才现形——测试必须覆盖带偏移的层。
 func buildMask(l *Layer, w, h int) []uint8 {
+	off := geom.Point{}
+	if l != nil {
+		off = l.bounds.RoundOut().Min
+	}
+	return buildMaskAt(l, w, h, off)
+}
+
+// buildMaskAt 与 buildMask 相同，但显式指定离屏缓冲原点对应的局部坐标。
+// 滤镜层会向外扩 pad，此时原点不是 bounds.Min，必须用这个版本。
+func buildMaskAt(l *Layer, w, h int, off geom.Point) []uint8 {
 	if l == nil || w <= 0 || h <= 0 || l.clip == ClipNone || l.clip == ClipRect {
 		// 矩形裁剪由指令流的 scissor 精确完成，不需要蒙版。
 		return nil
 	}
-	off := l.bounds.RoundOut().Min
 	r := l.clipRect.Offset(-off.X, -off.Y)
 
 	m := make([]uint8, w*h)
