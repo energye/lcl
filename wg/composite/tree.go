@@ -57,7 +57,6 @@ type treeStats struct {
 	Surface    int
 	MaxDepth   int
 	Downgraded int // 有理由但 M2 不建层的次数（Filter/Surface/超深度）
-	TextFlat   int // 因含文字而不能离屏的层数（见 noteTextOnLayer）
 }
 
 // Tree 是一棵构建好的合成层树。
@@ -396,21 +395,14 @@ func (b *builder) boundary(n *scene.Node, reason Reason) uint64 {
 	layer.computeBounds()
 
 	// 4) 决定合成方式
+	//
+	// 文字与离屏不再冲突：GDI 文字通道对非不透明目标走黑白双趟
+	// 保 alpha 写入（raster/gdi 的 Painter），文字可以正常进离屏，
+	// 组透明度/裁剪蒙版/滤镜/缓存对文字全部生效——没有 TextFlat 降级。
 	needOff := layer.opacity < 1 || layer.clip != ClipNone ||
 		reason == ReasonFilter || reason == ReasonSurface
-	layer.hasText = layer.pictureHasText()
 	if reason == ReasonRepaintBoundary && b.opts.Cache {
 		needOff = true
-	}
-	// 滤镜层：文字不进离屏，合成后按设备坐标补画（见 drawTextLayer），
-	// 因此不需要为了文字放弃离屏——阴影与文字可以同时成立。
-	if needOff && layer.hasText && reason != ReasonFilter {
-		// 其余离屏层（opacity/clip）仍有同样的问题：GDI 文字通道只写 RGB，
-		// 画在透明离屏上会把 alpha 一起抹掉。宁可少一层，不要文字消失：
-		// 降级为扁平化并计数，组透明度会退化成逐指令乘 alpha（重叠处偏暗）。
-		// `--layers` 会把它暴露出来。
-		needOff = false
-		b.t.stats.TextFlat++
 	}
 	layer.offscreen = needOff
 	layer.cacheable = needOff && b.opts.Cache
@@ -456,26 +448,9 @@ func (b *builder) closePicture() {
 		absOrigin: c.group.absOrigin,
 		picture:   dl,
 		bounds:    dl.Bounds(),
-		hasText:   dl.HasText(),
 		depth:     c.depth,
 	}
 	*c.out = append(*c.out, l)
-}
-
-// pictureHasText 递归判断组层是否含文字。
-func (l *Layer) pictureHasText() bool {
-	for _, c := range l.children {
-		if c.kind == LayerPicture {
-			if c.hasText {
-				return true
-			}
-			continue
-		}
-		if c.hasText || c.pictureHasText() {
-			return true
-		}
-	}
-	return false
 }
 
 // ── 签名 ────────────────────────────────────────────────────────────

@@ -95,9 +95,6 @@ type Compositor struct {
 	frame    int
 	lastSize geom.Size
 
-	// noText 非 0 时跳过文字通道（滤镜层先把形状做完卷积再补文字）。
-	noText int
-
 	// cache 是层离屏缓存（C7：只有合成器持有它）。
 	cache   *RasterCache
 	cacheOn bool

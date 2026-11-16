@@ -177,10 +177,6 @@ type Layer struct {
 	boxRadius float32
 	// nodeSize 是节点尺寸（盒阴影的形状来源）。
 	nodeSize geom.Size
-
-	// hasText 表示本层指令含文字。M2 的 GDI 文字通道画在透明离屏上会丢 alpha，
-	// 因此这类层**不**走离屏（降级为扁平化并计数，见 tree.go 的 noteTextOnLayer）。
-	hasText bool
 }
 
 // Kind 返回层种类。
@@ -242,9 +238,6 @@ func (l *Layer) Cacheable() bool { return l.cacheable }
 
 // Cached 表示本帧内容来自缓存。
 func (l *Layer) Cached() bool { return l.cached }
-
-// HasText 表示本层含文字指令。
-func (l *Layer) HasText() bool { return l.hasText }
 
 // Count 返回子树层数（含自身）。
 func (l *Layer) Count() int {

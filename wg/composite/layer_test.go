@@ -5,6 +5,7 @@ import (
 
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/raster"
+	"github.com/energye/lcl/wg/raster/software"
 	"github.com/energye/lcl/wg/render"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
@@ -348,32 +349,200 @@ func TestCacheBudgetEvicts(t *testing.T) {
 	}
 }
 
-// ── 降级路径：文字 ──────────────────────────────────────────────────
+// ── 文字与组语义（文字通道保 alpha 之后） ───────────────────────────
 
-func TestTextOnOpacityLayerFlattens(t *testing.T) {
-	// GDI 文字画在透明离屏上会丢 alpha，所以含文字的层不走向量离屏，
-	// 而是降级为扁平化。这条测试守着"降级必须被计数且不建离屏层"。
-	txt := scene.Text(scene.TextSpec{
+// fakeTextPainter 把每段文字的矩形画成实心预乘色块，模拟字形覆盖。
+// composite 只关心"文字像素进了 dst"这个事实；字形形状与覆盖率提取
+// 由 gdi 通道负责（有独立的通道级测试）。记录填充矩形供像素断言定位。
+type fakeTextPainter struct {
+	rects []geom.Rect
+	calls int
+}
+
+func (p *fakeTextPainter) PaintText(dst *raster.Backing, dl *render.DisplayList, clip geom.Rect) int {
+	p.calls++
+	if dst == nil || dl == nil || !dl.HasText() {
+		return 0
+	}
+	n := 0
+	for _, cmd := range dl.Commands() {
+		if cmd.Op != render.OpDrawText {
+			continue
+		}
+		item := dl.Text(cmd.Text)
+		if item == nil || item.Layout.Empty() {
+			continue
+		}
+		a := cmd.Rect.Intersect(clip).RoundOut()
+		p.rects = append(p.rects, a)
+		x0, y0 := maxi(int(a.Min.X), 0), maxi(int(a.Min.Y), 0)
+		x1, y1 := mini(int(a.Max.X), dst.W()), mini(int(a.Max.Y), dst.H())
+		px := item.Color.PremulBGRA()
+		for y := y0; y < y1; y++ {
+			row := dst.Row(y)
+			for x := x0; x < x1; x++ {
+				row[x] = px
+			}
+		}
+		n++
+	}
+	return n
+}
+
+// equalPix 逐像素比较两块缓冲。
+func equalPix(a, b []uint32) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// newTextComp 造一个黑底合成器 + fake 文字通道。
+func newTextComp(t *testing.T, w, h int) (*Compositor, *fakeTextPainter) {
+	t.Helper()
+	p := &fakeTextPainter{}
+	c, err := New(Options{
+		Backend:    software.New(software.Options{}),
+		Text:       p,
+		Width:      w,
+		Height:     h,
+		Background: geom.RGBA(0, 0, 0),
+	})
+	if err != nil {
+		t.Fatalf("创建合成器失败: %v", err)
+	}
+	return c, p
+}
+
+func testTextNode() *scene.Node {
+	return scene.Text(scene.TextSpec{
 		Src:        "hello",
 		Layout:     testLayout(),
 		LayoutFont: text.DefaultFont(14),
-		Color:      geom.RGBA(0, 0, 0),
+		Color:      geom.RGBA(255, 255, 255),
 	})
-	root := scene.Opacity(0.5, txt)
+}
+
+func TestTextOnOpacityLayerOffscreen(t *testing.T) {
+	// 文字通道保 alpha 后，含文字的 opacity 层正常离屏，文字被组透明度乘到。
+	// 黑底白"字" 50% 组透明度 → 文本像素 ≈128 灰。TextFlat 时代文字
+	// 不经过组透明度（全不透明白），这条像素断言守的就是这个差别。
+	root := scene.Opacity(0.5, testTextNode())
 	root.Layout(scene.Unbounded())
 	tr := buildOnly(root)
-	if tr.Stats().TextFlat != 1 {
-		t.Fatalf("含文字层应计一次 TextFlat: %+v", tr.Stats())
-	}
 	var off bool
 	tr.Walk(func(l *Layer) bool {
-		if l.Reason() == ReasonOpacity && l.Offscreen() {
-			off = true
+		if l.Reason() == ReasonOpacity {
+			off = l.Offscreen()
 		}
 		return true
 	})
-	if off {
-		t.Fatal("含文字的 opacity 层不该离屏")
+	if !off {
+		t.Fatal("含文字的 opacity 层应正常离屏（不应再降级扁平化）")
+	}
+
+	c, _ := newTextComp(t, 60, 60)
+	c.InvalidateAll()
+	if _, err := c.DrawTree(tr); err != nil {
+		t.Fatal(err)
+	}
+	pix := c.Backing().Pix()
+	gray, solid := 0, 0
+	for _, px := range pix {
+		if px == 0xFF808080 {
+			gray++
+		}
+		if px == 0xFFFFFFFF {
+			solid++
+		}
+	}
+	if gray == 0 {
+		t.Fatal("黑底上应有 50% 组透明度的灰色文字像素（≈0x80）")
+	}
+	if solid != 0 {
+		t.Fatalf("文字不应以全不透明白出现（组透明度没乘到文字）: %d 像素", solid)
+	}
+}
+
+func TestTextOnClipLayerMasked(t *testing.T) {
+	// 圆角裁剪层的"文字"必须吃蒙版：圆角外的像素不出现。
+	root := scene.Clip(scene.ClipSpec{Radius: 10}, testTextNode())
+	root.Layout(scene.Unbounded())
+	tr := buildOnly(root)
+
+	c, p := newTextComp(t, 60, 60)
+	c.InvalidateAll()
+	if _, err := c.DrawTree(tr); err != nil {
+		t.Fatal(err)
+	}
+	if len(p.rects) == 0 {
+		t.Fatal("文字通道应被调用")
+	}
+	r := p.rects[0]
+	if !r.IsEmpty() && r.Min.X < 2 && r.Min.Y < 2 {
+		// 文字矩形从原点附近开始：圆角 (0,0) 在半径 10 之外，必须被裁掉。
+		if got := c.Backing().Pix()[0]; got != 0xFF000000 {
+			t.Fatalf("圆角外 (0,0) 应是背景黑，实际 %#08x", got)
+		}
+		if got := c.Backing().Pix()[5*60+5]; got != 0xFFFFFFFF {
+			t.Fatalf("圆角内 (5,5) 应是不透明文字像素，实际 %#08x", got)
+		}
+	}
+}
+
+func TestCacheHitKeepsText(t *testing.T) {
+	// 文字随内容进缓存：命中帧不再走文字通道，也不能丢字。
+	// （旧实现里含文字的滤镜层 cacheable=true 但命中路径不补画文字，命中即丢字。）
+	c, p := newTextComp(t, 60, 60)
+	root := scene.Opacity(0.5, testTextNode())
+	root.Layout(scene.Unbounded())
+	tr := Build(root, BuildOptions{Cache: true})
+	c.InvalidateAll()
+	if _, err := c.DrawTree(tr); err != nil {
+		t.Fatal(err)
+	}
+	first := c.Backing().Pix()
+
+	c.InvalidateAll()
+	st, err := c.DrawTree(tr)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if st.LayerCacheHits == 0 {
+		t.Fatalf("第二帧应命中缓存: %+v", st)
+	}
+	if pix := c.Backing().Pix(); !equalPix(pix, first) {
+		t.Fatal("命中帧的像素应与首帧完全一致（文字不能丢）")
+	}
+	if p.calls != 1 {
+		t.Fatalf("文字通道应只在首帧（栅格化）调用 1 次，实际 %d 次", p.calls)
+	}
+}
+
+func TestNestedOpacityMultipliesText(t *testing.T) {
+	// 嵌套组透明度对文字相乘：0.5 × 0.5 = 0.25 → 黑底上 ≈64 灰。
+	root := scene.Opacity(0.5, scene.Opacity(0.5, testTextNode()))
+	root.Layout(scene.Unbounded())
+	tr := buildOnly(root)
+
+	c, _ := newTextComp(t, 60, 60)
+	c.InvalidateAll()
+	if _, err := c.DrawTree(tr); err != nil {
+		t.Fatal(err)
+	}
+	gray := 0
+	for _, px := range c.Backing().Pix() {
+		if px == 0xFF404040 {
+			gray++
+		}
+	}
+	if gray == 0 {
+		t.Fatal("黑底上应有 0.25 有效透明度的文字像素（≈0x40）")
 	}
 }
 

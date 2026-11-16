@@ -208,25 +208,25 @@ func layerCases() []layerCase {
 			},
 		},
 		{
-			name: "filter-downgrade-counted",
-			want: "组模糊 M2 未实现 → 不建层但降级计数=1（C22）",
+			name: "filter-layer-built",
+			want: "组模糊已实现（1cb5edd）：滤镜层正常建层，不再走 M2 降级",
 			run: func() (string, error) {
 				root := scene.Effect(scene.EffectSpec{BlurSigma: 4}, box(20, 20, geom.RGBA(1, 2, 3)))
 				root.Layout(scene.Unbounded())
 				tr := composite.Build(root, composite.BuildOptions{})
 				got := fmt.Sprintf("组层 %d 降级 %d", tr.Groups(), tr.Stats().Downgraded)
-				if tr.Groups() != 1 {
-					return got, fmt.Errorf("不该建层")
+				if tr.Groups() != 2 {
+					return got, fmt.Errorf("组模糊应建滤镜层（根 + 滤镜层）")
 				}
-				if tr.Stats().Downgraded != 1 {
-					return got, fmt.Errorf("降级必须计数")
+				if tr.Stats().Downgraded != 0 {
+					return got, fmt.Errorf("组模糊已实现，不应降级")
 				}
 				return got, nil
 			},
 		},
 		{
-			name: "text-on-layer-flattens",
-			want: "含文字的 opacity 层不离屏（GDI 文字在透明底上会丢 alpha），计 TextFlat",
+			name: "text-on-layer-offscreen",
+			want: "含文字的 opacity 层正常离屏（文字通道保 alpha），文字进组语义",
 			run: func() (string, error) {
 				font := text.DefaultFont(14)
 				txt := scene.Text(scene.TextSpec{
@@ -242,12 +242,12 @@ func layerCases() []layerCase {
 				if l == nil {
 					return "未找到层", fmt.Errorf("未建层")
 				}
-				got := fmt.Sprintf("offscreen=%v TextFlat=%d", l.Offscreen(), tr.Stats().TextFlat)
-				if l.Offscreen() {
-					return got, fmt.Errorf("含文字层不该离屏")
+				got := fmt.Sprintf("组层 %d offscreen=%v cacheable=%v", tr.Groups(), l.Offscreen(), l.Cacheable())
+				if !l.Offscreen() {
+					return got, fmt.Errorf("含文字的 opacity 层应离屏")
 				}
-				if tr.Stats().TextFlat != 1 {
-					return got, fmt.Errorf("应计一次 TextFlat")
+				if !l.Cacheable() {
+					return got, fmt.Errorf("含文字层应可缓存（文字随内容进缓存）")
 				}
 				return got, nil
 			},

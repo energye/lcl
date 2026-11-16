@@ -35,6 +35,10 @@ func (c *Compositor) drawLayer(l *Layer, dst *raster.Backing, ox, oy int, clip g
 }
 
 // drawPicture 回放一段指令（形状走光栅后端，文字走设备空间通道）。
+//
+// 文字直接画进 dst：不透明目标（主缓冲）走 GDI 单趟往返；
+// 透明目标（组层离屏）走黑白双趟保 alpha 写入——文字由此参与
+// 组透明度/裁剪蒙版/滤镜/缓存，不再需要任何降级或补画。
 func (c *Compositor) drawPicture(dst *raster.Backing, dl *render.DisplayList, dx, dy int, clip geom.Rect, alpha float32) raster.Stats {
 	if dl == nil || dl.Empty() || dst == nil {
 		return raster.Stats{}
@@ -46,7 +50,7 @@ func (c *Compositor) drawPicture(dst *raster.Backing, dl *render.DisplayList, dx
 		dl = dl.OffsetBy(float32(dx), float32(dy))
 	}
 	st := c.backend.Draw(dst, dl, clip)
-	if dl.HasText() && c.noText == 0 {
+	if dl.HasText() {
 		if c.text != nil {
 			c.st.textLines += c.text.PaintText(dst, dl, clip)
 		} else {
@@ -105,21 +109,12 @@ func (c *Compositor) drawGroup(l *Layer, dst *raster.Backing, ox, oy int, clip g
 		target = content
 	}
 
-	// 滤镜层：文字不进离屏（GDI 文字通道只写 RGB，画在透明底上会丢 alpha），
-	// 形状先进离屏做卷积，合成后再把文字按设备坐标补画上去。
-	skipText := pad > 0 && l.hasText
-	if skipText {
-		c.noText++
-	}
 	for _, ch := range l.children {
 		// 子层的 origin 在**本层局部空间**，离屏的 (0,0) 是 base，
 		// 所以减掉 base 才是离屏像素坐标。
 		cx := roundf(ch.origin.X - base.X)
 		cy := roundf(ch.origin.Y - base.Y)
 		c.drawLayer(ch, target, cx, cy, target.Bounds(), 1)
-	}
-	if skipText {
-		c.noText--
 	}
 
 	if pad > 0 {
@@ -134,38 +129,10 @@ func (c *Compositor) drawGroup(l *Layer, dst *raster.Backing, ox, oy int, clip g
 	c.st.layerRaster++
 	c.st.blended += blendBacking(dst, off, dx, dy, l.opacity, mask)
 
-	if skipText {
-		c.drawTextLayer(l, dst, ox, oy, clip)
-	}
-
 	if c.cacheOn && l.cacheable && c.cache != nil {
 		c.cache.Store(key, off, mask)
 	} else {
 		c.cache.Release(off)
-	}
-}
-
-// drawTextLayer 把一层里的文字按设备坐标补画到 dst（滤镜层专用）。
-//
-// 只处理文字指令：形状已经在离屏里处理完并参与了滤镜。这样"卡片有阴影
-// 也有文字"能同时成立，代价是文字本身不参与模糊（阴影场景这正是想要的）。
-func (c *Compositor) drawTextLayer(l *Layer, dst *raster.Backing, ox, oy int, clip geom.Rect) {
-	if c.text == nil {
-		return
-	}
-	for _, ch := range l.children {
-		if ch.kind == LayerPicture {
-			dl := ch.picture
-			if dl == nil || !dl.HasText() {
-				continue
-			}
-			if ox != 0 || oy != 0 {
-				dl = dl.OffsetBy(float32(ox), float32(oy))
-			}
-			c.st.textLines += c.text.PaintText(dst, dl, clip)
-			continue
-		}
-		c.drawTextLayer(ch, dst, ox+roundf(ch.origin.X), oy+roundf(ch.origin.Y), clip)
 	}
 }
 
