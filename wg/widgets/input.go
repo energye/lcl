@@ -42,6 +42,14 @@ func (w *Input) Editor() *input.TextEditor {
 	return w.editor
 }
 
+// FocusNode 返回持久焦点节点（焦点管理/诊断用）。
+func (w *Input) FocusNode() *input.FocusNode {
+	if w.focus == nil {
+		w.focus = input.NewFocusNode(true)
+	}
+	return w.focus
+}
+
 func (w *Input) ensureEditor() *input.TextEditor {
 	if w.editor == nil {
 		w.editor = input.NewTextEditor(w.Multiline)
@@ -123,6 +131,11 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 				return false
 			}
 			if w.keys.Handle(ev) {
+				// Tab 在编辑模型里是 ActionNext，但它不认识焦点管理器。
+				// 组件必须显式转发，否则输入框里按 Tab 光标不动（最常见的"焦点陷阱"）。
+				if ev.Code == input.CodeTab && ctx.Focus != nil {
+					ctx.Focus.HandleKey(ev)
+				}
 				return true
 			}
 			return ctx.Focus != nil && ctx.Focus.HandleKey(ev)

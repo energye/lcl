@@ -17,11 +17,15 @@ import (
 // 长度随着重建次数增长，而且焦点会莫名其妙丢失。
 type controlBase struct {
 	ui.Base
+	node    *scene.Node
 	focus   *input.FocusNode
 	hover   bool
 	pressed bool
 	tap     *ui.GestureDetector
 }
+
+// Node 返回最近一次构建出的场景节点（诊断/自动化点击用）。
+func (b *controlBase) Node() *scene.Node { return b.node }
 
 func (b *controlBase) states(disabled bool) ui.StateSet {
 	var s ui.StateSet
@@ -46,6 +50,7 @@ func (b *controlBase) states(disabled bool) ui.StateSet {
 // FocusManager.SetCurrent 看到"还是同一个 FocusNode"会直接返回，
 // 不补这一步，输入框重建一次后就再也收不到按键。
 func (b *controlBase) attach(ctx *ui.BuildContext, node *scene.Node, h input.Handler, canFocus bool) {
+	b.node = node
 	if ctx.Input != nil {
 		ctx.Input.Set(node, h)
 	}

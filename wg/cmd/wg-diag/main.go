@@ -45,6 +45,7 @@ func main() {
 		ovlF      = flag.Bool("overlaytest", false, "16 组浮层/组件基座断言（定位/关闭/遮罩/样式/动画）")
 		idleF     = flag.Bool("idle", false, "1000 节点静止 0 帧（C14 门禁）")
 		keysF     = flag.Bool("keyselftest", false, "14 项文本/按键分离断言（C28；中文上屏）")
+		formF     = flag.Bool("formtest", false, "7 项表单页 demo 门禁（零 lcl / 中文上屏 / Tab / Tooltip）")
 		showCtr   = flag.Bool("contracts", false, "打印契约表")
 		headless  = flag.Bool("headless", false, "无窗口确定性出帧")
 		frames    = flag.Int("frames", 60, "--headless 的帧数")
@@ -395,6 +396,29 @@ func main() {
 		fmt.Println(res.String())
 		if err != nil || !res.OK() {
 			fmt.Fprintln(os.Stderr, "keyselftest 门禁未通过（C28：文本与按键分离）")
+			exit = 1
+		}
+	}
+
+	if *formF {
+		ran = true
+		res, err := diag.FormTest()
+		if !*quiet {
+			for _, d := range res.Details {
+				mark := "ok  "
+				if !d.OK {
+					mark = "FAIL"
+				}
+				fmt.Printf("%s %-24s %s", mark, d.Name, d.Got)
+				if d.Note != "" {
+					fmt.Printf("  ← %s", d.Note)
+				}
+				fmt.Println()
+			}
+		}
+		fmt.Println(res.String())
+		if err != nil || !res.OK() {
+			fmt.Fprintln(os.Stderr, "formtest 门禁未通过（M3 表单页 demo）")
 			exit = 1
 		}
 	}

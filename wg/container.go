@@ -399,6 +399,9 @@ func (c *Container) ensureScene() bool {
 		OnChange: c.requestFrame,
 	})
 	c.disp = input.NewDispatcher(c.scene)
+	// 焦点管理器必须挂到分发器：否则 SetCurrent 只改内部状态，
+	// Key/IME 仍投给旧节点（表现为"输入框有焦点框但打不出字"）。
+	c.focus.Attach(c.disp)
 	c.disp.OnCursorChanged(func(cur scene.Cursor) {
 		// 光标暂由宿主平台层落地（M3 接 Binder.SetCursor）。
 		c.lastCursor = cur
