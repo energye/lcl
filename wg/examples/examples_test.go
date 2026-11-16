@@ -66,6 +66,42 @@ func TestEveryExampleInContainer(t *testing.T) {
 	}
 }
 
+// TestEveryExamplePaintsPixels 逐条验证示例的首帧真的画出了非背景像素。
+//
+// TestEveryExampleInContainer 只断言 Presented/Nodes，会把"节点全在零宽区域"
+// 这类真窗空白 bug 误判为通过（M6 的教训）。这里直接采样合成缓冲：每条示例
+// 都必须有足够多的非背景像素，才能证明该能力在容器上真实可见。
+func TestEveryExamplePaintsPixels(t *testing.T) {
+	for _, ex := range All {
+		ex := ex
+		t.Run(ex.ID, func(t *testing.T) {
+			c := wg.NewHeadless(wg.DefaultOptions())
+			c.Resize(1024, 768)
+			c.MountWidget(ex.Widget())
+			if _, err := c.FrameOnce(); err != nil {
+				t.Fatalf("首帧失败: %v", err)
+			}
+			b := c.Backing()
+			if b == nil {
+				t.Fatal("合成缓冲为空")
+			}
+			nonBg := 0
+			for y := 0; y < b.H(); y += 4 {
+				for x := 0; x < b.W(); x += 4 {
+					p := b.Pix()[y*b.W()+x]
+					r, g, bl := byte(p>>16), byte(p>>8), byte(p)
+					if r != 255 || g != 255 || bl != 255 {
+						nonBg++
+					}
+				}
+			}
+			if nonBg < 100 {
+				t.Fatalf("非背景采样点=%d，画布疑似空白", nonBg)
+			}
+		})
+	}
+}
+
 // TestGallerySelectsEveryExample 验证画廊能逐项切换并出帧。
 // 这是对真窗里"点左侧导航 → 右侧换页"这条链路的 headless 回归。
 func TestGallerySelectsEveryExample(t *testing.T) {

@@ -24,6 +24,7 @@ import (
 	"github.com/energye/lcl/types"
 	"github.com/energye/lcl/wg"
 	"github.com/energye/lcl/wg/examples"
+	"github.com/energye/lcl/wg/host"
 )
 
 type TExamplesForm struct {
@@ -43,6 +44,11 @@ var (
 func requestExit(code int) {
 	lcl.RunOnMainThreadAsync(func(id uint32) {
 		exitCode = code
+		// 必须先释放呈现层的 LCL 位图：Application.Terminate 之后运行时
+		// 开始销毁，再 Free 会访问违例（0xc0000005）。
+		if mainForm.container != nil {
+			mainForm.container.ReleasePresent()
+		}
 		lcl.Application.Terminate()
 	})
 }
@@ -124,16 +130,39 @@ func backingToImage(c *wg.Container) (*image.NRGBA, error) {
 // startShot 等帧泵稳定后导出 PNG，并打印呈现统计与"非背景像素"证据。
 func startShot(path string) {
 	go func() {
-		deadline := time.Now().Add(20 * time.Second)
-		for mainForm.container.Frames() < 30 && time.Now().Before(deadline) {
-			time.Sleep(10 * time.Millisecond)
+		// 静止界面按 C14 不会持续出帧，所以等到"至少 2 帧"或 2s 超时即可，
+		// 不必死等 30 帧：83 条示例逐条自检时，20s 超时会拖到几十分钟。
+		deadline := time.Now().Add(2 * time.Second)
+		for mainForm.container.Frames() < 2 && time.Now().Before(deadline) {
+			time.Sleep(5 * time.Millisecond)
 		}
+		// 同步补一次呈现：刚显示的窗口可能还没收到 WM_PAINT，
+		// 只等消息会得到 painted=0 的假阴性。
+		lcl.RunOnMainThreadAsync(func(id uint32) {
+			mainForm.container.PresentNow()
+		})
+		time.Sleep(120 * time.Millisecond)
 		// 真窗呈现器必须真的提交过帧：这是"窗口不是空白"的直接证据。
 		ps := mainForm.container.PresentStats()
 		fmt.Printf("[WG-SHOT] frames=%d painted=%d buffered=%v damage=%v\n",
 			ps.Frames, ps.Painted, ps.Buffered, ps.LastDamage)
 		if ps.Frames < 1 {
 			fmt.Println("[WG-SHOT] FAIL: 没有帧提交到呈现器")
+			requestExit(1)
+			return
+		}
+		// 屏幕级证据：--shot 读的是内存合成缓冲，内存有内容 ≠ 窗口有像素。
+		// 这里采样真实窗口 DC，全白直接判失败（M6 空白 bug 的回归门禁）。
+		nonWhiteWin, sampledWin, cw, ch, okWin := host.WindowPixelStats(
+			uintptr(mainForm.Handle()), 8)
+		if !okWin {
+			fmt.Println("[WG-SHOT] FAIL: 无法采样窗口客户区")
+			requestExit(1)
+			return
+		}
+		fmt.Printf("[WG-WINDOW] client=%dx%d 窗口非白=%d/%d\n", cw, ch, nonWhiteWin, sampledWin)
+		if nonWhiteWin < 50 {
+			fmt.Println("[WG-SHOT] FAIL: 真实窗口客户区几乎全白（内存缓冲有内容也不算通过）")
 			requestExit(1)
 			return
 		}

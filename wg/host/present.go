@@ -3,6 +3,8 @@ package host
 import (
 	"sync"
 
+	"github.com/energye/lcl/lcl"
+
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/raster"
 )
@@ -25,7 +27,20 @@ type Presenter struct {
 	host *Host // 用于校验帧尺寸与当前客户区一致（同包，不构成外部循环）
 	mu   sync.RWMutex
 
+	// plat 是平台私有状态（Windows：LCL 24bpp 离屏位图）。
+	plat presentPlatform
+
+	// canvas 返回当前可绘制的窗口画布（LCL TCanvas）。
+	// 只在 OnPaint 期间有效，所以由 Host 在 paint 回调里设置。
+	canvas func() lcl.ICanvas
+	// repaint 请求窗口重绘（LCL Repaint/Invalidate）。
+	repaint func()
+
 	b       *raster.Backing
+	// own 是 Presenter 自己持有的稳定副本：合成器的 Backing 在下一帧会被
+	// 覆写，若 Paint 直接读它，主线程与帧泵线程会竞争同一块像素（撕裂），
+	// 且在某些驱动上 StretchDIBits 会因源缓冲正被写入而失败。
+	own     *raster.Backing
 	damage  geom.Rect
 	frames  int
 	painted int
@@ -48,11 +63,54 @@ func NewPresenter(hwnd uintptr, h *Host) *Presenter {
 	return &Presenter{hwnd: hwnd, host: h}
 }
 
-// Frame 记录一帧合成结果，并让窗口无效化以便在 WM_PAINT 中提交。
+// SetCanvas 设置窗口画布提供者（LCL TCanvas，仅在 OnPaint 内有效）。
+func (p *Presenter) SetCanvas(fn func() lcl.ICanvas) { p.canvas = fn }
+
+// SetRepaint 设置重绘请求函数（LCL Repaint）。
+func (p *Presenter) SetRepaint(fn func()) { p.repaint = fn }
+
+// Frame 记录一帧合成结果，并让窗口无效化以便在 OnPaint 中提交。
 // damage 为空表示整帧（headless 出图时常见）。
+//
+// 这里**拷贝**像素到自有缓冲：合成器的 Backing 是复用的，下一帧会原地覆写；
+// 若 Paint 直接读它，主线程与帧泵线程竞争同一块像素会撕裂，实测还会让
+// StretchDIBits 返回 0（窗口全白）。拷贝只发生在 Presented 帧，静止界面
+// 一帧都不拷，符合 C14 的"按需装填"。
 func (p *Presenter) Frame(b *raster.Backing, damage geom.Rect) {
+	if b == nil {
+		return
+	}
+	w, h := b.W(), b.H()
+	if w <= 0 || h <= 0 {
+		return
+	}
+
 	p.mu.Lock()
-	p.b = b
+	if p.own == nil || p.own.W() != w || p.own.H() != h {
+		p.own = raster.NewBacking(w, h)
+	}
+	// 只拷脏区（damage 为空则整帧）；逐行 memcpy 保持 stride 语义。
+	src := b.Bytes()
+	dst := p.own.Bytes()
+	if len(src) != len(dst) {
+		p.mu.Unlock()
+		return
+	}
+	if damage.IsEmpty() {
+		copy(dst, src)
+	} else {
+		r := damage.Intersect(b.Bounds())
+		if r.IsEmpty() {
+			p.mu.Unlock()
+			return
+		}
+		x0, y0 := int(r.Min.X), int(r.Min.Y)
+		x1, y1 := int(r.Max.X), int(r.Max.Y)
+		for y := y0; y < y1; y++ {
+			row := y * p.own.Stride()
+			copy(dst[row+x0*4:row+x1*4], src[row+x0*4:row+x1*4])
+		}
+	}
 	p.damage = damage
 	p.frames++
 	p.mu.Unlock()
@@ -65,7 +123,7 @@ func (p *Presenter) Frame(b *raster.Backing, damage geom.Rect) {
 // 必须在窗口主线程（WM_PAINT 处理中）调用。
 func (p *Presenter) Paint() bool {
 	p.mu.RLock()
-	b := p.b
+	b := p.own
 	d := p.damage
 	p.mu.RUnlock()
 	if b == nil || p.hwnd == 0 {
@@ -88,7 +146,7 @@ func (p *Presenter) Stats() PresentStats {
 		Frames:     p.frames,
 		Painted:    p.painted,
 		LastDamage: p.damage,
-		Buffered:   p.b != nil,
+		Buffered:   p.own != nil,
 	}
 }
 
@@ -96,6 +154,7 @@ func (p *Presenter) Stats() PresentStats {
 func (p *Presenter) Close() {
 	p.mu.Lock()
 	p.b = nil
+	p.own = nil
 	p.mu.Unlock()
 	p.release()
 }

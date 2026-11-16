@@ -2,6 +2,7 @@ package host
 
 import (
 	"github.com/energye/lcl/lcl"
+	"github.com/energye/lcl/types"
 	"github.com/energye/lcl/wg/geom"
 )
 
@@ -18,6 +19,17 @@ type Host struct {
 	form lcl.IEngForm
 
 	root *Surface
+
+	// canvasHost 是真正承载像素的无 HWND 控件（TCustomGraphicControl）。
+	//
+	// 为什么需要它：直接对窗口 DC 调 GDI（GetDC + StretchDIBits）在 DWM
+	// 重定向表面上会间歇性失败；LCL 的 TGraphicControl 本身没有句柄，
+	// 它的 Canvas 只在 OnPaint 内有效，把像素提交放在这里既稳定又符合
+	// "无句柄画布"的设计前提（见 examples/wg/showcase 的实证）。
+	canvasHost lcl.ICustomGraphicControl
+
+	// OnPaint 由容器注入：在控件重绘时提交最近一帧。
+	OnPaint func(canvas lcl.ICanvas)
 
 	// client 是客户区像素尺寸。
 	client geom.Size
@@ -39,6 +51,47 @@ func New(form lcl.IEngForm) *Host {
 	}
 	h.root = NewSurface(SurfaceInline, geom.RectXYWH(0, 0, h.client.W, h.client.H))
 	return h
+}
+
+// CanvasControl 返回承载像素的无句柄控件；headless 时为 nil。
+func (h *Host) CanvasControl() lcl.ICustomGraphicControl { return h.canvasHost }
+
+// BindCanvas 在窗体上创建无 HWND 的画布控件，并把 OnPaint 接到 h.OnPaint。
+//
+// 必须在窗体句柄存在后调用（RunOnMainThreadAsync 里）。它替代"裸 GDI 写
+// 窗口 DC"：像素提交发生在控件自己的 OnPaint 内，Canvas 在那时保证有效。
+func (h *Host) BindCanvas() error {
+	if h.form == nil {
+		return ErrNoForm
+	}
+	if h.canvasHost != nil {
+		return nil
+	}
+	c := lcl.NewCustomGraphicControl(h.form)
+	if c == nil || !c.IsValid() {
+		return ErrNoForm
+	}
+	c.SetAlign(types.AlClient)
+	c.SetParent(h.form)
+	c.SetParentBackground(false)
+	c.SetControlStyle(c.ControlStyle().Include(types.CsOpaque))
+	c.SetOnPaint(func(sender lcl.IObject) {
+		if h.OnPaint == nil {
+			return
+		}
+		if cv := c.Canvas(); cv != nil && cv.IsValid() {
+			h.OnPaint(cv)
+		}
+	})
+	h.canvasHost = c
+	return nil
+}
+
+// Repaint 请求画布控件重绘（下一轮 OnPaint 会提交最新帧）。
+func (h *Host) Repaint() {
+	if h.canvasHost != nil {
+		h.canvasHost.Repaint()
+	}
 }
 
 // Form 返回绑定的窗体；headless 模式下为 nil。

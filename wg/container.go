@@ -1,11 +1,14 @@
 package wg
 
 import (
+	"fmt"
+	"os"
 	"sync"
 	"sync/atomic"
 	"time"
 
 	"github.com/energye/lcl/lcl"
+	"github.com/energye/lcl/types"
 	"github.com/energye/lcl/wg/composite"
 	"github.com/energye/lcl/wg/frame"
 	"github.com/energye/lcl/wg/geom"
@@ -661,6 +664,23 @@ func (c *Container) TickTime(now time.Time) {
 	}
 }
 
+// ResizeRequest 实现 host.ResizeSink：把平台尺寸变化转给去抖调度器。
+//
+// 不能直接调 Resize：拖动窗口时会来几十条 WM_SIZE，每次都重建合成缓冲
+// 既慢又会让画面抖动。交给 scheduler 去抖，窗口停下后才真正重建一次。
+func (c *Container) ResizeRequest(w, h int) {
+	c.mu.Lock()
+	s := c.sched
+	c.mu.Unlock()
+	if s != nil {
+		s.RequestResize(w, h)
+		return
+	}
+	// 还没有调度器（启动早期）：直接同步一次，保证首帧尺寸正确。
+	c.Resize(w, h)
+	c.RequestFrame()
+}
+
 // Resize 修改客户区尺寸并重建帧缓冲。
 func (c *Container) Resize(w, h int) {
 	c.mu.Lock()
@@ -762,6 +782,35 @@ func (c *Container) Backing() *raster.Backing {
 		return nil
 	}
 	return c.comp.Backing()
+}
+
+// ReleasePresent 在主线程释放呈现层的 LCL 资源（位图/像素视图）。
+//
+// 必须在 Application.Run 返回前调用：Run 之后 LCL 运行时开始销毁，
+// 再 Free 位图会访问违例。Application.Terminate 不会触发 OnClose，
+// 所以退出路径要显式调这个。可重复调用（内部置空）。
+func (c *Container) ReleasePresent() {
+	c.mu.Lock()
+	p := c.presenter
+	c.mu.Unlock()
+	if p != nil {
+		p.Close()
+	}
+}
+
+// PresentNow 立即把最近一帧提交到窗口 DC（必须在主线程调用）。
+//
+// 正常路径是 WM_PAINT → Presenter.Paint；但刚显示窗口时系统可能还没投递
+// paint，自检/截图如果只看 WM_PAINT 会得到"painted=0"的假阴性。这个入口
+// 让调用方能同步确认像素真的落地，不依赖消息时机。
+func (c *Container) PresentNow() bool {
+	c.mu.Lock()
+	p := c.presenter
+	c.mu.Unlock()
+	if p == nil {
+		return false
+	}
+	return p.Paint()
 }
 
 // PresentStats 返回呈现链路统计（帧提交到窗口 DC 的次数）。
@@ -990,14 +1039,37 @@ func (c *Container) Run() error {
 	// 窗口消息仍走 LCL 默认处理：鼠标键盘到不了分发器，输入法更是完全失联。
 	binder := host.NewBinder(c.host, c)
 	binder.SetIMEBridge(c.ime)
-	// 呈现链路：真窗需要一个 Presenter 把合成出的 Backing 贴到窗口 DC。
-	// 只绑定真窗（form != nil）：headless 容器只在内存里出图。
+	// 呈现链路：真窗需要一个 Presenter 把合成出的 Backing 画到窗口上。
+	// 像素提交走 LCL 无句柄控件的 OnPaint（见 host.BindCanvas），
+	// 不直接写窗口 DC —— 后者在 DWM 重定向表面上会间歇性失败。
 	if c.form != nil && c.host.Bound() {
 		p := host.NewPresenter(uintptr(c.form.Handle()), c.host)
+		p.SetCanvas(func() lcl.ICanvas {
+			if cc := c.host.CanvasControl(); cc != nil {
+				return cc.Canvas()
+			}
+			return nil
+		})
+		p.SetRepaint(c.host.Repaint)
+		c.host.OnPaint = func(cv lcl.ICanvas) {
+			_ = cv // Presenter 自己取 Canvas，这里只触发提交
+			p.Paint()
+		}
+		if err := c.host.BindCanvas(); err != nil {
+			fmt.Fprintf(os.Stderr, "wg: 画布控件绑定失败: %v\n", err)
+		}
 		c.mu.Lock()
 		c.presenter = p
 		c.mu.Unlock()
 		binder.SetPresenter(p)
+		// LCL 对象必须在 Application.Run 返回**之前**释放：Run 结束后
+		// LCL 运行时已开始销毁，此时 Free 位图会访问违例（实测 0xc0000005）。
+		// OnClose 是窗口关闭时的主线程回调，那时 LCL 仍完整可用。
+		if f := c.form; f != nil {
+			f.SetOnClose(func(sender lcl.IObject, action *types.TCloseAction) {
+				p.Close()
+			})
+		}
 		defer p.Close()
 	}
 	if err := binder.Install(); err != nil {

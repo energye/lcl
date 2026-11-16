@@ -69,6 +69,16 @@ type EventSink interface {
 	RequestFrame()
 }
 
+// ResizeSink 是可选的尺寸变化接口。
+//
+// 只有 Host 更新 client 是不够的：合成缓冲、场景根节点、光栅缓存都必须
+// 跟着换尺寸，否则 Presenter 因"帧尺寸 ≠ 客户区"一直拒绝提交，窗口就停在
+// 首帧（真窗表现为底部/右侧一条白边，painted 不再增长）。
+// Container 实现它，把尺寸变化转给去抖的 scheduler。
+type ResizeSink interface {
+	ResizeRequest(w, h int)
+}
+
 // RouterStats 是路由统计。
 type RouterStats struct {
 	Messages int
@@ -145,6 +155,10 @@ func (r *Router) Handle(m Message) bool {
 		r.stats.Resizes++
 		if r.OnResize != nil {
 			r.OnResize(w, h)
+		}
+		// 去抖后的真正重建：更新合成缓冲/场景/缓存。
+		if rs, ok := r.sink.(ResizeSink); ok {
+			rs.ResizeRequest(w, h)
 		}
 		// WM_SIZE 本身要透传（窗口类需要它做默认处理）。
 		return false
