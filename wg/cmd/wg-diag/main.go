@@ -1,15 +1,16 @@
 // Command wg-diag 是 WG Engine 的诊断入口。
 //
-// 用法（M0 已实现的部分）：
+// 用法：
 //
 //	wg-diag --selftest                      # 契约 + 几何 + 缓冲 + 画布树 + 时钟 + 空帧
 //	wg-diag --contracts                     # 打印 C1–C28 契约表与当期状态
 //	wg-diag --headless --frames 120          # ManualClock 确定性出帧统计
-//	wg-diag --stage M1 --selftest            # 以 M1 门禁标准检查（未实现断言会报 MISSING）
+//	wg-diag --stage M2 --selftest            # 以 M2 门禁标准检查（未实现断言会报 MISSING）
+//	wg-diag --layout --layers --hit          # 布局/层树/命中
+//	wg-diag --gesturetest --inputtest --overlaytest  # 交互链路（含浮层与组件基座）
 //
-// 后续里程碑补齐 --render-matrix / --layout / --hit / --gesturetest / --bench 等
-// （见 docs/wg-engine/05-API-ROADMAP.md §6）。参数解析留在 main，真正的矩阵实现
-// 放在 diag 包，便于 go test 直接调用。
+// 全量门禁命令矩阵见 docs/wg-engine/05-API-ROADMAP.md §6。参数解析留在 main，
+// 真正的矩阵实现放在 diag 包，便于 go test 直接调用。
 package main
 
 import (
@@ -41,6 +42,7 @@ func main() {
 		gestF     = flag.Bool("gesturetest", false, "6 组手势冲突断言（单指针单胜者）")
 		inputF    = flag.Bool("inputtest", false, "22 项输入链路断言（归一化/文本/IME/捕获自愈）")
 		resizeF   = flag.Bool("resizetest", false, "7 次尺寸切换断言（去抖 + 池释放顺序）")
+		ovlF      = flag.Bool("overlaytest", false, "16 组浮层/组件基座断言（定位/关闭/遮罩/样式/动画）")
 		showCtr   = flag.Bool("contracts", false, "打印契约表")
 		headless  = flag.Bool("headless", false, "无窗口确定性出帧")
 		frames    = flag.Int("frames", 60, "--headless 的帧数")
@@ -322,6 +324,34 @@ func main() {
 			fmt.Println(res.String())
 			if !res.OK() {
 				fmt.Fprintf(os.Stderr, "resizetest 门禁未通过（需 ≥7 次全绿）\n")
+				exit = 1
+			}
+		}
+	}
+
+	if *ovlF {
+		ran = true
+		res, err := diag.OverlayTest()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "wg-diag --overlaytest:", err)
+			exit = 1
+		} else {
+			if !*quiet {
+				for _, d := range res.Details {
+					mark := "ok  "
+					if !d.OK {
+						mark = "FAIL"
+					}
+					fmt.Printf("%s %-32s %s", mark, d.Name, d.Got)
+					if d.Note != "" {
+						fmt.Printf("  ← %s", d.Note)
+					}
+					fmt.Println()
+				}
+			}
+			fmt.Println(res.String())
+			if !res.OK() {
+				fmt.Fprintf(os.Stderr, "overlaytest 门禁未通过（需 ≥16 组全绿）\n")
 				exit = 1
 			}
 		}

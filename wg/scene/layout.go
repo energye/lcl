@@ -279,9 +279,13 @@ func (n *Node) placeStackLike() {
 		if !ch.positioned {
 			continue
 		}
-		// 绝对定位：偏移相对内容区原点，尺寸按 Stack 内容区紧约束
-		s := ch.Layout(TightConstraints(inner))
-		_ = s
+		// 绝对定位：偏移相对内容区原点。尺寸默认按内容区紧约束（铺满），
+		// 保持自身尺寸的（浮层/影子）用松约束，否则会被拉成全屏方块。
+		if ch.keepSize {
+			ch.Layout(LooseConstraints(inner))
+		} else {
+			ch.Layout(TightConstraints(inner))
+		}
 		ch.offset = geom.Pt(ox+ch.position.X+ch.margin.Left, oy+ch.position.Y+ch.margin.Top)
 	}
 }

@@ -81,7 +81,6 @@ func (n *Node) FrameMatrix(parent geom.Matrix) geom.Matrix {
 		Concat(geom.Translate(-px, -py))
 }
 
-
 // 组透明度（opacity<1）**不在这里处理**：把子树逐指令乘 alpha 会在
 // 重叠处重复变暗，是错的。正确做法是离屏合成——composite 会为 opacity<1
 // 的节点升级成 OpacityLayer（ReasonOpacity），由它整体混合。

@@ -302,6 +302,8 @@ type Node struct {
 	// position 是 Stack 内的绝对定位偏移（positioned=true 时生效）。
 	position   geom.Point
 	positioned bool
+	// keepSize 表示绝对定位子节点保持自身尺寸（不拉满父内容区）。
+	keepSize bool
 	// span 是 Grid 跨列数（0/1 = 一列）。
 	span int
 
@@ -896,6 +898,20 @@ func (n *Node) SetStackPosition(p geom.Point) *Node {
 	return n
 }
 
+// SetPositionKeepSize 让绝对定位的子节点保持自身尺寸。
+//
+// 默认行为（positioned → 紧约束拉满内容区）对"铺满的遮罩/背景"是对的，
+// 但对浮层、Tooltip、拖拽影子是灾难：它们由浮动位置决定尺寸，
+// 拉满父级会变成一个盖住整屏的方块。
+func (n *Node) SetPositionKeepSize(v bool) *Node {
+	n.keepSize = v
+	n.MarkNeedsLayout()
+	return n
+}
+
+// KeepSize 返回是否保持自身尺寸。
+func (n *Node) KeepSize() bool { return n.keepSize }
+
 // SetSpan 设置 Grid 跨列数。
 func (n *Node) SetSpan(s int) *Node {
 	if s < 1 {
@@ -1047,3 +1063,43 @@ var nan = float32(math.NaN())
 
 // isSet 报告一个尺寸覆盖值是否被设置过。
 func isSet(v float32) bool { return !math.IsNaN(float64(v)) }
+
+// FrameInRoot 返回本节点到根空间的变换（祖先链自根向下合成）。
+//
+// 为什么需要它：浮层定位、Tooltip、拖拽影子都要知道"某个节点在屏幕上的
+// 实际位置"，而节点只存相对父的 offset。让每个调用方自己爬父链迟早
+// 会漏掉 transform（旋转过的锚点定位会偏）。
+func (n *Node) FrameInRoot() geom.Matrix {
+	var chain []*Node
+	for x := n; x != nil; x = x.Parent() {
+		chain = append(chain, x)
+	}
+	m := geom.Identity
+	for i := len(chain) - 1; i >= 0; i-- {
+		m = chain[i].FrameMatrix(m)
+	}
+	return m
+}
+
+// AbsOrigin 返回节点左上角在根空间的坐标。
+func (n *Node) AbsOrigin() geom.Point {
+	return n.FrameInRoot().MapPoint(geom.Point{})
+}
+
+// BoundsInRoot 返回节点在根空间的轴对齐外接矩形。
+//
+// 旋转/缩放过的节点返回外接框（不是最小包围盒）：浮层定位要的是
+// "能对齐的那个矩形"，紧贴旋转后的斜四边形既难算也没有视觉收益。
+func (n *Node) BoundsInRoot() geom.Rect {
+	return n.FrameInRoot().MapRect(geom.RectXYWH(0, 0, n.size.W, n.size.H))
+}
+
+// VisibleInTree 表示节点自身与所有祖先都可见。
+func (n *Node) VisibleInTree() bool {
+	for x := n; x != nil; x = x.Parent() {
+		if !x.Visible() {
+			return false
+		}
+	}
+	return true
+}
