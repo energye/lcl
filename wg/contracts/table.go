@@ -151,6 +151,7 @@ var table = []Contract{
 	{
 		ID: "C27", Title: "单指针单胜者，败者 Reject 且不改状态", Owner: "③",
 		Gate: "--gesturetest", Since: M2,
+		Assert: assertSingleWinner,
 	},
 	{
 		ID: "C28", Title: "文本与按键分离，控制字符不进 Text", Owner: "③⓪",
