@@ -31,11 +31,13 @@ var table = []Contract{
 		// 依赖 WndProcPolicy（吃掉 WM_ERASEBKGND），M2 随宿主消息接管落地。
 		ID: "C3", Title: "ERASEBKGND 必须吃掉，否则闪烁", Owner: "⓪",
 		Gate: "--schedtest", Since: M2,
+		Assert: assertEraseEaten,
 	},
 	{
 		// 静态烘焙依赖 RasterCache，M2 落地。
 		ID: "C4", Title: "静态内容只烘焙一次，帧内不重画", Owner: "①",
 		Gate: "--bench", Since: M2,
+		Assert: assertBakeOnce,
 	},
 	{
 		ID: "C5", Title: "AA 就地混色，不额外分配整帧 alpha 缓冲", Owner: "①",
@@ -50,6 +52,7 @@ var table = []Contract{
 	{
 		ID: "C7", Title: "光栅缓存归属唯一（RasterCache 只由 ① 持有）", Owner: "①",
 		Gate: "--layers", Since: M2,
+		Assert: assertCacheOwnership,
 	},
 	{
 		ID: "C8", Title: "资源释放顺序固定，避免悬垂视图", Owner: "⓪①",
@@ -64,14 +67,17 @@ var table = []Contract{
 	{
 		ID: "C10", Title: "resize 去抖，连续拖动只重排一次", Owner: "⓪",
 		Gate: "--resizetest", Since: M2,
+		Assert: assertResizeDebounce,
 	},
 	{
 		ID: "C11", Title: "单 outstanding 帧槽，槽未回填不申请下一帧", Owner: "②",
 		Gate: "--schedtest", Since: M2,
+		Assert: assertSingleOutstanding,
 	},
 	{
 		ID: "C12", Title: "capture 自愈：丢失捕获必须补 Cancel", Owner: "③",
 		Gate: "--inputtest", Since: M2,
+		Assert: assertCaptureHeal,
 	},
 	{
 		ID: "C13", Title: "帧=帧槽：一帧一次不透明提交", Owner: "②",
@@ -87,6 +93,7 @@ var table = []Contract{
 		// 墙钟相位依赖 ticker 与动画系统，M2 落地。
 		ID: "C15", Title: "墙钟相位：动画按墙钟积分，不按帧计数", Owner: "②",
 		Gate: "--schedtest", Since: M2,
+		Assert: assertWallClockPhase,
 	},
 	{
 		ID: "C16", Title: "帧间隔用中位数统计，不用平均值", Owner: "②",
@@ -109,6 +116,7 @@ var table = []Contract{
 		// Layer 树与 Reason 校验在 M2 随合成层落地。
 		ID: "C19", Title: "Layer 必须声明 Reason，且稳态命中缓存", Owner: "①",
 		Gate: "--layers", Since: M2,
+		Assert: assertLayerReason,
 	},
 	{
 		ID: "C20", Title: "子 Surface damage 必须上卷，并做遮挡剔除", Owner: "①",
@@ -119,6 +127,7 @@ var table = []Contract{
 		// 池在 M2 引入（离屏层复用），届时才谈得上"归还池"的顺序。
 		ID: "C21", Title: "后备存储释放顺序：视图 → 位图 → 池", Owner: "⓪①",
 		Gate: "--resizetest", Since: M2,
+		Assert: assertPoolReleaseOrder,
 	},
 
 	// ── C22–C25 渲染内核（03-ENGINE.md） ───────────────────────────────
@@ -147,6 +156,7 @@ var table = []Contract{
 	{
 		ID: "C26", Title: "捕获指针必有 Up 或 Cancel，Cancel 回滚状态", Owner: "③",
 		Gate: "--inputtest", Since: M2,
+		Assert: assertCaptureTerminated,
 	},
 	{
 		ID: "C27", Title: "单指针单胜者，败者 Reject 且不改状态", Owner: "③",

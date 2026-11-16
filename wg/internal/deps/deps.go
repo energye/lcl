@@ -64,12 +64,12 @@ func set(names ...string) map[string]bool {
 // 关键约束（改动前请先读 05-API-ROADMAP.md §1）：
 //   - 只有 host 与 raster/gdi、raster/software 可以 import lcl；
 //   - render 不依赖 lcl，也不依赖 scene（否则录制层被渲染树绑死）；
-//   - host 不 import input（否则 host ↔ input 成环）；
+//   - host 可以 import input，但 input 不 import host（方向单向：平台层产生引擎事件）；
 //   - 上层（ui/widgets）不得出现 unsafe / lcl。
 var rules = map[string]ruleSet{
-	"":       {allowAll: true, allowLCL: true}, // 组合根：门面需要 lcl.IEngForm 出现在签名里
-	"geom":   {allow: set()},
-	"theme":  {allow: set("geom")},
+	"":      {allowAll: true, allowLCL: true}, // 组合根：门面需要 lcl.IEngForm 出现在签名里
+	"geom":  {allow: set()},
+	"theme": {allow: set("geom")},
 	"text": {
 		// 度量与字形句柄要走 GDI，因此允许 unsafe 操作 LOGFONT/TEXTMETRIC；
 		// 但不允许 import lcl（文本子系统必须能在无窗口环境工作）。
@@ -95,10 +95,13 @@ var rules = map[string]ruleSet{
 	"composite": {allow: set("geom", "render", "raster", "scene", "theme")},
 	"frame":     {allow: set("geom")},
 	"host": {
-		allow: set("geom", "frame", "render", "raster", "scene", "composite", "text", "theme"),
+		// host 需要 input 的事件类型：它把平台消息归一化成引擎事件，
+		// 不 import input 就只能再抄一份结构体，再写一层纯搬运的转换。
+		// 反向依赖（input → host）绝不成立，这才是真正要防的环。
+		allow:    set("geom", "frame", "render", "raster", "scene", "composite", "text", "theme", "input"),
 		allowLCL: true, allowUnsafe: true,
 	},
-	"input":   {allow: set("geom", "frame", "render", "scene", "host", "text")},
+	"input":   {allow: set("geom", "frame", "render", "scene", "text")},
 	"overlay": {allow: set("geom", "host", "input", "scene", "theme")},
 	"ui":      {allow: set("geom", "frame", "input", "overlay", "render", "scene", "text", "theme")},
 	"widgets": {allow: set("geom", "input", "scene", "theme", "ui")},
@@ -118,8 +121,8 @@ var rules = map[string]ruleSet{
 
 // exempt 目录整体跳过（不属于架构管辖范围）。
 var exempt = map[string]bool{
-	"testdata": true,
-	"vendor":   true,
+	"testdata":     true,
+	"vendor":       true,
 	"node_modules": true,
 }
 

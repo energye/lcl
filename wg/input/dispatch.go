@@ -186,9 +186,21 @@ func (d *Dispatcher) Pointer(ev *PointerEvent) bool {
 	case PointerCancel:
 		return d.Cancel(ev.Pointer, ev)
 
-	case PointerEnter, PointerLeave, PointerHover:
+	case PointerEnter, PointerHover:
+		// 无按键移动也必须算 hover 差分：宿主把"没按键的移动"归成 Hover，
+		// 如果这里不做差分，鼠标悬停按钮永远不会高亮（因为整个事件流里
+		// 根本不会出现 Down）。光标同理——手型光标就是靠 hover 更新出来的。
 		path := HitTest(d.root, ev.PosRoot)
+		d.updateHover(path, ev)
+		d.updateCursor(path)
 		return d.dispatch(ev, path.Nodes(), path.locals)
+
+	case PointerLeave:
+		// 指针离开窗口：没有任何节点处于 hover，路径必须清空而不是
+		// "在当前坐标再命中一次"——那会让离开前最后一个节点一直保持高亮。
+		d.updateHover(Path{}, ev)
+		d.updateCursor(Path{})
+		return d.dispatch(ev, nil, nil)
 	}
 	return false
 }

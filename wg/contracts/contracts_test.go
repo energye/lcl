@@ -90,16 +90,27 @@ func TestM1GateGreen(t *testing.T) {
 	}
 }
 
-// TestM2GateIsRed 保护契约机制本身：把门禁提到还没实现断言的里程碑时，
+// TestM3GateIsRed 保护契约机制本身：把门禁提到还没实现断言的里程碑时，
 // 必须报 MISSING 而不是静默通过——否则"契约与断言同生共死"就形同虚设。
-func TestM2GateIsRed(t *testing.T) {
-	rs := Run(M2)
+//
+// M2 的 11 条到期契约在 M2-6 全部转绿，因此这里改用 M3 当"未来门禁"的样本；
+// M3 的 C28（文本与按键分离）尚未落地。
+func TestM3GateIsRed(t *testing.T) {
+	rs := Run(M3)
 	s := Summarize(rs)
 	if s.Missing == 0 {
-		t.Fatalf("M2 门禁下应有 MISSING 项，实际 %s", s)
+		t.Fatalf("M3 门禁下应有 MISSING 项，实际 %s", s)
 	}
 	if s.OK() {
-		t.Fatal("M2 门禁不应为绿")
+		t.Fatal("M3 门禁不应为绿")
+	}
+}
+
+// TestM2GateGreen 确认 M2 的 11 条到期契约已全部落地。
+func TestM2GateGreen(t *testing.T) {
+	s := Summarize(Run(M2))
+	if s.Missing != 0 || s.Fail != 0 {
+		t.Fatalf("M2 门禁应为绿，实际 %s", s)
 	}
 }
 

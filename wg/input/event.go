@@ -168,6 +168,12 @@ type PointerEvent struct {
 	Mods     Modifiers
 	Pressure float32
 	Time     time.Time
+	// ClickCount 是本次按下的连击次数（1 = 单击，2 = 双击，其余事件为 0）。
+	//
+	// 由 host 依"间隔 + 位移"合成，不直接用 WM_LBUTTONDBLCLK：平台的双击
+	// 判定用的是系统鼠标设置（500ms/4px 之外的另一种阈值），与应用的 slop
+	// 不一致时会出现"系统说双击、组件判单击"；而且触摸/笔根本不发 DBLCLK。
+	ClickCount int
 }
 
 // EventKind 实现 Event。
@@ -192,6 +198,10 @@ type KeyCode uint16
 //
 // 前缀 Code 是刻意的：KeyKind 里已有 KeyDown/KeyUp（事件类型），
 // 键码再叫 KeyUp 就会撞名——"抬起事件"和"↑键"是两件事，名字必须分开。
+//
+// 为什么不用平台 VK 直传：快捷键表（Ctrl+S）必须跨平台一致，
+// 而 VK 是 Windows 的值，GTK/macOS 各有自己的编码。语义键码是
+// 平台层唯一的映射终点（映射表在 host/keys.go）。
 const (
 	CodeUnknown KeyCode = iota
 	CodeBackspace
@@ -200,6 +210,7 @@ const (
 	CodeEscape
 	CodeSpace
 	CodeDelete
+	CodeInsert
 	CodeLeft
 	CodeRight
 	CodeUp
@@ -208,11 +219,91 @@ const (
 	CodeEnd
 	CodePageUp
 	CodePageDown
-	CodeA
+	CodeShift
+	CodeControl
+	CodeAlt
+	CodeMeta
+	CodeCapsLock
+)
+
+// 数字行 0–9。
+const (
+	Code0 KeyCode = 100 + iota
+	Code1
+	Code2
+	Code3
+	Code4
+	Code5
+	Code6
+	Code7
+	Code8
+	Code9
+)
+
+// 字母 A–Z。
+const (
+	CodeA KeyCode = 200 + iota
+	CodeB
 	CodeC
+	CodeD
+	CodeE
+	CodeF
+	CodeG
+	CodeH
+	CodeI
+	CodeJ
+	CodeK
+	CodeL
+	CodeM
+	CodeN
+	CodeO
+	CodeP
+	CodeQ
+	CodeR
+	CodeS
+	CodeT
+	CodeU
 	CodeV
+	CodeW
 	CodeX
+	CodeY
 	CodeZ
+)
+
+// 功能键 F1–F12。
+const (
+	CodeF1 KeyCode = 300 + iota
+	CodeF2
+	CodeF3
+	CodeF4
+	CodeF5
+	CodeF6
+	CodeF7
+	CodeF8
+	CodeF9
+	CodeF10
+	CodeF11
+	CodeF12
+)
+
+// 标点与符号（按美式键盘物理位置，不随布局变化）。
+const (
+	CodeMinus KeyCode = 400 + iota
+	CodeEqual
+	CodeBracketLeft
+	CodeBracketRight
+	CodeBackslash
+	CodeSemicolon
+	CodeQuote
+	CodeComma
+	CodePeriod
+	CodeSlash
+	CodeBackquote
+	CodeNumpadAdd
+	CodeNumpadSub
+	CodeNumpadMul
+	CodeNumpadDiv
+	CodeNumpadDecimal
 )
 
 // KeyKind 是键盘事件类型。
@@ -300,3 +391,118 @@ type FocusEvent struct {
 
 // EventKind 实现 Event。
 func (*FocusEvent) EventKind() EventKind { return EventFocus }
+
+// String 返回键码的可读名（诊断与 --inputtest 输出用）。
+func (c KeyCode) String() string {
+	switch c {
+	case CodeUnknown:
+		return "unk"
+	case CodeBackspace:
+		return "backspace"
+	case CodeTab:
+		return "tab"
+	case CodeEnter:
+		return "enter"
+	case CodeEscape:
+		return "escape"
+	case CodeSpace:
+		return "space"
+	case CodeDelete:
+		return "delete"
+	case CodeInsert:
+		return "insert"
+	case CodeLeft:
+		return "left"
+	case CodeRight:
+		return "right"
+	case CodeUp:
+		return "up"
+	case CodeDown:
+		return "down"
+	case CodeHome:
+		return "home"
+	case CodeEnd:
+		return "end"
+	case CodePageUp:
+		return "pageup"
+	case CodePageDown:
+		return "pagedown"
+	case CodeShift:
+		return "shift"
+	case CodeControl:
+		return "control"
+	case CodeAlt:
+		return "alt"
+	case CodeMeta:
+		return "meta"
+	case CodeCapsLock:
+		return "capslock"
+	}
+	if c >= Code0 && c <= Code9 {
+		return string(rune('0' + (c - Code0)))
+	}
+	if c >= CodeA && c <= CodeZ {
+		return string(rune('a' + (c - CodeA)))
+	}
+	if c >= CodeF1 && c <= CodeF12 {
+		return "f" + itoa(int(c-CodeF1)+1)
+	}
+	switch c {
+	case CodeMinus:
+		return "-"
+	case CodeEqual:
+		return "="
+	case CodeBracketLeft:
+		return "["
+	case CodeBracketRight:
+		return "]"
+	case CodeBackslash:
+		return "\\"
+	case CodeSemicolon:
+		return ";"
+	case CodeQuote:
+		return "'"
+	case CodeComma:
+		return ","
+	case CodePeriod:
+		return "."
+	case CodeSlash:
+		return "/"
+	case CodeBackquote:
+		return "`"
+	case CodeNumpadAdd:
+		return "numpad+"
+	case CodeNumpadSub:
+		return "numpad-"
+	case CodeNumpadMul:
+		return "numpad*"
+	case CodeNumpadDiv:
+		return "numpad/"
+	case CodeNumpadDecimal:
+		return "numpad."
+	}
+	return "code(" + itoa(int(c)) + ")"
+}
+
+// itoa 是极小整数转字符串（避免为诊断引入 strconv 依赖热路径）。
+func itoa(v int) string {
+	if v == 0 {
+		return "0"
+	}
+	neg := v < 0
+	if neg {
+		v = -v
+	}
+	var b [12]byte
+	i := len(b)
+	for v > 0 {
+		i--
+		b[i] = byte('0' + v%10)
+		v /= 10
+	}
+	if neg {
+		i--
+		b[i] = '-'
+	}
+	return string(b[i:])
+}
