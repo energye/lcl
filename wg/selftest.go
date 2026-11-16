@@ -319,6 +319,9 @@ func SelfTest() []CheckResult {
 		return nil
 	})
 
+	// ── M2 接线 ──────────────────────────────────────────────────────
+	selfTestM2(add)
+
 	return out
 }
 

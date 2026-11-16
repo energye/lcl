@@ -4,13 +4,14 @@ import (
 	"time"
 
 	"github.com/energye/lcl/wg/geom"
+	"github.com/energye/lcl/wg/theme"
 )
 
 // Version 是引擎版本。M0 期间用里程碑后缀标识能力边界。
-const Version = "0.1.0-m0"
+const Version = "0.1.0-m2"
 
 // Stage 是当前里程碑名（与 contracts.Stage 对应，这里用字符串避免上层依赖）。
-const Stage = "M0"
+const Stage = "M2"
 
 // Options 是容器选项。
 //
@@ -51,6 +52,10 @@ type Options struct {
 	//
 	// 清屏只发生在脏区，不是整屏：这是"局部重绘"能真正省下像素的前提。
 	Background geom.Color
+
+	// Theme 是初始主题（零值 = theme.Default()）。
+	// 运行期换主题用 Container.SetTheme。
+	Theme *theme.Data
 }
 
 // DefaultOptions 返回推荐默认值。

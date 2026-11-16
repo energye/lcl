@@ -43,6 +43,7 @@ func main() {
 		inputF    = flag.Bool("inputtest", false, "22 项输入链路断言（归一化/文本/IME/捕获自愈）")
 		resizeF   = flag.Bool("resizetest", false, "7 次尺寸切换断言（去抖 + 池释放顺序）")
 		ovlF      = flag.Bool("overlaytest", false, "16 组浮层/组件基座断言（定位/关闭/遮罩/样式/动画）")
+		idleF     = flag.Bool("idle", false, "1000 节点静止 0 帧（C14 门禁）")
 		showCtr   = flag.Bool("contracts", false, "打印契约表")
 		headless  = flag.Bool("headless", false, "无窗口确定性出帧")
 		frames    = flag.Int("frames", 60, "--headless 的帧数")
@@ -354,6 +355,23 @@ func main() {
 				fmt.Fprintf(os.Stderr, "overlaytest 门禁未通过（需 ≥16 组全绿）\n")
 				exit = 1
 			}
+		}
+	}
+
+	if *idleF {
+		ran = true
+		res, err := diag.IdleTest()
+		if !*quiet {
+			fmt.Printf("节点=%d 静止用帧=%d 静止时钟片=%d\n",
+				res.Nodes, res.SettleFrames, res.IdleTicks)
+		}
+		fmt.Println(res.String())
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "wg-diag --idle:", err)
+			exit = 1
+		} else if !res.OK() {
+			fmt.Fprintf(os.Stderr, "idle 门禁未通过（需 1000 节点静止 0 帧）\n")
+			exit = 1
 		}
 	}
 

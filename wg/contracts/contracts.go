@@ -104,8 +104,11 @@ func (r Result) String() string {
 	return line
 }
 
-// Current 是当前里程碑，决定哪些契约必须为绿。默认 M0。
-var Current = M0
+// Current 是当前里程碑，决定哪些契约必须为绿。
+//
+// 跟着引擎实现走：到了 M2，M2 的 11 条契约就都是"必须绿"，
+// 未实现会被 CheckAll 报 MISSING（而不是静默跳过）。
+var Current = M2
 
 // SetStage 设置当前里程碑（diag 用命令行参数覆盖）。
 func SetStage(s Stage) { Current = s }

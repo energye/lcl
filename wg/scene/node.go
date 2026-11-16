@@ -358,6 +358,14 @@ type Node struct {
 	needsLayout    bool
 	needsPaint     bool
 	needsComposite bool
+	// selfDirty 表示"**这个节点自己的**视觉变了"（不含被子节点传染）。
+	//
+	// 为什么必须与 needsPaint 分开：needsPaint 会向上冒泡（父节点要重录，
+	// 因为录制流是一段），但如果脏区也按冒泡算，改一个 8px 方块就会得到
+	// 整屏脏区——局部重绘等于没做。DirtyRect 只认 selfDirty。
+	selfDirty bool
+	// onInvalidate 只在根节点上生效：子树任何层级变脏都会调到它。
+	onInvalidate func()
 	// layoutBoundary 表示本节点是布局边界：约束不变时其子树不重排。
 	layoutBoundary bool
 	// laidOut 表示布局已算过；lastConstraints 是上次的输入，用于命中缓存。
@@ -696,6 +704,9 @@ func (n *Node) MarkNeedsLayout() {
 // 于是贴出上一帧的图。这一条在 --layers 的 cache-invalidates 上挂着。
 func (n *Node) MarkNeedsPaint() {
 	n.signature++
+	// selfDirty 必须在去重之前置位：同一帧里改两次属性时 needsPaint 已经是
+	// true，但"这个节点的像素变了"这个事实不能因此丢掉（脏区要用它）。
+	n.selfDirty = true
 	if n.needsPaint {
 		return
 	}
@@ -707,6 +718,7 @@ func (n *Node) MarkNeedsPaint() {
 // signature 无条件递增，理由同 MarkNeedsPaint。
 func (n *Node) MarkNeedsComposite() {
 	n.signature++
+	n.selfDirty = true
 	if n.needsComposite {
 		return
 	}
@@ -716,10 +728,29 @@ func (n *Node) MarkNeedsComposite() {
 
 // invalidate 把自身 bounds 上卷（渲染树没有 Surface 的 damage 机制时，
 // 由 Container 在帧末统一收集——这里只标脏，不做几何）。
+//
+// 同时通知**根节点**上的变脏回调：树本身不知道帧循环在哪，而"有东西变了"
+// 是帧泵唯一愿意被叫醒的理由。没有这层通知，改完节点必须由调用方手工
+// RequestFrame——漏一处就是"界面不动，鼠标划过才刷新"。
 func (n *Node) invalidate() {
 	if n.parent != nil {
 		n.parent.needsPaint = true
 	}
+	root := n
+	for root.parent != nil {
+		root = root.parent
+	}
+	if root.onInvalidate != nil {
+		root.onInvalidate()
+	}
+}
+
+// SetInvalidateHook 在根节点上安装"子树变脏"回调（Container 用它申请帧）。
+//
+// 只有挂在根上的回调会生效：节点的 invalidate 会向上找到根再调，
+// 因此子树里的任何层级都能触发，不需要逐节点安装。
+func (n *Node) SetInvalidateHook(fn func()) {
+	n.onInvalidate = fn
 }
 
 // NeedsLayout 报告布局是否脏。
@@ -736,6 +767,7 @@ func (n *Node) ClearDirty() {
 	n.needsLayout = false
 	n.needsPaint = false
 	n.needsComposite = false
+	n.selfDirty = false
 }
 
 // ClearDirtyTree 递归清脏标记。
@@ -744,6 +776,86 @@ func (n *Node) ClearDirtyTree() {
 	for _, c := range n.children {
 		c.ClearDirtyTree()
 	}
+}
+
+// Dirty 是树级脏标记汇总。
+type Dirty struct {
+	Layout    bool
+	Paint     bool
+	Composite bool
+}
+
+// Any 表示是否有任何一档脏。
+func (d Dirty) Any() bool { return d.Layout || d.Paint || d.Composite }
+
+// String 返回可读名（诊断输出用）。
+func (d Dirty) String() string {
+	if !d.Any() {
+		return "clean"
+	}
+	s := ""
+	if d.Layout {
+		s += "L"
+	}
+	if d.Paint {
+		s += "P"
+	}
+	if d.Composite {
+		s += "C"
+	}
+	return s
+}
+
+// AnyDirty 汇总整棵子树的脏标记。
+//
+// 三档分开返回而不是合成一个 bool：布局脏要重排 + 重录，绘制脏只要重录，
+// 合成脏连重录都省了（只重建层树）。合成一个 bool 会让"只改了个透明度"
+// 也走全量重排——那正是"改颜色导致整页闪烁"的来源。
+//
+// 复杂度 O(n)。1000 节点每帧走一遍约几微秒，相对录制/光栅可忽略；
+// 换成"节点里存一个向上传递的计数"会引入"忘了减一就永远脏"的调试噩梦。
+func (n *Node) AnyDirty() Dirty {
+	d := Dirty{Layout: n.needsLayout, Paint: n.needsPaint, Composite: n.needsComposite}
+	for _, c := range n.children {
+		cd := c.AnyDirty()
+		d.Layout = d.Layout || cd.Layout
+		d.Paint = d.Paint || cd.Paint
+		d.Composite = d.Composite || cd.Composite
+	}
+	return d
+}
+
+// DirtyRect 返回脏节点在根空间的包围盒并集（无脏时为零矩形）。
+//
+// 用途：把"哪些节点变了"换算成"要重画哪块像素"。没有它就只能整屏重画，
+// 或者反过来只标脏不重画（画面停在上一帧，看起来像卡死）。
+//
+// 只统计 **selfDirty**（自己变了）的节点：needsPaint 会向上冒泡到祖先，
+// 若按它算脏区，改一个 8px 方块会得到整屏脏区——局部重绘等于没做。
+// 祖先的 needsPaint 只说明"要重录"，不代表它的像素变了。
+//
+// 前置条件：树已完成布局——BoundsInRoot 读的是当前 offset/size。
+// 布局脏的帧调用方应该整屏重画，不要用这个并集。
+func (n *Node) DirtyRect() geom.Rect {
+	var out geom.Rect
+	var walk func(*Node)
+	walk = func(x *Node) {
+		if x.selfDirty {
+			r := x.BoundsInRoot()
+			if !r.IsEmpty() {
+				if out.IsEmpty() {
+					out = r
+				} else {
+					out = out.Union(r)
+				}
+			}
+		}
+		for _, c := range x.children {
+			walk(c)
+		}
+	}
+	walk(n)
+	return out
 }
 
 // Signature 返回视觉签名（重录/缓存键的一部分）。
