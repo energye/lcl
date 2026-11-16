@@ -22,12 +22,18 @@ import (
 
 	"github.com/energye/lcl/wg"
 	"github.com/energye/lcl/wg/contracts"
+	"github.com/energye/lcl/wg/diag"
 	"github.com/energye/lcl/wg/frame"
 )
 
 func main() {
 	var (
 		selftest  = flag.Bool("selftest", false, "运行自检（默认行为）")
+		matrix    = flag.String("render-matrix", "", "20 图元 × 2 后端的位置比对；给目录则同时出图")
+		golden    = flag.String("golden", "", "与参考图比对（目录）；首次用 -golden-update 生成")
+		goldenUp  = flag.Bool("golden-update", false, "写入参考图（必须人工 review 后提交）")
+		benchFlag = flag.Bool("bench", false, "1440×880 无窗口性能基准")
+		damage    = flag.Bool("damage", false, "局部重绘面积断言")
 		showCtr   = flag.Bool("contracts", false, "打印契约表")
 		headless  = flag.Bool("headless", false, "无窗口确定性出帧")
 		frames    = flag.Int("frames", 60, "--headless 的帧数")
@@ -70,6 +76,66 @@ func main() {
 		if err := runHeadless(*width, *height, *frames); err != nil {
 			fmt.Fprintln(os.Stderr, "wg-diag --headless:", err)
 			exit = 1
+		}
+	}
+
+	if *matrix != "" {
+		ran = true
+		rep := diag.RenderMatrix()
+		fmt.Print(rep.String())
+		if *matrix != "-" {
+			if err := diag.WriteMatrixImages(*matrix); err != nil {
+				fmt.Fprintln(os.Stderr, "wg-diag --render-matrix 出图:", err)
+				exit = 1
+			} else {
+				fmt.Printf("出图目录: %s\n", *matrix)
+			}
+		}
+		if !rep.OK() {
+			exit = 1
+		}
+	}
+
+	if *golden != "" {
+		ran = true
+		res, err := diag.Golden(*golden, *goldenUp)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "wg-diag --golden:", err)
+			exit = 1
+		}
+		fmt.Println(res.String())
+		if !res.OK() {
+			exit = 1
+		}
+	}
+
+	if *benchFlag {
+		ran = true
+		res, err := diag.Bench(diag.BenchOptions{Width: *width, Height: *height, Frames: *frames})
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "wg-diag --bench:", err)
+			exit = 1
+		} else {
+			fmt.Println(res.String())
+			if !res.OK() {
+				fmt.Fprintf(os.Stderr, "bench 未达门禁（≥59 FPS）\n")
+				exit = 1
+			}
+		}
+	}
+
+	if *damage {
+		ran = true
+		res, err := diag.Damage()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "wg-diag --damage:", err)
+			exit = 1
+		} else {
+			fmt.Println(res.String())
+			if !res.OK() {
+				fmt.Fprintf(os.Stderr, "damage 面积超出按钮包围盒 1.5 倍\n")
+				exit = 1
+			}
 		}
 	}
 

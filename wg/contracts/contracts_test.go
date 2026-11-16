@@ -71,19 +71,35 @@ func TestCheckAllAtM0(t *testing.T) {
 	t.Fatal("未找到 C17")
 }
 
-// TestM1GateIsRed 验证门禁的"锯齿"行为：把门槛提到 M1 时，
-// 尚未实现的断言必须报 MISSING 而不是静默通过。
-//
-// 这条测试保护的是契约机制本身——如果 MISSING 被算作通过，
-// 整个 §7.5「契约与断言同生共死」就形同虚设。
-func TestM1GateIsRed(t *testing.T) {
+// TestM1GateGreen 是 M1 的门禁：所有 Since<=M1 的契约都必须有断言且通过。
+func TestM1GateGreen(t *testing.T) {
 	rs := Run(M1)
 	s := Summarize(rs)
+	if !s.OK() {
+		for _, r := range rs {
+			if r.Status == Fail || r.Status == Missing {
+				t.Errorf("%s %s: %s", r.ID, r.Status, r.Detail)
+			}
+		}
+		t.Fatalf("M1 门禁应为绿: %s", s)
+	}
+	// M1 到期 16 条（C1/C2/C5/C6/C8/C9/C13/C14/C16/C17/C18/C20/C22/C23/C24/C25），
+	// 其余 12 条按能力分期排到 M2/M3。
+	if s.Pass < 16 {
+		t.Fatalf("M1 应有至少 16 条契约在跑，实际 %d", s.Pass)
+	}
+}
+
+// TestM2GateIsRed 保护契约机制本身：把门禁提到还没实现断言的里程碑时，
+// 必须报 MISSING 而不是静默通过——否则"契约与断言同生共死"就形同虚设。
+func TestM2GateIsRed(t *testing.T) {
+	rs := Run(M2)
+	s := Summarize(rs)
 	if s.Missing == 0 {
-		t.Fatalf("M1 门禁下应有 MISSING 项，实际 %s", s)
+		t.Fatalf("M2 门禁下应有 MISSING 项，实际 %s", s)
 	}
 	if s.OK() {
-		t.Fatal("M1 门禁不应为绿")
+		t.Fatal("M2 门禁不应为绿")
 	}
 }
 

@@ -113,3 +113,6 @@ EnergyFrameworkDownloadCache
 ssl
 
 testdata
+# wg 引擎的视觉回归基线必须入库（上面的 testdata 规则本来是给示例工程用的）
+!wg/testdata/
+!wg/testdata/**

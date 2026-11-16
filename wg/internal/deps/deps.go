@@ -70,7 +70,11 @@ var rules = map[string]ruleSet{
 	"":       {allowAll: true, allowLCL: true}, // 组合根：门面需要 lcl.IEngForm 出现在签名里
 	"geom":   {allow: set()},
 	"theme":  {allow: set("geom")},
-	"text":   {allow: set("geom")},
+	"text": {
+		// 度量与字形句柄要走 GDI，因此允许 unsafe 操作 LOGFONT/TEXTMETRIC；
+		// 但不允许 import lcl（文本子系统必须能在无窗口环境工作）。
+		allow: set("geom"), allowUnsafe: true,
+	},
 	"render": {allow: set("geom", "text", "theme")},
 	"raster": {
 		// 帧缓冲（backing）需要 unsafe 做字节视图，这是 raster 的核心职责；
@@ -83,7 +87,9 @@ var rules = map[string]ruleSet{
 	},
 	"raster/gdi": {
 		// GDI 后端是唯一可以同时碰 lcl 与 unsafe 的光栅路径。
-		allow: set("geom", "render", "raster"), allowLCL: true, allowUnsafe: true,
+		// 它还需要 text 的字体描述（HFONT 缓存与排版结果），
+		// 因此允许依赖 text —— 这是"文字回放"职责决定的，不是图省事。
+		allow: set("geom", "render", "raster", "text"), allowLCL: true, allowUnsafe: true,
 	},
 	"scene":     {allow: set("geom", "render", "text", "theme")},
 	"composite": {allow: set("geom", "render", "raster", "scene", "theme")},
@@ -101,7 +107,8 @@ var rules = map[string]ruleSet{
 	"contracts": {
 		// 契约包只做断言，不参与渲染；C17 的断言实现需要调用检查器本身，
 		// 因此放行 internal/deps（同模块的静态分析工具，无运行时副作用）。
-		allow: set("geom", "frame", "raster", "host", "render", "scene", "composite",
+		allow: set("geom", "frame", "raster", "raster/software", "raster/gdi",
+			"host", "render", "scene", "composite",
 			"input", "overlay", "ui", "theme", "text", "internal/deps"),
 	},
 	"internal":      {allowAll: true, allowUnsafe: true},

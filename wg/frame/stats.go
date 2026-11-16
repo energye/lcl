@@ -30,6 +30,14 @@ type Stats struct {
 	Damage geom.Rect
 	// Dirty 表示本帧是否有实际绘制内容。静止帧为 false，此时不提交。
 	Dirty bool
+	// Presented 表示本帧是否真的走到提交（有脏区且完成光栅）。
+	Presented bool
+	// RasterOps 是光栅后端处理的指令数。
+	RasterOps int
+	// Degraded 是本帧因后端能力缺失而降级的指令数（C22）。
+	Degraded int
+	// TextLines 是文字通道绘制的行数。
+	TextLines int
 
 	// FrameDuration 是本帧总耗时。
 	FrameDuration time.Duration

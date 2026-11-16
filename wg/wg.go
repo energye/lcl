@@ -1,6 +1,10 @@
 package wg
 
-import "time"
+import (
+	"time"
+
+	"github.com/energye/lcl/wg/geom"
+)
 
 // Version 是引擎版本。M0 期间用里程碑后缀标识能力边界。
 const Version = "0.1.0-m0"
@@ -42,6 +46,11 @@ type Options struct {
 
 	// FrameInterval 是目标帧间隔（0 = 跟随显示器刷新率）。
 	FrameInterval time.Duration
+
+	// Background 是清屏色（零值 = 不透明白）。
+	//
+	// 清屏只发生在脏区，不是整屏：这是"局部重绘"能真正省下像素的前提。
+	Background geom.Color
 }
 
 // DefaultOptions 返回推荐默认值。
@@ -66,6 +75,9 @@ func (o Options) normalized() Options {
 	}
 	if o.FrameInterval < 0 {
 		o.FrameInterval = 0
+	}
+	if o.Background == (geom.Color{}) {
+		o.Background = geom.RGBA(255, 255, 255)
 	}
 	return o
 }
