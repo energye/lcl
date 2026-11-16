@@ -258,7 +258,13 @@ func wrapParagraph(lines []Line, para string, f Font, opts Options, lh float32) 
 
 	runes := []rune(para)
 	start := 0
-	for start < len(runes) || (len(runes) == 0 && len(lines) == 0) {
+	// 空段落直接产出一条空行：旧写法让循环体对空 runes 也进一次，
+	// end=start+1 的"单字硬塞"会把 runes[0:1] 切出 NUL 字符送去 GDI 度量
+	// （StringToUTF16 对 NUL 直接 panic）。空文本是合法输入（表格空单元格）。
+	if len(runes) == 0 {
+		return append(lines, Line{Text: "", Width: 0}), false
+	}
+	for start < len(runes) {
 		if opts.MaxLines > 0 && len(lines) >= opts.MaxLines {
 			return lines, true
 		}

@@ -8,10 +8,10 @@ import (
 )
 
 // Version 是引擎版本。里程碑后缀标识能力边界。
-const Version = "0.1.0-m4"
+const Version = "0.1.0-m7"
 
-// Stage 是当前里程碑名（与 contracts.Stage 对应，这里用字符串避免上层依赖）。
-const Stage = "M4"
+// Stage 是当前里程碑名（能力阶段；contracts.Current 记录的是契约到期阶段，二者独立）。
+const Stage = "M7"
 
 // Options 是容器选项。
 //

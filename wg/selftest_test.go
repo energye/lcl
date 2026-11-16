@@ -101,7 +101,8 @@ func TestContractStageDefaults(t *testing.T) {
 	if contracts.Current != contracts.M4 {
 		t.Fatalf("默认门禁 = %v，应为 M4", contracts.Current)
 	}
-	if Version != "0.1.0-m4" || Stage != "M4" {
+	// 能力阶段（M7：示例重构 + antd token 对齐）与契约到期阶段（M4）独立演进。
+	if Version != "0.1.0-m7" || Stage != "M7" {
 		t.Fatalf("版本/阶段 = %s/%s", Version, Stage)
 	}
 }

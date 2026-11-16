@@ -247,106 +247,121 @@ func defaultMotion() MotionTokens {
 	}
 }
 
-// Light 返回内置亮色主题。
+// Light 返回内置亮色主题（M7：值对齐 antd v5 默认算法，seed #1677FF）。
+//
+// antd 的大量 token 是带 alpha 的 rgba（colorText rgba(0,0,0,.88)、
+// colorFillQuaternary rgba(0,0,0,.04)…），这里换算成它们在白底上的
+// **实色等价**——GDI 文字通道会丢 alpha 字节（见 03-ENGINE.md §6.4），
+// 带 alpha 的文字色会把文字画成全黑。换算规则：
+// out = fg*a + bg*(1-a)，bg 取各自目标底色。
 func Light() *Data {
 	return &Data{
 		Name: "light",
 		Color: ColorTokens{
-			Primary:       geom.RGBA(59, 130, 246),
-			PrimaryHover:  geom.RGBA(37, 99, 235),
-			PrimaryActive: geom.RGBA(29, 78, 216),
+			// antd colorPrimary/hover/active = #1677FF/#4096FF/#0958D9
+			Primary:       geom.RGBA(22, 119, 255),
+			PrimaryHover:  geom.RGBA(64, 150, 255),
+			PrimaryActive: geom.RGBA(9, 88, 217),
 			OnPrimary:     geom.RGBA(255, 255, 255),
 
-			Background:    geom.RGBA(250, 250, 252),
-			Surface:       geom.RGBA(255, 255, 255),
-			SurfaceHover:  geom.RGBA(246, 248, 251),
-			SurfaceActive: geom.RGBA(238, 242, 247),
-			SurfaceSunken: geom.RGBA(244, 246, 249),
+			// colorBgLayout / colorBgContainer / fillQuaternary / fillTertiary / fillQuaternary
+			Background:    geom.RGBA(245, 245, 245), // #F5F5F5
+			Surface:       geom.RGBA(255, 255, 255), // #FFFFFF
+			SurfaceHover:  geom.RGBA(250, 250, 250), // #FAFAFA
+			SurfaceActive: geom.RGBA(240, 240, 240), // #F0F0F0
+			SurfaceSunken: geom.RGBA(250, 250, 250), // 表格斑马/演示舞台
 
-			Border:       geom.RGBA(226, 232, 240),
-			BorderStrong: geom.RGBA(203, 213, 225),
+			// colorBorder rgba(5,5,5,.15) 与 borderHover 的实色等价
+			Border:       geom.RGBA(217, 217, 217), // #D9D9D9
+			BorderStrong: geom.RGBA(191, 191, 191), // #BFBFBF
 
-			Text:      geom.RGBA(15, 23, 42),
-			TextMuted: geom.RGBA(100, 116, 139),
-			TextFaint: geom.RGBA(148, 163, 184),
-			OnDark:    geom.RGBA(248, 250, 252),
+			// colorText(.88)/TextSecondary(.65)/TextTertiary(.45) 的实色等价
+			Text:      geom.RGBA(31, 31, 31),    // #1F1F1F
+			TextMuted: geom.RGBA(89, 89, 89),    // #595959
+			TextFaint: geom.RGBA(140, 140, 140), // #8C8C8C
+			OnDark:    geom.RGBA(255, 255, 255),
 
-			Danger:    geom.RGBA(220, 38, 38),
+			// #52C41A / #FAAD14 / #FF4D4F / #1677FF
+			Danger:    geom.RGBA(255, 77, 79),
 			OnDanger:  geom.RGBA(255, 255, 255),
-			Warning:   geom.RGBA(217, 119, 6),
-			Success:   geom.RGBA(22, 163, 74),
-			Info:      geom.RGBA(14, 165, 233),
-			FocusRing: geom.RGBA(59, 130, 246),
-			Selection: geom.RGBA(191, 219, 254),
+			Warning:   geom.RGBA(250, 173, 20),
+			Success:   geom.RGBA(82, 196, 26),
+			Info:      geom.RGBA(22, 119, 255),
+			FocusRing: geom.RGBA(22, 119, 255),
+			Selection: geom.RGBA(186, 224, 255), // antd blue-2 #BAE0FF
 
-			Overlay: geom.RGBAa(15, 23, 42, 115),
-			Shadow:  geom.RGBAa(15, 23, 42, 26),
+			Overlay: geom.RGBAa(0, 0, 0, 115), // colorBgMask rgba(0,0,0,.45)
+			Shadow:  geom.RGBAa(0, 0, 0, 40),  // boxShadow 色
 		},
-		Radius: RadiusTokens{SM: 4, Base: 6, LG: 10, Pill: 999},
+		Radius: RadiusTokens{SM: 4, Base: 6, LG: 8, Pill: 999}, // antd borderRadiusSM/Base/LG
 		Space:  SpaceTokens{XS: 2, SM: 4, MD: 8, LG: 12, XL: 16, XXL: 24},
 		Font: FontTokens{
 			Family: "Segoe UI", LineHeight: 1.5,
-			SizeXS: 11, SizeSM: 12, SizeBase: 13, SizeLG: 15, SizeXL: 18, SizeTitle: 22,
+			SizeXS: 11, SizeSM: 12, SizeBase: 14, SizeLG: 16, SizeXL: 20, SizeTitle: 24,
 			WeightReg: 400, WeightMed: 500, WeightBold: 700,
 		},
 		Motion: defaultMotion(),
 		Elevation: []ShadowSpec{
-			{Dx: 0, Dy: 1, Blur: 2, Color: geom.RGBAa(15, 23, 42, 15)},
-			{Dx: 0, Dy: 2, Blur: 8, Color: geom.RGBAa(15, 23, 42, 26)},
-			{Dx: 0, Dy: 8, Blur: 24, Color: geom.RGBAa(15, 23, 42, 36)},
+			{Dx: 0, Dy: 1, Blur: 2, Color: geom.RGBAa(0, 0, 0, 20)},
+			{Dx: 0, Dy: 3, Blur: 6, Color: geom.RGBAa(0, 0, 0, 30)},
+			{Dx: 0, Dy: 6, Blur: 16, Color: geom.RGBAa(0, 0, 0, 41)},
 		},
 		Z: defaultZ(),
 	}
 }
 
-// Dark 返回内置暗色主题。语义键与亮色完全一致，只换值。
+// Dark 返回内置暗色主题（M7：对齐 antd v5 dark 算法，基底 #141414）。
+// 语义键与亮色完全一致，只换值；文字同样是暗底上的实色等价。
 func Dark() *Data {
 	return &Data{
 		Name: "dark",
 		Dark: true,
 		Color: ColorTokens{
-			Primary:       geom.RGBA(96, 165, 250),
-			PrimaryHover:  geom.RGBA(147, 197, 253),
-			PrimaryActive: geom.RGBA(59, 130, 246),
-			OnPrimary:     geom.RGBA(15, 23, 42),
+			// dark 算法下 primary = #1668DC（hover #3C89E8 / active #1554AD）
+			Primary:       geom.RGBA(22, 104, 220),
+			PrimaryHover:  geom.RGBA(60, 137, 232),
+			PrimaryActive: geom.RGBA(21, 84, 173),
+			OnPrimary:     geom.RGBA(255, 255, 255),
 
-			Background:    geom.RGBA(15, 23, 42),
-			Surface:       geom.RGBA(30, 41, 59),
-			SurfaceHover:  geom.RGBA(38, 51, 71),
-			SurfaceActive: geom.RGBA(47, 62, 85),
-			SurfaceSunken: geom.RGBA(22, 32, 48),
+			// colorBgLayout #000 / container #141414 / fillWhite 透明度阶梯
+			Background:    geom.RGBA(0, 0, 0),
+			Surface:       geom.RGBA(20, 20, 20), // #141414
+			SurfaceHover:  geom.RGBA(29, 29, 29), // #1D1D1D
+			SurfaceActive: geom.RGBA(34, 34, 34), // #222222
+			SurfaceSunken: geom.RGBA(29, 29, 29),
 
-			Border:       geom.RGBA(51, 65, 85),
-			BorderStrong: geom.RGBA(71, 85, 105),
+			Border:       geom.RGBA(48, 48, 48), // rgba(253,253,253,.12) 实色等价
+			BorderStrong: geom.RGBA(57, 57, 57), // .16
 
-			Text:      geom.RGBA(241, 245, 249),
-			TextMuted: geom.RGBA(148, 163, 184),
-			TextFaint: geom.RGBA(100, 116, 139),
-			OnDark:    geom.RGBA(248, 250, 252),
+			Text:      geom.RGBA(219, 219, 219), // rgba(255,255,255,.85) 实色等价
+			TextMuted: geom.RGBA(126, 126, 126), // .45
+			TextFaint: geom.RGBA(90, 90, 90),    // .30
+			OnDark:    geom.RGBA(255, 255, 255),
 
-			Danger:    geom.RGBA(248, 113, 113),
-			OnDanger:  geom.RGBA(15, 23, 42),
-			Warning:   geom.RGBA(251, 191, 36),
-			Success:   geom.RGBA(74, 222, 128),
-			Info:      geom.RGBA(56, 189, 248),
-			FocusRing: geom.RGBA(96, 165, 250),
-			Selection: geom.RGBA(30, 64, 175),
+			// dark 算法：#49AA19 / #D89614 / #DC4446 / #1668DC
+			Danger:    geom.RGBA(220, 68, 70),
+			OnDanger:  geom.RGBA(255, 255, 255),
+			Warning:   geom.RGBA(216, 150, 20),
+			Success:   geom.RGBA(73, 170, 25),
+			Info:      geom.RGBA(22, 104, 220),
+			FocusRing: geom.RGBA(22, 104, 220),
+			Selection: geom.RGBA(20, 41, 70), // primary 25% 实色等价
 
-			Overlay: geom.RGBAa(0, 0, 0, 140),
+			Overlay: geom.RGBAa(0, 0, 0, 166), // colorBgMask rgba(0,0,0,.65)
 			Shadow:  geom.RGBAa(0, 0, 0, 102),
 		},
-		Radius: RadiusTokens{SM: 4, Base: 6, LG: 10, Pill: 999},
+		Radius: RadiusTokens{SM: 4, Base: 6, LG: 8, Pill: 999},
 		Space:  SpaceTokens{XS: 2, SM: 4, MD: 8, LG: 12, XL: 16, XXL: 24},
 		Font: FontTokens{
 			Family: "Segoe UI", LineHeight: 1.5,
-			SizeXS: 11, SizeSM: 12, SizeBase: 13, SizeLG: 15, SizeXL: 18, SizeTitle: 22,
+			SizeXS: 11, SizeSM: 12, SizeBase: 14, SizeLG: 16, SizeXL: 20, SizeTitle: 24,
 			WeightReg: 400, WeightMed: 500, WeightBold: 700,
 		},
 		Motion: defaultMotion(),
 		Elevation: []ShadowSpec{
 			{Dx: 0, Dy: 1, Blur: 2, Color: geom.RGBAa(0, 0, 0, 77)},
-			{Dx: 0, Dy: 2, Blur: 8, Color: geom.RGBAa(0, 0, 0, 115)},
-			{Dx: 0, Dy: 8, Blur: 24, Color: geom.RGBAa(0, 0, 0, 140)},
+			{Dx: 0, Dy: 3, Blur: 6, Color: geom.RGBAa(0, 0, 0, 115)},
+			{Dx: 0, Dy: 6, Blur: 16, Color: geom.RGBAa(0, 0, 0, 140)},
 		},
 		Z: defaultZ(),
 	}
