@@ -46,6 +46,7 @@ func main() {
 		idleF     = flag.Bool("idle", false, "1000 节点静止 0 帧（C14 门禁）")
 		keysF     = flag.Bool("keyselftest", false, "14 项文本/按键分离断言（C28；中文上屏）")
 		formF     = flag.Bool("formtest", false, "7 项表单页 demo 门禁（零 lcl / 中文上屏 / Tab / Tooltip）")
+		migF      = flag.Bool("migrationtest", false, "7 项示例迁移门禁（三场景出帧 / compat / 零 lcl）")
 		showCtr   = flag.Bool("contracts", false, "打印契约表")
 		headless  = flag.Bool("headless", false, "无窗口确定性出帧")
 		frames    = flag.Int("frames", 60, "--headless 的帧数")
@@ -419,6 +420,29 @@ func main() {
 		fmt.Println(res.String())
 		if err != nil || !res.OK() {
 			fmt.Fprintln(os.Stderr, "formtest 门禁未通过（M3 表单页 demo）")
+			exit = 1
+		}
+	}
+
+	if *migF {
+		ran = true
+		res, err := diag.MigrationTest()
+		if !*quiet {
+			for _, d := range res.Details {
+				mark := "ok  "
+				if !d.OK {
+					mark = "FAIL"
+				}
+				fmt.Printf("%s %-24s %s", mark, d.Name, d.Got)
+				if d.Note != "" {
+					fmt.Printf("  ← %s", d.Note)
+				}
+				fmt.Println()
+			}
+		}
+		fmt.Println(res.String())
+		if err != nil || !res.OK() {
+			fmt.Fprintln(os.Stderr, "migrationtest 门禁未通过（M4 示例迁移）")
 			exit = 1
 		}
 	}

@@ -110,7 +110,7 @@ func (r Result) String() string {
 // 都会被 CheckAll 报 MISSING（而不是静默跳过）。M3 收口后
 // "未来门禁必须报红"由 TestMissingGateIsRed 用临时契约验证，
 // 不再依赖某个真实契约恰好还没实现。
-var Current = M3
+var Current = M4
 
 // SetStage 设置当前里程碑（diag 用命令行参数覆盖）。
 func SetStage(s Stage) { Current = s }

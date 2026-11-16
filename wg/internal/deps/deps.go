@@ -108,7 +108,12 @@ var rules = map[string]ruleSet{
 	// 以及 overlay 的浮层入口（Tooltip/Popover）；render 用于 CustomPaintNode
 	// 录制图形（Spin/图表），与 ui 层同级放行；不得碰 GDI 句柄。
 	"widgets": {allow: set("geom", "input", "overlay", "render", "scene", "text", "theme", "ui")},
-	"compat":  {allow: set("geom", "scene", "ui", "widgets")},
+	// widgets/chart 与 widgets 同级：图表也是组件，只多一层数据映射。
+	"widgets/chart": {allow: set("geom", "render", "scene", "text", "theme", "ui")},
+	// compat 是旧 API 门面，转发到新组件。
+	"compat": {allow: set("geom", "scene", "ui", "widgets")},
+	// migration 是示例组合层：把三个旧示例重建为组件场景，允许依赖组件与渲染基础。
+	"migration": {allow: set("geom", "input", "render", "scene", "theme", "ui", "widgets", "widgets/chart")},
 	"diag":    {allowAll: true, allowLCL: true},
 	"contracts": {
 		// 契约包只做断言，不参与渲染；C17 的断言实现需要调用检查器本身，

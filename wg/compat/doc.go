@@ -6,5 +6,6 @@
 //
 // 依赖：ui / widgets / scene / geom。
 //
-// 状态：M0 只有包声明；映射表在 M4 落地（见 05-API-ROADMAP.md §4）。
+// 状态：M4 已落地旧式构造器门面（compat.go），逐个转发到新组件；
+// 见 05-API-ROADMAP.md §4 的完整迁移映射表。
 package compat
