@@ -1,0 +1,118 @@
+package widgets
+
+import (
+	"testing"
+	"time"
+
+	"github.com/energye/lcl/wg/overlay"
+	"github.com/energye/lcl/wg/theme"
+	"github.com/energye/lcl/wg/ui"
+)
+
+// 用真实的 overlay.Host + theme 构造 BuildContext，验证浮层控制器接线。
+func feedbackCtx() (*ui.BuildContext, *overlay.Host) {
+	h := overlay.New(overlay.Options{})
+	return &ui.BuildContext{Theme: theme.Default(), Overlay: h}, h
+}
+
+func TestModalShowClose(t *testing.T) {
+	ctx, host := feedbackCtx()
+	m := NewModal("确认删除", Label{Text: "此操作不可撤销"})
+	confirmed := false
+	m.OnConfirm = func() { confirmed = true }
+	m.Show(ctx)
+	if !m.IsOpen() || host.Count() != 1 {
+		t.Fatalf("Modal 未显示: open=%v count=%d", m.IsOpen(), host.Count())
+	}
+	if host.Entries()[0].Band != theme.BandModal || !host.Entries()[0].Modal || !host.Entries()[0].TrapFocus {
+		t.Fatalf("Modal 应带 BandModal/遮罩/焦点域: %+v", host.Entries()[0])
+	}
+	m.Close()
+	if m.IsOpen() || host.Count() != 0 {
+		t.Fatal("Modal 未关闭")
+	}
+	// 确认按钮的回调在下一帧的内容里；这里只验证状态机
+	_ = confirmed
+}
+
+func TestModalShowTwiceIgnored(t *testing.T) {
+	ctx, host := feedbackCtx()
+	m := NewModal("标题", nil)
+	m.Show(ctx)
+	m.Show(ctx)
+	if host.Count() != 1 {
+		t.Fatalf("重复 Show 产生了 %d 条浮层", host.Count())
+	}
+}
+
+func TestDrawerEdges(t *testing.T) {
+	for _, edge := range []DrawerEdge{DrawerLeft, DrawerRight, DrawerTop, DrawerBottom} {
+		ctx, host := feedbackCtx()
+		d := NewDrawer("设置", Label{Text: "内容"})
+		d.Edge = edge
+		d.Show(ctx)
+		if !d.IsOpen() || host.Count() != 1 {
+			t.Fatalf("Drawer(edge=%d) 未显示", edge)
+		}
+		e := host.Entries()[0]
+		if e.Band != theme.BandModal || !e.Modal {
+			t.Fatalf("Drawer(edge=%d) 应有模态遮罩", edge)
+		}
+		if e.Dismiss.Has(overlay.DismissEsc) == false {
+			t.Fatalf("Drawer(edge=%d) 应支持 Esc 关闭", edge)
+		}
+		d.Close()
+	}
+}
+
+func TestNotificationTimeout(t *testing.T) {
+	ctx, host := feedbackCtx()
+	n := NewNotification("保存成功", "数据已写入")
+	n.Duration = 2 * time.Second
+	n.Show(ctx)
+	if !n.IsOpen() || host.Count() != 1 {
+		t.Fatal("Notification 未显示")
+	}
+	e := host.Entries()[0]
+	if e.Band != theme.BandToast || !e.Dismiss.Has(overlay.DismissTimeout) || e.Duration != 2*time.Second {
+		t.Fatalf("通知应有 BandToast/超时关闭/时长: %+v", e)
+	}
+	n.Close()
+	if n.IsOpen() {
+		t.Fatal("通知未关闭")
+	}
+}
+
+func TestPopconfirmAnchor(t *testing.T) {
+	ctx, host := feedbackCtx()
+	btn := NewButton("删除")
+	pc := NewPopconfirm("确定删除？", btn)
+	n := pc.Build(ctx)
+	if n == nil {
+		t.Fatal("Popconfirm 构建失败")
+	}
+	// 直接触发 show（点击路径由手势处理器覆盖，这里验证浮层声明）
+	pc.show(ctx, n)
+	if !pc.IsOpen() || host.Count() != 1 {
+		t.Fatal("Popconfirm 未显示")
+	}
+	e := host.Entries()[0]
+	if e.Band != theme.BandPopup || e.Anchor.Kind != overlay.AnchorNode || !e.Dismiss.Has(overlay.DismissOutsideClick) {
+		t.Fatalf("Popconfirm 应锚定节点且外部点击关闭: %+v", e)
+	}
+	pc.Close()
+	if pc.IsOpen() {
+		t.Fatal("Popconfirm 未关闭")
+	}
+}
+
+// 无 overlay 时 Show 必须安全 no-op（组件能在纯 headless 单测里用）。
+func TestFeedbackWithoutOverlayNoPanic(t *testing.T) {
+	ctx := &ui.BuildContext{Theme: theme.Default()}
+	NewModal("t", nil).Show(ctx)
+	NewDrawer("t", nil).Show(ctx)
+	NewNotification("t", "b").Show(ctx)
+	pc := NewPopconfirm("t", Label{Text: "x"})
+	pc.Build(ctx)
+	pc.show(ctx, nil)
+}
