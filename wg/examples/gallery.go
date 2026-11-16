@@ -57,21 +57,22 @@ func (g *Gallery) Next() {
 // Build 实现 ui.Widget。
 func (g *Gallery) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
-	root := scene.Flex(scene.Horizontal, 1)
+	// 交叉轴拉伸：Horizontal 的交叉轴是垂直，让左右两栏都铺满窗口高度。
+	// 默认 CrossStart 会让内容按自然高度缩成一条（真窗首帧实测右侧只有 71px）。
+	root := scene.Flex(scene.Horizontal, 1).SetCrossAlign(scene.CrossStretch)
 
-	// ── 左侧导航 ────────────────────────────────────────────────
-	nav := scene.Flex(scene.Vertical, 3).SetWidth(226)
-	nav.SetPadding(geom.InLTRB(8, 8, 8, 8))
-	nav.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface)})
-	nav.Add((&widgets.Label{Text: "wg 示例集", Size: th.Font.SizeTitle}).Build(ctx))
-	nav.Add((&widgets.Label{Text: fmt.Sprintf("共 %d 项 · 真窗运行", len(All)), Size: th.Font.SizeSM}).Build(ctx))
-	nav.Add((&widgets.Divider{}).Build(ctx))
+	// ── 左侧导航（可滚动，65 项远超一屏） ────────────────────────
+	navList := scene.Flex(scene.Vertical, 3)
+	navList.SetPadding(geom.InLTRB(8, 8, 8, 8))
+	navList.Add((&widgets.Label{Text: "wg 示例集", Size: th.Font.SizeTitle}).Build(ctx))
+	navList.Add((&widgets.Label{Text: fmt.Sprintf("共 %d 项 · 真窗运行", len(All)), Size: th.Font.SizeSM}).Build(ctx))
+	navList.Add((&widgets.Divider{}).Build(ctx))
 
 	lastGroup := ""
 	for i, ex := range All {
 		if ex.Group != lastGroup {
 			lastGroup = ex.Group
-			nav.Add((&widgets.Label{Text: "— " + lastGroup, Size: th.Font.SizeSM}).Build(ctx))
+			navList.Add((&widgets.Label{Text: "— " + lastGroup, Size: th.Font.SizeSM}).Build(ctx))
 		}
 		b := widgets.NewButton(ex.Name)
 		i := i
@@ -79,16 +80,19 @@ func (g *Gallery) Build(ctx *ui.BuildContext) *scene.Node {
 			idx := i
 			g.SetState(func() { g.selected = idx })
 		}
-		nav.Add(b.Build(ctx))
+		navList.Add(b.Build(ctx))
 	}
 
 	next := widgets.NewButton("→ 下一项")
 	next.OnClick = g.Next
-	nav.Add(next.Build(ctx))
+	navList.Add(next.Build(ctx))
+
+	nav := scene.Scroll(scene.Vertical, navList).SetWidth(226)
+	nav.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface)})
 	root.Add(nav)
 
 	// ── 右侧内容 ────────────────────────────────────────────────
-	body := scene.Flex(scene.Vertical, 8).SetFlex(1, scene.FlexTight)
+	body := scene.Flex(scene.Vertical, 8).SetFlex(1, scene.FlexTight).SetCrossAlign(scene.CrossStretch)
 	body.SetPadding(geom.InLTRB(16, 12, 16, 16))
 	body.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.Background)})
 

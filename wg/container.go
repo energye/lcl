@@ -92,6 +92,12 @@ type Container struct {
 	// layoutAll 表示下一帧必须整树重排（挂载/换主题/resize）。
 	layoutAll bool
 
+	// presenter 是呈现链路的最后一公里：把合成出的 Backing 提交到窗口 DC。
+	// headless 容器为 nil（合成结果只在内存里，供出图/自检读取）。
+	presenter *host.Presenter
+	// binder 是平台消息接管器；Run 里安装，WM_PAINT 时驱动 presenter.Paint。
+	binder *host.Binder
+
 	// 帧泵（Run 启动；无窗口模式下由调用方手动 FrameOnce/Tick）
 	sched  *frame.Scheduler
 	ticker *frame.ManualTicker
@@ -359,6 +365,11 @@ func (c *Container) rebuildScene() {
 	}
 	c.scene.RemoveAll()
 	if c.content != nil {
+		// 内容必须铺满视口：Stack 对普通子节点用 LooseConstraints（按内容
+		// 自然尺寸），会让只含窄导航+文字的页面缩成一小条、右侧内容宽 0。
+		// SetStackPosition(0,0) 让内容成为 positioned 且 keepSize=false，
+		// 走 TightConstraints(视口)——这正是"父容器铺满"的语义（浮层遮罩同理）。
+		c.content.SetStackPosition(geom.Pt(0, 0)).SetPositionKeepSize(false)
 		c.scene.Add(c.content)
 	}
 	if c.ov != nil {
@@ -753,6 +764,17 @@ func (c *Container) Backing() *raster.Backing {
 	return c.comp.Backing()
 }
 
+// PresentStats 返回呈现链路统计（帧提交到窗口 DC 的次数）。
+// headless 容器没有 Presenter，返回零值。
+func (c *Container) PresentStats() host.PresentStats {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.presenter == nil {
+		return host.PresentStats{}
+	}
+	return c.presenter.Stats()
+}
+
 // LastDamage 返回最近一帧提交的脏区（未提交过时为零矩形）。
 func (c *Container) LastDamage() geom.Rect {
 	c.mu.Lock()
@@ -887,6 +909,11 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 		if c.scene != nil {
 			c.scene.ClearDirtyTree()
 		}
+		// 最后一公里：把本帧合成结果交给 Presenter，驱动 WM_PAINT 提交到窗口。
+		// 必须在清脏之前取 Damage（st.Damage 已保存），且只在真窗下存在。
+		if c.presenter != nil {
+			c.presenter.Frame(c.comp.Backing(), st.Damage)
+		}
 	}
 
 	st.FrameDuration = time.Since(began)
@@ -963,15 +990,35 @@ func (c *Container) Run() error {
 	// 窗口消息仍走 LCL 默认处理：鼠标键盘到不了分发器，输入法更是完全失联。
 	binder := host.NewBinder(c.host, c)
 	binder.SetIMEBridge(c.ime)
+	// 呈现链路：真窗需要一个 Presenter 把合成出的 Backing 贴到窗口 DC。
+	// 只绑定真窗（form != nil）：headless 容器只在内存里出图。
+	if c.form != nil && c.host.Bound() {
+		p := host.NewPresenter(uintptr(c.form.Handle()), c.host)
+		c.mu.Lock()
+		c.presenter = p
+		c.mu.Unlock()
+		binder.SetPresenter(p)
+		defer p.Close()
+	}
 	if err := binder.Install(); err != nil {
 		c.mu.Lock()
 		c.sched = nil
 		c.st = stateCreated
+		c.presenter = nil
 		c.mu.Unlock()
 		sched.Stop()
 		return err
 	}
 	defer binder.Uninstall()
+	c.mu.Lock()
+	c.binder = binder
+	c.mu.Unlock()
+	defer func() {
+		c.mu.Lock()
+		c.binder = nil
+		c.presenter = nil
+		c.mu.Unlock()
+	}()
 
 	sched.RequestFrame()
 	// 进入平台消息循环：帧闹钟在别的 goroutine 上触发，消息循环负责

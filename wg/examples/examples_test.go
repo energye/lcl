@@ -95,6 +95,74 @@ func TestGallerySelectsEveryExample(t *testing.T) {
 	}
 }
 
+// TestGalleryContentFillsViewport 是这次真窗空白 bug 的回归门禁。
+//
+// 症状：内容节点被 Stack 用 LooseConstraints 测量，只按内容自然宽高布局，
+// 于是左侧导航 226px + 右侧内容 0px，图表画在零宽区域里——进程活着、
+// Presented=true、单测全绿，但真窗里什么都看不见。
+func TestGalleryContentFillsViewport(t *testing.T) {
+	const vw, vh = 1360, 860
+	c := wg.NewHeadless(wg.DefaultOptions())
+	c.Resize(vw, vh)
+	c.MountWidget(NewGallery())
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatalf("首帧失败: %v", err)
+	}
+	root := c.Content()
+	if root == nil {
+		t.Fatal("Content 为空")
+	}
+	if got := root.Size(); int(got.W) != vw || int(got.H) != vh {
+		t.Fatalf("画廊根节点 = %v，应铺满 %dx%d", got, vw, vh)
+	}
+	if len(root.Children()) < 2 {
+		t.Fatalf("画廊子节点数 = %d，应有导航+内容两栏", len(root.Children()))
+	}
+	body := root.Children()[1]
+	if got := body.Size(); got.W < float32(vw)/2 || got.H < float32(vh)/2 {
+		t.Fatalf("内容栏 = %v，未铺满视口过半", got)
+	}
+	// Section 的列也必须横向拉伸，否则图表仍落在零宽区域。
+	if len(body.Children()) > 2 {
+		sec := body.Children()[2]
+		if got := sec.Size(); got.W < 400 || got.H < 200 {
+			t.Fatalf("示例内容 Section = %v，尺寸不足", got)
+		}
+	}
+}
+
+// TestGalleryFrameHasPixels 验证首帧合成缓冲里真的有内容（像素级）。
+// 只看节点数/Presented 会把"所有节点都在零宽区域"误判为通过。
+func TestGalleryFrameHasPixels(t *testing.T) {
+	c := wg.NewHeadless(wg.DefaultOptions())
+	c.Resize(1360, 860)
+	c.MountWidget(NewGallery())
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatalf("首帧失败: %v", err)
+	}
+	b := c.Backing()
+	if b == nil {
+		t.Fatal("合成缓冲为空")
+	}
+	// 右侧内容区采样：默认首条是折线图，应有坐标轴/曲线等非白像素。
+	nonBg := 0
+	for y := 120; y < 500; y += 3 {
+		for x := 300; x < 1200; x += 3 {
+			if x >= b.W() || y >= b.H() {
+				continue
+			}
+			p := b.Pix()[y*b.W()+x]
+			r, g, bl := byte(p>>16), byte(p>>8), byte(p)
+			if r != 255 || g != 255 || bl != 255 {
+				nonBg++
+			}
+		}
+	}
+	if nonBg < 200 {
+		t.Fatalf("内容区非背景采样点 = %d，画布疑似空白", nonBg)
+	}
+}
+
 // TestAllGroupsCovered 防止新增分组却忘了配示例。
 func TestAllGroupsCovered(t *testing.T) {
 	groups := []string{

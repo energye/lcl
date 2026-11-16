@@ -37,6 +37,7 @@ var (
 	procScreenToClient  = user32.NewProc("ScreenToClient")
 	procGetDC           = user32.NewProc("GetDC")
 	procReleaseDC       = user32.NewProc("ReleaseDC")
+	procInvalidateRect  = user32.NewProc("InvalidateRect")
 )
 
 // trackMouseEvent 是 TRACKMOUSEEVENT。
@@ -57,6 +58,8 @@ type Binder struct {
 	form   lcl.IEngForm
 	hwnd   uintptr
 	ime    *IMEBridge
+	// presenter 在 WM_PAINT 中把缓存帧提交到窗口 DC（呈现链路最后一公里）。
+	presenter *Presenter
 
 	installed bool
 	tracking  bool
@@ -101,6 +104,9 @@ func (b *Binder) SetIMEBridge(br *IMEBridge) {
 	}
 }
 
+// SetPresenter 绑定呈现器：WM_PAINT 时由它把缓存帧提交到窗口 DC。
+func (b *Binder) SetPresenter(p *Presenter) { b.presenter = p }
+
 // Normalizer 返回归一化器。
 func (b *Binder) Normalizer() *Normalizer { return b.norm }
 
@@ -117,12 +123,16 @@ func (b *Binder) Install() error {
 	return nil
 }
 
-// Uninstall 恢复默认消息处理。
+// Uninstall 释放接管资源。
+//
+// 刻意不调用 SetOnWndProc(nil)：Uninstall 发生在 Application.Run 返回之后，
+// 此时窗口可能已被 Terminate 销毁，回调对象也已失效；再经 FFI 清空事件会
+// 触发访问违例（真窗 --shot 退出时实测 0xc0000005）。进程即将退出，LCL
+// 会随窗口一起回收回调，注销没有收益只有风险。
 func (b *Binder) Uninstall() {
 	if b.form == nil || !b.installed {
 		return
 	}
-	b.form.SetOnWndProc(nil)
 	if b.captured {
 		procReleaseCapture.Call()
 		b.captured = false
@@ -149,6 +159,13 @@ func (b *Binder) WndProc(msg *types.TLMessage) {
 	b.router.SetMods(b.currentMods())
 
 	consumed := b.router.Handle(m)
+
+	// WM_PAINT：Router 只请求一帧并吞掉消息（不让 LCL 画背景）。
+	// 真正的像素提交在这里完成 —— 把上一帧缓存的 Backing 贴到窗口 DC。
+	// 必须在主线程同步执行：GDI DC 只在消息处理期间稳定。
+	if m.Msg == wmPaint && b.presenter != nil {
+		b.presenter.Paint()
+	}
 
 	// OS 级捕获：按下时抓住，全部抬起时释放。逻辑捕获（Dispatcher）
 	// 决定"谁收事件"，OS 捕获决定"事件能不能到窗口"。

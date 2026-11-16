@@ -93,7 +93,7 @@ func Note(ctx *ui.BuildContext, text string) *scene.Node {
 
 // Section 把标题、说明和内容纵向排成一页，供各示例复用。
 func Section(ctx *ui.BuildContext, title, note string, body *scene.Node) *scene.Node {
-	col := scene.Flex(scene.Vertical, 10).SetFlex(1, scene.FlexTight)
+	col := scene.Flex(scene.Vertical, 10).SetFlex(1, scene.FlexTight).SetCrossAlign(scene.CrossStretch)
 	col.Add(Heading(ctx, title))
 	col.Add(Note(ctx, note))
 	if body != nil {
