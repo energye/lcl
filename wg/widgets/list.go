@@ -32,6 +32,7 @@ func NewList(items ...ListItem) *List { return &List{Items: items} }
 // 键控复用的意义不只是省一次分配：输入框列表中间插一项时，若同 Key 的
 // 节点被重建，正在输入的那个框会丢焦点、丢组合串。这里必须复用节点。
 func (l *List) Build(ctx *ui.BuildContext) *scene.Node {
+	ctx.BindState(l)
 	nodes, keys, _ := ui.KeyedList(l.Items,
 		func(it ListItem) ui.Key { return it.Key },
 		l.nodes, l.keys,

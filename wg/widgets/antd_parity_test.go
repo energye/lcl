@@ -9,6 +9,7 @@ package widgets
 
 import (
 	"testing"
+	"time"
 
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/input"
@@ -411,3 +412,25 @@ func TestAntdIconUnknownRendersPlaceholder(t *testing.T) {
 }
 
 var _ = geom.Pt(0, 0)
+
+// 临时实验（提交前删除）：复刻真窗事件流，验证 tap 是否丢失。
+func TestReproRealWindowSequence(t *testing.T) {
+	r := newControlRig()
+	calls := 0
+	b := NewButton("点我")
+	b.OnClick = func() { calls++; t.Log("TAP-FIRED") }
+	n := r.mount(b)
+	c := n.BoundsInRoot().Center()
+	p := c
+	now := time.Now()
+	// 真窗序列：enter → hover → down → up → cancel（含真实间隔）
+	r.disp.Pointer(&input.PointerEvent{Kind: input.PointerEnter, Pointer: input.MousePointer, Pos: p, PosRoot: p, Time: now})
+	r.disp.Pointer(&input.PointerEvent{Kind: input.PointerHover, Pointer: input.MousePointer, Pos: p, PosRoot: p, Time: now.Add(20 * time.Millisecond)})
+	r.disp.Pointer(&input.PointerEvent{Kind: input.PointerDown, Pointer: input.MousePointer, Pos: p, PosRoot: p, Time: now.Add(150 * time.Millisecond)})
+	r.disp.Pointer(&input.PointerEvent{Kind: input.PointerUp, Pointer: input.MousePointer, Pos: p, PosRoot: p, Time: now.Add(210 * time.Millisecond)})
+	r.disp.Pointer(&input.PointerEvent{Kind: input.PointerCancel, Pointer: input.MousePointer, Pos: p, PosRoot: p, Time: now.Add(211 * time.Millisecond)})
+	if calls == 0 {
+		t.Fatal("真窗序列下 tap 未触发——复现成功")
+	}
+	t.Logf("calls=%d（序列复刻下正常）", calls)
+}

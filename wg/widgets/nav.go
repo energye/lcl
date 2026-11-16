@@ -36,6 +36,7 @@ func (t *Tabs) Node() *scene.Node { return t.node }
 
 // Build 实现 ui.Widget。
 func (t *Tabs) Build(ctx *ui.BuildContext) *scene.Node {
+	ctx.BindState(t)
 	th := ctx.ThemeOr()
 	if len(t.Items) == 0 {
 		return scene.Empty()

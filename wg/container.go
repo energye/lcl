@@ -293,6 +293,7 @@ func (c *Container) buildContext() *ui.BuildContext {
 		th = theme.Default()
 	}
 	inherited := c.inherited
+	widget := c.widget
 	return &ui.BuildContext{
 		Theme: th,
 		Media: ui.MediaQuery{
@@ -307,6 +308,26 @@ func (c *Container) buildContext() *ui.BuildContext {
 			}
 			return inherited[key]
 		},
+		// 深层组件的状态变化 → 根 widget 置脏 + 请求帧。
+		// rebuildDirtyWidget 只扫根 widget 的脏位；深层组件直调 MarkDirty
+		// 不请求帧的话，静止窗口（C14）永不重绘——真窗表现为"点了没反应"。
+		// 置根脏必须用 SetDirtyOnly：根的 invalidate 往往就是本回调，
+		// 走 MarkDirty 会形成 MarkDirty→InvalidateRoot→MarkDirty 无限递归。
+		RequestFrame: c.requestFrame,
+		InvalidateRoot: func() {
+			if widget != nil {
+				if r, ok := widget.(interface{ SetDirtyOnly() }); ok {
+					r.SetDirtyOnly()
+				}
+			}
+			c.requestFrame()
+		},
+		Viewport: func() geom.Size {
+			if c.host == nil {
+				return geom.Size{}
+			}
+			return c.host.ClientSize()
+		}(),
 	}
 }
 

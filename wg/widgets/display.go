@@ -307,6 +307,7 @@ func NewSegmented(options ...string) *Segmented { return &Segmented{Options: opt
 
 // Build 实现 ui.Widget。
 func (s *Segmented) Build(ctx *ui.BuildContext) *scene.Node {
+	ctx.BindState(s)
 	th := ctx.ThemeOr()
 	children := make([]*scene.Node, 0, len(s.Options))
 	for i, opt := range s.Options {
@@ -523,6 +524,7 @@ func NewCollapse(panels ...CollapsePanel) *Collapse {
 
 // Build 实现 ui.Widget。
 func (c *Collapse) Build(ctx *ui.BuildContext) *scene.Node {
+	ctx.BindState(c)
 	th := ctx.ThemeOr()
 	col := scene.Flex(scene.Vertical, th.Space.XS)
 	for i := range c.Panels {

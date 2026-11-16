@@ -7,8 +7,18 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
-// contentW 是文档页内容列宽（窗口 1080 宽下的版心）。
-const contentW = 960
+// contentWidth 按视口算版心宽：随窗口自适应，钳制在 [640, 1200]。
+// 窗口 resize 时容器会重建根 widget，Build 拿到新的 Viewport 自动重排。
+func contentWidth(ctx *ui.BuildContext) float32 {
+	w := ctx.Viewport.W - 80 // 版心边距 40×2
+	if w < 640 {
+		w = 640
+	}
+	if w > 1200 {
+		w = 1200
+	}
+	return w
+}
 
 // page 是文档页渲染器：把 Meta 渲染成"说明 → 演示块 → API 表"三段式页面。
 type page struct {
@@ -21,12 +31,13 @@ func Page(m Meta) ui.Widget { return &page{meta: m} }
 
 // Build 实现 ui.Widget。
 //
-// 页面高度超过视口时整页滚动；内容列固定宽度（版心），演示块与 API 表
-// 都按版心宽拉伸。
+// 页面高度超过视口时整页滚动；版心宽随视口自适应（resize 时容器重建根
+// widget，本方法拿到新的 Viewport 自动重排）。
 func (p *page) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
+	w := contentWidth(ctx)
 	col := scene.Flex(scene.Vertical, 16)
-	col.SetWidth(contentW)
+	col.SetWidth(w)
 
 	// ① 标题区：组件名 + 分组脚注。
 	col.Add(widgets.Label{Text: p.meta.Title, Size: th.Font.SizeTitle}.Build(ctx))
@@ -42,7 +53,7 @@ func (p *page) Build(ctx *ui.BuildContext) *scene.Node {
 		for _, line := range p.meta.What {
 			col.Add(widgets.Label{
 				Text:     "· " + line,
-				MaxWidth: contentW - 32,
+				MaxWidth: w - 32,
 				Color:    th.Color.Text,
 			}.Build(ctx))
 		}
@@ -78,13 +89,14 @@ func sectionTitle(ctx *ui.BuildContext, text string) *scene.Node {
 
 // demoCard 渲染一个演示块。舞台底色用 SurfaceSunken，与页面背景区分开。
 func (p *page) demoCard(ctx *ui.BuildContext, d Demo) *scene.Node {
+	w := contentWidth(ctx)
 	th := ctx.ThemeOr()
 	head := scene.Flex(scene.Vertical, 4)
 	head.Add(widgets.Label{Text: d.Title, Size: th.Font.SizeLG}.Build(ctx))
 	if d.Note != "" {
 		head.Add(widgets.Label{
 			Text:     d.Note,
-			MaxWidth: contentW - 48,
+			MaxWidth: w - 48,
 			Size:     th.Font.SizeSM,
 			Color:    th.Color.TextMuted,
 		}.Build(ctx))
@@ -105,7 +117,7 @@ func (p *page) demoCard(ctx *ui.BuildContext, d Demo) *scene.Node {
 	}
 
 	card := scene.Flex(scene.Vertical, 12)
-	card.SetWidth(contentW)
+	card.SetWidth(w)
 	card.Add(head)
 	card.Add(stage)
 	box := scene.Box(scene.BoxSpec{
@@ -119,6 +131,7 @@ func (p *page) demoCard(ctx *ui.BuildContext, d Demo) *scene.Node {
 
 // apiTable 把 APIRow 渲染成 widgets.Table（参数/类型/默认值/说明）。
 func apiTable(ctx *ui.BuildContext, rows []APIRow) *scene.Node {
+	w := contentWidth(ctx)
 	cols := []widgets.TableColumn{
 		{Title: "参数", Mode: widgets.ColumnFixed, Width: 150},
 		{Title: "类型 / 签名", Mode: widgets.ColumnFixed, Width: 220},
@@ -134,7 +147,7 @@ func apiTable(ctx *ui.BuildContext, rows []APIRow) *scene.Node {
 		data = append(data, []any{r.Name, r.Type, def, r.Desc})
 	}
 	t := widgets.NewTable(cols, data)
-	t.Width = contentW
+	t.Width = w
 	// 视口高按行数算：表头 32 + 行高 30×N，上下限兜底。
 	t.Height = 32 + 30*float32(len(rows)) + 8
 	if t.Height < 96 {

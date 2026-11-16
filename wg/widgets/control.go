@@ -52,6 +52,16 @@ func (b *controlBase) states(disabled bool) ui.StateSet {
 // FocusManager.SetCurrent 看到"还是同一个 FocusNode"会直接返回，
 // 不补这一步，输入框重建一次后就再也收不到按键。
 func (b *controlBase) attach(ctx *ui.BuildContext, node *scene.Node, h input.Handler, canFocus bool) {
+	// 状态回调（MarkDirty/SetState）必须能叫醒帧泵并把根 widget 置脏：
+	// 容器只重建根 widget 的 Build 结果，深层组件不接线的话，静止窗口
+	// （C14）点击后永远不会重绘——真窗表现为"点了没反应"。
+	if ctx != nil {
+		if ctx.InvalidateRoot != nil {
+			b.Base.Attach(ctx.InvalidateRoot)
+		} else if ctx.RequestFrame != nil {
+			b.Base.Attach(ctx.RequestFrame)
+		}
+	}
 	b.node = node
 	if ctx.Input != nil {
 		ctx.Input.Set(node, h)

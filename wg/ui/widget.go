@@ -43,9 +43,9 @@ type MediaQuery struct {
 
 // BuildContext 是 Build 期间可用的环境。
 type BuildContext struct {
-	Theme     *theme.Data
-	Media     MediaQuery
-	Focus     *input.FocusManager
+	Theme *theme.Data
+	Media MediaQuery
+	Focus *input.FocusManager
 	// Input 是事件分发器：组件用它注册自己的 Handler。
 	Input *input.Dispatcher
 	// SetTextEditor 在输入框获得/失去焦点时通知平台 IME。
@@ -55,7 +55,23 @@ type BuildContext struct {
 	Scheduler     *frame.Scheduler
 	// Inherited 读取祖先提供的配置（主题/媒体/滚动）。
 	Inherited func(key any) any
+
+	// RequestFrame 请求下一帧（组件用它驱动动画/异步后重绘）。
+	// nil 表示宿主不驱动帧泵（部分 headless 测试）。
+	RequestFrame func()
+	// InvalidateRoot 把**根 widget** 置脏并请求一帧。
+	//
+	// 深层组件的状态变化必须走这里：容器只重建"根 widget 的 Build 结果"，
+	// 深层组件只调 MarkDirty（不置根脏）的话，静止窗口（C14）永远不会
+	// 重绘——真窗里表现为"点了没反应"（M8 对拍发现的引擎级缺陷）。
+	// nil 表示宿主不重建组件树（部分 headless 测试）。
+	InvalidateRoot func()
+	// Viewport 是当前视口尺寸（DIP）。Build 期据此做自适应排版。
+	// 零值表示未知（部分 headless 测试）。
+	Viewport geom.Size
 }
+
+// ---- M8 补充字段由单独编辑添加 ----
 
 // ThemeOr 返回主题（nil 时返回默认主题）。
 func (c *BuildContext) ThemeOr() *theme.Data {
@@ -141,4 +157,28 @@ func (b *Base) MarkDirty() {
 func (b *Base) Rebuild() {
 	b.dirty = false
 	b.builds++
+}
+
+// BindState 把有状态组件接到宿主：其 MarkDirty/SetState 会请求一帧并把
+// 根 widget 置脏（深层组件不接线的话，静止窗口 C14 下点击永不重绘）。
+// 走 controlBase 的控件已在 attach 里接线；其余有状态组件在 Build 里调用。
+func (ctx *BuildContext) BindState(b interface{ Attach(func()) }) {
+	if ctx == nil || b == nil {
+		return
+	}
+	switch {
+	case ctx.InvalidateRoot != nil:
+		b.Attach(ctx.InvalidateRoot)
+	case ctx.RequestFrame != nil:
+		b.Attach(ctx.RequestFrame)
+	}
+}
+
+// SetDirtyOnly 只置脏位，不触发 invalidate 回调。
+//
+// 供容器的 InvalidateRoot 使用：容器要把根 widget 标记为"需要重建"，
+// 但根自己的 invalidate 往往就是"请求帧/再置脏"——走 MarkDirty 会形成
+// MarkDirty→InvalidateRoot→MarkDirty 的无限递归（M8 真窗探针实测爆内存）。
+func (b *Base) SetDirtyOnly() {
+	b.dirty = true
 }

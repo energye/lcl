@@ -51,6 +51,7 @@ func (t *Tree) Toggle(key string) {
 
 // Build 实现 ui.Widget。
 func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
+	ctx.BindState(t)
 	th := ctx.ThemeOr()
 	col := scene.Flex(scene.Vertical, 0).SetWidth(t.Width)
 	t.taps = t.taps[:0]
@@ -216,6 +217,7 @@ func (f *Form) Validate() bool {
 
 // Build 实现 ui.Widget。
 func (f *Form) Build(ctx *ui.BuildContext) *scene.Node {
+	ctx.BindState(f)
 	th := ctx.ThemeOr()
 	col := scene.Flex(scene.Vertical, th.Space.MD)
 	for i := range f.Items {
