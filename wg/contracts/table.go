@@ -65,9 +65,9 @@ var table = []Contract{
 		Assert: assertSingleScale,
 	},
 	{
-		ID: "C10", Title: "resize 去抖，连续拖动只重排一次", Owner: "⓪",
+		ID: "C10", Title: "resize 节流+尾随：拖动中每 ~60ms 跟随、停下收尾", Owner: "⓪",
 		Gate: "--resizetest", Since: M2,
-		Assert: assertResizeDebounce,
+		Assert: assertResizeThrottle,
 	},
 	{
 		ID: "C11", Title: "单 outstanding 帧槽，槽未回填不申请下一帧", Owner: "②",

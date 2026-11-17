@@ -288,8 +288,8 @@ func schedCases() []schedCase {
 			},
 		},
 		{
-			name: "resize-debounced-once",
-			want: "连续 resize 只重排一次，用最后的尺寸（C10）",
+			name: "resize-throttled-with-trailing",
+			want: "拖动中每 ~60ms 跟随、停下尾随取最后尺寸（C10）",
 			run: func() (string, error) {
 				r := newSchedRig(false)
 				defer r.s.Stop()
@@ -297,30 +297,32 @@ func schedCases() []schedCase {
 					r.s.RequestResize(100+i*10, 200+i*10)
 					r.resize.Advance(8 * time.Millisecond)
 				}
-				r.resize.Advance(frame.DefaultResizeDebounce)
-				got := fmt.Sprintf("fires=%d sizes=%v", len(r.sizes), r.sizes)
-				if len(r.sizes) != 1 || r.sizes[0] != "200x300" {
-					return got, fmt.Errorf("应只执行一次且用最后尺寸 200x300")
+				if len(r.sizes) < 2 {
+					return fmt.Sprintf("fires=%d sizes=%v", len(r.sizes), r.sizes),
+						fmt.Errorf("拖动期间应节流执行（≥2 次）")
 				}
-				return got, nil
+				r.resize.Advance(frame.DefaultResizeDebounce)
+				if r.sizes[len(r.sizes)-1] != "200x300" {
+					return fmt.Sprintf("sizes=%v", r.sizes), fmt.Errorf("尾随应取最后尺寸 200x300")
+				}
+				return fmt.Sprintf("fires=%d", len(r.sizes)), nil
 			},
 		},
 		{
-			name: "resize-restarts-window",
-			want: "新请求重置 180ms 去抖窗口",
+			name: "resize-trailing-pinned-to-last-fire",
+			want: "窗口内请求的尾随钉在 lastFire+60ms（不是从现在起算）",
 			run: func() (string, error) {
 				r := newSchedRig(false)
 				defer r.s.Stop()
-				r.s.RequestResize(10, 10)
-				r.resize.Advance(170 * time.Millisecond)
-				r.s.RequestResize(20, 20)
-				r.resize.Advance(170 * time.Millisecond)
-				if len(r.sizes) != 0 {
-					return fmt.Sprintf("提前触发 %v", r.sizes), fmt.Errorf("窗口应被重置")
+				r.s.RequestResize(10, 10) // 首次前沿立即执行
+				if len(r.sizes) != 1 || r.sizes[0] != "10x10" {
+					return fmt.Sprintf("%v", r.sizes), fmt.Errorf("首次应立即执行")
 				}
-				r.resize.Advance(20 * time.Millisecond)
-				if len(r.sizes) != 1 {
-					return fmt.Sprintf("%v", r.sizes), fmt.Errorf("应执行一次")
+				r.resize.Advance(50 * time.Millisecond)
+				r.s.RequestResize(20, 20)
+				r.resize.Advance(50 * time.Millisecond) // lastFire+60ms 已到
+				if len(r.sizes) != 2 || r.sizes[1] != "20x20" {
+					return fmt.Sprintf("%v", r.sizes), fmt.Errorf("尾随应在 +60ms 触发 20x20")
 				}
 				return "ok", nil
 			},

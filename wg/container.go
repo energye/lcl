@@ -712,10 +712,11 @@ func (c *Container) TickTime(now time.Time) {
 	}
 }
 
-// ResizeRequest 实现 host.ResizeSink：把平台尺寸变化转给去抖调度器。
+// ResizeRequest 实现 host.ResizeSink：把平台尺寸变化转给节流调度器。
 //
 // 不能直接调 Resize：拖动窗口时会来几十条 WM_SIZE，每次都重建合成缓冲
-// 既慢又会让画面抖动。交给 scheduler 去抖，窗口停下后才真正重建一次。
+// 既慢又会让画面抖动。交给 scheduler 节流+尾随：拖动中每 ~60ms 跟随一次，
+// 停下后尾随保证最后尺寸落地（纯尾随在连续 WM_SIZE 下永不触发）。
 func (c *Container) ResizeRequest(w, h int) {
 	c.mu.Lock()
 	s := c.sched
@@ -930,17 +931,31 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 	}
 
 	began := time.Now()
-	// 组件重建要在布局之前：SetState 改了内容，当帧就得用新尺寸排版，
-	// 否则界面会晚一帧才跟上状态（肉眼见"点一下慢半拍"）。
-	if c.rebuildDirtyWidget() {
-		c.requested = true
-	}
 	now := c.clock.Now()
 	var st frame.Stats
 	st.Index = c.index
 	st.Now = now
 	if c.index > 0 {
 		st.Delta = now - c.last
+	}
+
+	// resize 已请求但尚未执行：backing 仍是旧尺寸，本帧提交必被 Presenter
+	// 按尺寸拒收（present_windows.go 的 submit 校验），录制/光栅/合成全白做。
+	// 拖动中 WM_SIZE 每 10–15ms 一次，这条跳过直接消灭 60fps 空转（卡顿主源）。
+	// 只记账不出画、返回 Presented=false；fireResize 执行后会自己 RequestFrame。
+	if c.presenter != nil {
+		if s := c.sched; s != nil && s.ResizePending() {
+			st.FrameDuration = time.Since(began)
+			c.index++
+			c.last = now
+			return st, nil
+		}
+	}
+
+	// 组件重建要在布局之前：SetState 改了内容，当帧就得用新尺寸排版，
+	// 否则界面会晚一帧才跟上状态（肉眼见"点一下慢半拍"）。
+	if c.rebuildDirtyWidget() {
+		c.requested = true
 	}
 
 	root := c.host.Root()
@@ -1242,7 +1257,7 @@ func (c *Container) Run() error {
 	return nil
 }
 
-// fireResize 是去抖窗口到期后的真正 resize。
+// fireResize 是节流前沿或尾随到期后的真正 resize。
 func (c *Container) fireResize(w, h int) {
 	c.Resize(w, h)
 	c.RequestFrame()

@@ -74,7 +74,7 @@ type EventSink interface {
 // 只有 Host 更新 client 是不够的：合成缓冲、场景根节点、光栅缓存都必须
 // 跟着换尺寸，否则 Presenter 因"帧尺寸 ≠ 客户区"一直拒绝提交，窗口就停在
 // 首帧（真窗表现为底部/右侧一条白边，painted 不再增长）。
-// Container 实现它，把尺寸变化转给去抖的 scheduler。
+// Container 实现它，把尺寸变化转给节流的 scheduler。
 type ResizeSink interface {
 	ResizeRequest(w, h int)
 }
@@ -100,7 +100,7 @@ type Router struct {
 	// toClient 把屏幕坐标换算成客户区坐标（滚轮消息自带屏幕坐标）。
 	toClient func(x, y int32) (int32, int32)
 
-	// OnResize 在收到尺寸变化时调用（去抖在 frame.Scheduler）。
+	// OnResize 在收到尺寸变化时调用（节流在 frame.Scheduler）。
 	OnResize func(w, h int)
 	// OnDPI 在 DPI 变化时调用。
 	OnDPI func(dpi DPI)
@@ -156,7 +156,7 @@ func (r *Router) Handle(m Message) bool {
 		if r.OnResize != nil {
 			r.OnResize(w, h)
 		}
-		// 去抖后的真正重建：更新合成缓冲/场景/缓存。
+		// 节流后的真正重建：更新合成缓冲/场景/缓存。
 		if rs, ok := r.sink.(ResizeSink); ok {
 			rs.ResizeRequest(w, h)
 		}

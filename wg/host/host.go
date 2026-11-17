@@ -120,7 +120,7 @@ func (h *Host) DIPToPixel(v float32) float32 { return v * h.Scale() }
 // PixelToDIP 把像素换算为 DIP。
 func (h *Host) PixelToDIP(v float32) float32 { return v / h.Scale() }
 
-// Resize 更新客户区尺寸并同步根画布（resize 去抖由 M1 的 dpi.go 负责，
+// Resize 更新客户区尺寸并同步根画布（resize 节流由 frame.Scheduler 负责，
 // 这里只保证几何一致，不做防抖）。
 func (h *Host) Resize(w, hgt int) {
 	if w < 0 {

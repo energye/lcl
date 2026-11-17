@@ -12,9 +12,9 @@ import (
 
 // ── --resizetest ────────────────────────────────────────────────────
 //
-// 7 次尺寸切换 + 释放顺序。C10（去抖）与 C21（视图→位图→池）在这里落地。
+// 7 次尺寸切换 + 释放顺序。C10（节流+尾随）与 C21（视图→位图→池）在这里落地。
 //
-// 为什么这条必须单独测：拖窗口边缘时每秒几十次 WM_SIZE，去抖没做好会
+// 为什么这条必须单独测：拖窗口边缘时每秒几十次 WM_SIZE，节流没做好会
 // 每一像素都重建一次缓冲（拖一下就分配几十 MB）；释放顺序错了则是
 // "偶发花屏 + GDI 句柄缓慢泄漏"，两者都不会在静态检查里暴露。
 
@@ -89,7 +89,7 @@ func ResizeTest() (ResizeResult, error) {
 		name string
 		run  func() (string, error)
 	}{
-		{"burst-debounced-to-last", caseBurstDebounced},
+		{"burst-throttled-with-trailing", caseBurstThrottled},
 		{"quiet-window-splits", caseQuietSplits},
 		{"host-size-follows", caseHostSizeFollows},
 		{"grow-invalidates-new-area", caseGrowInvalidates},
@@ -112,8 +112,10 @@ func ResizeTest() (ResizeResult, error) {
 	return res, nil
 }
 
-// caseBurstDebounced：180ms 内的 7 次请求只应触发一次，尺寸取最后一次。
-func caseBurstDebounced() (string, error) {
+// caseBurstThrottled：7 次请求间隔 20ms（比 60ms 窗口密）。
+// 节流 + 尾随语义下：拖动中每 ~60ms 执行一次（不再是 0 次），停下后
+// 尾随把最后一次尺寸落地；最终执行的一定是最后的请求尺寸。
+func caseBurstThrottled() (string, error) {
 	r := newResizeRig()
 	sizes := [][2]int{{800, 600}, {810, 600}, {820, 610}, {830, 620}, {840, 620}, {850, 640}, {860, 640}}
 	for _, s := range sizes {
@@ -122,16 +124,19 @@ func caseBurstDebounced() (string, error) {
 	}
 	r.rtick.Advance(frame.DefaultResizeDebounce)
 	got := fmt.Sprintf("%d 次触发 %v", len(r.sizes), r.sizes)
-	if len(r.sizes) != 1 {
-		return got, fmt.Errorf("突发 resize 应合并为一次")
+	if len(r.sizes) < 2 || len(r.sizes) > 5 {
+		return got, fmt.Errorf("拖动期间应有节流触发的 resize（2–5 次）")
 	}
-	if r.sizes[0] != "860x640" {
-		return got, fmt.Errorf("应取最后一次尺寸")
+	if r.sizes[0] != "800x600" {
+		return got, fmt.Errorf("首次请求应前沿立即执行")
+	}
+	if r.sizes[len(r.sizes)-1] != "860x640" {
+		return got, fmt.Errorf("尾随应取最后一次尺寸")
 	}
 	return got, nil
 }
 
-// caseQuietSplits：中间静默超过去抖窗口 → 应该触发两次。
+// caseQuietSplits：中间静默超过节流窗口 → 应该触发两次。
 func caseQuietSplits() (string, error) {
 	r := newResizeRig()
 	r.s.RequestResize(800, 600)
@@ -145,7 +150,7 @@ func caseQuietSplits() (string, error) {
 	return got, nil
 }
 
-// caseHostSizeFollows：去抖回调后宿主与根画布尺寸都应更新。
+// caseHostSizeFollows：resize 回调后宿主与根画布尺寸都应更新。
 func caseHostSizeFollows() (string, error) {
 	r := newResizeRig()
 	r.s.RequestResize(640, 480)

@@ -16,12 +16,13 @@ const (
 	// "一次卡顿的上限"，超过就按上限积分——动画会慢一点，但不会跳。
 	DefaultMaxDelta = 250 * time.Millisecond
 
-	// DefaultResizeDebounce 是 resize 去抖窗口（C10）。
-	// 连续拖动窗口边缘时 WM_SIZE 会以每帧一次的速度涌来，
-	// 每次都重分配后备存储 + 全量重排。180ms 的去抖窗口里拒提交会让
-	// 拖动中的窗口长时间停在旧帧上（DWM 拉伸旧帧 = 内容变形、新区域
-	// 背景不同步）——改 60ms：拖动中每 60ms 跟随重排一次，间歇由旧帧
-	// 等比拉伸铺满（见 Presenter.submit 的 stretch 分支）。
+	// DefaultResizeDebounce 是 resize 节流窗口（C10）。
+	// 连续拖动窗口边缘时 WM_SIZE 会以每帧一次的速度涌来（间隔常小于
+	// 窗口本身），每次都重分配后备存储 + 全量重排。纯尾随去抖在拖动中
+	// 一次都不会触发（每次请求都把闹钟推后），backing 停在旧尺寸，
+	// Presenter 全程拒提交、窗口冻结在旧帧 = "内容不跟窗"。
+	// 改为**节流 + 尾随**：拖动中每 60ms 真正跟随重排一次（前沿），
+	// 停下时尾随保证最后一次尺寸落地；间歇由旧帧等比拉伸铺满。
 	DefaultResizeDebounce = 60 * time.Millisecond
 )
 
@@ -31,8 +32,8 @@ type Options struct {
 	Clock FrameClock
 	// Ticker 是帧闹钟（必填）。
 	Ticker Ticker
-	// ResizeTicker 是 resize 去抖闹钟（可选，默认用真实定时器）。
-	// 单独一条是因为它和帧节奏无关：帧闹钟随时可能被拆掉，去抖窗口不能被牵连。
+	// ResizeTicker 是 resize 节流闹钟（可选，默认用真实定时器）。
+	// 单独一条是因为它和帧节奏无关：帧闹钟随时可能被拆掉，节流窗口不能被牵连。
 	ResizeTicker Ticker
 	// AsyncPresent 表示提交是异步的：一帧画完后必须等 Present()
 	// 回填帧槽，才允许申请下一帧（C11）。
@@ -42,13 +43,13 @@ type Options struct {
 	AsyncPresent bool
 	// MaxDelta 是单帧增量上限（0 = DefaultMaxDelta）。
 	MaxDelta time.Duration
-	// ResizeDebounce 是 resize 去抖窗口（0 = DefaultResizeDebounce）。
+	// ResizeDebounce 是 resize 节流窗口（0 = DefaultResizeDebounce）。
 	ResizeDebounce time.Duration
 	// OnFrame 执行一帧：布局 → 录制 → 合成 → 提交。返回 true 表示真的提交了。
 	//
 	// 回调在锁外调用：里面可以安全地再调 RequestFrame（动画继续）。
 	OnFrame func(now, delta time.Duration) bool
-	// OnResize 在去抖窗口结束后被调用一次。
+	// OnResize 在节流前沿或尾随到期时被调用（尺寸为最新值）。
 	OnResize func(w, h int)
 	// WantFrame 回答"还需要帧吗、多久之后"。nil 表示没有动画系统。
 	WantFrame func(now time.Duration) (need bool, in time.Duration)
@@ -70,7 +71,7 @@ type SchedStats struct {
 	Requested int
 	// Clamped 是 delta 被 MaxDelta 截断的次数。
 	Clamped int
-	// Resizes 是收到的 resize 请求数，ResizeFires 是去抖后真正处理的次数。
+	// Resizes 是收到的 resize 请求数，ResizeFires 是节流后真正处理的次数。
 	Resizes     int
 	ResizeFires int
 	// LastDelta 是最近一帧的时间增量。
@@ -102,6 +103,9 @@ type Scheduler struct {
 
 	rw, rh        int
 	resizePending bool
+	// resizeFired 表示真正执行过 resize（此后按最后执行时刻做节流判断）。
+	resizeFired  bool
+	lastResizeAt time.Duration
 
 	stats  SchedStats
 	closed bool
@@ -254,8 +258,11 @@ func (s *Scheduler) Present() {
 
 // RequestResize 申请改变合成目标尺寸。
 //
-// 去抖语义（C10）：每次调用都把闹钟重置，直到 ResizeDebounce 内没有新请求
-// 才真正执行一次。连续拖动窗口 = 只重排一次，用的是最后的尺寸。
+// 节流 + 尾随语义（C10）：距上次真正执行满 ResizeDebounce 就立即执行
+// （前沿，首次请求也走这里）；否则把执行钉在 lastFire+ResizeDebounce
+// （尾随，多次请求只留最后一次尺寸）。连续拖动窗口 = 每 60ms 跟随一次，
+// 停下后必有一次收尾——纯尾随去抖在 WM_SIZE 间隔小于窗口时永远等不到
+// 静默期，拖拽全程一次都不执行（backing 停在旧尺寸，提交全程被拒）。
 func (s *Scheduler) RequestResize(w, h int) {
 	if w <= 0 || h <= 0 {
 		return
@@ -268,12 +275,32 @@ func (s *Scheduler) RequestResize(w, h int) {
 		s.mu.Unlock()
 		return
 	}
-	delay := s.opts.ResizeDebounce
+	now := s.opts.Clock.Now()
+	window := s.opts.ResizeDebounce
+	if !s.resizeFired || now-s.lastResizeAt >= window {
+		// 旧尾随闹钟在锁内拆掉：锁外拆会误杀并发请求刚装的新闹钟。
+		// 即使它随后到期也会因 resizePending=false 空转。
+		s.resizeTicker.Disarm()
+		s.mu.Unlock()
+		s.fireResize()
+		return
+	}
+	delay := window - (now - s.lastResizeAt)
 	s.mu.Unlock()
 	s.resizeTicker.Arm(delay, s.fireResize)
 }
 
-// fireResize 是去抖窗口到期后的回调。
+// ResizePending 表示有已请求但尚未执行的 resize。
+//
+// 帧泵据此跳过注定被 Presenter 按尺寸拒收的帧（backing 还是旧尺寸，
+// 录制/光栅全白做）；resize 执行后 fireResize 会主动申请一帧。
+func (s *Scheduler) ResizePending() bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.resizePending
+}
+
+// fireResize 真正执行一次 resize（前沿直达或尾随闹钟到期）。
 func (s *Scheduler) fireResize() {
 	s.mu.Lock()
 	if s.closed || !s.resizePending {
@@ -283,6 +310,8 @@ func (s *Scheduler) fireResize() {
 	w, h := s.rw, s.rh
 	s.resizePending = false
 	s.stats.ResizeFires++
+	s.resizeFired = true
+	s.lastResizeAt = s.opts.Clock.Now()
 	cb := s.opts.OnResize
 	s.mu.Unlock()
 

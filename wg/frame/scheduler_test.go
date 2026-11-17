@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// rig 是一套确定性调度环境：手动时钟 + 手动帧闹钟 + 手动去抖闹钟。
+// rig 是一套确定性调度环境：手动时钟 + 手动帧闹钟 + 手动 resize 闹钟。
 type rig struct {
 	clock  *ManualClock
 	tick   *ManualTicker
@@ -30,10 +30,10 @@ func newRig(t *testing.T, async bool) *rig {
 	r.tick = NewManualTicker(r.clock)
 	r.resize = NewManualTicker(r.clock)
 	s, err := NewScheduler(Options{
-		Clock:          r.clock,
-		Ticker:         r.tick,
-		ResizeTicker:   r.resize,
-		AsyncPresent:   async,
+		Clock:        r.clock,
+		Ticker:       r.tick,
+		ResizeTicker: r.resize,
+		AsyncPresent: async,
 		OnFrame: func(now, delta time.Duration) bool {
 			r.frames++
 			r.now, r.delta = now, delta
@@ -283,28 +283,27 @@ func TestFrameRequestedInsideFrame(t *testing.T) {
 	}
 }
 
-func TestResizeDebounced(t *testing.T) {
+func TestResizeThrottledDuringDrag(t *testing.T) {
 	r := newRig(t, false)
 	defer r.s.Stop()
 
-	// 连续 10 次 resize，间隔 8ms（模拟拖动窗口边缘）
+	// 连续 10 次 resize，间隔 8ms（模拟拖动窗口边缘）。旧纯尾随语义下
+	// 拖动全程一次都不触发（每次请求都重置闹钟），backing 停在旧尺寸、
+	// 提交全程被拒——节流前沿必须让拖动中每 ~60ms 真正执行一次。
 	for i := 1; i <= 10; i++ {
 		r.s.RequestResize(100+i*10, 200+i*10)
 		r.resize.Advance(8 * time.Millisecond)
 	}
-	if len(r.sizes) != 0 {
-		t.Fatalf("去抖窗口内不该执行 resize，实际 %v", r.sizes)
-	}
-	// 越过 180ms 窗口
-	r.resize.Advance(DefaultResizeDebounce)
-	if len(r.sizes) != 1 {
-		t.Fatalf("应只执行 1 次 resize，实际 %v", r.sizes)
-	}
-	if r.sizes[0] != "200x300" {
-		t.Fatalf("应使用最后一次尺寸 200x300，实际 %s", r.sizes[0])
+	if len(r.sizes) < 2 {
+		t.Fatalf("拖动期间应有节流触发的 resize（≥2 次），实际 %v", r.sizes)
 	}
 	if got := r.s.Stats().Resizes; got != 10 {
 		t.Fatalf("请求数 = %d，应为 10", got)
+	}
+	// 拖拽停下：尾随补偿保证最后一次尺寸落地。
+	r.resize.Advance(DefaultResizeDebounce)
+	if last := r.sizes[len(r.sizes)-1]; last != "200x300" {
+		t.Fatalf("最后一次应使用 200x300，实际 %v", r.sizes)
 	}
 	// resize 后应立刻申请一帧
 	if !r.tick.Armed() {
@@ -312,20 +311,44 @@ func TestResizeDebounced(t *testing.T) {
 	}
 }
 
-func TestResizeDebounceRestarts(t *testing.T) {
+func TestResizeTrailingPinnedToLastFire(t *testing.T) {
 	r := newRig(t, false)
 	defer r.s.Stop()
 
-	r.s.RequestResize(10, 10)
-	r.resize.Advance(50 * time.Millisecond)
-	r.s.RequestResize(20, 20) // 重新计时
-	r.resize.Advance(50 * time.Millisecond)
-	if len(r.sizes) != 0 {
-		t.Fatalf("每次新请求都应重置去抖窗口，实际 %v", r.sizes)
+	r.s.RequestResize(10, 10) // 首次请求：前沿立即执行
+	if len(r.sizes) != 1 || r.sizes[0] != "10x10" {
+		t.Fatalf("首次 resize 应立即执行，实际 %v", r.sizes)
 	}
-	r.resize.Advance(20 * time.Millisecond)
-	if len(r.sizes) != 1 || r.sizes[0] != "20x20" {
-		t.Fatalf("应执行最后一次 resize: %v", r.sizes)
+	r.resize.Advance(50 * time.Millisecond)
+	r.s.RequestResize(20, 20) // 窗口内：尾随钉在 lastFire+60ms，而不是"从现在起 60ms"
+	r.resize.Advance(50 * time.Millisecond)
+	if len(r.sizes) != 2 || r.sizes[1] != "20x20" {
+		t.Fatalf("尾随应在 lastFire+60ms 触发 20x20，实际 %v", r.sizes)
+	}
+	r.resize.Advance(DefaultResizeDebounce)
+	if len(r.sizes) != 2 {
+		t.Fatalf("尾随只该执行一次，实际 %v", r.sizes)
+	}
+}
+
+func TestResizePendingTracksRequestLifecycle(t *testing.T) {
+	r := newRig(t, false)
+	defer r.s.Stop()
+
+	if r.s.ResizePending() {
+		t.Fatal("未请求时不该挂起")
+	}
+	r.s.RequestResize(10, 10) // 前沿立即执行
+	if r.s.ResizePending() {
+		t.Fatal("前沿执行后不该挂起")
+	}
+	r.s.RequestResize(20, 20) // 窗口内，等尾随
+	if !r.s.ResizePending() {
+		t.Fatal("尾随期间应挂起")
+	}
+	r.resize.Advance(DefaultResizeDebounce)
+	if r.s.ResizePending() {
+		t.Fatal("尾随执行后不该挂起")
 	}
 }
 

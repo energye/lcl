@@ -41,7 +41,7 @@ func main() {
 		hitF      = flag.Bool("hit", false, "16 组命中断言（变换/裁剪/重叠）")
 		gestF     = flag.Bool("gesturetest", false, "6 组手势冲突断言（单指针单胜者）")
 		inputF    = flag.Bool("inputtest", false, "22 项输入链路断言（归一化/文本/IME/捕获自愈）")
-		resizeF   = flag.Bool("resizetest", false, "7 次尺寸切换断言（去抖 + 池释放顺序）")
+		resizeF   = flag.Bool("resizetest", false, "7 次尺寸切换断言（节流+尾随 + 池释放顺序）")
 		ovlF      = flag.Bool("overlaytest", false, "16 组浮层/组件基座断言（定位/关闭/遮罩/样式/动画）")
 		idleF     = flag.Bool("idle", false, "1000 节点静止 0 帧（C14 门禁）")
 		keysF     = flag.Bool("keyselftest", false, "14 项文本/按键分离断言（C28；中文上屏）")

@@ -185,9 +185,9 @@ func assertCacheOwnership() error {
 	return nil
 }
 
-// ── C10 resize 去抖 ────────────────────────────────────────────
+// ── C10 resize 节流+尾随 ──────────────────────────────────────
 
-func assertResizeDebounce() error {
+func assertResizeThrottle() error {
 	clock := frame.NewManualClock(0, frame.DefaultStep)
 	ft := frame.NewManualTicker(clock)
 	rt := frame.NewManualTicker(clock)
@@ -208,11 +208,15 @@ func assertResizeDebounce() error {
 		rt.Advance(20 * time.Millisecond)
 	}
 	rt.Advance(frame.DefaultResizeDebounce + time.Millisecond)
-	if len(sizes) != 1 {
-		return fmt.Errorf("7 次突发 resize 触发了 %d 次（应合并为 1）", len(sizes))
+	// 节流前沿：首次立即；拖动中每 ~60ms 跟随一次；尾随保证最后尺寸落地。
+	if len(sizes) < 2 {
+		return fmt.Errorf("7 次突发 resize 只触发 %d 次（拖动中应节流跟随）", len(sizes))
 	}
-	if sizes[0] != "860x660" {
-		return fmt.Errorf("去抖后尺寸 = %s（应取最后一次）", sizes[0])
+	if sizes[0] != "800x600" {
+		return fmt.Errorf("首次尺寸 = %s（前沿应立即执行）", sizes[0])
+	}
+	if sizes[len(sizes)-1] != "860x660" {
+		return fmt.Errorf("尾随尺寸 = %s（应取最后一次）", sizes[len(sizes)-1])
 	}
 	return nil
 }
