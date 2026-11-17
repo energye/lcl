@@ -99,6 +99,13 @@ type Scheduler struct {
 	awaiting bool
 	armed    bool
 	armedAt  time.Duration
+	// inTick 表示帧回调正在执行：单 outstanding 的硬保证。
+	//
+	// 帧内任何 arm(0)（RequestFrame/平台 WM_PAINT 回调）都可能让定时器
+	// 在 OnFrame 尚未返回时再次触发 Tick——没有这道闸，两帧会并发跑
+	// 布局/合成（-race 实测双 Tick 竞争场景树）。重入拍直接丢弃，
+	// 挂起请求由帧末 reschedule 重新装填。
+	inTick bool
 
 	rw, rh        int
 	resizePending bool
@@ -194,9 +201,21 @@ func (s *Scheduler) Tick() {
 		s.mu.Unlock()
 		return
 	}
+	if s.inTick {
+		// 同帧重入：这一拍对应的闹钟已经触发（定时器已被消费），必须
+		// 清掉 armed/armedAt，否则下一次 arm() 的「更早者胜」会认为旧
+		// 闹钟还在（armedAt 在过去）而拒绝重新装填——帧泵永久停摆。
+		s.armed = false
+		s.armedAt = 0
+		s.mu.Unlock()
+		return
+	}
 	if s.awaiting {
 		// C11：上一帧还没被呈现消费掉，这一拍直接丢弃，不入队。
+		// 同上：唤醒已被消费，armed 必须清掉（Present 回填后会重新装填）。
 		s.stats.Skipped++
+		s.armed = false
+		s.armedAt = 0
 		skip := s.opts.OnSkip
 		s.mu.Unlock()
 		if skip != nil {
@@ -205,6 +224,7 @@ func (s *Scheduler) Tick() {
 		return
 	}
 	s.armed = false
+	s.inTick = true
 	now := s.opts.Clock.Now()
 	delta := time.Duration(0)
 	if s.started {
@@ -240,6 +260,7 @@ func (s *Scheduler) Tick() {
 	} else {
 		s.stats.Idle++
 	}
+	s.inTick = false
 	s.mu.Unlock()
 
 	s.reschedule()
@@ -282,23 +303,23 @@ func (s *Scheduler) RequestResize(w, h int) {
 		// 旧尾随闹钟在锁内拆掉：锁外拆会误杀并发请求刚装的新闹钟。
 		// 即使它随后到期也会因 resizePending=false 空转。
 		s.resizeTicker.Disarm()
+		wall := s.opts.Clock.Kind() == Wall
 		s.mu.Unlock()
-		s.fireResize()
+		if wall {
+			// 墙钟下**不在消息线程里执行 OnResize**：它要拿容器锁，与帧
+			// 线程的整帧合成互等，会把 WM_SIZE 处理拖成几十 ms——窗口边框
+			// 跟不上鼠标（实测拖拽中消息线程停顿 avg 27ms / max 108ms）。
+			// 交给 resize 闹钟 goroutine 立刻执行；确定性门禁（手动时钟）
+			// 保持同步语义。
+			s.resizeTicker.Arm(0, s.fireResize)
+		} else {
+			s.fireResize()
+		}
 		return
 	}
 	delay := window - (now - s.lastResizeAt)
 	s.mu.Unlock()
 	s.resizeTicker.Arm(delay, s.fireResize)
-}
-
-// ResizePending 表示有已请求但尚未执行的 resize。
-//
-// 帧泵据此跳过注定被 Presenter 按尺寸拒收的帧（backing 还是旧尺寸，
-// 录制/光栅全白做）；resize 执行后 fireResize 会主动申请一帧。
-func (s *Scheduler) ResizePending() bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	return s.resizePending
 }
 
 // fireResize 真正执行一次 resize（前沿直达或尾随闹钟到期）。

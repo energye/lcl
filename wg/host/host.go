@@ -1,6 +1,8 @@
 package host
 
 import (
+	"sync"
+
 	"github.com/energye/lcl/lcl"
 	"github.com/energye/lcl/types"
 	"github.com/energye/lcl/wg/geom"
@@ -31,6 +33,10 @@ type Host struct {
 	// OnPaint 由容器注入：在控件重绘时提交最近一帧。
 	OnPaint func(canvas lcl.ICanvas)
 
+	// mu 保护 client/scale：WM_SIZE 在消息线程更新客户区，而容器的
+	// resize 应用（c.Resize）在帧定时器 goroutine 上执行——两条路径都会
+	// 调 Resize/ClientSize，必须互斥。
+	mu sync.Mutex
 	// client 是客户区像素尺寸。
 	client geom.Size
 	// scale 是画布缩放因子（96 DPI 为 1.0），用于 DIP ↔ 像素换算。
@@ -104,10 +110,16 @@ func (h *Host) Bound() bool { return h.form != nil }
 func (h *Host) Root() *Surface { return h.root }
 
 // ClientSize 返回客户区尺寸（像素）。
-func (h *Host) ClientSize() geom.Size { return h.client }
+func (h *Host) ClientSize() geom.Size {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	return h.client
+}
 
 // Scale 返回画布缩放因子（96 DPI = 1）。
 func (h *Host) Scale() float32 {
+	h.mu.Lock()
+	defer h.mu.Unlock()
 	if h.scale <= 0 {
 		return 1
 	}
@@ -120,8 +132,33 @@ func (h *Host) DIPToPixel(v float32) float32 { return v * h.Scale() }
 // PixelToDIP 把像素换算为 DIP。
 func (h *Host) PixelToDIP(v float32) float32 { return v / h.Scale() }
 
+// SetClientSize 只更新客户区尺寸记录，不触碰 Surface 树。
+//
+// 平台回调（WM_SIZE）在消息线程上调用它：Surface 树不是线程安全的
+// （见包注释），结构性变更必须由 wg.Container 在 c.mu 下串行化；消息线程
+// 写 Surface 会与帧线程的整帧合成竞争。根画布几何与失效由容器在
+// Container.Resize 里统一应用。
+func (h *Host) SetClientSize(w, hgt int) {
+	if w < 0 {
+		w = 0
+	}
+	if hgt < 0 {
+		hgt = 0
+	}
+	h.mu.Lock()
+	h.client = geom.Sz(float32(w), float32(hgt))
+	h.mu.Unlock()
+}
+
 // Resize 更新客户区尺寸并同步根画布（resize 节流由 frame.Scheduler 负责，
 // 这里只保证几何一致，不做防抖）。
+//
+// 必须在容器锁（c.mu）下调用：它修改 Surface 树（SetBounds/Invalidate），
+// 与整帧合成互斥。
+//
+// 判定基准必须是**根画布当前 bounds**，不是 client：平台回调已经在
+// WM_SIZE 里把 client 更新到新值（SetClientSize），拿 client 比较会让这里
+// 永远早退——根画布 bounds 停在初始尺寸（根失效/裁剪全错）。
 func (h *Host) Resize(w, hgt int) {
 	if w < 0 {
 		w = 0
@@ -130,14 +167,18 @@ func (h *Host) Resize(w, hgt int) {
 		hgt = 0
 	}
 	size := geom.Sz(float32(w), float32(hgt))
-	if size == h.client {
+	h.mu.Lock()
+	h.client = size
+	h.mu.Unlock()
+
+	b := h.root.LocalBounds()
+	if b.W() == size.W && b.H() == size.H {
 		return
 	}
-	old := h.client
-	h.client = size
+	oldW, oldH := b.W(), b.H()
 	h.root.SetBounds(geom.RectXYWH(0, 0, size.W, size.H))
 	// 契约 C20：窗口变大时新增区域必须重绘，否则残留旧像素。
-	if size.W > old.W || size.H > old.H {
+	if size.W > oldW || size.H > oldH {
 		h.root.Invalidate(h.root.LocalBounds())
 	} else {
 		h.root.Invalidate(geom.RectXYWH(0, 0, size.W, size.H))
@@ -150,7 +191,9 @@ func (h *Host) RefreshScale() {
 		return
 	}
 	if s := h.form.GetCanvasScaleFactor(); s > 0 {
+		h.mu.Lock()
 		h.scale = float32(s)
+		h.mu.Unlock()
 	}
 	h.root.Invalidate(h.root.LocalBounds())
 }

@@ -91,7 +91,8 @@ func NewBinder(h *Host, sink EventSink) *Binder {
 	r := NewRouter(norm, sink)
 	b := &Binder{host: h, norm: norm, router: r, form: h.Form()}
 	r.SetScreenToClient(b.screenToClient)
-	r.OnResize = func(w, hgt int) { b.host.Resize(w, hgt) }
+	// 只记录客户区尺寸；Surface 几何由容器在 c.mu 下应用（见 Host.SetClientSize）。
+	r.OnResize = func(w, hgt int) { b.host.SetClientSize(w, hgt) }
 	r.OnDPI = func(d DPI) {
 		b.norm.SetDPI(d)
 		b.host.RefreshScale()

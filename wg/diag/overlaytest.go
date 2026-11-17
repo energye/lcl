@@ -460,8 +460,13 @@ func uiStyleFollowsStatus() (string, error) {
 	if hover.Background == solid.Background {
 		return got, fmt.Errorf("hover 与常态同色")
 	}
-	if disabled.Opacity >= 1 {
-		return got, fmt.Errorf("禁用未降不透明度")
+	// antd v5 的禁用是**专色**（colorBgContainerDisabled /
+	// colorTextDisabled），不是整体不透明度——之前按 opacity 断言已过时。
+	if disabled.Opacity >= 1 && disabled.Foreground == solid.Foreground {
+		return got, fmt.Errorf("禁用未改变外观（应为禁用专色）")
+	}
+	if disabled.Background == solid.Background || disabled.Background == hover.Background {
+		return got, fmt.Errorf("禁用背景与常态/hover 相同")
 	}
 	// 位集折叠：禁用 + hover 必须显示禁用。
 	states := ui.StateDisabled | ui.StateHover

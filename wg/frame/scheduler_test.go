@@ -334,24 +334,46 @@ func TestResizeTrailingPinnedToLastFire(t *testing.T) {
 	}
 }
 
-func TestResizePendingTracksRequestLifecycle(t *testing.T) {
-	r := newRig(t, false)
-	defer r.s.Stop()
+// countTicker 只记 Arm 次数，不自动触发（确定性重入测试用）。
+type countTicker struct{ arms int }
 
-	if r.s.ResizePending() {
-		t.Fatal("未请求时不该挂起")
+func (c *countTicker) Arm(time.Duration, func()) { c.arms++ }
+func (c *countTicker) Disarm()                   {}
+func (c *countTicker) Stop()                     {}
+
+func TestTickReentryKeepsPumpAlive(t *testing.T) {
+	// 帧内 arm(0)（RequestFrame）+ 闹钟恰在帧内触发（重入 Tick）时：
+	// 重入拍必须被丢弃，但**不能留下 armed=true**——否则帧末 arm() 的
+	// "更早者胜"会认为旧闹钟还在而拒绝重新装填，帧泵永久停摆
+	// （真窗 resize 后动画/新窗停帧的根因）。
+	clock := NewManualClock(0, DefaultStep)
+	tk := &countTicker{}
+	frames := 0
+	var sc *Scheduler
+	sc, err := NewScheduler(Options{
+		Clock:  clock,
+		Ticker: tk,
+		OnFrame: func(now, delta time.Duration) bool {
+			frames++
+			if frames == 1 {
+				sc.RequestFrame() // 帧内请求下一帧（arm 0）
+				sc.Tick()         // 模拟"闹钟在帧内被触发"
+			}
+			return true
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
 	}
-	r.s.RequestResize(10, 10) // 前沿立即执行
-	if r.s.ResizePending() {
-		t.Fatal("前沿执行后不该挂起")
+	defer sc.Stop()
+
+	sc.RequestFrame()
+	sc.Tick()
+	if frames != 1 {
+		t.Fatalf("重入 Tick 不该执行第二帧，frames=%d", frames)
 	}
-	r.s.RequestResize(20, 20) // 窗口内，等尾随
-	if !r.s.ResizePending() {
-		t.Fatal("尾随期间应挂起")
-	}
-	r.resize.Advance(DefaultResizeDebounce)
-	if r.s.ResizePending() {
-		t.Fatal("尾随执行后不该挂起")
+	if tk.arms < 3 {
+		t.Fatalf("重入后必须重新装填闹钟（arms=%d，期望 ≥3：请求/帧内请求/帧末续装）", tk.arms)
 	}
 }
 

@@ -38,11 +38,15 @@ type Presenter struct {
 	// repaint 请求窗口重绘（LCL Repaint/Invalidate）。
 	repaint func()
 
-	b *raster.Backing
-	// own 是 Presenter 自己持有的稳定副本：合成器的 Backing 在下一帧会被
-	// 覆写，若 Paint 直接读它，主线程与帧泵线程会竞争同一块像素（撕裂），
-	// 且在某些驱动上 StretchDIBits 会因源缓冲正被写入而失败。
-	own     *raster.Backing
+	// staged 是 24bpp BGR 的最新帧副本（紧凑 stride = w*3）：帧泵 goroutine
+	// 把合成缓冲（BGRA32）转换进来，主线程 Paint 只做行 memcpy + 位图装载。
+	//
+	// 为什么转换不能在主线程：全窗逐像素转换 + LoadFromIntfImage 实测
+	// 20–37ms（2200×1200），正好落在 WM_SIZE/模态尺寸循环里，窗口边框都
+	// 跟不上鼠标。转换下放到帧线程后，主线程每次提交只剩几 ms。
+	staged []byte
+	sw, sh int
+
 	damage  geom.Rect
 	frames  int
 	painted int
@@ -59,6 +63,12 @@ type Presenter struct {
 	// 帧泵在投递下一帧前留出 inputBreath 的空队列窗口，让输入先被取走
 	// （showcase §9：慢帧后必须给 GetMessage 留机会，否则输入饿死）。
 	paintCostUs atomic.Int64
+	// stretchResize 为 true 时过渡帧整窗缩放；默认 1:1 + 背景填边。
+	stretchResize bool
+	background    geom.Color
+	// dirty 表示 staged 里有尚未提交的新像素；没有新帧的 WM_PAINT
+	// （被遮挡后重新露出）必须整帧重放，否则新暴露区是旧/残像素。
+	dirty bool
 }
 
 // PresentStats 是呈现统计（诊断与单测用）。
@@ -71,6 +81,8 @@ type PresentStats struct {
 	LastDamage geom.Rect
 	// Buffered 表示当前是否缓存了一帧可提交的像素。
 	Buffered bool
+	// LastPaintCost 是最近一次主线程提交的耗时（诊断）。
+	LastPaintCost time.Duration
 }
 
 // NewPresenter 创建呈现器。host 为 nil 或 hwnd 为 0 时得到无窗口呈现器（headless）。
@@ -88,8 +100,15 @@ func (p *Presenter) SetRepaint(fn func()) {
 	p.mu.Unlock()
 }
 
-// SetPost 设置"请求主线程尽快呈现"的投递函数（真窗为 PostMessage(WM_APP+n)）。
-//
+// SetResizePresent 设置过渡帧呈现方式与背景色（容器启动时注入）。
+func (p *Presenter) SetResizePresent(stretch bool, bg geom.Color) {
+	p.mu.Lock()
+	p.stretchResize = stretch
+	p.background = bg
+	p.mu.Unlock()
+}
+
+// SetPost 设置"请求主线程尽快呈现"的投递函数（真窗为 PostMessage(WM_APP+n)）。//
 // 为什么要 posted 消息：GetMessage 的优先级是 sent > posted > 硬件输入 >
 // WM_PAINT。帧泵在 goroutine 里合成，若只靠 InvalidateRect 等 WM_PAINT，
 // 拖动/连续鼠标消息会把它饿死（内容不跟窗）。posted 消息在模态尺寸循环里
@@ -169,10 +188,9 @@ func (p *Presenter) breathIfSlow() {
 // Frame 记录一帧合成结果，并让窗口无效化以便在 OnPaint 中提交。
 // damage 为空表示整帧（headless 出图时常见）。
 //
-// 这里**拷贝**像素到自有缓冲：合成器的 Backing 是复用的，下一帧会原地覆写；
-// 若 Paint 直接读它，主线程与帧泵线程竞争同一块像素会撕裂，实测还会让
-// StretchDIBits 返回 0（窗口全白）。拷贝只发生在 Presented 帧，静止界面
-// 一帧都不拷，符合 C14 的"按需装填"。
+// 这里**拷贝并转换**像素到自有缓冲：合成器的 Backing 是复用的，下一帧会
+// 原地覆写；若 Paint 直接读它，主线程与帧泵线程竞争同一块像素会撕裂。
+// 转换（BGRA→24bpp BGR）放在帧线程完成，主线程只搬运。
 func (p *Presenter) Frame(b *raster.Backing, damage geom.Rect) {
 	if b == nil {
 		return
@@ -183,33 +201,38 @@ func (p *Presenter) Frame(b *raster.Backing, damage geom.Rect) {
 	}
 
 	p.mu.Lock()
-	if p.own == nil || p.own.W() != w || p.own.H() != h {
-		p.own = raster.NewBacking(w, h)
+	if p.staged == nil || p.sw != w || p.sh != h {
+		p.staged = make([]byte, w*3*h)
+		p.sw, p.sh = w, h
 	}
-	// 只拷脏区（damage 为空则整帧）；逐行 memcpy 保持 stride 语义。
-	src := b.Bytes()
-	dst := p.own.Bytes()
-	if len(src) != len(dst) {
-		p.mu.Unlock()
-		return
-	}
-	if damage.IsEmpty() {
-		copy(dst, src)
-	} else {
+	// 只转换脏区（damage 为空则整帧）。
+	x0, y0, x1, y1 := 0, 0, w, h
+	if !damage.IsEmpty() {
 		r := damage.Intersect(b.Bounds())
 		if r.IsEmpty() {
 			p.mu.Unlock()
 			return
 		}
-		x0, y0 := int(r.Min.X), int(r.Min.Y)
-		x1, y1 := int(r.Max.X), int(r.Max.Y)
-		for y := y0; y < y1; y++ {
-			row := y * p.own.Stride()
-			copy(dst[row+x0*4:row+x1*4], src[row+x0*4:row+x1*4])
+		x0, y0 = int(r.Min.X), int(r.Min.Y)
+		x1, y1 = int(r.Max.X), int(r.Max.Y)
+	}
+	src := b.Bytes()
+	sstride := b.Stride()
+	dstride := w * 3
+	for y := y0; y < y1; y++ {
+		srow := y * sstride
+		drow := y * dstride
+		for x := x0; x < x1; x++ {
+			s := srow + x*4
+			d := drow + x*3
+			p.staged[d+0] = src[s+0] // B
+			p.staged[d+1] = src[s+1] // G
+			p.staged[d+2] = src[s+2] // R
 		}
 	}
 	p.damage = damage
 	p.frames++
+	p.dirty = true
 	p.mu.Unlock()
 	if p.hwnd != 0 {
 		p.invalidate(damage)
@@ -220,14 +243,13 @@ func (p *Presenter) Frame(b *raster.Backing, damage geom.Rect) {
 // 必须在窗口主线程（WM_PAINT 处理中）调用。
 func (p *Presenter) Paint() bool {
 	began := time.Now()
-	p.mu.RLock()
-	b := p.own
-	d := p.damage
-	p.mu.RUnlock()
-	if b == nil || p.hwnd == 0 {
+	if p.hwnd == 0 {
 		return false
 	}
-	if !p.submit(b, d) {
+	p.mu.RLock()
+	buffered := p.staged != nil
+	p.mu.RUnlock()
+	if !buffered || !p.submit() {
 		return false
 	}
 	p.mu.Lock()
@@ -242,10 +264,11 @@ func (p *Presenter) Stats() PresentStats {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
 	return PresentStats{
-		Frames:     p.frames,
-		Painted:    p.painted,
-		LastDamage: p.damage,
-		Buffered:   p.own != nil,
+		Frames:        p.frames,
+		Painted:       p.painted,
+		LastDamage:    p.damage,
+		Buffered:      p.staged != nil,
+		LastPaintCost: time.Duration(p.paintCostUs.Load()),
 	}
 }
 
@@ -255,8 +278,9 @@ func (p *Presenter) Stats() PresentStats {
 // 拿到的会是空回调（不能再去碰正在销毁的 LCL 画布）。
 func (p *Presenter) Close() {
 	p.mu.Lock()
-	p.b = nil
-	p.own = nil
+	p.staged = nil
+	p.sw, p.sh = 0, 0
+	p.dirty = false
 	p.post = nil
 	p.repaint = nil
 	p.mu.Unlock()

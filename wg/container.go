@@ -104,15 +104,22 @@ type Container struct {
 	binder *host.Binder
 
 	// 帧泵（Run 启动；无窗口模式下由调用方手动 FrameOnce/Tick）
-	sched  *frame.Scheduler
-	ticker *frame.ManualTicker
+	sched *frame.Scheduler
+	// schedAtomic 是给平台回调（WM_SIZE/WM_PAINT）用的无锁快照。
+	//
+	// 为什么需要：这些回调在消息线程上，不能为了读一个指针去抢 c.mu——
+	// 整帧合成会持有 c.mu 20–30ms，实测把 WM_SIZE 处理拖成 avg 25ms /
+	// max 108ms，窗口边框跟不上鼠标（一卡一卡）。平台回调只做
+	// "请求一次"（s.RequestResize / RequestFrame），调度器自身线程安全。
+	schedAtomic atomic.Pointer[frame.Scheduler]
+	ticker      *frame.ManualTicker
 
 	// lastCursor 是最近一次命中的光标（平台层据此换鼠标指针）。
 	lastCursor scene.Cursor
 
 	index     int
 	last      time.Duration
-	requested bool
+	requested atomic.Bool
 	// lastDamage 是最近一帧提交的脏区（诊断与门禁用）。
 	lastDamage geom.Rect
 	// deferred 记录"帧内有人请求了下一帧"。帧内回调已经持锁，
@@ -563,8 +570,28 @@ func (c *Container) SetTheme(t *theme.Data) {
 	if c.scene != nil {
 		c.scene.Relayout(c.rootConstraints())
 	}
+	// resize 过渡帧的填边色跟随主题（否则深色主题拖动时会闪浅色条带）。
+	if c.presenter != nil {
+		c.presenter.SetResizePresent(c.opts.ResizePresent == ResizePresentStretch, c.resizeBackground())
+	}
 	c.mu.Unlock()
 	c.RequestFrame()
+}
+
+// resizeBackground 返回 resize 过渡帧填边用的背景色。
+//
+// 优先 Options.Background；零值跟随当前主题背景（深色主题下不会闪白条），
+// 与根节点铺底颜一致是"先露底色、下一帧覆盖"观感正确的前提。
+func (c *Container) resizeBackground() geom.Color {
+	bg := c.opts.Background
+	if bg == (geom.Color{}) {
+		if c.opts.Theme != nil {
+			bg = c.opts.Theme.Color.Background
+		} else {
+			bg = theme.Default().Color.Background
+		}
+	}
+	return bg
 }
 
 // rootConstraints 返回根节点的布局约束（调用方持锁）。
@@ -717,11 +744,11 @@ func (c *Container) TickTime(now time.Time) {
 // 不能直接调 Resize：拖动窗口时会来几十条 WM_SIZE，每次都重建合成缓冲
 // 既慢又会让画面抖动。交给 scheduler 节流+尾随：拖动中每帧（~16.7ms）
 // 跟随一次，停下后尾随保证最后尺寸落地（纯尾随在连续 WM_SIZE 下永不触发）。
+//
+// 无锁：WM_SIZE 在消息线程上，只读 schedAtomic 并登记请求；真正应用尺寸
+// 在调度器的定时器 goroutine 上执行，消息线程绝不等整帧合成。
 func (c *Container) ResizeRequest(w, h int) {
-	c.mu.Lock()
-	s := c.sched
-	c.mu.Unlock()
-	if s != nil {
+	if s := c.schedAtomic.Load(); s != nil {
 		s.RequestResize(w, h)
 		return
 	}
@@ -765,16 +792,12 @@ func (c *Container) Resize(w, h int) {
 // 除了记标志，还要**装填帧闹钟**：帧泵是"按需装填"的（C14），
 // 没有这一句的话帧泵根本不会被叫醒——界面会停在上一帧，
 // 直到别的原因（拖动窗口、鼠标划过）触发了帧。
+//
+// 无锁：输入/平台回调在消息线程调用它，不能为了读 sched 指针去抢 c.mu
+// （整帧合成持有 c.mu 20–30ms）。
 func (c *Container) RequestFrame() {
-	c.mu.Lock()
-	if c.st == stateClosed {
-		c.mu.Unlock()
-		return
-	}
-	c.requested = true
-	s := c.sched
-	c.mu.Unlock()
-	if s != nil {
+	c.requested.Store(true)
+	if s := c.schedAtomic.Load(); s != nil {
 		s.RequestFrame()
 	}
 }
@@ -782,18 +805,15 @@ func (c *Container) RequestFrame() {
 // requestFrame 是"可能已经在帧内"的安全版本。
 //
 // 浮层宿主的 OnChange 既可能被用户代码调用（帧外），也可能被帧内的
-// Relayout 触发。后者持着容器锁，再走 RequestFrame 就是自己等自己。
+// Relayout 触发。帧内不能直接装帧（本帧末会把 requested 清掉），
+// 用 TryLock 区分：帧外直接装下一拍，帧内记 deferred 由帧末合并。
 func (c *Container) requestFrame() {
+	c.requested.Store(true)
 	if c.mu.TryLock() {
-		if c.st != stateClosed {
-			c.requested = true
-			if s := c.sched; s != nil {
-				c.mu.Unlock()
-				c.requestNextTick(s)
-				return
-			}
-		}
 		c.mu.Unlock()
+		if s := c.schedAtomic.Load(); s != nil {
+			c.requestNextTick(s)
+		}
 		return
 	}
 	c.deferred.Store(true)
@@ -937,23 +957,20 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 		st.Delta = now - c.last
 	}
 
-	// resize 已请求但尚未执行：backing 仍是旧尺寸，本帧提交必被 Presenter
-	// 按尺寸拒收（present_windows.go 的 submit 校验），录制/光栅/合成全白做。
-	// 拖动中 WM_SIZE 每 10–15ms 一次，这条跳过直接消灭 60fps 空转（卡顿主源）。
-	// 只记账不出画、返回 Presented=false；fireResize 执行后会自己 RequestFrame。
-	if c.presenter != nil {
-		if s := c.sched; s != nil && s.ResizePending() {
-			st.FrameDuration = time.Since(began)
-			c.index++
-			c.last = now
-			return st, nil
-		}
+	// 浮层计时/动画标脏在容器锁内推进：帧线程与 resize goroutine（异步
+	// 应用尺寸）会并发改场景树，锁外 MarkNeedsPaint 与整树布局竞争
+	// （-race 实测）。
+	if c.ov != nil && c.ov.Tick(time.Now()) > 0 {
+		c.requested.Store(true)
+	}
+	if c.animating.Load() && c.scene != nil {
+		c.scene.MarkNeedsPaint()
 	}
 
 	// 组件重建要在布局之前：SetState 改了内容，当帧就得用新尺寸排版，
 	// 否则界面会晚一帧才跟上状态（肉眼见"点一下慢半拍"）。
 	if c.rebuildDirtyWidget() {
-		c.requested = true
+		c.requested.Store(true)
 	}
 
 	root := c.host.Root()
@@ -965,7 +982,7 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 		// 还没有尺寸（headless 未 Resize）：只做结构统计，与 M0 行为一致
 		if root != nil {
 			st.Damage = root.Damage()
-			st.Dirty = root.HasDamage() || root.StructureDirty() || c.requested
+			st.Dirty = root.HasDamage() || root.StructureDirty() || c.requested.Load()
 			if st.Dirty && st.Damage.IsEmpty() {
 				st.Damage = root.LocalBounds()
 			}
@@ -973,7 +990,7 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 		st.FrameDuration = time.Since(began)
 		c.index++
 		c.last = now
-		c.requested = false
+		c.requested.Store(false)
 		return st, nil
 	}
 
@@ -1007,7 +1024,7 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 	}
 
 	// 结构变化（增删画布/改尺寸）必须整屏重画：布局可能整体位移。
-	dirty := root.HasDamage() || root.StructureDirty() || c.requested || sceneDirty.Any()
+	dirty := root.HasDamage() || root.StructureDirty() || c.requested.Load() || sceneDirty.Any()
 	switch {
 	case root.StructureDirty() || needLayout:
 		c.comp.InvalidateAll()
@@ -1078,13 +1095,13 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 	st.FrameDuration = time.Since(began)
 	c.index++
 	c.last = now
-	c.requested = false
+	c.requested.Store(false)
 	// 帧内的置脏/请求（组件 Build 尾的 MarkDirty、浮层 Relayout 回调）
 	// 必须落到下一帧：无论本帧是否提交成功都补一帧——动画页靠这条
 	// "每帧重建自己"续命；普通组件帧内 MarkDirty 也同样需要下帧生效。
 	// （旧语义"没提交成功才补"会把动画页的续帧吞掉，动画停在第二帧。）
 	if c.deferred.Swap(false) {
-		c.requested = true
+		c.requested.Store(true)
 		if s := c.sched; s != nil {
 			// 续帧钉在 60Hz 绝对网格（见 requestNextTick）；相对 16ms 会把
 			// 合成耗时累加进周期，且帧内自驱动的动画页没有这一拍间隔就会
@@ -1140,16 +1157,17 @@ func (c *Container) Start() error {
 		Clock:  c.clock,
 		Ticker: frame.NewTicker(),
 		OnFrame: func(now, delta time.Duration) bool {
-			c.TickTime(time.Now())
-			if c.animating.Load() && c.scene != nil {
-				// 动画活跃：标脏场景，本帧重录取新相位（绘制闭包读墙钟）。
-				c.scene.MarkNeedsPaint()
-			}
+			// 动画节拍/浮层计时都在 FrameOnce 的容器锁内推进（见 FrameOnce
+			// 开头）：帧线程与 resize goroutine 并发时，锁外改场景树会与
+			// 整树布局竞争（-race 实测）。
 			st, ferr := c.FrameOnce()
-			if ferr == nil && c.animating.Load() && c.sched != nil {
+			if ferr == nil && c.animating.Load() {
 				// 60Hz 节拍续帧：动态组件驱动渲染；静止窗不进此分支（C14）。
 				// 钉在绝对帧网格上（requestNextTick），慢帧跳过错过的边界。
-				c.requestNextTick(c.sched)
+				// 用原子快照：本回调在定时器 goroutine 上，不能抢容器锁。
+				if s := c.schedAtomic.Load(); s != nil {
+					c.requestNextTick(s)
+				}
 			}
 			return ferr == nil && st.Presented
 		},
@@ -1160,6 +1178,7 @@ func (c *Container) Start() error {
 		return err
 	}
 	c.sched = sched
+	c.schedAtomic.Store(sched)
 	c.st = stateRunning
 	c.mu.Unlock()
 
@@ -1179,6 +1198,8 @@ func (c *Container) Start() error {
 			return nil
 		})
 		p.SetRepaint(c.host.Repaint)
+		// 过渡帧语义：默认精确（内容 1:1 + 背景填边），整窗缩放需显式开启。
+		p.SetResizePresent(c.opts.ResizePresent == ResizePresentStretch, c.resizeBackground())
 		// 帧泵在 goroutine 里合成完就 post 一条高优先级呈现消息（posted 优先
 		// 于硬件输入与 WM_PAINT，拖动 resize 时不会被饿死）。
 		p.SetPost(func() { host.PostPresent(uintptr(c.form.Handle())) })
@@ -1203,6 +1224,7 @@ func (c *Container) Start() error {
 				c.mu.Lock()
 				c.st = stateClosed
 				c.sched = nil
+				c.schedAtomic.Store(nil)
 				c.presenter = nil
 				c.binder = nil
 				c.mu.Unlock()
@@ -1212,6 +1234,7 @@ func (c *Container) Start() error {
 	if err := binder.Install(); err != nil {
 		c.mu.Lock()
 		c.sched = nil
+		c.schedAtomic.Store(nil)
 		c.st = stateCreated
 		c.presenter = nil
 		c.mu.Unlock()
@@ -1250,6 +1273,7 @@ func (c *Container) Run() error {
 	c.mu.Lock()
 	s := c.sched
 	c.sched = nil
+	c.schedAtomic.Store(nil)
 	c.st = stateClosed
 	c.mu.Unlock()
 	if s != nil {
@@ -1259,7 +1283,14 @@ func (c *Container) Run() error {
 }
 
 // fireResize 是节流前沿或尾随到期后的真正 resize。
+//
+// 尺寸取**当前客户区**而不是请求快照：WM_SIZE 在消息线程已即时更新
+// host.client，异步 fire 若用 1–2ms 前的快照会把客户区回滚到旧值
+// （host.Resize 会无条件写回），导致合成尺寸与窗口来回摆动。
 func (c *Container) fireResize(w, h int) {
+	if cs := c.host.ClientSize(); cs.W > 0 && cs.H > 0 {
+		w, h = int(cs.W), int(cs.H)
+	}
 	c.Resize(w, h)
 	c.RequestFrame()
 }
@@ -1289,7 +1320,7 @@ func (c *Container) RunManual(clock *frame.ManualClock) *frame.ManualTicker {
 		Ticker:       tk,
 		ResizeTicker: tk,
 		OnFrame: func(now, delta time.Duration) bool {
-			c.TickTime(time.Now())
+			// 浮层计时/动画标脏由 FrameOnce 在容器锁内统一推进。
 			st, ferr := c.FrameOnce()
 			return ferr == nil && st.Presented
 		},
@@ -1300,6 +1331,7 @@ func (c *Container) RunManual(clock *frame.ManualClock) *frame.ManualTicker {
 		return nil
 	}
 	c.sched = sched
+	c.schedAtomic.Store(sched)
 	c.st = stateRunning
 	c.mu.Unlock()
 	sched.RequestFrame()
@@ -1325,6 +1357,7 @@ func (c *Container) Close() {
 	c.comp = nil
 	c.rec = nil
 	c.sched = nil
+	c.schedAtomic.Store(nil)
 	c.ticker = nil
 	c.ov = nil
 	c.scene = nil

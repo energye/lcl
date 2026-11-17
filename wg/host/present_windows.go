@@ -7,8 +7,8 @@ import (
 
 	"github.com/energye/lcl/lcl"
 	"github.com/energye/lcl/types"
+	"github.com/energye/lcl/types/colors"
 	"github.com/energye/lcl/wg/geom"
-	"github.com/energye/lcl/wg/raster"
 )
 
 // Win32 呈现：合成器产出 BGRA32 预乘内存帧，最终画到窗口上。
@@ -106,74 +106,118 @@ func (p *Presenter) releaseBuffer() {
 	pl.w, pl.h, pl.stride = 0, 0, 0
 }
 
-// submit 把 b 的像素提交到窗口 Canvas。damage 为空则整屏。
+// submit 把 staged（24bpp BGR）提交到窗口 Canvas。
 //
-// 返回值严格：只有像素真的写进位图并成功 CopyRect 才返回 true。
-func (p *Presenter) submit(b *raster.Backing, damage geom.Rect) bool {
-	if b == nil || p.canvas == nil {
+// 遵循成熟框架的 resize 语义：
+//   - 尺寸吻合：有新帧只更新脏区；没有新帧（被遮挡后重露）整帧重放。
+//   - 尺寸失配（过渡帧）：默认精确模式——内容 1:1 **绝不缩放**，只画
+//     帧/客户区交集，多出的条带填背景色；只有显式 ResizePresentStretch
+//     才整窗缩放。
+//
+// 主线程只做：行 memcpy（紧凑 stride → 位图对齐 stride）、
+// LoadFromIntfImage、CopyRect/FillRect；逐像素转换已在帧线程完成。
+func (p *Presenter) submit() bool {
+	p.mu.RLock()
+	st := p.staged
+	w, h := p.sw, p.sh
+	damage := p.damage
+	dirty := p.dirty
+	gen := p.frames
+	stretch := p.stretchResize
+	bg := p.background
+	p.mu.RUnlock()
+	if st == nil || p.canvas == nil || w <= 0 || h <= 0 || len(st) < w*3*h {
 		return false
 	}
-	w, h := b.W(), b.H()
-	if w <= 0 || h <= 0 {
-		return false
-	}
-	// resize 期间可能收到旧尺寸的帧；与当前客户区不符就不提交。
-	// 尺寸不符的过渡帧由 Container.Resize 用旧帧缩放铺满新缓冲来兜底
-	// （铺满后 backing 尺寸即客户区尺寸，这里恢复 1:1 提交）——
-	// 拒提 + DWM 拉伸旧帧会导致内容变形、背景不同步（用户实测）。
+	cw, ch := w, h
+	scale := false
 	if p.host != nil {
 		cs := p.host.ClientSize()
-		if cs.W > 0 && (int(cs.W) != w || int(cs.H) != h) {
-			return false
+		if cs.W > 0 && cs.H > 0 {
+			cw, ch = int(cs.W), int(cs.H)
+			scale = cw != w || ch != h
 		}
 	}
 	if !p.ensureBuffer(w, h) {
 		return false
 	}
 
-	// 脏区（DIP 与像素 1:1）；空 damage 视为整帧。
+	// 1:1 更新区：有新帧只搬脏区；没有新帧（重露/系统重绘）整帧。
 	r := geom.RectXYWH(0, 0, float32(w), float32(h))
-	if !damage.IsEmpty() {
-		if d := damage.Intersect(b.Bounds()); !d.IsEmpty() {
+	if dirty && !damage.IsEmpty() {
+		if d := damage.Intersect(r); !d.IsEmpty() {
 			r = d
 		}
 	}
 	x0, y0 := int(r.Min.X), int(r.Min.Y)
 	x1, y1 := int(r.Max.X), int(r.Max.Y)
 
-	// BGRA32 预乘 → 24bpp BGR：丢弃 alpha（画面已合成到不透明底）。
-	src := b.Bytes()
-	if len(src) == 0 {
-		return false
-	}
+	// 行拷贝：staged 紧凑 BGR → 位图行（真实 stride，4 字节对齐）。
 	pl := &p.plat
-	for y := y0; y < y1; y++ {
-		srow := y * b.Stride() // Stride 已是字节数（w*4）
-		drow := y * pl.stride
-		for x := x0; x < x1; x++ {
-			s := srow + x*4
-			d := drow + x*3
-			pl.pixels[d+0] = src[s+0] // B
-			pl.pixels[d+1] = src[s+1] // G
-			pl.pixels[d+2] = src[s+2] // R
+	p.mu.RLock()
+	if pl.stride > 0 && len(p.staged) >= w*3*h {
+		for y := y0; y < y1; y++ {
+			srow := y * w * 3
+			drow := y * pl.stride
+			copy(pl.pixels[drow+x0*3:drow+x1*3], p.staged[srow+x0*3:srow+x1*3])
 		}
 	}
+	p.mu.RUnlock()
 
 	// 像素视图 → 位图 → 窗口 Canvas。
 	pl.intf.BeginUpdate()
 	pl.intf.EndUpdate()
 	pl.bmp.LoadFromIntfImage(pl.intf)
 
-	dst := types.TRect{Left: int32(x0), Top: int32(y0), Right: int32(x1), Bottom: int32(y1)}
 	dstCanvas := p.canvas()
 	if dstCanvas == nil || !dstCanvas.IsValid() {
 		return false
 	}
+	if scale {
+		if stretch {
+			// 显式整窗缩放（ResizePresentStretch）。
+			dst := types.TRect{Left: 0, Top: 0, Right: int32(cw), Bottom: int32(ch)}
+			src := types.TRect{Left: 0, Top: 0, Right: int32(w), Bottom: int32(h)}
+			dstCanvas.CopyRectWithRectX2Canvas(dst, pl.bmp.Canvas(), src)
+			p.markPresented(gen)
+			return true
+		}
+		// 精确模式：1:1 交集 + 背景填边（几何见 exactPresentPlan）。
+		plan := exactPresentPlan(w, h, cw, ch)
+		cp := plan.Copy
+		dst := types.TRect{Left: 0, Top: 0, Right: int32(cp.Max.X), Bottom: int32(cp.Max.Y)}
+		dstCanvas.CopyRectWithRectX2Canvas(dst, pl.bmp.Canvas(), dst)
+		if len(plan.Fill) > 0 {
+			if bg.A == 0 && bg == (geom.Color{}) {
+				bg = geom.RGBA(255, 255, 255)
+			}
+			br := dstCanvas.BrushToBrush()
+			br.SetColor(colors.RGBToColor(bg.R, bg.G, bg.B))
+			br.SetStyle(types.BsSolid)
+			for _, f := range plan.Fill {
+				dstCanvas.FillRectWithIntX4(
+					int32(f.Min.X), int32(f.Min.Y), int32(f.Max.X), int32(f.Max.Y))
+			}
+		}
+		p.markPresented(gen)
+		return true
+	}
+	dst := types.TRect{Left: int32(x0), Top: int32(y0), Right: int32(x1), Bottom: int32(y1)}
 	dstCanvas.CopyRectWithRectX2Canvas(dst, pl.bmp.Canvas(), dst)
+	p.markPresented(gen)
 	return true
 }
 
-// invalidate 在 LCL 路径下等价于请求重绘（像素在 OnPaint 里提交）。
+// markPresented 清掉"有新像素"标记；提交期间若又来了新帧（frames 变化）
+// 则保留标记，下一次提交仍按新帧处理。
+func (p *Presenter) markPresented(gen int) {
+	p.mu.Lock()
+	if p.frames == gen {
+		p.dirty = false
+	}
+	p.mu.Unlock()
+}
+
 // invalidate 请求把新帧提交到窗口。
 //
 // 优先走 posted 消息（高优先级：GetMessage 顺序 sent > posted > 输入 >

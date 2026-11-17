@@ -51,12 +51,32 @@ type Options struct {
 	// Background 是清屏色（零值 = 不透明白）。
 	//
 	// 清屏只发生在脏区，不是整屏：这是"局部重绘"能真正省下像素的前提。
+	// resize 过渡帧新暴露的区域也用这个颜色填（见 ResizePresent）。
 	Background geom.Color
+
+	// ResizePresent 控制 resize 过渡帧（帧尺寸 ≠ 客户区）的呈现方式。
+	//
+	// 默认 ResizePresentExact：内容保持 1:1 不缩放，多出的客户区先用
+	// Background 填色，下一帧（尺寸吻合）覆盖——与原生窗口的过场一致。
+	// 布局场景本身会随视口重排（背景铺满、组件保持逻辑尺寸），
+	// 这就是成熟框架的 resize 语义；整窗缩放只在显式要求时才发生。
+	ResizePresent ResizePresent
 
 	// Theme 是初始主题（零值 = theme.Default()）。
 	// 运行期换主题用 Container.SetTheme。
 	Theme *theme.Data
 }
+
+// ResizePresent 是 resize 过渡帧的呈现方式。
+type ResizePresent uint8
+
+const (
+	// ResizePresentExact 是默认：内容 1:1，新暴露区填背景色（不缩放内容）。
+	ResizePresentExact ResizePresent = iota
+	// ResizePresentStretch 把过渡帧整窗缩放到客户区（会连组件一起缩放，
+	// 仅在应用明确需要"背景/画面跟随缩放"时打开）。
+	ResizePresentStretch
+)
 
 // DefaultOptions 返回推荐默认值。
 func DefaultOptions() Options {
