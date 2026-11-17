@@ -10,41 +10,60 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
+// Scroll 实例在 Build 外持有：Offset 跨重建保留（每帧新建会把滚动位置丢掉）。
+var (
+	vscroll = &widgets.Scroll{Axis: scene.Vertical, Width: 360, Height: 220}
+	hscroll = &widgets.Scroll{Axis: scene.Horizontal, Width: 360, Height: 96}
+)
+
 func main() {
+	vscroll.Child = doc.Node(func(ctx *ui.BuildContext) *scene.Node {
+		inner := scene.Flex(scene.Vertical, 6)
+		for i := 0; i < 24; i++ {
+			inner.Add((&widgets.Label{Text: fmt.Sprintf("滚动行 %c · 第 %02d 行", 'A'+i%26, i+1)}).Build(ctx))
+		}
+		return inner
+	})
+
+	hscroll.Child = doc.Node(func(ctx *ui.BuildContext) *scene.Node {
+		row := scene.Flex(scene.Horizontal, 8)
+		for i := 0; i < 16; i++ {
+			row.Add(doc.Box(ctx, fmt.Sprintf("列 %02d", i+1), ctx.ThemeOr().Color.Surface, 90, 28))
+		}
+		return row
+	})
+
 	launcher.Main(doc.Meta{
 		ID: "scroll", Title: "Scroll 滚动", Group: doc.GroupLayout,
 		What: []string{
-			"滚动视口与裁剪：滚轮/拖动由 input 分发；滚动位置是布局状态，不属于脏标记",
-			"组件层 widgets.Scroll 封装宽高；节点层 scene.Scroll 直接用",
-			"SetScrollOffset 程序化定位（虚拟化的唯一真相）",
+			"完整滚动条：滑块拖动、轨道翻页、滚轮；内容溢出时自动出现（ShowScrollbar 可强制显隐）",
+			"滚动视口 = 裁剪 + 偏移；纵向内容宽度固定、横向内容高度固定（与布局一致）",
+			"Offset 跨重建保留（组件实例必须在 Build 外持有）；越过边界时滚轮事件交给外层滚动",
 		},
 		Demos: []doc.Demo{
-			{Title: "组件滚动", Note: "widgets.Scroll 360×200，滚轮/拖动查看 24 行", Build: func(ctx *ui.BuildContext) ui.Widget {
-				child := doc.Node(func(ctx *ui.BuildContext) *scene.Node {
-					inner := scene.Flex(scene.Vertical, 6)
-					for i := 0; i < 24; i++ {
-						inner.Add((&widgets.Label{Text: fmt.Sprintf("滚动行 %c · 第 %02d 行", 'A'+i%26, i+1)}).Build(ctx))
-					}
-					return inner
-				})
-				return &widgets.Scroll{Axis: scene.Vertical, Child: child, Width: 360, Height: 200}
+			{Title: "纵向滚动（带滚动条）", Note: "滚轮 / 拖滑块 / 点轨道翻页", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return vscroll
 			}},
-			{Title: "程序化偏移", Note: "SetScrollOffset(80) 初始定位到 80px", Build: func(ctx *ui.BuildContext) ui.Widget {
-				th := ctx.ThemeOr()
-				inner := scene.Flex(scene.Vertical, 4)
-				for i := 0; i < 20; i++ {
-					inner.Add(doc.Box(ctx, fmt.Sprintf("行 %02d", i+1), th.Color.Surface, 300, 28))
-				}
-				view := scene.Scroll(scene.Vertical, inner).SetSize2(320, 160)
-				view.SetScrollOffset(80)
-				return doc.Node(func(*ui.BuildContext) *scene.Node { return view })
+			{Title: "横向滚动", Note: "滚轮（横向轴）或拖动底部滑块", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return hscroll
+			}},
+			{Title: "强制隐藏滚动条", Note: "ShowScrollbar=false：仍可滚轮滚动", Build: func(ctx *ui.BuildContext) ui.Widget {
+				hide := false
+				return &widgets.Scroll{Axis: scene.Vertical, Width: 360, Height: 160,
+					ShowScrollbar: &hide, Child: doc.Node(func(ctx *ui.BuildContext) *scene.Node {
+						inner := scene.Flex(scene.Vertical, 4)
+						for i := 0; i < 20; i++ {
+							inner.Add((&widgets.Label{Text: fmt.Sprintf("无条行 %02d", i+1)}).Build(ctx))
+						}
+						return inner
+					})}
 			}},
 		},
 		API: []doc.APIRow{
-			{Name: "widgets.Scroll", Type: "值类型{Axis,Child,Width,Height}", Desc: "组件层封装"},
-			{Name: "scene.Scroll", Type: "func(axis Axis, child *Node) *Node", Desc: "节点层视口"},
-			{Name: "SetScrollOffset", Type: "func(v float32)", Desc: "滚动偏移；越界钳制"},
-			{Name: "宽高 <=0", Type: "—", Desc: "由父级约束决定（放进 Flex 要设 flex）"},
+			{Name: "widgets.Scroll", Type: "struct{Axis,Child,Width,Height,ShowScrollbar,BarThickness,Offset}", Desc: "滚动视口 + 滚动条"},
+			{Name: "widgets.Scrollbar", Type: "struct{Axis,Length,Thickness,Value,Max,Viewport,OnChange}", Desc: "独立滚动条（可单用）"},
+			{Name: "SetScrollOffset", Type: "func(v float32)", Desc: "程序化定位；内容未测量时先记录、布局后钳制"},
+			{Name: "ShowScrollbar", Type: "*bool", Desc: "nil=溢出自动；true 始终；false 隐藏（仍可滚轮）"},
 		},
 	})
 }

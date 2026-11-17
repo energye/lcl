@@ -241,6 +241,10 @@ func (p *Presenter) markPresented(gen int) {
 // WM_PAINT，拖动/连续输入下 WM_PAINT 会被饿死）；没有 post 通道时退回
 // LCL Repaint。
 func (p *Presenter) invalidate(damage geom.Rect) {
+	if p.suppressPost.Load() {
+		// 渲染已在主线程：渲染方随后同步 Present，不再经过队列。
+		return
+	}
 	p.mu.RLock()
 	post := p.post
 	repaint := p.repaint

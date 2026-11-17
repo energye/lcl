@@ -11,15 +11,16 @@ import (
 
 var (
 	inp    = widgets.NewInput("试试输入中文，或用输入法组合")
-	status = widgets.NewButton("等待输入…")
+	status = widgets.NewTextView("当前内容：")
 	edit   = widgets.NewInput("试试 Backspace / Delete / Ctrl+A / Ctrl+←→")
 )
 
 func init() {
 	inp.Width = 420
+	// 固定宽 + 原地更新：每键回显只重绘这一行，不触发整页重建。
+	status.Width = 520
 	inp.OnChanged = func(s string) {
-		status.Text = "当前内容：" + s
-		status.MarkDirty()
+		status.SetText("当前内容：" + s)
 	}
 	edit.Width = 460
 }
@@ -31,7 +32,7 @@ func main() {
 			"单行/多行文本输入：TextEditor 持有文本/选区/撤销栈，跨重建不丢",
 			"对齐 antd：variant（outlined/filled/borderless）、status（error/warning）、prefix/suffix、addonBefore/addonAfter、count、allowClear、三档尺寸",
 			"IME 走 C28 链路：组合串提交时替换选区；编辑键由 TextKeyHandler 统一处理",
-			"未实现：status 反馈图标、autosize",
+			"未实现：status 反馈图标、autosize；多行内核已支持（换行/组合/撤销），按行定位与内部滚动待补",
 		},
 		Demos: []doc.Demo{
 			{Title: "受控输入与 IME", Note: "真窗里点输入框并切换中文输入法；OnChanged 实时回显", Build: func(ctx *ui.BuildContext) ui.Widget {

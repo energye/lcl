@@ -104,8 +104,7 @@ type Container struct {
 	binder *host.Binder
 
 	// 帧泵（Run 启动；无窗口模式下由调用方手动 FrameOnce/Tick）
-	sched *frame.Scheduler
-	// schedAtomic 是给平台回调（WM_SIZE/WM_PAINT）用的无锁快照。
+	sched *frame.Scheduler // schedAtomic 是给平台回调（WM_SIZE/WM_PAINT）用的无锁快照。
 	//
 	// 为什么需要：这些回调在消息线程上，不能为了读一个指针去抢 c.mu——
 	// 整帧合成会持有 c.mu 20–30ms，实测把 WM_SIZE 处理拖成 avg 25ms /
@@ -133,7 +132,30 @@ type Container struct {
 	// resize 只对依赖视口的页面重建；固定布局页面只重排布局，免全树
 	// Build（成熟框架语义：只为声明依赖的组件重建）。
 	viewportDep bool
-	st          state
+	// renderHWND 是主线程渲染消息的目标窗口（0 = 无窗口，帧线程内联合成）。
+	renderHWND uintptr
+	// renderReq 是当前在途的渲染请求（单 outstanding，与帧槽一致）。
+	renderReq atomic.Pointer[renderRequest]
+	// renderCostUs 是最近一次主线程整帧（布局+合成+呈现）的耗时。
+	// 超过一帧预算时，投递下一帧前留 inputBreath 空档给输入
+	// （showcase §9：posted 渲染消息若永不停歇会饿死硬件输入）。
+	renderCostUs atomic.Int64
+	// imeAnchor 是输入控件上报的光标锚点（节点 + 局部矩形），
+	// 布局后换算成客户区坐标交给平台输入法（组合窗/候选窗定位）。
+	// imeAnchorOwner/caretOwner 是登记者身份（见 BuildContext 的同名钩子）。
+	imeAnchor      *scene.Node
+	imeAnchorLocal geom.Rect
+	imeAnchorOwner any
+	imeCaret       geom.Rect
+	imeCaretOK     bool
+
+	// 插入符闪烁：caretNode 非 nil 时按系统节奏切换可见性。
+	caretNode  *scene.Node
+	caretOwner any
+	caretOn    bool
+	caretNext  time.Duration
+	caretArmed bool
+	st         state
 }
 
 // NewContainer 创建容器并绑定窗体。
@@ -360,6 +382,19 @@ func (c *Container) buildContext() *ui.BuildContext {
 		}(),
 		// 视口依赖登记：本次 Build 有组件调用 ViewportSize() 即置位。
 		ViewportUse: func() { c.viewportDep = true },
+		// IME 光标锚点：输入控件在 Build 里上报（局部坐标，布局后换算）。
+		// 按 owner 归属：未聚焦输入框的 nil 上报不得清掉已聚焦控件的锚点。
+		ReportIMECaret: func(owner any, n *scene.Node, local geom.Rect) {
+			if n == nil {
+				if owner == nil || c.imeAnchorOwner == owner {
+					c.imeAnchor, c.imeAnchorLocal, c.imeAnchorOwner = nil, geom.Rect{}, nil
+				}
+				return
+			}
+			c.imeAnchor, c.imeAnchorLocal, c.imeAnchorOwner = n, local, owner
+		},
+		// 插入符闪烁：输入控件上报光标节点，宿主负责 530ms 明暗切换。
+		ReportCaret: c.setCaretNode,
 	}
 }
 
@@ -701,7 +736,7 @@ func (c *Container) HandlePointer(ev *input.PointerEvent) bool {
 	}
 	c.mu.Lock()
 	ready := c.ensureScene()
-	ov, d := c.ov, c.disp
+	ov, d, f, root := c.ov, c.disp, c.focus, c.scene
 	c.mu.Unlock()
 	if !ready {
 		return false
@@ -712,7 +747,176 @@ func (c *Container) HandlePointer(ev *input.PointerEvent) bool {
 	if d == nil {
 		return false
 	}
-	return d.Pointer(ev)
+
+	// 点击非焦点子树 → 失焦（标准行为）：先记按下前的焦点与命中目标，
+	// 分发后若焦点没被控件主动迁移、且目标不在焦点子树内，就清焦点。
+	var before *input.FocusNode
+	var hit *scene.Node
+	if ev.Down() && f != nil {
+		before = f.Current()
+		if before != nil && before.Node != nil && root != nil {
+			hit = input.HitTest(root, ev.PosRoot).Target()
+		}
+	}
+	handled := d.Pointer(ev)
+	if before != nil && f.Current() == before && !nodeWithin(hit, before.Node) {
+		f.Blur()
+	}
+	return handled
+}
+
+// updateIMECaretLocked 把输入控件上报的光标锚点换算成客户区坐标（持锁）。
+//
+// 只认仍在当前场景树里的节点：重建换树后旧节点若没被新 Build 重新上报，
+// 就清空锚点（候选窗不动，但不会再定位到幽灵光标）。
+func (c *Container) updateIMECaretLocked() {
+	n := c.imeAnchor
+	if n == nil || c.scene == nil {
+		c.imeCaretOK = false
+		return
+	}
+	var chain []*scene.Node
+	for x := n; x != nil; x = x.Parent() {
+		chain = append(chain, x)
+	}
+	if chain[len(chain)-1] != c.scene {
+		c.imeCaretOK = false
+		return
+	}
+	m := geom.Identity
+	for i := len(chain) - 1; i >= 0; i-- {
+		m = chain[i].FrameMatrix(m)
+	}
+	p := m.MapPoint(c.imeAnchorLocal.Min)
+	c.imeCaret = geom.RectXYWH(p.X, p.Y, c.imeAnchorLocal.W(), c.imeAnchorLocal.H())
+	c.imeCaretOK = true
+}
+
+// syncIMECaret 把最新光标矩形交给平台输入法（仅主线程调用）。
+func (c *Container) syncIMECaret() {
+	c.mu.Lock()
+	ok, r, b := c.imeCaretOK, c.imeCaret, c.binder
+	c.mu.Unlock()
+	if ok && b != nil {
+		b.SetIMECaret(r)
+	}
+}
+
+// caretBlinkPeriod 是插入符明暗切换间隔（Windows 默认 530ms）。
+const caretBlinkPeriod = 530 * time.Millisecond
+
+// setCaretNode 记录/重置插入符节点（Build 与编辑时调用；node=nil 且
+// owner 是当前登记者时停止闪烁）。
+//
+// owner 归属是必需的：一个页面上有多个输入框，未聚焦者也会上报 nil；
+// 不区分 owner 时，后构建的未聚焦输入框会把已聚焦输入框的插入符
+// 从闪烁队列里清掉（真窗表现：刚点进输入框/重新聚焦时光标不闪）。
+//
+// 与 IME 锚点同一线程约定：Build 在帧内（持锁），编辑刷新在消息线程；
+// P0 下二者都是窗口主线程，不发生并发写。
+func (c *Container) setCaretNode(owner any, n *scene.Node) {
+	if n == nil {
+		if owner != nil && c.caretOwner != owner {
+			return
+		}
+		c.caretNode, c.caretOwner, c.caretArmed = nil, nil, false
+		c.caretOn = true
+		return
+	}
+	c.caretOwner = owner
+	if c.caretNode != n {
+		c.caretNode = n
+		c.caretOn = true
+		n.SetVisible(true)
+	} else if !c.caretOn {
+		// 同一个节点上的编辑/移动：立即恢复可见并重置相位（标准光标行为）。
+		c.caretOn = true
+		n.SetVisible(true)
+	}
+	c.caretNext = c.clock.Now() + caretBlinkPeriod
+	c.caretArmed = true
+}
+
+// updateCaretBlinkLocked 在帧首推进闪烁相位（调用方持锁）。
+func (c *Container) updateCaretBlinkLocked(now time.Duration) {
+	if c.caretNode == nil {
+		return
+	}
+	// 换树后旧光标节点可能已不在场景里（新内容没有输入框/组件没上报 nil）。
+	// 锚点用"是否仍在当前场景"兜底，避免给孤儿节点持续排闪烁帧。
+	if !c.caretNodeAlive(c.caretNode) {
+		c.caretNode, c.caretOwner, c.caretArmed = nil, nil, false
+		c.caretOn = true
+		return
+	}
+	if !c.caretArmed {
+		c.caretNext = now + caretBlinkPeriod
+		c.caretArmed = true
+		return
+	}
+	if now < c.caretNext {
+		return
+	}
+	c.caretOn = !c.caretOn
+	c.caretNode.SetVisible(c.caretOn)
+	c.caretNext = now + caretBlinkPeriod
+}
+
+// caretNodeAlive 判断节点是否仍挂在当前场景树上。
+func (c *Container) caretNodeAlive(n *scene.Node) bool {
+	if n == nil || c.scene == nil {
+		return false
+	}
+	for x := n; x != nil; x = x.Parent() {
+		if x == c.scene {
+			return true
+		}
+	}
+	return false
+}
+
+// scheduleCaretBlink 申请下一次插入符切换的帧（帧末调用）。
+func (c *Container) scheduleCaretBlink() {
+	if c.caretNode == nil {
+		return
+	}
+	if c.scene != nil && !c.caretNodeAlive(c.caretNode) {
+		return
+	}
+	s := c.schedAtomic.Load()
+	if s == nil {
+		return
+	}
+	d := c.caretNext - c.clock.Now()
+	if !c.caretArmed || d < 0 {
+		d = 0
+	}
+	if d > caretBlinkPeriod {
+		d = caretBlinkPeriod
+	}
+	s.RequestFrameIn(d)
+}
+
+// BlurFocus 实现 host.FocusSink：窗口失活时清焦点。
+func (c *Container) BlurFocus() {
+	c.mu.Lock()
+	f := c.focus
+	c.mu.Unlock()
+	if f != nil {
+		f.Blur()
+	}
+}
+
+var _ host.FocusSink = (*Container)(nil)
+
+// nodeWithin 判断 n 是否在 root 子树内（含自身）。
+func nodeWithin(n, root *scene.Node) bool {
+	for x := n; x != nil; x = x.Parent() {
+		if x == root {
+			return true
+		}
+	}
+	return false
 }
 
 // HandleKey 处理键盘事件（浮层优先）。
@@ -1005,6 +1209,8 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 	if c.animating.Load() && c.scene != nil {
 		c.scene.MarkNeedsPaint()
 	}
+	// 插入符闪烁：到点切换可见性并让脏区自然收敛到光标矩形。
+	c.updateCaretBlinkLocked(now)
 
 	// 组件重建要在布局之前：SetState 改了内容，当帧就得用新尺寸排版，
 	// 否则界面会晚一帧才跟上状态（肉眼见"点一下慢半拍"）。
@@ -1061,6 +1267,8 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 			c.ov.Relayout() // 布局变了，锚点跟着走
 		}
 	}
+	// IME 光标锚点：布局后把控件局部矩形换算成客户区坐标。
+	c.updateIMECaretLocked()
 
 	// 结构变化（增删画布/改尺寸）必须整屏重画：布局可能整体位移。
 	dirty := root.HasDamage() || root.StructureDirty() || c.requested.Load() || sceneDirty.Any()
@@ -1196,19 +1404,12 @@ func (c *Container) Start() error {
 		Clock:  c.clock,
 		Ticker: frame.NewTicker(),
 		OnFrame: func(now, delta time.Duration) bool {
-			// 动画节拍/浮层计时都在 FrameOnce 的容器锁内推进（见 FrameOnce
-			// 开头）：帧线程与 resize goroutine 并发时，锁外改场景树会与
-			// 整树布局竞争（-race 实测）。
-			st, ferr := c.FrameOnce()
-			if ferr == nil && c.animating.Load() {
-				// 60Hz 节拍续帧：动态组件驱动渲染；静止窗不进此分支（C14）。
-				// 钉在绝对帧网格上（requestNextTick），慢帧跳过错过的边界。
-				// 用原子快照：本回调在定时器 goroutine 上，不能抢容器锁。
-				if s := c.schedAtomic.Load(); s != nil {
-					c.requestNextTick(s)
-				}
+			// P0：组合在**窗口主线程**执行（与输入同线程），帧时钟只投递
+			// 并等待完成。headless/无 HWND 时退化为帧线程内联。
+			if c.renderHWND != 0 {
+				return c.renderOnMain()
 			}
-			return ferr == nil && st.Presented
+			return c.frameOnceAndContinue()
 		},
 		OnResize: c.fireResize,
 	})
@@ -1219,12 +1420,18 @@ func (c *Container) Start() error {
 	c.sched = sched
 	c.schedAtomic.Store(sched)
 	c.st = stateRunning
+	renderHWND := uintptr(0)
+	if c.form != nil {
+		renderHWND = uintptr(c.form.Handle())
+	}
+	c.renderHWND = renderHWND
 	c.mu.Unlock()
 
 	// 平台消息必须在消息循环启动前接管。此前 Run 只跑了帧泵，
 	// 窗口消息仍走 LCL 默认处理：鼠标键盘到不了分发器，输入法更是完全失联。
 	binder := host.NewBinder(c.host, c)
 	binder.SetIMEBridge(c.ime)
+	binder.SetRender(c.renderFrame)
 	// 呈现链路：真窗需要一个 Presenter 把合成出的 Backing 画到窗口上。
 	// 像素提交走 LCL 无句柄控件的 OnPaint（见 host.BindCanvas），
 	// 不直接写窗口 DC —— 后者在 DWM 重定向表面上会间歇性失败。
@@ -1321,6 +1528,85 @@ func (c *Container) Run() error {
 	return nil
 }
 
+// renderRequest 是一次"主线程整帧渲染"请求（单 outstanding）。
+type renderRequest struct {
+	done       chan struct{}
+	dispatched atomic.Bool
+	presented  bool
+}
+
+// frameOnceAndContinue 执行一帧并续动画节拍（渲染入口的唯一实现）。
+func (c *Container) frameOnceAndContinue() bool {
+	st, ferr := c.FrameOnce()
+	if ferr == nil && c.animating.Load() {
+		// 60Hz 节拍续帧：动态组件驱动渲染；静止窗不进此分支（C14）。
+		// 钉在绝对帧网格上（requestNextTick），慢帧跳过错过的边界。
+		if s := c.schedAtomic.Load(); s != nil {
+			c.requestNextTick(s)
+		}
+	}
+	if ferr == nil {
+		// 光标闪烁是低频率自驱动帧：按相位续装闹钟（静止窗也只每 530ms 一帧）。
+		c.scheduleCaretBlink()
+	}
+	return ferr == nil && st.Presented
+}
+
+// renderOnMain 把一帧投递到窗口主线程执行并等待完成（帧时钟 goroutine）。
+//
+// P0 方案①：布局/录制/合成/呈现与输入分发同线程，消除场景树的穿线竞态。
+// 消息循环尚未启动（窗口启动早期）时退化为本 goroutine 内联合成一次。
+func (c *Container) renderOnMain() bool {
+	req := &renderRequest{done: make(chan struct{}, 1)}
+	c.renderReq.Store(req)
+	// 慢帧后先留空队列让输入先走，再投下一帧（showcase §9 的 inputBreath）。
+	if c.renderCostUs.Load() > int64(frame.DefaultStep) {
+		time.Sleep(1500 * time.Microsecond)
+	}
+	if !host.PostRender(c.renderHWND) {
+		return c.frameOnceAndContinue()
+	}
+	select {
+	case <-req.done:
+		return req.presented
+	case <-time.After(250 * time.Millisecond):
+		if req.dispatched.CompareAndSwap(false, true) {
+			// 主线程还没进消息循环：先内联合成（此处尚无输入，无竞态窗口）。
+			return c.frameOnceAndContinue()
+		}
+		// 主线程已开始渲染但较慢：等它完成（闭环，不叠加第二帧）。
+		<-req.done
+		return req.presented
+	}
+}
+
+// renderFrame 在窗口主线程执行一帧（Binder 收到 wmRequestRender）。
+func (c *Container) renderFrame() {
+	req := c.renderReq.Load()
+	if req == nil || !req.dispatched.CompareAndSwap(false, true) {
+		return
+	}
+	c.mu.Lock()
+	p := c.presenter
+	c.mu.Unlock()
+	if p != nil {
+		// 渲染方在主线程：present 不需要再走 posted 消息。
+		p.SetSuppressPost(true)
+	}
+	began := time.Now()
+	presented := c.frameOnceAndContinue()
+	if p != nil {
+		p.SetSuppressPost(false)
+		if presented {
+			p.Present() // 同步 Invalidate+Update → Paint
+		}
+	}
+	c.renderCostUs.Store(int64(time.Since(began)))
+	c.syncIMECaret() // 组合窗/候选窗跟随光标
+	req.presented = presented
+	req.done <- struct{}{}
+}
+
 // fireResize 是节流前沿或尾随到期后的真正 resize。
 //
 // 尺寸取**当前客户区**而不是请求快照：WM_SIZE 在消息线程已即时更新
@@ -1360,8 +1646,7 @@ func (c *Container) RunManual(clock *frame.ManualClock) *frame.ManualTicker {
 		ResizeTicker: tk,
 		OnFrame: func(now, delta time.Duration) bool {
 			// 浮层计时/动画标脏由 FrameOnce 在容器锁内统一推进。
-			st, ferr := c.FrameOnce()
-			return ferr == nil && st.Presented
+			return c.frameOnceAndContinue()
 		},
 		OnResize: c.fireResize,
 	})

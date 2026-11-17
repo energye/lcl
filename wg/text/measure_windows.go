@@ -200,13 +200,67 @@ func measureString(s string, f Font) geom.Size {
 	return geom.Sz(float32(sz.CX)/sc, h)
 }
 
+// runeKey 是单字符推进的缓存键。
+type runeKey struct {
+	face faceKey
+	r    rune
+}
+
+// runeWidthCache 缓存单字符推进宽度（DIP）。
+//
+// 断行是逐字累加宽度的：每次 LayoutText 都会把整段文本的每个 rune 走一遍。
+// 不缓存时每次调用都是一次 GDI SelectObject/GetTextExtentPoint32/GetTextMetrics
+// ——真窗实测整页重建 93ms 里约 40ms 花在这里（万次 FFI）。
+var runeWidthCache = struct {
+	sync.RWMutex
+	m map[runeKey]float32
+}{m: make(map[runeKey]float32, 1024)}
+
 // runeAdvance 返回单个字符的推进宽度（DIP）。
 func runeAdvance(r rune, f Font) float32 {
-	return measureString(string(r), f).W
+	k := runeKey{face: f.key(), r: r}
+	runeWidthCache.RLock()
+	v, ok := runeWidthCache.m[k]
+	runeWidthCache.RUnlock()
+	if ok {
+		return v
+	}
+	v = measureString(string(r), f).W
+	runeWidthCache.Lock()
+	if len(runeWidthCache.m) > 8192 {
+		runeWidthCache.m = make(map[runeKey]float32, 1024)
+	}
+	runeWidthCache.m[k] = v
+	runeWidthCache.Unlock()
+	return v
+}
+
+// ascentCache 缓存字体基线高度：LayoutText 每行都取一次 ascent，
+// 不缓存时同样是一行两次 GDI 调用。
+var ascentCache = struct {
+	sync.RWMutex
+	m map[faceKey]float32
+}{m: make(map[faceKey]float32, 32)}
+
+// clearPlatformCaches 清空平台层度量缓存（DPI/字体变化时由 ClearMeasureCache 调用）。
+func clearPlatformCaches() {
+	runeWidthCache.Lock()
+	runeWidthCache.m = make(map[runeKey]float32, 1024)
+	runeWidthCache.Unlock()
+	ascentCache.Lock()
+	ascentCache.m = make(map[faceKey]float32, 32)
+	ascentCache.Unlock()
 }
 
 // ascentOf 返回基线到顶部的距离（DIP）。
 func ascentOf(f Font) float32 {
+	k := f.key()
+	ascentCache.RLock()
+	v, ok := ascentCache.m[k]
+	ascentCache.RUnlock()
+	if ok {
+		return v
+	}
 	dc := ensureDC()
 	hf := FontHandle(f)
 	if dc == 0 || hf == 0 {
@@ -224,6 +278,9 @@ func ascentOf(f Font) float32 {
 	if a <= 0 {
 		return f.lineHeight() * 0.8
 	}
+	ascentCache.Lock()
+	ascentCache.m[k] = a
+	ascentCache.Unlock()
 	return a
 }
 

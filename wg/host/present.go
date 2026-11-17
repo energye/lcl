@@ -75,6 +75,9 @@ type Presenter struct {
 	// needsFull 在"有 WM_PAINT 被让位给 posted 呈现"时置位：
 	// 下一次提交整帧重放（覆盖系统要求重绘的区域），而不是只画脏区。
 	needsFull atomic.Bool
+	// suppressPost 表示渲染本身已在主线程（P0 方案①）：present 不需要
+	// 再投递消息，渲染方会同步 Repaint。
+	suppressPost atomic.Bool
 }
 
 // PendingSubmit 表示有尚未提交的新帧（dirty）或呈现消息在途（presenting）。
@@ -143,7 +146,8 @@ func (p *Presenter) SetResizePresent(stretch bool, bg geom.Color) {
 	p.mu.Unlock()
 }
 
-// SetPost 设置"请求主线程尽快呈现"的投递函数（真窗为 PostMessage(WM_APP+n)）。//
+// SetPost 设置"请求主线程尽快呈现"的投递函数（真窗为 PostMessage(WM_APP+n)）。
+//
 // 为什么要 posted 消息：GetMessage 的优先级是 sent > posted > 硬件输入 >
 // WM_PAINT。帧泵在 goroutine 里合成，若只靠 InvalidateRect 等 WM_PAINT，
 // 拖动/连续鼠标消息会把它饿死（内容不跟窗）。posted 消息在模态尺寸循环里
@@ -152,6 +156,19 @@ func (p *Presenter) SetPost(fn func()) {
 	p.mu.Lock()
 	p.post = fn
 	p.mu.Unlock()
+}
+
+// SetSuppressPost 控制 present 是否还投递 posted 消息。
+//
+// 渲染在主线程进行时置 true：渲染方在 FrameOnce 之后同步 Repaint，
+// 不再经过消息队列（也不在帧内 sleep inputBreath）。
+func (p *Presenter) SetSuppressPost(v bool) { p.suppressPost.Store(v) }
+
+// Present 在主线程同步完成一次呈现（渲染在主线程时由渲染方调用）。
+func (p *Presenter) Present() {
+	p.allowPaint.Store(true)
+	p.RepaintNow()
+	p.allowPaint.Store(false)
 }
 
 // PresentDone 在主线程处理完一条呈现消息后调用：同步提交 + 释放闭环槽。

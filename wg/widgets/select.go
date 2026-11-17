@@ -49,6 +49,9 @@ type Select struct {
 	handle overlay.Handle
 	taps   []*ui.GestureDetector // 跨 Build 存活
 	filter string                // 搜索词（popup 内输入）
+	// 弹出层的选项滚动（每次打开新建，位置归零；跨 popup 重建保留）。
+	listViewport float32
+	listScroll   *Scroll
 }
 
 // NewSelect 创建下拉框。
@@ -277,6 +280,13 @@ func (s *Select) show(ctx *ui.BuildContext, anchor *scene.Node) {
 	if listH > mh {
 		listH = mh
 	}
+	searchH := float32(0)
+	if s.ShowSearch {
+		searchH = 36
+	}
+	s.listViewport = listH - searchH
+	s.listScroll = &Scroll{Axis: scene.Vertical, Width: s.Width, Height: s.listViewport,
+		Child: nodeFn(func(ctx *ui.BuildContext) *scene.Node { return s.optionsColumn(ctx, rowH) })}
 	s.filter = ""
 	s.handle = ctx.Overlay.Show(overlay.Entry{
 		Band:      theme.BandPopup,
@@ -291,12 +301,10 @@ func (s *Select) show(ctx *ui.BuildContext, anchor *scene.Node) {
 	})
 }
 
-// popupContent 构建弹层内容（搜索行 + 分组标题 + 选项行）。
+// popupContent 构建弹层内容（固定搜索行 + 可滚动选项列表）。
 func (s *Select) popupContent(ctx *ui.BuildContext, rowH float32) *scene.Node {
 	th := ctx.ThemeOr()
-	ls := s.labels()
 	col := scene.Flex(scene.Vertical, 0).SetWidth(s.Width)
-	col.SetOverflow(true)
 
 	if s.ShowSearch {
 		search := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(th.Color.Border, 1), Radius: th.Radius.SM}).
@@ -324,6 +332,21 @@ func (s *Select) popupContent(ctx *ui.BuildContext, rowH float32) *scene.Node {
 		}
 		col.Add(search)
 	}
+
+	// 选项列表可滚动（搜索行固定；显示滚动条）。
+	if s.listScroll != nil {
+		col.Add(s.listScroll.Build(ctx))
+	} else {
+		col.Add(s.optionsColumn(ctx, rowH))
+	}
+	return col
+}
+
+// optionsColumn 构建选项/分组标题列（被 Scroll 包裹）。
+func (s *Select) optionsColumn(ctx *ui.BuildContext, rowH float32) *scene.Node {
+	th := ctx.ThemeOr()
+	ls := s.labels()
+	col := scene.Flex(scene.Vertical, 0).SetWidth(s.Width)
 
 	prev := ""
 	for _, i := range s.visibleIndexes() {
@@ -412,3 +435,8 @@ func (s *Select) popupContent(ctx *ui.BuildContext, rowH float32) *scene.Node {
 	}
 	return col
 }
+
+// nodeFn 把闭包适配成 Widget（内部构建用）。
+type nodeFn func(*ui.BuildContext) *scene.Node
+
+func (f nodeFn) Build(ctx *ui.BuildContext) *scene.Node { return f(ctx) }

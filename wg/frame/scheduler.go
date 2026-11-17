@@ -104,8 +104,13 @@ type Scheduler struct {
 	// 帧内任何 arm(0)（RequestFrame/平台 WM_PAINT 回调）都可能让定时器
 	// 在 OnFrame 尚未返回时再次触发 Tick——没有这道闸，两帧会并发跑
 	// 布局/合成（-race 实测双 Tick 竞争场景树）。重入拍直接丢弃，
-	// 挂起请求由帧末 reschedule 重新装填。
+	// 但记 wakePending：帧末 reschedule 补装，否则那一拍携带的"下一帧"
+	// 意图（尤其是动画续帧的 RequestFrameIn）会随定时器一起消失，帧泵
+	// 永久停摆（-race 下渲染 >16.7ms 时实测复现）。
 	inTick bool
+	// wakePending 表示有一拍唤醒在 inTick/awaiting 期间被丢弃，需要在
+	// 当前帧结束（或 Present 回填）后补装。
+	wakePending bool
 
 	rw, rh        int
 	resizePending bool
@@ -203,19 +208,22 @@ func (s *Scheduler) Tick() {
 	}
 	if s.inTick {
 		// 同帧重入：这一拍对应的闹钟已经触发（定时器已被消费），必须
-		// 清掉 armed/armedAt，否则下一次 arm() 的「更早者胜」会认为旧
-		// 闹钟还在（armedAt 在过去）而拒绝重新装填——帧泵永久停摆。
+		// 清掉 armed/armedAt；同时记 wakePending，帧末 reschedule 补装，
+		// 否则这一拍携带的续帧意图会丢失（帧泵永久停摆）。
 		s.armed = false
 		s.armedAt = 0
+		s.wakePending = true
 		s.mu.Unlock()
 		return
 	}
 	if s.awaiting {
 		// C11：上一帧还没被呈现消费掉，这一拍直接丢弃，不入队。
-		// 同上：唤醒已被消费，armed 必须清掉（Present 回填后会重新装填）。
+		// 同上：唤醒已被消费，armed 清掉，意图记入 wakePending，
+		// Present 回填后的 reschedule 补装。
 		s.stats.Skipped++
 		s.armed = false
 		s.armedAt = 0
+		s.wakePending = true
 		skip := s.opts.OnSkip
 		s.mu.Unlock()
 		if skip != nil {
@@ -303,18 +311,10 @@ func (s *Scheduler) RequestResize(w, h int) {
 		// 旧尾随闹钟在锁内拆掉：锁外拆会误杀并发请求刚装的新闹钟。
 		// 即使它随后到期也会因 resizePending=false 空转。
 		s.resizeTicker.Disarm()
-		wall := s.opts.Clock.Kind() == Wall
 		s.mu.Unlock()
-		if wall {
-			// 墙钟下**不在消息线程里执行 OnResize**：它要拿容器锁，与帧
-			// 线程的整帧合成互等，会把 WM_SIZE 处理拖成几十 ms——窗口边框
-			// 跟不上鼠标（实测拖拽中消息线程停顿 avg 27ms / max 108ms）。
-			// 交给 resize 闹钟 goroutine 立刻执行；确定性门禁（手动时钟）
-			// 保持同步语义。
-			s.resizeTicker.Arm(0, s.fireResize)
-		} else {
-			s.fireResize()
-		}
+		// 同步执行：帧渲染已在主线程（P0 方案①），消息线程不会再与
+		// 帧线程的整帧合成互等；c.Resize 只剩 comp.Resize 重建（~0.5ms）。
+		s.fireResize()
 		return
 	}
 	delay := window - (now - s.lastResizeAt)
@@ -416,8 +416,16 @@ func (s *Scheduler) reschedule() {
 		return
 	}
 	if s.awaiting {
+		// 槽未回填：不装闹钟；wakePending 保留到 Present 回填后再补装。
 		s.mu.Unlock()
 		s.disarm()
+		return
+	}
+	if s.wakePending {
+		// 有被丢弃的唤醒：补装一拍（调用方会按挂起/动画需求继续续期）。
+		s.wakePending = false
+		s.mu.Unlock()
+		s.arm(0)
 		return
 	}
 	if s.pending {

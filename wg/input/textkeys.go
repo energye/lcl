@@ -36,6 +36,13 @@ func (h *TextKeyHandler) Handle(ev *KeyEvent) bool {
 	if ev == nil || h.editor == nil {
 		return false
 	}
+	// 编辑动作只在**按下沿**执行。窗口系统对同一物理按键会同时发
+	// KeyDown 与 KeyUp；不区分时方向键/删除键会被执行两次（真窗表现为
+	// "光标一次跳两个字符"、Backspace 一次删两个字）。抬起事件消费掉，
+	// 避免继续冒泡给焦点管理再处理一次 Tab。
+	if ev.Kind == KeyUp {
+		return true
+	}
 	if ev.Text != "" {
 		// 归一化层已过滤控制字符；这里再过一遍编辑模型（多行策略），
 		// 让"直接构造 KeyEvent"的调用方也无法把 \r 塞进单行框。

@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/energye/lcl/wg/geom"
+	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
 	"github.com/energye/lcl/wg/ui"
@@ -62,11 +63,21 @@ type Table struct {
 	OnSort     func(col int, asc bool)
 	OnSelect   func(row int)
 
+	// ShowScrollbar：nil = 内容溢出自动显示；true 始终；false 隐藏（仍可滚轮）。
+	ShowScrollbar *bool
+
 	offset    float32
 	sortCache []int
 	sortDirty bool
 	sorts     []*ui.GestureDetector // 跨 Build 存活
 	rowTaps   []*ui.GestureDetector
+	// 虚拟窗口与滚动条（原地滚动用）
+	rowNodes   []*scene.Node
+	rowVis     []int
+	builtFirst int
+	builtLast  int
+	bar        *Scrollbar
+	reqFrame   func()
 }
 
 // DefaultTableHeight 是未设置 Height 时的视口高。
@@ -81,6 +92,9 @@ func NewTable(cols []TableColumn, rows [][]any) *Table {
 }
 
 // SetScrollOffset 设置垂直滚动偏移（虚拟化的唯一真相）。
+//
+// 可见窗口不变时只平移行节点（不重建，拖动/滚轮才顺滑）；
+// 越过已构建的虚拟窗口才置脏重建。
 func (t *Table) SetScrollOffset(v float32) {
 	if v < 0 {
 		v = 0
@@ -88,10 +102,41 @@ func (t *Table) SetScrollOffset(v float32) {
 	if max := t.maxOffset(); v > max {
 		v = max
 	}
-	if t.offset != v {
-		t.offset = v
-		t.MarkDirty()
+	if t.offset == v {
+		return
 	}
+	t.offset = v
+	first, last := t.rowWindow()
+	if t.rowNodes == nil || first < t.builtFirst || last > t.builtLast {
+		t.MarkDirty()
+		return
+	}
+	for i, n := range t.rowNodes {
+		n.SetStackPosition(geom.Pt(0, t.HeaderH+float32(t.rowVis[i])*t.RowHeight-v))
+	}
+	if t.node != nil {
+		t.node.MarkNeedsPaint()
+	}
+	if t.bar != nil {
+		t.bar.SetValue(v)
+	}
+	if t.reqFrame != nil {
+		t.reqFrame()
+	}
+}
+
+// rowWindow 返回当前偏移下应构建的行窗口 [first,last)。
+func (t *Table) rowWindow() (int, int) {
+	vh := t.ViewportHeight()
+	first := int(t.offset/t.RowHeight) - t.Overscan
+	if first < 0 {
+		first = 0
+	}
+	last := first + int(vh/t.RowHeight) + t.Overscan*2 + 2
+	if n := len(t.Rows); last > n {
+		last = n
+	}
+	return first, last
 }
 
 // ScrollOffset 返回当前垂直滚动偏移。
@@ -247,7 +292,7 @@ func (t *Table) columnWidths(fontSize float32) []float32 {
 func (t *Table) VisibleRows() []int {
 	idx := t.sortedIndex()
 	vh := t.ViewportHeight()
-	first := int(t.offset / t.RowHeight) - t.Overscan
+	first := int(t.offset/t.RowHeight) - t.Overscan
 	if first < 0 {
 		first = 0
 	}
@@ -303,7 +348,7 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 
 	// 虚拟行：只构建可见区 ± Overscan
 	vh := t.ViewportHeight()
-	first := int(t.offset / t.RowHeight) - t.Overscan
+	first := int(t.offset/t.RowHeight) - t.Overscan
 	if first < 0 {
 		first = 0
 	}
@@ -312,6 +357,10 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 		last = len(idx)
 	}
 	t.rowTaps = t.rowTaps[:0]
+	t.rowNodes = t.rowNodes[:0]
+	t.rowVis = t.rowVis[:0]
+	t.builtFirst, t.builtLast = first, last
+	t.reqFrame = ctx.RequestFrame
 	for vi := first; vi < last; vi++ {
 		dataRow := idx[vi]
 		row := scene.Flex(scene.Horizontal, 0).SetWidth(t.Width).SetHeight(t.RowHeight)
@@ -347,7 +396,48 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 		row.SetStackPosition(geom.Pt(0, t.HeaderH+float32(vi)*t.RowHeight-t.offset))
 		row.SetPositionKeepSize(true)
 		col.Add(row)
+		t.rowNodes = append(t.rowNodes, row)
+		t.rowVis = append(t.rowVis, vi)
 	}
 	t.node = col
-	return col
+
+	// 滚轮：越界时返回 false，让外层滚动接手（嵌套滚动）。
+	if ctx.Input != nil {
+		ctx.Input.Set(col, input.Handler{Wheel: func(ev *input.WheelEvent) bool {
+			if ev.Delta.Y == 0 {
+				return false
+			}
+			before := t.offset
+			t.SetScrollOffset(t.offset + ev.Delta.Y)
+			return t.offset != before
+		}})
+	}
+
+	max := t.maxOffset()
+	show := max > 0
+	if t.ShowScrollbar != nil {
+		show = *t.ShowScrollbar
+	}
+	if !show {
+		return col
+	}
+	if t.bar == nil {
+		t.bar = &Scrollbar{}
+	}
+	t.bar.Axis = scene.Vertical
+	t.bar.Max = max
+	t.bar.Viewport = vh
+	t.bar.Length = vh - 2*scrollbarInset
+	t.bar.Value = t.offset
+	t.bar.OnChange = func(v float32) { t.SetScrollOffset(v) }
+
+	stack := scene.Stack().SetSize2(t.Width, vh)
+	col.SetPositionKeepSize(true)
+	col.SetStackPosition(geom.Pt(0, 0))
+	stack.Add(col)
+	barNode := t.bar.Build(ctx)
+	barNode.SetPositionKeepSize(true)
+	barNode.SetStackPosition(geom.Pt(t.Width-scrollbarThickness-scrollbarInset, scrollbarInset))
+	stack.Add(barNode)
+	return stack
 }

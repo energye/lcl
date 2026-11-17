@@ -54,5 +54,8 @@ func ascentOf(f Font) float32 {
 	return em * 0.8
 }
 
+// clearPlatformCaches 在非 Windows 平台无平台缓存可清。
+func clearPlatformCaches() {}
+
 // FontHandle 在非 Windows 平台无意义，返回 0。
 func FontHandle(f Font) uintptr { return 0 }

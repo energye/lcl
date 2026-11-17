@@ -37,11 +37,21 @@ const (
 	wmCaptureChanged = 0x0215
 	wmMouseLeave     = 0x02A3
 	wmSize           = 0x0005
+	wmSetFocus       = 0x0007
+	wmKillFocus      = 0x0008
+	wmActivate       = 0x0006
 	wmDpiChanged     = 0x02E0
 	wmSettingChange  = 0x001A
 	wmTimer          = 0x0113
 	wmEraseBkgnd     = 0x0014
 	wmPaint          = 0x000F
+
+	// 输入法消息（imm32.h）。组合消息必须继续走 DefWindowProc：
+	// 平台默认处理创建的组合窗/候选窗才是用户看到的那一层。
+	wmIMEStartComposition = 0x010D
+	wmIMEEndComposition   = 0x010E
+	wmIMEComposition      = 0x010F
+	wmIMESetContext       = 0x0281
 )
 
 // 鼠标消息 wParam 的键位。
@@ -90,6 +100,13 @@ type DPISink interface {
 	DPIChanged(scale float32)
 }
 
+// FocusSink 由容器实现：窗口失活（WA_INACTIVE）时必须清焦点。
+//
+// 否则切到别的应用再回来，输入框还显示焦点框、IME 还挂在旧编辑模型上。
+type FocusSink interface {
+	BlurFocus()
+}
+
 // RouterStats 是路由统计。
 type RouterStats struct {
 	Messages int
@@ -133,6 +150,27 @@ func (r *Router) SetIME(ime platformIME, b *IMEBridge) {
 // SetScreenToClient 设置屏幕 → 客户区换算（滚轮消息必需）。
 func (r *Router) SetScreenToClient(fn func(x, y int32) (int32, int32)) { r.toClient = fn }
 
+// AttachIME 取得输入法上下文（窗口获焦/接管消息后调用）。
+func (r *Router) AttachIME() {
+	if r.ime != nil {
+		r.ime.Attach()
+	}
+}
+
+// DetachIME 释放输入法上下文。
+func (r *Router) DetachIME() {
+	if r.ime != nil {
+		r.ime.Detach()
+	}
+}
+
+// SetIMECaret 把组合窗/候选窗摆到光标处（客户端像素坐标）。
+func (r *Router) SetIMECaret(rect geom.Rect) {
+	if r.ime != nil {
+		r.ime.SetCandidates(rect)
+	}
+}
+
 // SetMods 由胶水层按 GetKeyState 更新修饰键状态。
 func (r *Router) SetMods(m input.Modifiers) { r.mods = m }
 
@@ -149,17 +187,48 @@ func (r *Router) Stats() RouterStats { return r.stats }
 func (r *Router) Handle(m Message) bool {
 	r.stats.Messages++
 
+	// 上屏抑制：透传 WM_IME_COMPOSITION 后，系统会为 GCS_RESULTSTR 逐字
+	// 补发 WM_CHAR。结果串已经写入编辑器，这些补发必须吞掉，否则二次上屏。
+	if (m.Msg == wmChar || m.Msg == wmSysChar) && r.bridge != nil {
+		if r.bridge.TakeCommitChar(uint16(m.WParam)) {
+			r.stats.Handled++
+			return true
+		}
+	}
+	// 新的按键意味着上一次上屏的补发序列已经结束（或该 IME 根本不补发）。
+	if (m.Msg == wmKeyDown || m.Msg == wmSysKeyDown) && r.bridge != nil {
+		r.bridge.ClearSuppressed()
+	}
+
 	// 先给 IME：组合期间键盘输入属于输入法，不该再走按键路径，
 	// 否则"拼音输入时按 A 会在输入框里出现字母"。
+	//
+	// 消费后仍返回 false：WM_IME_* 必须继续给 DefWindowProc。系统在默认
+	// 处理里创建/维护组合窗与候选窗——吞掉消息后 IME 只能把候选框留在
+	// 默认位置（真窗表现为候选框跑到窗口左上角/固定不动）。
 	if r.ime != nil {
 		if evs, ok := r.ime.HandleMessage(m.Msg, m.WParam, m.LParam); ok {
 			r.stats.Handled++
 			r.emit(evs...)
-			return true
+			return false
 		}
 	}
 
 	switch m.Msg {
+	case wmSetFocus:
+		// 窗口获焦：补一次 IME 上下文（Install 时可能还拿不到）。
+		r.AttachIME()
+		return false
+
+	case wmActivate:
+		// 失活（WA_INACTIVE）：清焦点，避免回来时输入框仍持焦点/IME。
+		if uint32(m.WParam&0xFFFF) == 0 {
+			if fs, ok := r.sink.(FocusSink); ok {
+				fs.BlurFocus()
+			}
+		}
+		return false
+
 	case wmSize:
 		w := int(uint16(m.LParam & 0xFFFF))
 		h := int(uint16((m.LParam >> 16) & 0xFFFF))

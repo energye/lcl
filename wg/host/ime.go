@@ -114,6 +114,14 @@ type IMEBridge struct {
 	stats  IMEStats
 	// now 可注入（门禁里用固定时钟）。
 	now func() time.Time
+
+	// suppressed 是上屏后等待系统补发 WM_CHAR 的 UTF-16 码元队列。
+	//
+	// 我们透传 WM_IME_COMPOSITION 给 DefWindowProc（组合窗/候选窗需要系统
+	// 默认处理），系统会为 GCS_RESULTSTR 里的每个码元再补一条 WM_CHAR。
+	// 结果串已经由 IMFResult 写进编辑器，不吞这些 WM_CHAR 就会上屏两次
+	//（真机微软拼音实测："你好" → "你好你好"）。
+	suppressed []uint16
 }
 
 // NewIMEBridge 创建桥。
@@ -148,7 +156,31 @@ func (b *IMEBridge) SetEditor(e *input.TextEditor) {
 	}
 	b.editor = e
 	b.comp = Composition{}
+	b.ClearSuppressed()
 }
+
+// SuppressCommitChars 记录"已由结果串上屏"的字符，等系统补发的 WM_CHAR
+// 到来时逐个吞掉。
+func (b *IMEBridge) SuppressCommitChars(s string) {
+	b.suppressed = utf16.Encode([]rune(s))
+}
+
+// TakeCommitChar 尝试吞掉一个与待抑制队列匹配的 WM_CHAR 码元。
+// 不匹配说明是用户的新输入，清空队列并返回 false。
+func (b *IMEBridge) TakeCommitChar(code uint16) bool {
+	if len(b.suppressed) == 0 {
+		return false
+	}
+	if b.suppressed[0] == code {
+		b.suppressed = b.suppressed[1:]
+		return true
+	}
+	b.suppressed = nil
+	return false
+}
+
+// ClearSuppressed 清空待抑制队列（开始新组合/新按键时调用）。
+func (b *IMEBridge) ClearSuppressed() { b.suppressed = nil }
 
 // Composition 返回当前组合状态。
 func (b *IMEBridge) Composition() Composition { return b.comp }
@@ -172,6 +204,7 @@ func (b *IMEBridge) Handle(ev IMFEvent) []input.Event {
 	switch ev.Kind {
 	case IMFStartComposition:
 		b.stats.Starts++
+		b.ClearSuppressed()
 		// 有选区时从选区**起点**开始组合，而不是 Cursor（=选区末端）。
 		// 否则"选中 ab 后打中文"会得到 "ab好"：拼音追加在末尾，选区纹丝不动。
 		v := b.editor.Value()
@@ -180,6 +213,7 @@ func (b *IMEBridge) Handle(ev IMFEvent) []input.Event {
 
 	case IMFUpdateComposition:
 		b.stats.Updates++
+		b.ClearSuppressed()
 		text := ev.Text
 		if !b.comp.Active {
 			// 有些输入法不发 START 直接发 UPDATE：补一次开始。
@@ -225,6 +259,9 @@ func (b *IMEBridge) Handle(ev IMFEvent) []input.Event {
 		} else if ev.Text != "" {
 			b.editor.InsertText(ev.Text)
 		}
+		// 透传给 DefWindowProc 的完成消息会让系统按结果串逐码元补发
+		// WM_CHAR；这里登记待吞队列，Router 在字符消息到达时消费。
+		b.SuppressCommitChars(ev.Text)
 		b.comp = Composition{}
 		b.stats.Commits++
 		return []input.Event{&input.IMEEvent{

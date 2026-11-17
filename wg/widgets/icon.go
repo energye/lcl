@@ -1,7 +1,6 @@
 package widgets
 
 import (
-
 	"time"
 
 	"github.com/energye/lcl/wg/geom"
@@ -60,19 +59,19 @@ func (b iconBrush) circle(cx, cy, r float32) iconBrush {
 
 // iconPainters 是内置图标集。坐标都在 24×24 视口内。
 var iconPainters = map[string]iconDef{
-	"plus":     {stroke: func(b iconBrush) { b.seg(12, 5, 12, 19).seg(5, 12, 19, 12) }},
-	"minus":    {stroke: func(b iconBrush) { b.seg(5, 12, 19, 12) }},
-	"close":    {stroke: func(b iconBrush) { b.seg(6, 6, 18, 18).seg(18, 6, 6, 18) }},
-	"check":    {stroke: func(b iconBrush) { b.seg(4.5, 12.5, 9.5, 17.5, 19.5, 6.5) }},
+	"plus":  {stroke: func(b iconBrush) { b.seg(12, 5, 12, 19).seg(5, 12, 19, 12) }},
+	"minus": {stroke: func(b iconBrush) { b.seg(5, 12, 19, 12) }},
+	"close": {stroke: func(b iconBrush) { b.seg(6, 6, 18, 18).seg(18, 6, 6, 18) }},
+	"check": {stroke: func(b iconBrush) { b.seg(4.5, 12.5, 9.5, 17.5, 19.5, 6.5) }},
 	"search": {stroke: func(b iconBrush) {
 		b.circle(10.5, 10.5, 6.5)
 		b.seg(15.5, 15.5, 20.5, 20.5)
 	}},
-	"up":      {stroke: func(b iconBrush) { b.seg(6, 15, 12, 9, 18, 15) }},
-	"down":    {stroke: func(b iconBrush) { b.seg(6, 9, 12, 15, 18, 9) }},
-	"left":    {stroke: func(b iconBrush) { b.seg(15, 6, 9, 12, 15, 18) }},
-	"right":   {stroke: func(b iconBrush) { b.seg(9, 6, 15, 12, 9, 18) }},
-	"menu":    {stroke: func(b iconBrush) { b.seg(4, 6, 20, 6).seg(4, 12, 20, 12).seg(4, 18, 20, 18) }},
+	"up":    {stroke: func(b iconBrush) { b.seg(6, 15, 12, 9, 18, 15) }},
+	"down":  {stroke: func(b iconBrush) { b.seg(6, 9, 12, 15, 18, 9) }},
+	"left":  {stroke: func(b iconBrush) { b.seg(15, 6, 9, 12, 15, 18) }},
+	"right": {stroke: func(b iconBrush) { b.seg(9, 6, 15, 12, 9, 18) }},
+	"menu":  {stroke: func(b iconBrush) { b.seg(4, 6, 20, 6).seg(4, 12, 20, 12).seg(4, 18, 20, 18) }},
 	"calendar": {stroke: func(b iconBrush) {
 		b.move(4, 6).line(20, 6)
 		b.seg(8, 3, 8, 7).seg(16, 3, 16, 7)

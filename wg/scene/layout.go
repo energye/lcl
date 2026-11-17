@@ -155,6 +155,14 @@ func (n *Node) desiredText(c Constraints) geom.Size {
 	if target > 0 && absf(target-n.text.LayoutW) > 0.5 {
 		// 宽度变了就重排。LayoutText 内部按 (字体, 文本) 缓存度量，
 		// 所以这里不是"每帧调 GDI"，而是缓存命中。
+		//
+		// 字体优先取 TextSpec.LayoutFont；没填时退回 Layout 自带的字体。
+		// 缺了这条回退会用零值字体重排——字号/行高全变，真窗表现是
+		// "重建后文字整体变大/偏移"（输入框 hover 移出后右下偏移的根因）。
+		font := n.text.LayoutFont
+		if font.Size <= 0 && n.text.Layout != nil {
+			font = n.text.Layout.Font
+		}
 		opts := text.Options{
 			MaxWidth:   target,
 			MaxLines:   n.text.MaxLines,
@@ -162,7 +170,7 @@ func (n *Node) desiredText(c Constraints) geom.Size {
 			Align:      n.text.Layout.Align,
 			LineHeight: 0,
 		}
-		n.text.Layout = text.LayoutText(n.text.Src, n.text.LayoutFont, opts)
+		n.text.Layout = text.LayoutText(n.text.Src, font, opts)
 		n.text.LayoutW = target
 	}
 	sz := n.text.Layout.Size

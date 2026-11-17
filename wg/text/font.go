@@ -183,6 +183,7 @@ func ClearMeasureCache() {
 	measureCache.Lock()
 	measureCache.m = make(map[string]geom.Size, 256)
 	measureCache.Unlock()
+	clearPlatformCaches()
 }
 
 func cacheKey(s string, f Font) string {

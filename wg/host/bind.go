@@ -62,12 +62,28 @@ func clientUpdateRect(hwnd uintptr) geom.Rect {
 // 也会被及时派发（showcase 的实证做法）。
 const wmRequestPresent = 0x8000 + 0x21
 
+// wmRequestRender 是私有"整帧渲染"消息（P0：组合移到主线程）。
+//
+// 帧时钟（定时器 goroutine）只投递它并等待完成：布局/录制/合成/呈现全部
+// 在窗口主线程执行，与输入分发同线程——彻底消除"输入命中 vs 帧线程布局"
+// 的穿线竞态（showcase 的帧槽模型）。
+const wmRequestRender = 0x8000 + 0x23
+
 // PostPresent 请求主线程尽快呈现（在帧泵 goroutine 调用；Presenter 自带
 // 合并标记，一条消息对应最新像素）。
 func PostPresent(hwnd uintptr) {
 	if hwnd != 0 {
 		procPostMessage.Call(hwnd, wmRequestPresent, 0, 0)
 	}
+}
+
+// PostRender 请求主线程执行一帧渲染；返回是否投递成功。
+func PostRender(hwnd uintptr) bool {
+	if hwnd == 0 {
+		return false
+	}
+	r, _, _ := procPostMessage.Call(hwnd, wmRequestRender, 0, 0)
+	return r != 0
 }
 
 // trackMouseEvent 是 TRACKMOUSEEVENT。
@@ -91,12 +107,21 @@ type Binder struct {
 	ime    *IMEBridge
 	// presenter 在 WM_PAINT 中把缓存帧提交到窗口 DC（呈现链路最后一公里）。
 	presenter *Presenter
+	// render 由容器注入：收到 wmRequestRender 时在主线程执行一帧
+	// （布局+录制+合成+呈现，与输入同线程）。
+	render func()
 
 	installed bool
 	tracking  bool
 	captured  bool
 	lastCur   scene.Cursor
 	cursorSet bool
+
+	// imeCaret 是最近一次上报的 IME 光标矩形（客户区坐标）。
+	// 组合窗/候选窗在 DefWindowProc 里会被重置，必须在默认处理之后用
+	// 这份快照重新摆位（与 canvas_ime 的 PositionIME 同一套路）。
+	imeCaret   geom.Rect
+	imeCaretOK bool
 }
 
 // NewBinder 创建绑定器。
@@ -144,6 +169,9 @@ func (b *Binder) SetIMEBridge(br *IMEBridge) {
 // SetPresenter 绑定呈现器：WM_PAINT 时由它把缓存帧提交到窗口 DC。
 func (b *Binder) SetPresenter(p *Presenter) { b.presenter = p }
 
+// SetRender 绑定主线程渲染回调（wmRequestRender 的处理器）。
+func (b *Binder) SetRender(fn func()) { b.render = fn }
+
 // Normalizer 返回归一化器。
 func (b *Binder) Normalizer() *Normalizer { return b.norm }
 
@@ -157,6 +185,9 @@ func (b *Binder) Install() error {
 	}
 	b.form.SetOnWndProc(b.WndProc)
 	b.installed = true
+	// 输入法上下文：越早越好（Install 时窗口已获句柄；拿不到会在
+	// WM_SETFOCUS 再补）。
+	b.router.AttachIME()
 	return nil
 }
 
@@ -170,11 +201,18 @@ func (b *Binder) Uninstall() {
 	if b.form == nil || !b.installed {
 		return
 	}
+	b.router.DetachIME()
 	if b.captured {
 		procReleaseCapture.Call()
 		b.captured = false
 	}
 	b.installed = false
+}
+
+// SetIMECaret 把组合窗/候选窗摆到光标处（客户端像素坐标）。
+func (b *Binder) SetIMECaret(rect geom.Rect) {
+	b.imeCaret, b.imeCaretOK = rect, true
+	b.router.SetIMECaret(rect)
 }
 
 // WndProc 是接管后的窗口过程。
@@ -189,6 +227,16 @@ func (b *Binder) WndProc(msg *types.TLMessage) {
 		WParam: uintptr(msg.WParam),
 		LParam: uintptr(msg.LParam),
 		Time:   messageTime(),
+	}
+
+	// 私有渲染消息：在主线程执行整帧（布局/录制/合成/呈现）。这是帧的
+	// 唯一渲染入口；帧时钟只投递并等待完成（单 outstanding）。
+	if m.Msg == wmRequestRender {
+		if b.render != nil {
+			b.render()
+		}
+		msg.Result = 0
+		return
 	}
 
 	// 私有呈现消息：闭环呈现（画完才允许投下一帧，慢帧后留输入空档）。
@@ -239,6 +287,15 @@ func (b *Binder) WndProc(msg *types.TLMessage) {
 
 	if !consumed {
 		b.form.InheritedWndProc(msg)
+	}
+	// 组合窗/候选窗必须在默认处理之后重新摆位：DefWindowProc 处理
+	// WM_IME_STARTCOMPOSITION / WM_IME_SETCONTEXT 时会重设 IME 窗口位置，
+	// 默认位置就是"候选框跑到窗口角落"的来源（canvas_ime 的实测结论）。
+	switch m.Msg {
+	case wmIMEStartComposition, wmIMEComposition, wmIMESetContext:
+		if b.imeCaretOK {
+			b.router.SetIMECaret(b.imeCaret)
+		}
 	}
 }
 

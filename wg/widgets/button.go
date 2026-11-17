@@ -7,8 +7,8 @@ import (
 	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/render"
 	"github.com/energye/lcl/wg/scene"
-	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/text"
+	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
 )
 
@@ -59,11 +59,11 @@ type Button struct {
 	Type     ButtonType
 	Size     ui.Size
 	Shape    ButtonShape
-	Danger   bool   // 危险按钮（语义色整体切到 Danger 系）
-	Loading  bool   // 加载中：显示旋转指示并忽略点击
-	Block    bool   // 宽度占满父级交叉轴
+	Danger   bool // 危险按钮（语义色整体切到 Danger 系）
+	Loading  bool // 加载中：显示旋转指示并忽略点击
+	Block    bool // 宽度占满父级交叉轴
 	Disabled bool
-	Icon     *Icon  // 前置图标（Loading 时被旋转指示替代）
+	Icon     *Icon // 前置图标（Loading 时被旋转指示替代）
 	OnClick  func()
 }
 

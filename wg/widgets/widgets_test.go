@@ -73,8 +73,8 @@ func TestListReusesSameKey(t *testing.T) {
 }
 
 func TestScrollKeepsAxis(t *testing.T) {
-	n := Scroll{Axis: scene.Horizontal, Width: 100, Height: 40,
-		Child: Spacer{Width: 400, Height: 20}}.Build(testCtx())
+	n := (&Scroll{Axis: scene.Horizontal, Width: 100, Height: 40,
+		Child: Spacer{Width: 400, Height: 20}}).Build(testCtx())
 	n.Layout(scene.Unbounded())
 	if s := n.Size(); s.W != 100 || s.H != 40 {
 		t.Fatalf("视口尺寸 = %+v", s)

@@ -580,4 +580,3 @@ func (c *collapseItem) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	return root
 }
-

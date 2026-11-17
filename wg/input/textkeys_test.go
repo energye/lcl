@@ -113,3 +113,26 @@ func TestKeyHandlerCtrlWordMovement(t *testing.T) {
 		t.Fatalf("Ctrl+→ 光标 = %d，应为 8", c)
 	}
 }
+
+// TestKeyHandlerKeyUpDoesNotEdit 锁定"按下/抬起只执行一次编辑动作"。
+//
+// 真窗里 WM_KEYDOWN 与 WM_KEYUP 都会分发到焦点节点；旧实现不区分 Kind，
+// 方向键一次移动两格、Backspace 一次删两字。
+func TestKeyHandlerKeyUpDoesNotEdit(t *testing.T) {
+	e, h := newKeyEditor(false)
+	e.SetValue(EditingValue{Text: "abc", Selection: RangeAt(3)})
+	if !h.Handle(&KeyEvent{Kind: KeyUp, Code: CodeLeft}) {
+		t.Fatal("抬起事件应消费，但不应执行编辑")
+	}
+	if got := e.Value().Selection.End; got != 3 {
+		t.Fatalf("KeyUp 左移了光标：%d", got)
+	}
+	h.Handle(&KeyEvent{Kind: KeyUp, Code: CodeBackspace})
+	if got := e.Value().Text; got != "abc" {
+		t.Fatalf("KeyUp Backspace 删除了文本：%q", got)
+	}
+	h.Handle(&KeyEvent{Kind: KeyDown, Code: CodeLeft})
+	if got := e.Value().Selection.End; got != 2 {
+		t.Fatalf("KeyDown 左移应一格：%d", got)
+	}
+}

@@ -970,6 +970,42 @@ func (n *Node) SetMargin(ins geom.Insets) *Node {
 	return n
 }
 
+// SetMarginPaint 设置外边距并只标绘制脏。
+//
+// 只用于父级尺寸固定、外距变化不影响兄弟布局的场景（输入框横向滚动）。
+// 调用方必须同时 SetOffsetPaint 把节点当前偏移改到位：没有布局趟，
+// margin 自己要等下一次布局才会转成 offset。
+func (n *Node) SetMarginPaint(ins geom.Insets) *Node {
+	n.margin = ins
+	n.MarkNeedsPaint()
+	return n
+}
+
+// SetOffsetPaint 直接改节点偏移并只标绘制脏。
+//
+// 布局器下一次运行仍会按 margin/position 重新定位；本方法只负责让
+// 当前帧的像素与命中测试立刻用上新位置（文本内滚动、光标移动）。
+func (n *Node) SetOffsetPaint(p geom.Point) *Node {
+	n.offset = p
+	n.MarkNeedsPaint()
+	return n
+}
+
+// SetStackPositionPaint 更新绝对定位坐标并只标绘制脏。
+//
+// 与 SetStackPosition 的差别只是不冒泡布局脏。适用条件：父级尺寸固定，
+// 本节点尺寸不参与父布局（光标条、被固定框包住的文本）。
+func (n *Node) SetStackPositionPaint(p geom.Point) *Node {
+	n.position = p
+	n.positioned = true
+	if n.parent != nil {
+		o := n.parent.ContentOrigin()
+		n.offset = geom.Pt(o.X+p.X+n.margin.Left, o.Y+p.Y+n.margin.Top)
+	}
+	n.MarkNeedsPaint()
+	return n
+}
+
 // SetWidth 固定宽度（NaN 恢复自动）。
 func (n *Node) SetWidth(w float32) *Node { n.fixedW = w; n.MarkNeedsLayout(); return n }
 
@@ -1072,11 +1108,18 @@ func (n *Node) SetOverflow(v bool) *Node { n.overflow = v; return n }
 // 滚动**不触发重排**：只重摆自己的子节点（placeScroll），因为内容尺寸不随
 // 偏移改变。子节点的 Layout 会命中约束缓存，所以这里只改写 offset，O(子树)。
 // 如果走 MarkNeedsLayout，一次滚轮就会把整页重排一遍——这是滚动掉帧的经典原因。
+// SetScrollOffset 设置滚动偏移。
+//
+// 内容尺寸还没测量（Build 期恢复跨重建偏移）时按原值记录，布局阶段
+// placeScroll 会按真实内容钳制——否则首次恢复会被 maxScroll()=0 吃掉。
 func (n *Node) SetScrollOffset(v float32) *Node {
 	if n.kind != KindScroll {
 		return n
 	}
-	next := clampf(v, 0, n.maxScroll())
+	next := v
+	if n.contentSize.W > 0 || n.contentSize.H > 0 {
+		next = clampf(v, 0, n.maxScroll())
+	}
 	if next == n.scrollOffset {
 		return n
 	}
@@ -1120,6 +1163,24 @@ func (n *Node) SetText(spec TextSpec) *Node {
 		n.size = s.Layout.Size
 	}
 	n.MarkNeedsLayout()
+	return n
+}
+
+// SetTextPaint 更新文本内容并只标绘制脏。
+//
+// 与 SetText 的差别：不冒泡布局脏。适用条件是"文本尺寸变化不影响父/兄弟
+// 布局"——输入框文本层（父框固定尺寸）、固定宽状态栏。调用方必须把父容器
+// 一并标脏：文本变短时旧字形要用父级底色覆盖，否则会留残影。
+func (n *Node) SetTextPaint(spec TextSpec) *Node {
+	if n.kind != KindText {
+		return n
+	}
+	s := spec
+	n.text = &s
+	if s.Layout != nil {
+		n.size = s.Layout.Size
+	}
+	n.MarkNeedsPaint()
 	return n
 }
 

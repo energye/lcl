@@ -75,6 +75,19 @@ type BuildContext struct {
 	Viewport geom.Size
 	// ViewportUse 由宿主注入：ViewportSize() 调用它登记依赖。
 	ViewportUse func()
+	// ReportIMECaret 由输入控件在 Build 时上报光标锚点：node 是控件节点，
+	// local 是相对该节点的光标矩形（像素）。传 node=nil 表示登记者放弃光标。
+	//
+	// owner 是登记者的身份（通常是控件自身）：页面上可能有多个输入框，
+	// 未聚焦的输入框也会按"我没有光标"上报 nil。宿主必须按 owner 归属
+	// 处理，否则后构建的未聚焦输入框会把已聚焦输入框刚上报的锚点清掉
+	//（真窗表现：刚点进输入框时 IME 候选框/插入符定位丢失）。
+	ReportIMECaret func(owner any, node *scene.Node, local geom.Rect)
+	// ReportCaret 由输入控件上报"正在闪烁的插入符节点"。非 nil 时宿主
+	// 按系统节奏（530ms）切换其可见性并按时申请下一帧；node=nil 且
+	// owner 与当前登记者一致时才停止闪烁（语义同 ReportIMECaret）。
+	// 编辑/移动光标时重新上报同一节点会重置相位（刚敲完字不会立刻变暗）。
+	ReportCaret func(owner any, node *scene.Node)
 }
 
 // ViewportSize 返回视口尺寸（DIP）并登记"本组件依赖视口"。

@@ -177,18 +177,18 @@ func RequiredRule(msg string) Validator {
 // Form 是表单容器。校验器按字段名注册，Validate 汇总错误。
 type Form struct {
 	ui.Base
-	Items     []FormItem
-	Values    map[string]string
+	Items      []FormItem
+	Values     map[string]string
 	Validators map[string][]Validator
-	Errors    map[string]string
+	Errors     map[string]string
 }
 
 // NewForm 创建表单。
 func NewForm() *Form {
 	return &Form{
-		Values: make(map[string]string),
+		Values:     make(map[string]string),
 		Validators: make(map[string][]Validator),
-		Errors: make(map[string]string),
+		Errors:     make(map[string]string),
 	}
 }
 

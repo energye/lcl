@@ -31,13 +31,13 @@ func captureHost(ctx *ui.BuildContext) feedbackHost {
 
 // Modal 是模态对话框。Content 为自定义内容，按钮为确定/取消。
 type Modal struct {
-	Title    string
-	Content  ui.Widget
-	Confirm  string
-	Cancel   string
-	Width    float32
+	Title     string
+	Content   ui.Widget
+	Confirm   string
+	Cancel    string
+	Width     float32
 	OnConfirm func()
-	OnCancel func()
+	OnCancel  func()
 
 	handle overlay.Handle
 	fb     feedbackHost
@@ -74,7 +74,7 @@ func (m *Modal) Show(ctx *ui.BuildContext) {
 		Build: func() *scene.Node {
 			col := scene.Flex(scene.Vertical, th.Space.MD).SetWidth(w)
 			col.SetBox(scene.BoxSpec{
-				Fill: scene.Solid(th.Color.Surface),
+				Fill:   scene.Solid(th.Color.Surface),
 				Border: scene.Stroke(th.Color.BorderStrong, 1),
 				Radius: th.Radius.LG,
 			})
@@ -205,7 +205,7 @@ func (d *Drawer) Show(ctx *ui.BuildContext) {
 		Build: func() *scene.Node {
 			col := scene.Flex(scene.Vertical, th.Space.MD).SetWidth(w).SetHeight(400)
 			col.SetBox(scene.BoxSpec{
-				Fill: scene.Solid(th.Color.Surface),
+				Fill:   scene.Solid(th.Color.Surface),
 				Border: scene.Stroke(th.Color.Border, 1),
 			})
 			col.SetPadding(geom.InLTRB(th.Space.LG, th.Space.LG, th.Space.LG, th.Space.LG))
@@ -280,7 +280,7 @@ func (n *Notification) Show(ctx *ui.BuildContext) {
 		Build: func() *scene.Node {
 			col := scene.Flex(scene.Vertical, 4).SetWidth(280).SetHeight(72)
 			col.SetBox(scene.BoxSpec{
-				Fill: scene.Solid(th.Color.Surface),
+				Fill:   scene.Solid(th.Color.Surface),
 				Border: scene.Stroke(th.Color.Border, 1), Radius: th.Radius.Base,
 			})
 			col.SetPadding(geom.InLTRB(12, 10, 12, 10))
@@ -369,7 +369,7 @@ func (p *Popconfirm) show(ctx *ui.BuildContext, anchor *scene.Node) {
 		Build: func() *scene.Node {
 			col := scene.Flex(scene.Vertical, th.Space.SM).SetWidth(240)
 			col.SetBox(scene.BoxSpec{
-				Fill: scene.Solid(th.Color.Surface),
+				Fill:   scene.Solid(th.Color.Surface),
 				Border: scene.Stroke(th.Color.Border, 1), Radius: th.Radius.Base,
 			})
 			col.SetPadding(geom.InLTRB(12, 10, 12, 10))
