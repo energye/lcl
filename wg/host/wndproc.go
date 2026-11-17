@@ -26,10 +26,13 @@ const (
 	wmMouseMove      = 0x0200
 	wmLButtonDown    = 0x0201
 	wmLButtonUp      = 0x0202
+	wmLButtonDblClk  = 0x0203
 	wmRButtonDown    = 0x0204
 	wmRButtonUp      = 0x0205
+	wmRButtonDblClk  = 0x0206
 	wmMButtonDown    = 0x0207
 	wmMButtonUp      = 0x0208
+	wmMButtonDblClk  = 0x0209
 	wmMouseWheel     = 0x020A
 	wmCaptureChanged = 0x0215
 	wmMouseLeave     = 0x02A3
@@ -221,7 +224,11 @@ func (r *Router) decode(m Message) []RawEvent {
 			Buttons: buttonsFromWParam(m.WParam), Mods: r.mods, Time: t,
 		}}
 
-	case wmLButtonDown, wmRButtonDown, wmMButtonDown:
+	// 双击消息也必须当"按下"解码：LCL 窗口类带 CS_DBLCLKS，快速连点时
+	// Windows 只把后续按下投成 WM_*BUTTONDBLCLK。以前只认 *_DOWN，第二次
+	// 点击被丢弃（随后孤立的 Up 也凑不成手势）——连点 8 次只触发 3 次。
+	case wmLButtonDown, wmRButtonDown, wmMButtonDown,
+		wmLButtonDblClk, wmRButtonDblClk, wmMButtonDblClk:
 		return []RawEvent{{Kind: RawDown, X: cx, Y: cy, Button: btn, Mods: r.mods, Time: t}}
 
 	case wmLButtonUp, wmRButtonUp, wmMButtonUp:
@@ -277,11 +284,11 @@ func clientXY(l uintptr) (int32, int32) {
 // buttonFromMsg 返回消息对应的按钮序号。
 func buttonFromMsg(msg uint32) int {
 	switch msg {
-	case wmLButtonDown, wmLButtonUp:
+	case wmLButtonDown, wmLButtonUp, wmLButtonDblClk:
 		return 0
-	case wmRButtonDown, wmRButtonUp:
+	case wmRButtonDown, wmRButtonUp, wmRButtonDblClk:
 		return 1
-	case wmMButtonDown, wmMButtonUp:
+	case wmMButtonDown, wmMButtonUp, wmMButtonDblClk:
 		return 2
 	}
 	return 0

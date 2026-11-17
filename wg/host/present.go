@@ -2,6 +2,8 @@ package host
 
 import (
 	"sync"
+	"sync/atomic"
+	"time"
 
 	"github.com/energye/lcl/lcl"
 
@@ -36,7 +38,7 @@ type Presenter struct {
 	// repaint 请求窗口重绘（LCL Repaint/Invalidate）。
 	repaint func()
 
-	b       *raster.Backing
+	b *raster.Backing
 	// own 是 Presenter 自己持有的稳定副本：合成器的 Backing 在下一帧会被
 	// 覆写，若 Paint 直接读它，主线程与帧泵线程会竞争同一块像素（撕裂），
 	// 且在某些驱动上 StretchDIBits 会因源缓冲正被写入而失败。
@@ -44,6 +46,19 @@ type Presenter struct {
 	damage  geom.Rect
 	frames  int
 	painted int
+
+	// post 请求主线程尽快呈现（真窗：PostMessage(WM_APP+n)）。
+	post func()
+	// presenting 是闭环槽：一条呈现消息在队列里或正在主线程画时保持 true，
+	// 画完才允许投下一帧——否则 post 队列永远不空，硬件输入（鼠标/键盘）
+	// 在 GetMessage 的优先级里永远排在 posted 之后 = 最大化后点不动。
+	presenting atomic.Bool
+	// missed 表示"上一帧还在画时又来了新帧"：画完立刻补投一次。
+	missed atomic.Bool
+	// paintCostUs 是最近一次主线程提交的耗时（微秒）。超过一帧预算时，
+	// 帧泵在投递下一帧前留出 inputBreath 的空队列窗口，让输入先被取走
+	// （showcase §9：慢帧后必须给 GetMessage 留机会，否则输入饿死）。
+	paintCostUs atomic.Int64
 }
 
 // PresentStats 是呈现统计（诊断与单测用）。
@@ -67,7 +82,89 @@ func NewPresenter(hwnd uintptr, h *Host) *Presenter {
 func (p *Presenter) SetCanvas(fn func() lcl.ICanvas) { p.canvas = fn }
 
 // SetRepaint 设置重绘请求函数（LCL Repaint）。
-func (p *Presenter) SetRepaint(fn func()) { p.repaint = fn }
+func (p *Presenter) SetRepaint(fn func()) {
+	p.mu.Lock()
+	p.repaint = fn
+	p.mu.Unlock()
+}
+
+// SetPost 设置"请求主线程尽快呈现"的投递函数（真窗为 PostMessage(WM_APP+n)）。
+//
+// 为什么要 posted 消息：GetMessage 的优先级是 sent > posted > 硬件输入 >
+// WM_PAINT。帧泵在 goroutine 里合成，若只靠 InvalidateRect 等 WM_PAINT，
+// 拖动/连续鼠标消息会把它饿死（内容不跟窗）。posted 消息在模态尺寸循环里
+// 也会被及时派发，showcase 同款做法。
+func (p *Presenter) SetPost(fn func()) {
+	p.mu.Lock()
+	p.post = fn
+	p.mu.Unlock()
+}
+
+// PresentDone 在主线程处理完一条呈现消息后调用：同步提交 + 释放闭环槽。
+//
+// 画完才允许下一帧投递（showcase 的 FrameDone 语义）：否则慢帧下 post
+// 队列永不空，硬件输入（鼠标/键盘）在 GetMessage 的优先级里排在 posted
+// 之后，永远轮不到 = "内容还在动，但窗口点不动"。
+//
+// 画期间又来了新帧（missed）时**不能在主线程里直接补投**：主线程还没
+// 回到 GetMessage，队列一空就被自己填上，输入照样没机会。慢帧用
+// AfterFunc 把补投推迟 inputBreath，让主线程先取走挂起输入。
+func (p *Presenter) PresentDone() {
+	p.RepaintNow()
+	p.presenting.Store(false)
+	if !p.missed.Swap(false) {
+		return
+	}
+	if p.paintCostUs.Load() > int64(frameBudget) {
+		time.AfterFunc(inputBreath, p.postMissed)
+	} else {
+		p.postMissed()
+	}
+}
+
+// postMissed 补投一帧（timer goroutine 或主线程调用）。
+func (p *Presenter) postMissed() {
+	if !p.presenting.CompareAndSwap(false, true) {
+		return
+	}
+	p.mu.RLock()
+	post := p.post
+	p.mu.RUnlock()
+	if post == nil {
+		p.presenting.Store(false)
+		return
+	}
+	post()
+}
+
+// RepaintNow 在主线程同步提交（LCL Repaint = Invalidate+Update → 立即
+// OnPaint → Paint，不等低优先级 WM_PAINT）。
+func (p *Presenter) RepaintNow() {
+	p.mu.RLock()
+	fn := p.repaint
+	p.mu.RUnlock()
+	if fn != nil {
+		fn()
+	}
+}
+
+// inputBreath 是慢帧后留给输入的取消息窗口。
+//
+// GetMessage 的优先级 posted > 硬件输入：只要 post 队列里一直有我们的
+// 呈现消息，鼠标/键盘就永远排不上。慢帧（提交超过一帧预算）之后在投递
+// 前空出 1.5ms，主线程会在这段时间进入 GetMessage 取走挂起输入
+// （showcase §9 的实证值；正常 60Hz 帧不付这笔钱）。
+const inputBreath = 1500 * time.Microsecond
+
+// frameBudget 是 60Hz 的单帧预算；超过即视为慢帧。
+const frameBudget = 16 * time.Millisecond
+
+// breathIfSlow 在上一帧超预算时睡 inputBreath（帧泵 goroutine 调用）。
+func (p *Presenter) breathIfSlow() {
+	if p.paintCostUs.Load() > int64(frameBudget) {
+		time.Sleep(inputBreath)
+	}
+}
 
 // Frame 记录一帧合成结果，并让窗口无效化以便在 OnPaint 中提交。
 // damage 为空表示整帧（headless 出图时常见）。
@@ -122,6 +219,7 @@ func (p *Presenter) Frame(b *raster.Backing, damage geom.Rect) {
 // Paint 把缓存帧提交到窗口 DC；没有缓存或提交失败返回 false。
 // 必须在窗口主线程（WM_PAINT 处理中）调用。
 func (p *Presenter) Paint() bool {
+	began := time.Now()
 	p.mu.RLock()
 	b := p.own
 	d := p.damage
@@ -135,6 +233,7 @@ func (p *Presenter) Paint() bool {
 	p.mu.Lock()
 	p.painted++
 	p.mu.Unlock()
+	p.paintCostUs.Store(int64(time.Since(began)))
 	return true
 }
 
@@ -151,10 +250,17 @@ func (p *Presenter) Stats() PresentStats {
 }
 
 // Close 释放平台资源。
+//
+// 同时断开呈现通道：关闭后队列里可能还有一条已投递的呈现消息，WndProc
+// 拿到的会是空回调（不能再去碰正在销毁的 LCL 画布）。
 func (p *Presenter) Close() {
 	p.mu.Lock()
 	p.b = nil
 	p.own = nil
+	p.post = nil
+	p.repaint = nil
 	p.mu.Unlock()
+	p.presenting.Store(false)
+	p.missed.Store(false)
 	p.release()
 }

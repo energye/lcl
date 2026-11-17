@@ -289,7 +289,7 @@ func schedCases() []schedCase {
 		},
 		{
 			name: "resize-throttled-with-trailing",
-			want: "拖动中每 ~60ms 跟随、停下尾随取最后尺寸（C10）",
+			want: "拖动中每帧跟随、停下尾随取最后尺寸（C10）",
 			run: func() (string, error) {
 				r := newSchedRig(false)
 				defer r.s.Stop()
@@ -310,7 +310,7 @@ func schedCases() []schedCase {
 		},
 		{
 			name: "resize-trailing-pinned-to-last-fire",
-			want: "窗口内请求的尾随钉在 lastFire+60ms（不是从现在起算）",
+			want: "窗口内请求的尾随钉在 lastFire+一帧（不是从现在起算）",
 			run: func() (string, error) {
 				r := newSchedRig(false)
 				defer r.s.Stop()
@@ -318,11 +318,14 @@ func schedCases() []schedCase {
 				if len(r.sizes) != 1 || r.sizes[0] != "10x10" {
 					return fmt.Sprintf("%v", r.sizes), fmt.Errorf("首次应立即执行")
 				}
-				r.resize.Advance(50 * time.Millisecond)
-				r.s.RequestResize(20, 20)
-				r.resize.Advance(50 * time.Millisecond) // lastFire+60ms 已到
+				r.resize.Advance(10 * time.Millisecond) // 窗口内
+				r.s.RequestResize(20, 20)               // 尾随钉在 lastFire+一帧
+				if len(r.sizes) != 1 {
+					return fmt.Sprintf("%v", r.sizes), fmt.Errorf("窗口内请求不该立即执行")
+				}
+				r.resize.Advance(7 * time.Millisecond) // 越过 lastFire+16.667ms
 				if len(r.sizes) != 2 || r.sizes[1] != "20x20" {
-					return fmt.Sprintf("%v", r.sizes), fmt.Errorf("尾随应在 +60ms 触发 20x20")
+					return fmt.Sprintf("%v", r.sizes), fmt.Errorf("尾随应在 +一帧 触发 20x20")
 				}
 				return "ok", nil
 			},

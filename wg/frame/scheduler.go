@@ -16,14 +16,13 @@ const (
 	// "一次卡顿的上限"，超过就按上限积分——动画会慢一点，但不会跳。
 	DefaultMaxDelta = 250 * time.Millisecond
 
-	// DefaultResizeDebounce 是 resize 节流窗口（C10）。
-	// 连续拖动窗口边缘时 WM_SIZE 会以每帧一次的速度涌来（间隔常小于
-	// 窗口本身），每次都重分配后备存储 + 全量重排。纯尾随去抖在拖动中
-	// 一次都不会触发（每次请求都把闹钟推后），backing 停在旧尺寸，
-	// Presenter 全程拒提交、窗口冻结在旧帧 = "内容不跟窗"。
-	// 改为**节流 + 尾随**：拖动中每 60ms 真正跟随重排一次（前沿），
-	// 停下时尾随保证最后一次尺寸落地；间歇由旧帧等比拉伸铺满。
-	DefaultResizeDebounce = 60 * time.Millisecond
+	// DefaultResizeDebounce 是 resize 节流窗口（C10）：一个 60Hz 帧间隔。
+	// 连续拖动窗口边缘时 WM_SIZE 以 ~10–15ms 的间隔涌来（比帧间隔还密）。
+	// 纯尾随去抖在拖动中一次都不会触发（每次请求都把闹钟推后），backing
+	// 停在旧尺寸，Presenter 全程拒提交、窗口冻结在旧帧 = "内容不跟窗"。
+	// 节流窗口 = 一帧：拖动中**每帧跟随一次**（>1 帧的请求合并到下一拍），
+	// 停下时尾随保证最后一次尺寸落地；间歇由 DWM 拉伸旧帧兜底。
+	DefaultResizeDebounce = DefaultStep
 )
 
 // Options 是调度器配置。
@@ -129,6 +128,8 @@ func NewScheduler(opts Options) (*Scheduler, error) {
 	if rt == nil {
 		rt = NewTicker()
 	}
+	// 帧闹钟的精度前提：Windows 默认 15.6ms 粒度会把 16ms 帧钉成 ~31ms。
+	ensureTimerResolution()
 	return &Scheduler{opts: opts, resizeTicker: rt}, nil
 }
 
@@ -258,9 +259,9 @@ func (s *Scheduler) Present() {
 
 // RequestResize 申请改变合成目标尺寸。
 //
-// 节流 + 尾随语义（C10）：距上次真正执行满 ResizeDebounce 就立即执行
-// （前沿，首次请求也走这里）；否则把执行钉在 lastFire+ResizeDebounce
-// （尾随，多次请求只留最后一次尺寸）。连续拖动窗口 = 每 60ms 跟随一次，
+// 节流 + 尾随语义（C10）：距上次真正执行满 ResizeDebounce（=一帧）就立即
+// 执行（前沿，首次请求也走这里）；否则把执行钉在 lastFire+ResizeDebounce
+// （尾随，多次请求只留最后一次尺寸）。连续拖动窗口 = 每帧跟随一次，
 // 停下后必有一次收尾——纯尾随去抖在 WM_SIZE 间隔小于窗口时永远等不到
 // 静默期，拖拽全程一次都不执行（backing 停在旧尺寸，提交全程被拒）。
 func (s *Scheduler) RequestResize(w, h int) {

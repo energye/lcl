@@ -38,7 +38,24 @@ var (
 	procGetDC           = user32.NewProc("GetDC")
 	procReleaseDC       = user32.NewProc("ReleaseDC")
 	procInvalidateRect  = user32.NewProc("InvalidateRect")
+	procPostMessage     = user32.NewProc("PostMessageW")
 )
+
+// wmRequestPresent 是私有呈现消息（WM_APP 区间）。
+//
+// 为什么必须：GetMessage 的取消息顺序是 sent > posted > 硬件输入 >
+// WM_PAINT。帧泵在 goroutine 里合成，靠 InvalidateRect 等 WM_PAINT 会在
+// 拖动/连续鼠标消息下被饿死（内容不跟窗）。posted 消息在模态尺寸循环里
+// 也会被及时派发（showcase 的实证做法）。
+const wmRequestPresent = 0x8000 + 0x21
+
+// PostPresent 请求主线程尽快呈现（在帧泵 goroutine 调用；Presenter 自带
+// 合并标记，一条消息对应最新像素）。
+func PostPresent(hwnd uintptr) {
+	if hwnd != 0 {
+		procPostMessage.Call(hwnd, wmRequestPresent, 0, 0)
+	}
+}
 
 // trackMouseEvent 是 TRACKMOUSEEVENT。
 type trackMouseEvent struct {
@@ -154,6 +171,15 @@ func (b *Binder) WndProc(msg *types.TLMessage) {
 		Time:   messageTime(),
 	}
 
+	// 私有呈现消息：闭环呈现（画完才允许投下一帧，慢帧后留输入空档）。
+	if m.Msg == wmRequestPresent {
+		if b.presenter != nil {
+			b.presenter.PresentDone()
+		}
+		msg.Result = 0
+		return
+	}
+
 	// 修饰键用 GetKeyState 取，而不是靠 wParam 猜：键盘消息的 wParam
 	// 不含修饰位，鼠标消息的修饰位又可能与真实状态不同步。
 	b.router.SetMods(b.currentMods())
@@ -170,7 +196,8 @@ func (b *Binder) WndProc(msg *types.TLMessage) {
 	// OS 级捕获：按下时抓住，全部抬起时释放。逻辑捕获（Dispatcher）
 	// 决定"谁收事件"，OS 捕获决定"事件能不能到窗口"。
 	switch m.Msg {
-	case wmLButtonDown, wmRButtonDown, wmMButtonDown:
+	case wmLButtonDown, wmRButtonDown, wmMButtonDown,
+		wmLButtonDblClk, wmRButtonDblClk, wmMButtonDblClk:
 		if !b.captured {
 			procSetCapture.Call(b.hwnd)
 			b.captured = true

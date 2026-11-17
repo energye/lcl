@@ -319,11 +319,14 @@ func TestResizeTrailingPinnedToLastFire(t *testing.T) {
 	if len(r.sizes) != 1 || r.sizes[0] != "10x10" {
 		t.Fatalf("首次 resize 应立即执行，实际 %v", r.sizes)
 	}
-	r.resize.Advance(50 * time.Millisecond)
-	r.s.RequestResize(20, 20) // 窗口内：尾随钉在 lastFire+60ms，而不是"从现在起 60ms"
-	r.resize.Advance(50 * time.Millisecond)
+	r.resize.Advance(10 * time.Millisecond) // 进入节流窗口
+	r.s.RequestResize(20, 20)               // 尾随钉在 lastFire+一帧，而不是"从现在起一帧"
+	if len(r.sizes) != 1 {
+		t.Fatalf("窗口内请求不该立即执行，实际 %v", r.sizes)
+	}
+	r.resize.Advance(7 * time.Millisecond) // 越过 lastFire+16.667ms
 	if len(r.sizes) != 2 || r.sizes[1] != "20x20" {
-		t.Fatalf("尾随应在 lastFire+60ms 触发 20x20，实际 %v", r.sizes)
+		t.Fatalf("尾随应在 lastFire+一帧触发 20x20，实际 %v", r.sizes)
 	}
 	r.resize.Advance(DefaultResizeDebounce)
 	if len(r.sizes) != 2 {

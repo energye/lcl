@@ -112,9 +112,9 @@ func ResizeTest() (ResizeResult, error) {
 	return res, nil
 }
 
-// caseBurstThrottled：7 次请求间隔 20ms（比 60ms 窗口密）。
-// 节流 + 尾随语义下：拖动中每 ~60ms 执行一次（不再是 0 次），停下后
-// 尾随把最后一次尺寸落地；最终执行的一定是最后的请求尺寸。
+// caseBurstThrottled：7 次请求间隔 20ms（密于一帧节流窗口）。
+// 节流 + 尾随语义下：拖动中每帧跟随一次（不再是 0 次），停下后尾随把
+// 最后一次尺寸落地；最终执行的一定是最后的请求尺寸。
 func caseBurstThrottled() (string, error) {
 	r := newResizeRig()
 	sizes := [][2]int{{800, 600}, {810, 600}, {820, 610}, {830, 620}, {840, 620}, {850, 640}, {860, 640}}
@@ -124,8 +124,8 @@ func caseBurstThrottled() (string, error) {
 	}
 	r.rtick.Advance(frame.DefaultResizeDebounce)
 	got := fmt.Sprintf("%d 次触发 %v", len(r.sizes), r.sizes)
-	if len(r.sizes) < 2 || len(r.sizes) > 5 {
-		return got, fmt.Errorf("拖动期间应有节流触发的 resize（2–5 次）")
+	if len(r.sizes) < 2 || len(r.sizes) > len(sizes) {
+		return got, fmt.Errorf("拖动期间应每帧跟随（2–%d 次）", len(sizes))
 	}
 	if r.sizes[0] != "800x600" {
 		return got, fmt.Errorf("首次请求应前沿立即执行")

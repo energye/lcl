@@ -715,8 +715,8 @@ func (c *Container) TickTime(now time.Time) {
 // ResizeRequest 实现 host.ResizeSink：把平台尺寸变化转给节流调度器。
 //
 // 不能直接调 Resize：拖动窗口时会来几十条 WM_SIZE，每次都重建合成缓冲
-// 既慢又会让画面抖动。交给 scheduler 节流+尾随：拖动中每 ~60ms 跟随一次，
-// 停下后尾随保证最后尺寸落地（纯尾随在连续 WM_SIZE 下永不触发）。
+// 既慢又会让画面抖动。交给 scheduler 节流+尾随：拖动中每帧（~16.7ms）
+// 跟随一次，停下后尾随保证最后尺寸落地（纯尾随在连续 WM_SIZE 下永不触发）。
 func (c *Container) ResizeRequest(w, h int) {
 	c.mu.Lock()
 	s := c.sched
@@ -732,9 +732,12 @@ func (c *Container) ResizeRequest(w, h int) {
 
 // Resize 修改客户区尺寸并重建帧缓冲。
 //
-// 尺寸变化瞬间把**旧帧内容等比缩放铺进新缓冲**：resize 过渡期窗口的
-// 新暴露区域如果留白/残留旧背景，用户看到的就是"背景没同步窗口大小"；
-// 缩放铺满后（比例暂失真）等重排完成即恢复最终布局。
+// 这里**不做旧帧缩放**：resize 节流窗口是一帧，每次尺寸落地后
+// fireResize 都会立刻申请一帧整屏重绘（Resize 已 Invalidate 全根 +
+// layoutAll + widget MarkDirty），过渡帧由 DWM 拉伸上一张已提交帧兜底。
+// 旧版逐像素最近邻铺满（4.5M 像素 ×2 次整数除法）实测 2880×1557 一次
+// 要 46–55ms，全部花在消息线程上——最大化卡顿的主因，且那些像素从未
+// 被提交（Presenter 只提交与客户区同尺寸的帧），已删。
 func (c *Container) Resize(w, h int) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -742,35 +745,8 @@ func (c *Container) Resize(w, h int) {
 		return
 	}
 	c.host.Resize(w, h)
-	var old *raster.Backing
 	if c.comp != nil {
-		old = c.comp.Backing()
 		_ = c.comp.Resize(w, h)
-	}
-	// 旧帧内容等比缩放铺进新缓冲：最近邻逐像素映射（过渡帧质量足够，
-	// 60ms 内由紧随的重排恢复最终布局；backing 重建后自带清屏底色，
-	// 没有这条就会"背景不同步窗口大小"）。
-	if old != nil && w > 0 && h > 0 && (old.W() != w || old.H() != h) {
-		if nb := c.comp.Backing(); nb != nil {
-			ow, oh := old.W(), old.H()
-			dp, ds := nb.Pix(), nb.W()
-			op, os := old.Pix(), old.W()
-			for y := 0; y < h; y++ {
-				oy := y * oh / h
-				if oy >= oh {
-					oy = oh - 1
-				}
-				drow := y * ds
-				orow := oy * os
-				for x := 0; x < w; x++ {
-					ox := x * ow / w
-					if ox >= ow {
-						ox = ow - 1
-					}
-					dp[drow+x] = op[orow+ox]
-				}
-			}
-		}
 	}
 	c.host.Root().Invalidate(c.host.Root().LocalBounds())
 	if c.scene != nil {
@@ -813,11 +789,7 @@ func (c *Container) requestFrame() {
 			c.requested = true
 			if s := c.sched; s != nil {
 				c.mu.Unlock()
-				// 续帧走 RequestFrameIn(16ms) 而不是立即 RequestFrame：
-				// 帧内自驱动的动画页（Build 尾持续置脏）没有这一拍间隔
-				// 就会全速空转（deferred 链实测 400fps 拉满 CPU）——16ms
-				// 就是全局帧节拍；普通组件只是重绘推迟一帧（无感）。
-				s.RequestFrameIn(16 * time.Millisecond)
+				c.requestNextTick(s)
 				return
 			}
 		}
@@ -825,6 +797,32 @@ func (c *Container) requestFrame() {
 		return
 	}
 	c.deferred.Store(true)
+}
+
+// requestNextTick 申请"下一个 60Hz 边界"的帧（动画/自驱动续帧专用）。
+//
+// 为什么不是固定的"当前时刻 +16ms"：相对延迟会把每帧的合成耗时累加进
+// 周期（帧尾 +16ms → 实测 29ms/帧 ≈ 34fps）。钉在墙钟的绝对 16.667ms
+// 网格上，周期恒为 60Hz；超过一拍的慢帧自然跳到下一个边界（不补帧，
+// 与 showcase/Flutter 的 vsync 语义一致）。
+// 手动时钟保持固定 16ms：确定性门禁按 16ms 片推进，不引入网格相位。
+func (c *Container) requestNextTick(s *frame.Scheduler) {
+	s.RequestFrameIn(nextTickDelay(c.clock.Kind(), c.clock.Now(), frame.DefaultStep))
+}
+
+// nextTickDelay 计算"到下一个 60Hz 边界"的延迟。
+//
+// 墙钟：钉在绝对网格（delay ∈ (0, step]）；手动时钟保持固定 16ms 片长，
+// 确定性门禁不引入网格相位（详见 requestNextTick 的说明）。
+func nextTickDelay(kind frame.ClockKind, now, step time.Duration) time.Duration {
+	if kind == frame.Manual {
+		return 16 * time.Millisecond
+	}
+	delay := step - now%step
+	if delay <= 0 {
+		delay = step
+	}
+	return delay
 }
 
 // ensureCompositor 装配渲染管线（调用方持锁）。
@@ -1088,11 +1086,10 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 	if c.deferred.Swap(false) {
 		c.requested = true
 		if s := c.sched; s != nil {
-			// 续帧走 **RequestFrameIn(16ms)** 而不是立即 RequestFrame：
-			// 帧内自驱动的动画页（绘制闭包持续置脏）没有这一拍间隔就会
-			// 全速空转（deferred 链实测跑出 400fps 拉满 CPU）——16ms 就是
-			// 全局帧节拍；对普通组件只是把重绘推迟一帧（16ms，无感）。
-			s.RequestFrameIn(16 * time.Millisecond)
+			// 续帧钉在 60Hz 绝对网格（见 requestNextTick）；相对 16ms 会把
+			// 合成耗时累加进周期，且帧内自驱动的动画页没有这一拍间隔就会
+			// 全速空转（deferred 链实测跑出 400fps 拉满 CPU）。
+			c.requestNextTick(s)
 		}
 	}
 	return st, nil
@@ -1151,7 +1148,8 @@ func (c *Container) Start() error {
 			st, ferr := c.FrameOnce()
 			if ferr == nil && c.animating.Load() && c.sched != nil {
 				// 60Hz 节拍续帧：动态组件驱动渲染；静止窗不进此分支（C14）。
-				c.sched.RequestFrameIn(16 * time.Millisecond)
+				// 钉在绝对帧网格上（requestNextTick），慢帧跳过错过的边界。
+				c.requestNextTick(c.sched)
 			}
 			return ferr == nil && st.Presented
 		},
@@ -1181,6 +1179,9 @@ func (c *Container) Start() error {
 			return nil
 		})
 		p.SetRepaint(c.host.Repaint)
+		// 帧泵在 goroutine 里合成完就 post 一条高优先级呈现消息（posted 优先
+		// 于硬件输入与 WM_PAINT，拖动 resize 时不会被饿死）。
+		p.SetPost(func() { host.PostPresent(uintptr(c.form.Handle())) })
 		c.host.OnPaint = func(cv lcl.ICanvas) {
 			_ = cv // Presenter 自己取 Canvas，这里只触发提交
 			p.Paint()

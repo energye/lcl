@@ -78,7 +78,13 @@ func (p *Presenter) ensureBuffer(w, h int) bool {
 		bmp.Free()
 		return false
 	}
-	stride := w * 3 // Pf24bit：3 字节/像素，行间无填充
+	// 行跨距必须实测：24bpp 的 TRawImage 行按 4 字节对齐（实测 W=101 →
+	// stride=304 而非 303）。按 w*3 写非 4 对齐宽度会让每行错位 1–3 字节，
+	// 画面出现逐行偏移（灰/彩色斜纹）——只有 W%4==0 的窗口才恰好正常。
+	stride := w * 3
+	if p0, p1 := intf.GetDataLineStart(0), intf.GetDataLineStart(1); p1 > p0 {
+		stride = int(p1 - p0)
+	}
 	pl.bmp, pl.intf, pl.w, pl.h, pl.stride = bmp, intf, w, h, stride
 	pl.pixels = pointerBytes(ptr, stride*h)
 	return true
@@ -168,9 +174,30 @@ func (p *Presenter) submit(b *raster.Backing, damage geom.Rect) bool {
 }
 
 // invalidate 在 LCL 路径下等价于请求重绘（像素在 OnPaint 里提交）。
+// invalidate 请求把新帧提交到窗口。
+//
+// 优先走 posted 消息（高优先级：GetMessage 顺序 sent > posted > 输入 >
+// WM_PAINT，拖动/连续输入下 WM_PAINT 会被饿死）；没有 post 通道时退回
+// LCL Repaint。
 func (p *Presenter) invalidate(damage geom.Rect) {
-	if p.repaint != nil {
-		p.repaint()
+	p.mu.RLock()
+	post := p.post
+	repaint := p.repaint
+	p.mu.RUnlock()
+	if post != nil {
+		// 闭环：上一帧还在队列里或正在画 → 只记 missed（合成缓冲区里已是
+		// 最新像素，下一次投递自然取到），不往队列里再压一条。
+		if !p.presenting.CompareAndSwap(false, true) {
+			p.missed.Store(true)
+			return
+		}
+		// 慢帧后先空出队列让输入先走，再投下一帧（showcase §9）。
+		p.breathIfSlow()
+		post()
+		return
+	}
+	if repaint != nil {
+		repaint()
 	}
 }
 
