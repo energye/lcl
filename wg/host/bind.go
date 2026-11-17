@@ -86,6 +86,7 @@ type Binder struct {
 	norm   *Normalizer
 	router *Router
 	form   lcl.IEngForm
+	sink   EventSink
 	hwnd   uintptr
 	ime    *IMEBridge
 	// presenter 在 WM_PAINT 中把缓存帧提交到窗口 DC（呈现链路最后一公里）。
@@ -102,13 +103,18 @@ type Binder struct {
 func NewBinder(h *Host, sink EventSink) *Binder {
 	norm := NewNormalizer(NewDPI(h.Scale()))
 	r := NewRouter(norm, sink)
-	b := &Binder{host: h, norm: norm, router: r, form: h.Form()}
+	b := &Binder{host: h, norm: norm, router: r, form: h.Form(), sink: sink}
 	r.SetScreenToClient(b.screenToClient)
 	// 只记录客户区尺寸；Surface 几何由容器在 c.mu 下应用（见 Host.SetClientSize）。
 	r.OnResize = func(w, hgt int) { b.host.SetClientSize(w, hgt) }
 	r.OnDPI = func(d DPI) {
 		b.norm.SetDPI(d)
-		b.host.RefreshScale()
+		if ds, ok := b.sink.(DPISink); ok {
+			// 容器路径：c.mu 下重排 + 重建 + 全根失效（见 Container.DPIChanged）。
+			ds.DPIChanged(d.Scale())
+			return
+		}
+		b.host.SetScale(d.Scale())
 	}
 	b.ime = NewIMEBridge(nil)
 	if b.form != nil {

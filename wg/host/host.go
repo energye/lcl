@@ -185,15 +185,23 @@ func (h *Host) Resize(w, hgt int) {
 	}
 }
 
-// RefreshScale 重新读取 DPI 缩放（DPI 变化时由 WndProc 调用）。
+// SetScale 更新画布缩放因子（线程安全，只写记录）。
+func (h *Host) SetScale(scale float32) {
+	d := NewDPI(scale)
+	h.mu.Lock()
+	h.scale = d.Scale()
+	h.mu.Unlock()
+}
+
+// RefreshScale 重新读取窗体 DPI 缩放（兼容入口）。
+//
+// **不再触碰 Surface 树**：DPI 变更的布局/重绘由容器在 c.mu 下统一应用
+// （见 Container.DPIChanged）；在消息线程直接失效根画布会与帧线程竞争。
 func (h *Host) RefreshScale() {
 	if h.form == nil {
 		return
 	}
 	if s := h.form.GetCanvasScaleFactor(); s > 0 {
-		h.mu.Lock()
-		h.scale = float32(s)
-		h.mu.Unlock()
+		h.SetScale(float32(s))
 	}
-	h.root.Invalidate(h.root.LocalBounds())
 }

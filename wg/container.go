@@ -765,6 +765,34 @@ func (c *Container) ResizeRequest(w, h int) {
 	c.RequestFrame()
 }
 
+// DPIChanged 实现 host.DPISink：DPI 变更在容器锁内应用。
+//
+// 平台回调（WM_DPICHANGED）在消息线程上只传事件；场景重排、组件重建与
+// 根画布失效都在 c.mu 下进行，与 resize goroutine、帧线程串行——消息
+// 线程直接改 Surface 会与整帧合成竞争（-race 实测）。文字度量/布局可能
+// 依赖新缩放，沿用 SetTheme 的保守整树重建。
+func (c *Container) DPIChanged(scale float32) {
+	c.mu.Lock()
+	if c.st == stateClosed || c.host == nil {
+		c.mu.Unlock()
+		return
+	}
+	c.host.SetScale(scale)
+	c.layoutAll = true
+	if m, ok := c.widget.(interface{ MarkDirty() }); ok {
+		m.MarkDirty()
+	}
+	if c.scene != nil {
+		c.scene.Relayout(c.rootConstraints())
+	}
+	c.host.Root().Invalidate(c.host.Root().LocalBounds())
+	c.requested.Store(true)
+	c.mu.Unlock()
+	c.RequestFrame()
+}
+
+var _ host.DPISink = (*Container)(nil)
+
 // Resize 修改客户区尺寸并重建帧缓冲。
 //
 // 这里**不做旧帧缩放**：resize 节流窗口是一帧，每次尺寸落地后

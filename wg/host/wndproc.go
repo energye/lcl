@@ -82,6 +82,14 @@ type ResizeSink interface {
 	ResizeRequest(w, h int)
 }
 
+// DPISink 由容器实现：DPI 变更必须走容器路径（c.mu 下重排/重建/重绘）。
+//
+// 平台回调只传事件：Surface 树不是线程安全的，消息线程直接改根画布会与
+// 帧线程的合成竞争（真窗 -race 实测）。
+type DPISink interface {
+	DPIChanged(scale float32)
+}
+
 // RouterStats 是路由统计。
 type RouterStats struct {
 	Messages int
