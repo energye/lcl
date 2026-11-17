@@ -18,8 +18,11 @@ const (
 
 	// DefaultResizeDebounce 是 resize 去抖窗口（C10）。
 	// 连续拖动窗口边缘时 WM_SIZE 会以每帧一次的速度涌来，
-	// 每次都重分配后备存储 + 全量重排，代价远大于"晚 180ms 看到最终尺寸"。
-	DefaultResizeDebounce = 180 * time.Millisecond
+	// 每次都重分配后备存储 + 全量重排。180ms 的去抖窗口里拒提交会让
+	// 拖动中的窗口长时间停在旧帧上（DWM 拉伸旧帧 = 内容变形、新区域
+	// 背景不同步）——改 60ms：拖动中每 60ms 跟随重排一次，间歇由旧帧
+	// 等比拉伸铺满（见 Presenter.submit 的 stretch 分支）。
+	DefaultResizeDebounce = 60 * time.Millisecond
 )
 
 // Options 是调度器配置。
@@ -68,7 +71,7 @@ type SchedStats struct {
 	// Clamped 是 delta 被 MaxDelta 截断的次数。
 	Clamped int
 	// Resizes 是收到的 resize 请求数，ResizeFires 是去抖后真正处理的次数。
-	Resizes    int
+	Resizes     int
 	ResizeFires int
 	// LastDelta 是最近一帧的时间增量。
 	LastDelta time.Duration
@@ -376,7 +379,12 @@ func (s *Scheduler) reschedule() {
 	s.mu.Unlock()
 
 	if want == nil {
-		s.disarm()
+		// 没有动画系统（WantFrame=nil）：帧的续期完全由显式的
+		// RequestFrame/RequestFrameIn 管理——**不能 disarm**。帧内
+		// RequestFrameIn(16ms) 刚武装的动画续帧闹钟会被这里拆掉，
+		// 动画只出一帧就停（真窗多窗探针实测的停止根因）。
+		// 已武装的闹钟到点自会 Tick；静止时本无武装，自然零帧（C14）。
+		// （锁已在上方解锁；此处不得再 Unlock——双重解锁会 fatal。）
 		return
 	}
 	need, in := want(now)

@@ -550,6 +550,11 @@ func (n *Node) ID() uint64 { return n.id }
 func (n *Node) Kind() Kind { return n.kind }
 
 // Key 返回 diff 用的 Key。
+//
+// 语义：**跨重建稳定的组件身份**。重建每次产出全新节点（id 全换），
+// 有状态控件把自己的实例身份（如 "ctl-12"）钉在节点上，输入层的
+// hover 差分就能认出"换节点不换控件"，不把重建误判成悬停迁移。
+// 留空的节点退回指针同一性。
 func (n *Node) Key() string { return n.key }
 
 // SetKey 设置 Key 并返回自身（链式）。

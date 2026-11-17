@@ -317,9 +317,9 @@ func TestResizeDebounceRestarts(t *testing.T) {
 	defer r.s.Stop()
 
 	r.s.RequestResize(10, 10)
-	r.resize.Advance(170 * time.Millisecond)
+	r.resize.Advance(50 * time.Millisecond)
 	r.s.RequestResize(20, 20) // 重新计时
-	r.resize.Advance(170 * time.Millisecond)
+	r.resize.Advance(50 * time.Millisecond)
 	if len(r.sizes) != 0 {
 		t.Fatalf("每次新请求都应重置去抖窗口，实际 %v", r.sizes)
 	}

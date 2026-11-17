@@ -1,6 +1,10 @@
 package widgets
 
 import (
+	"fmt"
+	"sync/atomic"
+	"time"
+
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/render"
@@ -8,10 +12,12 @@ import (
 	"github.com/energye/lcl/wg/text"
 	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
-	"time"
 )
 
 // ── 控件公共基座 ───────────────────────────────────────────────────
+
+// ctlSeq 是控件实例序号：生成跨重建稳定的节点身份（node.SetKey）。
+var ctlSeq atomic.Uint64
 
 // controlBase 管理控件的焦点节点与交互状态。
 //
@@ -24,6 +30,7 @@ type controlBase struct {
 	hover   bool
 	pressed bool
 	tap     *ui.GestureDetector
+	ctlKey  string // 跨重建稳定的实例身份（悬停差分认"换节点不换控件"用）
 }
 
 // Node 返回最近一次构建出的场景节点（诊断/自动化点击用）。
@@ -63,6 +70,14 @@ func (b *controlBase) attach(ctx *ui.BuildContext, node *scene.Node, h input.Han
 		}
 	}
 	b.node = node
+	// 实例身份钉到节点上：重建产出全新节点，但控件没换。输入层的
+	// hover 差分按这个身份比较，"重建"不再被误判成"悬停迁移"
+	// ——否则每次鼠标移动都触发一次整树重建（hover 风暴），而且
+	// 重建落在 down/up 之间时指针捕获被破坏、tap 丢失。
+	if b.ctlKey == "" {
+		b.ctlKey = fmt.Sprintf("ctl-%d", ctlSeq.Add(1))
+	}
+	node.SetKey(b.ctlKey)
 	if ctx.Input != nil {
 		ctx.Input.Set(node, h)
 	}
@@ -98,7 +113,9 @@ func (b *controlBase) tapHandler(ctx *ui.BuildContext, disabled bool, onTap func
 	}
 	h := g.Handler()
 	h.Enter = func(*input.PointerEvent) {
-		if !disabled {
+		// 状态真正变化才置脏：身份差分之外的第二道防线，重复 Enter
+		//（路径里同一控件出现两次等边角）不再触发重建。
+		if !disabled && !b.hover {
 			b.hover = true
 			b.MarkDirty()
 		}

@@ -118,7 +118,11 @@ type Container struct {
 	// deferred 记录"帧内有人请求了下一帧"。帧内回调已经持锁，
 	// 直接走 RequestFrame 会自己和自己抢锁（死锁），因此先存标志、帧末合并。
 	deferred atomic.Bool
-	st       state
+	// animating 是"本窗有活跃动画"标志（Container.SetAnimating）：置位后
+	// 帧泵按 60Hz 节拍标脏场景并续帧（动态组件驱动渲染）；未置位的窗
+	// 严格按需渲染——有变化才出帧，静止零帧（C14）。
+	animating atomic.Bool
+	st        state
 }
 
 // NewContainer 创建容器并绑定窗体。
@@ -293,7 +297,6 @@ func (c *Container) buildContext() *ui.BuildContext {
 		th = theme.Default()
 	}
 	inherited := c.inherited
-	widget := c.widget
 	return &ui.BuildContext{
 		Theme: th,
 		Media: ui.MediaQuery{
@@ -313,14 +316,30 @@ func (c *Container) buildContext() *ui.BuildContext {
 		// 不请求帧的话，静止窗口（C14）永不重绘——真窗表现为"点了没反应"。
 		// 置根脏必须用 SetDirtyOnly：根的 invalidate 往往就是本回调，
 		// 走 MarkDirty 会形成 MarkDirty→InvalidateRoot→MarkDirty 无限递归。
+		// 根 widget 必须**实时读**：buildContext 在首次 Build 前被调用，
+		// 那时 c.widget 还没赋值——闭包捕获会拿到 nil，深层组件的置脏
+		// 全部 no-op（动画窗只出两帧的根因）。
 		RequestFrame: c.requestFrame,
 		InvalidateRoot: func() {
-			if widget != nil {
-				if r, ok := widget.(interface{ SetDirtyOnly() }); ok {
+			if c.mu.TryLock() {
+				w := c.widget
+				c.mu.Unlock()
+				if w != nil {
+					if r, ok := w.(interface{ SetDirtyOnly() }); ok {
+						r.SetDirtyOnly()
+					}
+				}
+				c.requestFrame()
+				return
+			}
+			// 帧内（本 goroutine 持锁，TryLock 必败）：直接置根脏，
+			// 并经 deferred 让帧尾补一帧（见 FrameOnce 尾部的消费）。
+			if w := c.widget; w != nil {
+				if r, ok := w.(interface{ SetDirtyOnly() }); ok {
 					r.SetDirtyOnly()
 				}
 			}
-			c.requestFrame()
+			c.deferred.Store(true)
 		},
 		Viewport: func() geom.Size {
 			if c.host == nil {
@@ -366,6 +385,12 @@ func (c *Container) swapContent(node *scene.Node) {
 	}
 	if old != nil && old != node {
 		old.ClearDirtyTree()
+		// 旧树的 handler 登记必须清掉：重建每次产出全新节点，不清就是
+		// 无界增长（悬停切换、逐键输入都是重建）。分发器会保留活跃
+		// 捕获与悬停链引用的节点——手势要在"按下那一刻的路径"上完成。
+		if c.disp != nil {
+			c.disp.ForgetTree(old)
+		}
 	}
 }
 
@@ -705,6 +730,10 @@ func (c *Container) ResizeRequest(w, h int) {
 }
 
 // Resize 修改客户区尺寸并重建帧缓冲。
+//
+// 尺寸变化瞬间把**旧帧内容等比缩放铺进新缓冲**：resize 过渡期窗口的
+// 新暴露区域如果留白/残留旧背景，用户看到的就是"背景没同步窗口大小"；
+// 缩放铺满后（比例暂失真）等重排完成即恢复最终布局。
 func (c *Container) Resize(w, h int) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -712,8 +741,35 @@ func (c *Container) Resize(w, h int) {
 		return
 	}
 	c.host.Resize(w, h)
+	var old *raster.Backing
 	if c.comp != nil {
+		old = c.comp.Backing()
 		_ = c.comp.Resize(w, h)
+	}
+	// 旧帧内容等比缩放铺进新缓冲：最近邻逐像素映射（过渡帧质量足够，
+	// 60ms 内由紧随的重排恢复最终布局；backing 重建后自带清屏底色，
+	// 没有这条就会"背景不同步窗口大小"）。
+	if old != nil && w > 0 && h > 0 && (old.W() != w || old.H() != h) {
+		if nb := c.comp.Backing(); nb != nil {
+			ow, oh := old.W(), old.H()
+			dp, ds := nb.Pix(), nb.W()
+			op, os := old.Pix(), old.W()
+			for y := 0; y < h; y++ {
+				oy := y * oh / h
+				if oy >= oh {
+					oy = oh - 1
+				}
+				drow := y * ds
+				orow := oy * os
+				for x := 0; x < w; x++ {
+					ox := x * ow / w
+					if ox >= ow {
+						ox = ow - 1
+					}
+					dp[drow+x] = op[orow+ox]
+				}
+			}
+		}
 	}
 	c.host.Root().Invalidate(c.host.Root().LocalBounds())
 	if c.scene != nil {
@@ -756,7 +812,11 @@ func (c *Container) requestFrame() {
 			c.requested = true
 			if s := c.sched; s != nil {
 				c.mu.Unlock()
-				s.RequestFrame()
+				// 续帧走 RequestFrameIn(16ms) 而不是立即 RequestFrame：
+				// 帧内自驱动的动画页（Build 尾持续置脏）没有这一拍间隔
+				// 就会全速空转（deferred 链实测 400fps 拉满 CPU）——16ms
+				// 就是全局帧节拍；普通组件只是重绘推迟一帧（无感）。
+				s.RequestFrameIn(16 * time.Millisecond)
 				return
 			}
 		}
@@ -1006,9 +1066,19 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 	c.index++
 	c.last = now
 	c.requested = false
-	// 帧内发生的浮层变化：本帧已把它们录进画面，没提交成功才补一帧。
-	if c.deferred.Swap(false) && !st.Presented {
+	// 帧内的置脏/请求（组件 Build 尾的 MarkDirty、浮层 Relayout 回调）
+	// 必须落到下一帧：无论本帧是否提交成功都补一帧——动画页靠这条
+	// "每帧重建自己"续命；普通组件帧内 MarkDirty 也同样需要下帧生效。
+	// （旧语义"没提交成功才补"会把动画页的续帧吞掉，动画停在第二帧。）
+	if c.deferred.Swap(false) {
 		c.requested = true
+		if s := c.sched; s != nil {
+			// 续帧走 **RequestFrameIn(16ms)** 而不是立即 RequestFrame：
+			// 帧内自驱动的动画页（绘制闭包持续置脏）没有这一拍间隔就会
+			// 全速空转（deferred 链实测跑出 400fps 拉满 CPU）——16ms 就是
+			// 全局帧节拍；对普通组件只是把重绘推迟一帧（16ms，无感）。
+			s.RequestFrameIn(16 * time.Millisecond)
+		}
 	}
 	return st, nil
 }
@@ -1032,15 +1102,15 @@ func (c *Container) Frames() int {
 	return c.index
 }
 
-// Run 启动帧泵并进入消息循环，阻塞直到窗口关闭或 Close 被调用。
+// Start 启动本窗的帧泵/消息接管/呈现器，但**不进入平台消息循环**。
 //
-// 帧泵的形状：**按需装填**。没有脏帧、没有浮层计时、没有输入时不装闹钟，
-// 于是静止界面一帧都不出（C14）——这是"CPU 占用 0%"与"每帧 0.1ms 但每秒
-// 60 次"之间的区别，也是笔记本风扇转不转的区别。
+// 多窗口入口：平台消息循环全局只有一条（主窗 Run 里的 Application.Run），
+// 每个窗的帧泵/事件分发/呈现全部按容器隔离——Start 之后各窗即可独立
+// 接收输入、独立出帧（静止零帧 C14，动画窗 60Hz 单 outstanding）。
+// 主窗调 Run()（= Start + Application.Run）；其余窗调 Start()。
 //
-// 无窗口容器（NewHeadless）没有消息循环可进，返回 ErrNilForm；
-// 那种场景请用 FrameOnce + ManualTicker 自己驱动。
-func (c *Container) Run() error {
+// 窗口关闭（OnClose）会停本窗帧泵并释放呈现层；主窗 Run 返回即程序退出。
+func (c *Container) Start() error {
 	c.mu.Lock()
 	if c.st == stateClosed {
 		c.mu.Unlock()
@@ -1059,7 +1129,15 @@ func (c *Container) Run() error {
 		Ticker: frame.NewTicker(),
 		OnFrame: func(now, delta time.Duration) bool {
 			c.TickTime(time.Now())
+			if c.animating.Load() && c.scene != nil {
+				// 动画活跃：标脏场景，本帧重录取新相位（绘制闭包读墙钟）。
+				c.scene.MarkNeedsPaint()
+			}
 			st, ferr := c.FrameOnce()
+			if ferr == nil && c.animating.Load() && c.sched != nil {
+				// 60Hz 节拍续帧：动态组件驱动渲染；静止窗不进此分支（C14）。
+				c.sched.RequestFrameIn(16 * time.Millisecond)
+			}
 			return ferr == nil && st.Presented
 		},
 		OnResize: c.fireResize,
@@ -1099,15 +1177,21 @@ func (c *Container) Run() error {
 		c.presenter = p
 		c.mu.Unlock()
 		binder.SetPresenter(p)
-		// LCL 对象必须在 Application.Run 返回**之前**释放：Run 结束后
-		// LCL 运行时已开始销毁，此时 Free 位图会访问违例（实测 0xc0000005）。
-		// OnClose 是窗口关闭时的主线程回调，那时 LCL 仍完整可用。
+		// 本窗关闭：停帧泵 + 释放呈现位图。OnClose 是主线程回调，
+		// 此时 LCL 仍完整可用，sched.Stop/P.Close 都安全。
+		// （主窗 Run 返回后的整体退出走进程回收，不经此路径。）
 		if f := c.form; f != nil {
 			f.SetOnClose(func(sender lcl.IObject, action *types.TCloseAction) {
+				sched.Stop()
 				p.Close()
+				c.mu.Lock()
+				c.st = stateClosed
+				c.sched = nil
+				c.presenter = nil
+				c.binder = nil
+				c.mu.Unlock()
 			})
 		}
-		defer p.Close()
 	}
 	if err := binder.Install(); err != nil {
 		c.mu.Lock()
@@ -1118,18 +1202,31 @@ func (c *Container) Run() error {
 		sched.Stop()
 		return err
 	}
-	defer binder.Uninstall()
 	c.mu.Lock()
 	c.binder = binder
 	c.mu.Unlock()
-	defer func() {
-		c.mu.Lock()
-		c.binder = nil
-		c.presenter = nil
-		c.mu.Unlock()
-	}()
 
 	sched.RequestFrame()
+	return nil
+}
+
+// Run 启动帧泵并进入消息循环，阻塞直到窗口关闭或 Close 被调用。
+//
+// 帧泵的形状：**按需装填**。没有脏帧、没有浮层计时、没有输入时不装闹钟，
+// 于是静止界面一帧都不出（C14）——这是"CPU 占用 0%"与"每帧 0.1ms 但每秒
+// 60 次"之间的区别，也是笔记本风扇转不转的区别。
+//
+// 多窗口：本方法 = Start + 平台消息循环，作为**主窗**入口；
+// 其余窗在 Run 之前调 Start()（见 Start 的注释）。
+//
+// 无窗口容器（NewHeadless）没有消息循环可进，返回 ErrNilForm；
+// 那种场景请用 FrameOnce + ManualTicker 自己驱动。
+func (c *Container) Run() error {
+	// Start 已建好本窗的帧泵/消息接管/呈现器（含 OnClose 清理）；
+	// 这里只进平台消息循环（全局唯一），返回即程序退出。
+	if err := c.Start(); err != nil {
+		return err
+	}
 	// 进入平台消息循环：帧闹钟在别的 goroutine 上触发，消息循环负责
 	// 输入与窗口生命周期，两者不互相阻塞（否则拖动窗口时动画会停）。
 	lcl.Application.Run()
@@ -1248,3 +1345,11 @@ func (c *Container) Close() {
 		detach(root)
 	}
 }
+
+// SetAnimating 设置"本窗有活跃动画"标志：置位后帧泵按 60Hz 节拍标脏
+// 场景并续帧（动态组件驱动渲染）；清除后恢复严格按需渲染——有变化才出
+// 帧，静止零帧（C14）。多窗隔离：每个容器独立持有自己的标志。
+func (c *Container) SetAnimating(on bool) { c.animating.Store(on) }
+
+// Animating 返回动画活跃标志。
+func (c *Container) Animating() bool { return c.animating.Load() }

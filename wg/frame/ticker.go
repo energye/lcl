@@ -51,11 +51,11 @@ func (t *timerTicker) Arm(d time.Duration, f func()) {
 	// AfterFunc 的 Stop 与已触发之间存在竞态，用代次号丢弃过期触发。
 	t.timer = time.AfterFunc(d, func() {
 		t.mu.Lock()
-		if t.stopped || gen != t.gen {
-			t.mu.Unlock()
+		dropped := t.stopped || gen != t.gen
+		t.mu.Unlock()
+		if dropped {
 			return
 		}
-		t.mu.Unlock()
 		f()
 	})
 }

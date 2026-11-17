@@ -112,6 +112,9 @@ func (p *Presenter) submit(b *raster.Backing, damage geom.Rect) bool {
 		return false
 	}
 	// resize 期间可能收到旧尺寸的帧；与当前客户区不符就不提交。
+	// 尺寸不符的过渡帧由 Container.Resize 用旧帧缩放铺满新缓冲来兜底
+	// （铺满后 backing 尺寸即客户区尺寸，这里恢复 1:1 提交）——
+	// 拒提 + DWM 拉伸旧帧会导致内容变形、背景不同步（用户实测）。
 	if p.host != nil {
 		cs := p.host.ClientSize()
 		if cs.W > 0 && (int(cs.W) != w || int(cs.H) != h) {
