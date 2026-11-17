@@ -69,6 +69,41 @@ type Presenter struct {
 	// dirty 表示 staged 里有尚未提交的新像素；没有新帧的 WM_PAINT
 	// （被遮挡后重新露出）必须整帧重放，否则新暴露区是旧/残像素。
 	dirty bool
+	// allowPaint 表示当前这次 WM_PAINT 是 PresentDone 主动 Repaint 触发的：
+	// 它就是要提交新帧，不能被下面的"去重"跳过。
+	allowPaint atomic.Bool
+	// needsFull 在"有 WM_PAINT 被让位给 posted 呈现"时置位：
+	// 下一次提交整帧重放（覆盖系统要求重绘的区域），而不是只画脏区。
+	needsFull atomic.Bool
+}
+
+// PendingSubmit 表示有尚未提交的新帧（dirty）或呈现消息在途（presenting）。
+func (p *Presenter) PendingSubmit() bool {
+	p.mu.RLock()
+	d := p.dirty
+	p.mu.RUnlock()
+	return d || p.presenting.Load()
+}
+
+// PaintOnMessage 处理 WM_PAINT。
+//
+//   - 专用呈现（PresentDone 主动 Repaint 触发）：按帧脏区/整帧提交；
+//   - 有在途新帧：让位给 posted 呈现（避免同一帧两条路径各画一遍），
+//     记 needsFull 让下一次提交整帧覆盖；
+//   - 其余系统重绘：只补 GetUpdateRect 的无效区（原生 rcPaint 语义）。
+func (p *Presenter) PaintOnMessage(update geom.Rect) {
+	if p.allowPaint.Load() {
+		p.Paint()
+		return
+	}
+	if p.PendingSubmit() {
+		p.needsFull.Store(true)
+		return
+	}
+	if update.IsEmpty() {
+		return
+	}
+	p.paintRegion(update)
 }
 
 // PresentStats 是呈现统计（诊断与单测用）。
@@ -129,7 +164,9 @@ func (p *Presenter) SetPost(fn func()) {
 // 回到 GetMessage，队列一空就被自己填上，输入照样没机会。慢帧用
 // AfterFunc 把补投推迟 inputBreath，让主线程先取走挂起输入。
 func (p *Presenter) PresentDone() {
+	p.allowPaint.Store(true)
 	p.RepaintNow()
+	p.allowPaint.Store(false)
 	p.presenting.Store(false)
 	if !p.missed.Swap(false) {
 		return
@@ -242,6 +279,11 @@ func (p *Presenter) Frame(b *raster.Backing, damage geom.Rect) {
 // Paint 把缓存帧提交到窗口 DC；没有缓存或提交失败返回 false。
 // 必须在窗口主线程（WM_PAINT 处理中）调用。
 func (p *Presenter) Paint() bool {
+	return p.paintRegion(geom.Rect{})
+}
+
+// paintRegion 提交缓存帧；region 非空时只更新该区域（系统无效区）。
+func (p *Presenter) paintRegion(region geom.Rect) bool {
 	began := time.Now()
 	if p.hwnd == 0 {
 		return false
@@ -249,7 +291,7 @@ func (p *Presenter) Paint() bool {
 	p.mu.RLock()
 	buffered := p.staged != nil
 	p.mu.RUnlock()
-	if !buffered || !p.submit() {
+	if !buffered || !p.submitRegion(region) {
 		return false
 	}
 	p.mu.Lock()

@@ -9,6 +9,7 @@ import (
 
 	"github.com/energye/lcl/lcl"
 	"github.com/energye/lcl/types"
+	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/scene"
 )
@@ -39,7 +40,19 @@ var (
 	procReleaseDC       = user32.NewProc("ReleaseDC")
 	procInvalidateRect  = user32.NewProc("InvalidateRect")
 	procPostMessage     = user32.NewProc("PostMessageW")
+	procGetUpdateRect   = user32.NewProc("GetUpdateRect")
 )
+
+// clientUpdateRect 返回窗口当前无效区（客户区像素坐标；空 = 无）。
+func clientUpdateRect(hwnd uintptr) geom.Rect {
+	var r winRect
+	ok, _, _ := procGetUpdateRect.Call(hwnd, uintptr(unsafe.Pointer(&r)), 0)
+	if ok == 0 || r.Right <= r.Left || r.Bottom <= r.Top {
+		return geom.Rect{}
+	}
+	return geom.RectXYWH(float32(r.Left), float32(r.Top),
+		float32(r.Right-r.Left), float32(r.Bottom-r.Top))
+}
 
 // wmRequestPresent 是私有呈现消息（WM_APP 区间）。
 //
@@ -191,7 +204,7 @@ func (b *Binder) WndProc(msg *types.TLMessage) {
 	// 真正的像素提交在这里完成 —— 把上一帧缓存的 Backing 贴到窗口 DC。
 	// 必须在主线程同步执行：GDI DC 只在消息处理期间稳定。
 	if m.Msg == wmPaint && b.presenter != nil {
-		b.presenter.Paint()
+		b.presenter.PaintOnMessage(clientUpdateRect(b.hwnd))
 	}
 
 	// OS 级捕获：按下时抓住，全部抬起时释放。逻辑捕获（Dispatcher）

@@ -129,7 +129,11 @@ type Container struct {
 	// 帧泵按 60Hz 节拍标脏场景并续帧（动态组件驱动渲染）；未置位的窗
 	// 严格按需渲染——有变化才出帧，静止零帧（C14）。
 	animating atomic.Bool
-	st        state
+	// viewportDep 记录"上次 Build 是否读取了视口"（ViewportSize）。
+	// resize 只对依赖视口的页面重建；固定布局页面只重排布局，免全树
+	// Build（成熟框架语义：只为声明依赖的组件重建）。
+	viewportDep bool
+	st          state
 }
 
 // NewContainer 创建容器并绑定窗体。
@@ -258,6 +262,7 @@ func (c *Container) MountWidget(w ui.Widget) {
 	}
 	c.mu.Lock()
 	c.ensureScene()
+	c.viewportDep = false
 	ctx := c.buildContext()
 	node := w.Build(ctx)
 	if r, ok := w.(interface{ Rebuild() }); ok {
@@ -318,8 +323,7 @@ func (c *Container) buildContext() *ui.BuildContext {
 			}
 			return inherited[key]
 		},
-		// 深层组件的状态变化 → 根 widget 置脏 + 请求帧。
-		// rebuildDirtyWidget 只扫根 widget 的脏位；深层组件直调 MarkDirty
+		// 深层组件的状态变化 → 根 widget 置脏 + 请求帧。		// rebuildDirtyWidget 只扫根 widget 的脏位；深层组件直调 MarkDirty
 		// 不请求帧的话，静止窗口（C14）永不重绘——真窗表现为"点了没反应"。
 		// 置根脏必须用 SetDirtyOnly：根的 invalidate 往往就是本回调，
 		// 走 MarkDirty 会形成 MarkDirty→InvalidateRoot→MarkDirty 无限递归。
@@ -354,6 +358,8 @@ func (c *Container) buildContext() *ui.BuildContext {
 			}
 			return c.host.ClientSize()
 		}(),
+		// 视口依赖登记：本次 Build 有组件调用 ViewportSize() 即置位。
+		ViewportUse: func() { c.viewportDep = true },
 	}
 }
 
@@ -369,6 +375,8 @@ func (c *Container) rebuildDirtyWidget() bool {
 	if !ok || !d.Dirty() {
 		return false
 	}
+	// 每次 Build 重新计算视口依赖（组件可能条件性读取）。
+	c.viewportDep = false
 	ctx := c.buildContext()
 	node := c.widget.Build(ctx)
 	if r, ok := c.widget.(interface{ Rebuild() }); ok {
@@ -782,7 +790,10 @@ func (c *Container) Resize(w, h int) {
 		c.layoutAll = true
 	}
 	// 组件可能按 MediaQuery 分支（窄屏换布局），尺寸变了就得重建。
-	if m, ok := c.widget.(interface{ MarkDirty() }); ok {
+	//
+	// 但只重建**声明了视口依赖**的页面（上次 Build 调过 ViewportSize）：
+	// 固定布局页面 resize 时只做布局重排，免全树 Build（成熟框架语义）。
+	if m, ok := c.widget.(interface{ MarkDirty() }); ok && (c.viewportDep || c.widgetNode == nil) {
 		m.MarkDirty()
 	}
 }

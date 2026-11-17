@@ -68,7 +68,26 @@ type BuildContext struct {
 	InvalidateRoot func()
 	// Viewport 是当前视口尺寸（DIP）。Build 期据此做自适应排版。
 	// 零值表示未知（部分 headless 测试）。
+	//
+	// **直接读字段不会登记"依赖视口"**：resize 时容器不会为你重建
+	// （成熟框架语义：只为声明了依赖的组件重建）。需要响应视口变化的
+	// 组件请调用 ViewportSize()。
 	Viewport geom.Size
+	// ViewportUse 由宿主注入：ViewportSize() 调用它登记依赖。
+	ViewportUse func()
+}
+
+// ViewportSize 返回视口尺寸（DIP）并登记"本组件依赖视口"。
+//
+// resize 时容器只会重建登记过依赖的组件树；读字段不登记。
+func (c *BuildContext) ViewportSize() geom.Size {
+	if c == nil {
+		return geom.Size{}
+	}
+	if c.ViewportUse != nil {
+		c.ViewportUse()
+	}
+	return c.Viewport
 }
 
 // ---- M8 补充字段由单独编辑添加 ----

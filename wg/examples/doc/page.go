@@ -8,9 +8,10 @@ import (
 )
 
 // contentWidth 按视口算版心宽：随窗口自适应，钳制在 [640, 1200]。
-// 窗口 resize 时容器会重建根 widget，Build 拿到新的 Viewport 自动重排。
+// 必须用 ViewportSize()（登记视口依赖）而不是直接读 ctx.Viewport：
+// 前者才会让容器在 resize 时重建本页。
 func contentWidth(ctx *ui.BuildContext) float32 {
-	w := ctx.Viewport.W - 80 // 版心边距 40×2
+	w := ctx.ViewportSize().W - 80 // 版心边距 40×2
 	if w < 640 {
 		w = 640
 	}

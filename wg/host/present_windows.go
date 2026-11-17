@@ -106,17 +106,18 @@ func (p *Presenter) releaseBuffer() {
 	pl.w, pl.h, pl.stride = 0, 0, 0
 }
 
-// submit 把 staged（24bpp BGR）提交到窗口 Canvas。
+// submitRegion 把 staged（24bpp BGR）提交到窗口 Canvas。
 //
 // 遵循成熟框架的 resize 语义：
-//   - 尺寸吻合：有新帧只更新脏区；没有新帧（被遮挡后重露）整帧重放。
+//   - 尺寸吻合：有新帧只更新脏区；没有新帧（被遮挡后重露）整帧重放；
+//     region 非空（系统无效区）时只补该区域。
 //   - 尺寸失配（过渡帧）：默认精确模式——内容 1:1 **绝不缩放**，只画
 //     帧/客户区交集，多出的条带填背景色；只有显式 ResizePresentStretch
 //     才整窗缩放。
 //
 // 主线程只做：行 memcpy（紧凑 stride → 位图对齐 stride）、
 // LoadFromIntfImage、CopyRect/FillRect；逐像素转换已在帧线程完成。
-func (p *Presenter) submit() bool {
+func (p *Presenter) submitRegion(region geom.Rect) bool {
 	p.mu.RLock()
 	st := p.staged
 	w, h := p.sw, p.sh
@@ -142,9 +143,25 @@ func (p *Presenter) submit() bool {
 		return false
 	}
 
-	// 1:1 更新区：有新帧只搬脏区；没有新帧（重露/系统重绘）整帧。
+	// 1:1 更新区：系统无效区优先；否则新帧只搬脏区；没有新帧
+	// （重露/系统重绘）或系统要求整帧重绘（needsFull）时整帧。
 	r := geom.RectXYWH(0, 0, float32(w), float32(h))
-	if dirty && !damage.IsEmpty() {
+	full := !dirty || p.needsFull.Swap(false)
+	switch {
+	case scale:
+		// 尺寸失配：过渡帧需要完整帧内容（plan 会画交集），忽略局部区。
+		if !full && !damage.IsEmpty() {
+			if d := damage.Intersect(r); !d.IsEmpty() {
+				r = d
+			}
+		}
+	case !region.IsEmpty():
+		if d := region.Intersect(r); !d.IsEmpty() {
+			r = d
+		} else {
+			return false // 无效区完全在帧外，无需绘制
+		}
+	case !full && !damage.IsEmpty():
 		if d := damage.Intersect(r); !d.IsEmpty() {
 			r = d
 		}
