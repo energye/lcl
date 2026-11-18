@@ -58,7 +58,7 @@ func TestEveryFeatureWindowSelfCheck(t *testing.T) {
 
 	// 2) 一次性构建全部 main 包
 	binDir := t.TempDir()
-	build := exec.Command("go", "build", "-o", binDir, "./wg/examples/...")
+	build := exec.Command("go", "build", "-buildvcs=false", "-o", binDir, "./wg/examples/...")
 	build.Dir = moduleRoot(t) // 模块根（lcl）
 	if out, err := build.CombinedOutput(); err != nil {
 		t.Fatalf("构建功能窗失败: %v\n%s", err, out)
@@ -119,7 +119,7 @@ func TestFeatureWindowMetaFormat(t *testing.T) {
 	dir := examplesDir(t)
 	target := filepath.Join(dir, "button")
 	bin := filepath.Join(t.TempDir(), "button.exe")
-	build := exec.Command("go", "build", "-o", bin, target)
+	build := exec.Command("go", "build", "-buildvcs=false", "-o", bin, target)
 	build.Dir = moduleRoot(t)
 	if out, err := build.CombinedOutput(); err != nil {
 		t.Fatalf("构建失败: %v\n%s", err, out)

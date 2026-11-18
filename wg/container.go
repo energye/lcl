@@ -459,6 +459,24 @@ func (c *Container) Scene() *scene.Node {
 	return c.scene
 }
 
+// Walk 在容器锁内遍历组合根（内容 + 浮层）。
+//
+// 供工作线程（审计等）安全读取场景树：Scene() 返回的指针在锁外遍历会
+// 与主线程布局（帧内写 size/offset）并发读写同一 Node，实测偶发
+// "unexpected signal during runtime execution"（--audit 全量第 36 窗）。
+// 回调内只读节点属性，**不得调用会重新获取容器锁的方法**（Scene/Snapshot 等）。
+func (c *Container) Walk(fn func(*scene.Node) bool) {
+	if fn == nil {
+		return
+	}
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if !c.ensureScene() || c.scene == nil {
+		return
+	}
+	c.scene.Walk(fn)
+}
+
 // rebuildScene 按当前内容与浮层重建组合根的子节点（调用方持锁）。
 func (c *Container) rebuildScene() {
 	if c.scene == nil {

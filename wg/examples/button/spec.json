@@ -120,7 +120,130 @@
             {
               "kind": "colorDelta",
               "tolPeak": 3,
-              "minRatio": 0.03
+              "minRatio": 0.05,
+              "tol": 60
+            }
+          ]
+        },
+        {
+          "name": "Default 边框 1px（官方 lineWidth）",
+          "target": {
+            "label": "button",
+            "text": "Default"
+          },
+          "then": [
+            {
+              "kind": "borderWidth",
+              "expectWidth": 1,
+              "tol": 1
+            }
+          ]
+        },
+        {
+          "name": "Default hover 边框文字转 colorPrimaryHover",
+          "target": {
+            "label": "button",
+            "text": "Default"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 150
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "expect": {
+                "token": "PrimaryHover"
+              },
+              "minRatio": 0.05,
+              "tol": 60
+            }
+          ]
+        },
+        {
+          "name": "Primary hover 背景为 colorPrimaryHover",
+          "target": {
+            "label": "button",
+            "text": "Primary"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 150
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "expect": {
+                "token": "PrimaryHover"
+              },
+              "minRatio": 0.5,
+              "tol": 20
+            }
+          ]
+        },
+        {
+          "name": "Text hover 填充 4% 黑（colorFillTertiary on 舞台）",
+          "target": {
+            "label": "button",
+            "text": "Text"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 150
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.12,
+                0.8,
+                0.13
+              ],
+              "expect": {
+                "token": "SurfaceActive",
+                "note": "#FAFAFA 上 4% 黑 ≈ #F0F0F0"
+              },
+              "minRatio": 0.6,
+              "tol": 10
+            }
+          ]
+        },
+        {
+          "name": "Default 按下出现 colorPrimaryActive（:active）",
+          "target": {
+            "label": "button",
+            "text": "Default"
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "button-press"
+            }
+          ]
+        },
+        {
+          "name": "Primary 按下背景转 colorPrimaryActive（:active）",
+          "target": {
+            "label": "button",
+            "text": "Primary"
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "button-press"
             }
           ]
         }
@@ -213,6 +336,21 @@
             {
               "kind": "template",
               "template": "disabled-no-op"
+            }
+          ]
+        },
+        {
+          "name": "禁用按钮边框仍为 1px",
+          "target": {
+            "label": "button",
+            "disabled": true,
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "borderWidth",
+              "expectWidth": 1,
+              "tol": 1
             }
           ]
         }

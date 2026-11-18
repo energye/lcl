@@ -192,7 +192,8 @@ func ResolveStyle(t *theme.Data, v Variant, st Status) Style {
 		out.BorderWidth = 1
 		switch st {
 		case StatusHover:
-			out.Border, out.Foreground = c.Primary, c.Primary
+			// antd 5.29.3：defaultHoverColor/Border = colorPrimaryHover（不是 Primary）。
+			out.Border, out.Foreground = c.PrimaryHover, c.PrimaryHover
 		case StatusActive:
 			out.Border, out.Foreground = c.PrimaryActive, c.PrimaryActive
 		case StatusDisabled:
@@ -206,7 +207,7 @@ func ResolveStyle(t *theme.Data, v Variant, st Status) Style {
 		out.Dashed = true
 		switch st {
 		case StatusHover:
-			out.Border, out.Foreground = c.Primary, c.Primary
+			out.Border, out.Foreground = c.PrimaryHover, c.PrimaryHover
 		case StatusActive:
 			out.Border, out.Foreground = c.PrimaryActive, c.PrimaryActive
 		case StatusDisabled:
@@ -225,7 +226,8 @@ func ResolveStyle(t *theme.Data, v Variant, st Status) Style {
 		case StatusActive:
 			out.Background = c.FillActive
 		case StatusDisabled:
-			out.Background, out.Foreground = disBg, disFg
+			// antd text 按钮禁用：仅 colorTextDisabled，无背景。
+			out.Foreground = disFg
 		case StatusSelected:
 			out.Foreground = c.Primary
 		}
@@ -237,7 +239,7 @@ func ResolveStyle(t *theme.Data, v Variant, st Status) Style {
 		case StatusActive:
 			out.Foreground = c.PrimaryActive
 		case StatusDisabled:
-			out.Background, out.Foreground = disBg, disFg
+			out.Foreground = disFg
 		case StatusSelected:
 			out.Foreground = c.PrimaryActive
 		}

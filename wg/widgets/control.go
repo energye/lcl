@@ -132,6 +132,37 @@ func (b *controlBase) tapHandler(ctx *ui.BuildContext, disabled bool, onTap func
 	return h
 }
 
+// tapHandlerPressed 在 tapHandler 基础上追踪按下态（antd :active 视觉）。
+//
+// 只有确实定义了 active 样式的控件（Button）才用：checkbox/switch 的样式
+// 若把 StatusActive 映射到边框色，会让"按下瞬間边框变深"这种 antd 并不
+// 存在的行为冒出来。按下→重建在旧手势实例上完成，up 仍走捕获路径触发 tap。
+func (b *controlBase) tapHandlerPressed(ctx *ui.BuildContext, disabled bool, onTap func()) input.Handler {
+	h := b.tapHandler(ctx, disabled, onTap)
+	gp := h.Pointer
+	h.Pointer = func(ev *input.PointerEvent) bool {
+		if ev != nil && !disabled {
+			switch ev.Kind {
+			case input.PointerDown:
+				if !b.pressed {
+					b.pressed = true
+					b.MarkDirty()
+				}
+			case input.PointerUp, input.PointerCancel:
+				if b.pressed {
+					b.pressed = false
+					b.MarkDirty()
+				}
+			}
+		}
+		if gp != nil {
+			return gp(ev)
+		}
+		return false
+	}
+	return h
+}
+
 // ── Button：见 button.go（M8 对齐 antd type 体系） ─────────────────
 
 // ── Checkbox / Radio / Switch ──────────────────────────────────────

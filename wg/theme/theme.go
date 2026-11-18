@@ -156,7 +156,7 @@ type ColorTokens struct {
 type RadiusTokens struct {
 	SM   float32 // 4
 	Base float32 // 6
-	LG   float32 // 10
+	LG   float32 // 8（antd borderRadiusLG）
 	Pill float32 // 999（用于胶囊）
 }
 
@@ -280,7 +280,7 @@ func Light() *Data {
 			SurfaceHover:  geom.RGBA(250, 250, 250), // #FAFAFA
 			SurfaceActive: geom.RGBA(240, 240, 240), // #F0F0F0
 			SurfaceSunken: geom.RGBA(250, 250, 250), // 表格斑马/演示舞台
-			FillHover:     geom.RGBAa(0, 0, 0, 15),  // rgba(0,0,0,.06)
+			FillHover:     geom.RGBAa(0, 0, 0, 10),  // colorFillTertiary rgba(0,0,0,.04)
 			FillActive:    geom.RGBAa(0, 0, 0, 38),  // rgba(0,0,0,.15)
 
 			// colorBorder rgba(5,5,5,.15) 与 borderHover 的实色等价

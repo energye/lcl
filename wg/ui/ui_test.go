@@ -142,9 +142,9 @@ func TestStyleOfCombines(t *testing.T) {
 	if st.Radius != th.Radius.SM {
 		t.Fatalf("小尺寸圆角 = %v", st.Radius)
 	}
-	// M8 对齐 antd：default 按钮 hover 是文字/边框转主色，底色不变。
-	if st.Border != th.Color.Primary || st.Foreground != th.Color.Primary {
-		t.Fatalf("outline hover 应转主色: %+v", st)
+	// antd 5.29.3：default 按钮 hover 是文字/边框转 colorPrimaryHover，底色不变。
+	if st.Border != th.Color.PrimaryHover || st.Foreground != th.Color.PrimaryHover {
+		t.Fatalf("outline hover 应转 colorPrimaryHover: %+v", st)
 	}
 }
 

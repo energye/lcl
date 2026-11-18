@@ -116,6 +116,11 @@ type SpecAssertion struct {
 	Delta    *float32 `json:"delta,omitempty"`
 	MinDelta *float32 `json:"minDelta,omitempty"`
 	Text     string   `json:"text,omitempty"`
+
+	// borderWidth
+	ExpectWidth int `json:"expectWidth,omitempty"`
+	// centeredIn 的参照锚（被测元素的中心须落在它内部）
+	Ref *SpecTarget `json:"ref,omitempty"`
 }
 
 // SpecExemption 是显式豁免（antd 语义下正确但无视觉变化的行为）。
@@ -186,7 +191,7 @@ func (r *specRunner) runStructure(st *SpecStructure) {
 	}
 	for _, title := range st.Sections {
 		found := false
-		r.c.Scene().Walk(func(n *scene.Node) bool {
+		r.c.Walk(func(n *scene.Node) bool {
 			if n.Kind() == scene.KindText {
 				if sp := n.Text(); sp != nil && sp.Src == title {
 					found = true
@@ -207,7 +212,7 @@ func (r *specRunner) runStructure(st *SpecStructure) {
 	}
 	if st.MinElements > 0 {
 		got := 0
-		r.c.Scene().Walk(func(n *scene.Node) bool {
+		r.c.Walk(func(n *scene.Node) bool {
 			if _, ok := interactiveLabels[n.HitSpec().Label]; ok {
 				got++
 			}
@@ -222,7 +227,7 @@ func (r *specRunner) runStructure(st *SpecStructure) {
 
 func (r *specRunner) locate(t SpecTarget) (*scene.Node, bool) {
 	var matches []*scene.Node
-	r.c.Scene().Walk(func(n *scene.Node) bool {
+	r.c.Walk(func(n *scene.Node) bool {
 		h := n.HitSpec()
 		if h.Label != t.Label {
 			return true
@@ -244,7 +249,7 @@ func (r *specRunner) locate(t SpecTarget) (*scene.Node, bool) {
 
 func (r *specRunner) countNodes(t SpecTarget) int {
 	n := 0
-	r.c.Scene().Walk(func(nd *scene.Node) bool {
+	r.c.Walk(func(nd *scene.Node) bool {
 		h := nd.HitSpec()
 		if h.Label == t.Label {
 			if t.Disabled != nil && h.Disabled != *t.Disabled {
@@ -264,7 +269,7 @@ func (r *specRunner) countNodes(t SpecTarget) int {
 func (r *specRunner) locateNear(t SpecTarget, center geom.Point) (*scene.Node, bool) {
 	var best *scene.Node
 	var bestD float32
-	r.c.Scene().Walk(func(n *scene.Node) bool {
+	r.c.Walk(func(n *scene.Node) bool {
 		h := n.HitSpec()
 		if h.Label != t.Label {
 			return true
@@ -594,6 +599,65 @@ func (r *specRunner) doAssert(caseName string, def *SpecTarget, as SpecAssertion
 			detail = fmt.Sprintf("滚动偏移变化 %.0f，期望 <=%.0f", got, *as.MinDelta)
 		}
 		r.add(caseName, "scroll", pass, detail)
+	case "borderWidth":
+		img := grab(r.c)
+		rect := r.sampleRect(target, as.Frac)
+		got := borderWidthOf(img, rect)
+		tol := 1
+		if as.Tol != nil {
+			tol = int(*as.Tol)
+		}
+		pass := got >= as.ExpectWidth-tol && got <= as.ExpectWidth+tol
+		r.add(caseName, "borderWidth", pass,
+			fmt.Sprintf("%s 边框 %dpx（期望 %d±%d）", targetDesc(target), got, as.ExpectWidth, tol))
+	case "centeredIn":
+		a, ok := r.locate(*target)
+		if !ok {
+			r.add(caseName, "centeredIn", false, "被测元素不存在："+targetDesc(target))
+			return
+		}
+		if as.Ref == nil {
+			r.add(caseName, "centeredIn", false, "缺少 ref 参照")
+			return
+		}
+		b, ok := r.locate(*as.Ref)
+		if !ok {
+			r.add(caseName, "centeredIn", false, "参照元素不存在："+targetDesc(as.Ref))
+			return
+		}
+		ba, bb := a.BoundsInRoot(), b.BoundsInRoot()
+		tol := float32(2)
+		if as.Tol != nil {
+			tol = float32(*as.Tol)
+		}
+		dy := ba.Center().Y - bb.Center().Y
+		if dy < 0 {
+			dy = -dy
+		}
+		insideX := ba.Min.X >= bb.Min.X-1 && ba.Max.X <= bb.Max.X+1
+		pass := dy <= tol && insideX
+		r.add(caseName, "centeredIn", pass,
+			fmt.Sprintf("%s 垂直中心差 %.1f ≤ %.1f 且水平在 %s 内=%v",
+				targetDesc(target), dy, tol, targetDesc(as.Ref), insideX))
+	case "colorRatio":
+		expect, note, ok := parseExpectedColor(as.Expect)
+		if !ok {
+			r.add(caseName, "colorRatio", false, "无法解析 expect")
+			return
+		}
+		minRatio := 0.05
+		if as.MinRatio != nil {
+			minRatio = *as.MinRatio
+		}
+		tol := 24.0
+		if as.Tol != nil {
+			tol = *as.Tol
+		}
+		img := grab(r.c)
+		rect := r.sampleRect(target, as.Frac)
+		ratio := colorRatioOf(img, rect, expect, tol)
+		r.add(caseName, "colorRatio", ratio >= minRatio,
+			fmt.Sprintf("%s %s 占比 %.3f ≥ %.3f", targetDesc(target), note, ratio, minRatio))
 	case "text":
 		n, ok := r.locate(*target)
 		if !ok && !r.caseBounds.IsEmpty() {
@@ -709,6 +773,8 @@ func (r *specRunner) runTemplate(caseName string, def *SpecTarget, tpl string) {
 		r.tplTreeNodeSelect(caseName, *def)
 	case "collapse-toggle":
 		r.tplCollapseToggle(caseName, *def)
+	case "button-press":
+		r.tplButtonPress(caseName, *def)
 	default:
 		r.add(caseName, "template:"+tpl, false, "未实现的模板")
 	}
@@ -914,7 +980,7 @@ func bandOf(name string) theme.Band {
 
 func (r *specRunner) scrollOffset() float32 {
 	var off, area float32
-	r.c.Scene().Walk(func(n *scene.Node) bool {
+	r.c.Walk(func(n *scene.Node) bool {
 		o := n.ScrollOffset()
 		if o == 0 {
 			return true
@@ -980,6 +1046,84 @@ func sampleRect(img *image.RGBA, r geom.Rect) [3]float64 {
 		}
 	}
 	return [3]float64{float64(sum[0]) / float64(n), float64(sum[1]) / float64(n), float64(sum[2]) / float64(n)}
+}
+
+// borderWidthOf 沿元素中心列自上而下扫描：与内部色差 > 24 的连续像素段
+// 长度即顶部边框宽度（抗锯齿边缘含在内，调用方按 ±1 容差判定）。
+// 内部参考色取"边框之后、文字之前"的窄带（中心列 y∈[Min+5,Min+8]）：
+// 直接取元素中心会把居中的文字当内部色，导致整段被误判成边框（实测 7px）。
+func borderWidthOf(img *image.RGBA, rect geom.Rect) int {
+	if img == nil || rect.IsEmpty() {
+		return 0
+	}
+	cx := int((rect.Min.X + rect.Max.X) / 2)
+	var sum [3]int
+	n := 0
+	for y := int(rect.Min.Y) + 5; y <= int(rect.Min.Y)+8 && y < img.Bounds().Dy(); y++ {
+		px := img.RGBAAt(cx, y)
+		sum[0] += int(px.R)
+		sum[1] += int(px.G)
+		sum[2] += int(px.B)
+		n++
+	}
+	if n == 0 {
+		return 0
+	}
+	inner := [3]float64{float64(sum[0]) / float64(n), float64(sum[1]) / float64(n), float64(sum[2]) / float64(n)}
+	differs := func(y int) bool {
+		px := img.RGBAAt(cx, y)
+		v := [3]float64{float64(px.R), float64(px.G), float64(px.B)}
+		return abs3Diff(v, inner) > 24
+	}
+	count, started := 0, false
+	for y := int(rect.Min.Y); y < int(rect.Min.Y)+8 && y < img.Bounds().Dy(); y++ {
+		if differs(y) {
+			count++
+			started = true
+		} else if started {
+			break
+		}
+	}
+	return count
+}
+
+// colorRatioOf 返回区域内与目标色每通道差 <= tol 的像素占比。
+func colorRatioOf(img *image.RGBA, rect geom.Rect, want geom.Color, tol float64) float64 {
+	if img == nil || rect.IsEmpty() {
+		return 0
+	}
+	w := [3]float64{float64(want.R), float64(want.G), float64(want.B)}
+	x0, y0 := int(rect.Min.X), int(rect.Min.Y)
+	x1, y1 := int(rect.Max.X), int(rect.Max.Y)
+	bounds := img.Bounds()
+	if x0 < bounds.Min.X {
+		x0 = bounds.Min.X
+	}
+	if y0 < bounds.Min.Y {
+		y0 = bounds.Min.Y
+	}
+	if x1 > bounds.Max.X {
+		x1 = bounds.Max.X
+	}
+	if y1 > bounds.Max.Y {
+		y1 = bounds.Max.Y
+	}
+	if x1 <= x0 || y1 <= y0 {
+		return 0
+	}
+	total, hit := 0, 0
+	for y := y0; y < y1; y++ {
+		i := y*img.Stride + x0*4
+		for x := x0; x < x1; x++ {
+			v := [3]float64{float64(img.Pix[i]), float64(img.Pix[i+1]), float64(img.Pix[i+2])}
+			if abs3Diff(v, w) <= tol {
+				hit++
+			}
+			total++
+			i += 4
+		}
+	}
+	return float64(hit) / float64(total)
 }
 
 func abs3Diff(a, b [3]float64) float64 {
@@ -1189,6 +1333,38 @@ func (r *specRunner) tplTreeNodeSelect(caseName string, t SpecTarget) {
 	pass := ok && abs3Diff(avg, [3]float64{float64(want.R), float64(want.G), float64(want.B)}) <= 20
 	r.add(caseName, "template:tree-node-select", pass,
 		fmt.Sprintf("节点背景 %s ≈ token Selection", fmtHex(avg)))
+}
+
+// tplButtonPress：按下期间出现 :active 色（colorPrimaryActive），
+// 且占比必须显著高于 hover 基线——这是"点击有压下效果"的判据。
+func (r *specRunner) tplButtonPress(caseName string, t SpecTarget) {
+	n, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:button-press", false, "目标不存在")
+		return
+	}
+	rect := n.BoundsInRoot()
+	p := clickPoint(rect, nil)
+	hoverAt(r.c, p.X, p.Y)
+	time.Sleep(180 * time.Millisecond)
+	before := grab(r.c)
+	injectDown(r.c, p.X, p.Y)
+	time.Sleep(120 * time.Millisecond)
+	mid := grab(r.c)
+	injectUp(r.c, p.X, p.Y)
+	injectLeave(r.c)
+	time.Sleep(200 * time.Millisecond)
+
+	active, ok := tokenColor("PrimaryActive")
+	if !ok {
+		r.add(caseName, "template:button-press", false, "主题 token 缺失")
+		return
+	}
+	rBefore := colorRatioOf(before, rect, active, 40)
+	rMid := colorRatioOf(mid, rect, active, 40)
+	pass := rMid-rBefore >= 0.02
+	r.add(caseName, "template:button-press", pass,
+		fmt.Sprintf("按下 active 色占比 %.3f（hover 基线 %.3f，需 +0.02）", rMid, rBefore))
 }
 
 // tplCollapseToggle：点击表头展开/收起，内容区大面积变化。

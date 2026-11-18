@@ -312,7 +312,7 @@ func Run(c *wg.Container, outDir string, spec *Spec) *Report {
 	// ① 回到顶部：向上滚到页面级滚动偏移稳定。
 	scrollPos := func() float32 {
 		var off, area float32
-		c.Scene().Walk(func(n *scene.Node) bool {
+		c.Walk(func(n *scene.Node) bool {
 			o := n.ScrollOffset()
 			if o == 0 {
 				return true
@@ -472,7 +472,7 @@ func Run(c *wg.Container, outDir string, spec *Spec) *Report {
 					var nb geom.Rect
 					found := false
 					vh := c.Scene().Size().H
-					c.Scene().Walk(func(n *scene.Node) bool {
+					c.Walk(func(n *scene.Node) bool {
 						h := n.HitSpec()
 						if h.Label != el.label || h.Disabled {
 							return true
@@ -548,7 +548,7 @@ func Run(c *wg.Container, outDir string, spec *Spec) *Report {
 		sz := c.Scene().Size()
 		var elems []element
 		seen := map[uint64]bool{}
-		c.Scene().Walk(func(n *scene.Node) bool {
+		c.Walk(func(n *scene.Node) bool {
 			h := n.HitSpec()
 			name, ok := interactiveLabels[h.Label]
 			if !ok {

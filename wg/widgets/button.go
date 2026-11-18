@@ -137,13 +137,14 @@ func (b *Button) Build(ctx *ui.BuildContext) *scene.Node {
 	font := text.DefaultFont(m.Font)
 
 	// 内容宽度：图标(或 loading) + 间距 + 文本。
+	// antd 5.29.3：图标 1em（=contentFontSize），iconGap = marginXS(8) 所有尺寸一致。
 	var iconW float32
 	if b.Loading || b.Icon != nil {
-		iconW = m.Font * 1.1
+		iconW = m.Font
 	}
 	gap := float32(0)
 	if iconW > 0 && b.Text != "" {
-		gap = m.Gap
+		gap = th.Space.MD
 	}
 	layout := text.LayoutText(b.Text, font, text.Options{})
 	textW := layout.Size.W
@@ -208,7 +209,7 @@ func (b *Button) Build(ctx *ui.BuildContext) *scene.Node {
 			b.OnClick()
 		}
 	}
-	h2 := b.tapHandler(ctx, b.Disabled || b.Loading, activate)
+	h2 := b.tapHandlerPressed(ctx, b.Disabled || b.Loading, activate)
 	h2.Key = func(e *input.KeyEvent) bool {
 		if e.Kind == input.KeyUp || b.Disabled || b.Loading {
 			return false
@@ -235,7 +236,7 @@ func (b *Button) Build(ctx *ui.BuildContext) *scene.Node {
 func (b *Button) iconFor(ctx *ui.BuildContext) *Icon {
 	if b.Loading {
 		m := ui.MetricsFor(ctx.ThemeOr(), b.Size)
-		return &Icon{Name: "loading", Size: m.Font * 1.1, Color: b.dangerFg(ctx), Spin: true}
+		return &Icon{Name: "loading", Size: m.Font, Color: b.dangerFg(ctx), Spin: true}
 	}
 	ic := b.Icon
 	ic.Size = m0size(ctx, ic.Size)
@@ -254,7 +255,7 @@ func m0size(ctx *ui.BuildContext, s float32) float32 {
 	if s > 0 {
 		return s
 	}
-	return ui.MetricsFor(ctx.ThemeOr(), ui.SizeMedium).Font * 1.1
+	return ui.MetricsFor(ctx.ThemeOr(), ui.SizeMedium).Font
 }
 
 // st2status 把状态位集折成单值（避免在外部重复优先级逻辑）。

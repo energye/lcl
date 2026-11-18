@@ -58,7 +58,7 @@ func DraftSpec(c *wg.Container) *Spec {
 
 	scrollPos := func() float32 {
 		var off, area float32
-		c.Scene().Walk(func(n *scene.Node) bool {
+		c.Walk(func(n *scene.Node) bool {
 			o := n.ScrollOffset()
 			if o == 0 {
 				return true
@@ -95,7 +95,7 @@ func DraftSpec(c *wg.Container) *Spec {
 		prev = off
 		vh := c.Scene().Size().H
 		rowSeen := map[uint64]bool{}
-		c.Scene().Walk(func(n *scene.Node) bool {
+		c.Walk(func(n *scene.Node) bool {
 			h := n.HitSpec()
 			if _, ok := interactiveLabels[h.Label]; !ok {
 				return true
