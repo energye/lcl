@@ -43,7 +43,9 @@ func (p Progress) Build(ctx *ui.BuildContext) *scene.Node {
 	if h <= 0 {
 		h = 6
 	}
-	track := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.SurfaceSunken), Radius: h / 2}).SetSize2(w, h)
+	// trail 用 SurfaceActive（#F0F0F0，antd 线形进度条默认灰轨）——
+	// SurfaceSunken 与演示舞台同色，底轨会隐形。
+	track := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.SurfaceActive), Radius: h / 2}).SetSize2(w, h)
 	v := p.Value
 	if v < 0 {
 		v = 0

@@ -93,7 +93,8 @@ func (d *DisplayList) Image(i int32) *ImageRef {
 	return d.images[i]
 }
 
-// Bounds 返回所有指令在设备空间的并集包围盒。
+// Bounds 返回所有**绘制**指令在设备空间的并集包围盒（裁剪/状态指令
+// 不画像素、不占包围盒，理由见 append）。
 func (d *DisplayList) Bounds() geom.Rect {
 	if d == nil {
 		return geom.ZeroRect
@@ -286,6 +287,10 @@ func (d *DisplayList) Painted() int {
 }
 
 // append 追加一条指令并更新包围盒（仅 Recorder 调用）。
+//
+// bounds 只统计**绘制**指令：裁剪/状态指令不画像素，不占包围盒。
+// 这一条是层缓存平移不变性的前提——随滚动平移的视口裁剪窗如果进了
+// bounds，层缓存的离屏尺寸就会随滚动变化，缓存键永远命中不了。
 func (d *DisplayList) append(c Command) {
 	if d.frozen {
 		panic("wg/render: 冻结后的 DisplayList 被修改（违反 C23）")
@@ -294,9 +299,9 @@ func (d *DisplayList) append(c Command) {
 	switch c.Op {
 	case OpFillRect, OpFillPath, OpStrokePath, OpDrawText, OpDrawImage:
 		d.painted++
-	}
-	if !c.Rect.IsEmpty() {
-		d.bounds = d.bounds.Union(c.Rect)
+		if !c.Rect.IsEmpty() {
+			d.bounds = d.bounds.Union(c.Rect)
+		}
 	}
 }
 

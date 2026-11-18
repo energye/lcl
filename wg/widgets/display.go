@@ -228,7 +228,8 @@ func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
 			rw = w * 0.6
 		}
 		n.Add(scene.Box(scene.BoxSpec{
-			Fill: scene.Solid(th.Color.SurfaceSunken), Radius: th.Radius.SM,
+			// SurfaceActive(#F0F0F0)：SurfaceSunken 与演示舞台同色，灰条会隐形。
+			Fill: scene.Solid(th.Color.SurfaceActive), Radius: th.Radius.SM,
 		}).SetSize2(rw, h))
 	}
 	return n
@@ -267,10 +268,14 @@ type Steps struct {
 // Build 实现 ui.Widget。
 func (s Steps) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
-	n := scene.Flex(scene.Horizontal, th.Space.MD)
+	// antd 步骤条：圆点一行、步骤间有连接线（已完成段主色、待办段灰），
+	// 标签在圆点下方居中。
+	n := scene.Flex(scene.Horizontal, 0)
+	n.SetCrossAlign(scene.CrossStart)
 	for i, label := range s.Labels {
 		step := scene.Flex(scene.Vertical, th.Space.XS)
-		fill := th.Color.SurfaceSunken
+		step.SetCrossAlign(scene.CrossCenter)
+		fill := th.Color.SurfaceActive
 		fg := th.Color.TextMuted
 		if i <= s.Current {
 			fill, fg = th.Color.Primary, th.Color.OnPrimary
@@ -288,6 +293,14 @@ func (s Steps) Build(ctx *ui.BuildContext) *scene.Node {
 		ll := text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{})
 		step.Add(scene.Text(scene.TextSpec{Src: label, Layout: ll, Color: th.Color.Text}))
 		n.Add(step)
+		if i < len(s.Labels)-1 {
+			line := th.Color.Border
+			if i < s.Current {
+				line = th.Color.Primary
+			}
+			n.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(line), Radius: 1}).
+				SetSize2(40, 2).SetMargin(geom.InLTRB(4, 9, 4, 0)))
+		}
 	}
 	return n
 }
@@ -315,8 +328,10 @@ func (s *Segmented) Build(ctx *ui.BuildContext) *scene.Node {
 		children = append(children, seg.Build(ctx))
 	}
 	row := scene.Flex(scene.Horizontal, 0, children...)
+	// 轨道用 SurfaceActive（#F0F0F0，与 antd 分段容器一致）——
+	// SurfaceSunken(#FAFAFA) 与演示舞台同色，轨道会隐形。
 	n := scene.Box(scene.BoxSpec{
-		Fill: scene.Solid(th.Color.SurfaceSunken), Radius: th.Radius.Base,
+		Fill: scene.Solid(th.Color.SurfaceActive), Radius: th.Radius.Base,
 	}, row)
 	n.SetPadding(geom.InLTRB(2, 2, 2, 2))
 	s.node = n
@@ -334,16 +349,20 @@ type segmentItem struct {
 func (s *segmentItem) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	selected := s.index == s.parent.Selected
+	// antd Segmented：灰轨道上的选中项是**白色滑块**（带轻投影）+ 深色
+	// 文字，不是主色实心块。
 	fill := geom.Color{}
 	fg := th.Color.Text
+	shadow := (*scene.ShadowSpec)(nil)
 	if selected {
-		fill, fg = th.Color.Primary, th.Color.OnPrimary
+		fill = th.Color.Surface
+		shadow = &scene.ShadowSpec{Dx: 0, Dy: 1, Blur: 3, Color: th.Color.Shadow}
 	}
 	font := text.DefaultFont(th.Font.SizeSM)
 	layout := text.LayoutText(s.label, font, text.Options{})
 	w := layout.Size.W + th.Space.LG
 	const h = float32(26)
-	item := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: th.Radius.SM}).SetSize2(w, h)
+	item := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: th.Radius.SM, Shadow: shadow}).SetSize2(w, h)
 	label := scene.Text(scene.TextSpec{Src: s.label, Layout: layout, Color: fg})
 	label.SetMargin(geom.InLTRB(th.Space.SM, (h-layout.Size.H)/2, 0, 0))
 	item.Add(label)
@@ -527,6 +546,8 @@ func (c *Collapse) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(c)
 	th := ctx.ThemeOr()
 	col := scene.Flex(scene.Vertical, th.Space.XS)
+	// 面板通栏铺满父级宽度（antd 折叠面板是全宽边框容器，不是紧凑按钮盒）。
+	col.SetCrossAlign(scene.CrossStretch)
 	for i := range c.Panels {
 		col.Add((&collapseItem{index: i, parent: c}).Build(ctx))
 	}
@@ -545,21 +566,21 @@ func (c *collapseItem) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	panel := c.parent.Panels[c.index]
 	open := c.index == c.parent.Open
-	header := scene.Box(scene.BoxSpec{
-		Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(th.Color.Border, 1), Radius: th.Radius.Base,
-	}).SetHeight(36)
+	// antd 折叠面板：面板=通栏边框容器；表头一行"标题居左、箭头居右"
+	// （SpaceBetween，宽度随父级自适应，箭头不再写死 x=320 飘在面板外）。
 	layout := text.LayoutText(panel.Title, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	label := scene.Text(scene.TextSpec{Src: panel.Title, Layout: layout, Color: th.Color.Text})
-	label.SetMargin(geom.InLTRB(th.Space.MD, (36-layout.Size.H)/2, 0, 0))
-	header.Add(label)
+	label.SetMargin(geom.InLTRB(th.Space.MD, 0, 0, 0))
 	arrow := "▸"
 	if open {
 		arrow = "▾"
 	}
 	al := text.LayoutText(arrow, text.DefaultFont(th.Font.SizeSM), text.Options{})
 	at := scene.Text(scene.TextSpec{Src: arrow, Layout: al, Color: th.Color.TextMuted})
-	at.SetPositionKeepSize(true).SetStackPosition(geom.Pt(320, (36-al.Size.H)/2))
-	header.Add(at)
+	at.SetMargin(geom.InLTRB(0, 0, th.Space.MD, 0))
+	header := scene.Flex(scene.Horizontal, 0, label, at)
+	header.SetCrossAlign(scene.CrossCenter).SetMainAlign(scene.MainSpaceBetween)
+	header.SetHeight(36)
 	header.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "collapse", Cursor: scene.CursorPointer})
 	parent, index := c.parent, c.index
 	hnd := c.tapHandler(ctx, false, func() {
@@ -574,9 +595,21 @@ func (c *collapseItem) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 	})
 	c.attach(ctx, header, hnd, false)
-	root := scene.Flex(scene.Vertical, 0, header)
+	// 内容区：表头下方带分隔线与内边距（antd 形态）。
+	rootChildren := []*scene.Node{header}
 	if open && panel.Content != nil {
-		root.Add(buildChild(ctx, panel.Content))
+		wrap := scene.Box(scene.BoxSpec{})
+		wrap.SetPadding(geom.InLTRB(th.Space.MD, th.Space.SM, th.Space.MD, th.Space.MD))
+		wrap.Add(buildChild(ctx, panel.Content))
+		rootChildren = append(rootChildren, wrap)
 	}
-	return root
+	root := scene.Flex(scene.Vertical, 0, rootChildren...)
+	root.SetCrossAlign(scene.CrossStretch)
+	// 定位 + 紧约束：内容根被拉满面板宽度（表头 SpaceBetween 才有全宽）。
+	root.SetPositionKeepSize(false)
+	root.SetStackPosition(geom.Pt(0, 0))
+	panelBox := scene.Box(scene.BoxSpec{
+		Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(th.Color.Border, 1), Radius: th.Radius.Base,
+	}, root)
+	return panelBox
 }

@@ -124,14 +124,21 @@ const (
 	Horizontal Axis = iota
 	// Vertical 垂直轴。
 	Vertical
+	// Both 双轴。scene 自身的滚动视口仍是单轴；这个值给组合级滚动组件
+	// （widgets.Scroll 的双轴模式）当标记，表示纵向与横向各自滚动。
+	Both
 )
 
 // String 返回可读名。
 func (a Axis) String() string {
-	if a == Horizontal {
+	switch a {
+	case Horizontal:
 		return "horizontal"
+	case Vertical:
+		return "vertical"
+	default:
+		return "both"
 	}
-	return "vertical"
 }
 
 // Flip 返回相反方向。

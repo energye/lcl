@@ -312,13 +312,12 @@ func (r *Router) decode(m Message) []RawEvent {
 		return []RawEvent{{Kind: RawUp, X: cx, Y: cy, Button: btn, Mods: r.mods, Time: t}}
 
 	case wmMouseWheel:
-		// 滚轮消息的 lParam 是**屏幕**坐标，必须先换成客户区。
-		sx, sy := clientXY(m.LParam)
-		if r.toClient != nil {
-			sx, sy = r.toClient(sx, sy)
-		}
+		// 滚轮消息的 lParam 与其它鼠标消息一样是**客户区**坐标：
+		// LCL 层已把原始 WM_MOUSEWHEEL 的屏幕坐标换算过（实测：把按屏幕
+		// 处理再 ScreenToClient 会双重换算，坐标跑到客户区外，滚轮全死）。
+		cx, cy := clientXY(m.LParam)
 		delta := int32(int16((m.WParam >> 16) & 0xFFFF))
-		return []RawEvent{{Kind: RawWheel, X: sx, Y: sy, Wheel: delta, Mods: r.mods, Time: t}}
+		return []RawEvent{{Kind: RawWheel, X: cx, Y: cy, Wheel: delta, Mods: r.mods, Time: t}}
 
 	case wmMouseLeave:
 		return []RawEvent{{Kind: RawLeave, Time: t}}

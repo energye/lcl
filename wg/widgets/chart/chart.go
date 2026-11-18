@@ -22,12 +22,12 @@ import (
 
 // Palette 是图表配色。零值由 theme 推导，非零点覆盖。
 type Palette struct {
-	Series   []geom.Color // 多序列/分类色；不够时循环
-	Grid     geom.Color
-	Axis     geom.Color
-	Text     geom.Color
-	Fill     geom.Color
-	Line     geom.Color
+	Series []geom.Color // 多序列/分类色；不够时循环
+	Grid   geom.Color
+	Axis   geom.Color
+	Text   geom.Color
+	Fill   geom.Color
+	Line   geom.Color
 }
 
 func paletteOr(th *theme.Data, p Palette) Palette {
@@ -119,7 +119,7 @@ func yOf(v, lo, hi float64, top, bottom float32) float32 {
 	return bottom - t*(bottom-top)
 }
 
-func fmtInt(v int64) string   { return strconv.FormatInt(v, 10) }
+func fmtInt(v int64) string     { return strconv.FormatInt(v, 10) }
 func fmtFloat(v float64) string { return strconv.FormatFloat(v, 'f', 1, 64) }
 
 // ── LineChart：折线 + 面积 + 网格 ────────────────────────────────
@@ -346,17 +346,23 @@ func (c PieChart) Build(ctx *ui.BuildContext) *scene.Node {
 		if sum <= 0 {
 			return
 		}
-		side := minf(sz.W-16, sz.H-16)
+		// 图例在右侧占 ~96px：饼/环在剩余区域居中，避免图例叠在图形上。
+		legendW := float32(0)
+		if len(labels) > 0 {
+			legendW = 96
+		}
+		availW := sz.W - 16 - legendW
+		side := minf(availW, sz.H-16)
 		if side <= 0 {
 			return
 		}
-		rr := geom.RectXYWH((sz.W-side)/2, (sz.H-side)/2, side, side)
+		rr := geom.RectXYWH(8+(availW-side)/2, (sz.H-side)/2, side, side)
 		angle := -float32(math.Pi) / 2
 		for i, v := range values {
 			if v <= 0 {
 				continue
 			}
-			sweep := float32(v / sum) * float32(math.Pi*2)
+			sweep := float32(v/sum) * float32(math.Pi*2)
 			col := colorAt(p, i)
 			path := render.NewPath()
 			cx, cy := (rr.Min.X+rr.Max.X)/2, (rr.Min.Y+rr.Max.Y)/2
@@ -481,7 +487,7 @@ func (w Waveform) Build(ctx *ui.BuildContext) *scene.Node {
 		path := render.NewPath()
 		for i, v := range values {
 			x := float32(i) * (sz.W / float32(len(values)-1))
-			y := mid - (float32((v-(lo+hi)/2)/(hi-lo))*mid*0.9)
+			y := mid - (float32((v-(lo+hi)/2)/(hi-lo)) * mid * 0.9)
 			if i == 0 {
 				path.MoveTo(x, y)
 			} else {

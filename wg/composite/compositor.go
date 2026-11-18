@@ -76,7 +76,6 @@ type Stats struct {
 	BlendedPixels int
 }
 
-
 // Compositor 负责"把指令表变成像素"并维护 damage。
 //
 // 一帧的顺序是固定的（对应 03-ENGINE.md §9）：
@@ -150,7 +149,6 @@ func (c *Compositor) SetRasterCache(on bool) {
 		c.cache.Clear()
 	}
 }
-
 
 // Backing 返回合成目标（32bpp 预乘 BGRA）。调用方只读，不得修改。
 func (c *Compositor) Backing() *raster.Backing { return c.dst }

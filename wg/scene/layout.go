@@ -287,10 +287,12 @@ func (n *Node) placeStackLike() {
 		if !ch.positioned {
 			continue
 		}
-		// 绝对定位：偏移相对内容区原点。尺寸默认按内容区紧约束（铺满），
-		// 保持自身尺寸的（浮层/影子）用松约束，否则会被拉成全屏方块。
+		// 绝对定位：偏移相对内容区原点。尺寸默认按内容区紧约束（铺满）；
+		// keepSize=true 的（浮层/影子/滑块手柄）按自身期望尺寸，不受父级
+		// 内容区钳制——松约束仍会把超过父级的子节点压小（4px 滑轨上的
+		// 14px 手柄被压成 8px 椭圆），与"保持自身尺寸"的语义相悖。
 		if ch.keepSize {
-			ch.Layout(LooseConstraints(inner))
+			ch.Layout(Unbounded())
 		} else {
 			ch.Layout(TightConstraints(inner))
 		}

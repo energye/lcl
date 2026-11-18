@@ -11,7 +11,7 @@ func main() {
 	launcher.Main(doc.Meta{
 		ID: "chart-gauge", Title: "Gauge 仪表盘", Group: doc.GroupChart,
 		What: []string{
-			"半环仪表：值域钳制到 [0,1]，环宽 8，中央显示百分比或自定义 Label",
+			"环形进度仪表：值域钳制到 [0,1]，环宽 8，中央显示百分比或自定义 Label",
 		},
 		Demos: []doc.Demo{
 			{Title: "72%", Note: "默认按百分比显示", Build: func(ctx *ui.BuildContext) ui.Widget {

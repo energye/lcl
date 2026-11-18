@@ -24,6 +24,15 @@ func (c *Compositor) drawLayer(l *Layer, dst *raster.Backing, ox, oy int, clip g
 		c.st.ops += st.Ops
 		c.st.degraded += st.Degraded
 	case LayerGroup:
+		// 继承裁剪（滚动视口等非开层裁剪的累计交集，层局部空间）在合成时
+		// 生效：它不烘进层内容，所以无论层是否命中缓存，视口都在这里收口。
+		if l.inheritClipValid {
+			clip = clip.Intersect(l.inheritClip.Offset(float32(ox), float32(oy)))
+			if clip.IsEmpty() {
+				c.st.layerSkip++
+				return
+			}
+		}
 		if !l.offscreen {
 			for _, ch := range l.children {
 				c.drawLayer(ch, dst, ox+roundf(ch.origin.X), oy+roundf(ch.origin.Y), clip, alpha*l.opacity)
@@ -84,7 +93,7 @@ func (c *Compositor) drawGroup(l *Layer, dst *raster.Backing, ox, oy int, clip g
 		if e := c.cache.Lookup(key); e != nil {
 			l.cached = true
 			c.st.layerHits++
-			c.st.blended += blendBacking(dst, e.backing, dx, dy, l.opacity, e.mask)
+			c.st.blended += blendBacking(dst, e.backing, dx, dy, l.opacity, e.mask, clip)
 			return
 		}
 	}
@@ -127,7 +136,7 @@ func (c *Compositor) drawGroup(l *Layer, dst *raster.Backing, ox, oy int, clip g
 		mask = buildMaskAt(l, w, h, base)
 	}
 	c.st.layerRaster++
-	c.st.blended += blendBacking(dst, off, dx, dy, l.opacity, mask)
+	c.st.blended += blendBacking(dst, off, dx, dy, l.opacity, mask, clip)
 
 	if c.cacheOn && l.cacheable && c.cache != nil {
 		c.cache.Store(key, off, mask)

@@ -12,7 +12,6 @@ package composite
 
 import (
 	"fmt"
-
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/render"
 	"github.com/energye/lcl/wg/scene"
@@ -174,6 +173,12 @@ type bctx struct {
 	out   *[]*Layer
 	group *Layer
 	depth int
+	// clipRect/clipValid 是**结构裁剪链**：祖先链上非开层矩形裁剪
+	// （滚动视口、矩形 Clip 节点）在当前流空间累计的交集。它和录制器
+	// 里的 scissor 状态同步演进，但可以被换算、存进 Layer.inheritClip，
+	// 在合成时参与 blend 裁剪——这是"继承裁剪不烘进层内容"的关键。
+	clipRect  geom.Rect
+	clipValid bool
 }
 
 // Build 从场景树构建层树。
@@ -194,7 +199,10 @@ func Build(root *scene.Node, opts BuildOptions) *Tree {
 
 	rec := render.NewRecorderAt(render.NewDisplayList(64), m, opts.Clip, !opts.Clip.IsEmpty())
 	b := &builder{opts: opts, t: t}
-	b.push(&bctx{rec: rec, out: &top.children, group: top, depth: 0})
+	b.push(&bctx{
+		rec: rec, out: &top.children, group: top, depth: 0,
+		clipRect: opts.Clip, clipValid: !opts.Clip.IsEmpty(),
+	})
 
 	if root != nil {
 		b.walk(root)
@@ -266,11 +274,29 @@ func (b *builder) walk(n *scene.Node) uint64 {
 	if !n.PaintFrame(c.rec) {
 		return h
 	}
+	// 矩形裁剪（滚动视口、矩形 Clip 节点）贡献进结构链，scope 与
+	// PaintFrame 的 Save/Restore 一致：只作用于本子树。圆角/路径裁剪
+	// 必然开层（reasonOf → ReasonClip），不会走到这里。
+	savedClip := c.clipRect
+	savedValid := c.clipValid
+	if spec := n.Clip(); spec != nil {
+		r := spec.Rect
+		if r.IsEmpty() {
+			r = geom.RectXYWH(0, 0, n.Size().W, n.Size().H)
+		}
+		dev := c.rec.Matrix().MapRect(r)
+		if c.clipValid {
+			c.clipRect = c.clipRect.Intersect(dev)
+		} else {
+			c.clipRect, c.clipValid = dev, true
+		}
+	}
 	n.PaintSelf(c.rec)
 	for _, ch := range n.Children() {
 		h = mix64(h, b.walk(ch))
 	}
 	n.EndFrame(c.rec)
+	c.clipRect, c.clipValid = savedClip, savedValid
 	return h
 }
 
@@ -316,7 +342,6 @@ func (b *builder) reasonOf(n *scene.Node) Reason {
 func (b *builder) boundary(n *scene.Node, reason Reason) uint64 {
 	c := b.cur()
 	parentM := c.rec.Matrix()
-	parentClip, hasClip := c.rec.Clip()
 
 	// 1) 先关掉父层当前 picture：保证层按绘制顺序插入，而不是全部漂到父层尾部。
 	b.closePicture()
@@ -344,9 +369,20 @@ func (b *builder) boundary(n *scene.Node, reason Reason) uint64 {
 		layer.boxRadius = bs.Radius
 	}
 
-	// 2) 局部裁剪 = (父裁剪 - 层原点) ∩ 自身裁剪
-	clipLocal := parentClip.Offset(-origin.X, -origin.Y)
-	clipValid := hasClip
+	// 2) 裁剪分两份，职责不同：
+	//    - 祖先链裁剪（滚动视口、矩形 Clip 节点等非开层裁剪，c.clipRect）
+	//      → 存进 layer.inheritClip（换算到层局部空间），合成时与 blend
+	//      裁剪求交。**不烘进层内容流**：它随滚动平移滑动，烘进去层缓存
+	//      的离屏窗口跟着错位，平移不变性就没了（TestCacheTranslationInvariant
+	//      守着这条）。
+	//    - 自身 spec 裁剪 → 进层属性（rect 由 computeBounds 收口离屏尺寸、
+	//      圆角/路径走蒙版），并作为层内指令流的初始裁剪（局部、静态）。
+	if c.clipValid {
+		layer.inheritClip = c.clipRect.Offset(-origin.X, -origin.Y)
+		layer.inheritClipValid = true
+	}
+	clipLocal := geom.ZeroRect
+	clipValid := false
 	if spec := n.Clip(); spec != nil {
 		r := spec.Rect
 		if r.IsEmpty() {
@@ -365,13 +401,7 @@ func (b *builder) boundary(n *scene.Node, reason Reason) uint64 {
 			layer.clip = ClipRect
 			layer.clipRect = r
 		}
-		if clipValid {
-			clipLocal = clipLocal.Intersect(r)
-		} else {
-			clipLocal, clipValid = r, true
-		}
-	} else if !clipValid {
-		clipLocal = geom.ZeroRect
+		clipLocal, clipValid = r, true
 	}
 
 	inner := render.NewRecorderAt(render.NewDisplayList(32), local, clipLocal, clipValid)
@@ -381,8 +411,11 @@ func (b *builder) boundary(n *scene.Node, reason Reason) uint64 {
 		inner.ClipRect(clipLocal.RoundOut())
 	}
 
-	// 3) 层内上下文
-	b.push(&bctx{rec: inner, out: &layer.children, group: layer, depth: c.depth + 1})
+	// 3) 层内上下文（结构链从自身 spec 重新起算——祖先链已存 inheritClip）
+	b.push(&bctx{
+		rec: inner, out: &layer.children, group: layer, depth: c.depth + 1,
+		clipRect: clipLocal, clipValid: clipValid,
+	})
 	n.PaintSelf(inner)
 	var h uint64
 	for _, ch := range n.Children() {
@@ -434,8 +467,12 @@ func (b *builder) closePicture() {
 	if !ok {
 		return
 	}
+	// scissor 重放：clip 状态是设备空间（记录时的矩阵已并进 Rect），必须
+	// 用不映射的 ClipRectDevice——分裂点常在已平移的节点坐标系里（滤镜
+	// 层边界），走 ClipRect 会被当前矩阵二次平移，重放出的裁剪整体错位
+	//（thumb 顶部丢失、文本左侧被裁即此因）。
 	if clip, has := c.rec.Clip(); has && !clip.IsEmpty() {
-		c.rec.ClipRect(clip)
+		c.rec.ClipRectDevice(clip)
 	}
 	if dl.Painted() == 0 {
 		return

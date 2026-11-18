@@ -80,8 +80,17 @@ func TestEmptySkeletonSpin(t *testing.T) {
 func TestSteps(t *testing.T) {
 	n := (&Steps{Labels: []string{"第一步", "第二步", "第三步"}, Current: 1}).Build(testCtx())
 	n.Layout(scene.Unbounded())
-	if got := len(n.Children()); got != 3 {
-		t.Fatalf("Steps 步数 = %d，应为 3", got)
+	// 新结构：根节点 = 步骤列与连接线交替（3 步 → 5 个子节点）。
+	steps, connectors := 0, 0
+	for _, ch := range n.Children() {
+		if len(ch.Children()) >= 2 {
+			steps++
+		} else {
+			connectors++
+		}
+	}
+	if steps != 3 || connectors != 2 {
+		t.Fatalf("Steps 步数 = %d（应 3），连接线 = %d（应 2）", steps, connectors)
 	}
 	if got := len(n.Children()[0].Children()); got != 2 {
 		t.Fatalf("每一步应有圆形序号+标签两个子节点，实际 %d", got)
@@ -178,8 +187,10 @@ func TestCollapseToggle(t *testing.T) {
 		t.Fatalf("展开失败: open=%d changed=%d", c.Open, changed)
 	}
 	// headless 下 MarkDirty 不自动重建，手动重建验证展开态
+	// 新结构：collapse 根 → 面板容器（Box）→ 内容根（表头+内容包装）。
 	rebuilt := c.Build(r.ctx)
-	if got := len(rebuilt.Children()[0].Children()); got != 2 {
+	panel := rebuilt.Children()[0].Children()[0]
+	if got := len(panel.Children()); got != 2 {
 		t.Fatalf("展开后应含表头+内容两个子节点，实际 %d", got)
 	}
 

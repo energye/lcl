@@ -57,7 +57,10 @@ func (a *AutoComplete) filtered() []string {
 func (a *AutoComplete) Build(ctx *ui.BuildContext) *scene.Node {
 
 	a.input.Width = a.Width
-	a.input.Placeholder = a.Placeholder
+	if a.Placeholder != "" {
+		// 仅在显式设置时覆盖：空值会抹掉 NewAutoComplete 里的默认占位。
+		a.input.Placeholder = a.Placeholder
+	}
 	a.input.Disabled = a.Disabled
 	a.input.Value = a.Value
 	a.input.OnChanged = func(s string) {

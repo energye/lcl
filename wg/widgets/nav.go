@@ -50,12 +50,7 @@ func (t *Tabs) Build(ctx *ui.BuildContext) *scene.Node {
 	m := ui.MetricsFor(th, ui.SizeMedium)
 	headers := make([]ui.Widget, 0, len(t.Items))
 	for i, item := range t.Items {
-		states := ui.StateSet(0)
-		if i == t.Active {
-			states |= ui.StateSelected
-		}
-		st := ui.StyleOf(th, ui.VariantSoft, ui.SizeMedium, states)
-		hdr := &tabHeader{index: i, label: item.Label, style: st, metrics: m, tabs: t}
+		hdr := &tabHeader{index: i, label: item.Label, metrics: m, tabs: t}
 		headers = append(headers, hdr)
 	}
 	bar := scene.Flex(scene.Horizontal, th.Space.SM, buildChildren(ctx, headers)...)
@@ -78,14 +73,27 @@ type tabHeader struct {
 }
 
 func (h *tabHeader) Build(ctx *ui.BuildContext) *scene.Node {
+	th := ctx.ThemeOr()
 	font := text.DefaultFont(h.metrics.Font)
 	layout := text.LayoutText(h.label, font, text.Options{})
 	w := layout.Size.W + h.metrics.Padding.Min.X + h.metrics.Padding.Max.X
-	n := scene.Box(scene.BoxSpec{Fill: scene.Solid(h.style.Background), Radius: h.style.Radius}).
-		SetSize2(w, h.metrics.Height)
-	label := scene.Text(scene.TextSpec{Src: h.label, Layout: layout, Color: h.style.Foreground})
+	// antd line 型页签：无底色按钮盒，文字色区分选中/悬停，选中带底部
+	// 下划线指示条（此前是实心主色圆角块，与官方 line 型不符）。
+	n := scene.Box(scene.BoxSpec{}).SetSize2(w, h.metrics.Height)
+	col := th.Color.Text
+	if h.index == h.tabs.Active {
+		col = th.Color.Primary
+	} else if h.hover {
+		col = th.Color.PrimaryHover
+	}
+	label := scene.Text(scene.TextSpec{Src: h.label, Layout: layout, Color: col})
 	label.SetMargin(geom.InLTRB(h.metrics.Padding.Min.X, (h.metrics.Height-layout.Size.H)/2, 0, 0))
 	n.Add(label)
+	if h.index == h.tabs.Active {
+		ind := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary)}).SetSize2(w, 2)
+		ind.SetPositionKeepSize(true).SetStackPosition(geom.Pt(0, h.metrics.Height-2))
+		n.Add(ind)
+	}
 	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "tab", Cursor: scene.CursorPointer})
 
 	tabs, index := h.tabs, h.index

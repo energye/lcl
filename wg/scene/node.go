@@ -474,9 +474,15 @@ func Grid(columns int, gap float32, children ...*Node) *Node {
 }
 
 // Scroll 创建滚动视口（单子节点）。
+//
+// 绘制时裁剪到自身边界：平移出去的内容不进指令流。此前只平移不裁剪，
+// 溢出内容会盖住视口外的其它 UI（scroll 示例真窗可复现）。空 spec 的
+// 语义是"按节点尺寸裁"（recordClip 与 composite 对空 Rect 的既定解释），
+// 两条绘制路径（扁平 Record / composite 层树）都吃这条。
 func Scroll(axis Axis, child *Node) *Node {
 	n := newNode(KindScroll)
 	n.axis = axis
+	n.clip = &ClipSpec{}
 	if child != nil {
 		n.Add(child)
 	}

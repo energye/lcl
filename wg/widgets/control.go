@@ -312,13 +312,15 @@ func NewSwitch(on bool) *Switch { return &Switch{On: on} }
 // Build 实现 ui.Widget。
 func (b *Switch) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
-	st := ui.StyleOf(th, ui.VariantSoft, ui.SizeSmall, b.states(b.Disabled || b.Loading))
 	trackW, trackH, knob := float32(36), float32(20), float32(16)
 	if b.Small {
 		trackW, trackH, knob = 24, 12, 8
 	}
+	// 轨道色直接取 antd Switch 语义（开=主色/悬停主色亮、关=中性灰），
+	// 不经 VariantSoft——那个变体是"浅底标签"语义，会给开态返回
+	// SurfaceSunken，蓝轨道在同类色舞台上隐形（M8 对照漏检）。
 	track := scene.Box(scene.BoxSpec{
-		Fill:   scene.Solid(bgOf(th, st, b.On)),
+		Fill:   scene.Solid(bgOf(th, b.On, b.hover, b.Disabled || b.Loading)),
 		Radius: trackH / 2,
 	}).SetSize2(trackW, trackH)
 
@@ -359,7 +361,6 @@ func (b *Switch) Build(ctx *ui.BuildContext) *scene.Node {
 		k.SetPositionKeepSize(true).SetStackPosition(geom.Pt(knobX, (trackH-knob)/2))
 		track.Add(k)
 	}
-	track.SetOpacity(st.Opacity)
 	track.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "switch", Cursor: scene.CursorPointer})
 
 	toggle := func() {
@@ -377,13 +378,17 @@ func (b *Switch) Build(ctx *ui.BuildContext) *scene.Node {
 	return track
 }
 
-// bgOf 根据布尔状态取语义色（不用组件自己的色值）。
-func bgOf(th *theme.Data, st ui.Style, on bool) geom.Color {
-	if !on {
-		return th.Color.SurfaceSunken
+// bgOf 取轨道语义色（antd Switch：开=主色，悬停=主色亮；关=中性灰，
+// 即 colorTextQuaternary 的实色等价；禁用=浅灰轨道）。
+func bgOf(th *theme.Data, on, hover, disabled bool) geom.Color {
+	if disabled {
+		return th.Color.SurfaceHover
 	}
-	if st.Background == (geom.Color{}) {
+	if on {
+		if hover {
+			return th.Color.PrimaryHover
+		}
 		return th.Color.Primary
 	}
-	return st.Background
+	return th.Color.BorderStrong
 }

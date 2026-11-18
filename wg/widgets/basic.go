@@ -276,7 +276,12 @@ func (v *TextView) Build(ctx *ui.BuildContext) *scene.Node {
 
 // Scroll 是带滚动条的滚动视口。宽高 <=0 时由父级约束决定（放进 Flex 要设 flex）。
 //
-// Offset 跨重建保留；ShowScrollbar = nil 时内容溢出才显示滚动条。
+// Axis = Horizontal/Vertical 是单轴滚动；Both 是双轴模式：纵向与横向各自
+// 滚动，两条滚动条都钉在视口边缘（不随内容平移），内容宽 =
+// max(视口宽, 内容自然宽)——窄视口不把内容压窄，由横向视口裁剪。
+//
+// Offset（纵向，单轴横向时即横向）/OffsetX（横向，仅 Both）跨重建保留；
+// ShowScrollbar = nil 时内容溢出才显示滚动条。
 type Scroll struct {
 	controlBase
 	Axis          scene.Axis
@@ -286,15 +291,22 @@ type Scroll struct {
 	ShowScrollbar *bool
 	// BarThickness 滚动条粗细（0 = 8）。
 	BarThickness float32
-	// Offset 是滚动偏移（跨重建保留）。
+	// Offset 是纵向滚动偏移（跨重建保留）；单轴横向模式下是横向偏移。
 	Offset float32
+	// OffsetX 是横向滚动偏移（仅 Both 模式，跨重建保留）。
+	OffsetX float32
 
-	view *scene.Node
-	bar  *Scrollbar
+	view  *scene.Node
+	viewX *scene.Node
+	bar   *Scrollbar
+	barX  *Scrollbar
 }
 
 // Build 实现 ui.Widget。
 func (s *Scroll) Build(ctx *ui.BuildContext) *scene.Node {
+	if s.Axis == scene.Both {
+		return s.buildBoth(ctx)
+	}
 	vertical := s.Axis == scene.Vertical
 	w, h := s.Width, s.Height
 	if w < 0 {
@@ -442,4 +454,177 @@ func (s *Scroll) Build(ctx *ui.BuildContext) *scene.Node {
 		}})
 	}
 	return stack
+}
+
+// Bar 返回纵向/横向滚动条实例（Both 模式下各自独立；未创建时为 nil）。
+// 诊断与测试用：Max/Value 反映当前溢出量与偏移。
+func (s *Scroll) Bar() (vertical, horizontal *Scrollbar) { return s.bar, s.barX }
+
+// buildBoth 双轴滚动：横向视口在外、纵向视口在内（scene.Scroll 是单轴的，
+// 两轴 = 嵌套），两条滚动条是 Stack 兄弟节点、钉在视口边缘——不随内容
+// 平移，横向滚动时纵向条不会跟着滑出视野。
+//
+// 内容宽撑到 max(视口宽, 自然宽)：纵向视口的紧约束是"内容宽=视口宽"，
+// 窄视口下会把内容压窄；先按自然宽把纵向视口撑宽，横向裁剪交给外层。
+func (s *Scroll) buildBoth(ctx *ui.BuildContext) *scene.Node {
+	w, h := s.Width, s.Height
+	if w < 0 {
+		w = 0
+	}
+	if h < 0 {
+		h = 0
+	}
+
+	child := buildChild(ctx, s.Child)
+	// 预测量：全无界拿自然宽 → 内容宽 = max(视口宽, 自然宽)，再按内容宽
+	// 紧约束测内容高（与 placeScroll 的纵向约束一致，条的比例才对得上）。
+	nat := child.Layout(scene.Unbounded())
+	contentW := nat.W
+	if w > contentW {
+		contentW = w
+	}
+	child.Layout(scene.NewConstraints(contentW, contentW, 0, scene.Inf))
+	content := child.Size()
+
+	viewV := scene.Scroll(scene.Vertical, child)
+	if contentW > 0 {
+		viewV.SetWidth(contentW)
+	}
+	if h > 0 {
+		viewV.SetHeight(h)
+	}
+	viewV.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "scroll-both-v"})
+	viewH := scene.Scroll(scene.Horizontal, viewV)
+	if w > 0 {
+		viewH.SetWidth(w)
+	}
+	if h > 0 {
+		viewH.SetHeight(h)
+	}
+	viewH.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "scroll-both"})
+
+	viewport, maxV := h, content.H-h
+	if maxV < 0 {
+		maxV = 0
+	}
+	maxH := contentW - w
+	if maxH < 0 {
+		maxH = 0
+	}
+	if s.Offset < 0 {
+		s.Offset = 0
+	}
+	if s.OffsetX < 0 {
+		s.OffsetX = 0
+	}
+	viewV.SetScrollOffset(s.Offset) // 布局后会按真实内容再钳一次
+	viewH.SetScrollOffset(s.OffsetX)
+
+	thick := s.BarThickness
+	if thick <= 0 {
+		thick = scrollbarThickness
+	}
+	if s.bar == nil {
+		s.bar = &Scrollbar{Axis: scene.Vertical}
+	}
+	if s.barX == nil {
+		s.barX = &Scrollbar{Axis: scene.Horizontal}
+	}
+	barV, barH := s.bar, s.barX
+	barV.Thickness = thick
+	barV.Max = maxV
+	barV.Viewport = viewport
+	barV.Value = s.Offset
+	barV.Length = h - 2*scrollbarInset
+	barV.OnChange = func(v float32) {
+		s.Offset = v
+		if s.view != nil {
+			s.view.SetScrollOffset(v)
+		}
+		if ctx.RequestFrame != nil {
+			ctx.RequestFrame()
+		}
+	}
+	barH.Thickness = thick
+	barH.Max = maxH
+	barH.Viewport = w
+	barH.Value = s.OffsetX
+	barH.Length = w - 2*scrollbarInset
+	barH.OnChange = func(v float32) {
+		s.OffsetX = v
+		if s.viewX != nil {
+			s.viewX.SetScrollOffset(v)
+		}
+		if ctx.RequestFrame != nil {
+			ctx.RequestFrame()
+		}
+	}
+	s.view, s.viewX = viewV, viewH
+
+	stack := scene.Stack()
+	if w > 0 && h > 0 {
+		stack.SetSize2(w, h)
+	}
+	viewH.SetPositionKeepSize(true)
+	viewH.SetStackPosition(geom.Pt(0, 0))
+	stack.Add(viewH)
+
+	// 条按轴各自决定显隐（ShowScrollbar 作用于两轴）。
+	build := func(bar *Scrollbar, max, length float32, pos geom.Point) {
+		if !showBar(s.ShowScrollbar, max) || length <= 0 {
+			return
+		}
+		node := bar.Build(ctx)
+		node.SetPositionKeepSize(true)
+		node.SetStackPosition(pos)
+		stack.Add(node)
+	}
+	build(barV, maxV, barV.Length, geom.Pt(w-thick-scrollbarInset, scrollbarInset))
+	build(barH, maxH, barH.Length, geom.Pt(scrollbarInset, h-thick-scrollbarInset))
+
+	if ctx.Input != nil {
+		ctx.Input.Set(stack, input.Handler{Wheel: func(ev *input.WheelEvent) bool {
+			consumed := false
+			// 任一轴动了就算消费；两轴都到边界才交给外层滚动。
+			if ev.Delta.Y != 0 && scrollClamped(&s.Offset, ev.Delta.Y, maxV) {
+				viewV.SetScrollOffset(s.Offset)
+				barV.SetValue(s.Offset)
+				consumed = true
+			}
+			if ev.Delta.X != 0 && scrollClamped(&s.OffsetX, ev.Delta.X, maxH) {
+				viewH.SetScrollOffset(s.OffsetX)
+				barH.SetValue(s.OffsetX)
+				consumed = true
+			}
+			if consumed && ctx.RequestFrame != nil {
+				ctx.RequestFrame()
+			}
+			return consumed
+		}})
+	}
+	return stack
+}
+
+// showBar 单轴显隐判定：nil = 溢出才显示。
+func showBar(flag *bool, max float32) bool {
+	if flag != nil {
+		return *flag
+	}
+	return max > 0
+}
+
+// scrollClamped 把 *v 加 dy 后钳到 [0,max]，有变化才返回 true。
+func scrollClamped(v *float32, dy, max float32) bool {
+	next := *v + dy
+	if next < 0 {
+		next = 0
+	}
+	if next > max {
+		next = max
+	}
+	if next == *v {
+		return false
+	}
+	*v = next
+	return true
 }

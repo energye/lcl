@@ -25,6 +25,9 @@ func contentWidth(ctx *ui.BuildContext) float32 {
 type page struct {
 	ui.Base
 	meta Meta
+	// pane 是窗体级双轴滚动视口。实例挂在 page 上跨重建持有：
+	// resize 重建本页时滚动位置不丢。
+	pane *widgets.Scroll
 }
 
 // Page 把 Meta 包装成可挂载的文档页 Widget。
@@ -32,11 +35,16 @@ func Page(m Meta) ui.Widget { return &page{meta: m} }
 
 // Build 实现 ui.Widget。
 //
-// 页面高度超过视口时整页滚动；版心宽随视口自适应（resize 时容器重建根
+// 页面内容超出视口时出纵/横滚动条（widgets.Scroll 的 Both 模式，滚轮/
+// 拖滑块/点轨道翻页都可用）；版心宽随视口自适应（resize 时容器重建根
 // widget，本方法拿到新的 Viewport 自动重排）。
 func (p *page) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	w := contentWidth(ctx)
+	// ViewportSize()（不是直接读 ctx.Viewport）才会登记视口依赖，
+	// resize 时容器才重建本页。
+	vp := ctx.ViewportSize()
+	vw, vh := vp.W-80, vp.H-56 // 版心边距：左右 40×2，上 24 下 32
 	col := scene.Flex(scene.Vertical, 16)
 	col.SetWidth(w)
 
@@ -63,8 +71,8 @@ func (p *page) Build(ctx *ui.BuildContext) *scene.Node {
 	// ③ 演示块×N：每块 = 标题 + 效果说明 + 可交互 demo 舞台。
 	if len(p.meta.Demos) > 0 {
 		col.Add(sectionTitle(ctx, "使用演示"))
-		for _, d := range p.meta.Demos {
-			col.Add(p.demoCard(ctx, d))
+		for i := range p.meta.Demos {
+			col.Add(p.demoCard(ctx, p.meta.Demos[i]))
 		}
 	}
 
@@ -74,10 +82,15 @@ func (p *page) Build(ctx *ui.BuildContext) *scene.Node {
 		col.Add(apiTable(ctx, p.meta.API))
 	}
 
-	// 版心边距由外层 Box 的 padding 给（Scroll 子节点不吃 margin，
-	// 交叉轴被视口约束直接拉回 0）。
-	page := scene.Scroll(scene.Vertical, col)
-	root := scene.Box(scene.BoxSpec{}, page)
+	// 窗体级双轴滚动：内容超出视口时纵/横条按需出现（ShowScrollbar
+	// 默认语义）。内容列由闭包交给 pane，Build 时用当前 ctx 构建。
+	if p.pane == nil {
+		p.pane = &widgets.Scroll{Axis: scene.Both}
+	}
+	p.pane.Child = Node(func(*ui.BuildContext) *scene.Node { return col })
+	p.pane.Width = vw
+	p.pane.Height = vh
+	root := scene.Box(scene.BoxSpec{}, p.pane.Build(ctx))
 	root.SetPadding(geom.InLTRB(40, 24, 40, 32))
 	return root
 }
@@ -89,6 +102,11 @@ func sectionTitle(ctx *ui.BuildContext, text string) *scene.Node {
 }
 
 // demoCard 渲染一个演示块。舞台底色用 SurfaceSunken，与页面背景区分开。
+//
+// 注意：Demo.Build 在每次页面重建时都会重新执行（产出全新节点树）。
+// 需要跨重建保状态的 demo（输入焦点/文本、开关勾选……）必须把控件
+// 实例持有在闭包外（包级变量或页结构体字段），闭包内只做
+// instance.Build(ctx) —— 这是 scroll 示例展示的既定模式。
 func (p *page) demoCard(ctx *ui.BuildContext, d Demo) *scene.Node {
 	w := contentWidth(ctx)
 	th := ctx.ThemeOr()

@@ -13,6 +13,26 @@ var (
 	inp    = widgets.NewInput("试试输入中文，或用输入法组合")
 	status = widgets.NewTextView("当前内容：")
 	edit   = widgets.NewInput("试试 Backspace / Delete / Ctrl+A / Ctrl+←→")
+
+	// 各 demo 的交互控件实例在包级持有：demo 闭包在每次页面重建时都会
+	// 重新执行（产出全新节点），实例一换，焦点/文本/勾选态就跟着丢——
+	// "点击聚焦→重建→焦点丢失"就是实例不持有导致的。闭包内只做
+	// instance.Build(ctx)（模式与 scroll 示例一致）。
+	variants = [3]*widgets.Input{
+		widgets.NewInput("outlined"),
+		widgets.NewInput("filled"),
+		widgets.NewInput("borderless"),
+	}
+	statuses = [4]*widgets.Input{
+		widgets.NewInput("error 状态"),
+		widgets.NewInput("warning 状态"),
+		widgets.NewInput("small"),
+		widgets.NewInput("large"),
+	}
+	prefixed = widgets.NewInput("站内搜索")
+	suffixed = widgets.NewInput("金额")
+	addoned  = widgets.NewInput("example.com 前缀")
+	counted  = widgets.NewInput("看右下角字数")
 )
 
 func init() {
@@ -23,6 +43,23 @@ func init() {
 		status.SetText("当前内容：" + s)
 	}
 	edit.Width = 460
+
+	variants[0].Width = 260
+	variants[1].Width, variants[1].Variant = 260, widgets.InputFilled
+	variants[2].Width, variants[2].Variant = 260, widgets.InputBorderless
+	statuses[0].Width, statuses[0].Status = 260, widgets.InputStatusError
+	statuses[1].Width, statuses[1].Status = 260, widgets.InputStatusWarning
+	statuses[2].Width, statuses[2].Size = 260, ui.SizeSmall
+	statuses[3].Width, statuses[3].Size = 260, ui.SizeLarge
+	prefixed.Width, prefixed.AllowClear = 300, true
+	prefixed.Prefix = &widgets.Icon{Name: "search", Size: 14}
+	suffixed.Width = 300
+	suffixed.Suffix = &widgets.Icon{Name: "info-circle", Size: 14}
+	addoned.Width = 300
+	addoned.AddonAfter = doc.Node(func(ctx *ui.BuildContext) *scene.Node {
+		return (&widgets.Label{Text: ".com", Size: 13, Color: ctx.ThemeOr().Color.TextMuted}).Build(ctx)
+	})
+	counted.Width, counted.Count = 300, true
 }
 
 func main() {
@@ -51,43 +88,16 @@ func main() {
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
 			}},
 			{Title: "三种 variant", Note: "outlined（默认）/ filled（灰底）/ borderless（无框）", Build: func(ctx *ui.BuildContext) ui.Widget {
-				o := widgets.NewInput("outlined")
-				o.Width = 260
-				f := widgets.NewInput("filled")
-				f.Width, f.Variant = 260, widgets.InputFilled
-				bl := widgets.NewInput("borderless")
-				bl.Width, bl.Variant = 260, widgets.InputBorderless
-				return widgets.Column{Gap: 8, Children: []ui.Widget{o, f, bl}}
+				return widgets.Column{Gap: 8, Children: []ui.Widget{variants[0], variants[1], variants[2]}}
 			}},
 			{Title: "status 与尺寸", Note: "error 红边 / warning 黄边；small/middle/large", Build: func(ctx *ui.BuildContext) ui.Widget {
-				err := widgets.NewInput("error 状态")
-				err.Width, err.Status = 260, widgets.InputStatusError
-				warn := widgets.NewInput("warning 状态")
-				warn.Width, warn.Status = 260, widgets.InputStatusWarning
-				sm := widgets.NewInput("small")
-				sm.Width, sm.Size = 260, ui.SizeSmall
-				lg := widgets.NewInput("large")
-				lg.Width, lg.Size = 260, ui.SizeLarge
-				return widgets.Column{Gap: 8, Children: []ui.Widget{err, warn, sm, lg}}
+				return widgets.Column{Gap: 8, Children: []ui.Widget{statuses[0], statuses[1], statuses[2], statuses[3]}}
 			}},
 			{Title: "前后缀与清除", Note: "prefix 图标 + suffix 图标；输入后 hover 显示 allowClear 清除", Build: func(ctx *ui.BuildContext) ui.Widget {
-				prefixed := widgets.NewInput("站内搜索")
-				prefixed.Width, prefixed.AllowClear = 300, true
-				prefixed.Prefix = &widgets.Icon{Name: "search", Size: 14}
-				suffixed := widgets.NewInput("金额")
-				suffixed.Width = 300
-				suffixed.Suffix = &widgets.Icon{Name: "info-circle", Size: 14}
 				return widgets.Column{Gap: 8, Children: []ui.Widget{prefixed, suffixed}}
 			}},
 			{Title: "addon 与 count", Note: "addonBefore/addonAfter 灰块；Count 右下角字数", Build: func(ctx *ui.BuildContext) ui.Widget {
-				withAddon := widgets.NewInput("example.com 前缀")
-				withAddon.Width = 300
-				withAddon.AddonAfter = doc.Node(func(ctx *ui.BuildContext) *scene.Node {
-					return (&widgets.Label{Text: ".com", Size: 13, Color: ctx.ThemeOr().Color.TextMuted}).Build(ctx)
-				})
-				counted := widgets.NewInput("看右下角字数")
-				counted.Width, counted.Count = 300, true
-				return widgets.Column{Gap: 12, Children: []ui.Widget{withAddon, counted}}
+				return widgets.Column{Gap: 12, Children: []ui.Widget{addoned, counted}}
 			}},
 			{Title: "文本编辑按键", Note: "编辑键统一处理；Enter/Tab 是语义动作不进入文本", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return edit

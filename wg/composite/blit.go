@@ -1,6 +1,9 @@
 package composite
 
 import (
+	"math"
+
+	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/raster"
 )
 
@@ -9,13 +12,15 @@ import (
 // 参数含义（三者相乘就是"这个源像素最终的有效 alpha"）：
 //   - src 自带 alpha（内容本身的半透明）；
 //   - alpha 是层透明度（组透明，0..1）；
-//   - mask 是裁剪覆盖率（nil 表示不裁剪）。
+//   - mask 是裁剪覆盖率（nil 表示不裁剪）；
+//   - clip 是设备空间的矩形裁剪（滚动视口等继承裁剪在这里收口——
+//     它不烘进层内容，所以缓存命中的贴图同样被正确裁剪）。
 //
 // 全部在**预乘**空间里算：src 已经是预乘的，所以"再乘一个因子 f"
 // 等价于 RGB 与 A 同时乘 f，不需要反预乘再预乘（那会丢精度）。
 //
 // 返回实际参与混合的像素数（统计用）。
-func blendBacking(dst, src *raster.Backing, dx, dy int, alpha float32, mask []uint8) int {
+func blendBacking(dst, src *raster.Backing, dx, dy int, alpha float32, mask []uint8, clip geom.Rect) int {
 	if dst == nil || src == nil {
 		return 0
 	}
@@ -27,24 +32,37 @@ func blendBacking(dst, src *raster.Backing, dx, dy int, alpha float32, mask []ui
 		mask = nil // 蒙版尺寸不匹配：宁可不裁也不能越界读
 	}
 	sw, sh := src.W(), src.H()
+	// 有效混合区 = clip（取整向外）∩ dst 边界，换算成 src 的行列区间。
+	// 循环前收敛成区间而不是逐像素判断：热循环里一次比较都不加。
+	cx0, cy0 := int(math.Floor(float64(clip.Min.X))), int(math.Floor(float64(clip.Min.Y)))
+	cx1, cy1 := int(math.Ceil(float64(clip.Max.X))), int(math.Ceil(float64(clip.Max.Y)))
 	dw, dh := dst.W(), dst.H()
+	if cx0 < 0 {
+		cx0 = 0
+	}
+	if cy0 < 0 {
+		cy0 = 0
+	}
+	if cx1 > dw {
+		cx1 = dw
+	}
+	if cy1 > dh {
+		cy1 = dh
+	}
+	sx0, sx1 := clampi(cx0-dx, 0, sw), clampi(cx1-dx, 0, sw)
+	sy0, sy1 := clampi(cy0-dy, 0, sh), clampi(cy1-dy, 0, sh)
+	if sx0 >= sx1 || sy0 >= sy1 {
+		return 0
+	}
 	n := 0
-	for sy := 0; sy < sh; sy++ {
-		ty := dy + sy
-		if ty < 0 || ty >= dh {
-			continue
-		}
+	for sy := sy0; sy < sy1; sy++ {
 		srow := src.Row(sy)
-		drow := dst.Row(ty)
+		drow := dst.Row(dy + sy)
 		var mrow []uint8
 		if mask != nil {
 			mrow = mask[sy*sw : (sy+1)*sw]
 		}
-		for sx := 0; sx < sw; sx++ {
-			tx := dx + sx
-			if tx < 0 || tx >= dw {
-				continue
-			}
+		for sx := sx0; sx < sx1; sx++ {
 			sp := srow[sx]
 			sa0 := int(sp >> 24)
 			if sa0 == 0 {
@@ -70,6 +88,7 @@ func blendBacking(dst, src *raster.Backing, dx, dy int, alpha float32, mask []ui
 					continue
 				}
 			}
+			tx := dx + sx
 			d := drow[tx]
 			if f == 255 && sa == 255 {
 				// 完全不透明：直接替换，省掉两次乘法
@@ -102,4 +121,15 @@ func blendBacking(dst, src *raster.Backing, dx, dy int, alpha float32, mask []ui
 		}
 	}
 	return n
+}
+
+// clampi 把 v 钳到 [lo,hi]。
+func clampi(v, lo, hi int) int {
+	if v < lo {
+		return lo
+	}
+	if v > hi {
+		return hi
+	}
+	return v
 }

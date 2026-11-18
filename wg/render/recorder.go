@@ -188,6 +188,17 @@ func (r *Recorder) ClipRect(rc geom.Rect) {
 	r.dl.append(Command{Op: OpClipRect, Rect: dev, Matrix: r.matrix, Path: -1, Paint: -1, Text: -1, Image: -1})
 }
 
+// ClipRectDevice 以设备空间矩形直接设置裁剪，不经过当前矩阵映射。
+//
+// closePicture 分裂指令流时用它重放 scissor：clip 状态本就是设备空间
+// （记录时的矩阵已经并进 Rect），若走 ClipRect 会被当前矩阵二次平移——
+// 分裂点落在已平移的节点坐标系里时（如滤镜层边界），重放出的裁剪会
+// 整体错位，把流内后续内容裁没（thumb 顶部丢失即此因）。
+func (r *Recorder) ClipRectDevice(dev geom.Rect) {
+	r.clip, r.clipValid = dev, true
+	r.dl.append(Command{Op: OpClipRect, Rect: dev, Matrix: geom.Identity, Path: -1, Paint: -1, Text: -1, Image: -1})
+}
+
 // ClipPath 按路径裁剪。
 //
 // 指令同时携带路径与设备空间包围盒：包围盒先收 scissor（省像素），

@@ -157,6 +157,13 @@ type Layer struct {
 	clipRadius float32
 	clipPath   *render.Path
 
+	// inheritClip 是**祖先链**（滚动视口、矩形 Clip 节点等非开层裁剪）
+	// 累计出的裁剪矩形，已经换算到本层局部空间。它不烘进层内容流：
+	// 烘进去会随滚动平移滑动，层缓存的离屏窗口跟着错位（平移不变性
+	// 被打破）；改在合成时与 blend 裁剪求交（见 drawLayer/drawGroup）。
+	inheritClip      geom.Rect
+	inheritClipValid bool
+
 	// version 是内容签名：由子树里所有节点的 (id, signature) 混合而成。
 	// 它刻意**不**包含位置——位置变了内容没变，缓存应当继续命中。
 	version uint64
@@ -304,3 +311,8 @@ func (l *Layer) backingSize() (int, int) {
 	r := l.bounds.RoundOut()
 	return int(r.W()), int(r.H())
 }
+
+// InheritClip 返回祖先链裁剪（层局部空间）；InheritClipValid 报告是否有。
+// 诊断用：视口裁剪错位时先看这里。
+func (l *Layer) InheritClip() geom.Rect      { return l.inheritClip }
+func (l *Layer) InheritClipValid() bool      { return l.inheritClipValid }
