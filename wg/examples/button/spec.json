@@ -9,5 +9,214 @@
       "图标 / 形状 / 尺寸 / block",
       "禁用"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "五种 type",
+      "cases": [
+        {
+          "name": "Primary 背景为主色",
+          "target": {
+            "label": "button",
+            "text": "Primary"
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.12,
+                0.12,
+                0.76,
+                0.13
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "Default 背景为表面色",
+          "target": {
+            "label": "button",
+            "text": "Default"
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.12,
+                0.12,
+                0.76,
+                0.13
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "Text 按钮透明（舞台底色）",
+          "target": {
+            "label": "button",
+            "text": "Text"
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.12,
+                0.12,
+                0.76,
+                0.13
+              ],
+              "expect": {
+                "token": "SurfaceSunken"
+              },
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "Primary hover 有底色反馈",
+          "target": {
+            "label": "button",
+            "text": "Primary"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 120
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorDelta",
+              "tolPeak": 3,
+              "minRatio": 0.05
+            }
+          ]
+        },
+        {
+          "name": "Default hover 边框文字转主色",
+          "target": {
+            "label": "button",
+            "text": "Default"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 120
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorDelta",
+              "tolPeak": 3,
+              "minRatio": 0.03
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "danger 危险按钮",
+      "cases": [
+        {
+          "name": "Danger Primary 背景为 Error 色",
+          "target": {
+            "label": "button",
+            "text": "Danger Primary"
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.12,
+                0.12,
+                0.76,
+                0.13
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "tol": 14
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "点击与加载",
+      "cases": [
+        {
+          "name": "点击「点我」文案回显",
+          "target": {
+            "label": "button",
+            "text": "点我"
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "已点击"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "禁用",
+      "cases": [
+        {
+          "name": "禁用主按钮为禁用专色",
+          "target": {
+            "label": "button",
+            "disabled": true,
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.12,
+                0.12,
+                0.76,
+                0.13
+              ],
+              "expect": {
+                "token": "SurfaceHover"
+              },
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "禁用按钮点击无反馈",
+          "target": {
+            "label": "button",
+            "disabled": true,
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "disabled-no-op"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

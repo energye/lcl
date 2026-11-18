@@ -5,5 +5,62 @@
     "sections": [
       "基本悬停"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "基本悬停",
+      "cases": [
+        {
+          "name": "悬停出现提示（BandTooltip）",
+          "target": {
+            "label": "button",
+            "text": "把鼠标停在这里"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 900
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1,
+              "band": "tooltip"
+            }
+          ]
+        },
+        {
+          "name": "移出后提示消失",
+          "target": {
+            "label": "button",
+            "text": "把鼠标停在这里"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 900
+            },
+            {
+              "moveOut": true
+            },
+            {
+              "wait": 400
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0,
+              "band": "tooltip"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -69,11 +69,13 @@ func (p Progress) Build(ctx *ui.BuildContext) *scene.Node {
 		track.Add(fill)
 	}
 	if !p.ShowInfo {
+		track.SetHit(scene.HitSpec{Label: "progress"})
 		return track
 	}
 	row := scene.Flex(scene.Horizontal, 8).SetCrossAlign(scene.CrossCenter)
 	row.Add(track)
 	row.Add((&Label{Text: pctText(v), Size: th.Font.SizeSM, Color: fillColor}).Build(ctx))
+	row.SetHit(scene.HitSpec{Label: "progress"})
 	return row
 }
 

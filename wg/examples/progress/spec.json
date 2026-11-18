@@ -6,5 +6,83 @@
       "四档进度",
       "status 与百分比"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "四档进度",
+      "cases": [
+        {
+          "name": "25% 档填充为主色",
+          "target": {
+            "label": "progress",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.02,
+                0.35,
+                0.15,
+                0.3
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "满进度转 success 绿",
+          "target": {
+            "label": "progress",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.02,
+                0.35,
+                0.15,
+                0.3
+              ],
+              "expect": {
+                "token": "Success"
+              },
+              "tol": 14
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "status 与百分比",
+      "cases": [
+        {
+          "name": "exception 档填充为 Error 红",
+          "target": {
+            "label": "progress",
+            "index": 5
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.02,
+                0.35,
+                0.15,
+                0.3
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "tol": 14
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -60,6 +60,8 @@ func (c Card) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	n := scene.Box(spec, col)
 	n.SetPadding(pad)
+	// 定位锚（自动化测试选择器；DeferToChild 不参与命中，不影响交互）。
+	n.SetHit(scene.HitSpec{Label: "card"})
 	return n
 }
 

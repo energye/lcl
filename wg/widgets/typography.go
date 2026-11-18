@@ -43,6 +43,7 @@ func (t Title) Build(ctx *ui.BuildContext) *scene.Node {
 		Src: t.Text, Layout: text.LayoutText(t.Text, font, text.Options{LineHeight: 1.3}), Color: th.Color.Text,
 	})
 	n.SetMargin(geom.InLTRB(0, 0, 0, size*0.4))
+	n.SetHit(scene.HitSpec{Label: "typography"}) // 定位锚（DeferToChild 不影响交互）
 	return n
 }
 
@@ -61,11 +62,13 @@ func (p Paragraph) Build(ctx *ui.BuildContext) *scene.Node {
 		c = th.Color.Text
 	}
 	font := text.DefaultFont(th.Font.SizeBase)
-	return scene.Text(scene.TextSpec{
+	n := scene.Text(scene.TextSpec{
 		Src: p.Text, Layout: text.LayoutText(p.Text, font, text.Options{
 			MaxWidth: p.MaxWidth, LineHeight: 1.57,
 		}), Color: c,
 	})
+	n.SetHit(scene.HitSpec{Label: "typography"})
+	return n
 }
 
 // TextType 是 Text 的语义类型（antd Typography.Text.type）。
@@ -125,6 +128,7 @@ func (t Text) Build(ctx *ui.BuildContext) *scene.Node {
 	} else {
 		inner = scene.Text(scene.TextSpec{Src: t.Body, Layout: layout, Color: color})
 	}
+	inner.SetHit(scene.HitSpec{Label: "typography"})
 
 	switch {
 	case t.Mark:

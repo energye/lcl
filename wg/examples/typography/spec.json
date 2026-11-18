@@ -7,5 +7,28 @@
       "Text 语义",
       "段落"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "标题层级",
+      "cases": [
+        {
+          "name": "一级标题存在",
+          "target": {
+            "label": "typography",
+            "text": "h1. 一级标题"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "typography",
+                "text": "h1. 一级标题"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -7,11 +7,13 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
+// tip 包级持有：闭包内新建会让 hover 态随重建丢失。
+var tip = &widgets.Tooltip{
+	Text:  "悬停 400ms 后显示，移开自动消失",
+	Child: widgets.NewButton("把鼠标停在这里"),
+}
+
 func main() {
-	tip := &widgets.Tooltip{
-		Text:  "悬停 400ms 后显示，移开自动消失",
-		Child: widgets.NewButton("把鼠标停在这里"),
-	}
 	launcher.Main(doc.Meta{
 		ID: "tooltip", Title: "Tooltip 提示", Group: doc.GroupControl,
 		What: []string{

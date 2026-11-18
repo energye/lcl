@@ -5,5 +5,34 @@
     "sections": [
       "三段式卡片"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "三段式卡片",
+      "cases": [
+        {
+          "name": "卡片背景为表面色",
+          "target": {
+            "label": "card",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.1,
+                0.02,
+                0.8,
+                0.08
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "tol": 14
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

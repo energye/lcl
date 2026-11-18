@@ -80,6 +80,7 @@ type SpecAction struct {
 	Key      string     `json:"key,omitempty"`
 	Wheel    *float32   `json:"wheel,omitempty"`
 	MoveOut  bool       `json:"moveOut,omitempty"`
+	Wait     int        `json:"wait,omitempty"` // 毫秒（Tooltip 悬停延迟等）
 }
 
 // SpecClick 是点击/悬停位置（目标锚内的 frac，默认中心；Target 可覆盖锚）。
@@ -140,8 +141,9 @@ type specRunner struct {
 	rep     *Report
 	covered map[string]bool
 
-	start    *image.RGBA // case 起始帧（colorDelta / 往返对照）
-	startOff float32     // case 起始页面滚动偏移
+	start      *image.RGBA // case 起始帧（colorDelta / 往返对照）
+	startOff   float32     // case 起始页面滚动偏移
+	caseBounds geom.Rect   // case target 的初始位置（点击改变文本后的回退锚）
 }
 
 // runSpecModel 执行整份 spec，返回被用例覆盖的标签集合（供启发式兜底跳过）。
@@ -258,6 +260,30 @@ func (r *specRunner) countNodes(t SpecTarget) int {
 	return n
 }
 
+// locateNear 按中心距离就近匹配（点击改变文本后的回退定位）。
+func (r *specRunner) locateNear(t SpecTarget, center geom.Point) (*scene.Node, bool) {
+	var best *scene.Node
+	var bestD float32
+	r.c.Scene().Walk(func(n *scene.Node) bool {
+		h := n.HitSpec()
+		if h.Label != t.Label {
+			return true
+		}
+		if t.Disabled != nil && h.Disabled != *t.Disabled {
+			return true
+		}
+		d := dist(n.BoundsInRoot().Center(), center)
+		if best == nil || d < bestD {
+			best, bestD = n, d
+		}
+		return true
+	})
+	if best != nil && bestD < 400 { // 中心距 < 20px
+		return best, true
+	}
+	return nil, false
+}
+
 func nodeTextContains(n *scene.Node, sub string) bool {
 	found := false
 	n.Walk(func(ch *scene.Node) bool {
@@ -333,10 +359,16 @@ func (r *specRunner) runCase(cs SpecCase) {
 	injectLeave(r.c)
 	time.Sleep(120 * time.Millisecond)
 
-	// 目标默认滚入可视域。
-	if cs.Target != nil && !r.ensureVisible(*cs.Target) {
-		r.add(name, "定位", false, "目标不可见："+targetDesc(cs.Target))
-		return
+	// 目标默认滚入可视域；记录初始位置（点击可能改变文本，文本锚会失效）。
+	r.caseBounds = geom.Rect{}
+	if cs.Target != nil {
+		if !r.ensureVisible(*cs.Target) {
+			r.add(name, "定位", false, "目标不可见："+targetDesc(cs.Target))
+			return
+		}
+		if n, ok := r.locate(*cs.Target); ok {
+			r.caseBounds = n.BoundsInRoot()
+		}
 	}
 	// 前置。
 	for _, g := range cs.Given {
@@ -437,6 +469,8 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 		injectWheel(r.c, 1035, 400, *a.Wheel)
 	case a.MoveOut:
 		injectLeave(r.c)
+	case a.Wait > 0:
+		time.Sleep(time.Duration(a.Wait) * time.Millisecond)
 	default:
 		r.add(caseName, "操作", false, "空操作")
 		return false
@@ -516,11 +550,17 @@ func (r *specRunner) doAssert(caseName string, def *SpecTarget, as SpecAssertion
 		if as.MinRatio != nil {
 			minRatio = *as.MinRatio
 		}
+		// tolPeak 控制通道阈值：hover 底色变化只有几个色阶（#FFF→#FAFAFA），
+		// 用默认 12 会漏检，需要 3。
+		thresh := uint8(12)
+		if as.TolPeak != nil {
+			thresh = uint8(*as.TolPeak)
+		}
 		img := grab(r.c)
 		rect := r.sampleRect(target, as.Frac)
-		ratio := regionChanged(r.start, img, rect)
+		ratio := regionChangedThresh(r.start, img, rect, thresh)
 		r.add(caseName, "colorDelta", ratio >= minRatio,
-			fmt.Sprintf("%s 变化 %.3f ≥ %.3f", targetDesc(target), ratio, minRatio))
+			fmt.Sprintf("%s 变化 %.3f ≥ %.3f（阈值 %d）", targetDesc(target), ratio, minRatio, thresh))
 	case "focus":
 		label := "nil"
 		if d := r.c.Dispatcher(); d != nil {
@@ -556,6 +596,10 @@ func (r *specRunner) doAssert(caseName string, def *SpecTarget, as SpecAssertion
 		r.add(caseName, "scroll", pass, detail)
 	case "text":
 		n, ok := r.locate(*target)
+		if !ok && !r.caseBounds.IsEmpty() {
+			// 点击后文案变了，文本锚失效：按初始位置就近匹配同 label 节点。
+			n, ok = r.locateNear(*target, r.caseBounds.Center())
+		}
 		pass := ok && nodeTextContains(n, as.Text)
 		detail := "文本未包含：" + as.Text
 		if pass {
