@@ -63,8 +63,37 @@ type Button struct {
 	Loading  bool // 加载中：显示旋转指示并忽略点击
 	Block    bool // 宽度占满父级交叉轴
 	Disabled bool
-	Icon     *Icon // 前置图标（Loading 时被旋转指示替代）
-	OnClick  func()
+	// Ghost 透明背景（antd background-ghost）：文字/边框按类型取色，
+	// 背景恒透明；text/link 变体不允许（忽略，同 antd warn 后不生效）。
+	Ghost bool
+	// IconPosition 图标位于文字之前（默认）或之后（antd iconPosition）。
+	IconPosition ButtonIconPosition
+	Icon         *Icon // 图标（Loading 时被旋转指示替代）
+	OnClick      func()
+}
+
+// ButtonIconPosition 是图标位置（antd Button.iconPosition）。
+type ButtonIconPosition uint8
+
+const (
+	// IconStart 图标在文字前（默认）。
+	IconStart ButtonIconPosition = iota
+	// IconEnd 图标在文字后。
+	IconEnd
+)
+
+// isTwoCNChars 判定恰为两个汉字（antd two-chinese-chars 的 letter-spacing 规则）。
+func isTwoCNChars(s string) bool {
+	r := []rune(s)
+	if len(r) != 2 {
+		return false
+	}
+	for _, c := range r {
+		if c < 0x4E00 || c > 0x9FA5 {
+			return false
+		}
+	}
+	return true
 }
 
 // NewButton 创建默认按钮。
@@ -129,9 +158,41 @@ func (b *Button) dangerize(th *theme.Data, st ui.Style, v ui.Variant, s ui.Statu
 func (b *Button) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	v := b.variantOf()
-	st := ui.StyleOf(th, v, b.Size, b.states(b.Disabled || b.Loading))
+	// antd loading 不是禁用态：保持类型色，仅 opacity 0.65 + 忽略点击。
+	st := ui.StyleOf(th, v, b.Size, b.states(b.Disabled))
 	if b.Danger {
-		st = b.dangerize(th, st, v, st2status(b.states(b.Disabled || b.Loading)))
+		st = b.dangerize(th, st, v, st2status(b.states(b.Disabled)))
+	}
+	if b.Loading {
+		st.Opacity = 0.65
+	}
+	// antd ghost：背景恒透明；text/link 变体忽略 ghost。
+	if b.Ghost && v != ui.VariantGhost && v != ui.VariantLink {
+		status := st2status(b.states(b.Disabled || b.Loading))
+		st.Background = geom.Color{}
+		switch {
+		case b.Disabled || b.Loading:
+			st.Foreground, st.Border = th.Color.BorderStrong, th.Color.Border
+		case b.Danger:
+			st.Foreground, st.Border = th.Color.Danger, th.Color.Danger
+			switch status {
+			case ui.StatusHover:
+				st.Foreground, st.Border = th.Color.DangerHover, th.Color.DangerHover
+			case ui.StatusActive:
+				st.Foreground, st.Border = th.Color.DangerActive, th.Color.DangerActive
+			}
+		case v == ui.VariantSolid:
+			st.Foreground, st.Border = th.Color.Primary, th.Color.Primary
+			switch status {
+			case ui.StatusHover:
+				st.Foreground, st.Border = th.Color.PrimaryHover, th.Color.PrimaryHover
+			case ui.StatusActive:
+				st.Foreground, st.Border = th.Color.PrimaryActive, th.Color.PrimaryActive
+			}
+		default:
+			// default ghost：文字/边框 = colorBgContainer（Surface 白），无 hover 变化。
+			st.Foreground, st.Border = th.Color.Surface, th.Color.Surface
+		}
 	}
 	m := ui.MetricsFor(th, b.Size)
 	font := text.DefaultFont(m.Font)
@@ -146,11 +207,26 @@ func (b *Button) Build(ctx *ui.BuildContext) *scene.Node {
 	if iconW > 0 && b.Text != "" {
 		gap = th.Space.MD
 	}
+	// antd icon-only：无文字且带图标时宽 = 控件高。
+	iconOnly := b.Text == "" && iconW > 0
+	// antd two-chinese-chars：无图标、恰两个汉字、非 text/link。
+	twoCN := iconW == 0 && isTwoCNChars(b.Text) && b.Type != TypeText && b.Type != TypeLink
 	layout := text.LayoutText(b.Text, font, text.Options{})
 	textW := layout.Size.W
+	var cnSpacing float32
+	if twoCN {
+		r := []rune(b.Text)
+		l1 := text.LayoutText(string(r[0]), font, text.Options{})
+		l2 := text.LayoutText(string(r[1]), font, text.Options{})
+		cnSpacing = 0.34 * m.Font
+		textW = l1.Size.W + cnSpacing + l2.Size.W
+	}
 
 	w := textW + iconW + gap + m.Padding.Min.X + m.Padding.Max.X
 	h := m.Height
+	if iconOnly {
+		w = h
+	}
 	switch b.Shape {
 	case ShapeCircle:
 		if w < h {
@@ -184,20 +260,42 @@ func (b *Button) Build(ctx *ui.BuildContext) *scene.Node {
 	})
 
 	// 内容水平居中（内容宽 < 按钮宽时），垂直绝对居中。
+	// 钳制只在内容溢出边框盒（contentX<0，被外部挤压）时贴 padding 兜底；
+	// icon-only 的 w=32 < 内容+双 padding，(32-14)/2=9 是正确居中，
+	// 不能按 padding 钳（否则左 15px 右 3px，加号明显偏右）。
 	contentX := (w - textW - iconW - gap) / 2
-	if contentX < m.Padding.Min.X {
+	if contentX < 0 {
 		contentX = m.Padding.Min.X
 	}
+	textX := contentX
+	iconX := contentX
 	if iconW > 0 {
+		if b.IconPosition == IconEnd {
+			iconX = contentX + textW + gap // 图标在右
+		} else {
+			textX = contentX + iconW + gap // 图标在左
+		}
 		ic := b.iconFor(ctx)
 		in := ic.Build(ctx)
 		in.SetPositionKeepSize(true)
-		in.SetStackPosition(geom.Pt(contentX, (h-iconW)/2))
+		in.SetStackPosition(geom.Pt(iconX, (h-iconW)/2))
 		n.Add(in)
 	}
-	if b.Text != "" {
+	if twoCN {
+		// 两字中文：逐字排版，中间 0.34em 字距（GDI 无 letter-spacing）。
+		r := []rune(b.Text)
+		l1 := text.LayoutText(string(r[0]), font, text.Options{})
+		l2 := text.LayoutText(string(r[1]), font, text.Options{})
+		t1 := scene.Text(scene.TextSpec{Src: string(r[0]), Layout: l1, Color: st.Foreground})
+		t1.SetMargin(geom.InLTRB(textX, (h-l1.Size.H)/2, 0, 0))
+		n.Add(t1)
+		t2 := scene.Text(scene.TextSpec{Src: string(r[1]), Layout: l2, Color: st.Foreground})
+		t2.SetMargin(geom.InLTRB(textX+l1.Size.W+cnSpacing, (h-l2.Size.H)/2, 0, 0))
+		n.Add(t2)
+	} else if b.Text != "" {
 		label := scene.Text(scene.TextSpec{Src: b.Text, Layout: layout, Color: st.Foreground})
-		label.SetMargin(geom.InLTRB(contentX+iconW+gap, (h-layout.Size.H)/2, 0, 0))
+		label.SetMargin(geom.InLTRB(textX, (h-layout.Size.H)/2, 0, 0))
+		label.SetHit(scene.HitSpec{Label: "button-label"}) // 定位锚（DeferToChild）
 		n.Add(label)
 	}
 
@@ -225,9 +323,10 @@ func (b *Button) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	b.attach(ctx, n, h2, !b.Disabled)
 
-	// Loading 续帧：旋转指示需要帧泵持续推进（真窗；headless 单帧静止）。
-	if b.Loading && ctx.Scheduler != nil {
-		ctx.Scheduler.RequestFrameIn(33 * time.Millisecond)
+	// Loading 旋转：声明活跃动画——容器 60Hz 标脏**重录**（不重建），
+	// 图标相位在录制时按墙钟计算，因此每个重录帧角度都在推进。
+	if ctx.SetAnimating != nil {
+		ctx.SetAnimating(b, b.Loading)
 	}
 	return n
 }

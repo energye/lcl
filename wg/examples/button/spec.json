@@ -7,7 +7,9 @@
       "danger 危险按钮",
       "点击与加载",
       "图标 / 形状 / 尺寸 / block",
-      "禁用"
+      "禁用",
+      "ghost 透明按钮",
+      "图标位置与纯图标"
     ]
   },
   "sections": [
@@ -150,7 +152,7 @@
               "hover": {}
             },
             {
-              "wait": 150
+              "wait": 200
             }
           ],
           "then": [
@@ -175,7 +177,7 @@
               "hover": {}
             },
             {
-              "wait": 150
+              "wait": 200
             }
           ],
           "then": [
@@ -200,7 +202,7 @@
               "hover": {}
             },
             {
-              "wait": 150
+              "wait": 200
             }
           ],
           "then": [
@@ -296,6 +298,19 @@
               "text": "已点击"
             }
           ]
+        },
+        {
+          "name": "加载图标持续旋转（两帧不同）",
+          "target": {
+            "label": "button",
+            "text": "加载 2 秒"
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "spinner-spin"
+            }
+          ]
         }
       ]
     },
@@ -351,6 +366,124 @@
               "kind": "borderWidth",
               "expectWidth": 1,
               "tol": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ghost 透明按钮",
+      "cases": [
+        {
+          "name": "Ghost Default 背景透明（深底透出）",
+          "target": {
+            "label": "button",
+            "text": "Ghost Default"
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.3,
+                0.08,
+                0.4,
+                0.12
+              ],
+              "expect": {
+                "hex": "#001529",
+                "note": "antd ghost demo 深底"
+              },
+              "tol": 20
+            }
+          ]
+        },
+        {
+          "name": "Ghost Primary 文字边框为主色",
+          "target": {
+            "label": "button",
+            "text": "Ghost Primary"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.025,
+              "tol": 44
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "图标位置与纯图标",
+      "cases": [
+        {
+          "name": "iconPosition=end 图标在按钮文字右侧",
+          "target": {
+            "label": "icon",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "sideIn",
+              "ref": {
+                "label": "button",
+                "text": "下载"
+              },
+              "side": "right"
+            }
+          ]
+        },
+        {
+          "name": "纯图标按钮宽=控件高 32",
+          "target": {
+            "label": "button",
+            "index": 24
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                31,
+                33
+              ]
+            }
+          ]
+        },
+        {
+          "name": "图标与文字间距为 iconGap 8",
+          "target": {
+            "label": "icon",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "gapBetween",
+              "ref": {
+                "label": "button-label",
+                "text": "搜索"
+              },
+              "gapExpect": 8,
+              "tol": 1.5
+            }
+          ]
+        },
+        {
+          "name": "图标与文字垂直对齐",
+          "target": {
+            "label": "icon",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "vAlign",
+              "ref": {
+                "label": "button-label",
+                "text": "搜索"
+              },
+              "tol": 2
             }
           ]
         }

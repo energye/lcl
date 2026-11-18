@@ -107,6 +107,7 @@ type SpecAssertion struct {
 	RightOf       *SpecTarget `json:"rightOf,omitempty"`
 	Below         *SpecTarget `json:"below,omitempty"`
 	WidthAtLeast  float32     `json:"widthAtLeast,omitempty"`
+	WidthBetween  []float32   `json:"widthBetween,omitempty"`
 	HeightBetween []float32   `json:"heightBetween,omitempty"`
 	CenterYWithin []float32   `json:"centerYWithin,omitempty"`
 	InViewport    bool        `json:"inViewport,omitempty"`
@@ -119,8 +120,12 @@ type SpecAssertion struct {
 
 	// borderWidth
 	ExpectWidth int `json:"expectWidth,omitempty"`
-	// centeredIn 的参照锚（被测元素的中心须落在它内部）
+	// centeredIn/sideIn 的参照锚
 	Ref *SpecTarget `json:"ref,omitempty"`
+	// Side 是 sideIn 的方位：right/left（被测元素中心相对参照中心的水平侧）
+	Side string `json:"side,omitempty"`
+	// GapExpect 是 gapBetween 的期望水平间距（默认 8）
+	GapExpect *float64 `json:"gapExpect,omitempty"`
 }
 
 // SpecExemption 是显式豁免（antd 语义下正确但无视觉变化的行为）。
@@ -290,18 +295,16 @@ func (r *specRunner) locateNear(t SpecTarget, center geom.Point) (*scene.Node, b
 }
 
 func nodeTextContains(n *scene.Node, sub string) bool {
-	found := false
+	// 拼接子树全部文本再判断：两字中文按钮被拆成两个 Text 节点
+	//（antd letter-spacing 的逐字排版），单节点匹配会漏。
+	var sb strings.Builder
 	n.Walk(func(ch *scene.Node) bool {
-		if found {
-			return false
-		}
-		if sp := ch.Text(); sp != nil && strings.Contains(sp.Src, sub) {
-			found = true
-			return false
+		if sp := ch.Text(); sp != nil {
+			sb.WriteString(sp.Src)
 		}
 		return true
 	})
-	return found
+	return strings.Contains(sb.String(), sub)
 }
 
 func targetDesc(t *SpecTarget) string {
@@ -480,7 +483,7 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 		r.add(caseName, "操作", false, "空操作")
 		return false
 	}
-	time.Sleep(120 * time.Millisecond)
+	time.Sleep(150 * time.Millisecond)
 	return true
 }
 
@@ -639,6 +642,74 @@ func (r *specRunner) doAssert(caseName string, def *SpecTarget, as SpecAssertion
 		r.add(caseName, "centeredIn", pass,
 			fmt.Sprintf("%s 垂直中心差 %.1f ≤ %.1f 且水平在 %s 内=%v",
 				targetDesc(target), dy, tol, targetDesc(as.Ref), insideX))
+	case "sideIn":
+		a, ok := r.locate(*target)
+		if !ok || as.Ref == nil {
+			r.add(caseName, "sideIn", false, "被测/参照元素缺失")
+			return
+		}
+		bb, ok := r.locate(*as.Ref)
+		if !ok {
+			r.add(caseName, "sideIn", false, "参照元素不存在："+targetDesc(as.Ref))
+			return
+		}
+		ax := a.BoundsInRoot().Center().X
+		bx := bb.BoundsInRoot().Center().X
+		pass := (as.Side == "right" && ax > bx) || (as.Side == "left" && ax < bx)
+		r.add(caseName, "sideIn", pass,
+			fmt.Sprintf("%s 中心 x=%.0f，%s %s 中心 x=%.0f", targetDesc(target), ax,
+				as.Side, targetDesc(as.Ref), bx))
+	case "vAlign":
+		a, ok := r.locate(*target)
+		if !ok || as.Ref == nil {
+			r.add(caseName, "vAlign", false, "被测/参照元素缺失")
+			return
+		}
+		bb, ok := r.locate(*as.Ref)
+		if !ok {
+			r.add(caseName, "vAlign", false, "参照元素不存在："+targetDesc(as.Ref))
+			return
+		}
+		dy := a.BoundsInRoot().Center().Y - bb.BoundsInRoot().Center().Y
+		if dy < 0 {
+			dy = -dy
+		}
+		tol := float32(2)
+		if as.Tol != nil {
+			tol = float32(*as.Tol)
+		}
+		r.add(caseName, "vAlign", dy <= tol,
+			fmt.Sprintf("%s 与 %s 垂直中心差 %.1f ≤ %.1f", targetDesc(target), targetDesc(as.Ref), dy, tol))
+	case "gapBetween":
+		a, ok := r.locate(*target)
+		if !ok || as.Ref == nil {
+			r.add(caseName, "gapBetween", false, "被测/参照元素缺失")
+			return
+		}
+		bb, ok := r.locate(*as.Ref)
+		if !ok {
+			r.add(caseName, "gapBetween", false, "参照元素不存在："+targetDesc(as.Ref))
+			return
+		}
+		ba, bbb := a.BoundsInRoot(), bb.BoundsInRoot()
+		gap := bbb.Min.X - ba.Max.X // 被测在左
+		if gap < 0 {
+			gap = ba.Min.X - bbb.Max.X // 被测在右
+		}
+		want := 8.0
+		if as.GapExpect != nil {
+			want = *as.GapExpect
+		}
+		tol := 1.5
+		if as.Tol != nil {
+			tol = *as.Tol
+		}
+		d := float64(gap) - want
+		if d < 0 {
+			d = -d
+		}
+		r.add(caseName, "gapBetween", d <= tol,
+			fmt.Sprintf("%s 与 %s 间距 %.1f（期望 %.1f±%.1f）", targetDesc(target), targetDesc(as.Ref), gap, want, tol))
 	case "colorRatio":
 		expect, note, ok := parseExpectedColor(as.Expect)
 		if !ok {
@@ -713,6 +784,13 @@ func (r *specRunner) assertGeometry(caseName string, target *SpecTarget, as Spec
 			detail string
 		}{b.W() >= as.WidthAtLeast, fmt.Sprintf("宽 %.0f ≥ %.0f", b.W(), as.WidthAtLeast)})
 	}
+	if len(as.WidthBetween) == 2 {
+		checks = append(checks, struct {
+			ok     bool
+			detail string
+		}{b.W() >= as.WidthBetween[0] && b.W() <= as.WidthBetween[1],
+			fmt.Sprintf("宽 %.0f ∈ [%.0f,%.0f]", b.W(), as.WidthBetween[0], as.WidthBetween[1])})
+	}
 	if len(as.HeightBetween) == 2 {
 		checks = append(checks, struct {
 			ok     bool
@@ -775,6 +853,8 @@ func (r *specRunner) runTemplate(caseName string, def *SpecTarget, tpl string) {
 		r.tplCollapseToggle(caseName, *def)
 	case "button-press":
 		r.tplButtonPress(caseName, *def)
+	case "spinner-spin":
+		r.tplSpinnerSpin(caseName, *def)
 	default:
 		r.add(caseName, "template:"+tpl, false, "未实现的模板")
 	}
@@ -1346,10 +1426,10 @@ func (r *specRunner) tplButtonPress(caseName string, t SpecTarget) {
 	rect := n.BoundsInRoot()
 	p := clickPoint(rect, nil)
 	hoverAt(r.c, p.X, p.Y)
-	time.Sleep(180 * time.Millisecond)
+	time.Sleep(240 * time.Millisecond)
 	before := grab(r.c)
 	injectDown(r.c, p.X, p.Y)
-	time.Sleep(120 * time.Millisecond)
+	time.Sleep(150 * time.Millisecond)
 	mid := grab(r.c)
 	injectUp(r.c, p.X, p.Y)
 	injectLeave(r.c)
@@ -1365,6 +1445,86 @@ func (r *specRunner) tplButtonPress(caseName string, t SpecTarget) {
 	pass := rMid-rBefore >= 0.02
 	r.add(caseName, "template:button-press", pass,
 		fmt.Sprintf("按下 active 色占比 %.3f（hover 基线 %.3f，需 +0.02）", rMid, rBefore))
+}
+
+// tplSpinnerSpin：点击触发 loading 后间隔抓两帧，图标区必须持续变化（在转）。
+// saveCropRGBA 裁剪并放大导出 RGBA 区域（spinner 诊断用，WG_SPIN_DEBUG 门控）。
+func saveCropRGBA(img *image.RGBA, r geom.Rect, path string) {
+	if img == nil {
+		return
+	}
+	x0, y0 := int(r.Min.X), int(r.Min.Y)
+	w, h := int(r.Max.X-r.Min.X), int(r.Max.Y-r.Min.Y)
+	if x0 < 0 || y0 < 0 || w <= 0 || h <= 0 || x0+w > img.Bounds().Dx() || y0+h > img.Bounds().Dy() {
+		return
+	}
+	const sc = 4
+	out := image.NewRGBA(image.Rect(0, 0, w*sc, h*sc))
+	for y := 0; y < h*sc; y++ {
+		for x := 0; x < w*sc; x++ {
+			out.Set(x, y, img.RGBAAt(x0+x/sc, y0+y/sc))
+		}
+	}
+	savePNG(out, path)
+}
+
+func (r *specRunner) tplSpinnerSpin(caseName string, t SpecTarget) {
+	n, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:spinner-spin", false, "触发按钮不存在")
+		return
+	}
+	rect := n.BoundsInRoot()
+	p := clickPoint(rect, nil)
+	injectDown(r.c, p.X, p.Y)
+	time.Sleep(60 * time.Millisecond)
+	injectUp(r.c, p.X, p.Y)
+	// 立即移出指针：hover 清除是一次性跳变，若留在"静止对"采样前才做，
+	// 悬停样式恢复会整段计入静止帧差（实测 0.288，把判据淹了）。
+	injectLeave(r.c)
+	time.Sleep(300 * time.Millisecond)
+
+	// 采样框稍大于图标槽（0.06..0.34 × 0.20..0.80）：弧线扫过整槽，
+	// 采样框只框弧线本体会把"扫出框"的变化漏掉。
+	iconRect := nodeSampleRect(n, []float32{0.06, 0.20, 0.28, 0.60})
+
+	// 相对判据：loading 中两帧必须有差异，loading 结束后的静止两帧必须一致。
+	// 弧线细（1.2px）且半透明，逐像素阈值计数会漏掉小相位差（实测 0.000），
+	// 改用平均绝对差 + 500ms 观察窗 × 3 采样取最大：225° 相位差下弧线
+	// 扫过整槽，meanAbsDiff 显著非零；静止帧 ≈ 0。
+	f0 := r.c.PresentStats().Frames
+	a := grab(r.c)
+	time.Sleep(500 * time.Millisecond)
+	b := grab(r.c)
+	time.Sleep(500 * time.Millisecond)
+	c2 := grab(r.c)
+	f1 := r.c.PresentStats().Frames
+	movingAB := meanAbsDiff(a, b, iconRect)
+	movingBC := meanAbsDiff(b, c2, iconRect)
+	movingAC := meanAbsDiff(a, c2, iconRect)
+	if os.Getenv("WG_SPIN_DEBUG") != "" {
+		dbg := geom.RectXYWH(rect.Min.X-4, rect.Min.Y-4, rect.W()+8, rect.H()+8)
+		saveCropRGBA(a, dbg, ".shots/audit/button/audit-spin-a.png")
+		saveCropRGBA(b, dbg, ".shots/audit/button/audit-spin-b.png")
+		saveCropRGBA(c2, dbg, ".shots/audit/button/audit-spin-c.png")
+	}
+	moving := movingAB
+	if movingBC > moving {
+		moving = movingBC
+	}
+	if movingAC > moving {
+		moving = movingAC
+	}
+
+	time.Sleep(1200 * time.Millisecond) // 等 demo 的 2s loading 结束并重建完
+	d2 := grab(r.c)
+	time.Sleep(500 * time.Millisecond)
+	e2 := grab(r.c)
+	still := meanAbsDiff(d2, e2, iconRect)
+	pass := moving >= 0.5 && moving > still*2+0.2 && f1 > f0
+	r.add(caseName, "template:spinner-spin", pass,
+		fmt.Sprintf("loading meanAbsDiff %.2f/%.2f/%.2f vs 静止 %.2f（帧 %d→%d，需 moving≥0.5 且 >2×静止+0.2）",
+			movingAB, movingBC, movingAC, still, f0, f1))
 }
 
 // tplCollapseToggle：点击表头展开/收起，内容区大面积变化。

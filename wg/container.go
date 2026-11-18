@@ -124,10 +124,16 @@ type Container struct {
 	// deferred 记录"帧内有人请求了下一帧"。帧内回调已经持锁，
 	// 直接走 RequestFrame 会自己和自己抢锁（死锁），因此先存标志、帧末合并。
 	deferred atomic.Bool
-	// animating 是"本窗有活跃动画"标志（Container.SetAnimating）：置位后
-	// 帧泵按 60Hz 节拍标脏场景并续帧（动态组件驱动渲染）；未置位的窗
+	// animating 是"本窗有活跃动画"标志（SetAnimating/SetAnimatingClaim 合成）：
+	// 置位后帧泵按 60Hz 节拍标脏场景并续帧（动态组件驱动渲染）；未置位的窗
 	// 严格按需渲染——有变化才出帧，静止零帧（C14）。
 	animating atomic.Bool
+	// animExplicit 是窗口级显式动画标志（demo 的 Container.SetAnimating）。
+	animExplicit atomic.Bool
+	// animClaims 是组件级动画声明集合（见 SetAnimatingClaim）。
+	// 独立锁：方法会在 Build 内被调用，而 Build 路径已持 c.mu。
+	animMu     sync.Mutex
+	animClaims map[any]bool
 	// viewportDep 记录"上次 Build 是否读取了视口"（ViewportSize）。
 	// resize 只对依赖视口的页面重建；固定布局页面只重排布局，免全树
 	// Build（成熟框架语义：只为声明依赖的组件重建）。
@@ -353,6 +359,7 @@ func (c *Container) buildContext() *ui.BuildContext {
 		// 那时 c.widget 还没赋值——闭包捕获会拿到 nil，深层组件的置脏
 		// 全部 no-op（动画窗只出两帧的根因）。
 		RequestFrame: c.requestFrame,
+		SetAnimating: c.SetAnimatingClaim,
 		InvalidateRoot: func() {
 			if c.mu.TryLock() {
 				w := c.widget
@@ -1249,6 +1256,14 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 	}
 	if c.animating.Load() && c.scene != nil {
 		c.scene.MarkNeedsPaint()
+		// 动画期间禁用层缓存：MarkNeedsPaint 只递增根签名，独立子层
+		// （CustomPaint 图标等）的缓存键不变会命中旧画面（实测加载图标
+		// 帧在跑但像素不动）。动画窗的缓存收益本就很小。
+		if c.comp != nil {
+			c.comp.SetRasterCache(false)
+		}
+	} else if c.comp != nil {
+		c.comp.SetRasterCache(true)
 	}
 	// 插入符闪烁：到点切换可见性并让脏区自然收敛到光标矩形。
 	c.updateCaretBlinkLocked(now)
@@ -1763,7 +1778,46 @@ func (c *Container) Close() {
 // SetAnimating 设置"本窗有活跃动画"标志：置位后帧泵按 60Hz 节拍标脏
 // 场景并续帧（动态组件驱动渲染）；清除后恢复严格按需渲染——有变化才出
 // 帧，静止零帧（C14）。多窗隔离：每个容器独立持有自己的标志。
-func (c *Container) SetAnimating(on bool) { c.animating.Store(on) }
+func (c *Container) SetAnimating(on bool) {
+	c.animExplicit.Store(on)
+	c.animMu.Lock()
+	claims := len(c.animClaims)
+	c.animMu.Unlock()
+	c.animating.Store(on || claims > 0)
+	if on {
+		c.armAnimFrame()
+	}
+}
+
+// SetAnimatingClaim 是组件级动画声明：按身份去重，任一组件仍在动画时
+// 全窗保持 60Hz 标脏重录（不重建）。按钮等控件在 Build 里每帧调用（幂等）。
+// 布尔覆盖会让"别的按钮重建时的 false"把 loading 的 true 冲掉（实测帧停）。
+// 用 requestNextTick 而非 requestFrame：Build 常在帧内，帧内 requestFrame
+// 走 deferred，实测该链在重建路径上不续帧。
+func (c *Container) SetAnimatingClaim(id any, on bool) {
+	c.animMu.Lock()
+	if c.animClaims == nil {
+		c.animClaims = map[any]bool{}
+	}
+	if on {
+		c.animClaims[id] = true
+	} else {
+		delete(c.animClaims, id)
+	}
+	n := len(c.animClaims)
+	c.animMu.Unlock()
+	c.animating.Store(c.animExplicit.Load() || n > 0)
+	if on && n > 0 {
+		c.armAnimFrame()
+	}
+}
+
+// armAnimFrame 装下一拍（线程安全；供动画声明直接驱动帧泵）。
+func (c *Container) armAnimFrame() {
+	if s := c.schedAtomic.Load(); s != nil {
+		c.requestNextTick(s)
+	}
+}
 
 // Animating 返回动画活跃标志。
 func (c *Container) Animating() bool { return c.animating.Load() }

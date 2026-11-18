@@ -5,6 +5,7 @@ import (
 
 	"github.com/energye/lcl/wg/examples/doc"
 	"github.com/energye/lcl/wg/examples/internal/launcher"
+	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/ui"
 	"github.com/energye/lcl/wg/widgets"
@@ -24,6 +25,8 @@ var (
 	shapeRow    []*widgets.Button
 	blockBtn    *widgets.Button
 	disabledRow []*widgets.Button
+	ghostRow    []*widgets.Button
+	iconRow     []*widgets.Button
 )
 
 // btn 构造一个展示按钮（样式通过 fn 就地设置）。
@@ -85,6 +88,19 @@ func init() {
 		btn("禁用主按钮", func(b *widgets.Button) { b.Type, b.Disabled = widgets.TypePrimary, true }),
 		btn("禁用默认", func(b *widgets.Button) { b.Disabled = true }),
 	}
+	ghostRow = []*widgets.Button{
+		btn("Ghost Primary", func(b *widgets.Button) { b.Type, b.Ghost = widgets.TypePrimary, true }),
+		btn("Ghost Default", func(b *widgets.Button) { b.Ghost = true }),
+		btn("Ghost Danger", func(b *widgets.Button) { b.Danger, b.Ghost = true, true }),
+		btn("Ghost Disabled", func(b *widgets.Button) { b.Disabled, b.Ghost = true, true }),
+	}
+	iconRow = []*widgets.Button{
+		btn("搜索", func(b *widgets.Button) { b.Icon = widgets.NewIcon("search") }),
+		btn("下载", func(b *widgets.Button) {
+			b.Icon, b.IconPosition = widgets.NewIcon("download"), widgets.IconEnd
+		}),
+		btn("", func(b *widgets.Button) { b.Icon = widgets.NewIcon("plus") }),
+	}
 }
 
 func main() {
@@ -131,6 +147,26 @@ func main() {
 			{Title: "禁用", Note: "antd 禁用专色（不降透明度）：bg #FAFAFA、文字 #BFBFBF", Build: func(ctx *ui.BuildContext) ui.Widget {
 				row := scene.Flex(scene.Horizontal, 10)
 				for _, b := range disabledRow {
+					row.Add(b.Build(ctx))
+				}
+				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
+			}},
+			{Title: "ghost 透明按钮", Note: "深底上背景透明，文字/边框按类型取色；text/link 不支持 ghost", Build: func(ctx *ui.BuildContext) ui.Widget {
+				dark := scene.Box(scene.BoxSpec{
+					Fill:   scene.Solid(geom.RGBA(0, 21, 41)),
+					Radius: ctx.ThemeOr().Radius.Base,
+				})
+				dark.SetPadding(geom.InLTRB(16, 16, 16, 16))
+				row := scene.Flex(scene.Horizontal, 10)
+				for _, b := range ghostRow {
+					row.Add(b.Build(ctx))
+				}
+				dark.Add(row)
+				return doc.Node(func(*ui.BuildContext) *scene.Node { return dark })
+			}},
+			{Title: "图标位置与纯图标", Note: "iconPosition=end 图标在右；无文字纯图标按钮宽=控件高", Build: func(ctx *ui.BuildContext) ui.Widget {
+				row := scene.Flex(scene.Horizontal, 10)
+				for _, b := range iconRow {
 					row.Add(b.Build(ctx))
 				}
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })

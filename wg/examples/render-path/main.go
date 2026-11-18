@@ -31,7 +31,7 @@ func main() {
 					cv.FillPath(render.NewPath().AddCircle(240, 98, 18), render.Fill(geom.RGBA(150, 100, 220)))
 					cv.FillPath(render.NewPath().AddArc(geom.RectXYWH(275, 80, 56, 56), 0, math.Pi*1.4), render.Fill(geom.RGBAa(60, 180, 200, 200)))
 					cl := p.Clone()
-					cl.Transform(geom.Translate(0, 125))
+					cl = cl.Transform(geom.Translate(0, 125)) // Transform 返回新路径，必须接回
 					cv.StrokePath(cl, render.Stroke(geom.RGBA(40, 40, 50), 2))
 					_ = cl.VerbCount()
 					_ = len(cl.Flatten(0.5, nil))

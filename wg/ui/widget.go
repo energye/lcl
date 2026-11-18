@@ -59,6 +59,11 @@ type BuildContext struct {
 	// RequestFrame 请求下一帧（组件用它驱动动画/异步后重绘）。
 	// nil 表示宿主不驱动帧泵（部分 headless 测试）。
 	RequestFrame func()
+	// SetAnimating 声明某个组件是否处于活跃动画（loading 旋转等）。
+	// id 是组件身份（按指针去重）：多个组件各自声明互不覆盖。
+	// 置位期间容器按 60Hz 标脏重录（不重建）。与 RequestFrame 的区别：
+	// 后者只来一帧，静止窗下不重录，建树时算死的相位会永远静止。
+	SetAnimating func(id any, on bool)
 	// InvalidateRoot 把**根 widget** 置脏并请求一帧。
 	//
 	// 深层组件的状态变化必须走这里：容器只重建"根 widget 的 Build 结果"，

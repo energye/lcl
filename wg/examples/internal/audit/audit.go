@@ -248,6 +248,55 @@ func regionChangedThresh(a, b *image.RGBA, r geom.Rect, thresh uint8) float64 {
 	return float64(diff) / float64(total)
 }
 
+// meanAbsDiff 返回区域内逐像素 RGB 平均绝对差（0..255）。
+// 比"超阈值像素占比"稳：细线条（loading 弧线 1.2px）小相位差的变化
+// 分散在大量像素上、单个像素 delta 小，阈值计数会漏（实测 0.000）；
+// 平均差对"弧线扫过的总能量"敏感，静止时≈0，旋转时显著非零。
+func meanAbsDiff(a, b *image.RGBA, r geom.Rect) float64 {
+	if a == nil || b == nil || r.IsEmpty() {
+		return 0
+	}
+	x0, y0 := int(r.Min.X), int(r.Min.Y)
+	x1, y1 := int(r.Max.X), int(r.Max.Y)
+	bounds := a.Bounds()
+	if x0 < bounds.Min.X {
+		x0 = bounds.Min.X
+	}
+	if y0 < bounds.Min.Y {
+		y0 = bounds.Min.Y
+	}
+	if x1 > bounds.Max.X {
+		x1 = bounds.Max.X
+	}
+	if y1 > bounds.Max.Y {
+		y1 = bounds.Max.Y
+	}
+	if x1 <= x0 || y1 <= y0 {
+		return 0
+	}
+	var sum int64
+	n := 0
+	for y := y0; y < y1; y++ {
+		i := y*a.Stride + x0*4
+		for x := x0; x < x1; x++ {
+			for c := 0; c < 3; c++ {
+				av, bv := int(a.Pix[i+c]), int(b.Pix[i+c])
+				if av > bv {
+					sum += int64(av - bv)
+				} else {
+					sum += int64(bv - av)
+				}
+			}
+			n += 3
+			i += 4
+		}
+	}
+	if n == 0 {
+		return 0
+	}
+	return float64(sum) / float64(n)
+}
+
 // frameChanged 返回整帧像素变化占比（3px 步进采样）。
 // 捕获元素区域之外的反馈：弹浮层/模态/气泡。
 func frameChanged(a, b *image.RGBA) float64 {

@@ -188,11 +188,7 @@ func (ic *Icon) Build(ctx *ui.BuildContext) *scene.Node {
 	if color == (geom.Color{}) {
 		color = ctx.ThemeOr().Color.Text
 	}
-	var spinPhase float32
-	if ic.Spin {
-		const period = 800 * time.Millisecond
-		spinPhase = float32(time.Since(iconBase)%period) / float32(period)
-	}
+	const spinPeriod = 800 * time.Millisecond
 	def := iconPainters[ic.Name]
 	n := scene.CustomPaintNode(func(cv render.Canvas, sz geom.Size) {
 		if def.stroke == nil && def.fill == nil {
@@ -203,23 +199,25 @@ func (ic *Icon) Build(ctx *ui.BuildContext) *scene.Node {
 		k := sz.W / 24
 		m := geom.Scale(k, k).Concat(geom.Translate(1, 1))
 		if ic.Spin {
-			// Spin：3/4 圆弧绕中心旋转（启动 loading 动画的组件负责续帧）。
+			// Spin：相位在**录制时**按墙钟计算——纯 Build 时固定相位在静止窗
+			// 缓存下会永远静止（--audit 实测"加载图标不旋转"）。
+			spinPhase := float32(time.Since(iconBase)%spinPeriod) / float32(spinPeriod)
 			arc := render.NewPath().AddArc(geom.RectXYWH(4.5, 4.5, 15, 15),
-				spinPhase*2*3.14159265, spinPhase*2*3.14159265+4.2)
-			arc.Transform(m)
+				spinPhase*2*3.14159265, 4.2) // AddArc 第二参是扫掠角（非结束角）：相位只动 start，弧长恒 240°
+			arc = arc.Transform(m) // Transform 返回新路径（不修改自身），必须接回
 			cv.StrokePath(arc, render.Stroke(color, 2*k).WithCap(render.CapRound).WithJoin(render.JoinRound))
 			return
 		}
 		if def.stroke != nil {
 			p := render.NewPath()
 			def.stroke(iconBrush{p})
-			p.Transform(m)
+			p = p.Transform(m) // 同上：丢弃返回值 = 图标按 24 视口原坐标绘制（M8 起）
 			cv.StrokePath(p, render.Stroke(color, 2*k).WithCap(render.CapRound).WithJoin(render.JoinRound))
 		}
 		if def.fill != nil {
 			p := render.NewPath()
 			def.fill(iconBrush{p})
-			p.Transform(m)
+			p = p.Transform(m)
 			cv.FillPath(p, render.Fill(color))
 		}
 	}).SetSize2(size, size)
