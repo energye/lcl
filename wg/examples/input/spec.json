@@ -67,8 +67,290 @@
               "widthAtLeast": 200
             }
           ]
+        },
+        {
+          "name": "outlined 默认边框为 colorBorder 1px",
+          "target": {
+            "label": "input",
+            "text": "outlined"
+          },
+          "then": [
+            {
+              "kind": "borderWidth",
+              "expectWidth": 1,
+              "tol": 1
+            },
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Border"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "outlined hover 边框转 colorPrimaryHover",
+          "target": {
+            "label": "input",
+            "text": "outlined"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "PrimaryHover"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "outlined 聚焦边框转 colorPrimary",
+          "target": {
+            "label": "input",
+            "text": "outlined"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 250
+            }
+          ],
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "占位文本色为 colorTextPlaceholder #BFBFBF",
+          "target": {
+            "label": "input",
+            "text": "outlined"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.06,
+                0.25,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "hex": "#BFBFBF",
+                "note": "colorTextPlaceholder"
+              },
+              "minRatio": 0.02,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "filled 聚焦底色转白（colorBgContainer）",
+          "target": {
+            "label": "input",
+            "text": "filled"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 250
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.15,
+                0.35,
+                0.5,
+                0.3
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.8,
+              "tol": 8
+            }
+          ]
+        },
+        {
+          "name": "borderless 无边框",
+          "target": {
+            "label": "input",
+            "text": "borderless"
+          },
+          "then": [
+            {
+              "kind": "borderWidth",
+              "expectWidth": 0,
+              "tol": 1
+            }
+          ]
         }
       ]
+    },
+    {
+      "name": "status 与尺寸",
+      "cases": [
+        {
+          "name": "error 边框为 colorError",
+          "target": {
+            "label": "input",
+            "text": "error 状态"
+          },
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Danger"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "error hover 边框转 colorErrorHover",
+          "target": {
+            "label": "input",
+            "text": "error 状态"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "DangerHover"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "warning 边框为 colorWarning",
+          "target": {
+            "label": "input",
+            "text": "warning 状态"
+          },
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Warning"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "warning hover 边框转 colorWarningHover",
+          "target": {
+            "label": "input",
+            "text": "warning 状态"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "hex": "#FFC53D",
+                "note": "colorWarningHover"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "禁用底色为 colorBgContainerDisabled",
+          "target": {
+            "label": "input",
+            "text": "禁用状态"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.15,
+                0.35,
+                0.5,
+                0.3
+              ],
+              "expect": {
+                "hex": "#F5F5F5",
+                "note": "colorBgContainerDisabled"
+              },
+              "minRatio": 0.8,
+              "tol": 8
+            }
+          ]
+        },
+        {
+          "name": "禁用文字与边框仍为禁用专色",
+          "target": {
+            "label": "input",
+            "text": "禁用状态"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.06,
+                0.25,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "BorderStrong"
+              },
+              "minRatio": 0.02,
+              "tol": 24
+            },
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Border"
+              },
+              "tol": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "前后缀与清除",
+      "cases": []
     },
     {
       "name": "addon 与 count",
@@ -77,7 +359,7 @@
           "name": "addon 包裹的输入框点击聚焦",
           "target": {
             "label": "input",
-            "index": 10
+            "index": 11
           },
           "when": [],
           "then": [
@@ -91,7 +373,7 @@
           "name": "count 输入框聚焦并可键入",
           "target": {
             "label": "input",
-            "index": 11
+            "index": 12
           },
           "then": [
             {
@@ -101,6 +383,10 @@
           ]
         }
       ]
+    },
+    {
+      "name": "文本编辑按键",
+      "cases": []
     }
   ]
 }

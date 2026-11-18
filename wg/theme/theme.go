@@ -110,11 +110,12 @@ type ColorTokens struct {
 	OnPrimary     geom.Color
 
 	// 表面
-	Background    geom.Color // 窗口底
-	Surface       geom.Color // 卡片/输入框
-	SurfaceHover  geom.Color
-	SurfaceActive geom.Color
-	SurfaceSunken geom.Color // 内凹区（表格斑马、代码块）
+	Background      geom.Color // 窗口底
+	Surface         geom.Color // 卡片/输入框
+	SurfaceHover    geom.Color
+	SurfaceActive   geom.Color
+	SurfaceSunken   geom.Color // 内凹区（表格斑马、代码块）
+	SurfaceDisabled geom.Color // 禁用容器底（colorBgContainerDisabled #F5F5F5）
 
 	// 交互填充（半透明叠加，antd colorFillTertiary/Quaternary）。
 	// 与 SurfaceHover 的区别：Surface 系列是不透明表面色，铺在同类表面上
@@ -128,10 +129,11 @@ type ColorTokens struct {
 	BorderStrong geom.Color
 
 	// 文字
-	Text      geom.Color
-	TextMuted geom.Color
-	TextFaint geom.Color
-	OnDark    geom.Color
+	Text            geom.Color
+	TextMuted       geom.Color
+	TextFaint       geom.Color
+	TextPlaceholder geom.Color // 占位文本（colorTextPlaceholder #BFBFBF）
+	OnDark          geom.Color
 
 	// 语义
 	Danger       geom.Color
@@ -140,6 +142,7 @@ type ColorTokens struct {
 	DangerBg     geom.Color // antd colorErrorBg #FFF1F0（default-danger 悬停底）
 	OnDanger     geom.Color
 	Warning      geom.Color
+	WarningHover geom.Color // antd colorWarningHover #FFC53D
 	Success      geom.Color
 	Info         geom.Color
 	FocusRing    geom.Color
@@ -275,23 +278,25 @@ func Light() *Data {
 			OnPrimary:     geom.RGBA(255, 255, 255),
 
 			// colorBgLayout / colorBgContainer / fillQuaternary / fillTertiary / fillQuaternary
-			Background:    geom.RGBA(245, 245, 245), // #F5F5F5
-			Surface:       geom.RGBA(255, 255, 255), // #FFFFFF
-			SurfaceHover:  geom.RGBA(250, 250, 250), // #FAFAFA
-			SurfaceActive: geom.RGBA(240, 240, 240), // #F0F0F0
-			SurfaceSunken: geom.RGBA(250, 250, 250), // 表格斑马/演示舞台
-			FillHover:     geom.RGBAa(0, 0, 0, 10),  // colorFillTertiary rgba(0,0,0,.04)
-			FillActive:    geom.RGBAa(0, 0, 0, 38),  // rgba(0,0,0,.15)
+			Background:      geom.RGBA(245, 245, 245), // #F5F5F5
+			Surface:         geom.RGBA(255, 255, 255), // #FFFFFF
+			SurfaceHover:    geom.RGBA(250, 250, 250), // #FAFAFA
+			SurfaceActive:   geom.RGBA(240, 240, 240), // #F0F0F0
+			SurfaceSunken:   geom.RGBA(250, 250, 250), // 表格斑马/演示舞台
+			SurfaceDisabled: geom.RGBA(245, 245, 245), // colorBgContainerDisabled rgba(0,0,0,.04)
+			FillHover:       geom.RGBAa(0, 0, 0, 10),  // colorFillTertiary rgba(0,0,0,.04)
+			FillActive:      geom.RGBAa(0, 0, 0, 38),  // rgba(0,0,0,.15)
 
 			// colorBorder rgba(5,5,5,.15) 与 borderHover 的实色等价
 			Border:       geom.RGBA(217, 217, 217), // #D9D9D9
 			BorderStrong: geom.RGBA(191, 191, 191), // #BFBFBF
 
 			// colorText(.88)/TextSecondary(.65)/TextTertiary(.45) 的实色等价
-			Text:      geom.RGBA(31, 31, 31),    // #1F1F1F
-			TextMuted: geom.RGBA(89, 89, 89),    // #595959
-			TextFaint: geom.RGBA(140, 140, 140), // #8C8C8C
-			OnDark:    geom.RGBA(255, 255, 255),
+			Text:            geom.RGBA(31, 31, 31),    // #1F1F1F
+			TextMuted:       geom.RGBA(89, 89, 89),    // #595959
+			TextFaint:       geom.RGBA(140, 140, 140), // #8C8C8C
+			TextPlaceholder: geom.RGBA(191, 191, 191), // colorTextPlaceholder #BFBFBF
+			OnDark:          geom.RGBA(255, 255, 255),
 
 			// #52C41A / #FAAD14 / #FF4D4F / #1677FF
 			Danger:       geom.RGBA(255, 77, 79),
@@ -300,6 +305,7 @@ func Light() *Data {
 			DangerBg:     geom.RGBA(255, 241, 240), // #FFF1F0
 			OnDanger:     geom.RGBA(255, 255, 255),
 			Warning:      geom.RGBA(250, 173, 20),
+			WarningHover: geom.RGBA(255, 197, 61), // colorWarningHover #FFC53D
 			Success:      geom.RGBA(82, 196, 26),
 			Info:         geom.RGBA(22, 119, 255),
 			FocusRing:    geom.RGBA(22, 119, 255),
@@ -339,21 +345,23 @@ func Dark() *Data {
 			OnPrimary:     geom.RGBA(255, 255, 255),
 
 			// colorBgLayout #000 / container #141414 / fillWhite 透明度阶梯
-			Background:    geom.RGBA(0, 0, 0),
-			Surface:       geom.RGBA(20, 20, 20), // #141414
-			SurfaceHover:  geom.RGBA(29, 29, 29), // #1D1D1D
-			SurfaceActive: geom.RGBA(34, 34, 34), // #222222
-			SurfaceSunken: geom.RGBA(29, 29, 29),
-			FillHover:     geom.RGBAa(255, 255, 255, 20), // rgba(255,255,255,.08)
-			FillActive:    geom.RGBAa(255, 255, 255, 41), // rgba(255,255,255,.16)
+			Background:      geom.RGBA(0, 0, 0),
+			Surface:         geom.RGBA(20, 20, 20), // #141414
+			SurfaceHover:    geom.RGBA(29, 29, 29), // #1D1D1D
+			SurfaceActive:   geom.RGBA(34, 34, 34), // #222222
+			SurfaceSunken:   geom.RGBA(29, 29, 29),
+			SurfaceDisabled: geom.RGBA(29, 29, 29),         // dark colorBgContainerDisabled 实色等价
+			FillHover:       geom.RGBAa(255, 255, 255, 20), // rgba(255,255,255,.08)
+			FillActive:      geom.RGBAa(255, 255, 255, 41), // rgba(255,255,255,.16)
 
 			Border:       geom.RGBA(48, 48, 48), // rgba(253,253,253,.12) 实色等价
 			BorderStrong: geom.RGBA(57, 57, 57), // .16
 
-			Text:      geom.RGBA(219, 219, 219), // rgba(255,255,255,.85) 实色等价
-			TextMuted: geom.RGBA(126, 126, 126), // .45
-			TextFaint: geom.RGBA(90, 90, 90),    // .30
-			OnDark:    geom.RGBA(255, 255, 255),
+			Text:            geom.RGBA(219, 219, 219), // rgba(255,255,255,.85) 实色等价
+			TextMuted:       geom.RGBA(126, 126, 126), // .45
+			TextFaint:       geom.RGBA(90, 90, 90),    // .30
+			TextPlaceholder: geom.RGBA(93, 93, 93),    // dark colorTextPlaceholder .25 实色等价
+			OnDark:          geom.RGBA(255, 255, 255),
 
 			// dark 算法：#49AA19 / #D89614 / #DC4446 / #1668DC
 			Danger:       geom.RGBA(220, 68, 70),
@@ -362,6 +370,7 @@ func Dark() *Data {
 			DangerBg:     geom.RGBA(61, 31, 32),  // dark colorErrorBg（实色等价）
 			OnDanger:     geom.RGBA(255, 255, 255),
 			Warning:      geom.RGBA(216, 150, 20),
+			WarningHover: geom.RGBA(228, 172, 60), // dark colorWarningHover 实色等价
 			Success:      geom.RGBA(73, 170, 25),
 			Info:         geom.RGBA(22, 104, 220),
 			FocusRing:    geom.RGBA(22, 104, 220),

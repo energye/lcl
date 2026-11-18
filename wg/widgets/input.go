@@ -129,6 +129,17 @@ func (w *Input) ensureEditor() *input.TextEditor {
 // statusBorder 折算边框/底色（antd 状态语义）。
 func (w *Input) statusBorder(th *theme.Data, hover bool, focused bool) (geom.Color, geom.Color, float32) {
 	c := th.Color
+	// antd disabled：边框仍 colorBorder，底转 colorBgContainerDisabled，
+	// 无 hover/focus 反馈（光晕也不画）。
+	if w.Disabled {
+		switch w.Variant {
+		case InputFilled:
+			return geom.Color{}, c.SurfaceDisabled, 1
+		case InputBorderless:
+			return geom.Color{}, geom.Color{}, 0
+		}
+		return c.Border, c.SurfaceDisabled, 1
+	}
 	border, bg := c.Border, c.Surface
 	switch w.Variant {
 	case InputFilled:
@@ -149,6 +160,9 @@ func (w *Input) statusBorder(th *theme.Data, hover bool, focused bool) (geom.Col
 		}
 	} else if w.Status == InputStatusWarning {
 		border = c.Warning
+		if hover {
+			border = c.WarningHover // antd colorWarningHover #FFC53D
+		}
 	}
 	if hover && w.Status == StatusOK {
 		border = c.PrimaryHover // antd hover #4096FF
@@ -245,7 +259,7 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	if src == "" {
 		src = w.Placeholder
-		color = th.Color.TextFaint
+		color = th.Color.TextPlaceholder // antd colorTextPlaceholder #BFBFBF
 	}
 	font := text.DefaultFont(m.Font)
 	lineH := text.Measure("Ag", font).H
@@ -366,7 +380,7 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 			vv := e.Value()
 			src2, color2 := vv.Text, th.Color.Text
 			if vv.Text == "" {
-				src2, color2 = w.Placeholder, th.Color.TextFaint
+				src2, color2 = w.Placeholder, th.Color.TextPlaceholder
 			}
 			lay := text.LayoutText(src2, font, opts)
 			// 只重绘不重排：父框尺寸固定，文本变宽/变窄不该触发整页布局。

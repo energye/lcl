@@ -30,10 +30,11 @@ var (
 		widgets.NewInput("small"),
 		widgets.NewInput("large"),
 	}
-	prefixed = widgets.NewInput("站内搜索")
-	suffixed = widgets.NewInput("金额")
-	addoned  = widgets.NewInput("example.com 前缀")
-	counted  = widgets.NewInput("看右下角字数")
+	disabledIn = widgets.NewInput("禁用状态")
+	prefixed   = widgets.NewInput("站内搜索")
+	suffixed   = widgets.NewInput("金额")
+	addoned    = widgets.NewInput("example.com 前缀")
+	counted    = widgets.NewInput("看右下角字数")
 )
 
 func init() {
@@ -63,6 +64,7 @@ func init() {
 	statuses[1].Width, statuses[1].Status = 260, widgets.InputStatusWarning
 	statuses[2].Width, statuses[2].Size = 260, ui.SizeSmall
 	statuses[3].Width, statuses[3].Size = 260, ui.SizeLarge
+	disabledIn.Width, disabledIn.Disabled = 260, true
 	prefixed.Width, prefixed.AllowClear = 300, true
 	prefixed.Prefix = &widgets.Icon{Name: "search", Size: 14}
 	suffixed.Width = 300
@@ -96,8 +98,8 @@ func main() {
 			{Title: "三种 variant", Note: "outlined（默认）/ filled（灰底）/ borderless（无框）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return widgets.Column{Gap: 8, Children: []ui.Widget{variants[0], variants[1], variants[2]}}
 			}},
-			{Title: "status 与尺寸", Note: "error 红边 / warning 黄边；small/middle/large", Build: func(ctx *ui.BuildContext) ui.Widget {
-				return widgets.Column{Gap: 8, Children: []ui.Widget{statuses[0], statuses[1], statuses[2], statuses[3]}}
+			{Title: "status 与尺寸", Note: "error 红边 / warning 黄边；small/middle/large；disabled 禁用专色", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return widgets.Column{Gap: 8, Children: []ui.Widget{statuses[0], statuses[1], statuses[2], statuses[3], disabledIn}}
 			}},
 			{Title: "前后缀与清除", Note: "prefix 图标 + suffix 图标；输入后 hover 显示 allowClear 清除", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return widgets.Column{Gap: 8, Children: []ui.Widget{prefixed, suffixed}}
