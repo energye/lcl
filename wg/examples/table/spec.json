@@ -1,0 +1,75 @@
+{
+  "id": "table",
+  "structure": {
+    "sections": [
+      "四列混排"
+    ],
+    "apiRows": 9,
+    "minElements": 12
+  },
+  "sections": [
+    {
+      "name": "四列混排",
+      "cases": [
+        {
+          "name": "行点击选中背景（token Selection）",
+          "target": {
+            "label": "table-row",
+            "index": 1
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "template",
+              "template": "table-row-select"
+            }
+          ]
+        },
+        {
+          "name": "点击字段表头首次排序为降序",
+          "target": {
+            "label": "table-sort",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "table-row",
+                "index": 0
+              },
+              "text": "owner_id"
+            }
+          ]
+        },
+        {
+          "name": "再次点击表头切回升序",
+          "target": {
+            "label": "table-sort",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "table-row",
+                "index": 0
+              },
+              "text": "created_at"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

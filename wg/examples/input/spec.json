@@ -1,0 +1,106 @@
+{
+  "id": "input",
+  "structure": {
+    "sections": [
+      "受控输入与 IME",
+      "三种 variant",
+      "status 与尺寸",
+      "前后缀与清除",
+      "addon 与 count",
+      "文本编辑按键"
+    ],
+    "apiRows": 13,
+    "minElements": 10
+  },
+  "sections": [
+    {
+      "name": "受控输入与 IME",
+      "cases": [
+        {
+          "name": "点击聚焦并可键入文本",
+          "target": {
+            "label": "input",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "input-type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "三种 variant",
+      "cases": [
+        {
+          "name": "filled 输入框点击聚焦",
+          "target": {
+            "label": "input",
+            "index": 2
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "template",
+              "template": "input-focus"
+            }
+          ]
+        },
+        {
+          "name": "variant 三档纵向依次排列",
+          "target": {
+            "label": "input",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "below": {
+                "label": "input",
+                "index": 2
+              }
+            },
+            {
+              "kind": "geometry",
+              "widthAtLeast": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "addon 与 count",
+      "cases": [
+        {
+          "name": "addon 包裹的输入框点击聚焦",
+          "target": {
+            "label": "input",
+            "index": 10
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "template",
+              "template": "input-focus"
+            }
+          ]
+        },
+        {
+          "name": "count 输入框聚焦并可键入",
+          "target": {
+            "label": "input",
+            "index": 11
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "input-type"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

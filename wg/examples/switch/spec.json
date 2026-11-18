@@ -1,0 +1,95 @@
+{
+  "id": "switch",
+  "structure": {
+    "sections": [
+      "基本 / 尺寸",
+      "文案与 loading"
+    ],
+    "apiRows": 7,
+    "minElements": 5
+  },
+  "sections": [
+    {
+      "name": "基本 / 尺寸",
+      "cases": [
+        {
+          "name": "默认开关点击切换并可切回",
+          "target": {
+            "label": "switch",
+            "index": 0
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "template",
+              "template": "toggle"
+            }
+          ]
+        },
+        {
+          "name": "小尺寸开关点击切换并可切回",
+          "target": {
+            "label": "switch",
+            "index": 2
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "template",
+              "template": "toggle"
+            }
+          ]
+        },
+        {
+          "name": "禁用开关点击无任何反馈",
+          "target": {
+            "label": "switch",
+            "disabled": true,
+            "index": 0
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "template",
+              "template": "disabled-no-op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "文案与 loading",
+      "cases": [
+        {
+          "name": "文案开关切换后文案变化并复原",
+          "target": {
+            "label": "switch",
+            "text": "启用"
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "template",
+              "template": "toggle"
+            }
+          ]
+        },
+        {
+          "name": "loading 开关点击被抑制",
+          "target": {
+            "label": "switch",
+            "disabled": true,
+            "index": 1
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "template",
+              "template": "disabled-no-op"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

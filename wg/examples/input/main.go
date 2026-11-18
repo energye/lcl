@@ -13,6 +13,7 @@ var (
 	inp    = widgets.NewInput("试试输入中文，或用输入法组合")
 	status = widgets.NewTextView("当前内容：")
 	edit   = widgets.NewInput("试试 Backspace / Delete / Ctrl+A / Ctrl+←→")
+	clear  = widgets.NewButton("清空")
 
 	// 各 demo 的交互控件实例在包级持有：demo 闭包在每次页面重建时都会
 	// 重新执行（产出全新节点），实例一换，焦点/文本/勾选态就跟着丢——
@@ -34,6 +35,17 @@ var (
 	addoned  = widgets.NewInput("example.com 前缀")
 	counted  = widgets.NewInput("看右下角字数")
 )
+
+func init() {
+	inp.OnChanged = func(s string) {
+		status.SetText("当前内容：" + s)
+	}
+	clear.OnClick = func() {
+		inp.Editor().SetValue(input.EditingValue{})
+		inp.Value = ""
+		inp.MarkDirty()
+	}
+}
 
 func init() {
 	inp.Width = 420
@@ -73,12 +85,6 @@ func main() {
 		},
 		Demos: []doc.Demo{
 			{Title: "受控输入与 IME", Note: "真窗里点输入框并切换中文输入法；OnChanged 实时回显", Build: func(ctx *ui.BuildContext) ui.Widget {
-				clear := widgets.NewButton("清空")
-				clear.OnClick = func() {
-					inp.Editor().SetValue(input.EditingValue{})
-					inp.Value = ""
-					inp.MarkDirty()
-				}
 				col := scene.Flex(scene.Vertical, 10)
 				col.Add(inp.Build(ctx))
 				row := scene.Flex(scene.Horizontal, 8)

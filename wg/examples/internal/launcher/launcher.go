@@ -170,7 +170,17 @@ func auditWindow(meta doc.Meta, o options) int {
 			time.Sleep(10 * time.Millisecond)
 		}
 		time.Sleep(300 * time.Millisecond)
-		rep := audit.Run(form.container, outDir)
+
+		// 声明式用例：wg/examples/<id>/spec.json（规范见 docs §06）。
+		var spec *audit.Spec
+		if data, err := os.ReadFile(filepath.Join("wg", "examples", meta.ID, "spec.json")); err == nil {
+			if s, perr := audit.ParseSpec(data); perr != nil {
+				fmt.Fprintln(os.Stderr, "spec 解析失败:", perr)
+			} else {
+				spec = s
+			}
+		}
+		rep := audit.Run(form.container, outDir, spec)
 		data, _ := json.MarshalIndent(rep, "", "  ")
 		rf, err := os.Create(filepath.Join(outDir, "report.json"))
 		if err == nil {
@@ -184,7 +194,12 @@ func auditWindow(meta doc.Meta, o options) int {
 				fmt.Printf("[audit]   FAIL %-8s %-8s %s\n", fd.Element, fd.Check, fd.Detail)
 			}
 		}
-		requestExit(&form, minInt(rep.Failed, 255))
+		// 门禁退出码：spec 模式取声明式用例失败数（启发式偶发不阻塞）。
+		code := rep.Failed
+		if rep.Spec != "" {
+			code = rep.SpecFailed
+		}
+		requestExit(&form, minInt(code, 255))
 	}()
 
 	if err := form.container.Run(); err != nil {

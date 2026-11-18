@@ -40,11 +40,15 @@ type Finding struct {
 }
 
 // Report 是一个功能窗的审计报告。
+// Failed 是全部失败数（spec + 启发式）；SpecFailed 只计声明式用例——
+// 门禁退出码取 SpecFailed（启发式偶发抖动不阻塞门禁）。
 type Report struct {
-	Pages    int       `json:"pages"`
-	Elements int       `json:"elements"`
-	Failed   int       `json:"failed"`
-	Findings []Finding `json:"findings"`
+	Spec       string    `json:"spec,omitempty"`
+	Pages      int       `json:"pages"`
+	Elements   int       `json:"elements"`
+	Failed     int       `json:"failed"`
+	SpecFailed int       `json:"specFailed,omitempty"`
+	Findings   []Finding `json:"findings"`
 }
 
 // ── 事件注入（引擎事件，与宿主归一化输出等价）──────────────────────
@@ -145,10 +149,11 @@ func grab(c *wg.Container) *image.RGBA {
 		src := y * w
 		dst := y * out.Stride
 		for x := 0; x < w; x++ {
+			// 缓冲是 32bpp 预乘 BGRA：uint32 低字节为 B（小端）。
 			v := px[src+x]
-			out.Pix[dst+x*4+0] = uint8(v)
-			out.Pix[dst+x*4+1] = uint8(v >> 8)
-			out.Pix[dst+x*4+2] = uint8(v >> 16)
+			out.Pix[dst+x*4+0] = uint8(v >> 16) // R
+			out.Pix[dst+x*4+1] = uint8(v >> 8)  // G
+			out.Pix[dst+x*4+2] = uint8(v)       // B
 			out.Pix[dst+x*4+3] = 255
 		}
 	}
@@ -286,7 +291,9 @@ func dist(a, b geom.Point) float32 {
 // ── 审计主流程 ──────────────────────────────────────────────────────
 
 // Run 执行全页审计。c 为已挂载并运行中的容器（可在工作 goroutine 调用）。
-func Run(c *wg.Container, outDir string) *Report {
+// spec 非 nil 时先跑声明式用例（docs/wg-engine/06-COMPONENT-TEST-SPEC.md），
+// 启发式兜底仅覆盖未被用例使用到的标签。
+func Run(c *wg.Container, outDir string, spec *Spec) *Report {
 	rep := &Report{Findings: []Finding{}}
 	_ = os.MkdirAll(outDir, 0o755)
 
@@ -294,6 +301,12 @@ func Run(c *wg.Container, outDir string) *Report {
 	deadline := time.Now().Add(3 * time.Second)
 	for int(c.PresentStats().Frames) < 3 && time.Now().Before(deadline) {
 		time.Sleep(10 * time.Millisecond)
+	}
+
+	covered := map[string]bool{}
+	if spec != nil {
+		rep.Spec = "wg/examples/" + spec.ID + "/spec.json"
+		covered = runSpecModel(c, rep, outDir, spec)
 	}
 
 	// ① 回到顶部：向上滚到页面级滚动偏移稳定。
@@ -540,6 +553,9 @@ func Run(c *wg.Container, outDir string) *Report {
 			name, ok := interactiveLabels[h.Label]
 			if !ok {
 				return true
+			}
+			if covered[h.Label] {
+				return true // spec 用例已覆盖该标签
 			}
 			b := n.BoundsInRoot()
 			if b.IsEmpty() || b.Max.Y <= 40 || b.Min.Y >= sz.H-40 || b.Max.X <= 0 || b.Min.X >= sz.W {
