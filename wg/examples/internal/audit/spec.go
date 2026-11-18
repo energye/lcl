@@ -377,6 +377,28 @@ func (r *specRunner) runCase(cs SpecCase) {
 		if n, ok := r.locate(*cs.Target); ok {
 			r.caseBounds = n.BoundsInRoot()
 		}
+		// 落定重验：滚轮惯性/延迟重建会让"bounds 判定可见"与"实际呈现的
+		// 像素"短暂错位（采样矩形对上一帧像素 → 像素断言随机 0.000）。
+		// bounds 连续两次一致才算落定；漂移就重滚。
+		for i := 0; i < 4; i++ {
+			time.Sleep(150 * time.Millisecond)
+			n2, ok2 := r.locate(*cs.Target)
+			if !ok2 {
+				return // 重建后目标消失，走常规失败路径
+			}
+			b2 := n2.BoundsInRoot()
+			if b2 == r.caseBounds {
+				break
+			}
+			r.caseBounds = b2
+			if !r.ensureVisible(*cs.Target) {
+				r.add(name, "定位", false, "落定后目标不可见："+targetDesc(cs.Target))
+				return
+			}
+			if n3, ok3 := r.locate(*cs.Target); ok3 {
+				r.caseBounds = n3.BoundsInRoot()
+			}
+		}
 	}
 	// 前置。
 	for _, g := range cs.Given {
@@ -613,6 +635,26 @@ func (r *specRunner) doAssert(caseName string, def *SpecTarget, as SpecAssertion
 		pass := got >= as.ExpectWidth-tol && got <= as.ExpectWidth+tol
 		r.add(caseName, "borderWidth", pass,
 			fmt.Sprintf("%s 边框 %dpx（期望 %d±%d）", targetDesc(target), got, as.ExpectWidth, tol))
+	case "borderColor":
+		img := grab(r.c)
+		rect := r.sampleRect(target, as.Frac)
+		expect, note, ok := parseExpectedColor(as.Expect)
+		if !ok {
+			r.add(caseName, "borderColor", false, "无法解析 expect")
+			return
+		}
+		tol := 24.0
+		if as.Tol != nil {
+			tol = *as.Tol
+		}
+		got, found := borderColorOf(img, rect)
+		// frac 带采样对 1px 边框不可靠：边框行随设备像素对齐落在带内不同
+		// 行，整数截断还会把 crisp 行裁掉。扫描线找"与内部参考色差异最大
+		// 的行"=边框行（光晕/阴影行差异小），取该行横向前 10%..90% 均色。
+		pass := found && abs3Diff(got, [3]float64{float64(expect.R), float64(expect.G), float64(expect.B)}) <= tol
+		r.add(caseName, "borderColor", pass,
+			fmt.Sprintf("%s 边框行色 ≈ %s（Δ%.0f ≤ %.0f）", targetDesc(target), note,
+				abs3Diff(got, [3]float64{float64(expect.R), float64(expect.G), float64(expect.B)}), tol))
 	case "centeredIn":
 		a, ok := r.locate(*target)
 		if !ok {
@@ -1165,6 +1207,54 @@ func borderWidthOf(img *image.RGBA, rect geom.Rect) int {
 		}
 	}
 	return count
+}
+
+// borderColorOf 返回区域顶部边框行的均色：从上向下取与内部参考色差异
+// 最大的行（边框行差异远大于光晕/阴影行），横向前 10%..90% 的均色避开
+// 圆角。found=false 表示顶部 8 行与内部参考色无差异（无边框）。
+func borderColorOf(img *image.RGBA, rect geom.Rect) ([3]float64, bool) {
+	if img == nil || rect.IsEmpty() {
+		return [3]float64{}, false
+	}
+	x0 := int(rect.Min.X) + int(rect.W()*0.1)
+	x1 := int(rect.Max.X) - int(rect.W()*0.1)
+	if x1 <= x0 {
+		return [3]float64{}, false
+	}
+	cx := (x0 + x1) / 2
+	var inner [3]float64
+	{
+		var sum [3]int
+		n := 0
+		for y := int(rect.Min.Y) + 5; y <= int(rect.Min.Y)+8 && y < img.Bounds().Dy(); y++ {
+			px := img.RGBAAt(cx, y)
+			sum[0] += int(px.R)
+			sum[1] += int(px.G)
+			sum[2] += int(px.B)
+			n++
+		}
+		if n == 0 {
+			return [3]float64{}, false
+		}
+		inner = [3]float64{float64(sum[0]) / float64(n), float64(sum[1]) / float64(n), float64(sum[2]) / float64(n)}
+	}
+	best, bestD := [3]float64{}, -1.0
+	for y := int(rect.Min.Y); y < int(rect.Min.Y)+8 && y < img.Bounds().Dy(); y++ {
+		var sum [3]int64
+		n := 0
+		for x := x0; x < x1; x++ {
+			i := y*img.Stride + x*4
+			sum[0] += int64(img.Pix[i])
+			sum[1] += int64(img.Pix[i+1])
+			sum[2] += int64(img.Pix[i+2])
+			n++
+		}
+		v := [3]float64{float64(sum[0]) / float64(n), float64(sum[1]) / float64(n), float64(sum[2]) / float64(n)}
+		if d := abs3Diff(v, inner); d > bestD {
+			bestD, best = d, v
+		}
+	}
+	return best, bestD > 12
 }
 
 // colorRatioOf 返回区域内与目标色每通道差 <= tol 的像素占比。

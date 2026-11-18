@@ -1,6 +1,8 @@
 package scene
 
 import (
+	"math"
+
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/render"
 )
@@ -157,10 +159,37 @@ func (n *Node) recordBox(c render.Canvas) {
 	}
 	if b.Border.StrokeWidth > 0 && !b.Border.Color.IsTransparent() &&
 		b.Border.Color.A > 0 && b.Fill.Color != b.Border.Color {
+		// CSS border-box 语义：边框画在盒**内**。描边路径内缩半线宽——
+		// 否则描边骑在盒边上，内外各半：内侧墨量只剩 50%（行色=Mix(边框，
+		// 底色)），边框颜色断言不可靠、视觉上边框发虚且向外溢出半像素。
+		bw := b.Border.StrokeWidth
+		inset := bw * 0.5
+		r2 := geom.RectXYWH(inset, inset, n.size.W-bw, n.size.H-bw)
+		// 设备像素对齐（CSS border 渲染语义：1px 就是 1px 实色）：布局是
+		// 分数坐标（行高 1.5×14=21、gap 8 累加出 .2/.6 尾数），不取整时
+		// 1px 描边跨两个像素行各 AA 一半——浅色边框（#D9D9D9）还能混过
+		// tol，饱和色（主色/红/黄）墨量被白底稀释到断言必失败。
+		// 描边以路径为中心覆盖 [p-0.5, p+0.5]：路径对齐到**半整数**设备
+		// 像素，描边才正好铺满一个像素行（整数路径仍会跨行各半）。
+		// 仅在纯平移矩阵（scale=1）下取整；带缩放的 HiDPI 路径不动。
+		if rc, ok := c.(*render.Recorder); ok {
+			if m := rc.Matrix(); m.A == 1 && m.B == 0 && m.C == 0 && m.D == 1 {
+				snap := func(v, off float32) float32 {
+					return float32(math.Floor(float64(v+off)+0.5)) + 0.5 - off
+				}
+				r2 = geom.RectXYWH(
+					snap(r2.Min.X, m.E), snap(r2.Min.Y, m.F),
+					r2.W(), r2.H())
+			}
+		}
 		if b.Radius > 0 {
-			c.StrokePath(render.NewPath().AddRRect(r, b.Radius), b.Border)
+			radius := b.Radius - inset
+			if radius < 0 {
+				radius = 0
+			}
+			c.StrokePath(render.NewPath().AddRRect(r2, radius), b.Border)
 		} else {
-			c.StrokePath(render.NewPath().AddRect(r), b.Border)
+			c.StrokePath(render.NewPath().AddRect(r2), b.Border)
 		}
 	}
 }
