@@ -116,6 +116,13 @@ type ColorTokens struct {
 	SurfaceActive geom.Color
 	SurfaceSunken geom.Color // 内凹区（表格斑马、代码块）
 
+	// 交互填充（半透明叠加，antd colorFillTertiary/Quaternary）。
+	// 与 SurfaceHover 的区别：Surface 系列是不透明表面色，铺在同类表面上
+	// 会"同色隐形"（Text 按钮 hover 画在 #FAFAFA 舞台上完全看不见）；
+	// Fill 系列带 alpha，铺在任何底色上都有对比。
+	FillHover  geom.Color // ≈ rgba(0,0,0,.06)
+	FillActive geom.Color // ≈ rgba(0,0,0,.15)
+
 	// 描边
 	Border       geom.Color
 	BorderStrong geom.Color
@@ -273,6 +280,8 @@ func Light() *Data {
 			SurfaceHover:  geom.RGBA(250, 250, 250), // #FAFAFA
 			SurfaceActive: geom.RGBA(240, 240, 240), // #F0F0F0
 			SurfaceSunken: geom.RGBA(250, 250, 250), // 表格斑马/演示舞台
+			FillHover:     geom.RGBAa(0, 0, 0, 15),  // rgba(0,0,0,.06)
+			FillActive:    geom.RGBAa(0, 0, 0, 38),  // rgba(0,0,0,.15)
 
 			// colorBorder rgba(5,5,5,.15) 与 borderHover 的实色等价
 			Border:       geom.RGBA(217, 217, 217), // #D9D9D9
@@ -335,6 +344,8 @@ func Dark() *Data {
 			SurfaceHover:  geom.RGBA(29, 29, 29), // #1D1D1D
 			SurfaceActive: geom.RGBA(34, 34, 34), // #222222
 			SurfaceSunken: geom.RGBA(29, 29, 29),
+			FillHover:     geom.RGBAa(255, 255, 255, 20), // rgba(255,255,255,.08)
+			FillActive:    geom.RGBAa(255, 255, 255, 41), // rgba(255,255,255,.16)
 
 			Border:       geom.RGBA(48, 48, 48), // rgba(253,253,253,.12) 实色等价
 			BorderStrong: geom.RGBA(57, 57, 57), // .16

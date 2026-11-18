@@ -192,7 +192,7 @@ func (s *Select) Build(ctx *ui.BuildContext) *scene.Node {
 		at := scene.Text(scene.TextSpec{Src: arrow, Layout: al, Color: th.Color.TextMuted})
 		at.SetPositionKeepSize(true).SetStackPosition(geom.Pt(s.Width-20, 8))
 		n.Add(at)
-		n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "select", Cursor: scene.CursorPointer})
+		n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "select", Cursor: scene.CursorPointer, Disabled: s.Disabled})
 		g := &ui.GestureDetector{OnTap: func(geom.Point) {
 			if !s.Disabled {
 				s.show(ctx, n)
@@ -220,7 +220,7 @@ func (s *Select) Build(ctx *ui.BuildContext) *scene.Node {
 	at.SetPositionKeepSize(true).SetStackPosition(geom.Pt(s.Width-20, (h-al.Size.H)/2))
 	n.Add(at)
 
-	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "select", Cursor: scene.CursorPointer})
+	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "select", Cursor: scene.CursorPointer, Disabled: s.Disabled})
 	g := &ui.GestureDetector{OnTap: func(geom.Point) {
 		if !s.Disabled {
 			s.show(ctx, n)
@@ -293,8 +293,9 @@ func (s *Select) show(ctx *ui.BuildContext, anchor *scene.Node) {
 		Anchor:    overlay.NodeAnchor(anchor),
 		Placement: overlay.PlacementBottomStart,
 		Size:      geom.Size{W: s.Width, H: listH},
-		Dismiss:   overlay.Dismiss(0),
+		Dismiss: overlay.DismissOutsideClick | overlay.DismissEsc | overlay.DismissAnchorGone,
 		Tag:       "select",
+		OnClose:   func() { s.handle = 0 },
 		Build: func() *scene.Node {
 			return s.popupContent(ctx, rowH)
 		},

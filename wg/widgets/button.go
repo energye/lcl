@@ -179,6 +179,7 @@ func (b *Button) Build(ctx *ui.BuildContext) *scene.Node {
 	n.SetOpacity(st.Opacity)
 	n.SetHit(scene.HitSpec{
 		Behavior: scene.HitOpaque, Label: "button", Cursor: scene.CursorPointer,
+		Disabled: b.Disabled || b.Loading,
 	})
 
 	// 内容水平居中（内容宽 < 按钮宽时），垂直绝对居中。

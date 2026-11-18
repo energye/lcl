@@ -118,10 +118,11 @@ var rules = map[string]ruleSet{
 	// 直接 go run）：每个示例要同时触达组件、场景、绘制、输入与主题，
 	// 与 migration 同性质；真窗自举需要组合根（""）、host（真窗像素采样）
 	// 与 lcl（窗口/消息循环），由 examples/internal/launcher 统一封装，
-	// 各功能 main 不得绕过 launcher 直接碰呈现层。
+	// 各功能 main 不得绕过 launcher 直接碰呈现层。audit 是 launcher 的
+	// 自测引擎子包，经 launcher 在 --audit 模式下驱动。
 	"examples": {
 		allow: set("geom", "input", "render", "scene", "text", "theme", "ui", "widgets", "widgets/chart",
-			"", "host", "examples/doc", "examples/internal/launcher"),
+			"", "host", "examples/doc", "examples/internal/launcher", "examples/internal/audit"),
 		allowLCL: true,
 	},
 	"diag":    {allowAll: true, allowLCL: true},

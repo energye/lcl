@@ -1129,6 +1129,29 @@ func (c *Container) Backing() *raster.Backing {
 	return c.comp.Backing()
 }
 
+// Snapshot 在容器锁内拷贝当前合成缓冲，返回独立的 32bpp BGRA 预乘位图。
+//
+// 与 Backing 的区别：Backing 返回的是主线程复用的活缓冲，跨线程在锁外读取
+// 会与下一帧光栅写竞争。审计等需要在工作线程采样像素的场景必须用本方法，
+// 拷贝在锁内完成，返回的缓冲与合成器再无关联。未出帧时返回 nil。
+func (c *Container) Snapshot() *raster.Backing {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.comp == nil {
+		return nil
+	}
+	b := c.comp.Backing()
+	if b == nil || b.W() <= 0 || b.H() <= 0 {
+		return nil
+	}
+	out := raster.NewBacking(b.W(), b.H())
+	if out == nil {
+		return nil
+	}
+	copy(out.Pix(), b.Pix())
+	return out
+}
+
 // ReleasePresent 在主线程释放呈现层的 LCL 资源（位图/像素视图）。
 //
 // 必须在 Application.Run 返回前调用：Run 之后 LCL 运行时开始销毁，

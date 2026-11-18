@@ -72,9 +72,11 @@ func (a *AutoComplete) Build(ctx *ui.BuildContext) *scene.Node {
 		a.suggest(ctx)
 	}
 	n := a.input.Build(ctx)
-	a.attach(ctx, n, input.Handler{}, false)
-	// 输入框的处理器已被 attach 覆盖？不——Input 自己 attach 了自己的
-	// 处理器；AutoComplete 只需要在文本变化时弹层，OnChanged 已接好。
+	// 只做状态接线，不能走 controlBase.attach：它会用空 Handler 覆盖
+	// 同一节点上 Input 已注册的处理器，点击输入框将不再聚焦
+	//（--audit 实测：聚焦/键入双失败）。
+	a.node = n
+	ctx.BindState(a)
 	return n
 }
 
@@ -103,8 +105,10 @@ func (a *AutoComplete) suggest(ctx *ui.BuildContext) {
 		Anchor:    overlay.NodeAnchor(a.input.node),
 		Placement: overlay.PlacementBottomStart,
 		Size:      geom.Size{W: a.input.Width, H: h},
-		Dismiss:   overlay.Dismiss(0),
+		// 与 antd 一致：点击浮层外或按 Esc 关闭；锚点（输入框）随重建消失时关闭。
+		Dismiss: overlay.DismissOutsideClick | overlay.DismissEsc | overlay.DismissAnchorGone,
 		Tag:       "autocomplete",
+		OnClose:   func() { a.handle = 0 },
 		Build: func() *scene.Node {
 			col := scene.Flex(scene.Vertical, 0).SetWidth(a.input.Width)
 			col.SetOverflow(true)

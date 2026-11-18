@@ -204,13 +204,19 @@ func (b *Checkbox) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		root.Add((&Label{Text: b.Label, Size: th.Font.SizeBase, Color: lc}).Build(ctx))
 	}
-	root.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "checkbox", Cursor: scene.CursorPointer})
+	root.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "checkbox", Cursor: scene.CursorPointer, Disabled: b.Disabled})
 
 	toggle := func() {
 		if b.Disabled {
 			return
 		}
-		b.Checked = !b.Checked
+		// antd 语义：半选态点击一次变全选（清除 Indeterminate），
+		// 否则视觉仍停在横杠，点击看起来没反应（--audit 实测）。
+		if b.Indeterminate {
+			b.Indeterminate, b.Checked = false, true
+		} else {
+			b.Checked = !b.Checked
+		}
 		b.MarkDirty()
 		if b.OnChange != nil {
 			b.OnChange(b.Checked)
@@ -276,7 +282,7 @@ func (b *Radio) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		root.Add((&Label{Text: b.Label, Size: th.Font.SizeBase, Color: lc}).Build(ctx))
 	}
-	root.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "radio", Cursor: scene.CursorPointer})
+	root.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "radio", Cursor: scene.CursorPointer, Disabled: b.Disabled})
 
 	selectIt := func() {
 		if b.Disabled || b.Checked {
@@ -361,7 +367,7 @@ func (b *Switch) Build(ctx *ui.BuildContext) *scene.Node {
 		k.SetPositionKeepSize(true).SetStackPosition(geom.Pt(knobX, (trackH-knob)/2))
 		track.Add(k)
 	}
-	track.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "switch", Cursor: scene.CursorPointer})
+	track.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "switch", Cursor: scene.CursorPointer, Disabled: b.Disabled})
 
 	toggle := func() {
 		if b.Disabled || b.Loading {

@@ -8,14 +8,23 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
+// 展示实例包级持有：demo 闭包每次重建都会执行，闭包内新建会把
+// 切换/hover 状态随重建丢失（--audit 实测"点了没反应"）。
 var (
-	sw   = widgets.NewSwitch(true)
-	lsw  = widgets.NewSwitch(true)
+	sw    = widgets.NewSwitch(true)
+	lsw   = widgets.NewSwitch(true)
+	dis   = widgets.NewSwitch(false)
+	small = widgets.NewSwitch(true)
+	words = widgets.NewSwitch(true)
 )
 
 func init() {
 	lsw.Loading = true
 	lsw.Disabled = true
+	dis.Disabled = true
+	small.Small = true
+	words.CheckedChildren = "启用"
+	words.UnCheckedChildren = "停用"
 }
 
 func main() {
@@ -27,10 +36,6 @@ func main() {
 		},
 		Demos: []doc.Demo{
 			{Title: "基本 / 尺寸", Note: "默认 36×20；Small 24×12", Build: func(ctx *ui.BuildContext) ui.Widget {
-				dis := widgets.NewSwitch(false)
-				dis.Disabled = true
-				small := widgets.NewSwitch(true)
-				small.Small = true
 				col := scene.Flex(scene.Vertical, 10)
 				col.Add(sw.Build(ctx))
 				row := scene.Flex(scene.Horizontal, 12)
@@ -40,9 +45,6 @@ func main() {
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
 			}},
 			{Title: "文案与 loading", Note: "On 开显示「启用」、关显示「停用」；loading 旋转且不可点", Build: func(ctx *ui.BuildContext) ui.Widget {
-				words := widgets.NewSwitch(true)
-				words.CheckedChildren = "启用"
-				words.UnCheckedChildren = "停用"
 				col := scene.Flex(scene.Vertical, 10)
 				col.Add(words.Build(ctx))
 				col.Add(lsw.Build(ctx))

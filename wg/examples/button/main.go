@@ -11,11 +11,29 @@ import (
 )
 
 // 有状态演示：实例放包级变量，跨 Build 保住交互状态。
+// 样式展示按钮同样要包级持有——demo 闭包每次重建都会执行，闭包内
+// widget.NewButton 会换新实例，hover/pressed 态随重建丢失（--audit 实测
+// "按下无反馈、hover 闪烁"）。闭包内只做实例的 Build。
 var (
 	clicked  = widgets.NewButton("点我")
 	loading  = widgets.NewButton("加载 2 秒")
 	spinning bool
+
+	typesRow    []*widgets.Button
+	dangerRow   []*widgets.Button
+	shapeRow    []*widgets.Button
+	blockBtn    *widgets.Button
+	disabledRow []*widgets.Button
 )
+
+// btn 构造一个展示按钮（样式通过 fn 就地设置）。
+func btn(text string, fn func(*widgets.Button)) *widgets.Button {
+	b := widgets.NewButton(text)
+	if fn != nil {
+		fn(b)
+	}
+	return b
+}
 
 func init() {
 	clicked.OnClick = func() {
@@ -35,6 +53,38 @@ func init() {
 			loading.MarkDirty()
 		})
 	}
+
+	typesRow = []*widgets.Button{
+		btn("Primary", func(b *widgets.Button) { b.Type = widgets.TypePrimary }),
+		btn("Default", nil),
+		btn("Dashed", func(b *widgets.Button) { b.Type = widgets.TypeDashed }),
+		btn("Text", func(b *widgets.Button) { b.Type = widgets.TypeText }),
+		btn("Link", func(b *widgets.Button) { b.Type = widgets.TypeLink }),
+	}
+	dangerRow = []*widgets.Button{
+		btn("Danger Primary", func(b *widgets.Button) { b.Type, b.Danger = widgets.TypePrimary, true }),
+		btn("Danger Default", func(b *widgets.Button) { b.Danger = true }),
+		btn("Danger Text", func(b *widgets.Button) { b.Type, b.Danger = widgets.TypeText, true }),
+	}
+	shapeRow = []*widgets.Button{
+		btn("Search", func(b *widgets.Button) {
+			b.Type = widgets.TypePrimary
+			b.Icon = widgets.NewIcon("search")
+		}),
+		btn("", func(b *widgets.Button) {
+			b.Type = widgets.TypePrimary
+			b.Shape = widgets.ShapeCircle
+			b.Icon = widgets.NewIcon("plus")
+		}),
+		btn("胶囊", func(b *widgets.Button) { b.Shape = widgets.ShapeRound }),
+		btn("Small", func(b *widgets.Button) { b.Size = ui.SizeSmall }),
+		btn("Large", func(b *widgets.Button) { b.Size = ui.SizeLarge }),
+	}
+	blockBtn = btn("Block 占满", func(b *widgets.Button) { b.Block = true })
+	disabledRow = []*widgets.Button{
+		btn("禁用主按钮", func(b *widgets.Button) { b.Type, b.Disabled = widgets.TypePrimary, true }),
+		btn("禁用默认", func(b *widgets.Button) { b.Disabled = true }),
+	}
 }
 
 func main() {
@@ -50,32 +100,16 @@ func main() {
 		Demos: []doc.Demo{
 			{Title: "五种 type", Note: "primary / default / dashed / text / link", Build: func(ctx *ui.BuildContext) ui.Widget {
 				row := scene.Flex(scene.Horizontal, 10)
-				p := widgets.NewButton("Primary")
-				p.Type = widgets.TypePrimary
-				row.Add(p.Build(ctx))
-				row.Add(widgets.NewButton("Default").Build(ctx))
-				d := widgets.NewButton("Dashed")
-				d.Type = widgets.TypeDashed
-				row.Add(d.Build(ctx))
-				t := widgets.NewButton("Text")
-				t.Type = widgets.TypeText
-				row.Add(t.Build(ctx))
-				l := widgets.NewButton("Link")
-				l.Type = widgets.TypeLink
-				row.Add(l.Build(ctx))
+				for _, b := range typesRow {
+					row.Add(b.Build(ctx))
+				}
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
 			}},
 			{Title: "danger 危险按钮", Note: "实心/描边/文字三种 danger 配色", Build: func(ctx *ui.BuildContext) ui.Widget {
 				row := scene.Flex(scene.Horizontal, 10)
-				p := widgets.NewButton("Danger Primary")
-				p.Type, p.Danger = widgets.TypePrimary, true
-				row.Add(p.Build(ctx))
-				d := widgets.NewButton("Danger Default")
-				d.Danger = true
-				row.Add(d.Build(ctx))
-				t := widgets.NewButton("Danger Text")
-				t.Type, t.Danger = widgets.TypeText, true
-				row.Add(t.Build(ctx))
+				for _, b := range dangerRow {
+					row.Add(b.Build(ctx))
+				}
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
 			}},
 			{Title: "点击与加载", Note: "点「点我」回显；点「加载 2 秒」看 loading 旋转与点击抑制", Build: func(ctx *ui.BuildContext) ui.Widget {
@@ -85,42 +119,20 @@ func main() {
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
 			}},
 			{Title: "图标 / 形状 / 尺寸 / block", Note: "icon 前置；circle 圆形；round 胶囊；small/large；block 占满", Build: func(ctx *ui.BuildContext) ui.Widget {
-				search := widgets.NewButton("Search")
-				search.Type = widgets.TypePrimary
-				search.Icon = widgets.NewIcon("search")
-				circle := widgets.NewButton("")
-				circle.Type = widgets.TypePrimary
-				circle.Shape = widgets.ShapeCircle
-				circle.Icon = widgets.NewIcon("plus")
-				round := widgets.NewButton("胶囊")
-				round.Shape = widgets.ShapeRound
-				small := widgets.NewButton("Small")
-				small.Size = ui.SizeSmall
-				large := widgets.NewButton("Large")
-				large.Size = ui.SizeLarge
 				col := scene.Flex(scene.Vertical, 10)
-				col.Add(func() *scene.Node {
-					row := scene.Flex(scene.Horizontal, 10)
-					row.Add(search.Build(ctx))
-					row.Add(circle.Build(ctx))
-					row.Add(round.Build(ctx))
-					row.Add(small.Build(ctx))
-					row.Add(large.Build(ctx))
-					return row
-				}())
-				block := widgets.NewButton("Block 占满")
-				block.Block = true
-				col.Add(block.Build(ctx))
+				row := scene.Flex(scene.Horizontal, 10)
+				for _, b := range shapeRow {
+					row.Add(b.Build(ctx))
+				}
+				col.Add(row)
+				col.Add(blockBtn.Build(ctx))
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
 			}},
 			{Title: "禁用", Note: "antd 禁用专色（不降透明度）：bg #FAFAFA、文字 #BFBFBF", Build: func(ctx *ui.BuildContext) ui.Widget {
 				row := scene.Flex(scene.Horizontal, 10)
-				p := widgets.NewButton("禁用主按钮")
-				p.Type, p.Disabled = widgets.TypePrimary, true
-				row.Add(p.Build(ctx))
-				d := widgets.NewButton("禁用默认")
-				d.Disabled = true
-				row.Add(d.Build(ctx))
+				for _, b := range disabledRow {
+					row.Add(b.Build(ctx))
+				}
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
 			}},
 		},

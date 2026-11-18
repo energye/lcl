@@ -77,7 +77,7 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	body := scene.Box(scene.BoxSpec{}).SetSize2(w, bodyH+markH)
 	// 命中区覆盖整个 body（含 marks 区）：拖动不必精确落在 4px 轨道上。
-	body.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "slider", Cursor: scene.CursorPointer})
+	body.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "slider", Cursor: scene.CursorPointer, Disabled: b.Disabled})
 	track := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.SurfaceSunken), Radius: trackH / 2}).
 		SetSize2(w, trackH)
 	track.SetPositionKeepSize(true).SetStackPosition(geom.Pt(0, bodyH/2-trackH/2))
@@ -240,6 +240,8 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 	}
 	g := &ui.GestureDetector{
+		// antd 语义：点击轨道/滑块直接跳到该位置（不必拖动）。
+		OnTap:      func(pos geom.Point) { activeEnd = 0; apply(pos, true) },
 		OnPanStart: func(pos geom.Point) { activeEnd = 0; apply(pos, true) },
 		OnPan:      func(pos, _ geom.Point) { apply(pos, false) },
 	}

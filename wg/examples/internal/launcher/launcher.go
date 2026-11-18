@@ -18,7 +18,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
+	"time"
+
+	"github.com/energye/lcl/wg/examples/internal/audit"
 
 	"github.com/energye/lcl/lcl"
 	"github.com/energye/lcl/types"
@@ -35,6 +39,7 @@ const (
 type options struct {
 	shot      string
 	selfcheck bool
+	audit     bool
 	meta      bool
 	w, h      int
 }
@@ -58,6 +63,10 @@ func Main(meta doc.Meta) {
 		os.Exit(selfcheck(meta, opts))
 		return
 	}
+	if opts.audit {
+		os.Exit(auditWindow(meta, opts))
+		return
+	}
 	os.Exit(realWindow(meta, opts))
 }
 
@@ -70,6 +79,8 @@ func parseArgs() options {
 			o.shot = strings.TrimPrefix(a, "--shot=")
 		case a == "--selfcheck":
 			o.selfcheck = true
+		case a == "--audit":
+			o.audit = true
 		case a == "--meta":
 			o.meta = true
 		case strings.HasPrefix(a, "--width="):
@@ -132,6 +143,63 @@ func realWindow(meta doc.Meta, o options) int {
 }
 
 var exitCode = -1 // -1 = 正常窗口运行；>=0 = 自检结束后退出
+
+// auditWindow 打开真窗后运行全自动审计（滚动截屏 + 逐元素点击/键入），
+// 报告与全页截图写入 --audit 指定目录（默认 .shots/audit/<id>）。
+// 退出码 = 审计失败条数（上限 255）。
+func auditWindow(meta doc.Meta, o options) int {
+	outDir := ".shots/audit/" + meta.ID
+	lcl.Init()
+	lcl.Application.Initialize()
+	lcl.Application.SetMainFormOnTaskBar(true)
+
+	var form featureForm
+	lcl.Application.NewForm(&form)
+	form.SetCaption(meta.Title + " · 审计")
+	form.SetPosition(types.PoScreenCenter)
+	form.SetWidth(int32(o.w))
+	form.SetHeight(int32(o.h))
+	form.SetDoubleBuffered(false)
+
+	form.container = wg.NewContainer(&form, wg.DefaultOptions())
+	form.container.MountWidget(doc.Page(meta))
+
+	go func() {
+		deadline := time.Now().Add(3 * time.Second)
+		for form.container.PresentStats().Frames < 2 && time.Now().Before(deadline) {
+			time.Sleep(10 * time.Millisecond)
+		}
+		time.Sleep(300 * time.Millisecond)
+		rep := audit.Run(form.container, outDir)
+		data, _ := json.MarshalIndent(rep, "", "  ")
+		rf, err := os.Create(filepath.Join(outDir, "report.json"))
+		if err == nil {
+			rf.WriteString(string(data))
+			rf.Close()
+		}
+		fmt.Printf("[audit] %s pages=%d elements=%d failed=%d\n",
+			meta.ID, rep.Pages, rep.Elements, rep.Failed)
+		for _, fd := range rep.Findings {
+			if !fd.OK {
+				fmt.Printf("[audit]   FAIL %-8s %-8s %s\n", fd.Element, fd.Check, fd.Detail)
+			}
+		}
+		requestExit(&form, minInt(rep.Failed, 255))
+	}()
+
+	if err := form.container.Run(); err != nil {
+		fmt.Fprintln(os.Stderr, "审计窗启动失败:", err)
+		return 1
+	}
+	return exitCode
+}
+
+func minInt(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
 
 func requestExit(f *featureForm, code int) {
 	lcl.RunOnMainThreadAsync(func(id uint32) {

@@ -19,6 +19,7 @@ var motionBase = time.Now()
 var (
 	ctrl   = ui.NewController(600*time.Millisecond, func(t float32) float32 { return t * t * (3 - 2 * t) })
 	status = widgets.NewButton("点击播放动画")
+	start  = widgets.NewButton("从头播放")
 )
 
 func init() {
@@ -39,7 +40,6 @@ func main() {
 		Demos: []doc.Demo{
 			{Title: "Controller 进度条", Note: "点「点击播放动画」再点进度条下的按钮从头播放", Build: func(ctx *ui.BuildContext) ui.Widget {
 				sched := ctx.Scheduler
-				start := widgets.NewButton("从头播放")
 				start.OnClick = func() {
 					ctrl.SetValue(0)
 					ctrl.Forward(time.Since(motionBase))

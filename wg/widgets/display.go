@@ -313,6 +313,9 @@ type Segmented struct {
 	Options  []string
 	Selected int
 	OnChange func(int)
+
+	// items 跨重建持有：分段项的 hover 态与手势实例必须稳定。
+	items []*segmentItem
 }
 
 // NewSegmented 创建分段选择器。
@@ -322,10 +325,16 @@ func NewSegmented(options ...string) *Segmented { return &Segmented{Options: opt
 func (s *Segmented) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(s)
 	th := ctx.ThemeOr()
+	if len(s.items) != len(s.Options) {
+		s.items = make([]*segmentItem, len(s.Options))
+		for i := range s.items {
+			s.items[i] = &segmentItem{index: i, parent: s}
+		}
+	}
 	children := make([]*scene.Node, 0, len(s.Options))
 	for i, opt := range s.Options {
-		seg := &segmentItem{index: i, label: opt, parent: s}
-		children = append(children, seg.Build(ctx))
+		s.items[i].label = opt
+		children = append(children, s.items[i].Build(ctx))
 	}
 	row := scene.Flex(scene.Horizontal, 0, children...)
 	// 轨道用 SurfaceActive（#F0F0F0，与 antd 分段容器一致）——

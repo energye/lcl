@@ -264,6 +264,9 @@ type HitSpec struct {
 	Tooltip string
 	// Label 语义标签（自动化测试选择器用）。
 	Label string
+	// Disabled 表示控件处于禁用态：命中仍吞事件，但点击不应产生任何
+	// 视觉/状态变化。自动化据此区分"点击无反应是正确行为"与缺陷。
+	Disabled bool
 }
 
 // idSeq 是全局节点 id 分配器。节点 id 参与缓存键与命中缓存，"重排不换 id"很重要。
@@ -1190,12 +1193,17 @@ func (n *Node) SetTextPaint(spec TextSpec) *Node {
 	return n
 }
 
-// Box 返回 Box spec（非 Box 节点为 nil）。
+// Box 返回 Box spec（文本/路径等叶节点为 nil；容器可有背景）。
 func (n *Node) Box() *BoxSpec { return n.box }
 
 // SetBox 替换 Box 样式。
+//
+// 容器（Stack/Flex）也允许设置：表格行斑马纹与选中态、树节点选中、
+// 下拉项高亮都直接写在容器的 box 上（recordSelf 一并绘制）。
 func (n *Node) SetBox(spec BoxSpec) *Node {
-	if n.kind != KindBox {
+	switch n.kind {
+	case KindBox, KindStack, KindFlex:
+	default:
 		return n
 	}
 	s := spec

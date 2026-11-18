@@ -71,6 +71,7 @@ func (m *Modal) Show(ctx *ui.BuildContext) {
 		TrapFocus: true,
 		Dismiss:   overlay.DismissEsc,
 		Tag:       "modal",
+		OnClose:   func() { m.handle = 0 },
 		Build: func() *scene.Node {
 			col := scene.Flex(scene.Vertical, th.Space.MD).SetWidth(w)
 			col.SetBox(scene.BoxSpec{
@@ -202,6 +203,7 @@ func (d *Drawer) Show(ctx *ui.BuildContext) {
 		TrapFocus: true,
 		Dismiss:   overlay.DismissEsc | overlay.DismissOutsideClick,
 		Tag:       "drawer",
+		OnClose:   func() { d.handle = 0 },
 		Build: func() *scene.Node {
 			col := scene.Flex(scene.Vertical, th.Space.MD).SetWidth(w).SetHeight(400)
 			col.SetBox(scene.BoxSpec{
@@ -277,6 +279,7 @@ func (n *Notification) Show(ctx *ui.BuildContext) {
 		Dismiss:   overlay.DismissTimeout | overlay.DismissOutsideClick,
 		Duration:  dur,
 		Tag:       "notification",
+		OnClose:   func() { n.handle = 0 },
 		Build: func() *scene.Node {
 			col := scene.Flex(scene.Vertical, 4).SetWidth(280).SetHeight(72)
 			col.SetBox(scene.BoxSpec{
@@ -366,6 +369,7 @@ func (p *Popconfirm) show(ctx *ui.BuildContext, anchor *scene.Node) {
 		Size:      geom.Size{W: 240, H: 110},
 		Dismiss:   overlay.DismissOutsideClick | overlay.DismissEsc,
 		Tag:       "popconfirm",
+		OnClose:   func() { p.handle = 0 },
 		Build: func() *scene.Node {
 			col := scene.Flex(scene.Vertical, th.Space.SM).SetWidth(240)
 			col.SetBox(scene.BoxSpec{

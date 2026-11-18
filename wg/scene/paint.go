@@ -117,7 +117,10 @@ func (n *Node) recordClip(c render.Canvas) {
 // recordSelf 画节点自身的视觉（不含子树）。
 func (n *Node) recordSelf(c render.Canvas) {
 	switch n.kind {
-	case KindBox:
+	case KindBox, KindStack, KindFlex:
+		// 容器也画自己的 box：表格行斑马纹/选中态、树节点选中、下拉项
+		// 高亮、弹层面板底色都写在 Flex/Stack 的 SetBox 上。以前只认
+		// KindBox，这些填充从未上屏（--audit 的点击零像素变化暴露）。
 		n.recordBox(c)
 	case KindText:
 		n.recordText(c)

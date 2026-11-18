@@ -117,7 +117,7 @@ func (w *InputNumber) Build(ctx *ui.BuildContext) *scene.Node {
 	t := scene.Text(scene.TextSpec{Src: e.Value().Text, Layout: layout, Color: th.Color.Text})
 	t.SetMargin(geom.InLTRB(11, (height-layout.Size.H)/2, 0, 0))
 	box.Add(t)
-	box.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "input-number", Cursor: scene.CursorText})
+	box.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "input-number", Cursor: scene.CursorText, Disabled: w.Disabled})
 
 	// 右侧步进器：上/下两个半区。
 	for i, name := range []string{"up", "down"} {

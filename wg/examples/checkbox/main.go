@@ -11,12 +11,17 @@ import (
 var (
 	cb   = widgets.NewCheckbox("启用动画", true)
 	pref = &widgets.CheckboxGroup{}
+	off  = widgets.NewCheckbox("禁用项", false)
+	mid  = widgets.NewCheckbox("半选（父级部分选中）", false)
 )
 
 func init() {
 	pref.Options = []string{"光栅化", "文字通道", "浮层系统"}
 	pref.Values = []string{"光栅化"}
 	pref.OnChange = func(vs []string) { pref.Values = vs }
+	// 展示实例包级持有：闭包内新建会让勾选态随重建丢失。
+	off.Disabled = true
+	mid.Indeterminate = true
 }
 
 func main() {
@@ -28,10 +33,6 @@ func main() {
 		},
 		Demos: []doc.Demo{
 			{Title: "基本 / 半选 / 禁用", Note: "Indeterminate 横杠态由父级聚合状态驱动", Build: func(ctx *ui.BuildContext) ui.Widget {
-				off := widgets.NewCheckbox("禁用项", false)
-				off.Disabled = true
-				mid := widgets.NewCheckbox("半选（父级部分选中）", false)
-				mid.Indeterminate = true
 				col := scene.Flex(scene.Vertical, 8)
 				col.Add(cb.Build(ctx))
 				col.Add(mid.Build(ctx))

@@ -62,6 +62,9 @@ type Table struct {
 	Selected   int // 选中行索引（数据索引，-1 无）
 	OnSort     func(col int, asc bool)
 	OnSelect   func(row int)
+	// RowLabel 自定义行命中标签（空 = "table-row"）。
+	// 纯展示表（文档 API 参数表）设成非交互标签，自动化审计据此跳过。
+	RowLabel string
 
 	// ShowScrollbar：nil = 内容溢出自动显示；true 始终；false 隐藏（仍可滚轮）。
 	ShowScrollbar *bool
@@ -308,6 +311,9 @@ func (t *Table) VisibleRows() []int {
 
 // Build 实现 ui.Widget。
 func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
+	// 行选中/排序走 MarkDirty：不接线的话静止窗口（C14）点击后
+	// 只置脏位不请求帧，界面表现为"点了没反应"（--audit 实测）。
+	ctx.BindState(t)
 	th := ctx.ThemeOr()
 	widths := t.columnWidths(th.Font.SizeSM)
 	idx := t.sortedIndex()
@@ -361,7 +367,11 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 	t.rowVis = t.rowVis[:0]
 	t.builtFirst, t.builtLast = first, last
 	t.reqFrame = ctx.RequestFrame
-	for vi := first; vi < last; vi++ {
+	rowLabel := t.RowLabel
+		if rowLabel == "" {
+			rowLabel = "table-row"
+		}
+		for vi := first; vi < last; vi++ {
 		dataRow := idx[vi]
 		row := scene.Flex(scene.Horizontal, 0).SetWidth(t.Width).SetHeight(t.RowHeight)
 		bg := geom.Color{}
@@ -379,7 +389,7 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 			tv.SetMargin(geom.InLTRB(6, (t.RowHeight-l.Size.H)/2, 0, 0))
 			cell.Add(tv)
 			if ctx.Input != nil {
-				cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-row", Cursor: scene.CursorPointer})
+				cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: rowLabel, Cursor: scene.CursorPointer})
 				r := dataRow
 				g := &ui.GestureDetector{OnTap: func(geom.Point) {
 					t.Selected = r

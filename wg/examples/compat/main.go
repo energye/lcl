@@ -8,6 +8,15 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
+// 展示控件包级持有：闭包内新建会让勾选/开关/hover 状态随重建丢失。
+var (
+	cbtn = widgets.NewButton("Button")
+	cbx  = widgets.NewCheckbox("Checkbox", true)
+	csw  = widgets.NewSwitch(true)
+	card = widgets.NewCard(widgets.Label{Text: "Card · NewCard 包装"})
+	prog = widgets.Progress{Value: 0.65}
+)
+
 func main() {
 	launcher.Main(doc.Meta{
 		ID: "compat", Title: "组件组合 API", Group: doc.GroupVisual,
@@ -20,13 +29,13 @@ func main() {
 			{Title: "一行组合", Note: "同一份组件树既可跑真窗也可跑 headless（ui.Widget 契约）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				th := ctx.ThemeOr()
 				row := scene.Flex(scene.Horizontal, 8)
-				row.Add(widgets.NewButton("Button").Build(ctx))
-				row.Add(widgets.NewCheckbox("Checkbox", true).Build(ctx))
-				row.Add(widgets.NewSwitch(true).Build(ctx))
+				row.Add(cbtn.Build(ctx))
+				row.Add(cbx.Build(ctx))
+				row.Add(csw.Build(ctx))
 				row.Add((&widgets.Label{Text: "Label", Color: th.Color.Text}).Build(ctx))
 				grid := scene.Grid(2, 8).SetWidth(420)
-				grid.Add(widgets.NewCard(widgets.Label{Text: "Card · NewCard 包装"}).Build(ctx))
-				grid.Add((widgets.Progress{Value: 0.65}).Build(ctx))
+				grid.Add(card.Build(ctx))
+				grid.Add(prog.Build(ctx))
 				col := scene.Flex(scene.Vertical, 8)
 				col.Add(row)
 				col.Add(grid)

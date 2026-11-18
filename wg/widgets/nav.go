@@ -25,7 +25,11 @@ type Tabs struct {
 	Items    []Tab
 	Active   int
 	OnChange func(int)
-	node     *scene.Node
+
+	// headers 跨重建持有：页签的 hover 态与手势实例必须稳定，
+	// 每帧新建会让 hover 高亮闪烁、按住期间的重建丢失手势（--audit 实测）。
+	headers []*tabHeader
+	node    *scene.Node
 }
 
 // NewTabs 创建标签页。
@@ -48,10 +52,19 @@ func (t *Tabs) Build(ctx *ui.BuildContext) *scene.Node {
 		t.Active = len(t.Items) - 1
 	}
 	m := ui.MetricsFor(th, ui.SizeMedium)
-	headers := make([]ui.Widget, 0, len(t.Items))
+	if len(t.headers) != len(t.Items) {
+		t.headers = make([]*tabHeader, len(t.Items))
+		for i := range t.headers {
+			t.headers[i] = &tabHeader{index: i, tabs: t}
+		}
+	}
 	for i, item := range t.Items {
-		hdr := &tabHeader{index: i, label: item.Label, metrics: m, tabs: t}
-		headers = append(headers, hdr)
+		t.headers[i].label = item.Label
+		t.headers[i].metrics = m
+	}
+	headers := make([]ui.Widget, len(t.headers))
+	for i, hdr := range t.headers {
+		headers[i] = hdr
 	}
 	bar := scene.Flex(scene.Horizontal, th.Space.SM, buildChildren(ctx, headers)...)
 	col := scene.Flex(scene.Vertical, th.Space.MD, bar)
@@ -175,6 +188,7 @@ func (t *Tooltip) show(ctx *ui.BuildContext, anchor *scene.Node) {
 		// Tooltip 只由 Enter/Leave 管，永远不参与点击路由。
 		Dismiss: overlay.Dismiss(0),
 		Tag:     "tooltip",
+		OnClose: func() { t.handle = 0 },
 		Build: func() *scene.Node {
 			m := ui.MetricsFor(th, ui.SizeSmall)
 			layout := textLayout(text, m.Font)

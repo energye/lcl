@@ -56,7 +56,7 @@ func (r *Rate) Build(ctx *ui.BuildContext) *scene.Node {
 			drawStar(p, sz.W/2, sz.H/2, sz.W*0.42)
 			cv.FillPath(p, render.Fill(color))
 		}).SetSize2(20, 20)
-		star.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "rate-star", Cursor: scene.CursorPointer})
+		star.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "rate-star", Cursor: scene.CursorPointer, Disabled: r.Disabled})
 		if ctx.Input != nil {
 			ctx.Input.Set(star, input.Handler{
 				Enter: func(*input.PointerEvent) { r.hoverAt = idx; r.MarkDirty() },

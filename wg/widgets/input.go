@@ -321,7 +321,7 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		n.Add(clear)
 	}
-	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "input", Cursor: scene.CursorText})
+	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "input", Cursor: scene.CursorText, Disabled: w.Disabled})
 
 	// 光标（自绘）：聚焦时显示，位置由选区末端决定。
 	caretLocal := geom.RectXYWH(textX+caretX-w.scrollX, (height-lineH)/2, 2, lineH)
@@ -502,7 +502,11 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 		w.countNode, w.countFont, w.countColor = cn, cf, th.Color.TextFaint
 		w.countLH, w.countMaxW = th.Font.LineHeight, width
 	}
-	w.attach(ctx, root, h, !w.Disabled)
+	// 处理器与焦点必须挂在输入框本体 n 上：分发器只把 Pointer 投给命中的
+	// 最深节点，挂在 addon 的 row / count 的 col 上时点击输入框命中 n，
+	// row/col 的处理器不会被调用（--audit 实测：点击不聚焦、键盘无输入）。
+	// addon/字数行点击不聚焦，与 antd 一致。
+	w.attach(ctx, n, h, !w.Disabled)
 	return root
 }
 

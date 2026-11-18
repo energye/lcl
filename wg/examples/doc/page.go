@@ -167,6 +167,7 @@ func apiTable(ctx *ui.BuildContext, rows []APIRow) *scene.Node {
 	}
 	t := widgets.NewTable(cols, data)
 	t.Width = w
+	t.RowLabel = "api-row" // 纯展示行：审计/自动化不按交互元素断言
 	// 视口高按行数算：表头 32 + 行高 30×N，上下限兜底。
 	t.Height = 32 + 30*float32(len(rows)) + 8
 	if t.Height < 96 {

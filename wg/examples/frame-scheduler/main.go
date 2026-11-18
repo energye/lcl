@@ -12,7 +12,10 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
-var frameStatus = widgets.NewButton("帧信息：—")
+var (
+	frameStatus = widgets.NewButton("帧信息：—")
+	req         = widgets.NewButton("请求下一帧")
+)
 
 func main() {
 	launcher.Main(doc.Meta{
@@ -24,7 +27,6 @@ func main() {
 		},
 		Demos: []doc.Demo{
 			{Title: "请求下一帧", Note: "点击后显示帧号/等待/已武装状态", Build: func(ctx *ui.BuildContext) ui.Widget {
-				req := widgets.NewButton("请求下一帧")
 				req.OnClick = func() {
 					if ctx.Scheduler != nil {
 						ctx.Scheduler.RequestFrame()

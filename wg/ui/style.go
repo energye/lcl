@@ -218,9 +218,12 @@ func ResolveStyle(t *theme.Data, v Variant, st Status) Style {
 		out.Background, out.Foreground = geom.Color{}, c.Text
 		switch st {
 		case StatusHover:
-			out.Background = c.SurfaceHover
+			// 半透明填充：铺在任意底色上都有对比（antd text 按钮 hover
+			// 是 rgba(0,0,0,.06)，不透明的 SurfaceHover 在 #FAFAFA 舞台
+			// 上完全同色隐形——--audit 实测 Text 按钮 hover 零像素变化）。
+			out.Background = c.FillHover
 		case StatusActive:
-			out.Background = c.SurfaceActive
+			out.Background = c.FillActive
 		case StatusDisabled:
 			out.Background, out.Foreground = disBg, disFg
 		case StatusSelected:

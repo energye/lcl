@@ -113,6 +113,10 @@ type Entry struct {
 	Build func() *scene.Node
 	// Tag 是诊断标签。
 	Tag string
+	// OnClose 在浮层被任何路径关闭后调用一次（组件自关 / Esc / 外部点击 /
+	// 超时 / 锚点消失 / 强制 CloseAll）。组件用它复位自己的 handle——
+	// 只在自关路径复位的话，Esc 关掉后再点打不开（--audit 实测）。
+	OnClose func()
 
 	// mask 是模态遮罩节点（Modal 时创建）。
 	mask *scene.Node
@@ -325,6 +329,9 @@ func (h *Host) closeEntry(e *Entry) {
 			h.order = append(h.order[:i], h.order[i+1:]...)
 			break
 		}
+	}
+	if e.OnClose != nil {
+		e.OnClose()
 	}
 	h.stats.Closed++
 	h.rebuild()

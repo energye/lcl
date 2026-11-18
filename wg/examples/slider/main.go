@@ -7,9 +7,22 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
-var slider = widgets.NewSlider(0, 100, 35)
+// 展示实例包级持有：闭包内新建会让拖动值随重建丢失。
+var (
+	slider = widgets.NewSlider(0, 100, 35)
+	marked = widgets.NewSlider(0, 100, 60)
+	rg     = widgets.NewSliderRange(0, 100, 20, 70)
+	st     = widgets.NewSlider(0, 100, 50)
+)
 
-func init() { slider.Width = 420 }
+func init() {
+	slider.Width = 420
+	marked.Width = 420
+	marked.Marks = widgets.SliderMarks{0: "0℃", 50: "50℃", 100: "100℃"}
+	rg.Width = 420
+	st.Width = 420
+	st.Step = 25
+}
 
 func main() {
 	launcher.Main(doc.Meta{
@@ -24,20 +37,12 @@ func main() {
 				return slider
 			}},
 			{Title: "marks 刻度", Note: "0/50/100 三个刻度线与文字", Build: func(ctx *ui.BuildContext) ui.Widget {
-				marked := widgets.NewSlider(0, 100, 60)
-				marked.Width = 420
-				marked.Marks = widgets.SliderMarks{0: "0℃", 50: "50℃", 100: "100℃"}
 				return marked
 			}},
 			{Title: "range 双滑块", Note: "就近端拖动；[20, 70] 初始区间", Build: func(ctx *ui.BuildContext) ui.Widget {
-				rg := widgets.NewSliderRange(0, 100, 20, 70)
-				rg.Width = 420
 				return rg
 			}},
 			{Title: "step 分档", Note: "Step=25 只取 0/25/50/75/100", Build: func(ctx *ui.BuildContext) ui.Widget {
-				st := widgets.NewSlider(0, 100, 50)
-				st.Width = 420
-				st.Step = 25
 				return st
 			}},
 		},
