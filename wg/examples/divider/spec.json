@@ -5,5 +5,56 @@
     "sections": [
       "水平分隔线"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "水平分隔线",
+      "cases": [
+        {
+          "name": "两条分隔线存在",
+          "target": {
+            "label": "divider"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "name": "分隔线为细线（1-3px）",
+          "target": {
+            "label": "divider",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "heightBetween": [
+                0.5,
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "name": "分隔线颜色为描边色",
+          "target": {
+            "label": "divider",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "color",
+              "expect": {
+                "token": "Border"
+              },
+              "tol": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

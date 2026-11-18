@@ -5,5 +5,23 @@
     "sections": [
       "四步进度"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "四步进度",
+      "cases": [
+        {
+          "name": "步骤条存在",
+          "target": {
+            "label": "steps"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

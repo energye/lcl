@@ -5,5 +5,35 @@
     "sections": [
       "基本用法"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "基本用法",
+      "cases": [
+        {
+          "name": "空状态存在",
+          "target": {
+            "label": "empty"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "主文案存在",
+          "target": {
+            "label": "empty"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "暂无数据"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

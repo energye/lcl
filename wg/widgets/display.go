@@ -84,7 +84,9 @@ func (b Badge) Build(ctx *ui.BuildContext) *scene.Node {
 		fill = th.Color.Danger
 	}
 	if b.Dot {
-		return scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: th.Radius.Pill}).SetSize2(8, 8)
+		dot := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: th.Radius.Pill}).SetSize2(8, 8)
+		dot.SetHit(scene.HitSpec{Label: "badge"})
+		return dot
 	}
 	label := b.Text
 	if label == "" && b.Count > 0 {
@@ -102,6 +104,7 @@ func (b Badge) Build(ctx *ui.BuildContext) *scene.Node {
 	t := scene.Text(scene.TextSpec{Src: label, Layout: layout, Color: fg})
 	t.SetMargin(geom.InLTRB(th.Space.SM, (h-layout.Size.H)/2, 0, 0))
 	n.Add(t)
+	n.SetHit(scene.HitSpec{Label: "badge"})
 	return n
 }
 
@@ -126,6 +129,7 @@ func (t Tag) Build(ctx *ui.BuildContext) *scene.Node {
 	label := scene.Text(scene.TextSpec{Src: t.Text, Layout: layout, Color: fg})
 	label.SetMargin(geom.InLTRB(th.Space.SM, (h-layout.Size.H)/2, 0, 0))
 	n.Add(label)
+	n.SetHit(scene.HitSpec{Label: "tag"})
 	return n
 }
 
@@ -159,6 +163,7 @@ func (a Avatar) Build(ctx *ui.BuildContext) *scene.Node {
 		t.SetMargin(geom.InLTRB((s-layout.Size.W)/2, (s-layout.Size.H)/2, 0, 0))
 		n.Add(t)
 	}
+	n.SetHit(scene.HitSpec{Label: "avatar"})
 	return n
 }
 
@@ -199,6 +204,7 @@ func (e Empty) Build(ctx *ui.BuildContext) *scene.Node {
 		st.SetStackPosition(geom.Pt((w-sub.Size.W)/2, 70)).SetPositionKeepSize(true)
 		n.Add(st)
 	}
+	n.SetHit(scene.HitSpec{Label: "empty"})
 	return n
 }
 
@@ -234,6 +240,7 @@ func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
 			Fill: scene.Solid(th.Color.SurfaceActive), Radius: th.Radius.SM,
 		}).SetSize2(rw, h))
 	}
+	n.SetHit(scene.HitSpec{Label: "skeleton"})
 	return n
 }
 
@@ -304,6 +311,7 @@ func (s Steps) Build(ctx *ui.BuildContext) *scene.Node {
 				SetSize2(40, 2).SetMargin(geom.InLTRB(4, 9, 4, 0)))
 		}
 	}
+	n.SetHit(scene.HitSpec{Label: "steps"})
 	return n
 }
 

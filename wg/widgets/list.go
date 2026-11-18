@@ -47,6 +47,7 @@ func (l *List) Build(ctx *ui.BuildContext) *scene.Node {
 		})
 	l.nodes, l.keys = nodes, keys
 	n := scene.Flex(scene.Vertical, l.Gap, nodes...)
+	n.SetHit(scene.HitSpec{Label: "list"})
 	return n
 }
 

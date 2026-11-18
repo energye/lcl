@@ -5,5 +5,39 @@
     "sections": [
       "键控复用"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "键控复用",
+      "cases": [
+        {
+          "name": "列表存在",
+          "target": {
+            "label": "list"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "键控项文本存在",
+          "target": {
+            "label": "list"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "label",
+                "text": "键控项 A"
+              },
+              "text": "键控项 A"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

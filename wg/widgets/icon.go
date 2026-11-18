@@ -223,5 +223,6 @@ func (ic *Icon) Build(ctx *ui.BuildContext) *scene.Node {
 			cv.FillPath(p, render.Fill(color))
 		}
 	}).SetSize2(size, size)
+	n.SetHit(scene.HitSpec{Label: "icon"})
 	return n
 }

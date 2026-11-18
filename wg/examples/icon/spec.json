@@ -6,5 +6,24 @@
       "全部内置图标",
       "语义色与旋转"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "全部内置图标",
+      "cases": [
+        {
+          "name": "图标集存在（≥20）",
+          "target": {
+            "label": "icon"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

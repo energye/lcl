@@ -5,5 +5,46 @@
     "sections": [
       "三档尺寸"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "三档尺寸",
+      "cases": [
+        {
+          "name": "三档头像存在",
+          "target": {
+            "label": "avatar"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "name": "头像底色为主色",
+          "target": {
+            "label": "avatar",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.35,
+                0.1,
+                0.3,
+                0.12
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

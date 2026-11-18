@@ -5,5 +5,46 @@
     "sections": [
       "三态角标"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "三态角标",
+      "cases": [
+        {
+          "name": "三态角标存在",
+          "target": {
+            "label": "badge"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "name": "计数角标为 Error 红底",
+          "target": {
+            "label": "badge",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "color",
+              "frac": [
+                0.12,
+                0.15,
+                0.3,
+                0.7
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "tol": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

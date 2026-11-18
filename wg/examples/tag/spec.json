@@ -5,5 +5,37 @@
     "sections": [
       "标签组"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "标签组",
+      "cases": [
+        {
+          "name": "四个标签存在",
+          "target": {
+            "label": "tag"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "name": "标签文本存在",
+          "target": {
+            "label": "tag",
+            "text": "无句柄画布"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "无句柄画布"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

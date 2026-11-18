@@ -68,9 +68,13 @@ func (d *Divider) Build(ctx *ui.BuildContext) *scene.Node {
 		thick = 1
 	}
 	if d.Vertical {
-		return scene.Box(scene.BoxSpec{Fill: scene.Solid(color)}).SetSize2(thick, length)
+		v := scene.Box(scene.BoxSpec{Fill: scene.Solid(color)}).SetSize2(thick, length)
+		v.SetHit(scene.HitSpec{Label: "divider"})
+		return v
 	}
-	return scene.Box(scene.BoxSpec{Fill: scene.Solid(color)}).SetSize2(length, thick)
+	h := scene.Box(scene.BoxSpec{Fill: scene.Solid(color)}).SetSize2(length, thick)
+	h.SetHit(scene.HitSpec{Label: "divider"})
+	return h
 }
 
 // ── Spacer / SizedBox ──────────────────────────────────────────────
@@ -183,10 +187,12 @@ func (l Label) Build(ctx *ui.BuildContext) *scene.Node {
 		MaxWidth: l.MaxWidth, MaxLines: l.MaxLines, Ellipsis: l.Ellipsis,
 		LineHeight: th.Font.LineHeight,
 	})
-	return scene.Text(scene.TextSpec{
+	tn := scene.Text(scene.TextSpec{
 		Src: l.Text, Layout: layout, Color: color,
 		LayoutFont: font, LayoutW: l.MaxWidth,
 	})
+	tn.SetHit(scene.HitSpec{Label: "label"})
+	return tn
 }
 
 // ── TextView（可原地更新的文本） ────────────────────────────────────
