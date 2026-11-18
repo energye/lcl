@@ -1,0 +1,67 @@
+{
+  "id": "select",
+  "structure": {
+    "apiRows": 10,
+    "sections": [
+      "基本单选",
+      "分组 + 搜索",
+      "多选"
+    ]
+  },
+  "sections": [
+    {
+      "name": "基本单选",
+      "cases": [
+        {
+          "name": "下拉打开、Esc 关闭、可再次打开",
+          "target": {
+            "label": "select",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "select-open-close"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "分组 + 搜索",
+      "cases": [
+        {
+          "name": "分组下拉打开与关闭",
+          "target": {
+            "label": "select",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "select-open-close"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "多选",
+      "cases": [
+        {
+          "name": "多选下拉打开与关闭",
+          "target": {
+            "label": "select",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "select-open-close"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "tree",
+  "structure": {
+    "apiRows": 8,
+    "sections": [
+      "目录树"
+    ]
+  },
+  "sections": [
+    {
+      "name": "目录树",
+      "cases": [
+        {
+          "name": "展开 src 出现 render 子节点",
+          "target": {
+            "label": "tree-node",
+            "text": "src"
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "render"
+              }
+            }
+          ]
+        },
+        {
+          "name": "再次点击收起 render 消失",
+          "target": {
+            "label": "tree-node",
+            "text": "src"
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "absent",
+              "target": {
+                "label": "tree-node",
+                "text": "render"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

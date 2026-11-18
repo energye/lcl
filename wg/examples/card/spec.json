@@ -1,0 +1,9 @@
+{
+  "id": "card",
+  "structure": {
+    "apiRows": 6,
+    "sections": [
+      "三段式卡片"
+    ]
+  }
+}

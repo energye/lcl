@@ -1,0 +1,11 @@
+{
+  "id": "padding-spacer",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "Spacer 弹性留白",
+      "SizedBox 固定尺寸",
+      "Padding 内边距"
+    ]
+  }
+}

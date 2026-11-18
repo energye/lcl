@@ -1,0 +1,9 @@
+{
+  "id": "canvas-transform",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "旋转条纹 + 缩放椭圆"
+    ]
+  }
+}

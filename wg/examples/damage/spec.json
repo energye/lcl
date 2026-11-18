@@ -1,0 +1,10 @@
+{
+  "id": "damage",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "相邻脏矩形",
+      "并集与遮挡"
+    ]
+  }
+}

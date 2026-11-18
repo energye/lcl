@@ -1,0 +1,9 @@
+{
+  "id": "raster-backing",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "手写像素 + 混合"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "notification",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "弹出通知"
+    ]
+  },
+  "sections": [
+    {
+      "name": "弹出通知",
+      "cases": [
+        {
+          "name": "点击弹出通知（BandToast）",
+          "target": {
+            "label": "button",
+            "text": "弹出通知"
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1,
+              "band": "toast"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

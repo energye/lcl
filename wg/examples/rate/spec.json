@@ -1,0 +1,49 @@
+{
+  "id": "rate",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "五星评分",
+      "三星只读"
+    ]
+  },
+  "sections": [
+    {
+      "name": "五星评分",
+      "cases": [
+        {
+          "name": "点击第三颗星设定评分",
+          "target": {
+            "label": "rate-star",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "rate-set"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "三星只读",
+      "cases": [
+        {
+          "name": "只读评分点击无反馈",
+          "target": {
+            "label": "rate-star",
+            "disabled": true,
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "disabled-no-op"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

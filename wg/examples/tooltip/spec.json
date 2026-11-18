@@ -1,0 +1,9 @@
+{
+  "id": "tooltip",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "基本悬停"
+    ]
+  }
+}

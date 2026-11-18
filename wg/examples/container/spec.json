@@ -1,0 +1,10 @@
+{
+  "id": "container",
+  "structure": {
+    "apiRows": 7,
+    "sections": [
+      "Media 查询与清屏色",
+      "独立 main 骨架"
+    ]
+  }
+}

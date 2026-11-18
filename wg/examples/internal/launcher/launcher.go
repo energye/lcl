@@ -40,6 +40,7 @@ type options struct {
 	shot      string
 	selfcheck bool
 	audit     bool
+	auditMode string
 	meta      bool
 	w, h      int
 }
@@ -81,6 +82,9 @@ func parseArgs() options {
 			o.selfcheck = true
 		case a == "--audit":
 			o.audit = true
+		case strings.HasPrefix(a, "--audit="):
+			o.audit = true
+			o.auditMode = strings.TrimPrefix(a, "--audit=")
 		case a == "--meta":
 			o.meta = true
 		case strings.HasPrefix(a, "--width="):
@@ -92,11 +96,15 @@ func parseArgs() options {
 	return o
 }
 
-// dumpMeta 打印功能元数据（枚举门禁收集 ID/分组用）。
+// dumpMeta 打印功能元数据（枚举门禁收集 ID/分组用；specgen 用 demos 标题生成 L1 用例）。
 func dumpMeta(meta doc.Meta) {
+	titles := make([]string, len(meta.Demos))
+	for i, d := range meta.Demos {
+		titles[i] = d.Title
+	}
 	out, err := json.Marshal(map[string]any{
 		"id": meta.ID, "title": meta.Title, "group": meta.Group,
-		"demos": len(meta.Demos), "apiRows": len(meta.API),
+		"demos": titles, "apiRows": len(meta.API),
 	})
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "meta 序列化失败:", err)
@@ -170,6 +178,23 @@ func auditWindow(meta doc.Meta, o options) int {
 			time.Sleep(10 * time.Millisecond)
 		}
 		time.Sleep(300 * time.Millisecond)
+
+		// draft 模式：逐屏枚举生成用例初稿，不跑断言。
+		if o.auditMode == "draft" {
+			spec := audit.DraftSpec(form.container)
+			data, merr := json.MarshalIndent(spec, "", "  ")
+			if merr == nil {
+				rf, ferr := os.Create(filepath.Join(outDir, "spec-draft.json"))
+				if ferr == nil {
+					rf.WriteString(string(data) + "\n")
+					rf.Close()
+				}
+			}
+			fmt.Printf("[audit] %s draft cases=%d → %s\n",
+				meta.ID, len(spec.Sections[0].Cases), filepath.Join(outDir, "spec-draft.json"))
+			requestExit(&form, 0)
+			return
+		}
 
 		// 声明式用例：wg/examples/<id>/spec.json（规范见 docs §06）。
 		var spec *audit.Spec

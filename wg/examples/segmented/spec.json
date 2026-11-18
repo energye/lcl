@@ -1,0 +1,29 @@
+{
+  "id": "segmented",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "周期切换"
+    ]
+  },
+  "sections": [
+    {
+      "name": "周期切换",
+      "cases": [
+        {
+          "name": "点击未选中分段",
+          "target": {
+            "label": "segment",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "segment-select"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "button",
+  "structure": {
+    "apiRows": 11,
+    "sections": [
+      "五种 type",
+      "danger 危险按钮",
+      "点击与加载",
+      "图标 / 形状 / 尺寸 / block",
+      "禁用"
+    ]
+  }
+}

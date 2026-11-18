@@ -1,0 +1,57 @@
+{
+  "id": "drawer",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "左侧抽屉"
+    ]
+  },
+  "sections": [
+    {
+      "name": "左侧抽屉",
+      "cases": [
+        {
+          "name": "点击打开抽屉（BandModal）",
+          "target": {
+            "label": "button",
+            "text": "从左侧滑出抽屉"
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1,
+              "band": "modal"
+            }
+          ]
+        },
+        {
+          "name": "打开后 Esc 关闭",
+          "target": {
+            "label": "button",
+            "text": "从左侧滑出抽屉"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "key": "escape"
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0,
+              "band": "modal"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

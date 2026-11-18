@@ -7,8 +7,10 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
+// confirm 包级持有：闭包内新建会让 hover 态随重建丢失。
+var confirm = widgets.NewPopconfirm("确定删除这一项？", widgets.NewButton("删除"))
+
 func main() {
-	confirm := widgets.NewPopconfirm("确定删除这一项？", widgets.NewButton("删除"))
 	launcher.Main(doc.Meta{
 		ID: "popconfirm", Title: "Popconfirm 确认气泡", Group: doc.GroupFeedback,
 		What: []string{

@@ -9,8 +9,10 @@ import (
 
 var ctxRef *ui.BuildContext
 
-func main() {
-	open := widgets.NewButton("弹出通知")
+// open 包级持有：闭包内新建会让 hover 态随重建丢失。
+var open = widgets.NewButton("弹出通知")
+
+func init() {
 	open.OnClick = func() {
 		if ctxRef == nil || ctxRef.Overlay == nil {
 			return
@@ -19,6 +21,9 @@ func main() {
 		n.Duration = 0 // 0 = 不自动消失（默认 3s）
 		n.Show(ctxRef)
 	}
+}
+
+func main() {
 	launcher.Main(doc.Meta{
 		ID: "notification", Title: "Notification 通知", Group: doc.GroupFeedback,
 		What: []string{

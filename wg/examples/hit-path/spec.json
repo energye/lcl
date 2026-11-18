@@ -1,0 +1,9 @@
+{
+  "id": "hit-path",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "矩形命中区域"
+    ]
+  }
+}

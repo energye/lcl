@@ -1,0 +1,29 @@
+{
+  "id": "tabs",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "三页切换"
+    ]
+  },
+  "sections": [
+    {
+      "name": "三页切换",
+      "cases": [
+        {
+          "name": "点击未选中页签切换",
+          "target": {
+            "label": "tab",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "segment-select"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

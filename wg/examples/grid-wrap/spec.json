@@ -1,0 +1,10 @@
+{
+  "id": "grid-wrap",
+  "structure": {
+    "apiRows": 3,
+    "sections": [
+      "Grid 3 列",
+      "Wrap 流式换行"
+    ]
+  }
+}

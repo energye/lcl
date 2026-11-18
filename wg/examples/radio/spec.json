@@ -1,0 +1,48 @@
+{
+  "id": "radio",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "Radio.Group",
+      "散用 Radio"
+    ]
+  },
+  "sections": [
+    {
+      "name": "Radio.Group",
+      "cases": [
+        {
+          "name": "组内选中迁移",
+          "target": {
+            "label": "radio",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "segment-select"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "散用 Radio",
+      "cases": [
+        {
+          "name": "散用单选互斥切换",
+          "target": {
+            "label": "radio",
+            "index": 4
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "segment-select"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

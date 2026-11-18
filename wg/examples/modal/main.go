@@ -10,8 +10,10 @@ import (
 
 var ctxRef *ui.BuildContext
 
-func main() {
-	open := widgets.NewButton("打开模态框")
+// open 包级持有：闭包内新建会让 hover 态随重建丢失。
+var open = widgets.NewButton("打开模态框")
+
+func init() {
 	open.OnClick = func() {
 		if ctxRef == nil || ctxRef.Overlay == nil {
 			return
@@ -20,6 +22,9 @@ func main() {
 			return (&widgets.Label{Text: "模态遮罩 + 焦点域；Esc / 点遮罩关闭"}).Build(ctx)
 		})).Show(ctxRef)
 	}
+}
+
+func main() {
 	launcher.Main(doc.Meta{
 		ID: "modal", Title: "Modal 模态框", Group: doc.GroupFeedback,
 		What: []string{

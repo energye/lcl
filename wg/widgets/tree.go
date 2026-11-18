@@ -1,6 +1,8 @@
 package widgets
 
 import (
+	"fmt"
+
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
@@ -209,6 +211,19 @@ func (f *Form) Rule(field string, v ...Validator) *Form {
 // Validate 校验所有字段，返回是否通过（同时写入 Errors）。
 func (f *Form) Validate() bool {
 	f.Errors = make(map[string]string)
+	// 先同步字段当前值：Input.Value 由编辑器实时维护，但 Form.Values
+	// 从未被填充过，不在这里回读会让校验永远读到空值（--audit 实测）。
+	for _, it := range f.Items {
+		if it.Label == "" {
+			continue
+		}
+		switch ch := it.Child.(type) {
+		case *Input:
+			f.Values[it.Label] = ch.Value
+		case *InputNumber:
+			f.Values[it.Label] = fmt.Sprintf("%v", ch.Value)
+		}
+	}
 	ok := true
 	for field, rules := range f.Validators {
 		for _, v := range rules {

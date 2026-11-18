@@ -1,0 +1,42 @@
+{
+  "id": "collapse",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "三节手风琴"
+    ]
+  },
+  "sections": [
+    {
+      "name": "三节手风琴",
+      "cases": [
+        {
+          "name": "点击第一节标题展开/收起",
+          "target": {
+            "label": "collapse",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "collapse-toggle"
+            }
+          ]
+        },
+        {
+          "name": "点击第二节标题切换",
+          "target": {
+            "label": "collapse",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "collapse-toggle"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

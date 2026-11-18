@@ -1,0 +1,9 @@
+{
+  "id": "chart-pie",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "环形图"
+    ]
+  }
+}

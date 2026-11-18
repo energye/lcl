@@ -1,0 +1,9 @@
+{
+  "id": "chart-scatter",
+  "structure": {
+    "apiRows": 2,
+    "sections": [
+      "三维散点"
+    ]
+  }
+}

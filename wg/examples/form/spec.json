@@ -1,0 +1,76 @@
+{
+  "id": "form",
+  "structure": {
+    "apiRows": 7,
+    "sections": [
+      "必填校验"
+    ]
+  },
+  "sections": [
+    {
+      "name": "必填校验",
+      "cases": [
+        {
+          "name": "空表单提交报校验失败",
+          "target": {
+            "label": "button",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "button",
+                "index": 0
+              },
+              "text": "校验失败"
+            }
+          ]
+        },
+        {
+          "name": "填入用户名后提交通过",
+          "target": {
+            "label": "input",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "input",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "typeText": "wg"
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "index": 0
+                }
+              }
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "button",
+                "index": 0
+              },
+              "text": "校验通过"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

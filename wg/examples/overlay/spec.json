@@ -1,0 +1,9 @@
+{
+  "id": "overlay",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "Tooltip + Select"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "divider",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "水平分隔线"
+    ]
+  }
+}

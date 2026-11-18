@@ -1,0 +1,57 @@
+{
+  "id": "popconfirm",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "删除确认"
+    ]
+  },
+  "sections": [
+    {
+      "name": "删除确认",
+      "cases": [
+        {
+          "name": "点击删除弹出确认气泡",
+          "target": {
+            "label": "button",
+            "text": "删除"
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1,
+              "band": "popup"
+            }
+          ]
+        },
+        {
+          "name": "气泡 Esc 关闭",
+          "target": {
+            "label": "button",
+            "text": "删除"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "key": "escape"
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0,
+              "band": "popup"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

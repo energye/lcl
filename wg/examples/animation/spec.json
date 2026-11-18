@@ -1,0 +1,10 @@
+{
+  "id": "animation",
+  "structure": {
+    "apiRows": 6,
+    "sections": [
+      "Controller 进度条",
+      "Implicit / Tween / 样式解析"
+    ]
+  }
+}

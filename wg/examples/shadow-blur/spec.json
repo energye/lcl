@@ -1,0 +1,11 @@
+{
+  "id": "shadow-blur",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "Blur 递进",
+      "软阴影卡片层叠",
+      "Elevation Token"
+    ]
+  }
+}

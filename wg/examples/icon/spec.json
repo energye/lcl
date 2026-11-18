@@ -1,0 +1,10 @@
+{
+  "id": "icon",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "全部内置图标",
+      "语义色与旋转"
+    ]
+  }
+}

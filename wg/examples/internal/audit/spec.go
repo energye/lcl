@@ -29,98 +29,98 @@ import (
 
 // Spec 是一个功能窗的声明式测试计划。
 type Spec struct {
-	ID         string          `json:"id"`
-	Structure  *SpecStructure  `json:"structure"`
-	Sections   []SpecSection   `json:"sections"`
-	Exemptions []SpecExemption `json:"exemptions"`
+	ID         string          `json:"id,omitempty"`
+	Structure  *SpecStructure  `json:"structure,omitempty"`
+	Sections   []SpecSection   `json:"sections,omitempty"`
+	Exemptions []SpecExemption `json:"exemptions,omitempty"`
 }
 
 // SpecStructure 是页面骨架断言（L1）。
 type SpecStructure struct {
-	Sections    []string `json:"sections"`    // demo 卡标题必须存在
-	APIRows     int      `json:"apiRows"`     // API 表行数下限（封顶 12，虚拟化窗口）
-	MinElements int      `json:"minElements"` // 全树可交互节点计数下限
+	Sections    []string `json:"sections,omitempty"`    // demo 卡标题必须存在
+	APIRows     int      `json:"apiRows,omitempty"`     // API 表行数下限（封顶 12，虚拟化窗口）
+	MinElements int      `json:"minElements,omitempty"` // 全树可交互节点计数下限
 }
 
 // SpecSection 对应一张 demo 卡。
 type SpecSection struct {
 	Name  string     `json:"name"`
-	Cases []SpecCase `json:"cases"`
+	Cases []SpecCase `json:"cases,omitempty"`
 }
 
 // SpecCase 是一条用例。
 type SpecCase struct {
 	Name   string          `json:"name"`
-	Target *SpecTarget     `json:"target"`
-	Given  []SpecGiven     `json:"given"`
-	When   []SpecAction    `json:"when"`
-	Then   []SpecAssertion `json:"then"`
+	Target *SpecTarget     `json:"target,omitempty"`
+	Given  []SpecGiven     `json:"given,omitempty"`
+	When   []SpecAction    `json:"when,omitempty"`
+	Then   []SpecAssertion `json:"then,omitempty"`
 }
 
 // SpecTarget 是定位锚。
 type SpecTarget struct {
 	Label    string `json:"label"`
-	Text     string `json:"text"` // 节点子树内文本子串
-	Disabled *bool  `json:"disabled"`
-	Index    int    `json:"index"` // 同锚第 n 个（树序）
+	Text     string `json:"text,omitempty"` // 节点子树内文本子串
+	Disabled *bool  `json:"disabled,omitempty"`
+	Index    int    `json:"index,omitempty"` // 同锚第 n 个（树序）
 }
 
 // SpecGiven 是前置步骤。
 type SpecGiven struct {
-	ScrollTo      string      `json:"scrollTo"`
-	CloseOverlays *bool       `json:"closeOverlays"`
-	Focus         *SpecTarget `json:"focus"`
+	ScrollTo      string      `json:"scrollTo,omitempty"`
+	CloseOverlays *bool       `json:"closeOverlays,omitempty"`
+	Focus         *SpecTarget `json:"focus,omitempty"`
 }
 
 // SpecAction 是一次操作。
 type SpecAction struct {
-	Click    *SpecClick `json:"click"`
-	Hover    *SpecClick `json:"hover"`
-	TypeText string     `json:"typeText"`
-	Key      string     `json:"key"`
-	Wheel    *float32   `json:"wheel"`
-	MoveOut  bool       `json:"moveOut"`
+	Click    *SpecClick `json:"click,omitempty"`
+	Hover    *SpecClick `json:"hover,omitempty"`
+	TypeText string     `json:"typeText,omitempty"`
+	Key      string     `json:"key,omitempty"`
+	Wheel    *float32   `json:"wheel,omitempty"`
+	MoveOut  bool       `json:"moveOut,omitempty"`
 }
 
 // SpecClick 是点击/悬停位置（目标锚内的 frac，默认中心；Target 可覆盖锚）。
 type SpecClick struct {
-	Frac   []float32   `json:"frac"`
-	Target *SpecTarget `json:"target"`
+	Frac   []float32   `json:"frac,omitempty"`
+	Target *SpecTarget `json:"target,omitempty"`
 }
 
 // SpecAssertion 是一条断言。
 type SpecAssertion struct {
 	Kind     string      `json:"kind"`
-	Target   *SpecTarget `json:"target"`
-	Of       *SpecTarget `json:"of"`
-	Count    int         `json:"count"`
-	Scope    string      `json:"scope"`
-	Expect   any         `json:"expect"`
-	Tol      *float64    `json:"tol"`
-	MinRatio *float64    `json:"minRatio"`
-	TolPeak  *float64    `json:"tolPeak"`
-	Frac     []float32   `json:"frac"`
-	Template string      `json:"template"`
+	Target   *SpecTarget `json:"target,omitempty"`
+	Of       *SpecTarget `json:"of,omitempty"`
+	Count    int         `json:"count,omitempty"`
+	Scope    string      `json:"scope,omitempty"`
+	Expect   any         `json:"expect,omitempty"`
+	Tol      *float64    `json:"tol,omitempty"`
+	MinRatio *float64    `json:"minRatio,omitempty"`
+	TolPeak  *float64    `json:"tolPeak,omitempty"`
+	Frac     []float32   `json:"frac,omitempty"`
+	Template string      `json:"template,omitempty"`
 
 	// geometry
-	RightOf       *SpecTarget `json:"rightOf"`
-	Below         *SpecTarget `json:"below"`
-	WidthAtLeast  float32     `json:"widthAtLeast"`
-	HeightBetween []float32   `json:"heightBetween"`
-	CenterYWithin []float32   `json:"centerYWithin"`
-	InViewport    bool        `json:"inViewport"`
+	RightOf       *SpecTarget `json:"rightOf,omitempty"`
+	Below         *SpecTarget `json:"below,omitempty"`
+	WidthAtLeast  float32     `json:"widthAtLeast,omitempty"`
+	HeightBetween []float32   `json:"heightBetween,omitempty"`
+	CenterYWithin []float32   `json:"centerYWithin,omitempty"`
+	InViewport    bool        `json:"inViewport,omitempty"`
 
 	// overlay / scroll / text
-	Band     string   `json:"band"`
-	Delta    *float32 `json:"delta"`
-	MinDelta *float32 `json:"minDelta"`
-	Text     string   `json:"text"`
+	Band     string   `json:"band,omitempty"`
+	Delta    *float32 `json:"delta,omitempty"`
+	MinDelta *float32 `json:"minDelta,omitempty"`
+	Text     string   `json:"text,omitempty"`
 }
 
 // SpecExemption 是显式豁免（antd 语义下正确但无视觉变化的行为）。
 type SpecExemption struct {
 	Case   string `json:"case"`
-	Reason string `json:"reason"`
+	Reason string `json:"reason,omitempty"`
 }
 
 // ParseSpec 解析 spec.json。
@@ -245,9 +245,13 @@ func (r *specRunner) countNodes(t SpecTarget) int {
 	r.c.Scene().Walk(func(nd *scene.Node) bool {
 		h := nd.HitSpec()
 		if h.Label == t.Label {
-			if t.Disabled == nil || h.Disabled == *t.Disabled {
-				n++
+			if t.Disabled != nil && h.Disabled != *t.Disabled {
+				return true
 			}
+			if t.Text != "" && !nodeTextContains(nd, t.Text) {
+				return true
+			}
+			n++
 		}
 		return true
 	})
@@ -651,6 +655,16 @@ func (r *specRunner) runTemplate(caseName string, def *SpecTarget, tpl string) {
 		r.tplTableRowSelect(caseName, *def)
 	case "select-open-close":
 		r.tplSelectOpenClose(caseName, *def)
+	case "slider-jump":
+		r.tplSliderJump(caseName, *def)
+	case "rate-set":
+		r.tplRateSet(caseName, *def)
+	case "segment-select":
+		r.tplSegmentSelect(caseName, *def)
+	case "tree-node-select":
+		r.tplTreeNodeSelect(caseName, *def)
+	case "collapse-toggle":
+		r.tplCollapseToggle(caseName, *def)
 	default:
 		r.add(caseName, "template:"+tpl, false, "未实现的模板")
 	}
@@ -995,4 +1009,159 @@ func hoverAt(c *wg.Container, x, y float32) {
 		Kind: input.PointerHover, Pointer: input.MousePointer, Device: input.DeviceMouse,
 		Pos: p, PosRoot: p, Time: time.Now(),
 	})
+}
+
+// tplSliderJump：点击轨道取值（antd 语义），值已等于点击位置时换位置再验。
+func (r *specRunner) tplSliderJump(caseName string, t SpecTarget) {
+	n, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:slider-jump", false, "目标不存在")
+		return
+	}
+	rect := n.BoundsInRoot()
+	before := grab(r.c)
+	try := func(frac float64) float64 {
+		p := clickPoint(rect, []float32{float32(frac), 0.5})
+		injectDown(r.c, p.X, p.Y)
+		time.Sleep(60 * time.Millisecond)
+		injectUp(r.c, p.X, p.Y)
+		time.Sleep(300 * time.Millisecond)
+		return regionChanged(before, grab(r.c), rect)
+	}
+	ratio := try(0.25)
+	if ratio < 0.02 {
+		ratio = try(0.90)
+	}
+	r.add(caseName, "template:slider-jump", ratio >= 0.02,
+		fmt.Sprintf("取值变化 %.3f ≥ 0.020", ratio))
+}
+
+// tplRateSet：点击第 k 星后该星为 Warning 色、下一颗为 SurfaceActive。
+func (r *specRunner) tplRateSet(caseName string, t SpecTarget) {
+	n, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:rate-set", false, "目标不存在")
+		return
+	}
+	p := clickPoint(n.BoundsInRoot(), nil)
+	injectDown(r.c, p.X, p.Y)
+	time.Sleep(60 * time.Millisecond)
+	injectUp(r.c, p.X, p.Y)
+	injectLeave(r.c)
+	time.Sleep(300 * time.Millisecond)
+
+	img := grab(r.c)
+	picked := func(n2 *scene.Node) [3]float64 {
+		return sampleRect(img, nodeSampleRect(n2, []float32{0.35, 0.35, 0.30, 0.30}))
+	}
+	n2, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:rate-set", false, "重建后目标不存在")
+		return
+	}
+	warn, ok1 := tokenColor("Warning")
+	active, ok2 := tokenColor("SurfaceActive")
+	if !ok1 || !ok2 {
+		r.add(caseName, "template:rate-set", false, "主题 token 缺失")
+		return
+	}
+	avg := picked(n2)
+	pass := abs3Diff(avg, [3]float64{float64(warn.R), float64(warn.G), float64(warn.B)}) <= 48
+	r.add(caseName, "template:rate-set", pass,
+		fmt.Sprintf("被点星 %s ≈ token Warning", fmtHex(avg)))
+
+	next := SpecTarget{Label: t.Label, Disabled: t.Disabled, Index: t.Index + 1}
+	if n3, ok := r.locate(next); ok {
+		avg2 := picked(n3)
+		pass2 := abs3Diff(avg2, [3]float64{float64(active.R), float64(active.G), float64(active.B)}) <= 48
+		r.add(caseName, "template:rate-set", pass2,
+			fmt.Sprintf("下一颗星 %s ≈ token SurfaceActive", fmtHex(avg2)))
+	}
+}
+
+// tplSegmentSelect：点击未选中项选中迁移；点已选中项则改点同组邻居。
+func (r *specRunner) tplSegmentSelect(caseName string, t SpecTarget) {
+	n, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:segment-select", false, "目标不存在")
+		return
+	}
+	rect := n.BoundsInRoot()
+	before := grab(r.c)
+	p := clickPoint(rect, nil)
+	injectDown(r.c, p.X, p.Y)
+	time.Sleep(60 * time.Millisecond)
+	injectUp(r.c, p.X, p.Y)
+	time.Sleep(300 * time.Millisecond)
+	ratio := regionChanged(before, grab(r.c), rect)
+	if ratio >= 0.02 {
+		r.add(caseName, "template:segment-select", true, fmt.Sprintf("点击选中变化 %.3f", ratio))
+		return
+	}
+	// 已选中项点击无变化属正确：改点同组邻居，验证指示迁移。
+	off := 0
+	if t.Index == 0 {
+		off = 1
+	}
+	neighbor := SpecTarget{Label: t.Label, Disabled: t.Disabled, Index: off}
+	if _, ok := r.locate(neighbor); ok {
+		// 邻居可能在另一屏：先滚入可视域再点（跨 demo 的同类元素）。
+		r.ensureVisible(neighbor)
+		if n2, ok2 := r.locate(neighbor); ok2 {
+			p2 := clickPoint(n2.BoundsInRoot(), nil)
+			injectDown(r.c, p2.X, p2.Y)
+			time.Sleep(60 * time.Millisecond)
+			injectUp(r.c, p2.X, p2.Y)
+			time.Sleep(300 * time.Millisecond)
+			frame := frameChanged(before, grab(r.c))
+			r.add(caseName, "template:segment-select", frame >= 0.0005,
+				fmt.Sprintf("邻居切换全帧变化 %.4f ≥ 0.0005", frame))
+			return
+		}
+	}
+	r.add(caseName, "template:segment-select", false, "无可用邻居")
+}
+
+// tplTreeNodeSelect：点击节点后节点背景 ≈ token Selection（同表格行语义）。
+func (r *specRunner) tplTreeNodeSelect(caseName string, t SpecTarget) {
+	n, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:tree-node-select", false, "目标不存在")
+		return
+	}
+	p := clickPoint(n.BoundsInRoot(), nil)
+	injectDown(r.c, p.X, p.Y)
+	time.Sleep(60 * time.Millisecond)
+	injectUp(r.c, p.X, p.Y)
+	injectLeave(r.c)
+	time.Sleep(300 * time.Millisecond)
+	n2, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:tree-node-select", false, "重建后目标不存在")
+		return
+	}
+	avg := sampleRect(grab(r.c), nodeSampleRect(n2, []float32{0.05, 0.05, 0.90, 0.15}))
+	want, ok := tokenColor("Selection")
+	pass := ok && abs3Diff(avg, [3]float64{float64(want.R), float64(want.G), float64(want.B)}) <= 20
+	r.add(caseName, "template:tree-node-select", pass,
+		fmt.Sprintf("节点背景 %s ≈ token Selection", fmtHex(avg)))
+}
+
+// tplCollapseToggle：点击表头展开/收起，内容区大面积变化。
+func (r *specRunner) tplCollapseToggle(caseName string, t SpecTarget) {
+	n, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:collapse-toggle", false, "目标不存在")
+		return
+	}
+	before := grab(r.c)
+	p := clickPoint(n.BoundsInRoot(), nil)
+	injectDown(r.c, p.X, p.Y)
+	time.Sleep(60 * time.Millisecond)
+	injectUp(r.c, p.X, p.Y)
+	injectLeave(r.c)
+	time.Sleep(400 * time.Millisecond)
+	frame := frameChanged(before, grab(r.c))
+	r.add(caseName, "template:collapse-toggle", frame >= 0.001,
+		fmt.Sprintf("展开/收起全帧变化 %.4f ≥ 0.001", frame))
 }

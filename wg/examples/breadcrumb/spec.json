@@ -1,0 +1,9 @@
+{
+  "id": "breadcrumb",
+  "structure": {
+    "apiRows": 2,
+    "sections": [
+      "三级路径"
+    ]
+  }
+}

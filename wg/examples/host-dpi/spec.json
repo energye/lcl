@@ -1,0 +1,9 @@
+{
+  "id": "host-dpi",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "DIP 与像素对齐"
+    ]
+  }
+}

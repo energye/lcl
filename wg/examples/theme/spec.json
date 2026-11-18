@@ -1,0 +1,11 @@
+{
+  "id": "theme",
+  "structure": {
+    "apiRows": 7,
+    "sections": [
+      "语义色板",
+      "明暗主题与缓动曲线",
+      "样式解析 API"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "chart-gauge",
+  "structure": {
+    "apiRows": 3,
+    "sections": [
+      "72%"
+    ]
+  }
+}

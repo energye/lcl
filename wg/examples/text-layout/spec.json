@@ -1,0 +1,10 @@
+{
+  "id": "text-layout",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "排版三选项",
+      "测量与字重"
+    ]
+  }
+}

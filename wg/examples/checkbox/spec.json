@@ -1,0 +1,79 @@
+{
+  "id": "checkbox",
+  "structure": {
+    "apiRows": 6,
+    "sections": [
+      "基本 / 半选 / 禁用",
+      "Checkbox.Group"
+    ]
+  },
+  "sections": [
+    {
+      "name": "基本 / 半选 / 禁用",
+      "cases": [
+        {
+          "name": "基本项点击切换并可切回",
+          "target": {
+            "label": "checkbox",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "toggle"
+            }
+          ]
+        },
+        {
+          "name": "半选点击变全选",
+          "target": {
+            "label": "checkbox",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorDelta",
+              "minRatio": 0.02
+            }
+          ]
+        },
+        {
+          "name": "禁用项点击无反馈",
+          "target": {
+            "label": "checkbox",
+            "disabled": true
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "disabled-no-op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Checkbox.Group",
+      "cases": [
+        {
+          "name": "组项点击勾选并可切回",
+          "target": {
+            "label": "checkbox",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "toggle"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

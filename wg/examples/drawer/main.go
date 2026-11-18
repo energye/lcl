@@ -10,8 +10,10 @@ import (
 
 var ctxRef *ui.BuildContext
 
-func main() {
-	open := widgets.NewButton("从左侧滑出抽屉")
+// open 包级持有：闭包内新建会让 hover 态随重建丢失。
+var open = widgets.NewButton("从左侧滑出抽屉")
+
+func init() {
 	open.OnClick = func() {
 		if ctxRef == nil || ctxRef.Overlay == nil {
 			return
@@ -20,6 +22,9 @@ func main() {
 			return (&widgets.Label{Text: "Drawer 从边缘滑入，锚定视口一侧"}).Build(ctx)
 		})).Show(ctxRef)
 	}
+}
+
+func main() {
 	launcher.Main(doc.Meta{
 		ID: "drawer", Title: "Drawer 抽屉", Group: doc.GroupFeedback,
 		What: []string{

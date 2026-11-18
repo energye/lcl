@@ -1,0 +1,29 @@
+{
+  "id": "input-number",
+  "structure": {
+    "apiRows": 7,
+    "sections": [
+      "0..100 步进 1"
+    ]
+  },
+  "sections": [
+    {
+      "name": "0..100 步进 1",
+      "cases": [
+        {
+          "name": "点击聚焦数字输入框",
+          "target": {
+            "label": "input-number",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "input-focus"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

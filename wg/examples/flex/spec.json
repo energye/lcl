@@ -1,0 +1,13 @@
+{
+  "id": "flex",
+  "structure": {
+    "apiRows": 8,
+    "sections": [
+      "Row / Column 组件",
+      "主轴分布",
+      "交叉轴对齐",
+      "约束与拉伸",
+      "约束协商 API"
+    ]
+  }
+}

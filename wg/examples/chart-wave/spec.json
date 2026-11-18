@@ -1,0 +1,9 @@
+{
+  "id": "chart-wave",
+  "structure": {
+    "apiRows": 2,
+    "sections": [
+      "合成波形"
+    ]
+  }
+}

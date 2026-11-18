@@ -1,0 +1,57 @@
+{
+  "id": "modal",
+  "structure": {
+    "apiRows": 6,
+    "sections": [
+      "打开模态"
+    ]
+  },
+  "sections": [
+    {
+      "name": "打开模态",
+      "cases": [
+        {
+          "name": "点击打开模态（BandModal）",
+          "target": {
+            "label": "button",
+            "text": "打开模态框"
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1,
+              "band": "modal"
+            }
+          ]
+        },
+        {
+          "name": "打开后 Esc 关闭",
+          "target": {
+            "label": "button",
+            "text": "打开模态框"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "key": "escape"
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0,
+              "band": "modal"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

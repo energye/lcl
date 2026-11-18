@@ -1,0 +1,86 @@
+{
+  "id": "slider",
+  "structure": {
+    "apiRows": 8,
+    "sections": [
+      "基本滑动",
+      "marks 刻度",
+      "range 双滑块",
+      "step 分档"
+    ]
+  },
+  "sections": [
+    {
+      "name": "基本滑动",
+      "cases": [
+        {
+          "name": "点击轨道直接取值",
+          "target": {
+            "label": "slider",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "slider-jump"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "marks 刻度",
+      "cases": [
+        {
+          "name": "marks 滑块点击取值",
+          "target": {
+            "label": "slider",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "slider-jump"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "range 双滑块",
+      "cases": [
+        {
+          "name": "range 点击就近端取值",
+          "target": {
+            "label": "slider",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "slider-jump"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "step 分档",
+      "cases": [
+        {
+          "name": "step 点击吸附到分档",
+          "target": {
+            "label": "slider",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "slider-jump"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

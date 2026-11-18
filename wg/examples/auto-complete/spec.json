@@ -1,0 +1,29 @@
+{
+  "id": "auto-complete",
+  "structure": {
+    "apiRows": 8,
+    "sections": [
+      "渲染术语建议"
+    ]
+  },
+  "sections": [
+    {
+      "name": "渲染术语建议",
+      "cases": [
+        {
+          "name": "点击聚焦联想输入框",
+          "target": {
+            "label": "input",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "input-focus"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

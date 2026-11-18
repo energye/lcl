@@ -1,0 +1,11 @@
+{
+  "id": "typography",
+  "structure": {
+    "apiRows": 6,
+    "sections": [
+      "标题层级",
+      "Text 语义",
+      "段落"
+    ]
+  }
+}
