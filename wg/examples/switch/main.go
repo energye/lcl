@@ -35,7 +35,7 @@ func main() {
 			"文案显示在滑块对侧（OnPrimary 色）；loading 时显示旋转指示并忽略点击",
 		},
 		Demos: []doc.Demo{
-			{Title: "基本 / 尺寸", Note: "默认 36×20；Small 24×12", Build: func(ctx *ui.BuildContext) ui.Widget {
+			{Title: "基本 / 尺寸", Note: "默认 44×22（antd trackMinWidth/trackHeight）；Small 28×16", Build: func(ctx *ui.BuildContext) ui.Widget {
 				col := scene.Flex(scene.Vertical, 10)
 				col.Add(sw.Build(ctx))
 				row := scene.Flex(scene.Horizontal, 12)

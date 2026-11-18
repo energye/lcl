@@ -13,6 +13,120 @@
       "name": "基本 / 尺寸",
       "cases": [
         {
+          "name": "轨道尺寸为 antd token（44×22）",
+          "target": {
+            "label": "switch",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                44,
+                44
+              ]
+            },
+            {
+              "kind": "geometry",
+              "heightBetween": [
+                22,
+                22
+              ]
+            }
+          ]
+        },
+        {
+          "name": "small 轨道尺寸为 antd token（28×16）",
+          "target": {
+            "label": "switch",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                28,
+                28
+              ]
+            },
+            {
+              "kind": "geometry",
+              "heightBetween": [
+                16,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "name": "开态轨道为 colorPrimary、滑块为白",
+          "target": {
+            "label": "switch",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.08,
+                0.3,
+                0.3,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.6,
+              "tol": 14
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.56,
+                0.2,
+                0.36,
+                0.6
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.6,
+              "tol": 8
+            }
+          ]
+        },
+        {
+          "name": "hover 开态轨道转 colorPrimaryHover",
+          "target": {
+            "label": "switch",
+            "index": 0
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.08,
+                0.3,
+                0.3,
+                0.4
+              ],
+              "expect": {
+                "token": "PrimaryHover"
+              },
+              "minRatio": 0.5,
+              "tol": 14
+            }
+          ]
+        },
+        {
           "name": "默认开关点击切换并可切回",
           "target": {
             "label": "switch",

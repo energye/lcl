@@ -367,9 +367,11 @@ func NewSwitch(on bool) *Switch { return &Switch{On: on} }
 // Build 实现 ui.Widget。
 func (b *Switch) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
-	trackW, trackH, knob := float32(36), float32(20), float32(16)
+	// antd Switch tokens：trackMinWidth 44、trackHeight 22、handleSize 18
+	//（上下内缩 2）；small：28×16、handle 12。
+	trackW, trackH, knob := float32(44), float32(22), float32(18)
 	if b.Small {
-		trackW, trackH, knob = 24, 12, 8
+		trackW, trackH, knob = 28, 16, 12
 	}
 	// 轨道色直接取 antd Switch 语义（开=主色/悬停主色亮、关=中性灰），
 	// 不经 VariantSoft——那个变体是"浅底标签"语义，会给开态返回
