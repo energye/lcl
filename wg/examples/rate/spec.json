@@ -23,6 +23,68 @@
               "template": "rate-set"
             }
           ]
+        },
+        {
+          "name": "星星尺寸 20",
+          "target": {
+            "label": "rate-star",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                20,
+                20
+              ]
+            }
+          ]
+        },
+        {
+          "name": "选中星为 colorWarning",
+          "target": {
+            "label": "rate-star",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Warning"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "未选星为灰（colorFillSecondary）",
+          "target": {
+            "label": "rate-star",
+            "index": 4
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "SurfaceActive"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
         }
       ]
     },
@@ -40,6 +102,29 @@
             {
               "kind": "template",
               "template": "disabled-no-op"
+            }
+          ]
+        },
+        {
+          "name": "只读选中星保持 colorWarning",
+          "target": {
+            "label": "rate-star",
+            "index": 5
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Warning"
+              },
+              "minRatio": 0.4,
+              "tol": 14
             }
           ]
         }
