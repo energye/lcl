@@ -13,6 +13,7 @@ var (
 	marked = widgets.NewSlider(0, 100, 60)
 	rg     = widgets.NewSliderRange(0, 100, 20, 70)
 	st     = widgets.NewSlider(0, 100, 50)
+	dis    = widgets.NewSlider(0, 100, 35)
 )
 
 func init() {
@@ -22,6 +23,8 @@ func init() {
 	rg.Width = 420
 	st.Width = 420
 	st.Step = 25
+	dis.Width = 420
+	dis.Disabled = true
 }
 
 func main() {
@@ -44,6 +47,9 @@ func main() {
 			}},
 			{Title: "step 分档", Note: "Step=25 只取 0/25/50/75/100", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return st
+			}},
+			{Title: "禁用", Note: "antd disabled：填充消失、滑块描边转灰、无主色", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return dis
 			}},
 		},
 		API: []doc.APIRow{

@@ -96,7 +96,12 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		return v
 	}
-	// 轨道填充与滑块。
+	// 轨道填充与滑块。禁用（antd disabled）：填充消失（轨道整体灰）、
+	// 滑块描边转 colorBorder——整条滑块无主色。
+	fillColor, knobBorder := th.Color.Primary, th.Color.Primary
+	if b.Disabled {
+		fillColor, knobBorder = th.Color.SurfaceDisabled, th.Color.Border
+	}
 	ratio := func(v float32) float32 { return (clamp(v) - lo) / (hi - lo) }
 	place := func(v float32) float32 {
 		x := w*ratio(v) - knob/2
@@ -110,7 +115,7 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	fill := func(from, to float32) *scene.Node {
 		x0, x1 := ratio(from)*w, ratio(to)*w
-		f := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary), Radius: trackH / 2}).
+		f := scene.Box(scene.BoxSpec{Fill: scene.Solid(fillColor), Radius: trackH / 2}).
 			SetSize2(x1-x0, trackH)
 		f.SetPositionKeepSize(true).SetStackPosition(geom.Pt(x0, 0))
 		return f
@@ -118,14 +123,14 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 	if b.Range {
 		track.Add(fill(b.Value, b.Value2))
 		for i, v := range []float32{b.Value, b.Value2} {
-			k := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(th.Color.Primary, 2), Radius: knob / 2}).SetSize2(knob, knob)
+			k := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(knobBorder, 2), Radius: knob / 2}).SetSize2(knob, knob)
 			k.SetPositionKeepSize(true).SetStackPosition(geom.Pt(place(v), (trackH-knob)/2))
 			_ = i
 			track.Add(k)
 		}
 	} else {
 		track.Add(fill(lo, b.Value))
-		k := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(th.Color.Primary, 2), Radius: knob / 2}).SetSize2(knob, knob)
+		k := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(knobBorder, 2), Radius: knob / 2}).SetSize2(knob, knob)
 		k.SetPositionKeepSize(true).SetStackPosition(geom.Pt(place(b.Value), (trackH-knob)/2))
 		track.Add(k)
 	}
@@ -147,7 +152,7 @@ func (b *Slider) Build(ctx *ui.BuildContext) *scene.Node {
 			}
 			dot := float32(8)
 			var dotNode *scene.Node
-			if inSelected(mv) {
+			if inSelected(mv) && !b.Disabled {
 				dotNode = scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary), Radius: dot / 2}).SetSize2(dot, dot)
 			} else {
 				dotNode = scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(th.Color.Border, 1), Radius: dot / 2}).SetSize2(dot, dot)

@@ -6,7 +6,8 @@
       "基本滑动",
       "marks 刻度",
       "range 双滑块",
-      "step 分档"
+      "step 分档",
+      "禁用"
     ]
   },
   "sections": [
@@ -23,6 +24,43 @@
             {
               "kind": "template",
               "template": "slider-jump"
+            }
+          ]
+        },
+        {
+          "name": "轨道填充为 colorPrimary、滑块白底",
+          "target": {
+            "label": "slider",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.05,
+                0.4,
+                0.2,
+                0.2
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.335,
+                0.25,
+                0.03,
+                0.5
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.2,
+              "tol": 8
             }
           ]
         }
@@ -77,6 +115,48 @@
             {
               "kind": "template",
               "template": "slider-jump"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "禁用",
+      "cases": [
+        {
+          "name": "禁用滑块无主色（填充消失、描边转灰）",
+          "target": {
+            "label": "slider",
+            "index": 4
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.05,
+                0.4,
+                0.3,
+                0.2
+              ],
+              "expect": {
+                "token": "SurfaceDisabled"
+              },
+              "minRatio": 0.3,
+              "tol": 14
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.335,
+                0.25,
+                0.03,
+                0.5
+              ],
+              "expect": {
+                "token": "Border"
+              },
+              "minRatio": 0.1,
+              "tol": 24
             }
           ]
         }
