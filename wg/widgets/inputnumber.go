@@ -101,12 +101,20 @@ func (w *InputNumber) Build(ctx *ui.BuildContext) *scene.Node {
 	if width <= 0 {
 		width = 120
 	}
+	// antd disabled：底 colorBgContainerDisabled、文字/步进器转灰
+	// （colorTextDisabled），无 hover/focus 反馈。
 	border, bg := th.Color.Border, th.Color.Surface
-	if w.hover && !w.Disabled {
-		border = th.Color.PrimaryHover
-	}
-	if w.focus != nil && w.focus.Focused() && !w.Disabled {
-		border = th.Color.Primary
+	textColor, iconColor := th.Color.Text, th.Color.TextMuted
+	if w.Disabled {
+		border, bg = th.Color.Border, th.Color.SurfaceDisabled
+		textColor, iconColor = th.Color.BorderStrong, th.Color.BorderStrong
+	} else {
+		if w.hover {
+			border = th.Color.PrimaryHover
+		}
+		if w.focus != nil && w.focus.Focused() {
+			border = th.Color.Primary
+		}
 	}
 	const stepW = float32(18)
 	box := scene.Box(scene.BoxSpec{Fill: scene.Solid(bg), Border: scene.Stroke(border, 1), Radius: th.Radius.Base}).
@@ -114,14 +122,14 @@ func (w *InputNumber) Build(ctx *ui.BuildContext) *scene.Node {
 
 	font := text.DefaultFont(m.Font)
 	layout := text.LayoutText(e.Value().Text, font, text.Options{MaxWidth: width - 24 - stepW})
-	t := scene.Text(scene.TextSpec{Src: e.Value().Text, Layout: layout, Color: th.Color.Text})
+	t := scene.Text(scene.TextSpec{Src: e.Value().Text, Layout: layout, Color: textColor})
 	t.SetMargin(geom.InLTRB(11, (height-layout.Size.H)/2, 0, 0))
 	box.Add(t)
 	box.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "input-number", Cursor: scene.CursorText, Disabled: w.Disabled})
 
 	// 右侧步进器：上/下两个半区。
 	for i, name := range []string{"up", "down"} {
-		ic := (&Icon{Name: name, Size: 10, Color: th.Color.TextMuted}).Build(ctx)
+		ic := (&Icon{Name: name, Size: 10, Color: iconColor}).Build(ctx)
 		ic.SetPositionKeepSize(true)
 		ic.SetStackPosition(geom.Pt(width-stepW+3, float32(i)*(height/2)+(height/2-10)/2))
 		ic.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "input-number-" + name, Cursor: scene.CursorPointer})

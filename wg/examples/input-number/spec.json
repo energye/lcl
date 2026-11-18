@@ -11,6 +11,89 @@
       "name": "0..100 步进 1",
       "cases": [
         {
+          "name": "默认边框为 colorBorder 1px",
+          "target": {
+            "label": "input-number",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "borderWidth",
+              "expectWidth": 1,
+              "tol": 1
+            },
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Border"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "聚焦边框转 colorPrimary",
+          "target": {
+            "label": "input-number",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 250
+            }
+          ],
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "禁用底色与文字为禁用专色",
+          "target": {
+            "label": "input-number",
+            "text": "42"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "hex": "#F5F5F5",
+                "note": "colorBgContainerDisabled"
+              },
+              "minRatio": 0.7,
+              "tol": 8
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.05,
+                0.25,
+                0.3,
+                0.5
+              ],
+              "expect": {
+                "token": "BorderStrong"
+              },
+              "minRatio": 0.02,
+              "tol": 24
+            }
+          ]
+        },
+        {
           "name": "点击聚焦数字输入框",
           "target": {
             "label": "input-number",

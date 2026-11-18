@@ -12,11 +12,14 @@ import (
 
 var (
 	num     = widgets.NewInputNumber(0, 100, 20)
+	numDis  = widgets.NewInputNumber(0, 100, 42)
 	numStat = widgets.NewButton("值 = 20")
 )
 
 func init() {
 	num.Width = 140
+	numDis.Width = 140
+	numDis.Disabled = true
 	num.OnChange = func(v float32) {
 		numStat.Text = fmt.Sprintf("值 = %v", v)
 		numStat.MarkDirty()
@@ -35,6 +38,7 @@ func main() {
 			{Title: "0..100 步进 1", Note: "点右侧上下箭头或聚焦后按 ↑/↓；直接输入非数字会回退", Build: func(ctx *ui.BuildContext) ui.Widget {
 				row := scene.Flex(scene.Horizontal, 10).SetCrossAlign(scene.CrossCenter)
 				row.Add(num.Build(ctx))
+				row.Add(numDis.Build(ctx))
 				row.Add(numStat.Build(ctx))
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
 			}},
