@@ -12,6 +12,78 @@
       "name": "Radio.Group",
       "cases": [
         {
+          "name": "选中项边框与圆点为 colorPrimary",
+          "target": {
+            "label": "radio-box",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 24,
+              "frac": [
+                0.3,
+                0.0,
+                0.4,
+                0.15
+              ],
+              "minRatio": 0.12
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.5,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "hover 未选边框转 colorPrimary",
+          "target": {
+            "label": "radio",
+            "text": "软件光栅"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "target": {
+                "label": "radio-box",
+                "index": 0
+              },
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 24,
+              "frac": [
+                0.3,
+                0.0,
+                0.4,
+                0.15
+              ],
+              "minRatio": 0.12
+            }
+          ]
+        },
+        {
           "name": "组内选中迁移",
           "target": {
             "label": "radio",
@@ -39,6 +111,67 @@
             {
               "kind": "template",
               "template": "segment-select"
+            }
+          ]
+        },
+        {
+          "name": "禁用选中项圆点/底色为禁用专色",
+          "target": {
+            "label": "radio-box",
+            "index": 5
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "BorderStrong"
+              },
+              "minRatio": 0.5,
+              "tol": 14
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.06,
+                0.06,
+                0.12,
+                0.88
+              ],
+              "expect": {
+                "hex": "#F5F5F5",
+                "note": "colorBgContainerDisabled"
+              },
+              "minRatio": 0.5,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "禁用 label 为 colorTextDisabled",
+          "target": {
+            "label": "radio",
+            "text": "禁用项"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.36,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "BorderStrong"
+              },
+              "minRatio": 0.02,
+              "tol": 24
             }
           ]
         }

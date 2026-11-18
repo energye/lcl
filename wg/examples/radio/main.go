@@ -10,6 +10,7 @@ import (
 var (
 	r1 = widgets.NewRadio("选项一", true)
 	r2 = widgets.NewRadio("选项二", false)
+	r3 = widgets.NewRadio("禁用项", true)
 	rg = &widgets.RadioGroup{}
 )
 
@@ -17,6 +18,7 @@ func init() {
 	// 手动互斥（保留旧用法；组见第二个演示）。
 	r1.OnChange = func(bool) { r2.Checked = !r1.Checked; r2.MarkDirty() }
 	r2.OnChange = func(bool) { r1.Checked = !r2.Checked; r1.MarkDirty() }
+	r3.Disabled = true
 	rg.Options = []string{"软件光栅", "GDI 混合", "自动"}
 	rg.Value = "自动"
 	rg.OnChange = func(s string) { rg.Value = s }
@@ -33,8 +35,8 @@ func main() {
 			{Title: "Radio.Group", Note: "组管互斥与选中值", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return rg
 			}},
-			{Title: "散用 Radio", Note: "回调互改兄弟实例（兼容旧用法）", Build: func(ctx *ui.BuildContext) ui.Widget {
-				return widgets.Row{Gap: 12, Children: []ui.Widget{r1, r2}}
+			{Title: "散用 Radio", Note: "回调互改兄弟实例（兼容旧用法）；disabled 禁用专色", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return widgets.Row{Gap: 12, Children: []ui.Widget{r1, r2, r3}}
 			}},
 		},
 		API: []doc.APIRow{

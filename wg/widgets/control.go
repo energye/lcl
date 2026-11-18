@@ -289,19 +289,26 @@ func NewRadio(label string, checked bool) *Radio {
 }
 
 // Build 实现 ui.Widget。
+//
+// 视觉对齐 antd：选中态主色圆点 + 主色边框；未选 hover 边框转 colorPrimary
+// （antd radio hover 用主色本尊）；禁用底 colorBgContainerDisabled、圆点与
+// 边框转灰，label 转 colorTextDisabled，不降透明度。
 func (b *Radio) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
-	st := ui.StyleOf(th, ui.VariantOutline, ui.SizeSmall, b.states(b.Disabled))
-	// 选中/悬停时圆点与外框转主色（antd 视觉）。
-	border, dotColor := st.Border, th.Color.Primary
+	border, dotColor := th.Color.Border, th.Color.Primary
+	boxFill := th.Color.Surface
+	if b.hover && !b.Checked && !b.Disabled {
+		border = th.Color.Primary
+	}
 	if b.Checked {
 		border = th.Color.Primary
 	}
 	if b.Disabled {
 		border, dotColor = th.Color.Border, th.Color.BorderStrong
+		boxFill = th.Color.SurfaceDisabled
 	}
 	n := scene.Box(scene.BoxSpec{
-		Fill:   scene.Solid(th.Color.Surface),
+		Fill:   scene.Solid(boxFill),
 		Border: scene.Stroke(border, 1),
 		Radius: 8,
 	}).SetSize2(16, 16)
@@ -310,7 +317,9 @@ func (b *Radio) Build(ctx *ui.BuildContext) *scene.Node {
 		dot.SetPositionKeepSize(true).SetStackPosition(geom.Pt(4, 4))
 		n.Add(dot)
 	}
-	n.SetOpacity(st.Opacity)
+	// 被动定位锚（同 checkbox-box）：断言采样打在圆钮上，不被 label 墨迹污染。
+	n.SetHit(scene.HitSpec{Label: "radio-box"})
+	n.SetOpacity(1)
 
 	// Label 文字（修复同 Checkbox 的丢字 bug）；整行可点。
 	root := scene.Flex(scene.Horizontal, 8).SetCrossAlign(scene.CrossCenter)
@@ -318,7 +327,7 @@ func (b *Radio) Build(ctx *ui.BuildContext) *scene.Node {
 	if b.Label != "" {
 		lc := th.Color.Text
 		if b.Disabled {
-			lc = th.Color.TextFaint
+			lc = th.Color.BorderStrong // antd colorTextDisabled #BFBFBF
 		}
 		root.Add((&Label{Text: b.Label, Size: th.Font.SizeBase, Color: lc}).Build(ctx))
 	}
