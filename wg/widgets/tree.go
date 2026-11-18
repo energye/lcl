@@ -137,14 +137,22 @@ func (f FormItem) Build(ctx *ui.BuildContext) *scene.Node {
 	if labelW <= 0 {
 		labelW = 80
 	}
-	label := f.Label
+	// antd Form：必填星号红色（#ff4d4f）置于标签前；标签为正文色而非弱化灰。
+	labelRow := scene.Flex(scene.Horizontal, 0)
 	if f.Required {
-		label = "* " + label
+		font := text.DefaultFont(th.Font.SizeSM)
+		star := scene.Text(scene.TextSpec{
+			Src: "*", Layout: text.LayoutText("*", font, text.Options{}),
+			Color: th.Color.Danger,
+		})
+		star.SetMargin(geom.InLTRB(0, 6, 3, 0))
+		labelRow.Add(star)
 	}
-	ll := text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{})
-	lt := scene.Text(scene.TextSpec{Src: label, Layout: ll, Color: th.Color.TextMuted})
+	ll := text.LayoutText(f.Label, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	lt := scene.Text(scene.TextSpec{Src: f.Label, Layout: ll, Color: th.Color.Text})
 	lt.SetWidth(labelW).SetMargin(geom.InLTRB(0, 6, 0, 0))
-	row.Add(lt)
+	labelRow.Add(lt)
+	row.Add(labelRow)
 	if f.Child != nil {
 		row.Add(buildChild(ctx, f.Child))
 	}
