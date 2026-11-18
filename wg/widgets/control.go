@@ -190,19 +190,24 @@ func NewCheckbox(label string, checked bool) *Checkbox {
 //   - 禁用：底/记号整体转 disabled 专色。
 func (b *Checkbox) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
-	st := ui.StyleOf(th, ui.VariantOutline, ui.SizeSmall, b.states(b.Disabled))
 	var boxFill, markColor, borderColor geom.Color
 	switch {
-	case b.Indeterminate && b.Disabled:
-		boxFill, markColor, borderColor = th.Color.SurfaceHover, th.Color.BorderStrong, th.Color.Border
+	case b.Disabled:
+		// antd disabled 全形态统一：底 colorBgContainerDisabled（#F5F5F5）、
+		// 勾/横杠与边框转灰（colorTextDisabled / colorBorder），不降透明度。
+		boxFill, markColor, borderColor = th.Color.SurfaceDisabled, th.Color.BorderStrong, th.Color.Border
 	case b.Indeterminate:
 		boxFill, markColor, borderColor = th.Color.Surface, th.Color.Primary, th.Color.Primary
-	case b.Checked && b.Disabled:
-		boxFill, markColor, borderColor = th.Color.SurfaceHover, th.Color.BorderStrong, th.Color.Border
 	case b.Checked:
 		boxFill, markColor, borderColor = th.Color.Primary, th.Color.OnPrimary, th.Color.Primary
 	default:
-		boxFill, markColor, borderColor = th.Color.Surface, th.Color.Primary, st.Border
+		// 未选：底 colorBgContainer、边 colorBorder；hover 边框转
+		// colorPrimary（antd checkbox hover 用主色本尊，非 hover 色）。
+		borderColor = th.Color.Border
+		if b.hover {
+			borderColor = th.Color.Primary
+		}
+		boxFill, markColor = th.Color.Surface, th.Color.Primary
 	}
 	box := scene.Box(scene.BoxSpec{
 		Fill:   scene.Solid(boxFill),
@@ -223,7 +228,11 @@ func (b *Checkbox) Build(ctx *ui.BuildContext) *scene.Node {
 		check.SetPositionKeepSize(true).SetStackPosition(geom.Pt(0, 0))
 		box.Add(check)
 	}
-	box.SetOpacity(st.Opacity)
+	// 被动定位锚（HitDeferToChild 永不进命中路径，不影响交互）：自动化
+	// 按锚采样盒子的边框/底色，免得用整行 bounds 混进 label 文字墨迹。
+	box.SetHit(scene.HitSpec{Label: "checkbox-box"})
+	// opacity 仅 disabled 时可能非 1（专色方案下保持 1，见 input 轮结论）。
+	box.SetOpacity(1)
 
 	// Label 文字必须渲染（修复：Label 字段此前从未画出来）；整行可点。
 	root := scene.Flex(scene.Horizontal, 8).SetCrossAlign(scene.CrossCenter)
@@ -231,7 +240,7 @@ func (b *Checkbox) Build(ctx *ui.BuildContext) *scene.Node {
 	if b.Label != "" {
 		lc := th.Color.Text
 		if b.Disabled {
-			lc = th.Color.TextFaint
+			lc = th.Color.BorderStrong // antd colorTextDisabled #BFBFBF
 		}
 		root.Add((&Label{Text: b.Label, Size: th.Font.SizeBase, Color: lc}).Build(ctx))
 	}

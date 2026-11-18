@@ -637,7 +637,11 @@ func (r *specRunner) doAssert(caseName string, def *SpecTarget, as SpecAssertion
 			fmt.Sprintf("%s 边框 %dpx（期望 %d±%d）", targetDesc(target), got, as.ExpectWidth, tol))
 	case "borderColor":
 		img := grab(r.c)
-		rect := r.sampleRect(target, as.Frac)
+		at := target
+		if as.Target != nil {
+			at = as.Target // 断言级覆盖：交互目标与采样目标不同（hover 打在行上、采盒子）
+		}
+		rect := r.sampleRect(at, as.Frac)
 		expect, note, ok := parseExpectedColor(as.Expect)
 		if !ok {
 			r.add(caseName, "borderColor", false, "无法解析 expect")
@@ -1209,36 +1213,25 @@ func borderWidthOf(img *image.RGBA, rect geom.Rect) int {
 	return count
 }
 
-// borderColorOf 返回区域顶部边框行的均色：从上向下取与内部参考色差异
-// 最大的行（边框行差异远大于光晕/阴影行），横向前 10%..90% 的均色避开
-// 圆角。found=false 表示顶部 8 行与内部参考色无差异（无边框）。
+// borderColorOf 返回区域顶部边框行的均色。内部参考色取顶部 8 行的**众数
+// 色**（16 级量化分桶）——固定窄带（+5..+8）在 16px 小盒上会撞上勾/横杠
+// 墨迹（半选横杠在行 7..9），众数不受少量墨迹干扰。横向前 10%..90% 均色
+// 避开圆角。found=false 表示顶部无行与参考色有明显差异（无边框）。
 func borderColorOf(img *image.RGBA, rect geom.Rect) ([3]float64, bool) {
 	if img == nil || rect.IsEmpty() {
 		return [3]float64{}, false
 	}
-	x0 := int(rect.Min.X) + int(rect.W()*0.1)
-	x1 := int(rect.Max.X) - int(rect.W()*0.1)
+	x0 := int(rect.Min.X) + int(rect.W()*0.25)
+	x1 := int(rect.Max.X) - int(rect.W()*0.25)
 	if x1 <= x0 {
 		return [3]float64{}, false
 	}
-	cx := (x0 + x1) / 2
-	var inner [3]float64
-	{
-		var sum [3]int
-		n := 0
-		for y := int(rect.Min.Y) + 5; y <= int(rect.Min.Y)+8 && y < img.Bounds().Dy(); y++ {
-			px := img.RGBAAt(cx, y)
-			sum[0] += int(px.R)
-			sum[1] += int(px.G)
-			sum[2] += int(px.B)
-			n++
-		}
-		if n == 0 {
-			return [3]float64{}, false
-		}
-		inner = [3]float64{float64(sum[0]) / float64(n), float64(sum[1]) / float64(n), float64(sum[2]) / float64(n)}
+	type rowColor struct {
+		v   [3]float64
+		d   float64
+		cnt int
 	}
-	best, bestD := [3]float64{}, -1.0
+	rows := make([]rowColor, 0, 8)
 	for y := int(rect.Min.Y); y < int(rect.Min.Y)+8 && y < img.Bounds().Dy(); y++ {
 		var sum [3]int64
 		n := 0
@@ -1249,12 +1242,43 @@ func borderColorOf(img *image.RGBA, rect geom.Rect) ([3]float64, bool) {
 			sum[2] += int64(img.Pix[i+2])
 			n++
 		}
-		v := [3]float64{float64(sum[0]) / float64(n), float64(sum[1]) / float64(n), float64(sum[2]) / float64(n)}
-		if d := abs3Diff(v, inner); d > bestD {
-			bestD, best = d, v
+		rows = append(rows, rowColor{
+			v: [3]float64{float64(sum[0]) / float64(n), float64(sum[1]) / float64(n), float64(sum[2]) / float64(n)},
+		})
+	}
+	// 众数色：16 级量化分桶计数，取最大桶的均色。
+	buckets := map[[3]int]*rowColor{}
+	for i := range rows {
+		var key [3]int
+		for c := 0; c < 3; c++ {
+			key[c] = int(rows[i].v[c]) / 16
+		}
+		b, ok := buckets[key]
+		if !ok {
+			b = &rowColor{}
+			buckets[key] = b
+		}
+		b.v[0] += rows[i].v[0]
+		b.v[1] += rows[i].v[1]
+		b.v[2] += rows[i].v[2]
+		b.cnt++
+	}
+	var inner rowColor
+	maxCnt := 0
+	for _, b := range buckets {
+		if b.cnt > maxCnt {
+			maxCnt = b.cnt
+			inner = rowColor{v: [3]float64{b.v[0] / float64(b.cnt), b.v[1] / float64(b.cnt), b.v[2] / float64(b.cnt)}}
 		}
 	}
-	return best, bestD > 12
+	best, bestD := rowColor{}, -1.0
+	for i := range rows {
+		rows[i].d = abs3Diff(rows[i].v, inner.v)
+		if rows[i].d > bestD {
+			bestD, best = rows[i].d, rows[i]
+		}
+	}
+	return best.v, bestD > 12
 }
 
 // colorRatioOf 返回区域内与目标色每通道差 <= tol 的像素占比。

@@ -12,6 +12,141 @@
       "name": "基本 / 半选 / 禁用",
       "cases": [
         {
+          "name": "勾选态盒子为 colorPrimary",
+          "target": {
+            "label": "checkbox-box",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.25,
+                0.25,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "hover 边框转 colorPrimary",
+          "target": {
+            "label": "checkbox",
+            "text": "文字通道"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "borderColor",
+              "target": {
+                "label": "checkbox-box",
+                "index": 4
+              },
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "半选边框与横杠为主色",
+          "target": {
+            "label": "checkbox-box",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 24
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.3,
+                0.6,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.03,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "禁用盒子底色为 colorBgContainerDisabled",
+          "target": {
+            "label": "checkbox-box",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.25,
+                0.25,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "hex": "#F5F5F5",
+                "note": "colorBgContainerDisabled"
+              },
+              "minRatio": 0.7,
+              "tol": 8
+            },
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Border"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "禁用项 label 为 colorTextDisabled",
+          "target": {
+            "label": "checkbox",
+            "text": "禁用项"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.36,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "BorderStrong"
+              },
+              "minRatio": 0.02,
+              "tol": 24
+            }
+          ]
+        },
+        {
           "name": "基本项点击切换并可切回",
           "target": {
             "label": "checkbox",
@@ -60,6 +195,29 @@
     {
       "name": "Checkbox.Group",
       "cases": [
+        {
+          "name": "组选中项盒子为 colorPrimary",
+          "target": {
+            "label": "checkbox-box",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.25,
+                0.25,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
         {
           "name": "组项点击勾选并可切回",
           "target": {
