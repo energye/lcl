@@ -3,7 +3,8 @@
   "structure": {
     "apiRows": 2,
     "sections": [
-      "四步进度"
+      "四步进度",
+      "error 状态"
     ]
   },
   "sections": [
@@ -80,6 +81,42 @@
               "tol": 8
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "error 状态",
+      "cases": [
+        {
+          "name": "错误步圆点为 Error 红底",
+          "target": {
+            "label": "steps-circle",
+            "index": 5
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "minRatio": 0.5,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "错误步符号为 ×（OnDanger 白）",
+          "target": {
+            "label": "steps-circle",
+            "index": 5
+          },
+          "then": []
         }
       ]
     }

@@ -16,12 +16,18 @@ func main() {
 		},
 		Demos: []doc.Demo{
 			{Title: "四步进度", Note: "Current=2：第三步进行中", Build: func(ctx *ui.BuildContext) ui.Widget {
-				return widgets.Steps{Labels: []string{"选择", "配置", "确认", "完成"}, Current: 2}
+				return widgets.NewSteps([]string{"选择", "配置", "确认", "完成"}, 2)
+			}},
+			{Title: "error 状态", Note: "第二步出错（红圆+×，antd status=error）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				st := widgets.NewSteps([]string{"选择", "配置", "确认", "完成"}, 2)
+				st.ErrorStep = 1
+				return st
 			}},
 		},
 		API: []doc.APIRow{
 			{Name: "Labels", Type: "[]string", Desc: "步骤名"},
 			{Name: "Current", Type: "int", Default: "0", Desc: "当前步下标（0 起）"},
+			{Name: "ErrorStep", Type: "int", Default: "-1", Desc: "错误步下标（红圆+×，antd status=error）"},
 		},
 	})
 }

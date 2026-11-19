@@ -408,6 +408,14 @@ func (s Spin) Build(ctx *ui.BuildContext) *scene.Node {
 type Steps struct {
 	Labels  []string
 	Current int
+	// ErrorStep 错误步下标（-1 无，antd status="error"）：该步圆点转红、
+	// 符号转 ×（优先于 Current 推导的状态）。
+	ErrorStep int
+}
+
+// NewSteps 创建步骤条（ErrorStep=-1 无错误步）。
+func NewSteps(labels []string, current int) *Steps {
+	return &Steps{Labels: labels, Current: current, ErrorStep: -1}
 }
 
 // Build 实现 ui.Widget。
@@ -425,16 +433,22 @@ func (s Steps) Build(ctx *ui.BuildContext) *scene.Node {
 		// antd wait 步的圆点是**空心描边圆**（透明底 + 灰边），完成/进行步
 		// 是主色实心圆。此前 wait 用实心灰底，与 antd 官方对照不符。
 		wait := i > s.Current
-		if i <= s.Current {
+		errorStep := i == s.ErrorStep
+		if errorStep {
+			// antd status="error"：圆点与符号转红（colorError）。
+			fill, fg = th.Color.Danger, th.Color.OnDanger
+		} else if i <= s.Current {
 			fill, fg = th.Color.Primary, th.Color.OnPrimary
 		}
 		circle := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: 10}).SetSize2(20, 20)
-		if wait {
+		if wait && !errorStep {
 			circle = scene.Box(scene.BoxSpec{Border: scene.Stroke(th.Color.BorderStrong, 2), Radius: 10}).SetSize2(20, 20)
 		}
 		circle.SetHit(scene.HitSpec{Label: "steps-circle"}) // 被动锚：步骤圆点断言
 		cap := fmt.Sprintf("%d", i+1)
-		if i < s.Current {
+		if errorStep {
+			cap = "×"
+		} else if i < s.Current {
 			cap = "✓"
 		}
 		fl := text.LayoutText(cap, text.DefaultFont(th.Font.SizeXS), text.Options{})
