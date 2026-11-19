@@ -66,7 +66,9 @@ func (m *Modal) Show(ctx *ui.BuildContext) {
 		Band:      theme.BandModal,
 		Anchor:    overlay.Anchor{Kind: overlay.AnchorNone},
 		Placement: overlay.PlacementCenter,
-		Size:      geom.Size{W: w, H: 220},
+		// 高度 0 = 由内容决定（Overlay 对 Center 放置取内容自然尺寸），
+		// 固定 220 会在内容多时截断（antd 对话框高度自适应）。
+		Size:      geom.Size{W: w},
 		Modal:     true,
 		TrapFocus: true,
 		Dismiss:   overlay.DismissEsc,
@@ -80,16 +82,20 @@ func (m *Modal) Show(ctx *ui.BuildContext) {
 				Radius: th.Radius.LG,
 			})
 			col.SetPadding(geom.InLTRB(th.Space.LG, th.Space.LG, th.Space.LG, th.Space.LG))
-			// 标题
+			// 标题 + 分隔线（antd 对话框标题区有 hairline 分隔）。
 			if title != "" {
 				tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeLG), text.Options{})
 				col.Add(scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text}))
+				col.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).
+					SetHeight(1).SetFlex(1, scene.FlexTight))
 			}
 			if content != nil {
 				col.Add(buildChild(ctx, content))
 			}
-			// 按钮行
+			// 按钮行右对齐（antd footer 按钮靠右）。
 			row := scene.Flex(scene.Horizontal, th.Space.SM)
+			row.SetMainAlign(scene.MainEnd)
+			row.SetCrossAlign(scene.CrossCenter)
 			if cancel != "" {
 				row.Add(modalButton(ctx, cancel, false, th, func() {
 					m.close()

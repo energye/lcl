@@ -30,6 +30,72 @@
           ]
         },
         {
+          "name": "点确定按钮关闭模态",
+          "target": {
+            "label": "button",
+            "text": "打开模态框"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "modal-button",
+                  "text": "确定"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0,
+              "band": "modal"
+            }
+          ]
+        },
+        {
+          "name": "点取消按钮关闭模态",
+          "target": {
+            "label": "button",
+            "text": "打开模态框"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "modal-button",
+                  "text": "取消"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0,
+              "band": "modal"
+            }
+          ]
+        },
+        {
           "name": "打开后 Esc 关闭",
           "target": {
             "label": "button",
