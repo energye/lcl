@@ -103,7 +103,7 @@
         {
           "name": "初始 doc 节点复选框为勾选（主色底）",
           "target": {
-            "label": "tree-check",
+            "label": "checkbox-box",
             "index": 0
           },
           "then": [
@@ -126,7 +126,7 @@
         {
           "name": "点击复选框取消勾选（回灰边白底）",
           "target": {
-            "label": "tree-check",
+            "label": "checkbox",
             "index": 0
           },
           "when": [
@@ -147,7 +147,11 @@
                 "token": "Surface"
               },
               "minRatio": 0.5,
-              "tol": 14
+              "tol": 14,
+              "target": {
+                "label": "checkbox-box",
+                "index": 0
+              }
             }
           ]
         }
