@@ -24,9 +24,12 @@ import (
 //
 // 宽高由父级约束决定：放进 Flex 时给 flex，卡片自己只按内容增长。
 type Card struct {
-	Title    ui.Widget
-	Content  ui.Widget
-	Footer   ui.Widget
+	Title   ui.Widget
+	Content ui.Widget
+	Footer  ui.Widget
+	// Actions 操作区（antd Card actions）：渲染在卡片底部，顶部 hairline
+	// 分隔、横排均分（MainSpaceEvenly）、无左右内边距。
+	Actions  []ui.Widget
 	Padding  geom.Insets
 	Elevated bool
 }
@@ -68,6 +71,18 @@ func (c Card) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	if c.Footer != nil {
 		col.Add(buildChild(ctx, c.Footer))
+	}
+	// Actions 操作区：顶部 hairline 分隔 + 横排均分（antd actions 形态——
+	// 操作项直接贴卡片底缘，无左右内边距）。
+	if len(c.Actions) > 0 {
+		col.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetHeight(1))
+		arow := scene.Flex(scene.Horizontal, 0).SetHeight(40).SetCrossAlign(scene.CrossCenter).SetMainAlign(scene.MainSpaceEvenly)
+		for _, act := range c.Actions {
+			arow.Add(buildChild(ctx, act))
+		}
+		// actions 区通栏：负 margin 抵消卡片内边距（直贴卡片底缘）。
+		arow.SetMargin(geom.InLTRB(-pad.Left, 0, -pad.Left, 0))
+		col.Add(arow)
 	}
 	n := scene.Box(spec, col)
 	n.SetPadding(pad)

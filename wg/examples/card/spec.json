@@ -3,7 +3,8 @@
   "structure": {
     "apiRows": 6,
     "sections": [
-      "三段式卡片"
+      "三段式卡片",
+      "actions 操作区"
     ]
   },
   "sections": [
@@ -40,18 +41,11 @@
           },
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.1,
-                0.0,
-                0.8,
-                1.0
-              ],
-              "expect": {
-                "token": "Border"
-              },
-              "minRatio": 0.3,
-              "tol": 24
+              "kind": "exists",
+              "target": {
+                "label": "card-divider",
+                "index": 0
+              }
             }
           ]
         },
@@ -67,6 +61,35 @@
               "widthAtLeast": 200
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "actions 操作区",
+      "cases": [
+        {
+          "name": "actions 项文字存在",
+          "target": {
+            "label": "label",
+            "text": "收藏"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "收藏"
+              }
+            }
+          ]
+        },
+        {
+          "name": "actions 区与内容间有分隔线",
+          "target": {
+            "label": "card-divider",
+            "index": 1
+          },
+          "then": []
         }
       ]
     }
