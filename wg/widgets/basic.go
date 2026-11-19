@@ -34,6 +34,9 @@ func buildChildren(ctx *ui.BuildContext, ws []ui.Widget) []*scene.Node {
 // ── Divider ────────────────────────────────────────────────────────
 
 // Divider 是一条分隔线。
+//
+// 带文字形态（antd orientation="center"）：Text 非空时主线分列文字两侧
+// （左段 flex 1、右段 flex 1，gap 12），文字 TextMuted。
 type Divider struct {
 	ui.Base
 	// Vertical 为真时竖直，默认为水平。
@@ -44,12 +47,17 @@ type Divider struct {
 	Thickness float32
 	// Color 零值时取主题边框色。
 	Color geom.Color
+	// Text 带文字分隔线（水平向专用；非空时忽略 Length，通栏铺满父级）。
+	Text string
 }
 
 // NewDivider 创建水平分隔线。
 func NewDivider() *Divider { return &Divider{} }
 
 // Build 实现 ui.Widget。
+//
+// 带文字形态需要交叉轴拉伸来源：放在 ShrinkWrap 列里时父级必须
+// CrossStretch（同 Card 分隔线的教训——固定 1px 线没有宽度来源）。
 func (d *Divider) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	color := d.Color
@@ -66,6 +74,21 @@ func (d *Divider) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	if thick <= 0 {
 		thick = 1
+	}
+	if d.Text != "" && !d.Vertical {
+		layout := text.LayoutText(d.Text, text.DefaultFont(th.Font.SizeBase), text.Options{})
+		row := scene.Flex(scene.Horizontal, th.Space.MD).SetCrossAlign(scene.CrossCenter)
+		left := scene.Box(scene.BoxSpec{Fill: scene.Solid(color)}).SetHeight(thick).SetFlex(1, scene.FlexTight)
+		right := scene.Box(scene.BoxSpec{Fill: scene.Solid(color)}).SetHeight(thick).SetFlex(1, scene.FlexTight)
+		t := scene.Text(scene.TextSpec{Src: d.Text, Layout: layout, Color: th.Color.TextMuted})
+		row.Add(left)
+		row.Add(t)
+		row.Add(right)
+		// 行宽：Length 显式时用之（ShrinkWrap 父级里 flex 段无宽度来源会
+		// 塌缩成 58——文字 26+gap 12×2）；父级通栏由使用方传 Length 铺满。
+		row.SetWidth(length)
+		row.SetHit(scene.HitSpec{Label: "divider"})
+		return row
 	}
 	if d.Vertical {
 		v := scene.Box(scene.BoxSpec{Fill: scene.Solid(color)}).SetSize2(thick, length)

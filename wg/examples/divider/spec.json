@@ -3,7 +3,8 @@
   "structure": {
     "apiRows": 4,
     "sections": [
-      "水平分隔线"
+      "水平分隔线",
+      "带文字分隔线"
     ]
   },
   "sections": [
@@ -51,6 +52,50 @@
                 "token": "Border"
               },
               "tol": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "带文字分隔线",
+      "cases": [
+        {
+          "name": "带文字分隔线显式宽 400",
+          "target": {
+            "label": "divider",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                400,
+                400
+              ]
+            }
+          ]
+        },
+        {
+          "name": "文字为 TextMuted",
+          "target": {
+            "label": "divider",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.4,
+                0.15,
+                0.2,
+                0.7
+              ],
+              "expect": {
+                "token": "TextMuted"
+              },
+              "minRatio": 0.02,
+              "tol": 24
             }
           ]
         }
