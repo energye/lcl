@@ -36,6 +36,38 @@
               "text": "键控项 A"
             }
           ]
+        },
+        {
+          "name": "键控项 B 在 A 下方（顺序保持）",
+          "target": {
+            "label": "label",
+            "text": "键控项 B"
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "below": {
+                "label": "label",
+                "text": "键控项 A"
+              }
+            }
+          ]
+        },
+        {
+          "name": "键控项 C 在 B 下方",
+          "target": {
+            "label": "label",
+            "text": "键控项 C"
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "below": {
+                "label": "label",
+                "text": "键控项 B"
+              }
+            }
+          ]
         }
       ]
     }
