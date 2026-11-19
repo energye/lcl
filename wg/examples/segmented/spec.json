@@ -11,6 +11,74 @@
       "name": "周期切换",
       "cases": [
         {
+          "name": "容器轨道为 #F0F0F0（colorFillSecondary）",
+          "target": {
+            "label": "segmented",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.02,
+                0.0,
+                0.96,
+                0.06
+              ],
+              "expect": {
+                "token": "SurfaceActive"
+              },
+              "minRatio": 0.6,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "选中段为白色滑块",
+          "target": {
+            "label": "segment",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.25,
+                0.8
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.6,
+              "tol": 8
+            }
+          ]
+        },
+        {
+          "name": "hover 未选段出现底色反馈",
+          "target": {
+            "label": "segment",
+            "index": 2
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorDelta",
+              "minRatio": 0.03,
+              "tolPeak": 3
+            }
+          ]
+        },
+        {
           "name": "点击未选中分段",
           "target": {
             "label": "segment",

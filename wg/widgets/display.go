@@ -353,6 +353,8 @@ func (s *Segmented) Build(ctx *ui.BuildContext) *scene.Node {
 		Fill: scene.Solid(th.Color.SurfaceActive), Radius: th.Radius.Base,
 	}, row)
 	n.SetPadding(geom.InLTRB(2, 2, 2, 2))
+	// 被动定位锚（HitDeferToChild 不影响交互）：容器轨道色断言用。
+	n.SetHit(scene.HitSpec{Label: "segmented"})
 	s.node = n
 	return n
 }
@@ -369,13 +371,15 @@ func (s *segmentItem) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	selected := s.index == s.parent.Selected
 	// antd Segmented：灰轨道上的选中项是**白色滑块**（带轻投影）+ 深色
-	// 文字，不是主色实心块。
+	// 文字，不是主色实心块；未选项 hover 轻微加深（colorFill 系反馈）。
 	fill := geom.Color{}
 	fg := th.Color.Text
 	shadow := (*scene.ShadowSpec)(nil)
 	if selected {
 		fill = th.Color.Surface
 		shadow = &scene.ShadowSpec{Dx: 0, Dy: 1, Blur: 3, Color: th.Color.Shadow}
+	} else if s.hover {
+		fill = th.Color.FillHover
 	}
 	font := text.DefaultFont(th.Font.SizeSM)
 	layout := text.LayoutText(s.label, font, text.Options{})
