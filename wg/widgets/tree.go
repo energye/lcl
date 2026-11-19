@@ -167,6 +167,8 @@ func (f FormItem) Build(ctx *ui.BuildContext) *scene.Node {
 		el := text.LayoutText(f.Error, text.DefaultFont(th.Font.SizeXS), text.Options{})
 		et := scene.Text(scene.TextSpec{Src: f.Error, Layout: el, Color: th.Color.Danger})
 		et.SetMargin(geom.InLTRB(labelW+th.Space.SM, 0, 0, 0))
+		// 被动定位锚：错误文字色断言用（scene.Text 直建，无 Label 锚）。
+		et.SetHit(scene.HitSpec{Label: "form-error"})
 		col.Add(et)
 	}
 	return col
@@ -249,8 +251,17 @@ func (f *Form) Build(ctx *ui.BuildContext) *scene.Node {
 	col := scene.Flex(scene.Vertical, th.Space.MD)
 	for i := range f.Items {
 		item := f.Items[i]
+		// 校验失败的字段：错误文字 + 输入框红边（antd status="error"）。
+		// Status 直接写到 Child 输入实例上（Validate 后 MarkDirty 重建生效）；
+		// 调用方手动设置的 Status 会被下次 Validate 覆盖（表单驱动语义）。
 		if msg := f.Errors[item.Label]; msg != "" {
 			item.Error = msg
+			if ch, ok := item.Child.(*Input); ok {
+				ch.Status = InputStatusError
+			}
+		} else if ch, ok := item.Child.(*Input); ok && ch.Status == InputStatusError {
+			// 上轮校验失败、本轮已通过：边框回常态。
+			ch.Status = StatusOK
 		}
 		col.Add(item.Build(ctx))
 	}

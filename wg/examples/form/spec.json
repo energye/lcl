@@ -29,6 +29,35 @@
                 "index": 0
               },
               "text": "校验失败"
+            },
+            {
+              "kind": "borderColor",
+              "target": {
+                "label": "input",
+                "index": 0
+              },
+              "expect": {
+                "token": "Danger"
+              },
+              "tol": 24
+            },
+            {
+              "kind": "colorRatio",
+              "target": {
+                "label": "form-error",
+                "text": "用户名不能为空"
+              },
+              "frac": [
+                0.1,
+                0.2,
+                0.8,
+                0.6
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "minRatio": 0.03,
+              "tol": 24
             }
           ]
         },
@@ -67,6 +96,17 @@
                 "index": 0
               },
               "text": "校验通过"
+            },
+            {
+              "kind": "borderColor",
+              "target": {
+                "label": "input",
+                "index": 0
+              },
+              "expect": {
+                "token": "Border"
+              },
+              "tol": 24
             }
           ]
         }
