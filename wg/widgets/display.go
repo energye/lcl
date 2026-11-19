@@ -7,6 +7,7 @@ package widgets
 
 import (
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/energye/lcl/wg/geom"
@@ -239,7 +240,15 @@ type Skeleton struct {
 	Rows   int
 	Width  float32
 	Height float32
+	// Phase 呼吸相位 0..1（透明度调制 0.45..1），由调用方推进；Animated=true
+	// 时相位按墙钟自动推进（1.4s/圈，antd active 呼吸节奏）并声明组件级
+	// 动画——外部不必推帧。
+	Phase    float32
+	Animated bool
 }
+
+// skeletonBase 是 Skeleton 呼吸动画的墙钟起点。
+var skeletonBase = time.Now()
 
 // Build 实现 ui.Widget。
 func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
@@ -255,7 +264,21 @@ func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
 	if h <= 0 {
 		h = 12
 	}
+	if s.Animated && ctx.SetAnimating != nil {
+		ctx.SetAnimating(&s, true)
+	}
+	phase := s.Phase
+	if s.Animated {
+		const breathePeriod = 1400 * time.Millisecond
+		phase = float32(time.Since(skeletonBase)%breathePeriod) / float32(breathePeriod)
+	}
+	// antd active 呼吸：透明度在 1 与 0.45 间摆动（正弦半周期）。
+	opacity := 1.0
+	if phase > 0 {
+		opacity = 1.0 - 0.55*(0.5-0.5*cos32(phase*2*3.14159265))
+	}
 	n := scene.Flex(scene.Vertical, th.Space.MD)
+	n.SetOpacity(float32(opacity))
 	for i := 0; i < rows; i++ {
 		rw := w
 		if i == rows-1 {
@@ -269,6 +292,8 @@ func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
 	n.SetHit(scene.HitSpec{Label: "skeleton"})
 	return n
 }
+
+func cos32(v float32) float64 { return math.Cos(float64(v)) }
 
 // Spin 是加载指示器（环形缺口；缺口位置由 Phase 决定，外部动画驱动）。
 type Spin struct {
