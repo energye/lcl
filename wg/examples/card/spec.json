@@ -31,6 +31,42 @@
               "tol": 14
             }
           ]
+        },
+        {
+          "name": "卡片标题下有分隔线",
+          "target": {
+            "label": "card-divider",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.0,
+                0.8,
+                1.0
+              ],
+              "expect": {
+                "token": "Border"
+              },
+              "minRatio": 0.3,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "卡片圆角为 LG（8）",
+          "target": {
+            "label": "card",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthAtLeast": 200
+            }
+          ]
         }
       ]
     }

@@ -50,9 +50,17 @@ func (c Card) Build(ctx *ui.BuildContext) *scene.Node {
 		spec.Shadow = &scene.ShadowSpec{Dx: e.Dx, Dy: e.Dy, Blur: e.Blur, Color: e.Color}
 	}
 	col := scene.Flex(scene.Vertical, th.Space.MD)
+	// 交叉轴拉伸：分隔线要通栏（宽度=卡片内容宽）——固定 1px 高的
+	// Box 在 ShrinkWrap 列里没有宽度来源，FlexTight 主轴拉伸也不适用
+	// （主轴是纵向）。CrossStretch 拉伸所有子节点宽度，文字节点不受影响。
+	col.SetCrossAlign(scene.CrossStretch)
 	if c.Title != nil {
 		col.Add(buildChild(ctx, c.Title))
-		col.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetHeight(1).SetFlex(1, scene.FlexTight))
+		divider := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetHeight(1)
+		// 被动定位锚：标题分隔线断言用（标题高度随内容变化，frac 采样
+		// 带不可靠）。
+		divider.SetHit(scene.HitSpec{Label: "card-divider"})
+		col.Add(divider)
 	}
 	if c.Content != nil {
 		col.Add(buildChild(ctx, c.Content))
