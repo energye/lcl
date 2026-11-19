@@ -23,24 +23,80 @@
           ]
         },
         {
-          "name": "头像底色为主色",
+          "name": "36 档尺寸直径 36",
+          "target": {
+            "label": "avatar",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                36,
+                36
+              ]
+            }
+          ]
+        },
+        {
+          "name": "默认头像为灰底（colorFillTertiary）",
           "target": {
             "label": "avatar",
             "index": 0
           },
           "then": [
             {
-              "kind": "color",
+              "kind": "colorRatio",
               "frac": [
-                0.35,
-                0.1,
-                0.3,
-                0.12
+                0.25,
+                0.15,
+                0.5,
+                0.2
               ],
               "expect": {
-                "token": "Primary"
+                "token": "SurfaceActive"
               },
-              "tol": 20
+              "minRatio": 0.5,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "默认头像文字为深色（colorText）",
+          "target": {
+            "label": "avatar",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Text"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "48 档尺寸直径 48",
+          "target": {
+            "label": "avatar",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                48,
+                48
+              ]
             }
           ]
         }

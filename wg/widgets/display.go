@@ -152,9 +152,16 @@ type Avatar struct {
 	Text  string
 	Size  float32
 	Color geom.Color
+	// TextColor 头像文字色（零值按底色取反色：默认灰底配深字，显式主色
+	// 底配 OnPrimary 白字）。
+	TextColor geom.Color
 }
 
 // Build 实现 ui.Widget。
+//
+// antd Avatar 默认形态：**灰底 #F0F0F0 + 深色文字**（colorText）；显式
+// Color 时按预设色语义（主色底配 OnPrimary 白字）。文字字号 ≈ size×0.375
+// （antd 32px 头像字号 14）。此前默认主色实底+白字，与官方对照不符。
 func (a Avatar) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	s := a.Size
@@ -162,16 +169,23 @@ func (a Avatar) Build(ctx *ui.BuildContext) *scene.Node {
 		s = 32
 	}
 	fill := a.Color
+	fg := a.TextColor
 	if fill == (geom.Color{}) {
-		fill = th.Color.Primary
+		// 默认：灰底 + 深字（colorFillTertiary 实色 + colorText）。
+		fill = th.Color.SurfaceActive
+		if fg == (geom.Color{}) {
+			fg = th.Color.Text
+		}
+	} else if fg == (geom.Color{}) {
+		fg = th.Color.OnPrimary
 	}
 	n := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: s / 2}).SetSize2(s, s)
 	if a.Text != "" {
 		r := []rune(a.Text)
 		label := string(r[:1])
-		font := text.DefaultFont(s * 0.45)
+		font := text.DefaultFont(s * 0.375)
 		layout := text.LayoutText(label, font, text.Options{})
-		t := scene.Text(scene.TextSpec{Src: label, Layout: layout, Color: th.Color.OnPrimary})
+		t := scene.Text(scene.TextSpec{Src: label, Layout: layout, Color: fg})
 		t.SetMargin(geom.InLTRB((s-layout.Size.W)/2, (s-layout.Size.H)/2, 0, 0))
 		n.Add(t)
 	}
