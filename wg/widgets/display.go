@@ -14,6 +14,7 @@ import (
 	"github.com/energye/lcl/wg/render"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
+	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
 )
 
@@ -84,15 +85,45 @@ type Badge struct {
 	Dot       bool
 	Color     geom.Color
 	TextColor geom.Color
+	// Status 语义色（antd Badge.status）：Success 绿 / Processing 主色 /
+	// Error 红。显式 Color 优先于 Status。
+	Status BadgeStatus
+}
+
+// BadgeStatus 是徽标语义（antd Badge.status）。
+type BadgeStatus uint8
+
+const (
+	// BadgeStatusDefault 无语义（Danger 红底，与 Count/Text 一致）。
+	BadgeStatusDefault BadgeStatus = iota
+	// BadgeStatusSuccess 成功绿。
+	BadgeStatusSuccess
+	// BadgeStatusProcessing 处理中主色。
+	BadgeStatusProcessing
+	// BadgeStatusError 错误红（与默认同色，显式声明用）。
+	BadgeStatusError
+)
+
+// statusFill 折算 Status 语义底色（Color 显式时优先）。
+func (b Badge) statusFill(th *theme.Data) geom.Color {
+	if b.Color != (geom.Color{}) {
+		return b.Color
+	}
+	switch b.Status {
+	case BadgeStatusSuccess:
+		return th.Color.Success
+	case BadgeStatusProcessing:
+		return th.Color.Primary
+	case BadgeStatusError:
+		return th.Color.Danger
+	}
+	return th.Color.Danger // Default：红底与 Count/Text 默认一致
 }
 
 // Build 实现 ui.Widget。
 func (b Badge) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
-	fill := b.Color
-	if fill == (geom.Color{}) {
-		fill = th.Color.Danger
-	}
+	fill := b.statusFill(th)
 	if b.Dot {
 		dot := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: th.Radius.Pill}).SetSize2(8, 8)
 		dot.SetHit(scene.HitSpec{Label: "badge"})

@@ -3,7 +3,8 @@
   "structure": {
     "apiRows": 5,
     "sections": [
-      "三态角标"
+      "三态角标",
+      "status 语义色"
     ]
   },
   "sections": [
@@ -100,6 +101,83 @@
             {
               "kind": "text",
               "text": "99+"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "status 语义色",
+      "cases": [
+        {
+          "name": "Success 状态为绿底",
+          "target": {
+            "label": "badge",
+            "text": "status",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Success"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "Processing 状态为主色底",
+          "target": {
+            "label": "badge",
+            "text": "status",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "Error 状态为红底",
+          "target": {
+            "label": "badge",
+            "text": "status",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "minRatio": 0.4,
+              "tol": 14
             }
           ]
         }
