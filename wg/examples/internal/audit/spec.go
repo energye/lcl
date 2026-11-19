@@ -657,7 +657,8 @@ func (r *specRunner) doAssert(caseName string, def *SpecTarget, as SpecAssertion
 		// 的行"=边框行（光晕/阴影行差异小），取该行横向前 10%..90% 均色。
 		pass := found && abs3Diff(got, [3]float64{float64(expect.R), float64(expect.G), float64(expect.B)}) <= tol
 		r.add(caseName, "borderColor", pass,
-			fmt.Sprintf("%s 边框行色 ≈ %s（Δ%.0f ≤ %.0f）", targetDesc(target), note,
+			fmt.Sprintf("%s@rect(%.1f,%.1f %.1fx%.1f) 边框行色 ≈ %s（实测 %s Δ%.0f ≤ %.0f）", targetDesc(target),
+				rect.Min.X, rect.Min.Y, rect.W(), rect.H(), note, fmtHex(got),
 				abs3Diff(got, [3]float64{float64(expect.R), float64(expect.G), float64(expect.B)}), tol))
 	case "centeredIn":
 		a, ok := r.locate(*target)
@@ -1213,72 +1214,68 @@ func borderWidthOf(img *image.RGBA, rect geom.Rect) int {
 	return count
 }
 
-// borderColorOf 返回区域顶部边框行的均色。内部参考色取顶部 8 行的**众数
-// 色**（16 级量化分桶）——固定窄带（+5..+8）在 16px 小盒上会撞上勾/横杠
-// 墨迹（半选横杠在行 7..9），众数不受少量墨迹干扰。横向前 10%..90% 均色
-// 避开圆角。found=false 表示顶部无行与参考色有明显差异（无边框）。
+// borderColorOf 返回区域**左边缘**（垂直边中点行）的边框色。改为左缘扫描
+// 的原因：顶行扫描有三类污染——①小宽盒（tag "Go"）正中列撞文字墨迹，GDI
+// ClearType 亚像素 AA 会产生彩色边缘（实测 #B9FAFA 青边）；②16px 圆钮
+// （radius=半宽）整条顶边都是弧，行均色必被稀释；③内部参考固定窄带在
+// 16px 小盒上会撞勾/横杠。左缘中点行：盒边是几何描边（无文字）、圆左极点
+// 切线垂直（该列恰好铺满）、内部参考取扫描窗内**众数列**（16 级量化分桶
+// ——固定 +2..+4 列在窄盒上会撞文字彩边，实测 #DAE9FF）。found=false 表示
+// 前 4 列与参考色无明显差异（无边框）。
 func borderColorOf(img *image.RGBA, rect geom.Rect) ([3]float64, bool) {
 	if img == nil || rect.IsEmpty() {
 		return [3]float64{}, false
 	}
-	x0 := int(rect.Min.X) + int(rect.W()*0.25)
-	x1 := int(rect.Max.X) - int(rect.W()*0.25)
-	if x1 <= x0 {
+	cy := int(rect.Min.Y + rect.H()/2)
+	if cy >= img.Bounds().Dy() {
 		return [3]float64{}, false
 	}
-	type rowColor struct {
+	px := func(x int) [3]float64 {
+		i := cy*img.Stride + x*4
+		return [3]float64{float64(img.Pix[i]), float64(img.Pix[i+1]), float64(img.Pix[i+2])}
+	}
+	cols := make([][3]float64, 0, 5)
+	for x := int(rect.Min.X); x < int(rect.Min.X)+4 && x < img.Bounds().Dx(); x++ {
+		cols = append(cols, px(x))
+	}
+	// 众数列：16 级量化分桶——边框 1 列 vs 背景 3+ 列，众数=内部参考色。
+	buckets := map[[3]int]*struct {
 		v   [3]float64
-		d   float64
 		cnt int
-	}
-	rows := make([]rowColor, 0, 8)
-	for y := int(rect.Min.Y); y < int(rect.Min.Y)+8 && y < img.Bounds().Dy(); y++ {
-		var sum [3]int64
-		n := 0
-		for x := x0; x < x1; x++ {
-			i := y*img.Stride + x*4
-			sum[0] += int64(img.Pix[i])
-			sum[1] += int64(img.Pix[i+1])
-			sum[2] += int64(img.Pix[i+2])
-			n++
-		}
-		rows = append(rows, rowColor{
-			v: [3]float64{float64(sum[0]) / float64(n), float64(sum[1]) / float64(n), float64(sum[2]) / float64(n)},
-		})
-	}
-	// 众数色：16 级量化分桶计数，取最大桶的均色。
-	buckets := map[[3]int]*rowColor{}
-	for i := range rows {
+	}{}
+	for _, v := range cols {
 		var key [3]int
 		for c := 0; c < 3; c++ {
-			key[c] = int(rows[i].v[c]) / 16
+			key[c] = int(v[c]) / 16
 		}
 		b, ok := buckets[key]
 		if !ok {
-			b = &rowColor{}
+			b = &struct {
+				v   [3]float64
+				cnt int
+			}{}
 			buckets[key] = b
 		}
-		b.v[0] += rows[i].v[0]
-		b.v[1] += rows[i].v[1]
-		b.v[2] += rows[i].v[2]
+		b.v[0] += v[0]
+		b.v[1] += v[1]
+		b.v[2] += v[2]
 		b.cnt++
 	}
-	var inner rowColor
+	var inner [3]float64
 	maxCnt := 0
 	for _, b := range buckets {
 		if b.cnt > maxCnt {
 			maxCnt = b.cnt
-			inner = rowColor{v: [3]float64{b.v[0] / float64(b.cnt), b.v[1] / float64(b.cnt), b.v[2] / float64(b.cnt)}}
+			inner = [3]float64{b.v[0] / float64(b.cnt), b.v[1] / float64(b.cnt), b.v[2] / float64(b.cnt)}
 		}
 	}
-	best, bestD := rowColor{}, -1.0
-	for i := range rows {
-		rows[i].d = abs3Diff(rows[i].v, inner.v)
-		if rows[i].d > bestD {
-			bestD, best = rows[i].d, rows[i]
+	best, bestD := [3]float64{}, -1.0
+	for _, v := range cols {
+		if d := abs3Diff(v, inner); d > bestD {
+			bestD, best = d, v
 		}
 	}
-	return best.v, bestD > 12
+	return best, bestD > 12
 }
 
 // colorRatioOf 返回区域内与目标色每通道差 <= tol 的像素占比。

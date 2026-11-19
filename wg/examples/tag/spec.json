@@ -34,6 +34,88 @@
               "text": "无句柄画布"
             }
           ]
+        },
+        {
+          "name": "默认标签为灰底描边、深色文字",
+          "target": {
+            "label": "tag",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Border"
+              },
+              "tol": 24
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.25,
+                0.25,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "SurfaceSunken"
+              },
+              "minRatio": 0.35,
+              "tol": 8
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.25,
+                0.4,
+                0.5
+              ],
+              "expect": {
+                "token": "Text"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "彩色标签底为 Primary 40% 浅底",
+          "target": {
+            "label": "tag",
+            "index": 4
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.15,
+                0.15,
+                0.2,
+                0.7
+              ],
+              "expect": {
+                "hex": "#DAE9FF",
+                "note": "Primary 40% 叠白"
+              },
+              "minRatio": 0.35,
+              "tol": 14
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.25,
+                0.4,
+                0.5
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
         }
       ]
     }

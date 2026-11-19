@@ -115,18 +115,24 @@ type Tag struct {
 }
 
 // Build 实现 ui.Widget。
+//
+// antd Tag 两态：**默认**（无 color）= 灰底 colorFillQuaternary + colorBorder
+// 描边 + colorText 文字；**彩色**（显式 Color）= 浅底（基色 40% 透明）+ 同色
+// 文字 + 基色淡描边。
 func (t Tag) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
-	fg := t.Color
-	if fg == (geom.Color{}) {
-		fg = th.Color.Primary
+	textColor, fillColor, borderColor := th.Color.Text, th.Color.SurfaceSunken, th.Color.Border
+	if t.Color != (geom.Color{}) {
+		textColor = t.Color
+		fillColor = t.Color.WithAlpha(40)
+		borderColor = t.Color.WithAlpha(80)
 	}
 	font := text.DefaultFont(th.Font.SizeSM)
 	layout := text.LayoutText(t.Text, font, text.Options{})
 	w := layout.Size.W + th.Space.MD
 	h := layout.Size.H + th.Space.SM
-	n := scene.Box(scene.BoxSpec{Fill: scene.Solid(fg.WithAlpha(40)), Radius: th.Radius.SM}).SetSize2(w, h)
-	label := scene.Text(scene.TextSpec{Src: t.Text, Layout: layout, Color: fg})
+	n := scene.Box(scene.BoxSpec{Fill: scene.Solid(fillColor), Border: scene.Stroke(borderColor, 1), Radius: th.Radius.SM}).SetSize2(w, h)
+	label := scene.Text(scene.TextSpec{Src: t.Text, Layout: layout, Color: textColor})
 	label.SetMargin(geom.InLTRB(th.Space.SM, (h-layout.Size.H)/2, 0, 0))
 	n.Add(label)
 	n.SetHit(scene.HitSpec{Label: "tag"})
