@@ -3,7 +3,79 @@
   "structure": {
     "apiRows": 2,
     "sections": [
-      "四个相位"
+      "四个相位",
+      "自动旋转"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "四个相位",
+      "cases": [
+        {
+          "name": "相位 0 弧线为主色",
+          "target": {
+            "label": "spin",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.008,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "四个相位指示器直径 28",
+          "target": {
+            "label": "spin",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                28,
+                28
+              ]
+            },
+            {
+              "kind": "geometry",
+              "heightBetween": [
+                28,
+                28
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "自动旋转",
+      "cases": [
+        {
+          "name": "自动旋转指示器持续转（两帧不同）",
+          "target": {
+            "label": "spin",
+            "index": 4
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "spinner-spin"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

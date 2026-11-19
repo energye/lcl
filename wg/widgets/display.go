@@ -7,6 +7,7 @@ package widgets
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/render"
@@ -259,7 +260,13 @@ func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
 type Spin struct {
 	Size  float32
 	Phase float32 // 0..1
+	// Spin 自动旋转：相位在录制闭包内按墙钟计算（800ms/圈），并声明
+	// 组件级动画（容器 60Hz 标脏重录）——外部不需要自己推帧。
+	Spin bool
 }
+
+// spinBase 是 Spin 自动旋转的墙钟起点（与 icon.Spin 同约定）。
+var spinBase = time.Now()
 
 // Build 实现 ui.Widget。
 func (s Spin) Build(ctx *ui.BuildContext) *scene.Node {
@@ -268,12 +275,22 @@ func (s Spin) Build(ctx *ui.BuildContext) *scene.Node {
 	if size <= 0 {
 		size = 20
 	}
+	if s.Spin && ctx.SetAnimating != nil {
+		ctx.SetAnimating(&s, true)
+	}
 	n := scene.CustomPaintNode(func(c render.Canvas, sz geom.Size) {
+		phase := s.Phase
+		if s.Spin {
+			const spinPeriod = 800 * time.Millisecond
+			phase = float32(time.Since(spinBase)%spinPeriod) / float32(spinPeriod)
+		}
 		p := render.NewPath()
-		p.AddArc(geom.RectXYWH(2, 2, sz.W-4, sz.H-4), s.Phase*6.2831853, 4.7)
+		p.AddArc(geom.RectXYWH(2, 2, sz.W-4, sz.H-4), phase*6.2831853, 4.7)
 		c.StrokePath(p, render.Stroke(th.Color.Primary, 2).WithCap(render.CapRound))
 	})
 	n.SetSize2(size, size)
+	// 被动定位锚：指示器几何/色断言用。
+	n.SetHit(scene.HitSpec{Label: "spin"})
 	return n
 }
 
