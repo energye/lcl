@@ -189,7 +189,7 @@ func (s *Select) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		n.SetSize2(s.Width, h)
 		al := text.LayoutText(arrow, text.DefaultFont(th.Font.SizeSM), text.Options{})
-		at := scene.Text(scene.TextSpec{Src: arrow, Layout: al, Color: th.Color.TextMuted})
+		at := scene.Text(scene.TextSpec{Src: arrow, Layout: al, Color: th.Color.BorderStrong})
 		at.SetPositionKeepSize(true).SetStackPosition(geom.Pt(s.Width-20, 8))
 		n.Add(at)
 		n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "select", Cursor: scene.CursorPointer, Disabled: s.Disabled})
@@ -209,14 +209,18 @@ func (s *Select) Build(ctx *ui.BuildContext) *scene.Node {
 	caption, picked := s.caption()
 	fg := th.Color.Text
 	if !picked {
-		fg = th.Color.TextFaint
+		// antd 未选占位文字=colorTextPlaceholder #BFBFBF（与 Input 一致），
+		// 不是 TextFaint（偏深）。
+		fg = th.Color.TextPlaceholder
 	}
 	l := text.LayoutText(caption, text.DefaultFont(th.Font.SizeSM), text.Options{})
 	tv := scene.Text(scene.TextSpec{Src: caption, Layout: l, Color: fg})
 	tv.SetMargin(geom.InLTRB(10, (h-l.Size.H)/2, 0, 0))
 	n.Add(tv)
+	// 箭头用浅灰（antd colorTextQuaternary 档，#BFBFBF）——TextMuted 偏深。
+	arrowFg := th.Color.BorderStrong
 	al := text.LayoutText(arrow, text.DefaultFont(th.Font.SizeSM), text.Options{})
-	at := scene.Text(scene.TextSpec{Src: arrow, Layout: al, Color: th.Color.TextMuted})
+	at := scene.Text(scene.TextSpec{Src: arrow, Layout: al, Color: arrowFg})
 	at.SetPositionKeepSize(true).SetStackPosition(geom.Pt(s.Width-20, (h-al.Size.H)/2))
 	n.Add(at)
 

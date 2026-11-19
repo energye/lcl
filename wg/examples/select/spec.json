@@ -13,10 +13,47 @@
       "name": "基本单选",
       "cases": [
         {
+          "name": "触发框边框 1px",
+          "target": {
+            "label": "select",
+            "text": "请选择"
+          },
+          "then": [
+            {
+              "kind": "borderWidth",
+              "expectWidth": 1,
+              "tol": 1
+            }
+          ]
+        },
+        {
+          "name": "未选占位文字为 colorTextPlaceholder",
+          "target": {
+            "label": "select",
+            "text": "请选择"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.12,
+                0.25,
+                0.76,
+                0.5
+              ],
+              "expect": {
+                "token": "TextPlaceholder"
+              },
+              "minRatio": 0.01,
+              "tol": 24
+            }
+          ]
+        },
+        {
           "name": "下拉打开、Esc 关闭、可再次打开",
           "target": {
             "label": "select",
-            "index": 0
+            "text": "请选择"
           },
           "then": [
             {
