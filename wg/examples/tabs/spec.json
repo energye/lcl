@@ -11,10 +11,106 @@
       "name": "三页切换",
       "cases": [
         {
+          "name": "选中页签文字为主色",
+          "target": {
+            "label": "tab",
+            "text": "第一页"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.15,
+                0.15,
+                0.7,
+                0.7
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "选中页签带主色下划线指示",
+          "target": {
+            "label": "tab",
+            "text": "第一页"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.25,
+                0.75,
+                0.5,
+                0.25
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.1,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "未选中页签文字为普通文字色",
+          "target": {
+            "label": "tab",
+            "text": "第三页"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.15,
+                0.15,
+                0.7,
+                0.7
+              ],
+              "expect": {
+                "token": "Text"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "初始显示第一页内容",
+          "target": {
+            "label": "label",
+            "text": "第一页内容"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "第一页内容"
+            }
+          ]
+        },
+        {
+          "name": "未选页签无其内容文字",
+          "target": {
+            "label": "label",
+            "text": "第二页内容"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "第二页内容",
+              "notContains": true
+            }
+          ]
+        },
+        {
           "name": "点击未选中页签切换",
           "target": {
             "label": "tab",
-            "index": 0
+            "text": "第二页"
           },
           "then": [
             {

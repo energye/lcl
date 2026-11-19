@@ -359,6 +359,17 @@ func clickPoint(b geom.Rect, frac []float32) geom.Point {
 
 // ── 用例执行 ────────────────────────────────────────────────────────
 
+// allAssertionsNotContains 判断一个用例的全部断言是否都是 text 的
+// notContains 模式——这类用例的目标节点不存在本身就是通过态。
+func allAssertionsNotContains(then []SpecAssertion) bool {
+	for _, a := range then {
+		if a.Kind != "text" || !a.NotContains {
+			return false
+		}
+	}
+	return len(then) > 0
+}
+
 func (r *specRunner) runCase(cs SpecCase) {
 	name := cs.Name
 	if cs.Target != nil {
@@ -369,9 +380,13 @@ func (r *specRunner) runCase(cs SpecCase) {
 	time.Sleep(120 * time.Millisecond)
 
 	// 目标默认滚入可视域；记录初始位置（点击可能改变文本，文本锚会失效）。
+	// 纯 notContains 用例外（折叠收起后内容节点不存在本身就是通过态，
+	// ensureVisible 的硬失败会把它误判为定位错误）。
+	allNotContains := cs.Target != nil && cs.Target.Label != "" &&
+		len(cs.Then) > 0 && allAssertionsNotContains(cs.Then)
 	r.caseBounds = geom.Rect{}
 	if cs.Target != nil {
-		if !r.ensureVisible(*cs.Target) {
+		if !allNotContains && !r.ensureVisible(*cs.Target) {
 			r.add(name, "定位", false, "目标不可见："+targetDesc(cs.Target))
 			return
 		}
@@ -385,6 +400,9 @@ func (r *specRunner) runCase(cs SpecCase) {
 			time.Sleep(150 * time.Millisecond)
 			n2, ok2 := r.locate(*cs.Target)
 			if !ok2 {
+				if allNotContains {
+					break // 目标不存在=notContains 的通过态，交断言处理
+				}
 				return // 重建后目标消失，走常规失败路径
 			}
 			b2 := n2.BoundsInRoot()
