@@ -5,5 +5,36 @@
     "sections": [
       "旋转条纹 + 缩放椭圆"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "旋转条纹 + 缩放椭圆",
+      "cases": [
+        {
+          "name": "Save/Restore 后红块矩形存在",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.68,
+                0.1,
+                0.25,
+                0.4
+              ],
+              "expect": {
+                "hex": "#C85B6E",
+                "note": "Restore 后红块"
+              },
+              "minRatio": 0.3,
+              "tol": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -5,5 +5,44 @@
     "sections": [
       "矩形 / 圆角 / 三角"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "矩形 / 圆角 / 三角",
+      "cases": [
+        {
+          "name": "裁剪画布存在",
+          "target": {
+            "label": "clip-demo",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                160,
+                160
+              ]
+            }
+          ]
+        },
+        {
+          "name": "裁剪节点宽 160",
+          "target": {
+            "label": "clip-demo",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                160,
+                160
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

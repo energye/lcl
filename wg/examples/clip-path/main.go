@@ -28,7 +28,9 @@ func main() {
 					}).SetSize2(160, 160)
 				}
 				plain := scene.Clip(scene.ClipSpec{Rect: geom.RectXYWH(0, 0, 160, 160)}, stripes())
+				plain.SetHit(scene.HitSpec{Label: "clip-demo"})
 				rrect := scene.Clip(scene.ClipSpec{Rect: geom.RectXYWH(0, 0, 160, 160), Radius: 40, AA: true}, stripes())
+				rrect.SetHit(scene.HitSpec{Label: "clip-demo"})
 				tri := scene.Clip(scene.ClipSpec{
 					Rect: geom.RectXYWH(0, 0, 160, 160),
 					Path: render.NewPath().MoveTo(80, 6).LineTo(154, 154).LineTo(6, 154).Close(),

@@ -5,5 +5,25 @@
     "sections": [
       "矩阵映射与矩形相交"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "矩阵映射与矩形相交",
+      "cases": [
+        {
+          "name": "矩阵演示画布存在",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthAtLeast": 200
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
