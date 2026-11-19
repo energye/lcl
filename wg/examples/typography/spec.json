@@ -27,6 +27,148 @@
               }
             }
           ]
+        },
+        {
+          "name": "h2 标题存在",
+          "target": {
+            "label": "typography",
+            "text": "h2. 二级标题"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "typography",
+                "text": "h2. 二级标题"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Text 语义",
+      "cases": [
+        {
+          "name": "danger 文字为 Error 红",
+          "target": {
+            "label": "typography",
+            "text": "危险 danger"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.2,
+                0.8,
+                0.6
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "minRatio": 0.03,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "disabled 文字为禁用灰",
+          "target": {
+            "label": "typography",
+            "text": "禁用 disabled"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.2,
+                0.8,
+                0.6
+              ],
+              "expect": {
+                "token": "BorderStrong"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "code 标记为灰底",
+          "target": {
+            "label": "typography",
+            "text": "CODE_CODE"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.05,
+                0.1,
+                0.12,
+                0.8
+              ],
+              "expect": {
+                "token": "SurfaceSunken"
+              },
+              "minRatio": 0.3,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "mark 标记为黄底",
+          "target": {
+            "label": "typography",
+            "text": "标记 mark"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.05,
+                0.1,
+                0.12,
+                0.8
+              ],
+              "expect": {
+                "hex": "#FFE58F",
+                "note": "antd mark 黄底"
+              },
+              "minRatio": 0.3,
+              "tol": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "段落",
+      "cases": [
+        {
+          "name": "段落文字为正文色",
+          "target": {
+            "label": "typography",
+            "text": "段落组件按容器宽度换行"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.05,
+                0.2,
+                0.9,
+                0.6
+              ],
+              "expect": {
+                "token": "Text"
+              },
+              "minRatio": 0.02,
+              "tol": 24
+            }
+          ]
         }
       ]
     }
