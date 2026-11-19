@@ -368,7 +368,19 @@ func (h *Host) relayout() {
 	h.root.SetSize2(vp.W(), vp.H())
 	for _, e := range h.Entries() {
 		anchor := e.Anchor.Resolve()
-		p := Resolve(e.Placement, anchor, e.Size, e.Offset, vp)
+		// 高度 0 = 高度自适应：按内容根的自然高度定位（antd 对话框形态——
+		// 高度随内容；固定 220 会截断多内容）。宽度仍用 Entry.Size。
+		// content 若还没走过布局（Show 当帧），先按视口宽松约束测一次。
+		size := e.Size
+		if size.H <= 0 && e.content != nil {
+			if e.content.Size().H <= 0 {
+				e.content.Layout(scene.LooseConstraints(geom.Sz(e.Size.W, vp.H())))
+			}
+			if e.content.Size().H > 0 {
+				size.H = e.content.Size().H
+			}
+		}
+		p := Resolve(e.Placement, anchor, size, e.Offset, vp)
 		if p.Flipped {
 			h.stats.Flips++
 		}
