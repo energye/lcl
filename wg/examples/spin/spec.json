@@ -4,7 +4,8 @@
     "apiRows": 2,
     "sections": [
       "四个相位",
-      "自动旋转"
+      "自动旋转",
+      "tip 文案"
     ]
   },
   "sections": [
@@ -73,6 +74,50 @@
               "kind": "template",
               "template": "spinner-spin",
               "text": "no-still"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tip 文案",
+      "cases": [
+        {
+          "name": "tip 文案存在",
+          "target": {
+            "label": "spin-tip",
+            "text": "数据加载中"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "spin-tip",
+                "text": "数据加载中"
+              }
+            }
+          ]
+        },
+        {
+          "name": "tip 文字为 TextMuted",
+          "target": {
+            "label": "spin-tip",
+            "text": "数据加载中"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.6,
+                0.4,
+                0.3
+              ],
+              "expect": {
+                "token": "TextMuted"
+              },
+              "minRatio": 0.02,
+              "tol": 24
             }
           ]
         }

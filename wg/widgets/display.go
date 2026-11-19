@@ -350,12 +350,17 @@ func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
 func cos32(v float32) float64 { return math.Cos(float64(v)) }
 
 // Spin 是加载指示器（环形缺口；缺口位置由 Phase 决定，外部动画驱动）。
+//
+// Tip 非空时进入**容器包裹形态**（antd Spin tip）：指示器下方显示 Tip
+// 文案（TextMuted），整体垂直居中排布。
 type Spin struct {
 	Size  float32
 	Phase float32 // 0..1
 	// Spin 自动旋转：相位在录制闭包内按墙钟计算（800ms/圈），并声明
 	// 组件级动画（容器 60Hz 标脏重录）——外部不需要自己推帧。
 	Spin bool
+	// Tip 加载文案（非空时容器包裹形态：指示器+文案纵排）。
+	Tip string
 }
 
 // spinBase 是 Spin 自动旋转的墙钟起点（与 icon.Spin 同约定）。
@@ -384,6 +389,16 @@ func (s Spin) Build(ctx *ui.BuildContext) *scene.Node {
 	n.SetSize2(size, size)
 	// 被动定位锚：指示器几何/色断言用。
 	n.SetHit(scene.HitSpec{Label: "spin"})
+	if s.Tip != "" {
+		// 容器包裹形态（antd Spin tip）：指示器下方显示文案。
+		col := scene.Flex(scene.Vertical, th.Space.SM).SetCrossAlign(scene.CrossCenter)
+		col.Add(n)
+		tl := text.LayoutText(s.Tip, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		tip := scene.Text(scene.TextSpec{Src: s.Tip, Layout: tl, Color: th.Color.TextMuted})
+		tip.SetHit(scene.HitSpec{Label: "spin-tip"}) // 被动锚：tip 文案断言用
+		col.Add(tip)
+		return col
+	}
 	return n
 }
 
