@@ -5,5 +5,36 @@
     "sections": [
       "三维散点"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "三维散点",
+      "cases": [
+        {
+          "name": "散点含主色",
+          "target": {
+            "label": "chart-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.8,
+                0.8
+              ],
+              "expect": {
+                "hex": "#458EFF",
+                "note": "Primary 78% 叠白（WithAlpha 200）"
+              },
+              "minRatio": 0.002,
+              "tol": 40
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

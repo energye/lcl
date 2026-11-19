@@ -5,5 +5,58 @@
     "sections": [
       "双序列"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "双序列",
+      "cases": [
+        {
+          "name": "第一序列为主色线",
+          "target": {
+            "label": "chart-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.8,
+                0.7
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.004,
+              "tol": 30
+            }
+          ]
+        },
+        {
+          "name": "第二系列为 Success 线",
+          "target": {
+            "label": "chart-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.8,
+                0.7
+              ],
+              "expect": {
+                "token": "Success"
+              },
+              "minRatio": 0.004,
+              "tol": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

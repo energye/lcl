@@ -5,5 +5,35 @@
     "sections": [
       "合成波形"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "合成波形",
+      "cases": [
+        {
+          "name": "波形主色存在",
+          "target": {
+            "label": "chart-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.8,
+                0.7
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.005,
+              "tol": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -67,6 +67,8 @@ func colorAt(p Palette, i int) geom.Color {
 func node(w, h float32, paint scene.CustomPaint) *scene.Node {
 	n := scene.CustomPaintNode(paint)
 	n.SetSize2(w, h)
+	// 被动定位锚：图表色占比断言用（HitDeferToChild 不影响交互）。
+	n.SetHit(scene.HitSpec{Label: "chart-canvas"})
 	return n
 }
 

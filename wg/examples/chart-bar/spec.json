@@ -5,5 +5,58 @@
     "sections": [
       "四季度两组"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "四季度两组",
+      "cases": [
+        {
+          "name": "柱状图第一系列为主色",
+          "target": {
+            "label": "chart-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.2,
+                0.8,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.03,
+              "tol": 30
+            }
+          ]
+        },
+        {
+          "name": "第二系列为 Success 绿",
+          "target": {
+            "label": "chart-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.2,
+                0.8,
+                0.6
+              ],
+              "expect": {
+                "token": "Success"
+              },
+              "minRatio": 0.02,
+              "tol": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

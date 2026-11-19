@@ -5,5 +5,49 @@
     "sections": [
       "环形图"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "环形图",
+      "cases": [
+        {
+          "name": "扇区含主色与 Success",
+          "target": {
+            "label": "chart-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.1,
+                0.6,
+                0.8
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.02,
+              "tol": 30
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.1,
+                0.6,
+                0.8
+              ],
+              "expect": {
+                "token": "Success"
+              },
+              "minRatio": 0.02,
+              "tol": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
