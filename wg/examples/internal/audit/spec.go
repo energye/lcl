@@ -113,10 +113,11 @@ type SpecAssertion struct {
 	InViewport    bool        `json:"inViewport,omitempty"`
 
 	// overlay / scroll / text
-	Band     string   `json:"band,omitempty"`
-	Delta    *float32 `json:"delta,omitempty"`
-	MinDelta *float32 `json:"minDelta,omitempty"`
-	Text     string   `json:"text,omitempty"`
+	Band        string   `json:"band,omitempty"`
+	Delta       *float32 `json:"delta,omitempty"`
+	MinDelta    *float32 `json:"minDelta,omitempty"`
+	Text        string   `json:"text,omitempty"`
+	NotContains bool     `json:"notContains,omitempty"` // text 断言的反向模式：断言节点子树不含该文本
 
 	// borderWidth
 	ExpectWidth int `json:"expectWidth,omitempty"`
@@ -782,7 +783,20 @@ func (r *specRunner) doAssert(caseName string, def *SpecTarget, as SpecAssertion
 			// 点击后文案变了，文本锚失效：按初始位置就近匹配同 label 节点。
 			n, ok = r.locateNear(*target, r.caseBounds.Center())
 		}
-		pass := ok && nodeTextContains(n, as.Text)
+		contains := ok && nodeTextContains(n, as.Text)
+		if as.NotContains {
+			// 反向断言：子树必须**不含**该文本（折叠收起后内容节点不存在）。
+			// 节点定位不到本身就含"内容缺失"的语义（内容已随收起消失），
+			// 不算定位错误——ensureVisible 已在采样前跑过。
+			pass := !contains
+			detail := fmt.Sprintf("文本不含：%s", as.Text)
+			if contains {
+				detail = fmt.Sprintf("文本仍包含：%s", as.Text)
+			}
+			r.add(caseName, "text", pass, fmt.Sprintf("%s %s", targetDesc(target), detail))
+			return
+		}
+		pass := contains
 		detail := "文本未包含：" + as.Text
 		if pass {
 			detail = "文本包含：" + as.Text

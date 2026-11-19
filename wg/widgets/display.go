@@ -568,7 +568,9 @@ type CollapsePanel struct {
 type Collapse struct {
 	controlBase
 	Panels   []CollapsePanel
-	Open     int
+	Open     int    // 单开（默认）：展开的面板下标，-1=全收
+	Multiple bool   // 多开模式（antd 默认）：Multiple 模式下各面板独立开关
+	OpenSet  []bool // Multiple 模式下各面板的展开状态（与 Panels 对齐）
 	OnChange func(int)
 }
 
@@ -581,6 +583,10 @@ func NewCollapse(panels ...CollapsePanel) *Collapse {
 func (c *Collapse) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(c)
 	th := ctx.ThemeOr()
+	// Multiple 模式：OpenSet 与 Panels 对齐（Panels 可变长）。
+	if c.Multiple && len(c.OpenSet) != len(c.Panels) {
+		c.OpenSet = make([]bool, len(c.Panels))
+	}
 	col := scene.Flex(scene.Vertical, th.Space.XS)
 	// 面板通栏铺满父级宽度（antd 折叠面板是全宽边框容器，不是紧凑按钮盒）。
 	col.SetCrossAlign(scene.CrossStretch)
@@ -602,6 +608,9 @@ func (c *collapseItem) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	panel := c.parent.Panels[c.index]
 	open := c.index == c.parent.Open
+	if c.parent.Multiple {
+		open = c.parent.OpenSet[c.index]
+	}
 	// antd 折叠面板：面板=通栏边框容器；表头一行"标题居左、箭头居右"
 	// （SpaceBetween，宽度随父级自适应，箭头不再写死 x=320 飘在面板外）。
 	layout := text.LayoutText(panel.Title, text.DefaultFont(th.Font.SizeBase), text.Options{})
@@ -620,6 +629,21 @@ func (c *collapseItem) Build(ctx *ui.BuildContext) *scene.Node {
 	header.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "collapse", Cursor: scene.CursorPointer})
 	parent, index := c.parent, c.index
 	hnd := c.tapHandler(ctx, false, func() {
+		if parent.Multiple {
+			parent.OpenSet[index] = !parent.OpenSet[index]
+			// 兼容 Open 单开语义：多开模式下把最后一个展开项同步给 Open。
+			parent.Open = -1
+			for i, v := range parent.OpenSet {
+				if v {
+					parent.Open = i
+				}
+			}
+			parent.MarkDirty()
+			if parent.OnChange != nil {
+				parent.OnChange(parent.Open)
+			}
+			return
+		}
 		next := -1
 		if parent.Open != index {
 			next = index
@@ -647,5 +671,8 @@ func (c *collapseItem) Build(ctx *ui.BuildContext) *scene.Node {
 	panelBox := scene.Box(scene.BoxSpec{
 		Fill: scene.Solid(th.Color.Surface), Border: scene.Stroke(th.Color.Border, 1), Radius: th.Radius.Base,
 	}, root)
+	// 被动定位锚（HitDeferToChild 不影响交互）：面板级内容存在性断言用
+	// （表头锚的子树不含内容文字——内容挂在面板容器下）。
+	panelBox.SetHit(scene.HitSpec{Label: "collapse-panel"})
 	return panelBox
 }

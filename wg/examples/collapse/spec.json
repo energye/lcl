@@ -3,7 +3,8 @@
   "structure": {
     "apiRows": 4,
     "sections": [
-      "三节手风琴"
+      "三节手风琴",
+      "多开模式"
     ]
   },
   "sections": [
@@ -28,6 +29,51 @@
           "target": {
             "label": "collapse",
             "index": 1
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "collapse-toggle"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "多开模式",
+      "cases": [
+        {
+          "name": "初始一三节展开、二节收起",
+          "target": {
+            "label": "collapse-panel",
+            "text": "多开 · 第一节"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "多开 · 第一节内容"
+            }
+          ]
+        },
+        {
+          "name": "收起的二节无内容文字",
+          "target": {
+            "label": "collapse-panel",
+            "text": "多开 · 第二节"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "多开 · 第二节内容",
+              "notContains": true
+            }
+          ]
+        },
+        {
+          "name": "二节点击展开内容出现并可收起",
+          "target": {
+            "label": "collapse",
+            "text": "多开 · 第二节"
           },
           "then": [
             {
