@@ -335,6 +335,29 @@ func (d *Dispatcher) fireCursor(cur scene.Cursor, changed bool) {
 	}
 }
 
+// PointerIn 把指针事件限定在指定子树内分发（浮层路由用）。
+//
+// 与 Pointer 的差别：HitTest 以 root（浮层内容根）为起点——事件只能命中
+// 该子树内的节点，模态遮罩后面的内容树天然不可达。down/up 两次调用传同一
+// 个 root，捕获路径（caps）内的节点都在浮层子树内，语义自洽。
+// 调用方（容器）必须保证 root 是浮层 content：这些节点的 handler 由
+// ctx.Input.Set 登记，与全局表共用。
+func (d *Dispatcher) PointerIn(root *scene.Node, ev *PointerEvent) bool {
+	if root == nil || ev == nil {
+		return false
+	}
+	d.mu.Lock()
+	saved := d.root
+	d.root = root
+	d.mu.Unlock()
+	defer func() {
+		d.mu.Lock()
+		d.root = saved
+		d.mu.Unlock()
+	}()
+	return d.Pointer(ev)
+}
+
 // Pointer 分发一个指针事件，返回是否被处理。
 func (d *Dispatcher) Pointer(ev *PointerEvent) bool {
 	if ev == nil {

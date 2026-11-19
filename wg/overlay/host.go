@@ -463,6 +463,22 @@ func (h *Host) HitEntry(p geom.Point) Handle {
 	return 0
 }
 
+// HitContent 返回命中点所在浮层的**内容根节点**（事件只分发给该子树，
+// 不透传下层内容树），无命中返回 nil。
+//
+// 容器据此把 PointerEvent 路由进浮层：命中浮层 ≠ 吞掉事件——浮层内的
+// 可点项（autocomplete 建议、select 选项等）必须收到点击。
+func (h *Host) HitContent(p geom.Point) *scene.Node {
+	es := h.Entries()
+	for i := len(es) - 1; i >= 0; i-- {
+		e := es[i]
+		if e.placed.Rect.Contains(p) {
+			return e.content
+		}
+	}
+	return nil
+}
+
 // HandlePointer 处理指针事件，返回是否应继续发给下层。
 //
 // 语义：

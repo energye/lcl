@@ -752,9 +752,10 @@ func (c *Container) PushEvent(ev input.Event) bool {
 
 // HandlePointer 处理指针事件，返回是否被消费。
 //
-// 顺序固定：**浮层 → 内容树**。浮层命中就透传不下去（浮层是最上面的一层纸）；
-// 浮层未命中也不代表事件白给——OutsideClick 会在这里把它关掉，那次点击
-// 同样不该落到下面的按钮上。
+// 顺序固定：**浮层 → 内容树**。命中浮层时事件分发给**浮层内容子树**
+// （浮层根挂在 scene 内，HitTest 以浮层 content 为根可达——吞掉分发会让
+// autocomplete 建议、select 选项等浮层内可点项永远收不到点击，--audit 实测
+// "点建议无回填"）；未命中浮层才走内容树，且 OutsideClick 在此时关闭浮层。
 func (c *Container) HandlePointer(ev *input.PointerEvent) bool {
 	if ev == nil {
 		return false
@@ -766,8 +767,13 @@ func (c *Container) HandlePointer(ev *input.PointerEvent) bool {
 	if !ready {
 		return false
 	}
-	if ov != nil && !ov.HandlePointer(ev, ev.PosRoot) {
-		return true
+	if ov != nil {
+		if content := ov.HitContent(ev.PosRoot); content != nil {
+			// 命中浮层：事件只发给浮层内容子树（不透传下层内容树——
+			// 浮层是"最上面的一层纸"；模态遮罩无 content 命中，自然被挡）。
+			return d.PointerIn(content, ev)
+		}
+		ov.HandlePointer(ev, ev.PosRoot) // 未命中：OutsideClick 关闭判定
 	}
 	if d == nil {
 		return false
