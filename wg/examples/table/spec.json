@@ -12,6 +12,28 @@
       "name": "四列混排",
       "cases": [
         {
+          "name": "行悬停出现浅色底反馈",
+          "target": {
+            "label": "table-row",
+            "index": 2
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorDelta",
+              "tolPeak": 3,
+              "minRatio": 0.03
+            }
+          ]
+        },
+        {
           "name": "行点击选中背景（token Selection）",
           "target": {
             "label": "table-row",

@@ -69,6 +69,8 @@ type Table struct {
 	// ShowScrollbar：nil = 内容溢出自动显示；true 始终；false 隐藏（仍可滚轮）。
 	ShowScrollbar *bool
 
+	hoverRow int // 行悬停（antd 行 hover 浅色反馈）；-1 = 无
+
 	offset    float32
 	sortCache []int
 	sortDirty bool
@@ -90,7 +92,7 @@ const DefaultTableHeight float32 = 240
 func NewTable(cols []TableColumn, rows [][]any) *Table {
 	return &Table{
 		Columns: cols, Rows: rows, Width: 640, RowHeight: 30, HeaderH: 32,
-		Overscan: 2, SortColumn: -1, Selected: -1, sortDirty: true,
+		Overscan: 2, SortColumn: -1, Selected: -1, hoverRow: -1, sortDirty: true,
 	}
 }
 
@@ -368,15 +370,18 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 	t.builtFirst, t.builtLast = first, last
 	t.reqFrame = ctx.RequestFrame
 	rowLabel := t.RowLabel
-		if rowLabel == "" {
-			rowLabel = "table-row"
-		}
-		for vi := first; vi < last; vi++ {
+	if rowLabel == "" {
+		rowLabel = "table-row"
+	}
+	for vi := first; vi < last; vi++ {
 		dataRow := idx[vi]
 		row := scene.Flex(scene.Horizontal, 0).SetWidth(t.Width).SetHeight(t.RowHeight)
 		bg := geom.Color{}
 		if dataRow == t.Selected {
 			bg = th.Color.Selection
+		} else if dataRow == t.hoverRow {
+			// antd 行悬停：浅色底（colorFillTertiary 系 FillHover）。
+			bg = th.Color.FillHover
 		} else if vi%2 == 1 {
 			bg = th.Color.SurfaceSunken
 		}
@@ -398,8 +403,22 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 						t.OnSelect(r)
 					}
 				}}
+				h := g.Handler()
+				// 行悬停：Enter/Leave 维护 hoverRow（优先级低于选中/斑马）。
+				h.Enter = func(*input.PointerEvent) {
+					if t.hoverRow != r {
+						t.hoverRow = r
+						t.MarkDirty()
+					}
+				}
+				h.Leave = func(*input.PointerEvent) {
+					if t.hoverRow == r {
+						t.hoverRow = -1
+						t.MarkDirty()
+					}
+				}
 				t.rowTaps = append(t.rowTaps, g)
-				ctx.Input.Set(cell, g.Handler())
+				ctx.Input.Set(cell, h)
 			}
 			row.Add(cell)
 		}
