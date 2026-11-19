@@ -475,6 +475,15 @@ func (h *Host) HitEntry(p geom.Point) Handle {
 	return 0
 }
 
+// ViewportRect 返回当前可用区域（根空间）；未配置视口时返回零矩形。
+// 浮层组件（Drawer 等通栏形态）据此定自己的通栏尺寸。
+func (h *Host) ViewportRect() geom.Rect {
+	if h.opts.Viewport == nil {
+		return geom.Rect{}
+	}
+	return h.opts.Viewport()
+}
+
 // HitContent 返回命中点所在浮层的**内容根节点**（事件只分发给该子树，
 // 不透传下层内容树），无命中返回 nil。
 //

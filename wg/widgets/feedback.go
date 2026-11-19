@@ -200,18 +200,30 @@ func (d *Drawer) Show(ctx *ui.BuildContext) {
 	}
 	title, content := d.Title, d.Content
 	onClose := d.OnClose
+	// 通栏尺寸（antd Drawer 全高/全宽）：左右抽屉高=视口高，上下抽屉宽=
+	// 视口宽。ViewportRect 未就绪（零矩形）时退回默认 400。
+	vp := d.fb.host.ViewportRect()
+	vpH, vpW := float32(400), float32(400)
+	if !vp.IsEmpty() {
+		vpH, vpW = vp.H(), vp.W()
+	}
+	size := geom.Size{W: w, H: vpH}
+	if d.Edge == DrawerTop || d.Edge == DrawerBottom {
+		size = geom.Size{W: vpW, H: 400}
+	}
 	d.handle = ctx.Overlay.Show(overlay.Entry{
 		Band:      theme.BandModal,
 		Anchor:    overlay.Anchor{Kind: overlay.AnchorNone},
 		Placement: placement,
-		Size:      geom.Size{W: w, H: 400},
+		Size:      size,
 		Modal:     true,
 		TrapFocus: true,
 		Dismiss:   overlay.DismissEsc | overlay.DismissOutsideClick,
 		Tag:       "drawer",
 		OnClose:   func() { d.handle = 0 },
 		Build: func() *scene.Node {
-			col := scene.Flex(scene.Vertical, th.Space.MD).SetWidth(w).SetHeight(400)
+			colH := size.H
+			col := scene.Flex(scene.Vertical, th.Space.MD).SetWidth(size.W).SetHeight(colH)
 			col.SetBox(scene.BoxSpec{
 				Fill:   scene.Solid(th.Color.Surface),
 				Border: scene.Stroke(th.Color.Border, 1),
@@ -230,7 +242,7 @@ func (d *Drawer) Show(ctx *ui.BuildContext) {
 					onClose()
 				}
 			})
-			closeBtn.SetStackPosition(geom.Pt(w-90, 8)).SetPositionKeepSize(true)
+			closeBtn.SetStackPosition(geom.Pt(size.W-90, 8)).SetPositionKeepSize(true)
 			col.Add(closeBtn)
 			return col
 		},
