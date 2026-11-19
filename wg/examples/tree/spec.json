@@ -3,7 +3,8 @@
   "structure": {
     "apiRows": 8,
     "sections": [
-      "目录树"
+      "目录树",
+      "checkable 复选"
     ]
   },
   "sections": [
@@ -91,6 +92,62 @@
                 "label": "tree-node",
                 "text": "render"
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "checkable 复选",
+      "cases": [
+        {
+          "name": "初始 doc 节点复选框为勾选（主色底）",
+          "target": {
+            "label": "tree-check",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.25,
+                0.25,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "点击复选框取消勾选（回灰边白底）",
+          "target": {
+            "label": "tree-check",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.25,
+                0.25,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.5,
+              "tol": 14
             }
           ]
         }

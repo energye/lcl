@@ -7,15 +7,34 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
-var tree = widgets.NewTree([]widgets.TreeNode{
-	{Key: "src", Label: "src", Children: []widgets.TreeNode{
-		{Key: "render", Label: "render", Children: []widgets.TreeNode{
-			{Key: "canvas", Label: "canvas.go"},
+var (
+	tree = widgets.NewTree([]widgets.TreeNode{
+		{Key: "src", Label: "src", Children: []widgets.TreeNode{
+			{Key: "render", Label: "render", Children: []widgets.TreeNode{
+				{Key: "canvas", Label: "canvas.go"},
+			}},
+			{Key: "scene", Label: "scene"},
 		}},
-		{Key: "scene", Label: "scene"},
-	}},
-	{Key: "widgets", Label: "widgets"},
-})
+		{Key: "widgets", Label: "widgets"},
+	})
+
+	treeCheck = widgets.NewTree([]widgets.TreeNode{
+		{Key: "doc", Label: "文档", Children: []widgets.TreeNode{
+			{Key: "doc-a", Label: "文档 A"},
+			{Key: "doc-b", Label: "文档 B"},
+		}},
+		{Key: "media", Label: "媒体", Children: []widgets.TreeNode{
+			{Key: "media-img", Label: "图片"},
+		}},
+		{Key: "misc", Label: "其他"},
+	})
+)
+
+func init() {
+	treeCheck.Checkable = true
+	treeCheck.Checked["doc"] = true
+	treeCheck.Checked["doc-a"] = true
+}
 
 func main() {
 	launcher.Main(doc.Meta{
@@ -23,11 +42,15 @@ func main() {
 		What: []string{
 			"层级数据展示：点击箭头展开/收起，点击标签选中",
 			"Expanded 状态按 Key 记录；缩进固定 18px、行高 28px",
-			"计划（M9）：checkable 复选、节点图标、异步加载",
+			"Checkable 复选模式（每行复选框独立勾选，checkStrictly 语义）",
+			"计划（M9）：级联勾选/半选、节点图标、异步加载",
 		},
 		Demos: []doc.Demo{
 			{Title: "目录树", Note: "展开 src → render，点选 canvas.go", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tree
+			}},
+			{Title: "checkable 复选", Note: "Checkable=true：每行复选框独立勾选（checkStrictly）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return treeCheck
 			}},
 		},
 		API: []doc.APIRow{
@@ -39,6 +62,8 @@ func main() {
 			{Name: "OnSelect", Type: "func(key string)", Desc: "选中回调"},
 			{Name: "OnToggle", Type: "func(key string)", Desc: "展开/收起回调"},
 			{Name: "Toggle", Type: "func(key string)", Desc: "程序化切换展开态"},
+			{Name: "Checkable/Checked", Type: "bool / map[string]bool", Desc: "复选模式与勾选集合"},
+			{Name: "OnCheck", Type: "func(checkedKeys []string)", Desc: "勾选变化回调"},
 		},
 	})
 }

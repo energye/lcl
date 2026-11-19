@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/energye/lcl/wg/geom"
+	"github.com/energye/lcl/wg/render"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
 	"github.com/energye/lcl/wg/ui"
@@ -30,6 +31,14 @@ type Tree struct {
 	OnSelect func(key string)
 	OnToggle func(key string, expanded bool)
 
+	// Checkable 复选模式（antd checkable）：每行渲染复选框，点击独立
+	// 勾选/取消（checkStrictly 语义——父子无级联），Checked 集合变化时
+	// 触发 OnCheck。
+	Checkable bool
+	// Checked 是勾选节点的 Key 集合（Checkable 模式下读写）。
+	Checked map[string]bool
+	OnCheck func(checkedKeys []string)
+
 	taps []*ui.GestureDetector
 }
 
@@ -37,7 +46,8 @@ type Tree struct {
 func NewTree(nodes []TreeNode) *Tree {
 	return &Tree{
 		Nodes: nodes, Expanded: make(map[string]bool),
-		Indent: 18, RowH: 28, Width: 240,
+		Checked: make(map[string]bool),
+		Indent:  18, RowH: 28, Width: 240,
 	}
 }
 
@@ -82,6 +92,46 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 			pt := scene.Text(scene.TextSpec{Src: prefix, Layout: pl, Color: th.Color.TextMuted})
 			pt.SetMargin(geom.InLTRB(float32(depth)*t.Indent+2, (t.RowH-pl.Size.H)/2, 0, 0))
 			row.Add(pt)
+
+			// 复选模式：缩进/箭头后渲染复选框（14×14，勾选主色底白勾，
+			// 未选灰边白底），点击独立勾选（checkStrictly 语义）。
+			if t.Checkable && ctx.Input != nil {
+				ck := t.Checked[n.Key]
+				cb := scene.Box(scene.BoxSpec{
+					Fill:   scene.Solid(map[bool]geom.Color{true: th.Color.Primary, false: th.Color.Surface}[ck]),
+					Border: scene.Stroke(th.Color.Border, 1), Radius: 3,
+				}).SetSize2(14, 14)
+				if ck {
+					cp := render.NewPath()
+					cp.MoveTo(3, 7).LineTo(6, 10.5).LineTo(11, 3.5)
+					cb.Add(scene.CustomPaintNode(func(cv render.Canvas, sz geom.Size) {
+						cv.StrokePath(cp, render.Stroke(th.Color.OnPrimary, 2).WithCap(render.CapRound).WithJoin(render.JoinRound))
+					}).SetSize2(14, 14))
+				}
+				cb.SetPositionKeepSize(true)
+				cb.SetStackPosition(geom.Pt(float32(depth)*t.Indent+2+pl.Size.W+4, (t.RowH-14)/2))
+				cb.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "tree-check", Cursor: scene.CursorPointer})
+				ckey := n.Key
+				cg := &ui.GestureDetector{OnTap: func(geom.Point) {
+					if t.Checked == nil {
+						t.Checked = make(map[string]bool)
+					}
+					t.Checked[ckey] = !t.Checked[ckey]
+					t.MarkDirty()
+					if t.OnCheck != nil {
+						keys := make([]string, 0, len(t.Checked))
+						for k, v := range t.Checked {
+							if v {
+								keys = append(keys, k)
+							}
+						}
+						t.OnCheck(keys)
+					}
+				}}
+				t.taps = append(t.taps, cg)
+				ctx.Input.Set(cb, cg.Handler())
+				row.Add(cb)
+			}
 
 			ll := text.LayoutText(n.Label, text.DefaultFont(th.Font.SizeSM), text.Options{})
 			fg := th.Color.Text
