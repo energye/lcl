@@ -281,13 +281,14 @@ func (n *Notification) Show(ctx *ui.BuildContext) {
 		Band:      theme.BandToast,
 		Anchor:    overlay.Anchor{Kind: overlay.AnchorNone},
 		Placement: overlay.PlacementTopEnd,
-		Size:      geom.Size{W: 280, H: 72},
+		// 高度 0 = 按内容自适应（正文长不被截断，[引擎] 浮层高度自适应）。
+		Size:      geom.Size{W: 280},
 		Dismiss:   overlay.DismissTimeout | overlay.DismissOutsideClick,
 		Duration:  dur,
 		Tag:       "notification",
 		OnClose:   func() { n.handle = 0 },
 		Build: func() *scene.Node {
-			col := scene.Flex(scene.Vertical, 4).SetWidth(280).SetHeight(72)
+			col := scene.Flex(scene.Vertical, 4).SetWidth(280)
 			col.SetBox(scene.BoxSpec{
 				Fill:   scene.Solid(th.Color.Surface),
 				Border: scene.Stroke(th.Color.Border, 1), Radius: th.Radius.Base,

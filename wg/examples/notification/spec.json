@@ -28,6 +28,39 @@
               "band": "toast"
             }
           ]
+        },
+        {
+          "name": "常驻通知点内容树处关闭（OutsideClick）",
+          "target": {
+            "label": "button",
+            "text": "弹出通知"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "label",
+                  "text": "常驻通知（需手动关）"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0,
+              "band": "toast"
+            }
+          ]
         }
       ]
     }
