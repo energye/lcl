@@ -426,6 +426,10 @@ type Pagination struct {
 	Page     int
 	Total    int // 总页数
 	OnChange func(int)
+
+	// buttons 跨重建持有：页码按钮的 hover 态与手势实例必须稳定——
+	// Build 内新建实例会让 hover 高亮随重建丢失（--audit 实测）。
+	buttons []*pageButton
 }
 
 // NewPagination 创建分页器。
@@ -438,11 +442,21 @@ func NewPagination(page, total int) *Pagination {
 
 // Build 实现 ui.Widget。
 func (p *Pagination) Build(ctx *ui.BuildContext) *scene.Node {
+	ctx.BindState(p)
 	th := ctx.ThemeOr()
+	pages := p.visiblePages()
+	// 实例池与可见页对齐：页码窗口滑动时增删实例（保留旧实例的 hover 态）。
+	if len(p.buttons) != len(pages) {
+		p.buttons = make([]*pageButton, len(pages))
+		for i := range p.buttons {
+			p.buttons[i] = &pageButton{parent: p}
+		}
+	}
 	row := scene.Flex(scene.Horizontal, th.Space.XS)
-	for _, page := range p.visiblePages() {
-		row.Add((&pageButton{page: page, current: page == p.Page, parent: p,
-			label: fmt.Sprintf("%d", page)}).Build(ctx))
+	for i, page := range pages {
+		b := p.buttons[i]
+		b.page, b.current, b.label = page, page == p.Page, fmt.Sprintf("%d", page)
+		row.Add(b.Build(ctx))
 	}
 	p.node = row
 	return row
@@ -483,8 +497,11 @@ func (b *pageButton) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	fill := geom.Color{}
 	fg := th.Color.Text
+	// antd：未选页 hover 显示浅灰底（colorFillTertiary 系）；当前页主色实底+白字。
 	if b.current {
 		fill, fg = th.Color.Primary, th.Color.OnPrimary
+	} else if b.hover {
+		fill = th.Color.FillHover
 	}
 	layout := text.LayoutText(b.label, text.DefaultFont(th.Font.SizeSM), text.Options{})
 	w := layout.Size.W + th.Space.MD

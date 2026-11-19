@@ -11,10 +11,78 @@
       "name": "8 页导航",
       "cases": [
         {
+          "name": "当前页为 colorPrimary 实底",
+          "target": {
+            "label": "page",
+            "text": "3"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.5,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "当前页文字为白（OnPrimary）",
+          "target": {
+            "label": "page",
+            "text": "3"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.35,
+                0.35,
+                0.3,
+                0.3
+              ],
+              "expect": {
+                "token": "OnPrimary"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "未选页 hover 出现浅灰底反馈",
+          "target": {
+            "label": "page",
+            "text": "5"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorDelta",
+              "tolPeak": 3,
+              "minRatio": 0.03
+            }
+          ]
+        },
+        {
           "name": "点击页码切换",
           "target": {
             "label": "page",
-            "index": 0
+            "text": "5"
           },
           "then": [
             {
