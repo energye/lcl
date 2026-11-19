@@ -1,9 +1,11 @@
 {
   "id": "pagination",
   "structure": {
-    "apiRows": 4,
+    "apiRows": 10,
     "sections": [
-      "8 页导航"
+      "8 页导航",
+      "pageSize 切换",
+      "快速跳页"
     ]
   },
   "sections": [
@@ -88,6 +90,310 @@
             {
               "kind": "template",
               "template": "segment-select"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pageSize 切换",
+      "cases": [
+        {
+          "name": "总条数文字为 共 50 条",
+          "target": {
+            "label": "page-total"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "共 50 条"
+            }
+          ]
+        },
+        {
+          "name": "初始窗口 5 页（50 条/10）",
+          "target": {
+            "label": "page",
+            "text": "5"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "当前页 1 为 Primary 实底",
+          "target": {
+            "label": "page",
+            "text": "1"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.5,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "切换 50 条/页：显示值更新且仅 1 页",
+          "target": {
+            "label": "select"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "select"
+                }
+              }
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "select-option",
+                  "text": "50 条/页"
+                }
+              }
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "select"
+              },
+              "text": "50 条/页"
+            },
+            {
+              "kind": "text",
+              "target": {
+                "label": "page-total"
+              },
+              "text": "共 50 条"
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.5,
+              "tol": 14,
+              "target": {
+                "label": "page",
+                "text": "1"
+              }
+            }
+          ]
+        },
+        {
+          "name": "切回 10 条/页：窗口恢复 5 页",
+          "target": {
+            "label": "select"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "select"
+                }
+              }
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "select-option",
+                  "text": "10 条/页"
+                }
+              }
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "select"
+              },
+              "text": "10 条/页"
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "page",
+                "text": "5"
+              }
+            }
+          ]
+        },
+        {
+          "name": "切换后当前页 1 仍为 Primary 实底",
+          "target": {
+            "label": "page",
+            "text": "1"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.5,
+              "tol": 14
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "快速跳页",
+      "cases": [
+        {
+          "name": "跳至提示文字存在",
+          "target": {
+            "label": "page-jump-hint"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "跳至"
+            }
+          ]
+        },
+        {
+          "name": "跳页输入框存在",
+          "target": {
+            "label": "page-jumper"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "输入 15 回车跳到第 15 页（主色实底）",
+          "target": {
+            "label": "page-jumper"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "page-jumper"
+                }
+              }
+            },
+            {
+              "typeText": "15"
+            },
+            {
+              "key": "enter"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.5,
+              "tol": 14,
+              "target": {
+                "label": "page",
+                "text": "15"
+              }
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.35,
+                0.35,
+                0.3,
+                0.3
+              ],
+              "expect": {
+                "token": "OnPrimary"
+              },
+              "minRatio": 0.05,
+              "tol": 24,
+              "target": {
+                "label": "page",
+                "text": "15"
+              }
+            }
+          ]
+        },
+        {
+          "name": "输入 99 钳制到末页 20（主色实底）",
+          "target": {
+            "label": "page-jumper"
+          },
+          "when": [
+            {
+              "key": "backspace"
+            },
+            {
+              "key": "backspace"
+            },
+            {
+              "typeText": "99"
+            },
+            {
+              "key": "enter"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.5,
+              "tol": 14,
+              "target": {
+                "label": "page",
+                "text": "20"
+              }
             }
           ]
         }

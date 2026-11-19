@@ -800,8 +800,12 @@ func (r *specRunner) doAssert(caseName string, def *SpecTarget, as SpecAssertion
 		if as.Tol != nil {
 			tol = *as.Tol
 		}
+		at := target
+		if as.Target != nil {
+			at = as.Target // 断言级覆盖：case 锚保证可见性、采样打别的节点
+		}
 		img := grab(r.c)
-		rect := r.sampleRect(target, as.Frac)
+		rect := r.sampleRect(at, as.Frac)
 		ratio := colorRatioOf(img, rect, expect, tol)
 		r.add(caseName, "colorRatio", ratio >= minRatio,
 			fmt.Sprintf("%s %s 占比 %.3f ≥ %.3f", targetDesc(target), note, ratio, minRatio))

@@ -8,6 +8,8 @@ package widgets
 import (
 	"fmt"
 	"math"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/energye/lcl/wg/geom"
@@ -565,16 +567,34 @@ func (s *segmentItem) Build(ctx *ui.BuildContext) *scene.Node {
 // ── Pagination ─────────────────────────────────────────────────────
 
 // Pagination 是分页器。Page 从 1 开始。
+// Total 语义随 PageSize 变化：PageSize<=0 时 Total 即总页数（简单模式）；
+// PageSize>0 时按 antd 语义解释为总条目数，总页数=ceil(Total/PageSize)。
 type Pagination struct {
 	controlBase
-	Page     int
-	Total    int // 总页数
-	OnChange func(int)
+	Page  int
+	Total int
+	// PageSize 每页条数（antd pageSize）。>0 时 Total 是总条目数。
+	PageSize int
+	// ShowTotal 显示"共 X 条"文字（需 PageSize>0 才有意义）。
+	ShowTotal bool
+	// ShowSizeChanger 显示"X 条/页"切换器（需 PageSize>0）。
+	ShowSizeChanger bool
+	// ShowQuickJumper 显示"跳至 X 页"快速跳页输入框（回车提交，超范围钳制）。
+	ShowQuickJumper bool
+	OnChange        func(int)
+	// OnPageSize 每页条数变化回调（切换后 Page 已钳制到新总页数范围）。
+	OnPageSize func(int)
 
 	// buttons 跨重建持有：页码按钮的 hover 态与手势实例必须稳定——
 	// Build 内新建实例会让 hover 高亮随重建丢失（--audit 实测）。
 	buttons []*pageButton
+	// sizer/jumper 同理跨重建持有（内嵌子组件实例池）。
+	sizer  *Select
+	jumper *Input
 }
+
+// sizeChangerOptions 是每页条数三档（与 antd 常用档位对齐）。
+var sizeChangerOptions = []string{"10 条/页", "20 条/页", "50 条/页"}
 
 // NewPagination 创建分页器。
 func NewPagination(page, total int) *Pagination {
@@ -584,10 +604,87 @@ func NewPagination(page, total int) *Pagination {
 	return &Pagination{Page: page, Total: total}
 }
 
+// totalPages 返回总页数：PageSize>0 时按条目数换算，否则 Total 即页数。
+func (p *Pagination) totalPages() int {
+	if p.PageSize > 0 {
+		n := (p.Total + p.PageSize - 1) / p.PageSize
+		if n < 1 {
+			n = 1
+		}
+		return n
+	}
+	if p.Total < 1 {
+		return 1
+	}
+	return p.Total
+}
+
+// SetPage 跳页（钳制到 [1,总页数]），触发 OnChange。
+func (p *Pagination) SetPage(n int) {
+	if n < 1 {
+		n = 1
+	}
+	if max := p.totalPages(); n > max {
+		n = max
+	}
+	if p.Page == n {
+		return
+	}
+	p.Page = n
+	p.MarkDirty()
+	if p.OnChange != nil {
+		p.OnChange(n)
+	}
+}
+
+// setPageSize 切换每页条数并钳制当前页，触发 OnPageSize。
+func (p *Pagination) setPageSize(size int) {
+	if size < 1 || size == p.PageSize {
+		return
+	}
+	p.PageSize = size
+	if max := p.totalPages(); p.Page > max {
+		p.Page = max
+	}
+	p.MarkDirty()
+	if p.OnPageSize != nil {
+		p.OnPageSize(size)
+	}
+}
+
 // Build 实现 ui.Widget。
 func (p *Pagination) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(p)
 	th := ctx.ThemeOr()
+	row := p.buildPages(ctx, th)
+
+	// 附加件全关：保持单行页码（与旧版完全一致，索引锚不位移）。
+	if !p.ShowTotal && !p.ShowSizeChanger && !p.ShowQuickJumper {
+		p.node = row
+		return row
+	}
+	wrap := scene.Flex(scene.Horizontal, th.Space.MD).SetAlign(scene.Center)
+	if p.ShowTotal && p.PageSize > 0 {
+		total := fmt.Sprintf("共 %d 条", p.Total)
+		l := text.LayoutText(total, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		t := scene.Text(scene.TextSpec{Src: total, Layout: l, Color: th.Color.Text})
+		// 被动定位锚：total 文字无 hit，文本断言无法定位（breadcrumb 先例）。
+		t.SetHit(scene.HitSpec{Label: "page-total"})
+		wrap.Add(t)
+	}
+	wrap.Add(row)
+	if p.ShowSizeChanger && p.PageSize > 0 {
+		wrap.Add(p.buildSizer(ctx, th))
+	}
+	if p.ShowQuickJumper {
+		wrap.Add(p.buildJumper(ctx, th))
+	}
+	p.node = wrap
+	return wrap
+}
+
+// buildPages 构建页码行（±2 窗口 + 实例池）。
+func (p *Pagination) buildPages(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
 	pages := p.visiblePages()
 	// 实例池与可见页对齐：页码窗口滑动时增删实例（保留旧实例的 hover 态）。
 	if len(p.buttons) != len(pages) {
@@ -602,12 +699,58 @@ func (p *Pagination) Build(ctx *ui.BuildContext) *scene.Node {
 		b.page, b.current, b.label = page, page == p.Page, fmt.Sprintf("%d", page)
 		row.Add(b.Build(ctx))
 	}
-	p.node = row
 	return row
 }
 
+// buildSizer 构建每页条数切换器（Select 内嵌实例，跨重建持有）。
+func (p *Pagination) buildSizer(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
+	if p.sizer == nil {
+		p.sizer = &Select{Width: 88, MaxHeight: 240, Placeholder: ""}
+		p.sizer.Options = append([]string{}, sizeChangerOptions...)
+	}
+	// Selected 与 PageSize 同步（外部直改 PageSize 也要反映，不触发回调）。
+	sel := -1
+	for i, size := range []int{10, 20, 50} {
+		if size == p.PageSize {
+			sel = i
+			break
+		}
+	}
+	p.sizer.Selected = sel
+	p.sizer.OnChange = func(i int) {
+		if i < 0 || i >= len(sizeChangerOptions) {
+			return
+		}
+		p.setPageSize([]int{10, 20, 50}[i])
+	}
+	return p.sizer.Build(ctx)
+}
+
+// buildJumper 构建快速跳页："跳至 [input] 页"，回车提交（超范围钳制）。
+func (p *Pagination) buildJumper(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
+	inner := scene.Flex(scene.Horizontal, th.Space.XS).SetAlign(scene.Center)
+	jump := "跳至"
+	l := text.LayoutText(jump, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	hint := scene.Text(scene.TextSpec{Src: jump, Layout: l, Color: th.Color.Text})
+	hint.SetHit(scene.HitSpec{Label: "page-jump-hint"}) // 被动定位锚
+	inner.Add(hint)
+	if p.jumper == nil {
+		p.jumper = &Input{Placeholder: "", Width: 48, Height: 26, HitLabel: "page-jumper"}
+	}
+	p.jumper.OnSubmit = func(v string) {
+		if n, err := strconv.Atoi(strings.TrimSpace(v)); err == nil {
+			p.SetPage(n)
+		}
+	}
+	inner.Add(p.jumper.Build(ctx))
+	to := "页"
+	l2 := text.LayoutText(to, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	inner.Add(scene.Text(scene.TextSpec{Src: to, Layout: l2, Color: th.Color.Text}))
+	return inner
+}
+
 func (p *Pagination) visiblePages() []int {
-	total := p.Total
+	total := p.totalPages()
 	if total < 1 {
 		return []int{1}
 	}
@@ -659,14 +802,7 @@ func (b *pageButton) Build(ctx *ui.BuildContext) *scene.Node {
 	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "page", Cursor: scene.CursorPointer})
 	parent, page := b.parent, b.page
 	hnd := b.tapHandler(ctx, false, func() {
-		if parent.Page == page {
-			return
-		}
-		parent.Page = page
-		parent.MarkDirty()
-		if parent.OnChange != nil {
-			parent.OnChange(page)
-		}
+		parent.SetPage(page)
 	})
 	b.attach(ctx, n, hnd, false)
 	return n

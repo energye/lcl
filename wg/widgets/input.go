@@ -67,7 +67,9 @@ type Input struct {
 	Count       bool      // 右下角显示字数
 	Width       float32
 	Height      float32
-	// MaxLines 只对多行生效。
+	// HitLabel 自定义命中标签（空 = "input"）。嵌入复合组件（如分页跳页框）
+	// 时设成非交互标签，避免被自动化审计当独立输入框枚举。
+	HitLabel  string
 	MaxLines  int
 	OnChanged func(string)
 	OnSubmit  func(string)
@@ -335,7 +337,11 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		n.Add(clear)
 	}
-	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "input", Cursor: scene.CursorText, Disabled: w.Disabled})
+	hitLabel := w.HitLabel
+	if hitLabel == "" {
+		hitLabel = "input"
+	}
+	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: hitLabel, Cursor: scene.CursorText, Disabled: w.Disabled})
 
 	// 光标（自绘）：聚焦时显示，位置由选区末端决定。
 	caretLocal := geom.RectXYWH(textX+caretX-w.scrollX, (height-lineH)/2, 2, lineH)
