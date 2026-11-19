@@ -627,6 +627,11 @@ func (b *Breadcrumb) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		layout := text.LayoutText(label, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		item := scene.Text(scene.TextSpec{Src: label, Layout: layout, Color: color})
+		if last {
+			// 末项（当前页）被动定位锚：末项不可点、原本无 hit spec，
+			// 颜色断言永远无法采样——加锚只此一处，不碰可点项。
+			item.SetHit(scene.HitSpec{Label: "breadcrumb-item"})
+		}
 		if !last && b.OnClick != nil {
 			idx := i
 			g := &ui.GestureDetector{OnTap: func(geom.Point) { b.OnClick(idx) }}

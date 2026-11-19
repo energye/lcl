@@ -5,5 +5,84 @@
     "sections": [
       "三级路径"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "三级路径",
+      "cases": [
+        {
+          "name": "末项为当前页深色文字",
+          "target": {
+            "label": "breadcrumb-item",
+            "text": "渲染引擎"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.2,
+                0.8,
+                0.6
+              ],
+              "expect": {
+                "token": "Text"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "可点项为 TextMuted 次级色",
+          "target": {
+            "label": "breadcrumb",
+            "text": "资源管理"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.2,
+                0.8,
+                0.6
+              ],
+              "expect": {
+                "token": "TextMuted"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "点击非末项回调回显",
+          "target": {
+            "label": "button",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "breadcrumb",
+                  "text": "首页"
+                }
+              }
+            },
+            {
+              "wait": 250
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "点击了：首页"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

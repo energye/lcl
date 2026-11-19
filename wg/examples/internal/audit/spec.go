@@ -510,7 +510,7 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 		for r.c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
 			time.Sleep(20 * time.Millisecond)
 		}
-		time.Sleep(80 * time.Millisecond) // 帧呈现到栅格化完成的余量
+		time.Sleep(250 * time.Millisecond) // 帧呈现到栅格化完成的余量（高负载下 80ms 偶发不够）
 	case a.TypeText != "":
 		for _, ch := range a.TypeText {
 			injectChar(r.c, ch)
