@@ -32,6 +32,42 @@
               "text": "暂无数据"
             }
           ]
+        },
+        {
+          "name": "插图圆直径 40 且居中",
+          "target": {
+            "label": "empty",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthAtLeast": 320
+            }
+          ]
+        },
+        {
+          "name": "子文案为 TextFaint（次级灰）",
+          "target": {
+            "label": "empty",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.8,
+                0.4,
+                0.15
+              ],
+              "expect": {
+                "token": "TextFaint"
+              },
+              "minRatio": 0.02,
+              "tol": 24
+            }
+          ]
         }
       ]
     }
