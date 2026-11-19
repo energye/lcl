@@ -33,6 +33,27 @@
           ]
         },
         {
+          "name": "提示弹层为深色底（colorBgSpotlight）",
+          "target": {
+            "label": "button",
+            "text": "把鼠标停在这里"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 900
+            }
+          ],
+          "then": [
+            {
+              "kind": "template",
+              "template": "tooltip-dark"
+            }
+          ]
+        },
+        {
           "name": "移出后提示消失",
           "target": {
             "label": "button",

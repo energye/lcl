@@ -178,11 +178,15 @@ func (t *Tooltip) show(ctx *ui.BuildContext, anchor *scene.Node) {
 	th := ctx.ThemeOr()
 	text := t.Text
 	placement := t.Placement
+	m := ui.MetricsFor(th, ui.SizeSmall)
+	layout := textLayout(text, m.Font)
+	w := layout.Size.W + 16
 	t.handle = ctx.Overlay.Show(overlay.Entry{
 		Band:      theme.BandTooltip,
 		Anchor:    overlay.NodeAnchor(anchor),
 		Placement: placement,
-		Size:      geom.Size{W: float32(len([]rune(text)))*13 + 16, H: 30},
+		// 宽度按文字排版实测（rune×13 估算对宽字符/中西混排会溢出）。
+		Size:      geom.Size{W: w, H: 30},
 		// 不用 OutsideClick：那会让"先悬停再点按钮"的第二次点击被
 		// 关闭浮层吃掉（浮层吞掉的那次点击不下传，按钮看起来失灵）。
 		// Tooltip 只由 Enter/Leave 管，永远不参与点击路由。
@@ -190,14 +194,13 @@ func (t *Tooltip) show(ctx *ui.BuildContext, anchor *scene.Node) {
 		Tag:     "tooltip",
 		OnClose: func() { t.handle = 0 },
 		Build: func() *scene.Node {
-			m := ui.MetricsFor(th, ui.SizeSmall)
-			layout := textLayout(text, m.Font)
+			// antd Tooltip：深色底（colorBgSpotlight #1F1F1F）+ 白字，
+			// 无边框（白底黑字是旧形态，与官方对照不符）。
 			n := scene.Box(scene.BoxSpec{
-				Fill:   scene.Solid(th.Color.Surface),
-				Border: scene.Stroke(th.Color.Border, 1),
+				Fill:   scene.Solid(th.Color.Text),
 				Radius: th.Radius.Base,
-			}).SetSize2(layout.Size.W+16, 30)
-			label := scene.Text(scene.TextSpec{Src: text, Layout: layout, Color: th.Color.Text})
+			}).SetSize2(w, 30)
+			label := scene.Text(scene.TextSpec{Src: text, Layout: layout, Color: th.Color.OnDark})
 			label.SetMargin(geom.InLTRB(8, (30-layout.Size.H)/2, 0, 0))
 			n.Add(label)
 			n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "tooltip"})
