@@ -292,10 +292,17 @@ func (s Steps) Build(ctx *ui.BuildContext) *scene.Node {
 		step.SetCrossAlign(scene.CrossCenter)
 		fill := th.Color.SurfaceActive
 		fg := th.Color.TextMuted
+		// antd wait 步的圆点是**空心描边圆**（透明底 + 灰边），完成/进行步
+		// 是主色实心圆。此前 wait 用实心灰底，与 antd 官方对照不符。
+		wait := i > s.Current
 		if i <= s.Current {
 			fill, fg = th.Color.Primary, th.Color.OnPrimary
 		}
 		circle := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: 10}).SetSize2(20, 20)
+		if wait {
+			circle = scene.Box(scene.BoxSpec{Border: scene.Stroke(th.Color.BorderStrong, 2), Radius: 10}).SetSize2(20, 20)
+		}
+		circle.SetHit(scene.HitSpec{Label: "steps-circle"}) // 被动锚：步骤圆点断言
 		cap := fmt.Sprintf("%d", i+1)
 		if i < s.Current {
 			cap = "✓"

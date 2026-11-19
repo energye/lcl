@@ -20,6 +20,66 @@
               "kind": "exists"
             }
           ]
+        },
+        {
+          "name": "进行步圆点为主色实心",
+          "target": {
+            "label": "steps-circle",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.5,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "待办步为空心描边圆（透明底+灰边）",
+          "target": {
+            "label": "steps-circle",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.0,
+                0.4,
+                0.12
+              ],
+              "expect": {
+                "token": "BorderStrong"
+              },
+              "minRatio": 0.3,
+              "tol": 24
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.35,
+                0.35,
+                0.3,
+                0.3
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.35,
+              "tol": 8
+            }
+          ]
         }
       ]
     }
