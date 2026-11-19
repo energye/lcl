@@ -16,11 +16,12 @@ func main() {
 			"未实现（M10 计划）：circle/dashboard 形态、trail 色自定义",
 		},
 		Demos: []doc.Demo{
-			{Title: "四档进度", Note: "0 / 25% / 60% / 100%（满进度自动转 success 绿）", Build: func(ctx *ui.BuildContext) ui.Widget {
+			{Title: "四档进度", Note: "0 / 25% / 60% / 100%（满进度自动转 success 绿）；末行用默认尺寸（高 8）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				col := scene.Flex(scene.Vertical, 10).SetWidth(480)
 				for _, v := range []float32{0, 0.25, 0.6, 1} {
 					col.Add((&widgets.Progress{Value: v, Width: 400, Height: 10}).Build(ctx))
 				}
+				col.Add((&widgets.Progress{Value: 0.3}).Build(ctx))
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
 			}},
 			{Title: "status 与百分比", Note: "showInfo 显示右侧百分比；exception 红", Build: func(ctx *ui.BuildContext) ui.Widget {

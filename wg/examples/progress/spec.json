@@ -54,6 +54,45 @@
               "tol": 14
             }
           ]
+        },
+        {
+          "name": "默认轨道高度为 antd 线形 8px",
+          "target": {
+            "label": "progress",
+            "index": 4
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "heightBetween": [
+                8,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "name": "0% 档轨道无填充（灰轨）",
+          "target": {
+            "label": "progress",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.4,
+                0.6,
+                0.2
+              ],
+              "expect": {
+                "token": "SurfaceActive"
+              },
+              "minRatio": 0.7,
+              "tol": 14
+            }
+          ]
         }
       ]
     },
@@ -64,7 +103,7 @@
           "name": "exception 档填充为 Error 红",
           "target": {
             "label": "progress",
-            "index": 5
+            "index": 6
           },
           "then": [
             {
@@ -79,6 +118,29 @@
                 "token": "Danger"
               },
               "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "exception 档 showInfo 文字跟随填充色",
+          "target": {
+            "label": "progress-text",
+            "text": "40%"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.8,
+                0.8
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "minRatio": 0.04,
+              "tol": 24
             }
           ]
         }

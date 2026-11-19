@@ -41,10 +41,11 @@ func (p Progress) Build(ctx *ui.BuildContext) *scene.Node {
 		w = 160
 	}
 	if h <= 0 {
-		h = 6
+		h = 8 // antd Progress 线形 strokeWidth 默认 8（此前 6 偏细）
 	}
 	// trail 用 SurfaceActive（#F0F0F0，antd 线形进度条默认灰轨）——
-	// SurfaceSunken 与演示舞台同色，底轨会隐形。
+	// SurfaceSunken 与演示舞台同色，底轨会隐形。默认高 8 = antd Progress
+	// lineHeight（antd 默认轨道 8px，此前 6 偏细）。
 	track := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.SurfaceActive), Radius: h / 2}).SetSize2(w, h)
 	v := p.Value
 	if v < 0 {
@@ -74,7 +75,9 @@ func (p Progress) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	row := scene.Flex(scene.Horizontal, 8).SetCrossAlign(scene.CrossCenter)
 	row.Add(track)
-	row.Add((&Label{Text: pctText(v), Size: th.Font.SizeSM, Color: fillColor}).Build(ctx))
+	txt := (&Label{Text: pctText(v), Size: th.Font.SizeSM, Color: fillColor}).Build(ctx)
+	txt.SetHit(scene.HitSpec{Label: "progress-text"}) // 被动锚：文字色断言
+	row.Add(txt)
 	row.SetHit(scene.HitSpec{Label: "progress"})
 	return row
 }
