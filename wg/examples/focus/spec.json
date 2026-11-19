@@ -5,5 +5,42 @@
     "sections": [
       "三个输入框"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "三个输入框",
+      "cases": [
+        {
+          "name": "三个输入框存在",
+          "target": {
+            "label": "input",
+            "text": "第一个输入框"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "input",
+                "text": "第一个输入框"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "input",
+                "text": "第二个输入框"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "input",
+                "text": "第三个输入框"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

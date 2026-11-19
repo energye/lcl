@@ -6,5 +6,28 @@
       "请求下一帧",
       "耗时分布"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "帧调度演示",
+      "cases": [
+        {
+          "name": "帧信息与请求按钮存在",
+          "target": {
+            "label": "button",
+            "text": "帧信息"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "请求下一帧"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

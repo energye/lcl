@@ -5,5 +5,35 @@
     "sections": [
       "按键回显"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "按键回显",
+      "cases": [
+        {
+          "name": "键盘目标区与按钮存在",
+          "target": {
+            "label": "button",
+            "text": "按任意键"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "按任意键"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "键盘目标区域"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

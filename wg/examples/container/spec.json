@@ -6,5 +6,28 @@
       "Media 查询与清屏色",
       "独立 main 骨架"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "容器能力演示",
+      "cases": [
+        {
+          "name": "Toast 触发按钮存在",
+          "target": {
+            "label": "button",
+            "text": "触发 Toast"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "触发 Toast"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

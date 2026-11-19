@@ -5,5 +5,35 @@
     "sections": [
       "组合串替换选区"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "组合串替换选区",
+      "cases": [
+        {
+          "name": "输入框与模拟按钮存在",
+          "target": {
+            "label": "input",
+            "text": "点这里"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "input",
+                "text": "点这里"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "模拟：拼音"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

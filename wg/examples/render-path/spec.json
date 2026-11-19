@@ -5,5 +5,20 @@
     "sections": [
       "曲线与图形"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "曲线与图形",
+      "cases": [
+        {
+          "kind": "geometry",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "widthAtLeast": 300
+        }
+      ]
+    }
+  ]
 }

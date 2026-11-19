@@ -7,5 +7,49 @@
       "SizedBox 固定尺寸",
       "Padding 内边距"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "间距演示",
+      "cases": [
+        {
+          "name": "左/右标签与说明存在",
+          "target": {
+            "label": "label",
+            "text": "左"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "左"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "右 · 中间 120px 空隙"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "固定 260×60"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "被 padding 包裹"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -5,5 +5,20 @@
     "sections": [
       "录制 → 冻结 → 回放"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "录制 → 冻结 → 回放",
+      "cases": [
+        {
+          "kind": "geometry",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "widthAtLeast": 300
+        }
+      ]
+    }
+  ]
 }

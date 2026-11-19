@@ -5,5 +5,20 @@
     "sections": [
       "三档采样对照"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "三档采样对照",
+      "cases": [
+        {
+          "kind": "geometry",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "widthAtLeast": 200
+        }
+      ]
+    }
+  ]
 }

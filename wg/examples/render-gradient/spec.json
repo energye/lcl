@@ -5,5 +5,20 @@
     "sections": [
       "线性 + 径向 + 采样条"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "线性 + 径向 + 采样条",
+      "cases": [
+        {
+          "kind": "geometry",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "widthAtLeast": 300
+        }
+      ]
+    }
+  ]
 }

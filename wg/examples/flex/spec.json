@@ -9,5 +9,58 @@
       "约束与拉伸",
       "约束协商 API"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "布局演示",
+      "cases": [
+        {
+          "name": "子项 A/B/C 顺序存在",
+          "target": {
+            "label": "label",
+            "text": "A"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "A"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "B"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "C"
+              }
+            }
+          ]
+        },
+        {
+          "name": "对齐标题存在",
+          "target": {
+            "label": "label",
+            "text": "左对齐"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "左对齐"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

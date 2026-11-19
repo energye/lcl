@@ -6,5 +6,35 @@
       "Controller 进度条",
       "Implicit / Tween / 样式解析"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "动画演示",
+      "cases": [
+        {
+          "name": "播放按钮存在",
+          "target": {
+            "label": "button",
+            "text": "点击播放动画"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "点击播放动画"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "从头播放"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

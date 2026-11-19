@@ -5,5 +5,20 @@
     "sections": [
       "DIP 与像素对齐"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "DIP 与像素对齐",
+      "cases": [
+        {
+          "kind": "geometry",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "widthAtLeast": 200
+        }
+      ]
+    }
+  ]
 }

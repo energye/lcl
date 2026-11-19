@@ -3,8 +3,21 @@
   "structure": {
     "apiRows": 3,
     "sections": [
-      "Grid 3 列",
-      "Wrap 流式换行"
+      "Grid 3 列"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "Grid 3 列",
+      "cases": [
+        {
+          "kind": "exists",
+          "target": {
+            "label": "label",
+            "text": "1"
+          }
+        }
+      ]
+    }
+  ]
 }

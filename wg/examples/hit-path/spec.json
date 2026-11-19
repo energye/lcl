@@ -5,5 +5,44 @@
     "sections": [
       "矩形命中区域"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "矩形命中区域",
+      "cases": [
+        {
+          "name": "触发按钮存在",
+          "target": {
+            "label": "button",
+            "text": "点击矩形试试"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "点击矩形试试"
+              }
+            }
+          ]
+        },
+        {
+          "name": "命中区域标签存在",
+          "target": {
+            "label": "label",
+            "text": "命中区域"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "命中区域"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

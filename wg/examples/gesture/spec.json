@@ -5,5 +5,35 @@
     "sections": [
       "三种手势"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "三种手势",
+      "cases": [
+        {
+          "name": "手势按钮与说明存在",
+          "target": {
+            "label": "button",
+            "text": "等待手势"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "等待手势"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "单击 / 长按 / 拖动"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

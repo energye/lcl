@@ -5,5 +5,20 @@
     "sections": [
       "端帽、拐角与虚线"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "端帽、拐角与虚线",
+      "cases": [
+        {
+          "kind": "geometry",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "widthAtLeast": 300
+        }
+      ]
+    }
+  ]
 }
