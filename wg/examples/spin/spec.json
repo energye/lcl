@@ -71,7 +71,8 @@
           "then": [
             {
               "kind": "template",
-              "template": "spinner-spin"
+              "template": "spinner-spin",
+              "text": "no-still"
             }
           ]
         }

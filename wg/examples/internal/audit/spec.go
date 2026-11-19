@@ -935,7 +935,7 @@ func (r *specRunner) runTemplate(caseName string, def *SpecTarget, as SpecAssert
 	case "button-press":
 		r.tplButtonPress(caseName, *def)
 	case "spinner-spin":
-		r.tplSpinnerSpin(caseName, *def)
+		r.tplSpinnerSpin(caseName, *def, as)
 	default:
 		r.add(caseName, "template:"+as.Template, false, "未实现的模板")
 	}
@@ -1673,21 +1673,36 @@ func saveCropRGBA(img *image.RGBA, r geom.Rect, path string) {
 	savePNG(out, path)
 }
 
-func (r *specRunner) tplSpinnerSpin(caseName string, t SpecTarget) {
-	n, ok := r.locate(t)
-	if !ok {
-		r.add(caseName, "template:spinner-spin", false, "触发按钮不存在")
-		return
+// 参数由断言 text 字段携带："no-still" = 持续动画目标（Spin 组件等，
+// 无 loading 结束概念），跳过点击触发与静止对判定，只验证帧差非零。
+func (r *specRunner) tplSpinnerSpin(caseName string, t SpecTarget, as SpecAssertion) {
+	stillCheck := as.Text != "no-still"
+	var n *scene.Node
+	var ok bool
+	var rect geom.Rect
+	if stillCheck {
+		n, ok = r.locate(t)
+		if !ok {
+			r.add(caseName, "template:spinner-spin", false, "触发按钮不存在")
+			return
+		}
+		rect = n.BoundsInRoot()
+		p := clickPoint(rect, nil)
+		injectDown(r.c, p.X, p.Y)
+		time.Sleep(60 * time.Millisecond)
+		injectUp(r.c, p.X, p.Y)
+		// 立即移出指针：hover 清除是一次性跳变，若留在"静止对"采样前才做，
+		// 悬停样式恢复会整段计入静止帧差（实测 0.288，把判据淹了）。
+		injectLeave(r.c)
+		time.Sleep(300 * time.Millisecond)
+	} else {
+		n, ok = r.locate(t)
+		if !ok {
+			r.add(caseName, "template:spinner-spin", false, "目标不存在")
+			return
+		}
+		rect = n.BoundsInRoot()
 	}
-	rect := n.BoundsInRoot()
-	p := clickPoint(rect, nil)
-	injectDown(r.c, p.X, p.Y)
-	time.Sleep(60 * time.Millisecond)
-	injectUp(r.c, p.X, p.Y)
-	// 立即移出指针：hover 清除是一次性跳变，若留在"静止对"采样前才做，
-	// 悬停样式恢复会整段计入静止帧差（实测 0.288，把判据淹了）。
-	injectLeave(r.c)
-	time.Sleep(300 * time.Millisecond)
 
 	// 采样框稍大于图标槽（0.06..0.34 × 0.20..0.80）：弧线扫过整槽，
 	// 采样框只框弧线本体会把"扫出框"的变化漏掉。
@@ -1721,12 +1736,15 @@ func (r *specRunner) tplSpinnerSpin(caseName string, t SpecTarget) {
 		moving = movingAC
 	}
 
-	time.Sleep(1200 * time.Millisecond) // 等 demo 的 2s loading 结束并重建完
-	d2 := grab(r.c)
-	time.Sleep(500 * time.Millisecond)
-	e2 := grab(r.c)
-	still := meanAbsDiff(d2, e2, iconRect)
-	pass := moving >= 0.5 && moving > still*2+0.2 && f1 > f0
+	still := 0.0
+	if stillCheck {
+		time.Sleep(1200 * time.Millisecond) // 等 demo 的 2s loading 结束并重建完
+		d2 := grab(r.c)
+		time.Sleep(500 * time.Millisecond)
+		e2 := grab(r.c)
+		still = meanAbsDiff(d2, e2, iconRect)
+	}
+	pass := moving >= 0.5 && f1 > f0 && (!stillCheck || moving > still*2+0.2)
 	r.add(caseName, "template:spinner-spin", pass,
 		fmt.Sprintf("loading meanAbsDiff %.2f/%.2f/%.2f vs 静止 %.2f（帧 %d→%d，需 moving≥0.5 且 >2×静止+0.2）",
 			movingAB, movingBC, movingAC, still, f0, f1))
