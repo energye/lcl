@@ -46,5 +46,8 @@ func CaptureCtx(slot **ui.BuildContext, ctx *ui.BuildContext) { *slot = ctx }
 
 // CustomPaint 造一个固定尺寸的自绘节点（C17 允许的录制通道）。
 func CustomPaint(fn func(cv render.Canvas, sz geom.Size), w, h float32) *scene.Node {
-	return scene.CustomPaintNode(fn).SetSize2(w, h)
+	n := scene.CustomPaintNode(fn).SetSize2(w, h)
+	// 被动定位锚（HitDeferToChild 不影响交互）：演示窗的色占比断言用。
+	n.SetHit(scene.HitSpec{Label: "custom-canvas"})
+	return n
 }

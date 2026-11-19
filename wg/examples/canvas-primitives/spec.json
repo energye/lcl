@@ -5,5 +5,156 @@
     "sections": [
       "七种图元"
     ]
-  }
+  },
+  "sections": [
+    {
+      "name": "七种图元",
+      "cases": [
+        {
+          "name": "蓝色填充矩形存在",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.03,
+                0.05,
+                0.25,
+                0.25
+              ],
+              "expect": {
+                "hex": "#4078DC",
+                "note": "FillRect 蓝"
+              },
+              "minRatio": 0.3,
+              "tol": 20
+            }
+          ]
+        },
+        {
+          "name": "红色圆角矩形存在",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.37,
+                0.05,
+                0.25,
+                0.25
+              ],
+              "expect": {
+                "hex": "#DC645A",
+                "note": "FillRRect 红"
+              },
+              "minRatio": 0.25,
+              "tol": 20
+            }
+          ]
+        },
+        {
+          "name": "绿色椭圆存在",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.69,
+                0.05,
+                0.22,
+                0.25
+              ],
+              "expect": {
+                "hex": "#5ABE8C",
+                "note": "FillOval 绿"
+              },
+              "minRatio": 0.15,
+              "tol": 20
+            }
+          ]
+        },
+        {
+          "name": "橙色弧线存在",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.05,
+                0.5,
+                0.25,
+                0.4
+              ],
+              "expect": {
+                "hex": "#E6AA3C",
+                "note": "DrawArc 橙"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "紫色填充路径存在",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.44,
+                0.5,
+                0.22,
+                0.4
+              ],
+              "expect": {
+                "hex": "#9664DC",
+                "note": "FillPath 紫"
+              },
+              "minRatio": 0.1,
+              "tol": 20
+            }
+          ]
+        },
+        {
+          "name": "青色描边路径存在",
+          "target": {
+            "label": "custom-canvas",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.7,
+                0.5,
+                0.25,
+                0.4
+              ],
+              "expect": {
+                "hex": "#3CB4C8",
+                "note": "StrokePath 青"
+              },
+              "minRatio": 0.03,
+              "tol": 24
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
