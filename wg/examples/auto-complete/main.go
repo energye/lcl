@@ -7,10 +7,19 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
-var ac = widgets.NewAutoComplete([]string{
-	"软件光栅化", "GDI 混合", "无句柄画布", "DisplayList", "Layer 树",
-	"脏区合并", "GestureArena", "IME 组合", "ClearType", "预乘 BGRA",
-})
+// 展示实例包级持有：demo 闭包内新建会让输入/焦点状态随重建丢失。
+var (
+	ac = widgets.NewAutoComplete([]string{
+		"软件光栅化", "GDI 混合", "无句柄画布", "DisplayList", "Layer 树",
+		"脏区合并", "GestureArena", "IME 组合", "ClearType", "预乘 BGRA",
+	})
+	acDis = widgets.NewAutoComplete([]string{"软件光栅化", "GDI 混合"})
+)
+
+func init() {
+	acDis.Width = 240
+	acDis.Disabled = true
+}
 
 func main() {
 	launcher.Main(doc.Meta{
@@ -23,6 +32,9 @@ func main() {
 		Demos: []doc.Demo{
 			{Title: "渲染术语建议", Note: "输入「光」过滤出「软件光栅化」；点建议回填", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return ac
+			}},
+			{Title: "禁用态", Note: "Disabled 后不弹建议、不可聚焦", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return acDis
 			}},
 		},
 		API: []doc.APIRow{

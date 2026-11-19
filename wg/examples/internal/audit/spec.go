@@ -821,7 +821,7 @@ func (r *specRunner) doAssert(caseName string, def *SpecTarget, as SpecAssertion
 		}
 		r.add(caseName, "text", pass, fmt.Sprintf("%s %s", targetDesc(target), detail))
 	case "template":
-		r.runTemplate(caseName, def, as.Template)
+		r.runTemplate(caseName, def, as)
 	default:
 		r.add(caseName, "断言", false, "未知 kind："+as.Kind)
 	}
@@ -902,12 +902,12 @@ func (r *specRunner) assertGeometry(caseName string, target *SpecTarget, as Spec
 
 // ── 交互模板（§5）──────────────────────────────────────────────────
 
-func (r *specRunner) runTemplate(caseName string, def *SpecTarget, tpl string) {
+func (r *specRunner) runTemplate(caseName string, def *SpecTarget, as SpecAssertion) {
 	if def == nil {
-		r.add(caseName, "template:"+tpl, false, "模板缺少 target")
+		r.add(caseName, "template:"+as.Template, false, "模板缺少 target")
 		return
 	}
-	switch tpl {
+	switch as.Template {
 	case "toggle":
 		r.tplToggle(caseName, *def)
 	case "disabled-no-op":
@@ -916,6 +916,8 @@ func (r *specRunner) runTemplate(caseName string, def *SpecTarget, tpl string) {
 		r.tplInputFocus(caseName, *def)
 	case "input-type":
 		r.tplInputType(caseName, *def)
+	case "autocomplete-select":
+		r.tplAutocompleteSelect(caseName, *def, as)
 	case "table-row-select":
 		r.tplTableRowSelect(caseName, *def)
 	case "select-open-close":
@@ -935,7 +937,7 @@ func (r *specRunner) runTemplate(caseName string, def *SpecTarget, tpl string) {
 	case "spinner-spin":
 		r.tplSpinnerSpin(caseName, *def)
 	default:
-		r.add(caseName, "template:"+tpl, false, "未实现的模板")
+		r.add(caseName, "template:"+as.Template, false, "未实现的模板")
 	}
 }
 
@@ -992,9 +994,11 @@ func (r *specRunner) tplDisabledNoOp(caseName string, t SpecTarget) {
 	after := grab(r.c)
 	region := regionChangedThresh(before, after, rect, 3)
 	frame := frameChanged(before, after)
-	pass := region == 0 && frame < 0.0005
+	// 主判据=目标区域零变化；全帧阈值 0.002 容纳滚动条 thumb/页面级微噪
+	//（带滚动条的页面整帧 3px 步进采样会扫到非零差异，实测 0.0015）。
+	pass := region == 0 && frame < 0.002
 	r.add(caseName, "template:disabled-no-op", pass,
-		fmt.Sprintf("区域变化 %.3f==0 全帧 %.4f<0.0005", region, frame))
+		fmt.Sprintf("区域变化 %.3f==0 全帧 %.4f<0.002", region, frame))
 }
 
 // tplInputFocus：点击后焦点归属该输入框。
@@ -1083,6 +1087,64 @@ func (r *specRunner) tplSelectOpenClose(caseName string, t SpecTarget) {
 	afterReopen := open()
 	r.add(caseName, "template:select-open-close", afterReopen == base+1,
 		fmt.Sprintf("再次点击浮层 → %d（句柄复位）", afterReopen))
+	injectEsc(r.c)
+	time.Sleep(150 * time.Millisecond)
+}
+
+// tplAutocompleteSelect：聚焦输入过滤词 → 建议弹层出现 → 点第一条建议 →
+// 输入框回填完整建议文本（antd AutoComplete 核心交互链）。
+// 过滤词与期望回填取自断言的 text 字段（格式 "过滤词=期望回填"；
+// 未带 = 时过滤词=期望文本）——target.text 只作定位锚。
+func (r *specRunner) tplAutocompleteSelect(caseName string, t SpecTarget, as SpecAssertion) {
+	keyword, expect := as.Text, as.Text
+	if i := strings.Index(as.Text, "="); i > 0 {
+		keyword, expect = as.Text[:i], as.Text[i+1:]
+	}
+	if keyword == "" {
+		r.add(caseName, "template:autocomplete-select", false, "缺少过滤词（断言 text 字段，格式 过滤词=期望回填）")
+		return
+	}
+	n, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:autocomplete-select", false, "输入框不存在")
+		return
+	}
+	p := clickPoint(n.BoundsInRoot(), nil)
+	injectDown(r.c, p.X, p.Y)
+	injectUp(r.c, p.X, p.Y)
+	time.Sleep(200 * time.Millisecond)
+	for _, ch := range keyword {
+		injectChar(r.c, ch)
+		time.Sleep(20 * time.Millisecond)
+	}
+	time.Sleep(350 * time.Millisecond)
+	base := r.overlayCount("")
+	r.add(caseName, "template:autocomplete-select", base >= 1,
+		fmt.Sprintf("键入「%s」后建议弹层出现（浮层 %d）", keyword, base))
+	// 点弹层第一条建议（弹层锚定输入框下方，取输入框左缘 + 一行高的一半）。
+	// 回填验证不能用原锚（占位文字在键入后已消失），按 label 不带文本重找。
+	if base >= 1 {
+		b := n.BoundsInRoot()
+		item := geom.Pt(b.Min.X+30, b.Max.Y+15)
+		injectDown(r.c, item.X, item.Y)
+		injectUp(r.c, item.X, item.Y)
+		time.Sleep(350 * time.Millisecond)
+		n2, ok2 := r.locate(SpecTarget{Label: t.Label})
+		got := ""
+		if ok2 {
+			var sb strings.Builder
+			n2.Walk(func(ch *scene.Node) bool {
+				if sp := ch.Text(); sp != nil {
+					sb.WriteString(sp.Src)
+				}
+				return true
+			})
+			got = sb.String()
+		}
+		pass := ok2 && nodeTextContains(n2, expect)
+		r.add(caseName, "template:autocomplete-select", pass,
+			fmt.Sprintf("点建议后输入框回填「%s」（实测 %q）", expect, got))
+	}
 	injectEsc(r.c)
 	time.Sleep(150 * time.Millisecond)
 }

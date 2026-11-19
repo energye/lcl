@@ -3,7 +3,8 @@
   "structure": {
     "apiRows": 8,
     "sections": [
-      "渲染术语建议"
+      "渲染术语建议",
+      "禁用态"
     ]
   },
   "sections": [
@@ -11,15 +12,71 @@
       "name": "渲染术语建议",
       "cases": [
         {
+          "name": "占位文字为 colorTextPlaceholder",
+          "target": {
+            "label": "input",
+            "text": "输入以过滤建议"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.25,
+                0.8,
+                0.5
+              ],
+              "expect": {
+                "token": "TextPlaceholder"
+              },
+              "minRatio": 0.01,
+              "tol": 24
+            }
+          ]
+        },
+        {
           "name": "点击聚焦联想输入框",
           "target": {
             "label": "input",
-            "index": 0
+            "text": "输入以过滤建议"
           },
           "then": [
             {
               "kind": "template",
               "template": "input-focus"
+            }
+          ]
+        },
+        {
+          "name": "键入过滤词出建议并回填",
+          "target": {
+            "label": "input",
+            "text": "输入以过滤建议"
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "autocomplete-select",
+              "text": "光=软件光栅化"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "禁用态",
+      "cases": [
+        {
+          "name": "禁用输入框聚焦无文本反馈",
+          "target": {
+            "label": "input",
+            "disabled": true,
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "disabled-no-op"
             }
           ]
         }
