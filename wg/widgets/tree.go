@@ -100,9 +100,13 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 					if kids {
 						t.Toggle(key)
 					}
-					if t.OnSelect != nil {
+					// 选中态与回调解耦：OnSelect 为 nil 时点击节点仍默认选中
+					// （antd 点击节点即选中，不依赖调用方是否监听）。
+					if t.Selected != key {
 						t.Selected = key
 						t.MarkDirty()
+					}
+					if t.OnSelect != nil {
 						t.OnSelect(key)
 					}
 				}}

@@ -32,6 +32,48 @@
           ]
         },
         {
+          "name": "选中行底色为 Selection、文字转 Primary",
+          "target": {
+            "label": "tree-node",
+            "text": "src"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.05,
+                0.3,
+                0.6,
+                0.4
+              ],
+              "expect": {
+                "token": "Selection"
+              },
+              "minRatio": 0.4,
+              "tol": 24
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.05,
+                0.3,
+                0.3,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.01,
+              "tol": 24
+            }
+          ],
+          "when": [
+            {
+              "wait": 400
+            }
+          ]
+        },
+        {
           "name": "再次点击收起 render 消失",
           "target": {
             "label": "tree-node",
