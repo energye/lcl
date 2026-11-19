@@ -13,14 +13,16 @@ func main() {
 		ID: "badge", Title: "Badge 徽标", Group: doc.GroupDisplay,
 		What: []string{
 			"角标：计数/文本/圆点三态，可与其他节点组合使用",
-			"默认 Danger 红底；计划（M9）：status 语义色与 overflowCount 溢出省略",
+			"默认 Danger 红底；overflowCount 溢出省略（>99 显示 99+）",
+			"计划（M9）：status 语义色",
 		},
 		Demos: []doc.Demo{
-			{Title: "三态角标", Note: "计数 3 / 文本 NEW / 圆点", Build: func(ctx *ui.BuildContext) ui.Widget {
+			{Title: "三态角标", Note: "计数 3 / 文本 NEW / 圆点；溢出 150 显示 99+", Build: func(ctx *ui.BuildContext) ui.Widget {
 				row := scene.Flex(scene.Horizontal, 18)
 				row.Add((&widgets.Badge{Count: 3}).Build(ctx))
 				row.Add((&widgets.Badge{Text: "NEW"}).Build(ctx))
 				row.Add((&widgets.Badge{Dot: true}).Build(ctx))
+				row.Add((&widgets.Badge{Count: 150}).Build(ctx))
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
 			}},
 		},

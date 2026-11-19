@@ -43,6 +43,65 @@
               "tol": 20
             }
           ]
+        },
+        {
+          "name": "文本角标文字为白（OnDanger）",
+          "target": {
+            "label": "badge",
+            "text": "NEW"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.25,
+                0.6,
+                0.5
+              ],
+              "expect": {
+                "token": "OnDanger"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "圆点直径 8",
+          "target": {
+            "label": "badge",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                8,
+                8
+              ]
+            },
+            {
+              "kind": "geometry",
+              "heightBetween": [
+                8,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "name": "溢出显示 99+",
+          "target": {
+            "label": "badge",
+            "text": "99+"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "99+"
+            }
+          ]
         }
       ]
     }

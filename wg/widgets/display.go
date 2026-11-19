@@ -90,7 +90,12 @@ func (b Badge) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	label := b.Text
 	if label == "" && b.Count > 0 {
-		label = fmt.Sprintf("%d", b.Count)
+		// antd overflowCount 语义：超过 99 显示 "99+"。
+		if b.Count > 99 {
+			label = "99+"
+		} else {
+			label = fmt.Sprintf("%d", b.Count)
+		}
 	}
 	font := text.DefaultFont(th.Font.SizeXS)
 	layout := text.LayoutText(label, font, text.Options{})
