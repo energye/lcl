@@ -501,6 +501,16 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 		}
 		p := clickPoint(n.BoundsInRoot(), a.Hover.Frac)
 		hoverAt(r.c, p.X, p.Y)
+		// hover 重建落帧等待：高负载（全量串行回归）下 hover 置位→重建→
+		// 呈现的链路偶发超过 200ms，固定 wait 后采样仍读到旧帧（borderColor
+		// 读到常态色 / colorDelta 读到 0.000，三次全量三个窗轮番 flake）。
+		// 等 PresentStats 帧号增长（hover 高亮必然触发一次重绘）再返回。
+		f0 := r.c.PresentStats().Frames
+		deadline := time.Now().Add(600 * time.Millisecond)
+		for r.c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
+			time.Sleep(20 * time.Millisecond)
+		}
+		time.Sleep(80 * time.Millisecond) // 帧呈现到栅格化完成的余量
 	case a.TypeText != "":
 		for _, ch := range a.TypeText {
 			injectChar(r.c, ch)
@@ -918,6 +928,8 @@ func (r *specRunner) runTemplate(caseName string, def *SpecTarget, as SpecAssert
 		r.tplInputType(caseName, *def)
 	case "autocomplete-select":
 		r.tplAutocompleteSelect(caseName, *def, as)
+	case "tooltip-dark":
+		r.tplTooltipDark(caseName, *def)
 	case "table-row-select":
 		r.tplTableRowSelect(caseName, *def)
 	case "select-open-close":
@@ -1089,6 +1101,64 @@ func (r *specRunner) tplSelectOpenClose(caseName string, t SpecTarget) {
 		fmt.Sprintf("再次点击浮层 → %d（句柄复位）", afterReopen))
 	injectEsc(r.c)
 	time.Sleep(150 * time.Millisecond)
+}
+
+// tplTooltipDark：悬停触发元素后，弹层（BandTooltip）应为深色底
+// （antd colorBgSpotlight）——在锚点周边 ±160px 区域统计深色像素占比。
+func (r *specRunner) tplTooltipDark(caseName string, t SpecTarget) {
+	n, ok := r.locate(t)
+	if !ok {
+		r.add(caseName, "template:tooltip-dark", false, "目标不存在")
+		return
+	}
+	b := n.BoundsInRoot()
+	p := clickPoint(b, nil)
+	hoverAt(r.c, p.X, p.Y)
+	time.Sleep(900 * time.Millisecond)
+	// 弹层横向不超出锚点太多（默认 Top 居中/Bottom）：只统计锚点正上
+	// 40px + 正下 40px 两条带（弹层必然落在其中之一），避免大面积白底
+	// 页面稀释占比。
+	above := geom.RectXYWH(b.Min.X, b.Min.Y-40, b.W(), 40)
+	below := geom.RectXYWH(b.Min.X, b.Max.Y, b.W(), 40)
+	img := grab(r.c)
+	dark, total := 0, 0
+	for _, region := range []geom.Rect{above, below} {
+		x0, y0 := int(region.Min.X), int(region.Min.Y)
+		x1, y1 := int(region.Max.X), int(region.Max.Y)
+		bounds := img.Bounds()
+		if x0 < bounds.Min.X {
+			x0 = bounds.Min.X
+		}
+		if y0 < bounds.Min.Y {
+			y0 = bounds.Min.Y
+		}
+		if x1 > bounds.Max.X {
+			x1 = bounds.Max.X
+		}
+		if y1 > bounds.Max.Y {
+			y1 = bounds.Max.Y
+		}
+		for y := y0; y < y1; y++ {
+			i := y*img.Stride + x0*4
+			for x := x0; x < x1; x++ {
+				lum := (int(img.Pix[i])*299 + int(img.Pix[i+1])*587 + int(img.Pix[i+2])*114) / 1000
+				total++
+				if lum < 80 {
+					dark++
+				}
+				i += 4
+			}
+		}
+	}
+	ratio := 0.0
+	if total > 0 {
+		ratio = float64(dark) / float64(total)
+	}
+	pass := ratio >= 0.15
+	r.add(caseName, "template:tooltip-dark", pass,
+		fmt.Sprintf("锚点周边深色像素占比 %.3f ≥ 0.15（colorBgSpotlight）", ratio))
+	injectLeave(r.c)
+	time.Sleep(200 * time.Millisecond)
 }
 
 // tplAutocompleteSelect：聚焦输入过滤词 → 建议弹层出现 → 点第一条建议 →
