@@ -658,6 +658,9 @@ type Steps struct {
 	// ErrorStep 错误步下标（-1 无，antd status="error"）：该步圆点转红、
 	// 符号转 ×（优先于 Current 推导的状态）。
 	ErrorStep int
+	// Vertical 垂直方向（antd direction="vertical"）：步骤纵向排布，
+	// 连接线转竖直，标签在圆点右侧。
+	Vertical bool
 }
 
 // NewSteps 创建步骤条（ErrorStep=-1 无错误步）。
@@ -668,6 +671,9 @@ func NewSteps(labels []string, current int) *Steps {
 // Build 实现 ui.Widget。
 func (s Steps) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
+	if s.Vertical {
+		return s.buildVertical(ctx, th)
+	}
 	// antd 步骤条：圆点一行、步骤间有连接线（已完成段主色、待办段灰），
 	// 标签在圆点下方居中。
 	n := scene.Flex(scene.Horizontal, 0)
@@ -713,6 +719,54 @@ func (s Steps) Build(ctx *ui.BuildContext) *scene.Node {
 			}
 			n.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(line), Radius: 1}).
 				SetSize2(40, 2).SetMargin(geom.InLTRB(4, 9, 4, 0)))
+		}
+	}
+	n.SetHit(scene.HitSpec{Label: "steps"})
+	return n
+}
+
+// buildVertical 构建垂直步骤条：步骤纵向排布，连接线竖直（已完成段
+// 主色），标签在圆点右侧同行（antd direction="vertical"）。
+func (s Steps) buildVertical(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
+	n := scene.Flex(scene.Vertical, 0)
+	for i, label := range s.Labels {
+		row := scene.Flex(scene.Horizontal, th.Space.SM)
+		wait := i > s.Current
+		errorStep := i == s.ErrorStep
+		fill := th.Color.Primary
+		fg := th.Color.OnPrimary
+		if errorStep {
+			fill, fg = th.Color.Danger, th.Color.OnDanger
+		} else if wait {
+			fill, fg = th.Color.Surface, th.Color.TextMuted
+		}
+		circle := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: 10}).SetSize2(20, 20)
+		if wait && !errorStep {
+			circle = scene.Box(scene.BoxSpec{Border: scene.Stroke(th.Color.BorderStrong, 2), Radius: 10}).SetSize2(20, 20)
+		}
+		circle.SetHit(scene.HitSpec{Label: "steps-circle"})
+		cap := fmt.Sprintf("%d", i+1)
+		if errorStep {
+			cap = "×"
+		} else if i < s.Current {
+			cap = "✓"
+		}
+		fl := text.LayoutText(cap, text.DefaultFont(th.Font.SizeXS), text.Options{})
+		ct := scene.Text(scene.TextSpec{Src: cap, Layout: fl, Color: fg})
+		ct.SetMargin(geom.InLTRB((20-fl.Size.W)/2, (20-fl.Size.H)/2, 0, 0))
+		circle.Add(ct)
+		row.Add(circle)
+		ll := text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		row.Add(scene.Text(scene.TextSpec{Src: label, Layout: ll, Color: th.Color.Text}))
+		n.Add(row)
+		if i < len(s.Labels)-1 {
+			line := th.Color.Border
+			if i < s.Current {
+				line = th.Color.Primary
+			}
+			// 竖直连接线：缩进到圆点中轴（10-1），高 40。
+			n.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(line), Radius: 1}).
+				SetSize2(2, 40).SetMargin(geom.InLTRB(9, 2, 0, 2)))
 		}
 	}
 	n.SetHit(scene.HitSpec{Label: "steps"})

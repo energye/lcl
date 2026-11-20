@@ -1,10 +1,11 @@
 {
   "id": "steps",
   "structure": {
-    "apiRows": 2,
+    "apiRows": 4,
     "sections": [
       "四步进度",
-      "error 状态"
+      "error 状态",
+      "垂直方向"
     ]
   },
   "sections": [
@@ -117,6 +118,69 @@
             "index": 5
           },
           "then": []
+        }
+      ]
+    },
+    {
+      "name": "垂直方向",
+      "cases": [
+        {
+          "name": "垂直步骤条整体存在",
+          "target": {
+            "label": "steps",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "当前步圆点为 Primary（index 4=级联推算）",
+          "target": {
+            "label": "steps-circle",
+            "index": 9
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "wait 步圆点描边为灰（BorderStrong）",
+          "target": {
+            "label": "steps-circle",
+            "index": 11
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.0,
+                0.0,
+                1.0,
+                1.0
+              ],
+              "expect": {
+                "token": "BorderStrong"
+              },
+              "minRatio": 0.08,
+              "tol": 24
+            }
+          ]
         }
       ]
     }
