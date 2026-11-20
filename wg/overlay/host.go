@@ -395,6 +395,12 @@ func (h *Host) relayout() {
 		e.content.SetStackPosition(p.Rect.Min)
 		// 浮层由定位决定位置、由内容决定尺寸，不能按 Stack 默认的紧约束拉满。
 		e.content.SetPositionKeepSize(true)
+		// SetStackPosition 走 MarkNeedsLayout 异步折算 offset——审计在
+		// Show 后 300ms 内 locate 时布局可能尚未跑完，浮层内节点的
+		// BoundsInRoot 读到旧值/零（实测 select-option 点击坐标打不到
+		// 浮层的根因）。SetStackPositionPaint **同步**写 offset（含
+		// parent.ContentOrigin），定位当帧坐标即刻正确。
+		e.content.SetStackPositionPaint(p.Rect.Min)
 	}
 }
 

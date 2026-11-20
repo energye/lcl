@@ -296,6 +296,9 @@ func (v *TextView) Build(ctx *ui.BuildContext) *scene.Node {
 		box.SetHeight(v.Height)
 	}
 	box.Add(t)
+	// 定位锚：与 Label 同名（text/geometry 断言按 label 锚定位）。
+	// TextView 此前无锚，审计 text 断言永远定位不到（实测）。
+	box.SetHit(scene.HitSpec{Label: "label"})
 	v.node, v.box, v.req = t, box, ctx.RequestFrame
 	v.font, v.opts, v.color = font, opts, color
 	return box

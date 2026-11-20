@@ -19,6 +19,29 @@ var (
 	mStat   = widgets.NewButton("多选：[]")
 )
 
+// lvSel label-value 分离演示：显示语言名，提交语言代码。
+// 提交值文本用 Button.Text+MarkDirty（form demo 校验结果同款已验证通道：
+// controlBase 标准 attach 的重建链在审计时序下可靠；TextView/Label 通道
+// 实测读旧值）。
+var (
+	lvSel  = widgets.NewSelect(nil)
+	lvStat = widgets.NewButton("提交值：go")
+)
+
+func init() {
+	lvSel.Width = 260
+	lvSel.Selected = 0 // 初始选中 Go：触发框显示唯一文本，供审计锚定位
+	lvSel.Items = []widgets.SelectOption{
+		{Label: "Go", Value: "go"},
+		{Label: "Python", Value: "py"},
+		{Label: "Rust", Value: "rust"},
+	}
+	lvSel.OnChange = func(i int) {
+		lvStat.Text = "提交值：" + lvSel.Value()
+		lvStat.MarkDirty()
+	}
+}
+
 func init() {
 	sel.Width = 260
 	sel.OnChange = func(i int) {
@@ -48,9 +71,15 @@ func main() {
 		What: []string{
 			"下拉选择：弹层走 overlay.Host（BandPopup），OutsideClick/Esc 关闭",
 			"M8 对齐 antd：showSearch 搜索过滤、multiple 多选（选中不收起）、分组标题行",
-			"未实现：label/value 分离（Label 即 Value）、异步加载、虚拟滚动、option 自定义渲染",
+			"label/value 分离：Label 显示、Value 提交（SelectOption.Value，空=回退 Label）",
 		},
 		Demos: []doc.Demo{
+			{Title: "label/value 分离", Note: "显示 Go/Python/Rust，提交 go/py/rust（SelectOption.Value）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				col := scene.Flex(scene.Vertical, 10)
+				col.Add(lvSel.Build(ctx))
+				col.Add(lvStat.Build(ctx))
+				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
+			}},
 			{Title: "基本单选", Note: "点开下拉选择；选中回显", Build: func(ctx *ui.BuildContext) ui.Widget {
 				col := scene.Flex(scene.Vertical, 10)
 				col.Add(sel.Build(ctx))
@@ -69,7 +98,8 @@ func main() {
 		},
 		API: []doc.APIRow{
 			{Name: "NewSelect", Type: "func(options []string) *Select", Desc: "构造（单选字符串项）"},
-			{Name: "Items", Type: "[]SelectOption{Label, Group}", Desc: "带分组的选项（设置后优先于 Options）"},
+			{Name: "Items", Type: "[]SelectOption{Label, Value, Group}", Desc: "带分组/提交值的选项（Value 空=回退 Label）"},
+			{Name: "Value/OptionValue", Type: "func() string / func(i int) string", Desc: "选中项提交值 / 第 i 项提交值（label-value 分离）"},
 			{Name: "ShowSearch", Type: "bool", Default: "false", Desc: "弹层顶部搜索行（antd showSearch）"},
 			{Name: "Multiple", Type: "bool", Default: "false", Desc: "多选（antd multiple；选中不收起）"},
 			{Name: "Selected/Values", Type: "int / []string", Desc: "单选下标 / 多选集合"},

@@ -1,14 +1,127 @@
 {
   "id": "select",
   "structure": {
-    "apiRows": 10,
+    "apiRows": 12,
     "sections": [
+      "label/value 分离",
       "基本单选",
       "分组 + 搜索",
       "多选"
     ]
   },
   "sections": [
+    {
+      "name": "label/value 分离",
+      "cases": [
+        {
+          "name": "初始选中 Go（Label 显示）",
+          "target": {
+            "label": "select",
+            "text": "Go"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "Go",
+              "target": {
+                "label": "select",
+                "text": "Go"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点选 Rust：触发框显示 Label、提交值变 rust",
+          "target": {
+            "label": "button",
+            "text": "提交值："
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "select",
+                  "text": "Go"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "select-option",
+                  "text": "Rust"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "Rust",
+              "target": {
+                "label": "select",
+                "text": "Rust"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "提交值：rust",
+              "target": {
+                "label": "button",
+                "text": "提交值："
+              }
+            }
+          ]
+        },
+        {
+          "name": "再选 Go：提交值变 go",
+          "target": {
+            "label": "button",
+            "text": "提交值："
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "select",
+                  "text": "Rust"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "select-option",
+                  "text": "Go"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "提交值：go",
+              "target": {
+                "label": "button",
+                "text": "提交值："
+              }
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "基本单选",
       "cases": [

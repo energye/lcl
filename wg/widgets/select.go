@@ -18,12 +18,15 @@ import (
 // 已对齐：单选（Selected 索引语义保留）/多选（Values 集合）、showSearch
 // 过滤（contains，大小写不敏感）、分组标题行、OutsideClick/Esc 关闭、
 // 多选选中不收起、键盘可达（同旧实现的手势链）。
-// 未实现（如实标注）：labels/value 分离（Label 即 Value）、异步加载、
+// 未实现（如实标注）：异步加载、
 // 虚拟滚动、option 渲染自定义。
 
 // SelectOption 是带分组的选项（antd options item）。
 type SelectOption struct {
 	Label string
+	// Value 提交值（labelInValue 语义简化版）：空 = 回退 Label
+	//（Label 即 Value，兼容旧用法）。
+	Value string
 	Group string // 空 = 不分组
 }
 
@@ -82,6 +85,57 @@ func (s *Select) SetSelected(i int) {
 	if s.OnChange != nil {
 		s.OnChange(i)
 	}
+}
+
+// Value 返回单选选中项的提交值（label-value 分离）：Value 字段优先，
+// 空 = 回退 Label；未选中返回空串。
+func (s *Select) Value() string {
+	if s.Selected < 0 {
+		return ""
+	}
+	if len(s.Items) > 0 && s.Selected < len(s.Items) {
+		it := s.Items[s.Selected]
+		if it.Value != "" {
+			return it.Value
+		}
+		return it.Label
+	}
+	if s.Selected < len(s.Options) {
+		return s.Options[s.Selected]
+	}
+	return ""
+}
+
+// OptionValue 返回第 i 项的提交值（label-value 分离，单/多选共用）。
+func (s *Select) OptionValue(i int) string {
+	if i < 0 {
+		return ""
+	}
+	if len(s.Items) > 0 && i < len(s.Items) {
+		it := s.Items[i]
+		if it.Value != "" {
+			return it.Value
+		}
+		return it.Label
+	}
+	if i < len(s.Options) {
+		return s.Options[i]
+	}
+	return ""
+}
+
+// SelectedValues 返回多选选中项的提交值集合（按 Values 索引换算）。
+func (s *Select) SelectedValues() []string {
+	out := make([]string, 0, len(s.Values))
+	for _, v := range s.Values {
+		for i, l := range s.labels() {
+			if l == v {
+				out = append(out, s.OptionValue(i))
+				break
+			}
+		}
+	}
+	return out
 }
 
 // SetValues 设置多选集合并回调。

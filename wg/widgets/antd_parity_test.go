@@ -411,6 +411,45 @@ func TestAntdIconUnknownRendersPlaceholder(t *testing.T) {
 	}
 }
 
+func TestAntdSelectLabelValueSplit(t *testing.T) {
+	// label-value 分离（antd labelInValue 简化）：Label 显示、Value 提交，
+	// Value 空=回退 Label。
+	s := NewSelect(nil)
+	s.Items = []SelectOption{
+		{Label: "Go", Value: "go"},
+		{Label: "Python"}, // 空 Value=回退 Label
+		{Label: "Rust", Value: "rust"},
+	}
+	s.Selected = 0
+	if got := s.Value(); got != "go" {
+		t.Errorf("Value()=%q，期望 go", got)
+	}
+	if got := s.OptionValue(1); got != "Python" {
+		t.Errorf("OptionValue(1)=%q，空 Value 应回退 Label=Python", got)
+	}
+	s.Selected = 2
+	if got := s.Value(); got != "rust" {
+		t.Errorf("Value()=%q，期望 rust", got)
+	}
+	s.Selected = -1
+	if got := s.Value(); got != "" {
+		t.Errorf("未选 Value()=%q，期望空串", got)
+	}
+	// 多选提交值集合。
+	s.Multiple = true
+	s.Values = []string{"Go", "Python"}
+	got := s.SelectedValues()
+	if len(got) != 2 || got[0] != "go" || got[1] != "Python" {
+		t.Errorf("SelectedValues()=%v，期望 [go Python]", got)
+	}
+	// Options 纯文本模式：Label 即 Value。
+	s2 := NewSelect([]string{"A", "B"})
+	s2.Selected = 1
+	if got := s2.Value(); got != "B" {
+		t.Errorf("Options 模式 Value()=%q，期望 B", got)
+	}
+}
+
 var _ = geom.Pt(0, 0)
 
 // 临时实验（提交前删除）：复刻真窗事件流，验证 tap 是否丢失。
