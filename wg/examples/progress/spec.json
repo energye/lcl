@@ -1,10 +1,12 @@
 {
   "id": "progress",
   "structure": {
-    "apiRows": 4,
+    "apiRows": 7,
     "sections": [
       "四档进度",
-      "status 与百分比"
+      "status 与百分比",
+      "circle 圆环",
+      "dashboard 仪表盘"
     ]
   },
   "sections": [
@@ -141,6 +143,87 @@
               },
               "minRatio": 0.04,
               "tol": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "circle 圆环",
+      "cases": [
+        {
+          "name": "圆环存在（progress-circle 锚 ×2）",
+          "target": {
+            "label": "progress-circle"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "name": "进度弧含主色（Primary 像素检出）",
+          "target": {
+            "label": "progress-circle"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.8,
+                0.8
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.02,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "中心百分比文字为 75%",
+          "target": {
+            "label": "progress-text",
+            "text": "75%"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "75%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dashboard 仪表盘",
+      "cases": [
+        {
+          "name": "仪表盘存在",
+          "target": {
+            "label": "progress-circle"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "中心文字为 60%",
+          "target": {
+            "label": "progress-text",
+            "text": "60%"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "60%"
             }
           ]
         }

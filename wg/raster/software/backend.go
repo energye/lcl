@@ -204,7 +204,14 @@ func (b *Backend) fillPath(dst *raster.Backing, path *render.Path, m geom.Matrix
 // strokePath 描边路径（stroke-to-fill）。
 func (b *Backend) strokePath(dst *raster.Backing, path *render.Path, m geom.Matrix, paint *render.Paint, clip geom.Rect) raster.Stats {
 	scale := m.ScaleFactor()
-	polys := path.Flatten(b.tol/maxf(scale, 0.01), b.polys)
+	// 描边场景按线宽放宽展平容差：弦高偏差 ≤ 线宽/8 时被描边带完全覆盖，
+	// 视觉不可辨（6px 线宽放宽 0.75px）。弧线/贝塞尔的展平点数与
+	// (1/tol)^0.5 成正比——0.25→1.0 点数减半，描边多边形点数是填充
+	// 活跃边表的直接成本（progress 圆环首帧 4s→56ms 的关键一环；
+	// 单靠此优化 109ms→52ms，配合 trail 走 AddOval 整圆路径达标）。
+	w := paint.StrokeWidthOr() * scale
+	tol := b.tol/maxf(scale, 0.01) + w/8
+	polys := path.Flatten(tol, b.polys)
 	b.polys = polys
 
 	b.outline = strokePolygons(polys, paint, b.outline[:0])

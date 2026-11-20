@@ -1,6 +1,7 @@
 package software
 
 import (
+	"sort"
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/raster"
 	"github.com/energye/lcl/wg/render"
@@ -114,16 +115,26 @@ func (f *filler) buildOrder() {
 	for i := range f.edges {
 		f.order = append(f.order, int32(i))
 	}
-	for i := 1; i < len(f.order); i++ {
-		v := f.order[i]
-		vy := f.edges[v].y0
-		j := i - 1
-		for j >= 0 && f.edges[f.order[j]].y0 > vy {
-			f.order[j+1] = f.order[j]
-			j--
+	// 按 y0 排序。边数少（<64，矩形/圆角矩形等常规图元）用插入排序
+	// （缓存友好、无闭包开销）；多时必须 O(n log n)——progress 圆环轮
+	// 实测：4.4 万条描边边的弧线用插入排序一次 fill 1.2s（占总耗时 85%），
+	// 换 sort.Slice 后降到 ~4ms。
+	if len(f.order) < 64 {
+		for i := 1; i < len(f.order); i++ {
+			v := f.order[i]
+			vy := f.edges[v].y0
+			j := i - 1
+			for j >= 0 && f.edges[f.order[j]].y0 > vy {
+				f.order[j+1] = f.order[j]
+				j--
+			}
+			f.order[j+1] = v
 		}
-		f.order[j+1] = v
+		return
 	}
+	sort.Slice(f.order, func(a, b int) bool {
+		return f.edges[f.order[a]].y0 < f.edges[f.order[b]].y0
+	})
 }
 
 // fill 用给定颜色/渐变填充已累积的边，写入 dst 的 clip 区域。
@@ -342,15 +353,32 @@ func (f *filler) spans(sy float32, rule render.FillRule, x0, w int) bool {
 	if len(f.xs) < 2 {
 		return false
 	}
-	// 插入排序（交点数通常很少）
-	for i := 1; i < len(f.xs); i++ {
-		x, d := f.xs[i], f.dirs[i]
-		j := i - 1
-		for j >= 0 && f.xs[j] > x {
-			f.xs[j+1], f.dirs[j+1] = f.xs[j], f.dirs[j]
-			j--
+	// 排序：交点数少（<32）用插入排序（常数小），多时用 Go 排序
+	// O(k log k)——弧线描边一行交点可达数百，插入排序 O(k²) 是
+	// progress 圆环首帧 2.3s 的主因之一（实测 360° 弧 fill 1.7s）。
+	if len(f.xs) < 32 {
+		for i := 1; i < len(f.xs); i++ {
+			x, d := f.xs[i], f.dirs[i]
+			j := i - 1
+			for j >= 0 && f.xs[j] > x {
+				f.xs[j+1], f.dirs[j+1] = f.xs[j], f.dirs[j]
+				j--
+			}
+			f.xs[j+1], f.dirs[j+1] = x, d
 		}
-		f.xs[j+1], f.dirs[j+1] = x, d
+	} else {
+		idx := make([]int, len(f.xs))
+		for i := range idx {
+			idx[i] = i
+		}
+		sort.Slice(idx, func(a, b int) bool { return f.xs[idx[a]] < f.xs[idx[b]] })
+		xs2 := make([]float32, len(f.xs))
+		dirs2 := make([]int32, len(f.dirs))
+		for i, id := range idx {
+			xs2[i], dirs2[i] = f.xs[id], f.dirs[id]
+		}
+		copy(f.xs, xs2)
+		copy(f.dirs, dirs2)
 	}
 	// 按填充规则生成跨度
 	touched := false

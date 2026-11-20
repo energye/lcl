@@ -32,12 +32,25 @@ func main() {
 				col.Add(bad.Build(ctx))
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
 			}},
+			{Title: "circle 圆环", Note: "Shape=ProgressCircle：灰轨+主色进度弧+中心百分比（CustomPaint 弧线）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				row := scene.Flex(scene.Horizontal, 24)
+				row.Add((&widgets.Progress{Value: 0.75, Shape: widgets.ProgressCircle, ShowInfo: true}).Build(ctx))
+				row.Add((&widgets.Progress{Value: 1, Shape: widgets.ProgressCircle, ShowInfo: true}).Build(ctx))
+				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
+			}},
+			{Title: "dashboard 仪表盘", Note: "Shape=ProgressDashboard：270° 缺口朝下（antd dashboard）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return doc.Node(func(c *ui.BuildContext) *scene.Node {
+					return (&widgets.Progress{Value: 0.6, Shape: widgets.ProgressDashboard, ShowInfo: true}).Build(c)
+				})
+			}},
 		},
 		API: []doc.APIRow{
 			{Name: "Value", Type: "float32", Default: "0", Desc: "进度 0..1"},
 			{Name: "Width/Height", Type: "float32", Desc: "轨道尺寸"},
 			{Name: "Status", Type: "widgets.ProgressStatus", Default: "Normal", Desc: "Normal/Success/Exception（满进度自动 Success）"},
-			{Name: "ShowInfo", Type: "bool", Default: "false", Desc: "右侧百分比文字（antd showInfo）"},
+			{Name: "ShowInfo", Type: "bool", Default: "false", Desc: "右侧（线形）/中心（圆环）百分比文字"},
+			{Name: "Shape", Type: "ProgressShape", Default: "Line", Desc: "Line/Circle/Dashboard 三形态"},
+			{Name: "StrokeWidth", Type: "float32", Default: "6", Desc: "圆环描边宽（antd strokeWidth）"},
 		},
 	})
 }
