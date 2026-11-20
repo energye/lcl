@@ -121,7 +121,6 @@ var interactiveLabels = map[string]string{
 	"rate-star":         "评分星",
 	"page":              "页码",
 	"breadcrumb":        "面包屑项",
-	"modal-button":      "模态按钮",
 	"input-number":      "数字输入",
 	"autocomplete-item": "联想项",
 }

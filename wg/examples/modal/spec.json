@@ -45,7 +45,7 @@
             {
               "click": {
                 "target": {
-                  "label": "modal-button",
+                  "label": "button",
                   "text": "确定"
                 }
               }
@@ -78,7 +78,7 @@
             {
               "click": {
                 "target": {
-                  "label": "modal-button",
+                  "label": "button",
                   "text": "取消"
                 }
               }

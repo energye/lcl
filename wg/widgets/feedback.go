@@ -131,27 +131,16 @@ func (m *Modal) Close() { m.close() }
 // IsOpen 返回是否正在显示。
 func (m *Modal) IsOpen() bool { return m.handle != 0 }
 
-// modalButton 构造模态框里的一个按钮（内部函数）。
+// modalButton 构造模态框 footer 按钮：**复用 Button 组件**（Flutter 标准
+// 哲学——AlertDialog.actions 就是调用方传 TextButton，框架不自绘按钮；
+// 自绘盒钮只有 OnTap，hover/按压反馈全部缺失）。primary 走 TypePrimary，
+// 其余 TypeDefault。
 func modalButton(ctx *ui.BuildContext, label string, primary bool, th *theme.Data, onClick func()) *scene.Node {
-	w, h := float32(80), float32(34)
-	fill, fg := geom.Color{}, th.Color.Text
+	b := &Button{Text: label, OnClick: onClick}
 	if primary {
-		fill, fg = th.Color.Primary, th.Color.OnPrimary
+		b.Type = TypePrimary
 	}
-	n := scene.Box(scene.BoxSpec{
-		Fill: scene.Solid(fill), Border: scene.Stroke(th.Color.Border, 1), Radius: th.Radius.Base,
-	}).SetSize2(w, h)
-	l := text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{})
-	tv := scene.Text(scene.TextSpec{Src: label, Layout: l, Color: fg})
-	tv.SetMargin(geom.InLTRB((w-l.Size.W)/2, (h-l.Size.H)/2, 0, 0))
-	n.Add(tv)
-	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "modal-button", Cursor: scene.CursorPointer})
-	g := &ui.GestureDetector{OnTap: func(geom.Point) { onClick() }}
-	if ctx.Input != nil {
-		ctx.Input.Set(n, g.Handler())
-	}
-	// g 由浮层内容节点的处理器闭包持有，浮层销毁前一直可达。
-	return n
+	return b.Build(ctx)
 }
 
 // ── Drawer ────────────────────────────────────────────────────────
