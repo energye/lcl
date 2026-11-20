@@ -25,6 +25,13 @@ var (
 		p.ShowQuickJumper = true
 		return p
 	}()
+
+	// pageSimple：简易形态（simple）：「{当前}/{总页}」+ 跳页输入。
+	pageSimple = func() *widgets.Pagination {
+		p := widgets.NewPagination(2, 8)
+		p.Simple = true
+		return p
+	}()
 )
 
 func main() {
@@ -36,6 +43,9 @@ func main() {
 			"快速跳页：输入页码回车直达，超出范围自动钳制",
 		},
 		Demos: []doc.Demo{
+			{Title: "simple 简易", Note: "Simple=true：「{当前}/{总页}」+跳页输入（无页码按钮行）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return pageSimple
+			}},
 			{Title: "8 页导航", Note: "当前第 3 页", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return page
 			}},
@@ -54,6 +64,7 @@ func main() {
 			{Name: "ShowTotal", Type: "bool", Desc: "显示\"共 X 条\"（需 PageSize>0）"},
 			{Name: "ShowSizeChanger", Type: "bool", Desc: "显示\"X 条/页\"切换器（需 PageSize>0）"},
 			{Name: "ShowQuickJumper", Type: "bool", Desc: "显示\"跳至 X 页\"输入框（回车提交）"},
+			{Name: "Simple", Type: "bool", Desc: "简易形态：当前/总页+跳页输入（antd simple）"},
 			{Name: "SetPage", Type: "func(n int)", Desc: "程序化跳页（钳制+回调）"},
 			{Name: "OnChange", Type: "func(int)", Desc: "页码切换回调"},
 			{Name: "OnPageSize", Type: "func(int)", Desc: "每页条数变化回调"},

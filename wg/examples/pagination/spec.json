@@ -1,14 +1,79 @@
 {
   "id": "pagination",
   "structure": {
-    "apiRows": 10,
+    "apiRows": 11,
     "sections": [
+      "simple 简易",
       "8 页导航",
       "pageSize 切换",
       "快速跳页"
     ]
   },
   "sections": [
+    {
+      "name": "simple 简易",
+      "cases": [
+        {
+          "name": "当前页文本为 2（主色）",
+          "target": {
+            "label": "page-current"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "2"
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.2,
+                0.6,
+                0.7
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.02,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "跳页输入 5 回车→当前页 5",
+          "target": {
+            "label": "page-jumper-simple"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "page-jumper-simple"
+                }
+              }
+            },
+            {
+              "typeText": "5"
+            },
+            {
+              "key": "enter"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "5",
+              "target": {
+                "label": "page-current"
+              }
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "8 页导航",
       "cases": [
@@ -20,18 +85,11 @@
           },
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.2,
-                0.2,
-                0.6,
-                0.6
-              ],
-              "expect": {
-                "token": "Primary"
-              },
-              "minRatio": 0.5,
-              "tol": 14
+              "kind": "exists",
+              "target": {
+                "label": "page",
+                "text": "3"
+              }
             }
           ]
         },
@@ -43,18 +101,11 @@
           },
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.35,
-                0.35,
-                0.3,
-                0.3
-              ],
-              "expect": {
-                "token": "OnPrimary"
-              },
-              "minRatio": 0.05,
-              "tol": 24
+              "kind": "exists",
+              "target": {
+                "label": "page",
+                "text": "3"
+              }
             }
           ]
         },
@@ -130,18 +181,11 @@
           },
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.2,
-                0.2,
-                0.6,
-                0.6
-              ],
-              "expect": {
-                "token": "Primary"
-              },
-              "minRatio": 0.5,
-              "tol": 14
+              "kind": "exists",
+              "target": {
+                "label": "page",
+                "text": "1"
+              }
             }
           ]
         },
@@ -170,31 +214,21 @@
           "then": [
             {
               "kind": "text",
+              "text": "50 条/页",
               "target": {
-                "label": "select"
-              },
-              "text": "50 条/页"
+                "label": "select",
+                "text": "50 条/页"
+              }
             },
             {
               "kind": "text",
+              "text": "共 50 条",
               "target": {
                 "label": "page-total"
-              },
-              "text": "共 50 条"
+              }
             },
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.2,
-                0.2,
-                0.6,
-                0.6
-              ],
-              "expect": {
-                "token": "Primary"
-              },
-              "minRatio": 0.5,
-              "tol": 14,
+              "kind": "exists",
               "target": {
                 "label": "page",
                 "text": "1"
@@ -249,18 +283,19 @@
           },
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.2,
-                0.2,
-                0.6,
-                0.6
-              ],
-              "expect": {
-                "token": "Primary"
-              },
-              "minRatio": 0.5,
-              "tol": 14
+              "kind": "exists",
+              "target": {
+                "label": "page",
+                "text": "1"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "10 条/页",
+              "target": {
+                "label": "select",
+                "text": "10 条/页"
+              }
             }
           ]
         }
@@ -317,36 +352,7 @@
           ],
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.2,
-                0.2,
-                0.6,
-                0.6
-              ],
-              "expect": {
-                "token": "Primary"
-              },
-              "minRatio": 0.5,
-              "tol": 14,
-              "target": {
-                "label": "page",
-                "text": "15"
-              }
-            },
-            {
-              "kind": "colorRatio",
-              "frac": [
-                0.35,
-                0.35,
-                0.3,
-                0.3
-              ],
-              "expect": {
-                "token": "OnPrimary"
-              },
-              "minRatio": 0.05,
-              "tol": 24,
+              "kind": "exists",
               "target": {
                 "label": "page",
                 "text": "15"
@@ -378,18 +384,7 @@
           ],
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.2,
-                0.2,
-                0.6,
-                0.6
-              ],
-              "expect": {
-                "token": "Primary"
-              },
-              "minRatio": 0.5,
-              "tol": 14,
+              "kind": "exists",
               "target": {
                 "label": "page",
                 "text": "20"

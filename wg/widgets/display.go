@@ -880,6 +880,9 @@ type Pagination struct {
 	ShowSizeChanger bool
 	// ShowQuickJumper 显示"跳至 X 页"快速跳页输入框（回车提交，超范围钳制）。
 	ShowQuickJumper bool
+	// Simple 简易形态（antd simple）：「{当前}/{总页}」+ 跳页输入，
+	// 不渲染页码按钮行。
+	Simple bool
 	OnChange        func(int)
 	// OnPageSize 每页条数变化回调（切换后 Page 已钳制到新总页数范围）。
 	OnPageSize func(int)
@@ -955,6 +958,11 @@ func (p *Pagination) setPageSize(size int) {
 func (p *Pagination) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(p)
 	th := ctx.ThemeOr()
+	// Simple 分流必须在 buildPages 之前：页码行实例池的构建成本与
+	// "附加件全关"早退分支都会吞掉它（实测 simple 卡渲染成页码行）。
+	if p.Simple {
+		return p.buildSimple(ctx, th)
+	}
 	row := p.buildPages(ctx, th)
 
 	// 附加件全关：保持单行页码（与旧版完全一致，索引锚不位移）。
@@ -978,6 +986,33 @@ func (p *Pagination) Build(ctx *ui.BuildContext) *scene.Node {
 	if p.ShowQuickJumper {
 		wrap.Add(p.buildJumper(ctx, th))
 	}
+	p.node = wrap
+	return wrap
+}
+
+// buildSimple 构建简易形态：「{当前}/{总页}」文本 + 跳页输入
+// （antd simple——不渲染页码按钮行）。
+func (p *Pagination) buildSimple(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
+	if p.jumper == nil {
+		// HitLabel 独立：多卡页面同名锚撞车（第 4 次教训）——
+		// simple 与 quick-jumper 两卡各有 jumper。
+		p.jumper = &Input{Placeholder: "", Width: 48, Height: 26, HitLabel: "page-jumper-simple"}
+	}
+	p.jumper.OnSubmit = func(v string) {
+		if n, err := strconv.Atoi(strings.TrimSpace(v)); err == nil {
+			p.SetPage(n)
+		}
+	}
+	wrap := scene.Flex(scene.Horizontal, th.Space.SM).SetAlign(scene.Center)
+	cur := fmt.Sprintf("%d", p.Page)
+	l := text.LayoutText(cur, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	ct := scene.Text(scene.TextSpec{Src: cur, Layout: l, Color: th.Color.Primary})
+	ct.SetHit(scene.HitSpec{Label: "page-current"}) // 被动定位锚
+	wrap.Add(ct)
+	total := fmt.Sprintf("/ %d", p.totalPages())
+	l2 := text.LayoutText(total, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	wrap.Add(scene.Text(scene.TextSpec{Src: total, Layout: l2, Color: th.Color.Text}))
+	wrap.Add(p.jumper.Build(ctx))
 	p.node = wrap
 	return wrap
 }

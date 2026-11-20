@@ -33,7 +33,11 @@ import (
 // 默认窗口尺寸（--width/--height 可覆盖）。
 const (
 	defaultW = 1080
-	defaultH = 760
+	// defaultH 1100：4 卡 demo 页总高常超 760 视口的滚动上限，页尾卡
+	// 底部元素在 ensureVisible 40 次滚动后仍不可达（pagination/simple
+	// 轮反复踩）。1100 让内容高 ~1400px 的滚动上限覆盖页尾卡。
+	// --height 可覆盖。
+	defaultH = 1100
 )
 
 type options struct {
