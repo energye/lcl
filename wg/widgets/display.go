@@ -291,11 +291,19 @@ func (e Empty) Build(ctx *ui.BuildContext) *scene.Node {
 	return n
 }
 
-// Skeleton 是加载骨架（n 条灰色圆角条，最后一条较短）。
+// Skeleton 是加载骨架。
+//
+// 基础形态：n 条灰色圆角条，最后一条较短（Rows/Width/Height）。
+// 组合形态（antd 默认骨架，Avatar/Title 任一开启时启用）：圆形头像 +
+// 标题条 + 段落条组水平排布（组合复用同一条形图元，无新绘制通道）。
 type Skeleton struct {
 	Rows   int
 	Width  float32
 	Height float32
+	// Avatar 头像条（32×32 圆，组合形态开关之一）。
+	Avatar bool
+	// Title 标题条（宽 40%，组合形态开关之一）。
+	Title bool
 	// Phase 呼吸相位 0..1（透明度调制 0.45..1），由调用方推进；Animated=true
 	// 时相位按墙钟自动推进（1.4s/圈，antd active 呼吸节奏）并声明组件级
 	// 动画——外部不必推帧。
@@ -333,6 +341,40 @@ func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
 	if phase > 0 {
 		opacity = 1.0 - 0.55*(0.5-0.5*cos32(phase*2*3.14159265))
 	}
+	bar := func(bw, bh float32, round float32) *scene.Node {
+		b := scene.Box(scene.BoxSpec{
+			// SurfaceActive(#F0F0F0)：SurfaceSunken 与演示舞台同色，灰条会隐形。
+			Fill: scene.Solid(th.Color.SurfaceActive), Radius: round,
+		}).SetSize2(bw, bh)
+		return b
+	}
+	// 组合形态（Avatar/Title 任一开启）：antd 默认骨架布局。
+	if s.Avatar || s.Title {
+		root := scene.Flex(scene.Horizontal, th.Space.MD).SetCrossAlign(scene.CrossCenter)
+		root.SetOpacity(float32(opacity))
+		if s.Avatar {
+			av := bar(32, 32, th.Radius.Pill)
+			// 被动定位锚：头像圆独立采样（几何/颜色断言）。
+			av.SetHit(scene.HitSpec{Label: "skeleton-avatar"})
+			root.Add(av)
+		}
+		col := scene.Flex(scene.Vertical, th.Space.SM)
+		if s.Title {
+			t := bar(w*0.4, 16, th.Radius.SM)
+			t.SetHit(scene.HitSpec{Label: "skeleton-title"}) // 被动定位锚
+			col.Add(t)
+		}
+		for i := 0; i < rows; i++ {
+			rw := w
+			if i == rows-1 {
+				rw = w * 0.6
+			}
+			col.Add(bar(rw, h, th.Radius.SM))
+		}
+		root.Add(col)
+		root.SetHit(scene.HitSpec{Label: "skeleton"})
+		return root
+	}
 	n := scene.Flex(scene.Vertical, th.Space.MD)
 	n.SetOpacity(float32(opacity))
 	for i := 0; i < rows; i++ {
@@ -340,10 +382,7 @@ func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
 		if i == rows-1 {
 			rw = w * 0.6
 		}
-		n.Add(scene.Box(scene.BoxSpec{
-			// SurfaceActive(#F0F0F0)：SurfaceSunken 与演示舞台同色，灰条会隐形。
-			Fill: scene.Solid(th.Color.SurfaceActive), Radius: th.Radius.SM,
-		}).SetSize2(rw, h))
+		n.Add(bar(rw, h, th.Radius.SM))
 	}
 	n.SetHit(scene.HitSpec{Label: "skeleton"})
 	return n

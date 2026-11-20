@@ -1,9 +1,10 @@
 {
   "id": "skeleton",
   "structure": {
-    "apiRows": 4,
+    "apiRows": 7,
     "sections": [
-      "四行占位"
+      "四行占位",
+      "组合形态"
     ]
   },
   "sections": [
@@ -19,6 +20,73 @@
             {
               "kind": "geometry",
               "widthAtLeast": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "组合形态",
+      "cases": [
+        {
+          "name": "头像圆条存在且为 32×32",
+          "target": {
+            "label": "skeleton-avatar"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            },
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                30,
+                34
+              ],
+              "heightBetween": [
+                30,
+                34
+              ]
+            }
+          ]
+        },
+        {
+          "name": "头像圆条为 SurfaceActive 灰",
+          "target": {
+            "label": "skeleton-avatar"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "SurfaceActive"
+              },
+              "minRatio": 0.5,
+              "tol": 10
+            }
+          ]
+        },
+        {
+          "name": "标题条在头像右侧",
+          "target": {
+            "label": "skeleton-title"
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "rightOf": {
+                "label": "skeleton-avatar"
+              },
+              "widthBetween": [
+                110,
+                130
+              ]
             }
           ]
         }
