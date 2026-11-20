@@ -29,6 +29,9 @@ type Card struct {
 	Title   ui.Widget
 	Content ui.Widget
 	Footer  ui.Widget
+	// Cover 封面区（antd Card.cover）：渲染在卡片最顶部、**通栏无内边距**
+	// （封面图元直贴卡片边缘，与 antd cover 语义一致）。
+	Cover   ui.Widget
 	// Actions 操作区（antd Card actions）：渲染在卡片底部，顶部 hairline
 	// 分隔、横排均分（MainSpaceEvenly）、无左右内边距。
 	Actions  []ui.Widget
@@ -60,6 +63,15 @@ func (c Card) Build(ctx *ui.BuildContext) *scene.Node {
 	// Box 在 ShrinkWrap 列里没有宽度来源，FlexTight 主轴拉伸也不适用
 	// （主轴是纵向）。CrossStretch 拉伸所有子节点宽度，文字节点不受影响。
 	col.SetCrossAlign(scene.CrossStretch)
+	// Cover 封面：直贴卡片顶缘（无内边距——负 margin 抵消，与 actions
+	// 同款通栏手法）；卡片圆角上缘由 Card Box 的 Radius+Fill 承担，
+	// Cover 内容自身若需圆角由调用方控制。
+	if c.Cover != nil {
+		cover := buildChild(ctx, c.Cover)
+		cover.SetMargin(geom.InLTRB(-pad.Left, -pad.Top, -pad.Left, 0))
+		cover.SetHit(scene.HitSpec{Label: "card-cover"}) // 被动定位锚
+		col.Add(cover)
+	}
 	if c.Title != nil {
 		col.Add(buildChild(ctx, c.Title))
 		divider := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetHeight(1)
