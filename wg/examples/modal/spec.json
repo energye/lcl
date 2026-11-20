@@ -1,9 +1,10 @@
 {
   "id": "modal",
   "structure": {
-    "apiRows": 6,
+    "apiRows": 9,
     "sections": [
-      "打开模态"
+      "打开模态",
+      "预设系列"
     ]
   },
   "sections": [
@@ -114,6 +115,323 @@
               "kind": "overlay",
               "count": 0,
               "band": "modal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "预设系列",
+      "cases": [
+        {
+          "name": "信息提示：图标圆底为 Primary 且单「知道了」按钮",
+          "target": {
+            "label": "button",
+            "text": "信息提示"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "modal-preset-icon"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "知道了",
+              "target": {
+                "label": "button",
+                "text": "知道了"
+              }
+            }
+          ]
+        },
+        {
+          "name": "信息提示：点「知道了」关闭",
+          "target": {
+            "label": "button",
+            "text": "信息提示"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "text": "知道了"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        },
+        {
+          "name": "操作成功：图标圆底为 Success 且单「知道了」按钮",
+          "target": {
+            "label": "button",
+            "text": "操作成功"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Success"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "modal-preset-icon"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "知道了",
+              "target": {
+                "label": "button",
+                "text": "知道了"
+              }
+            }
+          ]
+        },
+        {
+          "name": "操作成功：点「知道了」关闭",
+          "target": {
+            "label": "button",
+            "text": "操作成功"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "text": "知道了"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        },
+        {
+          "name": "警告：图标圆底为 Warning 且单「知道了」按钮",
+          "target": {
+            "label": "button",
+            "text": "警告"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Warning"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "modal-preset-icon"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "知道了",
+              "target": {
+                "label": "button",
+                "text": "知道了"
+              }
+            }
+          ]
+        },
+        {
+          "name": "警告：点「知道了」关闭",
+          "target": {
+            "label": "button",
+            "text": "警告"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "text": "知道了"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        },
+        {
+          "name": "错误：图标圆底为 Danger 且单「知道了」按钮",
+          "target": {
+            "label": "button",
+            "text": "错误"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "modal-preset-icon"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "知道了",
+              "target": {
+                "label": "button",
+                "text": "知道了"
+              }
+            }
+          ]
+        },
+        {
+          "name": "错误：点「知道了」关闭",
+          "target": {
+            "label": "button",
+            "text": "错误"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "text": "知道了"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
             }
           ]
         }

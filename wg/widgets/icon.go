@@ -63,6 +63,16 @@ var iconPainters = map[string]iconDef{
 	"minus": {stroke: func(b iconBrush) { b.seg(5, 12, 19, 12) }},
 	"close": {stroke: func(b iconBrush) { b.seg(6, 6, 18, 18).seg(18, 6, 6, 18) }},
 	"check": {stroke: func(b iconBrush) { b.seg(4.5, 12.5, 9.5, 17.5, 19.5, 6.5) }},
+	// info-body / exclamation：实心圆底内的纯图形（Modal 预设确认框用——
+	// antd 图标=实底圆白图形，圆底由组合方 Box 画，这里只画本体）。
+	"info-body": {
+		stroke: func(b iconBrush) { b.seg(12, 11, 12, 17.5) },
+		fill:   func(b iconBrush) { b.circle(12, 7, 1.4) },
+	},
+	"exclamation": {
+		stroke: func(b iconBrush) { b.seg(12, 4.5, 12, 13.5) },
+		fill:   func(b iconBrush) { b.circle(12, 17.5, 1.4) },
+	},
 	"search": {stroke: func(b iconBrush) {
 		b.circle(10.5, 10.5, 6.5)
 		b.seg(15.5, 15.5, 20.5, 20.5)

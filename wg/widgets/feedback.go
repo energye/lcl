@@ -29,7 +29,25 @@ func captureHost(ctx *ui.BuildContext) feedbackHost {
 
 // ── Modal ─────────────────────────────────────────────────────────
 
+// ModalKind 是模态框预设类型（antd Modal.info/success/warning/error）。
+type ModalKind uint8
+
+const (
+	// ModalNormal 普通确认对话框（确定/取消，无图标）。
+	ModalNormal ModalKind = iota
+	// ModalInfo 信息提示（蓝圆+i）。
+	ModalInfo
+	// ModalSuccess 成功（绿圆+勾）。
+	ModalSuccess
+	// ModalWarning 警告（黄圆+叹号）。
+	ModalWarning
+	// ModalError 错误（红圆+×）。
+	ModalError
+)
+
 // Modal 是模态对话框。Content 为自定义内容，按钮为确定/取消。
+// Kind 非 ModalNormal 时渲染预设确认形态：状态图标圆底 + 标题/内容 +
+// 单"知道了"按钮（footer 按钮为 Button 组件）。
 type Modal struct {
 	Title     string
 	Content   ui.Widget
@@ -38,6 +56,10 @@ type Modal struct {
 	Width     float32
 	OnConfirm func()
 	OnCancel  func()
+	// Kind 预设类型（默认 ModalNormal 保持普通形态）。
+	Kind ModalKind
+	// OKText 预设按钮文字（默认"知道了"）。
+	OKText string
 
 	handle overlay.Handle
 	fb     feedbackHost
@@ -46,6 +68,12 @@ type Modal struct {
 // NewModal 创建模态框。
 func NewModal(title string, content ui.Widget) *Modal {
 	return &Modal{Title: title, Content: content, Confirm: "确定", Cancel: "取消", Width: 400}
+}
+
+// NewModalPreset 创建预设确认框（antd Modal.info/success/warning/error）：
+// 状态图标+标题+内容+单 OK 按钮（组合 Modal/Button/Icon，零新绘制通道）。
+func NewModalPreset(kind ModalKind, title string, content ui.Widget, onOk func()) *Modal {
+	return &Modal{Title: title, Content: content, Kind: kind, Width: 416, OnConfirm: onOk}
 }
 
 // Show 显示模态框。无 overlay 宿主时安全 no-op。
@@ -60,6 +88,16 @@ func (m *Modal) Show(ctx *ui.BuildContext) {
 	w := m.Width
 	if w <= 0 {
 		w = 400
+	}
+	preset := m.Kind != ModalNormal
+	if preset {
+		// antd 预设确认框：单 OK 按钮（OKText > "知道了"），无 Cancel，
+		// 无标题分隔线。
+		cancel = ""
+		confirm = m.OKText
+		if confirm == "" {
+			confirm = "知道了"
+		}
 	}
 	onConfirm, onCancel := m.OnConfirm, m.OnCancel
 	m.handle = ctx.Overlay.Show(overlay.Entry{
@@ -82,15 +120,20 @@ func (m *Modal) Show(ctx *ui.BuildContext) {
 				Radius: th.Radius.LG,
 			})
 			col.SetPadding(geom.InLTRB(th.Space.LG, th.Space.LG, th.Space.LG, th.Space.LG))
-			// 标题 + 分隔线（antd 对话框标题区有 hairline 分隔）。
-			if title != "" {
-				tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeLG), text.Options{})
-				col.Add(scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text}))
-				col.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).
-					SetHeight(1).SetFlex(1, scene.FlexTight))
-			}
-			if content != nil {
-				col.Add(buildChild(ctx, content))
+			if preset {
+				// 预设确认形态：状态图标圆底 + 右列（标题+内容）。
+				col.Add(presetBody(ctx, th, m.Kind, title, content))
+			} else {
+				// 标题 + 分隔线（antd 对话框标题区有 hairline 分隔）。
+				if title != "" {
+					tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeLG), text.Options{})
+					col.Add(scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text}))
+					col.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).
+						SetHeight(1).SetFlex(1, scene.FlexTight))
+				}
+				if content != nil {
+					col.Add(buildChild(ctx, content))
+				}
 			}
 			// 按钮行右对齐（antd footer 按钮靠右）。
 			row := scene.Flex(scene.Horizontal, th.Space.SM)
@@ -141,6 +184,41 @@ func modalButton(ctx *ui.BuildContext, label string, primary bool, th *theme.Dat
 		b.Type = TypePrimary
 	}
 	return b.Build(ctx)
+}
+
+// presetBody 构建预设确认框内容区：状态图标圆底（Stack：语义色 32×32 圆
+// Box + 白图形 Icon 居中——antd 实底圆白图形）+ 右列（标题+内容）。
+// 图标圆底加 modal-preset-icon 被动定位锚供断言采样。
+func presetBody(ctx *ui.BuildContext, th *theme.Data, kind ModalKind, title string, content ui.Widget) *scene.Node {
+	fill := th.Color.Primary
+	name := "info-body"
+	switch kind {
+	case ModalSuccess:
+		fill, name = th.Color.Success, "check"
+	case ModalWarning:
+		fill, name = th.Color.Warning, "exclamation"
+	case ModalError:
+		fill, name = th.Color.Danger, "close"
+	}
+	row := scene.Flex(scene.Horizontal, th.Space.MD).SetCrossAlign(scene.CrossStart)
+	disc := scene.Stack().SetSize2(32, 32)
+	disc.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: th.Radius.Pill}).SetSize2(32, 32))
+	ic := (&Icon{Name: name, Size: 18, Color: th.Color.OnPrimary}).Build(ctx)
+	ic.SetPositionKeepSize(true)
+	ic.SetStackPosition(geom.Pt(7, 7)) // (32-18)/2 居中
+	disc.Add(ic)
+	disc.SetHit(scene.HitSpec{Label: "modal-preset-icon"})
+	row.Add(disc)
+	colR := scene.Flex(scene.Vertical, th.Space.SM)
+	if title != "" {
+		tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeLG), text.Options{})
+		colR.Add(scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text}))
+	}
+	if content != nil {
+		colR.Add(buildChild(ctx, content))
+	}
+	row.Add(colR)
+	return row
 }
 
 // ── Drawer ────────────────────────────────────────────────────────
