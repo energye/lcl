@@ -221,6 +221,110 @@ func presetBody(ctx *ui.BuildContext, th *theme.Data, kind ModalKind, title stri
 	return row
 }
 
+// ── Alert ─────────────────────────────────────────────────────────
+
+// AlertType 是提示语义（antd Alert.type）。
+type AlertType uint8
+
+const (
+	// AlertInfo 信息（主色）。
+	AlertInfo AlertType = iota
+	// AlertSuccess 成功（绿）。
+	AlertSuccess
+	// AlertWarning 警告（黄）。
+	AlertWarning
+	// AlertError 错误（红）。
+	AlertError
+)
+
+// alertPalette 折算 Alert 类型的底色/图标色/图标名。
+func alertPalette(th *theme.Data, typ AlertType) (bg, fg geom.Color, icon string) {
+	switch typ {
+	case AlertSuccess:
+		return th.Color.SuccessBg, th.Color.Success, "check-circle"
+	case AlertWarning:
+		return th.Color.WarningBg, th.Color.Warning, "warning-circle"
+	case AlertError:
+		return th.Color.DangerBg, th.Color.Danger, "close-circle"
+	default:
+		return th.Color.InfoBg, th.Color.Primary, "info-circle"
+	}
+}
+
+// Alert 是静态提示（antd Alert）：浅色语义底 + 图标（showIcon）+
+// 标题/描述 + 可关闭（closable）。全部内容组合复用 Icon/Label 组件。
+type Alert struct {
+	controlBase
+	Type AlertType
+	// Title 主文案（加粗语义——用默认字重+正色即可，antd title 无特殊字重）。
+	Title string
+	// Description 副文案（TextMuted 弱化）。
+	Description string
+	// ShowIcon 显示左侧类型图标（antd showIcon）。
+	ShowIcon bool
+	// Closable 可关闭：右上 × 点击触发 OnClose（antd closable）。
+	Closable bool
+	OnClose  func()
+	Width    float32
+
+	taps []*ui.GestureDetector // × 手势实例池（跨重建持有）
+}
+
+// Build 实现 ui.Widget。
+func (a *Alert) Build(ctx *ui.BuildContext) *scene.Node {
+	th := ctx.ThemeOr()
+	bg, fg, icon := alertPalette(th, a.Type)
+	w := a.Width
+	if w <= 0 {
+		w = 420
+	}
+	col := scene.Flex(scene.Vertical, th.Space.XS).SetWidth(w)
+	col.SetBox(scene.BoxSpec{
+		Fill:   scene.Solid(bg),
+		Border: scene.Stroke(fg.WithAlpha(60), 1),
+		Radius: th.Radius.Base,
+	})
+	col.SetPadding(geom.InLTRB(th.Space.MD, th.Space.SM, th.Space.MD, th.Space.SM))
+
+	// 主行：图标（showIcon）+ 标题 + 右上 ×（closable）。
+	mainRow := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
+	if a.ShowIcon {
+		ic := (&Icon{Name: icon, Size: 16, Color: fg}).Build(ctx)
+		mainRow.Add(ic)
+	}
+	if a.Title != "" {
+		t := (&Label{Text: a.Title, Size: th.Font.SizeBase, Color: fg}).Build(ctx)
+		mainRow.Add(t)
+	}
+	// × 用 MainEnd 推到行尾：加一个弹性占位把 × 推右。
+	if a.Closable {
+		sp := scene.Box(scene.BoxSpec{}).SetFlex(1, scene.FlexTight)
+		mainRow.Add(sp)
+		ix := (&Icon{Name: "close", Size: 12, Color: th.Color.TextFaint}).Build(ctx)
+		ix.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "alert-close", Cursor: scene.CursorPointer})
+		mainRow.Add(ix)
+		// × 手势：标准 attach 接线（Input.Set + InvalidateRoot 帧请求 +
+		// ctlKey 钉身份——closable 移除后的重绘链依赖它）。
+		if ctx.Input != nil {
+			g := &ui.GestureDetector{OnTap: func(geom.Point) {
+				if a.OnClose != nil {
+					a.OnClose()
+				}
+			}}
+			a.taps = append(a.taps, g)
+			a.attach(ctx, ix, g.Handler(), false)
+		}
+	}
+	col.Add(mainRow)
+
+	if a.Description != "" {
+		d := (&Label{Text: a.Description, Size: th.Font.SizeSM, Color: th.Color.TextMuted}).Build(ctx)
+		col.Add(d)
+	}
+	col.SetHit(scene.HitSpec{Label: "alert"})
+	return col
+}
+
 // ── Drawer ────────────────────────────────────────────────────────
 
 // DrawerEdge 是抽屉弹出的边。

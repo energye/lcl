@@ -1,0 +1,203 @@
+{
+  "id": "alert",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "四类型",
+      "带描述与关闭"
+    ]
+  },
+  "sections": [
+    {
+      "name": "四类型",
+      "cases": [
+        {
+          "name": "info 底色为 colorPrimaryBg",
+          "target": {
+            "label": "alert",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "InfoBg"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "success 底色为 colorSuccessBg",
+          "target": {
+            "label": "alert",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "SuccessBg"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "warning 底色为 colorWarningBg",
+          "target": {
+            "label": "alert",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "WarningBg"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "error 底色为 colorErrorBg",
+          "target": {
+            "label": "alert",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "DangerBg"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "标题文字为语义色（Primary）",
+          "target": {
+            "label": "alert",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.08,
+                0.3,
+                0.5,
+                0.7
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.02,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "四条提示文本齐全",
+          "target": {
+            "label": "alert",
+            "text": "提示标题"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "提示标题"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "带描述与关闭",
+      "cases": [
+        {
+          "name": "描述文本存在（弱化色 Label）",
+          "target": {
+            "label": "alert",
+            "text": "磁盘空间不足"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "磁盘空间不足"
+            },
+            {
+              "kind": "text",
+              "text": "系统盘剩余 2.1 GB"
+            }
+          ]
+        },
+        {
+          "name": "× 关闭后提示收起（显示占位）",
+          "target": {
+            "label": "alert",
+            "text": "磁盘空间不足"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "alert-close"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "absent",
+              "target": {
+                "label": "alert",
+                "text": "磁盘空间不足"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "提示已关闭",
+              "target": {
+                "label": "label",
+                "text": "提示已关闭"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

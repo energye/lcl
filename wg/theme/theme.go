@@ -140,6 +140,10 @@ type ColorTokens struct {
 	DangerHover  geom.Color // antd colorErrorHover #FF7875
 	DangerActive geom.Color // antd colorErrorActive #D9363E
 	DangerBg     geom.Color // antd colorErrorBg #FFF1F0（default-danger 悬停底）
+	// Alert 语义底色（antd colorXxxBg）：Alert/Notification 浅底形态用。
+	InfoBg    geom.Color // antd colorPrimaryBg #E6F4FF
+	SuccessBg geom.Color // antd colorSuccessBg #F6FFED
+	WarningBg geom.Color // antd colorWarningBg #FFFBE6
 	OnDanger     geom.Color
 	Warning      geom.Color
 	WarningHover geom.Color // antd colorWarningHover #FFC53D
@@ -303,6 +307,9 @@ func Light() *Data {
 			DangerHover:  geom.RGBA(255, 120, 117), // #FF7875
 			DangerActive: geom.RGBA(217, 54, 62),   // #D9363E
 			DangerBg:     geom.RGBA(255, 241, 240), // #FFF1F0
+			InfoBg:       geom.RGBA(230, 244, 255), // colorPrimaryBg #E6F4FF
+			SuccessBg:    geom.RGBA(246, 255, 237), // colorSuccessBg #F6FFED
+			WarningBg:    geom.RGBA(255, 251, 230), // colorWarningBg #FFFBE6
 			OnDanger:     geom.RGBA(255, 255, 255),
 			Warning:      geom.RGBA(250, 173, 20),
 			WarningHover: geom.RGBA(255, 197, 61), // colorWarningHover #FFC53D
@@ -368,6 +375,9 @@ func Dark() *Data {
 			DangerHover:  geom.RGBA(228, 96, 97), // dark colorErrorHover
 			DangerActive: geom.RGBA(166, 39, 40), // dark colorErrorActive
 			DangerBg:     geom.RGBA(61, 31, 32),  // dark colorErrorBg（实色等价）
+			InfoBg:       geom.RGBA(17, 35, 56),  // dark colorPrimaryBg 实色等价
+			SuccessBg:    geom.RGBA(25, 43, 26),  // dark colorSuccessBg 实色等价
+			WarningBg:    geom.RGBA(47, 40, 22),  // dark colorWarningBg 实色等价
 			OnDanger:     geom.RGBA(255, 255, 255),
 			Warning:      geom.RGBA(216, 150, 20),
 			WarningHover: geom.RGBA(228, 172, 60), // dark colorWarningHover 实色等价

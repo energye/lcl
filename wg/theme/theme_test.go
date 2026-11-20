@@ -83,6 +83,10 @@ func TestDefaultTokenColors(t *testing.T) {
 	want(t, c(col.DangerHover), [3]int{255, 120, 117}, "DangerHover #FF7875")
 	want(t, c(col.DangerActive), [3]int{217, 54, 62}, "DangerActive #D9363E")
 	want(t, c(col.DangerBg), [3]int{255, 241, 240}, "DangerBg #FFF1F0")
+	// Alert 语义底色（antd 官方值）。
+	want(t, c(col.InfoBg), [3]int{230, 244, 255}, "InfoBg #E6F4FF")
+	want(t, c(col.SuccessBg), [3]int{246, 255, 237}, "SuccessBg #F6FFED")
+	want(t, c(col.WarningBg), [3]int{255, 251, 230}, "WarningBg #FFFBE6")
 	want(t, c(col.OnDanger), [3]int{255, 255, 255}, "OnDanger #FFFFFF")
 	want(t, c(col.Selection), [3]int{186, 224, 255}, "Selection #BAE0FF（primary 淡底）")
 	want(t, c(col.Info), [3]int{22, 119, 255}, "Info = Primary")
