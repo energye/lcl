@@ -616,6 +616,82 @@ func (m *Message) Close() {
 // IsOpen 返回是否正在显示。
 func (m *Message) IsOpen() bool { return m.handle != 0 }
 
+// ── Result ────────────────────────────────────────────────────────
+
+// ResultStatus 是结果页语义（antd Result.status）。
+type ResultStatus uint8
+
+const (
+	// ResultSuccess 成功（绿大图标）。
+	ResultSuccess ResultStatus = iota
+	// ResultError 错误（红）。
+	ResultError
+	// ResultWarning 警告（黄）。
+	ResultWarning
+	// ResultInfo 信息（主色）。
+	ResultInfo
+)
+
+// resultPalette 折算 Result 状态的大图标/颜色。
+func resultPalette(th *theme.Data, st ResultStatus) (fg geom.Color, icon string) {
+	switch st {
+	case ResultSuccess:
+		return th.Color.Success, "check-circle"
+	case ResultError:
+		return th.Color.Danger, "close-circle"
+	case ResultWarning:
+		return th.Color.Warning, "warning-circle"
+	default:
+		return th.Color.Primary, "info-circle"
+	}
+}
+
+// Result 是结果页（antd Result）：大图标 + 标题/副标题 + 操作区
+// （Extra 按钮，组合复用 Button）。整列居中排布。
+type Result struct {
+	Status   ResultStatus
+	Title    string
+	SubTitle string
+	// Extra 操作区（antd Result.extra）：通常放 Button（组合复用）。
+	Extra []ui.Widget
+	Width float32
+}
+
+// Build 实现 ui.Widget。
+func (r *Result) Build(ctx *ui.BuildContext) *scene.Node {
+	th := ctx.ThemeOr()
+	fg, icon := resultPalette(th, r.Status)
+	w := r.Width
+	if w <= 0 {
+		w = 420
+	}
+	col := scene.Flex(scene.Vertical, th.Space.SM).SetWidth(w).SetCrossAlign(scene.CrossCenter)
+	col.SetHit(scene.HitSpec{Label: "result"})
+	// 大图标：语义色圆底（Alert 语义色 fg 直接染色，直径 72）。
+	n := scene.Box(scene.BoxSpec{Fill: scene.Solid(fg.WithAlpha(48)), Radius: 36}).SetSize2(72, 72)
+	ic := (&Icon{Name: icon, Size: 40, Color: fg}).Build(ctx)
+	ic.SetPositionKeepSize(true)
+	ic.SetStackPosition(geom.Pt(16, 16))
+	n.Add(ic)
+	n.SetHit(scene.HitSpec{Label: "result-icon"})
+	col.Add(n)
+	if r.Title != "" {
+		col.Add((&Label{Text: r.Title, Size: th.Font.SizeLG, Color: th.Color.Text}).Build(ctx))
+	}
+	if r.SubTitle != "" {
+		col.Add((&Label{Text: r.SubTitle, Size: th.Font.SizeSM, Color: th.Color.TextMuted}).Build(ctx))
+	}
+	if len(r.Extra) > 0 {
+		row := scene.Flex(scene.Horizontal, th.Space.SM)
+		row.SetMainAlign(scene.MainCenter)
+		for _, x := range r.Extra {
+			row.Add(buildChild(ctx, x))
+		}
+		col.Add(row)
+	}
+	return col
+}
+
 // ── Popconfirm ───────────────────────────────────────────────────
 
 // Popconfirm 是锚定在控件旁的确认气泡。

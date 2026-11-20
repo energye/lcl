@@ -1,0 +1,155 @@
+{
+  "id": "result",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "成功与错误",
+      "警告与信息"
+    ]
+  },
+  "sections": [
+    {
+      "name": "成功与错误",
+      "cases": [
+        {
+          "name": "成功大图标为绿（Success）",
+          "target": {
+            "label": "result-icon",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.35,
+                0.35,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Success"
+              },
+              "minRatio": 0.15,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "错误大图标为红（Danger）",
+          "target": {
+            "label": "result-icon",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.35,
+                0.35,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "minRatio": 0.15,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "标题/副标题文本存在",
+          "target": {
+            "label": "result"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "提交成功"
+            },
+            {
+              "kind": "text",
+              "text": "表单内容已保存"
+            }
+          ]
+        },
+        {
+          "name": "Extra 操作区按钮存在",
+          "target": {
+            "label": "button",
+            "text": "查看记录"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "警告与信息",
+      "cases": [
+        {
+          "name": "警告大图标为黄（Warning）",
+          "target": {
+            "label": "result-icon",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.35,
+                0.35,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Warning"
+              },
+              "minRatio": 0.15,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "信息大图标为主色（Primary）",
+          "target": {
+            "label": "result-icon",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.35,
+                0.35,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.15,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "精简形态无操作区（标题文本存在）",
+          "target": {
+            "label": "result",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "存储空间告急"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
