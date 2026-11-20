@@ -501,6 +501,121 @@ func (n *Notification) Close() {
 // IsOpen 返回是否正在显示。
 func (n *Notification) IsOpen() bool { return n.handle != 0 }
 
+// ── Message ───────────────────────────────────────────────────────
+
+// MessageType 是全局消息语义（antd message.type）。
+type MessageType uint8
+
+const (
+	// MessageInfo 信息（主色图标）。
+	MessageInfo MessageType = iota
+	// MessageSuccess 成功（绿图标）。
+	MessageSuccess
+	// MessageWarning 警告（黄图标）。
+	MessageWarning
+	// MessageError 错误（红图标）。
+	MessageError
+	// MessageLoading 加载（旋转指示，主色）。
+	MessageLoading
+)
+
+// messagePalette 折算 Message 类型的图标色/图标名（Loading 用 Spin）。
+func messagePalette(th *theme.Data, typ MessageType) (fg geom.Color, icon string, spin bool) {
+	switch typ {
+	case MessageSuccess:
+		return th.Color.Success, "check-circle", false
+	case MessageWarning:
+		return th.Color.Warning, "warning-circle", false
+	case MessageError:
+		return th.Color.Danger, "close-circle", false
+	case MessageLoading:
+		return th.Color.Primary, "loading", true
+	default:
+		return th.Color.Primary, "info-circle", false
+	}
+}
+
+// Message 是全局消息提示（antd message）：顶部居中白底圆角浮层，
+// 语义色图标 + 文本，DismissTimeout 自动消失（默认 3s）。
+// 与 Alert 的区别：Message 是**浮层**（不占布局、自动消失、白底），
+// Alert 是**文档流内的静态块**（彩底、常驻）。
+type Message struct {
+	Type     MessageType
+	Text     string
+	Duration time.Duration
+
+	handle overlay.Handle
+	fb     feedbackHost
+}
+
+// NewMessage 创建全局消息。
+func NewMessage(typ MessageType, text string) *Message {
+	return &Message{Type: typ, Text: text}
+}
+
+// Show 显示消息（顶部居中）。重复调用会先关掉前一条（antd 单例语义）。
+func (m *Message) Show(ctx *ui.BuildContext) {
+	if ctx == nil || ctx.Overlay == nil {
+		return
+	}
+	if m.handle != 0 {
+		m.fb.host.Close(m.handle)
+		m.handle = 0
+	}
+	m.fb = captureHost(ctx)
+	th := m.fb.th
+	fg, icon, spin := messagePalette(th, m.Type)
+	content, dur := m.Text, m.Duration
+	if dur <= 0 {
+		dur = 3 * time.Second
+	}
+	typ := m.Type
+	m.handle = ctx.Overlay.Show(overlay.Entry{
+		Band:      theme.BandToast,
+		Anchor:    overlay.Anchor{Kind: overlay.AnchorNone},
+		Placement: overlay.PlacementTop,
+		// 白底圆角 + 阴影（antd message 是白底浮层，与 Alert 彩底区分）。
+		Size:     geom.Size{W: 0}, // 宽度按内容自适应
+		Dismiss:  overlay.DismissTimeout,
+		Duration: dur,
+		Tag:      "message",
+		OnClose:  func() { m.handle = 0 },
+		Build: func() *scene.Node {
+			row := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
+			row.SetBox(scene.BoxSpec{
+				Fill:   scene.Solid(th.Color.Surface),
+				Shadow: func() *scene.ShadowSpec {
+					if len(th.Elevation) > 0 {
+						e := th.Elevation[0]
+						return &scene.ShadowSpec{Dx: e.Dx, Dy: e.Dy, Blur: e.Blur, Color: e.Color}
+					}
+					return nil
+				}(),
+				Radius: th.Radius.Base,
+			})
+			row.SetPadding(geom.InLTRB(th.Space.MD, th.Space.SM, th.Space.MD, th.Space.SM))
+			ic := (&Icon{Name: icon, Size: 16, Color: fg, Spin: spin}).Build(ctx)
+			row.Add(ic)
+			tl := text.LayoutText(content, text.DefaultFont(th.Font.SizeBase), text.Options{})
+			row.Add(scene.Text(scene.TextSpec{Src: content, Layout: tl, Color: th.Color.Text}))
+			row.SetHit(scene.HitSpec{Label: "message"})
+			return row
+		},
+	})
+	_ = typ
+}
+
+// Close 立即关闭消息。
+func (m *Message) Close() {
+	if m.handle != 0 && m.fb.host != nil {
+		m.fb.host.Close(m.handle)
+	}
+	m.handle = 0
+}
+
+// IsOpen 返回是否正在显示。
+func (m *Message) IsOpen() bool { return m.handle != 0 }
+
 // ── Popconfirm ───────────────────────────────────────────────────
 
 // Popconfirm 是锚定在控件旁的确认气泡。

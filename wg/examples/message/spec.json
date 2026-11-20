@@ -1,0 +1,148 @@
+{
+  "id": "message",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "四类型触发"
+    ]
+  },
+  "sections": [
+    {
+      "name": "四类型触发",
+      "cases": [
+        {
+          "name": "点击显示信息消息（浮层开+文本正确）",
+          "target": {
+            "label": "button",
+            "text": "显示信息"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "text",
+              "text": "这是一条信息提示",
+              "target": {
+                "label": "message",
+                "text": "这是一条信息提示"
+              }
+            }
+          ]
+        },
+        {
+          "name": "信息消息 3s 后自动消失（DismissTimeout）",
+          "target": {
+            "label": "button",
+            "text": "显示信息"
+          },
+          "when": [
+            {
+              "wait": 3400
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        },
+        {
+          "name": "成功消息显示",
+          "target": {
+            "label": "button",
+            "text": "显示成功"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "text",
+              "text": "操作成功",
+              "target": {
+                "label": "message",
+                "text": "操作成功"
+              }
+            }
+          ]
+        },
+        {
+          "name": "错误消息显示",
+          "target": {
+            "label": "button",
+            "text": "显示错误"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "text",
+              "text": "网络连接失败",
+              "target": {
+                "label": "message",
+                "text": "错误：网络连接失败"
+              }
+            }
+          ]
+        },
+        {
+          "name": "再次点击同按钮单例（先关前一条再开）",
+          "target": {
+            "label": "button",
+            "text": "显示错误"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 200
+            },
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
