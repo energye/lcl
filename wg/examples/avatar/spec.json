@@ -1,9 +1,11 @@
 {
   "id": "avatar",
   "structure": {
-    "apiRows": 4,
+    "apiRows": 6,
     "sections": [
-      "三档尺寸"
+      "三档尺寸",
+      "图标头像",
+      "头像组"
     ]
   },
   "sections": [
@@ -96,6 +98,93 @@
               "widthBetween": [
                 48,
                 48
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "图标头像",
+      "cases": [
+        {
+          "name": "灰底 user 图标头像存在",
+          "target": {
+            "label": "avatar",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "主色底头像文字为白（OnPrimary）",
+          "target": {
+            "label": "avatar",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.4,
+                0.35,
+                0.3,
+                0.3
+              ],
+              "expect": {
+                "token": "OnPrimary"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "头像组",
+      "cases": [
+        {
+          "name": "尾项文本为 +2（唯一文本锚）",
+          "target": {
+            "label": "avatar",
+            "text": "+"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "+2"
+            }
+          ]
+        },
+        {
+          "name": "组内第 3 成员（Max 内最后一位）显示首字",
+          "target": {
+            "label": "avatar",
+            "text": "王"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "王"
+            }
+          ]
+        },
+        {
+          "name": "尾项尺寸与组员一致 32",
+          "target": {
+            "label": "avatar",
+            "text": "+"
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                30,
+                34
               ]
             }
           ]

@@ -287,7 +287,7 @@ func (t *Tag) Build(ctx *ui.BuildContext) *scene.Node {
 
 // ── Avatar ─────────────────────────────────────────────────────────
 
-// Avatar 是圆形头像：有文字时取首字符，否则显示纯色圆。
+// Avatar 是圆形头像：文字取首字符，或 Icon 图标（组合复用）。
 type Avatar struct {
 	Text  string
 	Size  float32
@@ -295,6 +295,11 @@ type Avatar struct {
 	// TextColor 头像文字色（零值按底色取反色：默认灰底配深字，显式主色
 	// 底配 OnPrimary 白字）。
 	TextColor geom.Color
+	// Icon 图标头像（antd Avatar.icon）：设置后优先于 Text（组合复用
+	// Icon 组件，颜色随文字语义）。
+	Icon string
+	// FullText 整体显示 Text 不截首字符（"+N" 尾项等短语义文本用）。
+	FullText bool
 }
 
 // Build 实现 ui.Widget。
@@ -302,7 +307,7 @@ type Avatar struct {
 // antd Avatar 默认形态：**灰底 #F0F0F0 + 深色文字**（colorText）；显式
 // Color 时按预设色语义（主色底配 OnPrimary 白字）。文字字号 ≈ size×0.375
 // （antd 32px 头像字号 14）。此前默认主色实底+白字，与官方对照不符。
-func (a Avatar) Build(ctx *ui.BuildContext) *scene.Node {
+func (a *Avatar) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	s := a.Size
 	if s <= 0 {
@@ -320,9 +325,18 @@ func (a Avatar) Build(ctx *ui.BuildContext) *scene.Node {
 		fg = th.Color.OnPrimary
 	}
 	n := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: s / 2}).SetSize2(s, s)
-	if a.Text != "" {
-		r := []rune(a.Text)
-		label := string(r[:1])
+	switch {
+	case a.Icon != "":
+		// 图标头像：Icon 组件居中（尺寸 ≈ size×0.5，antd 语义）。
+		ic := (&Icon{Name: a.Icon, Size: s * 0.5, Color: fg}).Build(ctx)
+		ic.SetMargin(geom.InLTRB((s-s*0.5)/2, (s-s*0.5)/2, 0, 0))
+		n.Add(ic)
+	case a.Text != "":
+		label := a.Text
+		if !a.FullText {
+			r := []rune(a.Text)
+			label = string(r[:1])
+		}
 		font := text.DefaultFont(s * 0.375)
 		layout := text.LayoutText(label, font, text.Options{})
 		t := scene.Text(scene.TextSpec{Src: label, Layout: layout, Color: fg})
@@ -331,6 +345,38 @@ func (a Avatar) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	n.SetHit(scene.HitSpec{Label: "avatar"})
 	return n
+}
+
+// AvatarGroup 是头像组（antd Avatar.Group）：横向排布，max 控制显示
+// 个数，超出部分合并为 "+N" 尾项（灰底深字）。
+type AvatarGroup struct {
+	Avatars []*Avatar
+	// Max 最多显示个数（超出部分合并为 "+N" 尾项；0=全部显示）。
+	Max int
+}
+
+// Build 实现 ui.Widget。
+func (g *AvatarGroup) Build(ctx *ui.BuildContext) *scene.Node {
+	th := ctx.ThemeOr()
+	row := scene.Flex(scene.Horizontal, th.Space.XS)
+	n := len(g.Avatars)
+	if g.Max <= 0 || g.Max >= n {
+		for _, a := range g.Avatars {
+			row.Add(a.Build(ctx))
+		}
+		return row
+	}
+	for _, a := range g.Avatars[:g.Max] {
+		row.Add(a.Build(ctx))
+	}
+	size := g.Avatars[0].Size
+	if size <= 0 {
+		size = 32
+	}
+	tail := &Avatar{Text: fmt.Sprintf("+%d", n-g.Max), Size: size, FullText: true}
+	tail.TextColor = th.Color.Text
+	row.Add(tail.Build(ctx))
+	return row
 }
 
 // ── Empty / Skeleton / Spin ────────────────────────────────────────
