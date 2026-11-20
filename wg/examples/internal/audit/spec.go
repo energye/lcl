@@ -363,7 +363,10 @@ func clickPoint(b geom.Rect, frac []float32) geom.Point {
 // notContains 模式——这类用例的目标节点不存在本身就是通过态。
 func allAssertionsNotContains(then []SpecAssertion) bool {
 	for _, a := range then {
-		if a.Kind != "text" || !a.NotContains {
+		// text+notContains 与 absent（不存在即通过）同属"反向"断言：
+		// 目标定位失败本身就是通过态，ensureVisible 的硬失败与之矛盾。
+		ok := (a.Kind == "text" && a.NotContains) || a.Kind == "absent"
+		if !ok {
 			return false
 		}
 	}

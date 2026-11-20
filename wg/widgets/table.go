@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/energye/lcl/wg/geom"
+	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
@@ -68,6 +69,13 @@ type Table struct {
 
 	// ShowScrollbar：nil = 内容溢出自动显示；true 始终；false 隐藏（仍可滚轮）。
 	ShowScrollbar *bool
+	// ShowPagination 底部分页器（antd pagination，**Pagination 组件组合
+	// 复用**）：开启后 Page 从 1 起、每页 PageSize 行（默认 10）。
+	ShowPagination bool
+	// PageSize 每页行数（ShowPagination 时生效，默认 10）。
+	PageSize      int
+	pageNo        int        // 当前页（1 起，内部状态）
+	pagePager     *Pagination // 分页器实例池（跨重建持有）
 
 	hoverRow int // 行悬停（antd 行 hover 浅色反馈）；-1 = 无
 
@@ -317,8 +325,61 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 	// 只置脏位不请求帧，界面表现为"点了没反应"（--audit 实测）。
 	ctx.BindState(t)
 	th := ctx.ThemeOr()
-	widths := t.columnWidths(th.Font.SizeSM)
 	idx := t.sortedIndex()
+
+	// 分页模式：排序结果按页切片（Pagination 组件组合复用管页码），
+	// 页内行子集仍走虚拟化窗口。
+	if t.ShowPagination && t.PageSize > 0 {
+		ps := t.PageSize
+		total := len(idx)
+		maxPage := (total + ps - 1) / ps
+		if maxPage < 1 {
+			maxPage = 1
+		}
+		if t.pageNo > maxPage {
+			t.pageNo = maxPage
+		}
+		if t.pageNo < 1 {
+			t.pageNo = 1
+		}
+		lo := (t.pageNo - 1) * ps
+		if lo > total {
+			lo = total
+		}
+		hi := lo + ps
+		if hi > total {
+			hi = total
+		}
+		idx = idx[lo:hi]
+		inner := t.buildInner(ctx, th, idx)
+		col := scene.Flex(scene.Vertical, th.Space.SM)
+		col.Add(inner)
+		// 底部分页器行（Pagination 组件组合复用；Total=总条目数语义）。
+		if t.pagePager == nil {
+			t.pagePager = &Pagination{}
+		}
+		t.pagePager.PageSize = t.PageSize
+		t.pagePager.Total = len(t.Rows)
+		t.pagePager.ShowTotal = true // antd 表格分页默认显示总条数
+		t.pagePager.Page = t.pageNo
+		t.pagePager.OnChange = func(n int) {
+			t.pageNo = n
+			t.MarkDirty()
+		}
+		pager := t.pagePager.Build(ctx)
+		pagerRow := scene.Flex(scene.Horizontal, 0).SetMainAlign(scene.MainEnd)
+		pagerRow.Add(pager)
+		col.Add(pagerRow)
+		return col
+	}
+
+	return t.buildInner(ctx, th, idx)
+}
+
+// buildInner 构建表格本体（表头+虚拟行[+滚动条]），idx 为已排序（可能
+// 已分页切片）的数据行下标。
+func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) *scene.Node {
+	widths := t.columnWidths(th.Font.SizeSM)
 
 	col := scene.Flex(scene.Vertical, 0).SetWidth(t.Width).SetHeight(t.ViewportHeight())
 	col.SetOverflow(true)

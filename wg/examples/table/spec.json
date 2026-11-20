@@ -2,12 +2,94 @@
   "id": "table",
   "structure": {
     "sections": [
+      "分页表格",
       "四列混排"
     ],
-    "apiRows": 9,
+    "apiRows": 8,
     "minElements": 12
   },
   "sections": [
+    {
+      "name": "分页表格",
+      "cases": [
+        {
+          "name": "分页器存在且页码 1（首页）",
+          "target": {
+            "label": "page",
+            "text": "1"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "总条数文字 23 条",
+          "target": {
+            "label": "page-total"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "共 23 条"
+            }
+          ]
+        },
+        {
+          "name": "第 1 页首行为 field_01",
+          "target": {
+            "label": "table-row",
+            "text": "field_01"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "点击页码 3 翻页（field_11 入窗）",
+          "target": {
+            "label": "page",
+            "text": "3"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "table-row",
+                "text": "field_11"
+              }
+            }
+          ]
+        },
+        {
+          "name": "翻页后 field_01 出窗（absent）",
+          "target": {
+            "label": "table-row",
+            "text": "field_01"
+          },
+          "then": [
+            {
+              "kind": "absent",
+              "target": {
+                "label": "table-row",
+                "text": "field_01"
+              }
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "四列混排",
       "cases": [
@@ -61,11 +143,11 @@
           "then": [
             {
               "kind": "text",
+              "text": "↓",
               "target": {
-                "label": "table-row",
+                "label": "table-sort",
                 "index": 0
-              },
-              "text": "owner_id"
+              }
             }
           ]
         },
@@ -83,11 +165,11 @@
           "then": [
             {
               "kind": "text",
+              "text": "↑",
               "target": {
-                "label": "table-row",
+                "label": "table-sort",
                 "index": 0
-              },
-              "text": "created_at"
+              }
             }
           ]
         }

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/energye/lcl/wg/examples/doc"
 	"github.com/energye/lcl/wg/examples/internal/launcher"
 	"github.com/energye/lcl/wg/ui"
@@ -24,7 +26,25 @@ func init() {
 	}
 	tbl = widgets.NewTable(cols, rows)
 	tbl.Width, tbl.Height = 620, 180
+
+	// tblPage 分页卡（ShowPagination）：23 行 × 每页 5 行（Pagination
+	// 组件组合复用，Total=总条目数语义）。
+	pcols := []widgets.TableColumn{
+		{Title: "序号", Mode: widgets.ColumnFixed, Width: 60},
+		{Title: "字段", Mode: widgets.ColumnAuto}, // 不 Sortable：table-sort 锚与四列混排卡撞车
+		{Title: "说明", Mode: widgets.ColumnFlex, Flex: 1},
+	}
+	var prows [][]any
+	for i := 1; i <= 23; i++ {
+		prows = append(prows, []any{i, fmt.Sprintf("field_%02d", i), "第 " + fmt.Sprintf("%02d", i) + " 个字段"})
+	}
+	tblPage = widgets.NewTable(pcols, prows)
+	tblPage.Width, tblPage.Height = 620, 180
+	tblPage.ShowPagination = true
+	tblPage.PageSize = 5
 }
+
+var tblPage *widgets.Table
 
 func main() {
 	launcher.Main(doc.Meta{
@@ -36,6 +56,9 @@ func main() {
 			"计划（M9）：固定列/列拖宽/行悬停/分页/筛选/自定义单元格渲染",
 		},
 		Demos: []doc.Demo{
+			{Title: "分页表格", Note: "23 行 × 每页 5 行：底部分页器翻页（组合复用 Pagination）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return tblPage
+			}},
 			{Title: "四列混排", Note: "Auto+Fixed+Flex 三档列宽；点击「字段」表头排序", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tbl
 			}},
