@@ -1,9 +1,10 @@
 {
   "id": "radio",
   "structure": {
-    "apiRows": 4,
+    "apiRows": 5,
     "sections": [
       "Radio.Group",
+      "button 按钮组",
       "散用 Radio"
     ]
   },
@@ -93,6 +94,115 @@
             {
               "kind": "template",
               "template": "segment-select"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "button 按钮组",
+      "cases": [
+        {
+          "name": "选中项（上海）为主色实底",
+          "target": {
+            "label": "radio-button",
+            "text": "上海"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "未选项为白底（Surface）",
+          "target": {
+            "label": "radio-button",
+            "text": "杭州"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "点击北京切换选中（主色实底迁移）",
+          "target": {
+            "label": "radio-button",
+            "text": "北京"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "radio-button",
+                "text": "北京"
+              }
+            }
+          ]
+        },
+        {
+          "name": "切换后上海回白底",
+          "target": {
+            "label": "radio-button",
+            "text": "上海"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.4,
+              "tol": 14
             }
           ]
         }
