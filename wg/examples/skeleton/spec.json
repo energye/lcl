@@ -4,6 +4,7 @@
     "apiRows": 7,
     "sections": [
       "四行占位",
+      "呼吸态",
       "组合形态"
     ]
   },
@@ -20,6 +21,55 @@
             {
               "kind": "geometry",
               "widthAtLeast": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "呼吸态",
+      "cases": [
+        {
+          "name": "呼吸态画面持续变化（动态效果存在）",
+          "target": {
+            "label": "skeleton",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "animate",
+              "tol": 600,
+              "minRatio": 0.3,
+              "frac": [
+                0.1,
+                0.1,
+                0.9,
+                0.9
+              ]
+            }
+          ]
+        },
+        {
+          "name": "呼吸态灰条为 SurfaceActive",
+          "target": {
+            "label": "skeleton",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "SurfaceActive"
+              },
+              "minRatio": 0.4,
+              "tol": 14
             }
           ]
         }

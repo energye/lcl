@@ -337,21 +337,45 @@ func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
 		phase = float32(time.Since(skeletonBase)%breathePeriod) / float32(breathePeriod)
 	}
 	// antd active 呼吸：透明度在 1 与 0.45 间摆动（正弦半周期）。
+	//
+	// Animated 时**相位必须在渲染闭包内按墙钟实时算**：此前在 Build 里算
+	// 一次、烘焙进节点 opacity 属性——帧泵虽按 claim 每拍标脏重录，但记录
+	// 的属性是常量，画面零变化（--audit animate 模板实测逐帧差恒 0.000，
+	// "呼吸态"实为死动画）。Spin 的 loading 旋转即此模式（phase 在闭包里算）。
+	// 非 Animated：保留 Phase 外驱（调用方每帧改 Phase 并标脏，属性随之更新）。
+	bar := func(bw, bh float32, round float32) *scene.Node {
+		if !s.Animated {
+			b := scene.Box(scene.BoxSpec{
+				// SurfaceActive(#F0F0F0)：SurfaceSunken 与演示舞台同色，灰条会隐形。
+				Fill: scene.Solid(th.Color.SurfaceActive), Radius: round,
+			}).SetSize2(bw, bh)
+			return b
+		}
+		// 渲染时实时相位：闭包每次录制重执行，alpha 随墙钟摆动。
+		// Fill 走几何颜色带 alpha（FillHover 等已验证该通道），
+		// 填充路径 AddRRect 保证圆角与 Box 形态一致。
+		cp := render.NewPath().AddRRect(geom.RectXYWH(0, 0, bw, bh), round)
+		n := scene.CustomPaintNode(func(cv render.Canvas, sz geom.Size) {
+			const breathePeriod = 1400 * time.Millisecond
+			p := float32(time.Since(skeletonBase)%breathePeriod) / float32(breathePeriod)
+			op := 1.0 - 0.55*(0.5-0.5*cos32(p*2*3.14159265))
+			col := th.Color.SurfaceActive
+			cv.FillPath(cp, render.Fill(geom.RGBAa(col.R, col.G, col.B, uint8(op*255))))
+		}).SetSize2(bw, bh)
+		return n
+	}
+	// 外驱模式（非 Animated）：Phase 由调用方推进，opacity 烘焙进节点属性。
 	opacity := 1.0
 	if phase > 0 {
 		opacity = 1.0 - 0.55*(0.5-0.5*cos32(phase*2*3.14159265))
 	}
-	bar := func(bw, bh float32, round float32) *scene.Node {
-		b := scene.Box(scene.BoxSpec{
-			// SurfaceActive(#F0F0F0)：SurfaceSunken 与演示舞台同色，灰条会隐形。
-			Fill: scene.Solid(th.Color.SurfaceActive), Radius: round,
-		}).SetSize2(bw, bh)
-		return b
-	}
 	// 组合形态（Avatar/Title 任一开启）：antd 默认骨架布局。
 	if s.Avatar || s.Title {
 		root := scene.Flex(scene.Horizontal, th.Space.MD).SetCrossAlign(scene.CrossCenter)
-		root.SetOpacity(float32(opacity))
+		// Animated 时各条内部实时 alpha，root 不再叠加（否则二次相乘变暗）。
+		if !s.Animated {
+			root.SetOpacity(float32(opacity))
+		}
 		if s.Avatar {
 			av := bar(32, 32, th.Radius.Pill)
 			// 被动定位锚：头像圆独立采样（几何/颜色断言）。
@@ -376,7 +400,9 @@ func (s Skeleton) Build(ctx *ui.BuildContext) *scene.Node {
 		return root
 	}
 	n := scene.Flex(scene.Vertical, th.Space.MD)
-	n.SetOpacity(float32(opacity))
+	if !s.Animated {
+		n.SetOpacity(float32(opacity))
+	}
 	for i := 0; i < rows; i++ {
 		rw := w
 		if i == rows-1 {

@@ -952,6 +952,8 @@ func (r *specRunner) runTemplate(caseName string, def *SpecTarget, as SpecAssert
 		r.tplButtonPress(caseName, *def)
 	case "spinner-spin":
 		r.tplSpinnerSpin(caseName, *def, as)
+	case "animate":
+		r.tplAnimate(caseName, *def, as)
 	default:
 		r.add(caseName, "template:"+as.Template, false, "未实现的模板")
 	}
@@ -1822,6 +1824,56 @@ func (r *specRunner) tplSpinnerSpin(caseName string, t SpecTarget, as SpecAssert
 	r.add(caseName, "template:spinner-spin", pass,
 		fmt.Sprintf("loading meanAbsDiff %.2f/%.2f/%.2f vs 静止 %.2f（帧 %d→%d，需 moving≥0.5 且 >2×静止+0.2）",
 			movingAB, movingBC, movingAC, still, f0, f1))
+}
+
+// tplAnimate：通用动态效果断言（spinner-spin 之外的所有动画形态）。
+//
+// 对目标区域连续抓多帧，逐像素平均绝对差（meanAbsDiff）必须持续非零
+// 且帧号必须增长——"动态效果是否存在"的数值判据。frame 采样区间用
+// frac（默认全框）；窗口帧数/间隔可调（Skeleton 呼吸 1.4s 周期需
+// 长窗口才能扫过完整半周期）。阈值默认 0.3（透明度摆动等大面积
+// 动画差值大；细弧线类请用 spinner-spin 或调低 minDiff）。
+//
+// 注意：采样区间内若有非动画内容（文字墨迹等静态元素），会拉高基线
+// 掩盖动画差异——目标锚应选动画本体区域（如 Skeleton 条组整体）。
+func (r *specRunner) tplAnimate(caseName string, t SpecTarget, as SpecAssertion) {
+	if _, ok := r.locate(t); !ok {
+		r.add(caseName, "template:animate", false, "目标不存在："+targetDesc(&t))
+		return
+	}
+	rect := r.sampleRect(&t, as.Frac)
+	interval := 500 * time.Millisecond
+	if as.Tol != nil { // 复用 tol 字段作"帧间隔 ms"的便捷通道（模板专用）
+		interval = time.Duration(*as.Tol) * time.Millisecond
+	}
+	frames := 4
+	minDiff := 0.3
+	if as.MinRatio != nil {
+		minDiff = float64(*as.MinRatio)
+	}
+	f0 := r.c.PresentStats().Frames
+	prev := grab(r.c)
+	diffs := make([]float64, 0, frames)
+	var last *image.RGBA
+	last = prev
+	for i := 1; i < frames; i++ {
+		time.Sleep(interval)
+		cur := grab(r.c)
+		diffs = append(diffs, meanAbsDiff(last, cur, rect))
+		last = cur
+	}
+	f1 := r.c.PresentStats().Frames
+	peak := 0.0
+	for _, d := range diffs {
+		if d > peak {
+			peak = d
+		}
+	}
+	// 判据：帧号增长（动画确实在请求帧）+ 窗口内峰值差非零（画面在变化）。
+	pass := f1 > f0 && peak >= minDiff
+	r.add(caseName, "template:animate", pass,
+		fmt.Sprintf("窗口 %d 帧×%v 逐帧差 %.3f 峰值 %.3f ≥ %.3f（帧 %d→%d）",
+			frames-1, interval, diffs, peak, minDiff, f0, f1))
 }
 
 // tplCollapseToggle：点击表头展开/收起，内容区大面积变化。
