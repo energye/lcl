@@ -1,9 +1,10 @@
 {
   "id": "segmented",
   "structure": {
-    "apiRows": 4,
+    "apiRows": 6,
     "sections": [
-      "周期切换"
+      "周期切换",
+      "block 撑满+图标项"
     ]
   },
   "sections": [
@@ -88,6 +89,60 @@
             {
               "kind": "template",
               "template": "segment-select"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "block 撑满+图标项",
+      "cases": [
+        {
+          "name": "block 轨道宽度撑满（≥380）",
+          "target": {
+            "label": "segmented",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthAtLeast": 380
+            }
+          ]
+        },
+        {
+          "name": "选中段（看板）存在",
+          "target": {
+            "label": "segment",
+            "text": "看板"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "点击日历段切换",
+          "target": {
+            "label": "segment",
+            "text": "日历"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "segment",
+                "text": "日历"
+              }
             }
           ]
         }

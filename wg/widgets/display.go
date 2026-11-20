@@ -781,6 +781,12 @@ type Segmented struct {
 	Options  []string
 	Selected int
 	OnChange func(int)
+	// Block 撑满父级宽度：各段等分（antd block）。
+	Block bool
+	// Icons 与 Options 对齐的图标名（antd options item icon；空=无图标）。
+	Icons []string
+	// Width 轨道宽（Block=true 时必设——父列默认不拉伸交叉轴）。
+	Width float32
 
 	// items 跨重建持有：分段项的 hover 态与手势实例必须稳定。
 	items []*segmentItem
@@ -802,6 +808,9 @@ func (s *Segmented) Build(ctx *ui.BuildContext) *scene.Node {
 	children := make([]*scene.Node, 0, len(s.Options))
 	for i, opt := range s.Options {
 		s.items[i].label = opt
+		if i < len(s.Icons) {
+			s.items[i].icon = s.Icons[i]
+		}
 		children = append(children, s.items[i].Build(ctx))
 	}
 	row := scene.Flex(scene.Horizontal, 0, children...)
@@ -811,6 +820,17 @@ func (s *Segmented) Build(ctx *ui.BuildContext) *scene.Node {
 		Fill: scene.Solid(th.Color.SurfaceActive), Radius: th.Radius.Base,
 	}, row)
 	n.SetPadding(geom.InLTRB(2, 2, 2, 2))
+	// Block：轨道/行/段全部**显式等分宽**（Width/段数）。flex 等分
+	// （FlexTight+FlexLoose 组合）在本布局通道下实测把轨道压成 4px、
+	// 段全部 (0,0,0,0)——显式逐段 SetWidth 是零歧义通道。
+	if s.Block && s.Width > 0 {
+		n.SetWidth(s.Width)
+		row.SetWidth(s.Width - 4)
+		seg := (s.Width - 4) / float32(len(children))
+		for _, ch := range children {
+			ch.SetWidth(seg)
+		}
+	}
 	// 被动定位锚（HitDeferToChild 不影响交互）：容器轨道色断言用。
 	n.SetHit(scene.HitSpec{Label: "segmented"})
 	s.node = n
@@ -822,6 +842,7 @@ type segmentItem struct {
 	controlBase
 	index  int
 	label  string
+	icon   string // 非空=左侧图标（组合复用 Icon）
 	parent *Segmented
 }
 
@@ -842,10 +863,22 @@ func (s *segmentItem) Build(ctx *ui.BuildContext) *scene.Node {
 	font := text.DefaultFont(th.Font.SizeSM)
 	layout := text.LayoutText(s.label, font, text.Options{})
 	w := layout.Size.W + th.Space.LG
+	if s.icon != "" {
+		w += 18 // 图标宽+间距
+	}
 	const h = float32(26)
 	item := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: th.Radius.SM, Shadow: shadow}).SetSize2(w, h)
+	if s.icon != "" {
+		ic := (&Icon{Name: s.icon, Size: 14, Color: fg}).Build(ctx)
+		ic.SetMargin(geom.InLTRB(th.Space.SM, (h-14)/2, 0, 0))
+		item.Add(ic)
+	}
 	label := scene.Text(scene.TextSpec{Src: s.label, Layout: layout, Color: fg})
-	label.SetMargin(geom.InLTRB(th.Space.SM, (h-layout.Size.H)/2, 0, 0))
+	if s.icon != "" {
+		label.SetMargin(geom.InLTRB(th.Space.XS, (h-layout.Size.H)/2, 0, 0))
+	} else {
+		label.SetMargin(geom.InLTRB(th.Space.SM, (h-layout.Size.H)/2, 0, 0))
+	}
 	item.Add(label)
 	item.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "segment", Cursor: scene.CursorPointer})
 	parent, index := s.parent, s.index
