@@ -171,34 +171,117 @@ func (b Badge) Build(ctx *ui.BuildContext) *scene.Node {
 	return n
 }
 
-// Tag 是标签（浅底圆角文字）。
+// Tag 是标签（浅底圆角文字）。指针接收器：closable/checkable 需要跨
+// Build 持有手势与选中态（值接收器的字段写入不落回源实例）。
 type Tag struct {
+	controlBase
 	Text  string
-	Color geom.Color // 零值时取主题 Primary
+	Color geom.Color // 零值时取主题默认灰底
+	// Closable 可关闭：右侧 × 图标（复用 Icon 组件 close 图元），
+	// 点击触发 OnClose（antd closable）。
+	Closable bool
+	// Checkable 可选中：点击切换选中态（选中=主色实底+白字，
+	// antd checkable 选中态）；未选保持默认灰底。OnCheck 回调切换值。
+	Checkable bool
+	Checked   bool
+	// Preset 预设色名（antd color 预设值）："success"/"error"/
+	// "warning"/"processing"/"default"；设置后按语义色渲染（浅底+
+	// 同色文字+淡描边），Preset 解析优先于显式 Color。
+	Preset string
+	OnClose func()
+	OnCheck func(bool)
+
+	taps []*ui.GestureDetector // 跨 Build 持有（实例池，防 hover/状态丢失）
+}
+
+// presetColor 把预设色名解析为语义色（零值=未匹配）。
+func presetColor(th *theme.Data, name string) geom.Color {
+	switch name {
+	case "success":
+		return th.Color.Success
+	case "error":
+		return th.Color.Danger
+	case "warning":
+		return th.Color.Warning
+	case "processing":
+		return th.Color.Primary
+	}
+	return geom.Color{}
 }
 
 // Build 实现 ui.Widget。
 //
 // antd Tag 两态：**默认**（无 color）= 灰底 colorFillQuaternary + colorBorder
-// 描边 + colorText 文字；**彩色**（显式 Color）= 浅底（基色 40% 透明）+ 同色
-// 文字 + 基色淡描边。
-func (t Tag) Build(ctx *ui.BuildContext) *scene.Node {
+// 描边 + colorText 文字；**彩色**（显式 Color 或 Preset 预设色）= 浅底
+// （基色 40% 透明）+ 同色文字 + 基色淡描边。checkable 选中态=主色实底+
+// 白字；closable=右侧 × 图标。
+func (t *Tag) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
+	base := t.Color
+	if t.Preset != "" {
+		base = presetColor(th, t.Preset)
+	}
 	textColor, fillColor, borderColor := th.Color.Text, th.Color.SurfaceSunken, th.Color.Border
-	if t.Color != (geom.Color{}) {
-		textColor = t.Color
-		fillColor = t.Color.WithAlpha(40)
-		borderColor = t.Color.WithAlpha(80)
+	if base != (geom.Color{}) {
+		textColor = base
+		fillColor = base.WithAlpha(40)
+		borderColor = base.WithAlpha(80)
+	}
+	// checkable 选中态：antd 主色实底+白字。
+	selected := t.Checkable && t.Checked
+	if selected {
+		textColor, fillColor = th.Color.OnPrimary, th.Color.Primary
+		borderColor = th.Color.Primary
 	}
 	font := text.DefaultFont(th.Font.SizeSM)
 	layout := text.LayoutText(t.Text, font, text.Options{})
-	w := layout.Size.W + th.Space.MD
+	contentW := layout.Size.W + th.Space.MD
+	if t.Closable {
+		contentW += 12 // × 图标
+	}
 	h := layout.Size.H + th.Space.SM
-	n := scene.Box(scene.BoxSpec{Fill: scene.Solid(fillColor), Border: scene.Stroke(borderColor, 1), Radius: th.Radius.SM}).SetSize2(w, h)
+	n := scene.Box(scene.BoxSpec{Fill: scene.Solid(fillColor), Border: scene.Stroke(borderColor, 1), Radius: th.Radius.SM}).SetSize2(contentW, h)
 	label := scene.Text(scene.TextSpec{Src: t.Text, Layout: layout, Color: textColor})
 	label.SetMargin(geom.InLTRB(th.Space.SM, (h-layout.Size.H)/2, 0, 0))
 	n.Add(label)
-	n.SetHit(scene.HitSpec{Label: "tag"})
+	if t.Closable {
+		// × 图标：复用 Icon close 图元（组合复用），紧贴文字。
+		ix := (&Icon{Name: "close", Size: 12, Color: th.Color.TextFaint}).Build(ctx)
+		ix.SetMargin(geom.InLTRB(th.Space.SM, (h-12)/2, th.Space.SM, 0))
+		n.Add(ix)
+		ix.SetHit(scene.HitSpec{Label: "tag-close", Cursor: scene.CursorPointer})
+	}
+	// 命中与手势：**根节点统一 HitOpaque，单手势按点击坐标分流**——
+	// closable 的 × 是框内热区（右侧 16px），其余区域归 checkable 切换
+	// （antd 交互：整框可点，× 独立热区）。此前 × 手势绑在子 Icon 节点 +
+	// 根 DeferToChild 的方案实测命中不到（--audit 点击 × 无效），改热区
+	// 分流后根节点直接吃事件，无子节点命中穿透问题。
+	n.SetHit(scene.HitSpec{Label: "tag", Behavior: scene.HitOpaque})
+	// 走标准 attach 接线：InvalidateRoot 帧请求 + ctlKey 钉实例身份
+	// （缺 ctlKey 时重建被 hover 差分误判为悬停迁移，事件路由不稳定）。
+	hnd := t.tapHandler(ctx, false, func() {})
+	if ctx.Input != nil && (t.Closable || t.Checkable) {
+		t.taps = t.taps[:0]
+		w := contentW // 根框宽（× 热区从右缘向左 16px）
+		gc := &ui.GestureDetector{OnTap: func(p geom.Point) {
+			if t.Closable && p.X > w-16 {
+				if t.OnClose != nil {
+					t.OnClose()
+				}
+				return
+			}
+			if t.Checkable {
+				t.Checked = !t.Checked
+				t.MarkDirty()
+				if t.OnCheck != nil {
+					t.OnCheck(t.Checked)
+				}
+			}
+		}}
+		t.taps = append(t.taps, gc)
+		hnd = gc.Handler()
+	}
+	t.attach(ctx, n, hnd, false)
 	return n
 }
 

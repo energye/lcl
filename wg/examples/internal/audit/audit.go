@@ -120,6 +120,7 @@ var interactiveLabels = map[string]string{
 	"tree-node":         "树节点",
 	"rate-star":         "评分星",
 	"page":              "页码",
+	"tag":               "标签",
 	"breadcrumb":        "面包屑项",
 	"input-number":      "数字输入",
 	"autocomplete-item": "联想项",

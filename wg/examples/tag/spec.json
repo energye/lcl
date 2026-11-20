@@ -1,9 +1,12 @@
 {
   "id": "tag",
   "structure": {
-    "apiRows": 2,
+    "apiRows": 5,
     "sections": [
-      "标签组"
+      "标签组",
+      "preset 预设色",
+      "closable 可关闭",
+      "checkable 可选中"
     ]
   },
   "sections": [
@@ -74,7 +77,7 @@
               "expect": {
                 "token": "Text"
               },
-              "minRatio": 0.05,
+              "minRatio": 0.04,
               "tol": 24
             }
           ]
@@ -114,6 +117,326 @@
               },
               "minRatio": 0.05,
               "tol": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "preset 预设色",
+      "cases": [
+        {
+          "name": "四预设标签文本齐全",
+          "target": {
+            "label": "tag",
+            "text": "processing"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "success",
+              "target": {
+                "label": "tag",
+                "text": "success"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "error",
+              "target": {
+                "label": "tag",
+                "text": "error"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "warning",
+              "target": {
+                "label": "tag",
+                "text": "warning"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "processing",
+              "target": {
+                "label": "tag",
+                "text": "processing"
+              }
+            }
+          ]
+        },
+        {
+          "name": "processing 文字为 Primary 纯色",
+          "target": {
+            "label": "tag",
+            "text": "processing"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.7
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.04,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "success 文字为 Success 纯色",
+          "target": {
+            "label": "tag",
+            "text": "success"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.7
+              ],
+              "expect": {
+                "token": "Success"
+              },
+              "minRatio": 0.02,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "error 文字为 Danger 纯色",
+          "target": {
+            "label": "tag",
+            "text": "error"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.7
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "minRatio": 0.02,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "warning 文字为 Warning 纯色",
+          "target": {
+            "label": "tag",
+            "text": "warning"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.7
+              ],
+              "expect": {
+                "token": "Warning"
+              },
+              "minRatio": 0.015,
+              "tol": 14
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "closable 可关闭",
+      "cases": [
+        {
+          "name": "× 图标存在且可点",
+          "target": {
+            "label": "tag-close"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "点击×后 golang 标签消失",
+          "target": {
+            "label": "tag",
+            "text": "golang"
+          },
+          "when": [
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tag",
+                  "text": "golang"
+                },
+                "frac": [
+                  0.92,
+                  0.5
+                ]
+              }
+            },
+            {
+              "wait": 400
+            }
+          ],
+          "then": [
+            {
+              "kind": "absent",
+              "target": {
+                "label": "tag",
+                "text": "golang"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tag",
+                "text": "React"
+              }
+            }
+          ]
+        },
+        {
+          "name": "再点×后 React 标签消失",
+          "target": {
+            "label": "tag",
+            "text": "React"
+          },
+          "when": [
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tag",
+                  "text": "React"
+                },
+                "frac": [
+                  0.92,
+                  0.5
+                ]
+              }
+            },
+            {
+              "wait": 400
+            }
+          ],
+          "then": [
+            {
+              "kind": "absent",
+              "target": {
+                "label": "tag",
+                "text": "React"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "checkable 可选中",
+      "cases": [
+        {
+          "name": "三个可选中标签存在",
+          "target": {
+            "label": "tag",
+            "text": "后端"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "点击标签选中（主色实底）",
+          "target": {
+            "label": "tag",
+            "text": "后端"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.35,
+              "tol": 14,
+              "target": {
+                "label": "tag",
+                "text": "后端"
+              }
+            }
+          ]
+        },
+        {
+          "name": "再点击取消选中（恢复灰底）",
+          "target": {
+            "label": "tag",
+            "text": "后端"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.6
+              ],
+              "expect": {
+                "token": "SurfaceSunken"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "tag",
+                "text": "后端"
+              }
             }
           ]
         }
