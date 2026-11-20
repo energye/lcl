@@ -28,12 +28,33 @@ var (
 		}},
 		{Key: "misc", Label: "其他"},
 	})
+
+	// treeCascade 级联勾选（CheckStrictly=false 默认）：勾父全选子孙、
+	// 子孙部分勾选父半选。预置 doc 半选态（doc-a 勾 doc-b 不勾）。
+	// Label 唯一化（资料/图库/手册 A…）：多卡页面 text 锚撞车是定位
+	// 混乱的根源（Select/Tag 轮同款教训）。
+	treeCascade = widgets.NewTree([]widgets.TreeNode{
+		{Key: "all", Label: "全部资料", Children: []widgets.TreeNode{
+			{Key: "grp-doc", Label: "手册", Children: []widgets.TreeNode{
+				{Key: "doc-a", Label: "手册 A"},
+				{Key: "doc-b", Label: "手册 B"},
+			}},
+			{Key: "grp-media", Label: "图库"}, // 无子节点：压缩卡高（页尾卡滚动可达性）
+		}},
+	})
 )
 
 func init() {
 	treeCheck.Checkable = true
+	treeCheck.CheckStrictly = true // 旧行为保持：独立勾选
 	treeCheck.Checked["doc"] = true
 	treeCheck.Checked["doc-a"] = true
+	treeCascade.Checkable = true
+	treeCascade.Expanded["all"] = true
+	treeCascade.Expanded["grp-doc"] = true  // 「文档」展开：子孙复选框入树
+
+	treeCascade.Checked["doc-a"] = true // 部分勾选 → 「手册」半选
+	treeCascade.SyncChecked()           // 外部预置后重算父链半选态
 }
 
 func main() {
@@ -42,15 +63,17 @@ func main() {
 		What: []string{
 			"层级数据展示：点击箭头展开/收起，点击标签选中",
 			"Expanded 状态按 Key 记录；缩进固定 18px、行高 28px",
-			"Checkable 复选模式（每行复选框独立勾选，checkStrictly 语义）",
-			"计划（M9）：级联勾选/半选、节点图标、异步加载",
+			"Checkable 复选：CheckStrictly=true 独立勾选 / false 级联（勾父全选子孙、部分选父半选）",
 		},
 		Demos: []doc.Demo{
 			{Title: "目录树", Note: "展开 src → render，点选 canvas.go", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tree
 			}},
-			{Title: "checkable 复选", Note: "Checkable=true：每行复选框独立勾选（checkStrictly）", Build: func(ctx *ui.BuildContext) ui.Widget {
+			{Title: "checkable 复选", Note: "CheckStrictly=true：每行复选框独立勾选", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return treeCheck
+			}},
+			{Title: "级联勾选", Note: "CheckStrictly=false：预置「手册 A」勾选 →「手册」半选；勾「全部资料」级联全选", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return treeCascade
 			}},
 		},
 		API: []doc.APIRow{
@@ -63,6 +86,7 @@ func main() {
 			{Name: "OnToggle", Type: "func(key string)", Desc: "展开/收起回调"},
 			{Name: "Toggle", Type: "func(key string)", Desc: "程序化切换展开态"},
 			{Name: "Checkable/Checked", Type: "bool / map[string]bool", Desc: "复选模式与勾选集合"},
+			{Name: "CheckStrictly", Type: "bool", Default: "false", Desc: "true=独立勾选 / false=级联（父全选子孙+半选联动）"},
 			{Name: "OnCheck", Type: "func(checkedKeys []string)", Desc: "勾选变化回调"},
 		},
 	})

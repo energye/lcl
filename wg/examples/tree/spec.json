@@ -1,10 +1,11 @@
 {
   "id": "tree",
   "structure": {
-    "apiRows": 8,
+    "apiRows": 11,
     "sections": [
       "目录树",
-      "checkable 复选"
+      "checkable 复选",
+      "级联勾选"
     ]
   },
   "sections": [
@@ -103,23 +104,47 @@
         {
           "name": "初始 doc 节点复选框为勾选（主色底）",
           "target": {
-            "label": "checkbox-box",
+            "label": "checkbox",
             "index": 0
           },
           "then": [
             {
               "kind": "colorRatio",
               "frac": [
-                0.25,
-                0.25,
-                0.5,
-                0.5
+                0.3,
+                0.3,
+                0.4,
+                0.4
               ],
               "expect": {
                 "token": "Primary"
               },
               "minRatio": 0.4,
-              "tol": 14
+              "tol": 14,
+              "target": {
+                "label": "checkbox-box",
+                "index": 0
+              }
+            }
+          ],
+          "when": [
+            {
+              "wheel": 3
+            },
+            {
+              "wheel": 3
+            },
+            {
+              "wheel": 3
+            },
+            {
+              "wheel": 3
+            },
+            {
+              "wheel": 3
+            },
+            {
+              "wait": 300
             }
           ]
         },
@@ -151,6 +176,171 @@
               "target": {
                 "label": "checkbox-box",
                 "index": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "级联勾选",
+      "cases": [
+        {
+          "name": "预置部分勾选：「文档」复选框为半选（主色横杠）",
+          "target": {
+            "label": "checkbox",
+            "index": 4
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.45,
+                0.5,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.01,
+              "tol": 24,
+              "target": {
+                "label": "checkbox-box",
+                "index": 4
+              }
+            }
+          ]
+        },
+        {
+          "name": "未勾选节点「手册 A」为白底（Surface）",
+          "target": {
+            "label": "checkbox",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "checkbox-box",
+                "index": 2
+              }
+            }
+          ]
+        },
+        {
+          "name": "勾「文档」级联全选子孙（A/B 全勾）",
+          "target": {
+            "label": "checkbox",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "checkbox",
+                "index": 2
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "checkbox",
+                "index": 3
+              }
+            }
+          ]
+        },
+        {
+          "name": "级联后「文档」复选框为全勾（主色实底）",
+          "target": {
+            "label": "checkbox",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "checkbox-box",
+                "index": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "取消「文档」级联清空子孙（回白底）",
+          "target": {
+            "label": "checkbox",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "checkbox"
+                }
+              }
+            },
+            {
+              "wait": 200
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "checkbox"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "checkbox-box"
               }
             }
           ]

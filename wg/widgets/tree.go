@@ -32,10 +32,14 @@ type Tree struct {
 
 	// Checkable 复选模式（antd checkable）：每行复选框是 **Checkbox 组件
 	// 实例**（组合复用——hover 主色边框/indeterminate 半选/Space 键/禁用态
-	// 全部白拿，M9 级联勾选走 Indeterminate）。点击独立勾选/取消
-	// （checkStrictly 语义——父子无级联），Checked 集合变化时触发 OnCheck。
+	// 全部白拿）。点击勾选/取消，Checked 集合变化时触发 OnCheck。
 	Checkable bool
-	// Checked 是勾选节点的 Key 集合（Checkable 模式下读写）。
+	// CheckStrictly 父子勾选是否解除关联（antd checkStrictly）：
+	// false（默认）= **级联**——勾父全选子孙、子孙全选时父自动勾、
+	// 部分选时父半选（Checkbox.Indeterminate）；true = 独立勾选（旧行为）。
+	CheckStrictly bool
+	// Checked 是勾选节点的 Key 集合（Checkable 模式下读写；级联模式下
+	// 勾选父节点时子孙 Key 也会写入）。
 	Checked map[string]bool
 	OnCheck func(checkedKeys []string)
 
@@ -62,6 +66,93 @@ func (t *Tree) Toggle(key string) {
 	if t.OnToggle != nil {
 		t.OnToggle(key, next)
 	}
+}
+
+// SyncChecked 重算全部父链的勾选/半选态（级联模式下外部直接改 Checked
+// map 后调用——预置状态、程序化勾选都需要，否则父节点半选不生效）。
+func (t *Tree) SyncChecked() {
+	for _, n := range t.Nodes {
+		t.syncAncestors(t.Nodes, n.Key)
+	}
+	t.MarkDirty()
+}
+
+// collectDescendants 收集 key 节点的全部子孙 Key（含自身）。
+func (t *Tree) collectDescendants(nodes []TreeNode, key string, out *[]string) bool {
+	for _, n := range nodes {
+		if n.Key == key {
+			var walk func(ns []TreeNode)
+			walk = func(ns []TreeNode) {
+				for _, c := range ns {
+					*out = append(*out, c.Key)
+					walk(c.Children)
+				}
+			}
+			*out = append(*out, n.Key)
+			walk(n.Children)
+			return true
+		}
+		if t.collectDescendants(n.Children, key, out) {
+			return true
+		}
+	}
+	return false
+}
+
+// findParent 返回 key 的父节点（根层返回 nil）。
+func (t *Tree) findParent(nodes []TreeNode, key string) *TreeNode {
+	for i := range nodes {
+		n := &nodes[i]
+		for _, c := range n.Children {
+			if c.Key == key {
+				return n
+			}
+		}
+		if p := t.findParent(n.Children, key); p != nil {
+			return p
+		}
+	}
+	return nil
+}
+
+// syncAncestors 级联模式下的父链同步：全选→父勾、部分→父半选（写
+// Indeterminate 进池化 Checkbox）、全不选→父清。
+func (t *Tree) syncAncestors(nodes []TreeNode, key string) {
+	p := t.findParent(nodes, key)
+	if p == nil {
+		return
+	}
+	total, on := 0, 0
+	var walk func(ns []TreeNode)
+	walk = func(ns []TreeNode) {
+		for _, c := range ns {
+			total++
+			if t.Checked[c.Key] {
+				on++
+			}
+			walk(c.Children)
+		}
+	}
+	walk(p.Children)
+	cb := t.checks[p.Key]
+	switch {
+	case on == 0:
+		t.Checked[p.Key] = false
+		if cb != nil {
+			cb.Indeterminate = false
+		}
+	case on == total:
+		t.Checked[p.Key] = true
+		if cb != nil {
+			cb.Indeterminate = false
+		}
+	default:
+		t.Checked[p.Key] = false
+		if cb != nil {
+			cb.Indeterminate = true
+		}
+	}
+	t.syncAncestors(nodes, p.Key)
 }
 
 // Build 实现 ui.Widget。
@@ -96,8 +187,9 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 			pt.SetMargin(geom.InLTRB(float32(depth)*t.Indent+2, (t.RowH-pl.Size.H)/2, 0, 0))
 			row.Add(pt)
 
-			// 复选模式：缩进/箭头后嵌 Checkbox 组件实例（池化按 Key），
-			// 点击独立勾选（checkStrictly 语义）。
+			// 复选模式：缩进/箭头后嵌 Checkbox 组件实例（池化按 Key）。
+			// CheckStrictly=true 独立勾选；false（默认）级联——勾父全选
+			// 子孙、子孙联动父链（全选勾/部分半选/全不选清）。
 			if t.Checkable {
 				if t.checks == nil {
 					t.checks = make(map[string]*Checkbox)
@@ -110,7 +202,16 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 						if t.Checked == nil {
 							t.Checked = make(map[string]bool)
 						}
-						t.Checked[ckey] = on
+						if t.CheckStrictly {
+							t.Checked[ckey] = on
+						} else {
+							var keys []string
+							t.collectDescendants(t.Nodes, ckey, &keys)
+							for _, k := range keys {
+								t.Checked[k] = on
+							}
+							t.syncAncestors(t.Nodes, ckey)
+						}
 						t.MarkDirty()
 						if t.OnCheck != nil {
 							keys := make([]string, 0, len(t.Checked))
@@ -125,6 +226,23 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 					t.checks[ckey] = cb
 				}
 				cb.Checked = t.Checked[n.Key] // map 是真相源，每次同步
+				// 级联模式下半选态从 Checked 集合推导（外部直接改 map 也生效）：
+				// 子孙部分勾选→半选；池化实例的 Indeterminate 是上次运行残留。
+				if !t.CheckStrictly && hasKids {
+					total, on := 0, 0
+					var walk func(ns []TreeNode)
+					walk = func(ns []TreeNode) {
+						for _, c := range ns {
+							total++
+							if t.Checked[c.Key] {
+								on++
+							}
+							walk(c.Children)
+						}
+					}
+					walk(n.Children)
+					cb.Indeterminate = on > 0 && on < total
+				}
 				cbn := cb.Build(ctx)
 				cbn.SetPositionKeepSize(true)
 				cbn.SetStackPosition(geom.Pt(float32(depth)*t.Indent+2+pl.Size.W+4, (t.RowH-16)/2))
