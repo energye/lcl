@@ -1,9 +1,11 @@
 {
   "id": "tabs",
   "structure": {
-    "apiRows": 4,
+    "apiRows": 8,
     "sections": [
-      "三页切换"
+      "三页切换",
+      "card 卡片型",
+      "closable 可关闭"
     ]
   },
   "sections": [
@@ -116,6 +118,218 @@
             {
               "kind": "template",
               "template": "segment-select"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "card 卡片型",
+      "cases": [
+        {
+          "name": "card 页签为灰底（SurfaceActive）",
+          "target": {
+            "label": "tab",
+            "text": "设置"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.4,
+                0.4
+              ],
+              "expect": {
+                "token": "SurfaceActive"
+              },
+              "minRatio": 0.3,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "选中 card 页签为白底（Surface）",
+          "target": {
+            "label": "tab",
+            "text": "文档"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.5,
+                0.4,
+                0.3
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "card 页签有描边（Border）",
+          "target": {
+            "label": "tab",
+            "text": "关于"
+          },
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Border"
+              },
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "点击 card 页签切换内容",
+          "target": {
+            "label": "tab",
+            "text": "设置"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "设置内容",
+              "target": {
+                "label": "label",
+                "text": "设置内容"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "closable 可关闭",
+      "cases": [
+        {
+          "name": "× 热区存在（tab-close 锚）",
+          "target": {
+            "label": "tab-close"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "name": "点击标签一的 × 移除（tab 计数 3→2）",
+          "target": {
+            "label": "tab",
+            "text": "标签一"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tab",
+                  "text": "标签一"
+                },
+                "frac": [
+                  0.92,
+                  0.5
+                ]
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "absent",
+              "target": {
+                "label": "tab",
+                "text": "标签一"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tab",
+                "text": "标签二"
+              }
+            }
+          ]
+        },
+        {
+          "name": "再点标签二的 × 移除（仅剩固定页）",
+          "target": {
+            "label": "tab",
+            "text": "标签二"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tab",
+                  "text": "标签二"
+                },
+                "frac": [
+                  0.92,
+                  0.5
+                ]
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tab",
+                "text": "固定页"
+              }
+            }
+          ]
+        },
+        {
+          "name": "固定页（无 Closable）仍可切换选中",
+          "target": {
+            "label": "tab",
+            "text": "固定页"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tab",
+                  "text": "固定页"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "固定页内容",
+              "target": {
+                "label": "label",
+                "text": "固定页内容"
+              }
             }
           ]
         }

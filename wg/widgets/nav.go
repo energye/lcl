@@ -17,7 +17,21 @@ type Tab struct {
 	Key     ui.Key
 	Label   string
 	Content ui.Widget
+	// Closable 页签可关闭（antd closable）：右侧 × 图标，点击触发
+	// Tabs.OnEdit（action="remove"）。
+	Closable bool
 }
+
+// TabsType 是页签风格（antd tabs type）。
+type TabsType uint8
+
+const (
+	// TabsLine 线型（默认）：无底色文字页签 + 选中底部主色指示条。
+	TabsLine TabsType = iota
+	// TabsCard 卡片型（antd type="card"）：灰底描边方块页签、选中白底 +
+	// 顶部主色线。
+	TabsCard
+)
 
 // Tabs 是标签页。它是有状态组件：Active 改变后由 MarkDirty 触发重建。
 type Tabs struct {
@@ -25,10 +39,17 @@ type Tabs struct {
 	Items    []Tab
 	Active   int
 	OnChange func(int)
+	// Type 页签风格（默认 TabsLine）。
+	Type TabsType
+	// OnEdit 页签编辑回调（antd onEdit）——closable 页签的 × 触发，
+	// action="remove"；调用方在回调里自行修改 Items 并 MarkDirty。
+
+	OnEdit func(tabKey ui.Key, action string)
 
 	// headers 跨重建持有：页签的 hover 态与手势实例必须稳定，
 	// 每帧新建会让 hover 高亮闪烁、按住期间的重建丢失手势（--audit 实测）。
 	headers []*tabHeader
+	taps    []*ui.GestureDetector // × 关闭/切换手势实例池（跨重建持有）
 	node    *scene.Node
 }
 
@@ -87,14 +108,48 @@ type tabHeader struct {
 
 func (h *tabHeader) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
+	card := h.tabs.Type == TabsCard
+	closable := h.tabs.Items[h.index].Closable
 	font := text.DefaultFont(h.metrics.Font)
 	layout := text.LayoutText(h.label, font, text.Options{})
 	w := layout.Size.W + h.metrics.Padding.Min.X + h.metrics.Padding.Max.X
-	// antd line 型页签：无底色按钮盒，文字色区分选中/悬停，选中带底部
-	// 下划线指示条（此前是实心主色圆角块，与官方 line 型不符）。
-	n := scene.Box(scene.BoxSpec{}).SetSize2(w, h.metrics.Height)
+	if closable {
+		w += 14 // × 图标热区
+	}
+	active := h.index == h.tabs.Active
+
+	var n *scene.Node
+	var fill, borderColor geom.Color
+	if card {
+		// antd card 型页签：灰底（colorFillTertiary 系）+ 描边方块；
+		// 选中白底 + 顶部主色线（与内容区拼接的"活页"形态）。
+		fill, borderColor = th.Color.SurfaceActive, th.Color.Border
+		if active {
+			fill = th.Color.Surface
+		} else if h.hover {
+			fill = th.Color.SurfaceHover
+		}
+		n = scene.Box(scene.BoxSpec{
+			Fill: scene.Solid(fill), Border: scene.Stroke(borderColor, 1),
+			Radius: th.Radius.SM,
+		}).SetSize2(w, h.metrics.Height)
+		if active {
+			ind := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary)}).SetSize2(w, 2)
+			ind.SetPositionKeepSize(true).SetStackPosition(geom.Pt(0, 0))
+			n.Add(ind)
+		}
+	} else {
+		// antd line 型页签：无底色按钮盒，文字色区分选中/悬停，选中带底部
+		// 下划线指示条（此前是实心主色圆角块，与官方 line 型不符）。
+		n = scene.Box(scene.BoxSpec{}).SetSize2(w, h.metrics.Height)
+		if active {
+			ind := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary)}).SetSize2(w, 2)
+			ind.SetPositionKeepSize(true).SetStackPosition(geom.Pt(0, h.metrics.Height-2))
+			n.Add(ind)
+		}
+	}
 	col := th.Color.Text
-	if h.index == h.tabs.Active {
+	if active {
 		col = th.Color.Primary
 	} else if h.hover {
 		col = th.Color.PrimaryHover
@@ -102,24 +157,39 @@ func (h *tabHeader) Build(ctx *ui.BuildContext) *scene.Node {
 	label := scene.Text(scene.TextSpec{Src: h.label, Layout: layout, Color: col})
 	label.SetMargin(geom.InLTRB(h.metrics.Padding.Min.X, (h.metrics.Height-layout.Size.H)/2, 0, 0))
 	n.Add(label)
-	if h.index == h.tabs.Active {
-		ind := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary)}).SetSize2(w, 2)
-		ind.SetPositionKeepSize(true).SetStackPosition(geom.Pt(0, h.metrics.Height-2))
-		n.Add(ind)
+	// × 关闭热区：复用 Icon close 图元（组合复用），右缘贴齐。
+	if closable {
+		ix := (&Icon{Name: "close", Size: 12, Color: th.Color.TextFaint}).Build(ctx)
+		ix.SetMargin(geom.InLTRB(0, (h.metrics.Height-12)/2, 2, 0))
+		n.Add(ix)
+		ix.SetHit(scene.HitSpec{Label: "tab-close", Cursor: scene.CursorPointer})
 	}
+	// 命中与手势：**根节点统一 HitOpaque，单手势按局部坐标分流**（Tag 轮
+	// 结论——× 手势绑子节点+根 DeferToChild 穿透在本引擎实测不可靠）；
+	// × 热区=右缘 14px，其余区域归页签切换。
 	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "tab", Cursor: scene.CursorPointer})
-
 	tabs, index := h.tabs, h.index
-	hd := h.tapHandler(ctx, false, func() {
-		if tabs.Active == index {
-			return
-		}
-		tabs.Active = index
-		tabs.MarkDirty()
-		if tabs.OnChange != nil {
-			tabs.OnChange(index)
-		}
-	})
+	hd := h.tapHandler(ctx, false, func() {})
+	{
+		g := &ui.GestureDetector{OnTap: func(p geom.Point) {
+			if closable && p.X > w-14 {
+				if tabs.OnEdit != nil {
+					tabs.OnEdit(tabs.Items[index].Key, "remove")
+				}
+				return
+			}
+			if tabs.Active == index {
+				return
+			}
+			tabs.Active = index
+			tabs.MarkDirty()
+			if tabs.OnChange != nil {
+				tabs.OnChange(index)
+			}
+		}}
+		h.tabs.taps = append(h.tabs.taps, g)
+		hd = g.Handler()
+	}
 	h.attach(ctx, n, hd, true)
 	return n
 }
