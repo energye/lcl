@@ -15,6 +15,8 @@ func main() {
 			"角标：计数/文本/圆点三态，可与其他节点组合使用",
 			"默认 Danger 红底；overflowCount 溢出省略（>99 显示 99+）",
 			"status 语义色（Success 绿/Processing 主色/Error 红）",
+			"角标集成：Badge.Child 包裹组件，角标叠右上角出血（antd 核心用法）",
+			"OverflowCount 显示上限：超过显示 N+（默认 99，可调如 10→10+）",
 		},
 		Demos: []doc.Demo{
 			{Title: "三态角标", Note: "计数 3 / 文本 NEW / 圆点；溢出 150 显示 99+", Build: func(ctx *ui.BuildContext) ui.Widget {
@@ -32,6 +34,18 @@ func main() {
 				}
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
 			}},
+			{Title: "角标集成", Note: "Badge.Child 包裹 Avatar/Button，角标右上角出血", Build: func(ctx *ui.BuildContext) ui.Widget {
+				row := scene.Flex(scene.Horizontal, 24)
+				row.Add((&widgets.Badge{Count: 5, Child: &widgets.Avatar{Icon: "user", Size: 40}}).Build(ctx))
+				row.Add((&widgets.Badge{Dot: true, Child: widgets.NewButton("消息")}).Build(ctx))
+				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
+			}},
+			{Title: "OverflowCount", Note: "上限 10：Count=15 显示 10+（默认 99→99+）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				row := scene.Flex(scene.Horizontal, 18)
+				row.Add((&widgets.Badge{Count: 15, OverflowCount: 10}).Build(ctx))
+				row.Add((&widgets.Badge{Count: 150}).Build(ctx))
+				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
+			}},
 		},
 		API: []doc.APIRow{
 			{Name: "Count", Type: "int", Desc: "计数值（设置后优先于 Text）"},
@@ -40,6 +54,8 @@ func main() {
 			{Name: "Color", Type: "geom.Color", Default: "Color.Danger", Desc: "底色"},
 			{Name: "TextColor", Type: "geom.Color", Default: "Color.OnDanger", Desc: "文字色"},
 			{Name: "Status", Type: "widgets.BadgeStatus", Default: "Default", Desc: "Success/Processing/Error 语义色（Color 显式时优先）"},
+			{Name: "Child", Type: "ui.Widget", Desc: "被包裹组件（角标叠右上角出血）"},
+			{Name: "OverflowCount", Type: "int", Default: "99", Desc: "显示上限（超过显示 N+）"},
 		},
 	})
 }

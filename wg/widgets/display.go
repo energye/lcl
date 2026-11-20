@@ -117,6 +117,12 @@ type Badge struct {
 	// Status 语义色（antd Badge.status）：Success 绿 / Processing 主色 /
 	// Error 红。显式 Color 优先于 Status。
 	Status BadgeStatus
+	// Child 被包裹组件（antd Badge 核心用法）：角标叠加在其右上角
+	// （Stack 布局，角标偏移 (childW-6, -6) 出血）。nil 时独立渲染。
+	Child ui.Widget
+	// OverflowCount 显示上限（antd overflowCount，默认 99）：超过显示
+	// "N+"。Count>上限时钳制。
+	OverflowCount int
 }
 
 // BadgeStatus 是徽标语义（antd Badge.status）。
@@ -151,6 +157,35 @@ func (b Badge) statusFill(th *theme.Data) geom.Color {
 
 // Build 实现 ui.Widget。
 func (b Badge) Build(ctx *ui.BuildContext) *scene.Node {
+	badge := b.badgeNode(ctx)
+	if b.Child == nil {
+		return badge
+	}
+	// 包裹形态（antd Badge 核心用法）：Stack = Child + 角标叠右上角。
+	child := buildChild(ctx, b.Child)
+	cw, ch := child.Size().W, child.Size().H
+	if cw < 16 {
+		cw = 16
+	}
+	if ch < 16 {
+		ch = 16
+	}
+	stack := scene.Stack().SetSize2(cw, ch)
+	child.SetPositionKeepSize(true)
+	child.SetStackPosition(geom.Pt(0, 0))
+	stack.Add(child)
+	badge.SetPositionKeepSize(true)
+	// 角标出血：右上角 (childW-badgeW*0.4, -badgeH*0.4)（badge 自身尺寸
+	// 在布局后才知，Dot 8/文本条按实测 size 折算偏移）。
+	bw, bh := badge.Size().W, badge.Size().H
+	badge.SetStackPosition(geom.Pt(cw-bw*0.4, -bh*0.4))
+	stack.Add(badge)
+	stack.SetHit(scene.HitSpec{Label: "badge-wrap", Behavior: scene.HitDeferToChild})
+	return stack
+}
+
+// badgeNode 构建角标本体（Dot 圆点 / 文本条）。
+func (b Badge) badgeNode(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
 	fill := b.statusFill(th)
 	if b.Dot {
@@ -160,9 +195,13 @@ func (b Badge) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	label := b.Text
 	if label == "" && b.Count > 0 {
-		// antd overflowCount 语义：超过 99 显示 "99+"。
-		if b.Count > 99 {
-			label = "99+"
+		// antd overflowCount 语义：超过上限显示 "N+"（默认 99）。
+		limit := b.OverflowCount
+		if limit <= 0 {
+			limit = 99
+		}
+		if b.Count > limit {
+			label = fmt.Sprintf("%d+", limit)
 		} else {
 			label = fmt.Sprintf("%d", b.Count)
 		}

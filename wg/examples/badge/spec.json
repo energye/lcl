@@ -1,10 +1,12 @@
 {
   "id": "badge",
   "structure": {
-    "apiRows": 5,
+    "apiRows": 9,
     "sections": [
       "三态角标",
-      "status 语义色"
+      "status 语义色",
+      "角标集成",
+      "OverflowCount"
     ]
   },
   "sections": [
@@ -178,6 +180,86 @@
               },
               "minRatio": 0.4,
               "tol": 14
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "角标集成",
+      "cases": [
+        {
+          "name": "包裹形态存在（badge-wrap 锚）",
+          "target": {
+            "label": "badge-wrap"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "name": "角标叠在 Child 右上（badge 5 在 Avatar 包裹内）",
+          "target": {
+            "label": "badge",
+            "index": 4
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "Dot 角标包裹 Button 存在",
+          "target": {
+            "label": "button",
+            "text": "消息"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "OverflowCount",
+      "cases": [
+        {
+          "name": "上限 10：Count=15 显示 10+",
+          "target": {
+            "label": "badge",
+            "text": "10+"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "10+",
+              "target": {
+                "label": "badge",
+                "text": "10+"
+              }
+            }
+          ]
+        },
+        {
+          "name": "默认上限 99：Count=150 显示 99+",
+          "target": {
+            "label": "badge",
+            "text": "99+"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "99+",
+              "target": {
+                "label": "badge",
+                "text": "99+"
+              }
             }
           ]
         }
