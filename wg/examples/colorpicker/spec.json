@@ -1,0 +1,182 @@
+{
+  "id": "colorpicker",
+  "structure": {
+    "apiRows": 6,
+    "sections": [
+      "基础"
+    ]
+  },
+  "sections": [
+    {
+      "name": "基础",
+      "cases": [
+        {
+          "name": "触发框显示默认 hex",
+          "target": {
+            "label": "color-picker"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "#1677FF",
+              "target": {
+                "label": "color-hex"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击触发框弹取色面板",
+          "target": {
+            "label": "color-picker"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "color-panel"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "color-sv"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "color-hue"
+              }
+            },
+            {
+              "kind": "exists",
+              "count": 20,
+              "target": {
+                "label": "color-preset"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点预设首格选色且面板保持",
+          "target": {
+            "label": "color-picker"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "color-preset",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "text",
+              "text": "#F5222D",
+              "target": {
+                "label": "color-hex"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点 SV 面板取色值变化",
+          "target": {
+            "label": "color-picker"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "color-sv"
+                },
+                "frac": [
+                  0.3,
+                  0.5
+                ]
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "text",
+              "text": "#F5222D",
+              "notContains": true,
+              "target": {
+                "label": "color-hex"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Esc 关闭面板",
+          "target": {
+            "label": "color-picker"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "escape"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
