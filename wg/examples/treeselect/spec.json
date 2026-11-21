@@ -1,0 +1,298 @@
+{
+  "id": "treeselect",
+  "structure": {
+    "apiRows": 7,
+    "sections": [
+      "基础",
+      "带初值"
+    ]
+  },
+  "sections": [
+    {
+      "name": "基础",
+      "cases": [
+        {
+          "name": "占位触发框显示请选择",
+          "target": {
+            "label": "tree-select",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "请选择",
+              "target": {
+                "label": "tree-select",
+                "index": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击触发框弹树面板",
+          "target": {
+            "label": "tree-select",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-select-panel"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "组件"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "导航"
+              }
+            }
+          ]
+        },
+        {
+          "name": "逐级点选叶子后触发框显示 Label 且面板关闭",
+          "target": {
+            "label": "tree-select",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tree-select",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "组件"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "表单"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "输入框"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "text",
+              "text": "输入框",
+              "target": {
+                "label": "tree-select",
+                "index": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "Esc 关闭面板",
+          "target": {
+            "label": "tree-select",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tree-select",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "escape"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "带初值",
+      "cases": [
+        {
+          "name": "触发框显示初值节点 Label",
+          "target": {
+            "label": "tree-select",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "输入框",
+              "target": {
+                "label": "tree-select",
+                "index": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "点组件展开二级（表单/展示可见）",
+          "target": {
+            "label": "tree-select",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tree-select",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "组件"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "表单"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "展示"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点表单展开三级（输入框/选择器可见）",
+          "target": {
+            "label": "tree-select",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tree-select",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "表单"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "输入框"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "选择器"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

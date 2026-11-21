@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/energye/lcl/wg/geom"
+	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
 	"github.com/energye/lcl/wg/ui"
@@ -42,6 +43,11 @@ type Tree struct {
 	// 勾选父节点时子孙 Key 也会写入）。
 	Checked map[string]bool
 	OnCheck func(checkedKeys []string)
+
+	// TapDownExec 浮层内嵌模式（TreeSelect 同款）：行点击 **down 即执行**
+	// 而非 GestureDetector tap 配对——浮层内 tap 配对不可靠（Dropdown/
+	// DatePicker 轮结论）。独立 Tree 窗（内容树）保持默认 false。
+	TapDownExec bool
 
 	taps []*ui.GestureDetector
 	// checks 跨 Build 持有复选框实例（按 Key 池化）：Build 内新建实例
@@ -262,7 +268,7 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 			if ctx.Input != nil && (hasKids || t.OnSelect != nil) {
 				row.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "tree-node", Cursor: scene.CursorPointer})
 				key, kids := n.Key, hasKids
-				g := &ui.GestureDetector{OnTap: func(geom.Point) {
+				onTap := func(geom.Point) {
 					if kids {
 						t.Toggle(key)
 					}
@@ -275,9 +281,21 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 					if t.OnSelect != nil {
 						t.OnSelect(key)
 					}
-				}}
-				t.taps = append(t.taps, g)
-				ctx.Input.Set(row, g.Handler())
+				}
+				if t.TapDownExec {
+					// 浮层内嵌：tap 配对不可靠，down 即执行。
+					ctx.Input.Set(row, input.Handler{Pointer: func(ev *input.PointerEvent) bool {
+						if !ev.Down() {
+							return false
+						}
+						onTap(geom.Point{})
+						return true
+					}})
+				} else {
+					g := &ui.GestureDetector{OnTap: onTap}
+					t.taps = append(t.taps, g)
+					ctx.Input.Set(row, g.Handler())
+				}
 			}
 			col.Add(row)
 			if hasKids && t.Expanded[n.Key] {
