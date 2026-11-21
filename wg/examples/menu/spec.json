@@ -402,6 +402,53 @@
               "wait": 300
             }
           ]
+        }, 
+        {
+          "name": "hover 系统设置展开孙面板", 
+          "target": {
+            "label": "menu-item", 
+            "text": "设置"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "menu-sub-item", 
+                "text": "权限管理"
+              }
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "menu-sub-item", 
+                "text": "操作日志"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "hover": {
+                "target": {
+                  "label": "menu-item", 
+                  "text": "设置"
+                }
+              }
+            }, 
+            {
+              "wait": 400
+            }, 
+            {
+              "hover": {
+                "target": {
+                  "label": "menu-sub-item", 
+                  "text": "系统设置"
+                }
+              }
+            }, 
+            {
+              "wait": 400
+            }
+          ]
         }
       ], 
       "name": "横向子菜单"

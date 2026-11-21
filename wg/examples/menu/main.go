@@ -28,7 +28,10 @@ var (
 		&widgets.MenuItem{Key: "settings", Label: "设置", Icon: "setting",
 			Children: []*widgets.MenuItem{
 				{Key: "set-a", Label: "个人设置"},
-				{Key: "set-b", Label: "系统设置"},
+				{Key: "set-b", Label: "系统设置", Children: []*widgets.MenuItem{
+					{Key: "set-b-1", Label: "权限管理"},
+					{Key: "set-b-2", Label: "操作日志"},
+				}},
 			}},
 	)
 	vMenu = widgets.NewMenu(

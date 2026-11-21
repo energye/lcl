@@ -82,20 +82,30 @@ type menuItem struct {
 	depth  int
 	hover  bool
 	parent *Menu
-	// 横向 Popup 子菜单（本轮）：hasKids=有子项；kids 子项数据拷贝；
-	// handle/hideTimer 浮层状态（Dropdown 同款延迟隐藏）。
+	// 横向 Popup 子菜单：hasKids=有子项；kids 递归数据；hideTimer
+	// 延迟隐藏（Dropdown 同款）；subHandles 各级面板 handle。
 	hasKids   bool
 	kids      []menuKid
-	handle    overlay.Handle
 	hideTimer *time.Timer
 	// subAnchor 子面板锚（最近构建的行节点）。
-	subAnchor *scene.Node
+	subAnchor  *scene.Node
+	subHandles map[int]overlay.Handle
 }
 
-// menuKid 子菜单项数据（横向浮层渲染用，只一层）。
+// menuKid 子菜单项数据（横向浮层渲染，**递归支持多层嵌套**）。
 type menuKid struct {
 	key   string
 	label string
+	kids  []menuKid
+}
+
+// kidsFrom 递归拷贝 MenuItem.Children 为浮层渲染数据。
+func kidsFrom(items []*MenuItem) []menuKid {
+	out := make([]menuKid, 0, len(items))
+	for _, it := range items {
+		out = append(out, menuKid{key: it.Key, label: it.Label, kids: kidsFrom(it.Children)})
+	}
+	return out
 }
 
 // Build 实现 ui.Widget。
@@ -114,13 +124,10 @@ func (m *Menu) Build(ctx *ui.BuildContext) *scene.Node {
 		m.items[i].key = it.Key
 		m.items[i].label = it.Label
 		m.items[i].icon = it.Icon
-		// 横向 Popup 子菜单：子项数据拷贝（只一层，嵌套如实标注未实现）。
+		// 横向 Popup 子菜单：子项数据递归拷贝（多层嵌套）。
 		mi := m.items[i]
 		mi.hasKids = len(it.Children) > 0
-		mi.kids = mi.kids[:0]
-		for _, ch := range it.Children {
-			mi.kids = append(mi.kids, menuKid{key: ch.Key, label: ch.Label})
-		}
+		mi.kids = kidsFrom(it.Children)
 	}
 	if m.Mode == MenuVertical {
 		n := scene.Flex(scene.Vertical, 0)
@@ -304,7 +311,7 @@ func (mi *menuItem) Build(ctx *ui.BuildContext) *scene.Node {
 		// 横向 SubMenu：**hover 展开**（Dropdown 同款——Enter 立即弹、
 		// Leave 延迟 150ms 关，浮层项 Enter 取消）；父项点击=开/关面板。
 		h := mi.tapHandler(ctx, false, func() {
-			if mi.handle != 0 {
+			if mi.handleAt(1) != 0 {
 				mi.hideSubNow(ctx)
 			} else {
 				mi.showSub(ctx, n, th)
@@ -339,14 +346,25 @@ func (mi *menuItem) Build(ctx *ui.BuildContext) *scene.Node {
 	return n
 }
 
-// showSub 弹出横向子菜单浮层（BandPopup+BottomStart，Dropdown 同通道）。
+// showSub 弹出横向子菜单浮层（level 1；子级经 showSubKids 递归）。
 func (mi *menuItem) showSub(ctx *ui.BuildContext, anchor *scene.Node, th *theme.Data) {
+	mi.showSubKids(ctx, anchor, th, mi.kids, 1)
+}
+
+// showSubKids 弹出某级子面板（level 从 1 起；面板项有 kids → hover
+// **递归展开右侧**——PlacementRightStart，全深度支持）。
+func (mi *menuItem) showSubKids(ctx *ui.BuildContext, anchor *scene.Node, th *theme.Data, kids []menuKid, level int) {
 	m := mi.parent
 	if mi.hideTimer != nil {
 		mi.hideTimer.Stop()
 		mi.hideTimer = nil
 	}
-	if mi.handle != 0 || ctx == nil || ctx.Overlay == nil || len(mi.kids) == 0 {
+	if ctx == nil || ctx.Overlay == nil || len(kids) == 0 {
+		return
+	}
+	// 切分支：关闭比 level 深的既有面板（保留本级）。
+	mi.hideFrom(ctx, level)
+	if mi.handleAt(level) != 0 {
 		return
 	}
 	panel := scene.Flex(scene.Vertical, 0)
@@ -364,7 +382,7 @@ func (mi *menuItem) showSub(ctx *ui.BuildContext, anchor *scene.Node, th *theme.
 	})
 	panel.SetWidth(160)
 	panel.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "menu-sub"})
-	for _, kid := range mi.kids {
+	for _, kid := range kids {
 		kid := kid
 		active := m.Selected == kid.key
 		row := scene.Box(scene.BoxSpec{})
@@ -378,15 +396,24 @@ func (mi *menuItem) showSub(ctx *ui.BuildContext, anchor *scene.Node, th *theme.
 		txt := scene.Text(scene.TextSpec{Src: kid.label, Layout: l, Color: lc})
 		txt.SetMargin(geom.InLTRB(12, (34-l.Size.H)/2, 0, 0))
 		row.Add(txt)
+		if len(kid.kids) > 0 {
+			ic := (&Icon{Name: "right", Size: 10, Color: th.Color.TextFaint}).Build(ctx)
+			ic.SetPositionKeepSize(true)
+			ic.SetStackPosition(geom.Pt(160-14, (34-10)/2))
+			row.Add(ic)
+		}
 		row.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "menu-sub-item", Cursor: scene.CursorPointer})
 		if ctx.Input != nil {
 			// down 即执行（浮层 tap 配对不可靠结论复用）；Enter 取消
-			// 父项 Leave 的延迟隐藏（Dropdown 同款）。
+			// Leave 的延迟隐藏（Dropdown 同款）+ **有子级时递归展开右侧**。
 			ctx.Input.Set(row, input.Handler{
 				Enter: func(*input.PointerEvent) {
 					if mi.hideTimer != nil {
 						mi.hideTimer.Stop()
 						mi.hideTimer = nil
+					}
+					if len(kid.kids) > 0 {
+						mi.showSubKids(ctx, row, th, kid.kids, level+1)
 					}
 					row.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.FillHover)})
 					row.MarkNeedsPaint()
@@ -399,12 +426,14 @@ func (mi *menuItem) showSub(ctx *ui.BuildContext, anchor *scene.Node, th *theme.
 					if !ev.Down() {
 						return false
 					}
+					if len(kid.kids) > 0 {
+						// 有子级：down 展开右侧（与 hover 一致）。
+						mi.showSubKids(ctx, row, th, kid.kids, level+1)
+						return true
+					}
 					m.Selected = kid.key
 					m.MarkDirty()
-					if ctx.Overlay != nil && mi.handle != 0 {
-						ctx.Overlay.Close(mi.handle)
-					}
-					mi.handle = 0
+					mi.hideSubNow(ctx)
 					if m.OnClick != nil {
 						m.OnClick(kid.key)
 					}
@@ -414,21 +443,69 @@ func (mi *menuItem) showSub(ctx *ui.BuildContext, anchor *scene.Node, th *theme.
 		}
 		panel.Add(row)
 	}
-	mi.handle = ctx.Overlay.Show(overlay.Entry{
+	placement := overlay.PlacementBottomStart
+	if level > 1 {
+		placement = overlay.PlacementRightStart // 二级起右侧展开（antd 竖向子菜单位）
+	}
+	mi.setHandle(level, ctx.Overlay.Show(overlay.Entry{
 		Band:      theme.BandPopup,
 		Anchor:    overlay.NodeAnchor(anchor),
-		Placement: overlay.PlacementBottomStart,
+		Placement: placement,
 		Size:      geom.Size{W: 160, H: 0}, // 高自适应
 		Dismiss:   overlay.DismissOutsideClick | overlay.DismissEsc,
 		Tag:       "menu-sub",
 		OnClose: func() {
-			mi.handle = 0
+			mi.clearHandle(level)
 		},
 		Build: func() *scene.Node { return panel },
-	})
+	}))
 }
 
-// hideSubDelayed 延迟 150ms 关闭（鼠标移向浮层的 Leave 间隙不闪断）。
+// handleAt 取某级面板 handle（0=未开）。
+func (mi *menuItem) handleAt(level int) overlay.Handle {
+	if mi.subHandles == nil {
+		return 0
+	}
+	return mi.subHandles[level]
+}
+
+// setHandle 记录某级面板 handle（同时关闭更深级别——切分支语义）。
+func (mi *menuItem) setHandle(level int, h overlay.Handle) {
+	if mi.subHandles == nil {
+		mi.subHandles = map[int]overlay.Handle{}
+	}
+	for lv := range mi.subHandles {
+		if lv > level {
+			delete(mi.subHandles, lv)
+		}
+	}
+	mi.subHandles[level] = h
+}
+
+// clearHandle 清某级 handle 记录。
+func (mi *menuItem) clearHandle(level int) {
+	if mi.subHandles != nil {
+		delete(mi.subHandles, level)
+	}
+}
+
+// hideFrom 关闭 level 及更深的全部面板。
+func (mi *menuItem) hideFrom(ctx *ui.BuildContext, level int) {
+	if mi.subHandles == nil {
+		return
+	}
+	for lv, h := range mi.subHandles {
+		if lv >= level && h != 0 && ctx != nil && ctx.Overlay != nil {
+			ctx.Overlay.Close(h)
+		}
+		if lv >= level {
+			delete(mi.subHandles, lv)
+		}
+	}
+}
+
+// hideSubDelayed 延迟 150ms 关闭全部面板（鼠标移向浮层的 Leave 间隙
+// 不闪断；面板项 Enter 取消）。
 func (mi *menuItem) hideSubDelayed(ctx *ui.BuildContext) {
 	if mi.hideTimer != nil {
 		mi.hideTimer.Stop()
@@ -436,14 +513,11 @@ func (mi *menuItem) hideSubDelayed(ctx *ui.BuildContext) {
 	mi.hideTimer = time.AfterFunc(150*time.Millisecond, func() { mi.hideSubNow(ctx) })
 }
 
-// hideSubNow 立即关闭子菜单浮层。
+// hideSubNow 立即关闭全部层级面板。
 func (mi *menuItem) hideSubNow(ctx *ui.BuildContext) {
 	if mi.hideTimer != nil {
 		mi.hideTimer.Stop()
 		mi.hideTimer = nil
 	}
-	if ctx != nil && ctx.Overlay != nil && mi.handle != 0 {
-		ctx.Overlay.Close(mi.handle)
-	}
-	mi.handle = 0
+	mi.hideFrom(ctx, 1)
 }
