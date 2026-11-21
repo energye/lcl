@@ -9,8 +9,6 @@ package widgets
 // （如实标注）。
 
 import (
-	"fmt"
-
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
@@ -31,6 +29,9 @@ type TimelineItem struct {
 	Time  string // 小字时间（如 2026-11-21 10:24）
 	Text  string // 主文本
 	Color string // 节点色（TimelineBlue/Green/Red/Gray）
+	// Widget 主文本 Widget（antd content 任意节点；非空时优先于
+	// Text——深化轮）。
+	Widget ui.Widget
 }
 
 // Timeline 是垂直时间轴。
@@ -124,15 +125,23 @@ func (t *Timeline) Build(ctx *ui.BuildContext) *scene.Node {
 			tv.SetHit(scene.HitSpec{Label: "timeline-time"})
 			ccol.Add(tv)
 		}
-		ml := text.LayoutText(it.Text, text.DefaultFont(th.Font.SizeBase), text.Options{})
-		mv := scene.Text(scene.TextSpec{Src: it.Text, Layout: ml, Color: th.Color.Text})
-		mv.SetMargin(geom.InLTRB(8, 0, 0, 0))
-		mv.SetHit(scene.HitSpec{Label: "timeline-item"})
-		ccol.Add(mv)
+		if it.Widget != nil {
+			// Widget 主内容（antd content 任意节点——深化轮）。
+			if wn := it.Widget.Build(ctx); wn != nil {
+				wn.SetMargin(geom.InLTRB(8, 0, 0, 0))
+				wn.SetHit(scene.HitSpec{Label: "timeline-item"})
+				ccol.Add(wn)
+			}
+		} else {
+			ml := text.LayoutText(it.Text, text.DefaultFont(th.Font.SizeBase), text.Options{})
+			mv := scene.Text(scene.TextSpec{Src: it.Text, Layout: ml, Color: th.Color.Text})
+			mv.SetMargin(geom.InLTRB(8, 0, 0, 0))
+			mv.SetHit(scene.HitSpec{Label: "timeline-item"})
+			ccol.Add(mv)
+		}
 		row.Add(ccol)
 		col.Add(row)
 
-		_ = fmt.Sprintf // fmt 保留（后续轮内容格式化）
 	}
 	return col
 }
