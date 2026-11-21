@@ -1,0 +1,69 @@
+{
+  "id": "watermark",
+  "structure": {
+    "apiRows": 6,
+    "sections": [
+      "文本平铺水印"
+    ]
+  },
+  "sections": [
+    {
+      "name": "文本平铺水印",
+      "cases": [
+        {
+          "name": "水印层与内容存在",
+          "target": {
+            "label": "watermark"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "watermark"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "watermark-layer"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "季度经营摘要",
+              "target": {
+                "label": "watermark",
+                "text": "季度经营摘要"
+              }
+            }
+          ]
+        },
+        {
+          "name": "水印灰字区域采样（alpha 38 叠白 ≈ #D9D9D9 系）",
+          "target": {
+            "label": "watermark-layer"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.8,
+                0.8
+              ],
+              "expect": {
+                "hex": "#FFFFFF"
+              },
+              "minRatio": 0.4,
+              "tol": 60,
+              "target": {
+                "label": "watermark-layer"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
