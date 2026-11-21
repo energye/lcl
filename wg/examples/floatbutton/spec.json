@@ -1,0 +1,152 @@
+{
+  "id": "floatbutton",
+  "structure": {
+    "apiRows": 6,
+    "sections": [
+      "双型",
+      "按钮组"
+    ]
+  },
+  "sections": [
+    {
+      "name": "双型",
+      "cases": [
+        {
+          "name": "primary 按钮为主色实底",
+          "target": {
+            "label": "float-button",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "default 按钮为白底（Surface）",
+          "target": {
+            "label": "float-button",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "primary 直径 56",
+          "target": {
+            "label": "float-button",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                54,
+                58
+              ]
+            }
+          ]
+        },
+        {
+          "name": "default 直径 40",
+          "target": {
+            "label": "float-button",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                38,
+                42
+              ]
+            }
+          ]
+        },
+        {
+          "name": "点击 primary 有按压视觉反馈",
+          "target": {
+            "label": "float-button",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "button-press",
+              "target": {
+                "label": "float-button",
+                "index": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "按钮组",
+      "cases": [
+        {
+          "name": "组内三个按钮存在",
+          "target": {
+            "label": "float-button"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "name": "组底色为 InfoBg（ShapeGroup）",
+          "target": {
+            "label": "float-button-group",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.05,
+                0.05,
+                0.3,
+                0.3
+              ],
+              "expect": {
+                "token": "InfoBg"
+              },
+              "minRatio": 0.4,
+              "tol": 14
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
