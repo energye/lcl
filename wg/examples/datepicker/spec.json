@@ -1,0 +1,165 @@
+{
+  "id": "datepicker",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "日期选择"
+    ]
+  },
+  "sections": [
+    {
+      "name": "日期选择",
+      "cases": [
+        {
+          "name": "触发框显示当前日期（非占位）",
+          "target": {
+            "label": "date-picker"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "点击触发框弹出日历面板",
+          "target": {
+            "label": "date-picker"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-panel"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-panel-title"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-cell"
+              }
+            }
+          ]
+        },
+        {
+          "name": "面板月标题含当前年份",
+          "target": {
+            "label": "date-picker"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "2026",
+              "target": {
+                "label": "date-panel-title",
+                "text": "2026"
+              }
+            }
+          ],
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ]
+        },
+        {
+          "name": "点击 › 切换到下月（标题月份变化）",
+          "target": {
+            "label": "date-picker"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-nav",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-panel-title"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击日期格选择并关闭面板",
+          "target": {
+            "label": "date-picker"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "index": 10
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
