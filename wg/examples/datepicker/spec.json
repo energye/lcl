@@ -67,6 +67,53 @@
               "count": 1
             }
           ]
+        },
+        {
+          "name": "第一击选 11 日后面板保持且 15 格子在",
+          "target": {
+            "label": "date-picker",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "text": "11"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-cell",
+                "text": "11"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-cell",
+                "text": "15"
+              }
+            }
+          ]
         }
       ]
     },

@@ -173,6 +173,9 @@ func (d *DatePicker) Show(ctx *ui.BuildContext) {
 // IsOpen 返回面板是否打开。
 func (d *DatePicker) IsOpen() bool { return d.panelOpen }
 
+// RangeStage 返回范围选择阶段（0=未开始/完成，1=已选起待选止；诊断用）。
+func (d *DatePicker) RangeStage() int { return d.rangeStage }
+
 // openPanel 打开日历面板（BandPopup+PlacementBottomStart，Dropdown 同通道）。
 func (d *DatePicker) openPanel(ctx *ui.BuildContext, anchor *scene.Node, th *theme.Data) {
 	if d.handle != 0 {
@@ -266,9 +269,20 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 	offset := (int(first.Weekday()) + 6) % 7
 	daysInMonth := time.Date(d.viewYear, time.Month(d.viewMonth)+1, 0, 0, 0, 0, 0, time.Local).Day()
 	today := time.Now()
-	grid := scene.Grid(7, 0)
+	// 日期区：每周一行 Flex（绕开 Grid——Grid(7,0) 在浮层内实测
+	// dump 探针 60s 超时+锚定位失败，Flex 行是零歧义通道）。
+	grid := scene.Flex(scene.Vertical, 0)
+	weekRow := scene.Flex(scene.Horizontal, 0)
 	for i := 0; i < offset; i++ {
-		grid.Add(scene.Empty())
+		weekRow.Add(scene.Empty())
+	}
+	daysThisRow := offset
+	flushRow := func() {
+		if daysThisRow > 0 {
+			grid.Add(weekRow)
+		}
+		weekRow = scene.Flex(scene.Horizontal, 0)
+		daysThisRow = 0
 	}
 	for day := 1; day <= daysInMonth; day++ {
 		day := day
@@ -293,6 +307,11 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 		txt.SetMargin(geom.InLTRB(0, (28-l.Size.H)/2, 0, 0))
 		cell.Add(txt)
 		cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-cell", Cursor: scene.CursorPointer})
+		weekRow.Add(cell)
+		daysThisRow++
+		if daysThisRow == 7 {
+			flushRow()
+		}
 		if ctx.Input != nil {
 			// **down 即执行**（Dropdown 轮结论：浮层内 tap 配对永不触发）。
 			ctx.Input.Set(cell, input.Handler{Pointer: func(ev *input.PointerEvent) bool {
@@ -336,7 +355,7 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 				return true
 			}})
 		}
-		grid.Add(cell)
+		flushRow()
 	}
 	panel.Add(grid)
 	panel.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-panel"})
