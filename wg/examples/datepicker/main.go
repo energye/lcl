@@ -39,8 +39,11 @@ func main() {
 			{Name: "NewDatePicker", Type: "func() *DatePicker", Desc: "构造（默认当前日期）"},
 			{Name: "Value", Type: "time.Time", Desc: "选中日期"},
 			{Name: "OnChange", Type: "func(t time.Time)", Desc: "选择回调（选择后面板自动关闭）"},
-			{Name: "Placeholder", Type: "string", Default: "请选择日期", Desc: "占位文本"},
-			{Name: "Width", Type: "float32", Default: "200", Desc: "触发框宽度"},
+			{Name: "Range", Type: "bool", Default: "false", Desc: "范围选择模式：双触发框，面板两击选起止"},
+			{Name: "Value2 / OnChangeRange", Type: "time.Time / func(t1,t2)", Desc: "范围结束日期 / 范围选择回调（第二击早于第一击自动交换）"},
+			{Name: "Placeholder / Placeholder2", Type: "string", Default: "请选择日期", Desc: "触发框占位文本（范围模式为起/止框）"},
+			{Name: "Show / Close / IsOpen / RangeStage", Type: "func(...)", Desc: "程序化开关面板 / 状态查询（RangeStage：0=未开始 1=已选起待选止）"},
+			{Name: "Width", Type: "float32", Default: "200", Desc: "触发框宽度（范围模式为单框宽）"},
 		},
 	})
 }

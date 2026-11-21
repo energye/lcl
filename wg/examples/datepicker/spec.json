@@ -1,7 +1,7 @@
 {
   "id": "datepicker",
   "structure": {
-    "apiRows": 6,
+    "apiRows": 8,
     "sections": [
       "范围选择",
       "日期选择"
@@ -14,7 +14,7 @@
         {
           "name": "双触发框存在（开始/结束占位）",
           "target": {
-            "label": "date-picker"
+            "label": "date-range-start"
           },
           "then": [
             {
@@ -25,13 +25,13 @@
         {
           "name": "点击起框弹面板",
           "target": {
-            "label": "date-picker"
+            "label": "date-range-start"
           },
           "when": [
             {
               "click": {
                 "target": {
-                  "label": "date-picker",
+                  "label": "date-range-start",
                   "index": 0
                 }
               }
@@ -50,7 +50,7 @@
         {
           "name": "点击起框弹出面板（overlay 1）",
           "target": {
-            "label": "date-picker",
+            "label": "date-range-start",
             "index": 0
           },
           "when": [
@@ -68,17 +68,142 @@
             }
           ]
         },
+        
         {
-          "name": "第一击选 11 日后面板保持且 15 格子在",
+          "name": "两击选起止后双触发框显示区间且面板保持",
           "target": {
-            "label": "date-picker",
+            "label": "date-range-start",
             "index": 0
           },
           "when": [
             {
               "click": {
                 "target": {
-                  "label": "date-picker",
+                  "label": "date-range-start",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "text": "11"
+                }
+              }
+            },
+            {
+              "wait": 200
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "text": "15"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "2026-11-11",
+              "target": {
+                "label": "date-range-start",
+                "index": 0
+              }
+            },
+            {
+              "kind": "text",
+              "text": "2026-11-15",
+              "target": {
+                "label": "date-range-end"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-panel"
+              }
+            }
+          ]
+        },
+        {
+          "name": "逆序两击自动交换（先 20 后 12 → 起 12 止 20）",
+          "target": {
+            "label": "date-range-start",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-range-start",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "text": "20"
+                }
+              }
+            },
+            {
+              "wait": 200
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "text": "12"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "2026-11-12",
+              "target": {
+                "label": "date-range-start",
+                "index": 0
+              }
+            },
+            {
+              "kind": "text",
+              "text": "2026-11-20",
+              "target": {
+                "label": "date-range-end"
+              }
+            }
+          ]
+        },
+        {
+          "name": "第一击选 11 日后面板保持且 15 格子在",
+          "target": {
+            "label": "date-range-start",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-range-start",
                   "index": 0
                 }
               }
@@ -111,6 +236,14 @@
               "target": {
                 "label": "date-cell",
                 "text": "15"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "2026-11-11",
+              "target": {
+                "label": "date-range-start",
+                "index": 0
               }
             }
           ]

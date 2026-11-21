@@ -118,7 +118,7 @@ func (d *DatePicker) buildRangeTrigger(ctx *ui.BuildContext, th *theme.Data) *sc
 	row := scene.Flex(scene.Horizontal, th.Space.XS).SetCrossAlign(scene.CrossCenter)
 	sep := text.LayoutText("~", text.DefaultFont(th.Font.SizeBase), text.Options{})
 	row.Add(scene.Text(scene.TextSpec{Src: "~", Layout: sep, Color: th.Color.TextFaint}))
-	for _, seg := range []struct {
+	for i, seg := range []struct {
 		val      time.Time
 		ph       string
 	}{
@@ -128,10 +128,17 @@ func (d *DatePicker) buildRangeTrigger(ctx *ui.BuildContext, th *theme.Data) *sc
 		display := seg.val.Format("2006-01-02")
 		txtColor := th.Color.Text
 		if seg.val.IsZero() {
-			display, txtColor = seg.ph, th.Color.TextPlaceholder
-		}
-		if seg.ph == "" {
-			display, txtColor = "开始日期", th.Color.TextPlaceholder
+			// 无值才显示占位；占位未设时按框位兜底（起/止各自的默认文案，
+			// 且绝不覆盖已选日期——此前硬编码无条件覆盖是本轮探针抓出的 bug）。
+			display = seg.ph
+			if display == "" {
+				if i == 0 {
+					display = "开始日期"
+				} else {
+					display = "结束日期"
+				}
+			}
+			txtColor = th.Color.TextPlaceholder
 		}
 		font := text.DefaultFont(th.Font.SizeBase)
 		layout := text.LayoutText(display, font, text.Options{})
@@ -147,7 +154,13 @@ func (d *DatePicker) buildRangeTrigger(ctx *ui.BuildContext, th *theme.Data) *sc
 		ic.SetPositionKeepSize(true)
 		ic.SetStackPosition(geom.Pt(w-11-14, (h-14)/2))
 		n.Add(ic)
-		n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-picker", Cursor: scene.CursorPointer})
+		// 范围双框用全窗唯一标签：页面上常与单选 DatePicker 共存，
+		// 撞 "date-picker" 会让审计锚点点到单选实例（本轮真窗实测踩坑）。
+		hitLabel := "date-range-end"
+		if i == 0 {
+			hitLabel = "date-range-start"
+		}
+		n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: hitLabel, Cursor: scene.CursorPointer})
 		if ctx.Input != nil {
 			anchor := n
 			g := &ui.GestureDetector{OnTap: func(geom.Point) {
@@ -355,8 +368,8 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 				return true
 			}})
 		}
-		flushRow()
 	}
+	flushRow() // 尾行（最后不满 7 天的一周）
 	panel.Add(grid)
 	panel.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-panel"})
 	return panel
