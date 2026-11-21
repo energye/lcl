@@ -1,148 +1,148 @@
 {
-  "id": "tooltip",
-  "structure": {
-    "apiRows": 7,
-    "sections": [
-      "基本悬停",
-      "富内容"
-    ]
-  },
+  "id": "tooltip", 
   "sections": [
     {
-      "name": "基本悬停",
       "cases": [
         {
-          "name": "悬停出现提示（BandTooltip）",
+          "name": "悬停出现提示（BandTooltip）", 
           "target": {
-            "label": "button",
+            "label": "button", 
             "text": "把鼠标停在这里"
-          },
+          }, 
+          "then": [
+            {
+              "band": "tooltip", 
+              "count": 1, 
+              "kind": "overlay"
+            }
+          ], 
           "when": [
             {
               "hover": {}
-            },
+            }, 
             {
               "wait": 900
-            }
-          ],
-          "then": [
-            {
-              "kind": "overlay",
-              "count": 1,
-              "band": "tooltip"
             }
           ]
-        },
+        }, 
         {
-          "name": "提示弹层为深色底（colorBgSpotlight）",
+          "name": "提示弹层为深色底（colorBgSpotlight）", 
           "target": {
-            "label": "button",
+            "label": "button", 
             "text": "把鼠标停在这里"
-          },
-          "when": [
-            {
-              "hover": {}
-            },
-            {
-              "wait": 900
-            }
-          ],
+          }, 
           "then": [
             {
-              "kind": "template",
+              "kind": "template", 
               "template": "tooltip-dark"
             }
-          ]
-        },
-        {
-          "name": "移出后提示消失",
-          "target": {
-            "label": "button",
-            "text": "把鼠标停在这里"
-          },
+          ], 
           "when": [
             {
               "hover": {}
-            },
+            }, 
             {
               "wait": 900
-            },
+            }
+          ]
+        }, 
+        {
+          "name": "移出后提示消失", 
+          "target": {
+            "label": "button", 
+            "text": "把鼠标停在这里"
+          }, 
+          "then": [
+            {
+              "band": "tooltip", 
+              "count": 0, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "hover": {}
+            }, 
+            {
+              "wait": 900
+            }, 
             {
               "moveOut": true
-            },
+            }, 
             {
               "wait": 400
             }
-          ],
-          "then": [
-            {
-              "kind": "overlay",
-              "count": 0,
-              "band": "tooltip"
-            }
           ]
         }
-      ]
-    },
+      ], 
+      "name": "基本悬停"
+    }, 
     {
-      "name": "富内容",
       "cases": [
         {
-          "name": "悬停按钮弹出富内容浮层",
+          "name": "悬停按钮弹多行文本浮层", 
           "target": {
-            "label": "button",
-            "text": "悬停看富内容"
-          },
+            "label": "button", 
+            "text": "悬停看多行提示"
+          }, 
+          "then": [
+            {
+              "count": 1, 
+              "kind": "overlay"
+            }, 
+            {
+              "kind": "text", 
+              "target": {
+                "label": "tooltip", 
+                "text": "第一步：填写表单字段"
+              }, 
+              "text": "第一步：填写表单字段"
+            }, 
+            {
+              "kind": "text", 
+              "target": {
+                "label": "tooltip", 
+                "text": "第二步：点击提交按钮"
+              }, 
+              "text": "第二步：点击提交按钮"
+            }, 
+            {
+              "expect": {
+                "token": "Text"
+              }, 
+              "frac": [
+                0.1, 
+                0.1, 
+                0.6, 
+                0.6
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.5, 
+              "target": {
+                "label": "tooltip", 
+                "text": "第一步：填写表单字段"
+              }, 
+              "tol": 24
+            }
+          ], 
           "when": [
             {
               "hover": {}
-            },
+            }, 
             {
               "wait": 900
             }
-          ],
-          "then": [
-            {
-              "kind": "overlay",
-              "count": 1
-            },
-            {
-              "kind": "text",
-              "text": "操作指引",
-              "target": {
-                "label": "tooltip",
-                "text": "操作指引"
-              }
-            },
-            {
-              "kind": "text",
-              "text": "2. 点击提交按钮",
-              "target": {
-                "label": "tooltip",
-                "text": "2. 点击提交按钮"
-              }
-            },
-            {
-              "kind": "colorRatio",
-              "frac": [
-                0.1,
-                0.1,
-                0.6,
-                0.6
-              ],
-              "expect": {
-                "token": "Text"
-              },
-              "minRatio": 0.5,
-              "tol": 24,
-              "target": {
-                "label": "tooltip",
-                "text": "操作指引"
-              }
-            }
           ]
         }
-      ]
+      ], 
+      "name": "多行文本"
     }
-  ]
+  ], 
+  "structure": {
+    "apiRows": 4, 
+    "sections": [
+      "基本悬停", 
+      "多行文本"
+    ]
+  }
 }

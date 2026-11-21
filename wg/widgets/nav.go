@@ -201,13 +201,11 @@ func (h *tabHeader) Build(ctx *ui.BuildContext) *scene.Node {
 // 浮层的定位/关闭/z 序全部交给 overlay.Host；这里只负责
 // "何时显示、显示什么"，不在组件里写全局鼠标监听或计时器。
 type Tooltip struct {
-	Child     ui.Widget
+	Child ui.Widget
+	// Text 提示文本（antd Tooltip title——纯文本短提示，多行可用 \n）。
+	// **富内容形态已拆分至 Popover**（白底 Title/Content——antd 语义
+	// 边界：Tooltip 深底短文本、Popover 白底富内容，M9 尾轮）。
 	Text      string
-	// Title 富内容形态的加粗标题行（antd Tooltip title；Text 仍作正文）。
-	Title string
-	// Content 富内容 Widget（antd Tooltip content）：设置后优先于
-	// Text/Title，浮层尺寸按内容实测（高度自适应）。
-	Content   ui.Widget
 	Placement overlay.Placement
 	handle    overlay.Handle
 }
@@ -251,36 +249,6 @@ func (t *Tooltip) show(ctx *ui.BuildContext, anchor *scene.Node) {
 		return
 	}
 	th := ctx.ThemeOr()
-	// 富内容形态（Content Widget）：浮层尺寸按内容实测（高度自适应、
-	// 宽度取内容实测宽封顶 300）。
-	if t.Content != nil {
-		content := buildChild(ctx, t.Content)
-		if content == nil {
-			return
-		}
-		content.Layout(scene.LooseConstraints(geom.Sz(300, 10000)))
-		w := content.Size().W + 16
-		col := scene.Flex(scene.Vertical, th.Space.XS)
-		col.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.Text), Radius: th.Radius.Base})
-		col.SetPadding(geom.InLTRB(8, 6, 8, 6))
-		if t.Title != "" {
-			tl := textLayout(t.Title, th.Font.SizeSM)
-			col.Add(scene.Text(scene.TextSpec{Src: t.Title, Layout: tl, Color: th.Color.OnDark}))
-		}
-		col.Add(content)
-		col.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "tooltip"})
-		t.handle = ctx.Overlay.Show(overlay.Entry{
-			Band:      theme.BandTooltip,
-			Anchor:    overlay.NodeAnchor(anchor),
-			Placement: t.Placement,
-			Size:      geom.Size{W: w, H: 0}, // 高度自适应（[引擎] 浮层高度自适应）
-			Dismiss:   overlay.Dismiss(0),
-			Tag:       "tooltip",
-			OnClose:   func() { t.handle = 0 },
-			Build:     func() *scene.Node { return col },
-		})
-		return
-	}
 	if t.Text == "" {
 		return
 	}
