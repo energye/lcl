@@ -28,6 +28,36 @@
               "template": "input-type"
             }
           ]
+        },
+        {
+          "name": "warning 状态图标为黄（warning-circle）",
+          "target": {
+            "label": "input",
+            "text": "warning 状态"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.82,
+                0.25,
+                1.0,
+                0.75
+              ],
+              "expect": {
+                "token": "Warning"
+              },
+              "minRatio": 0.005,
+              "tol": 24,
+              "target": {
+                "label": "input",
+                "text": "warning 状态"
+              }
+            }
+          ]
         }
       ]
     },

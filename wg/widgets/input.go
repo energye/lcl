@@ -233,6 +233,18 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 	if showClear {
 		sideSuffix += 16
 	}
+	// status 反馈图标（antd status 图标：error 红 close-circle /
+	// warning 黄 warning-circle，右侧覆盖在 suffix 区前）。
+	statusIcon := ""
+	statusIconColor := geom.Color{}
+	if w.Status == InputStatusError {
+		statusIcon, statusIconColor = "close-circle", th.Color.Danger
+	} else if w.Status == InputStatusWarning {
+		statusIcon, statusIconColor = "warning-circle", th.Color.Warning
+	}
+	if statusIcon != "" {
+		sideSuffix += 18
+	}
 	sideW += sideSuffix
 
 	innerW := width - 22 - sideW // 22 = 左右基础内边距
@@ -305,6 +317,13 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 	n.Add(t)
 
 	sx := width - 11 - sideSuffix
+	if statusIcon != "" {
+		si := (&Icon{Name: statusIcon, Size: 14, Color: statusIconColor}).Build(ctx)
+		si.SetPositionKeepSize(true)
+		si.SetStackPosition(geom.Pt(sx, (height-14)/2))
+		n.Add(si)
+		sx += 18
+	}
 	if w.Suffix != nil {
 		sn := w.Suffix.Build(ctx)
 		sn.SetPositionKeepSize(true)
