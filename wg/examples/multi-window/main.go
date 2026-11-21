@@ -54,6 +54,17 @@ func main() {
 		selfcheck()
 		return
 	}
+	// ── 审计模式：跳过副窗启动 + 定时自动退出（回归不挂——主窗
+	// Run 永久阻塞消息循环且此前无 --audit 解析，全量回归会卡死
+	// 在本窗；窗口自动关闭为用户明确要求）。
+	auditMode := hasArg("--audit")
+	if auditMode {
+		time.AfterFunc(10*time.Second, func() {
+			lcl.RunOnMainThreadAsync(func(uint32) {
+				lcl.Application.Terminate()
+			})
+		})
+	}
 	lcl.Init()
 	lcl.Application.Initialize()
 	lcl.Application.SetMainFormOnTaskBar(true)
@@ -65,21 +76,25 @@ func main() {
 	main.container = wg.NewContainer(&main, wg.DefaultOptions())
 	main.container.MountWidget(mainPage())
 
-	// ── 动画副窗（启动即开）：持续帧窗 ──────────────────────────
+	// ── 动画副窗（启动即开）：持续帧窗（audit 模式跳过——副窗
+	// 生命周期不进启发式审计，留着即窗残留）─────────────────────
 	var anim mwForm
-	lcl.Application.NewForm(&anim)
-	setupWindow(&anim, "wg 多窗口 · 动画副窗（60Hz）", 700, 520)
-	anim.container = wg.NewContainer(&anim, wg.DefaultOptions())
-	anim.container.SetAnimating(true) // 动态组件驱动渲染：60Hz 标脏+续帧（按需渲染）
-	// 副窗顺序：**先 Start 后 MountWidget**——自驱动动画页在 Build 里
-	// 用 sched.RequestFrameIn 续帧，Build 必须发生在帧泵就位之后
-	// （Mount 先于 Start 时首帧 Build 的 Scheduler 为 nil，续帧被帧尾
-	// deferred 吞掉，动画只出 1 帧就停）。
-	if err := anim.container.Start(); err != nil {
-		fmt.Fprintln(os.Stderr, "动画副窗启动失败:", err)
+	skipAnim := auditMode
+	if !skipAnim {
+		lcl.Application.NewForm(&anim)
+		setupWindow(&anim, "wg 多窗口 · 动画副窗（60Hz）", 700, 520)
+		anim.container = wg.NewContainer(&anim, wg.DefaultOptions())
+		anim.container.SetAnimating(true) // 动态组件驱动渲染：60Hz 标脏+续帧（按需渲染）
+		// 副窗顺序：**先 Start 后 MountWidget**——自驱动动画页在 Build 里
+		// 用 sched.RequestFrameIn 续帧，Build 必须发生在帧泵就位之后
+		// （Mount 先于 Start 时首帧 Build 的 Scheduler 为 nil，续帧被帧尾
+		// deferred 吞掉，动画只出 1 帧就停）。
+		if err := anim.container.Start(); err != nil {
+			fmt.Fprintln(os.Stderr, "动画副窗启动失败:", err)
+		}
+		anim.container.MountWidget(animPage())
+		anim.Show()
 	}
-	anim.container.MountWidget(animPage())
-	anim.Show()
 
 	// ── 主窗进消息循环（副窗的消息经各自的 binder 到达）──────────
 	if err := main.container.Run(); err != nil {
@@ -89,6 +104,9 @@ func main() {
 
 // openInteractive 动态打开一个交互副窗（主窗按钮回调，已在主线程）。
 func openInteractive() {
+	if hasArg("--audit") {
+		return // 审计模式：开窗按钮点击不真开副窗（防窗残留）
+	}
 	var f mwForm
 	lcl.Application.NewForm(&f)
 	openCount++
