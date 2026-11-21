@@ -1,0 +1,87 @@
+{
+  "id": "qrcode",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "演示矩阵"
+    ]
+  },
+  "sections": [
+    {
+      "name": "演示矩阵",
+      "cases": [
+        {
+          "name": "二维码与 Value 文本展示",
+          "target": {
+            "label": "qrcode"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "qrcode"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "https://example.com/join?token=abc123",
+              "target": {
+                "label": "qrcode-value"
+              }
+            }
+          ]
+        },
+        {
+          "name": "定位角黑块存在（左上角心）",
+          "target": {
+            "label": "qrcode"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.02,
+                0.02,
+                0.04,
+                0.04
+              ],
+              "expect": {
+                "hex": "#000000"
+              },
+              "minRatio": 0.6,
+              "tol": 20,
+              "target": {
+                "label": "qrcode"
+              }
+            }
+          ]
+        },
+        {
+          "name": "中心区黑白混合（模块分布非空白）",
+          "target": {
+            "label": "qrcode"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.4,
+                0.4,
+                0.2,
+                0.2
+              ],
+              "expect": {
+                "hex": "#000000"
+              },
+              "minRatio": 0.1,
+              "tol": 20,
+              "target": {
+                "label": "qrcode"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
