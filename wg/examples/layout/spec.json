@@ -1,0 +1,106 @@
+{
+  "id": "layout",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "经典布局"
+    ]
+  },
+  "sections": [
+    {
+      "name": "经典布局",
+      "cases": [
+        {
+          "name": "四区锚存在",
+          "target": {
+            "label": "layout"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "layout-header"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "layout-sider"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "layout-content"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "layout-footer"
+              }
+            }
+          ]
+        },
+        {
+          "name": "顶栏高 64",
+          "target": {
+            "label": "layout-header"
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "heightBetween": [
+                62,
+                66
+              ],
+              "target": {
+                "label": "layout-header"
+              }
+            }
+          ]
+        },
+        {
+          "name": "侧边栏宽 200",
+          "target": {
+            "label": "layout-sider"
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "widthBetween": [
+                198,
+                202
+              ],
+              "target": {
+                "label": "layout-sider"
+              }
+            }
+          ]
+        },
+        {
+          "name": "各分区内容文本",
+          "target": {
+            "label": "layout"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "顶栏 · 应用标题",
+              "target": {
+                "label": "layout-header"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "主内容区",
+              "target": {
+                "label": "layout-content"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
