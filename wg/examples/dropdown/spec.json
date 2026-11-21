@@ -1,0 +1,90 @@
+{
+  "id": "dropdown",
+  "structure": {
+    "apiRows": 3,
+    "sections": [
+      "悬停下拉"
+    ]
+  },
+  "sections": [
+    {
+      "name": "悬停下拉",
+      "cases": [
+        {
+          "name": "悬停触发元素弹出浮层菜单",
+          "target": {
+            "label": "button",
+            "text": "悬停下拉"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 900
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "text",
+              "text": "复制",
+              "target": {
+                "label": "dropdown-item",
+                "text": "复制"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击菜单项回调（状态文本更新）+浮层关闭",
+          "target": {
+            "label": "button",
+            "text": "悬停下拉"
+          },
+          "when": [
+            {
+              "hover": {
+                "target": {
+                  "label": "button",
+                  "text": "悬停下拉"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "dropdown-item",
+                  "text": "编辑"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "text",
+              "text": "已选择：edit",
+              "target": {
+                "label": "button",
+                "text": "已选择：edit"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
