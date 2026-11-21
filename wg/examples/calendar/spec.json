@@ -1,0 +1,178 @@
+{
+  "id": "calendar",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "全屏日历"
+    ]
+  },
+  "sections": [
+    {
+      "name": "全屏日历",
+      "cases": [
+        {
+          "name": "页头标题含当前年月",
+          "target": {
+            "label": "calendar-title"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "2026年11月",
+              "target": {
+                "label": "calendar-title"
+              }
+            }
+          ]
+        },
+        {
+          "name": "日期格 30 个存在（11 月）",
+          "target": {
+            "label": "calendar-cell"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 30,
+              "target": {
+                "label": "calendar-cell"
+              }
+            }
+          ]
+        },
+        {
+          "name": "today 格主色描边",
+          "target": {
+            "label": "calendar-cell",
+            "text": "21"
+          },
+          "then": [
+            {
+              "kind": "borderColor",
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 24,
+              "target": {
+                "label": "calendar-cell",
+                "text": "21"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击日期格选中实底迁移",
+          "target": {
+            "label": "calendar-cell",
+            "text": "15"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "calendar-cell",
+                  "text": "15"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "calendar-cell",
+                "text": "15"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点下月切到 12 月",
+          "target": {
+            "label": "calendar-title"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "calendar-nav-next"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "2026年12月",
+              "target": {
+                "label": "calendar-title"
+              }
+            }
+          ]
+        },
+        {
+          "name": "今天按钮回 11 月并选中今天",
+          "target": {
+            "label": "calendar-title"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "calendar-nav-today"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "2026年11月",
+              "target": {
+                "label": "calendar-title"
+              }
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "calendar-cell",
+                "text": "21"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
