@@ -1,12 +1,92 @@
 {
   "id": "list",
   "structure": {
-    "apiRows": 5,
+    "apiRows": 8,
     "sections": [
+      "分页列表",
+      "空态",
       "键控复用"
     ]
   },
   "sections": [
+    {
+      "name": "分页列表",
+      "cases": [
+        {
+          "name": "首页 6 条（条目 01-06 存在）",
+          "target": {
+            "label": "list",
+            "text": "条目 01"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "条目 01"
+            }
+          ]
+        },
+        {
+          "name": "总条数文字 23 条",
+          "target": {
+            "label": "page-total"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "共 23 条"
+            }
+          ]
+        },
+        {
+          "name": "点页码 2 翻页（条目 07 入窗）",
+          "target": {
+            "label": "page",
+            "text": "2"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "list",
+                "text": "条目 07"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "空态",
+      "cases": [
+        {
+          "name": "空态文案存在（Empty 组件）",
+          "target": {
+            "label": "empty"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            },
+            {
+              "kind": "text",
+              "text": "暂无数据",
+              "target": {
+                "label": "empty",
+                "text": "暂无数据"
+              }
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "键控复用",
       "cases": [
