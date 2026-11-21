@@ -1,0 +1,153 @@
+{
+  "id": "mentions",
+  "structure": {
+    "apiRows": 7,
+    "sections": [
+      "基础"
+    ]
+  },
+  "sections": [
+    {
+      "name": "基础",
+      "cases": [
+        {
+          "name": "占位文本显示",
+          "target": {
+            "label": "mentions-input"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "输入 @ 唤起提及",
+              "target": {
+                "label": "mentions-input"
+              }
+            }
+          ]
+        },
+        {
+          "name": "键入 @ 弹候选面板",
+          "target": {
+            "label": "mentions-input"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 200
+            },
+            {
+              "typeText": "@"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "mentions-panel"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "mentions-option",
+                "text": "afc"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "mentions-option",
+                "text": "bluetooth"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点选 afc 后文本插入且面板关闭",
+          "target": {
+            "label": "mentions-input"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 200
+            },
+            {
+              "typeText": "@"
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "mentions-option",
+                  "text": "afc"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "text",
+              "text": "@afc",
+              "target": {
+                "label": "mentions-input"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Esc 关闭候选面板",
+          "target": {
+            "label": "mentions-input"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 200
+            },
+            {
+              "typeText": "@"
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "escape"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
