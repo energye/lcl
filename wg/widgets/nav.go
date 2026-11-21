@@ -203,6 +203,11 @@ func (h *tabHeader) Build(ctx *ui.BuildContext) *scene.Node {
 type Tooltip struct {
 	Child     ui.Widget
 	Text      string
+	// Title 富内容形态的加粗标题行（antd Tooltip title；Text 仍作正文）。
+	Title string
+	// Content 富内容 Widget（antd Tooltip content）：设置后优先于
+	// Text/Title，浮层尺寸按内容实测（高度自适应）。
+	Content   ui.Widget
 	Placement overlay.Placement
 	handle    overlay.Handle
 }
@@ -242,10 +247,43 @@ func (t *Tooltip) Build(ctx *ui.BuildContext) *scene.Node {
 }
 
 func (t *Tooltip) show(ctx *ui.BuildContext, anchor *scene.Node) {
-	if ctx.Overlay == nil || t.handle != 0 || t.Text == "" {
+	if ctx.Overlay == nil || t.handle != 0 {
 		return
 	}
 	th := ctx.ThemeOr()
+	// 富内容形态（Content Widget）：浮层尺寸按内容实测（高度自适应、
+	// 宽度取内容实测宽封顶 300）。
+	if t.Content != nil {
+		content := buildChild(ctx, t.Content)
+		if content == nil {
+			return
+		}
+		content.Layout(scene.LooseConstraints(geom.Sz(300, 10000)))
+		w := content.Size().W + 16
+		col := scene.Flex(scene.Vertical, th.Space.XS)
+		col.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.Text), Radius: th.Radius.Base})
+		col.SetPadding(geom.InLTRB(8, 6, 8, 6))
+		if t.Title != "" {
+			tl := textLayout(t.Title, th.Font.SizeSM)
+			col.Add(scene.Text(scene.TextSpec{Src: t.Title, Layout: tl, Color: th.Color.OnDark}))
+		}
+		col.Add(content)
+		col.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "tooltip"})
+		t.handle = ctx.Overlay.Show(overlay.Entry{
+			Band:      theme.BandTooltip,
+			Anchor:    overlay.NodeAnchor(anchor),
+			Placement: t.Placement,
+			Size:      geom.Size{W: w, H: 0}, // 高度自适应（[引擎] 浮层高度自适应）
+			Dismiss:   overlay.Dismiss(0),
+			Tag:       "tooltip",
+			OnClose:   func() { t.handle = 0 },
+			Build:     func() *scene.Node { return col },
+		})
+		return
+	}
+	if t.Text == "" {
+		return
+	}
 	text := t.Text
 	placement := t.Placement
 	m := ui.MetricsFor(th, ui.SizeSmall)

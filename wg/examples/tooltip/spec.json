@@ -1,9 +1,10 @@
 {
   "id": "tooltip",
   "structure": {
-    "apiRows": 4,
+    "apiRows": 7,
     "sections": [
-      "基本悬停"
+      "基本悬停",
+      "富内容"
     ]
   },
   "sections": [
@@ -78,6 +79,66 @@
               "kind": "overlay",
               "count": 0,
               "band": "tooltip"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "富内容",
+      "cases": [
+        {
+          "name": "悬停按钮弹出富内容浮层",
+          "target": {
+            "label": "button",
+            "text": "悬停看富内容"
+          },
+          "when": [
+            {
+              "hover": {}
+            },
+            {
+              "wait": 900
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "text",
+              "text": "操作指引",
+              "target": {
+                "label": "tooltip",
+                "text": "操作指引"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "2. 点击提交按钮",
+              "target": {
+                "label": "tooltip",
+                "text": "2. 点击提交按钮"
+              }
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Text"
+              },
+              "minRatio": 0.5,
+              "tol": 24,
+              "target": {
+                "label": "tooltip",
+                "text": "操作指引"
+              }
             }
           ]
         }
