@@ -1,0 +1,82 @@
+{
+  "id": "statistic",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "金额",
+      "用户数"
+    ]
+  },
+  "sections": [
+    {
+      "name": "金额",
+      "cases": [
+        {
+          "name": "标题与前缀存在",
+          "target": {
+            "label": "statistic"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "账户总余额",
+              "target": {
+                "label": "statistic-title"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "¥",
+              "target": {
+                "label": "statistic-prefix"
+              }
+            }
+          ]
+        },
+        {
+          "name": "数值千分位+两位小数",
+          "target": {
+            "label": "statistic-value"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "189,345.25",
+              "target": {
+                "label": "statistic-value"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "用户数",
+      "cases": [
+        {
+          "name": "整数千分位+后缀",
+          "target": {
+            "label": "statistic"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "112,893",
+              "target": {
+                "label": "statistic-value",
+                "index": 1
+              }
+            },
+            {
+              "kind": "text",
+              "text": "人",
+              "target": {
+                "label": "statistic-suffix"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
