@@ -1,0 +1,161 @@
+{
+  "id": "upload",
+  "structure": {
+    "apiRows": 8,
+    "sections": [
+      "基础",
+      "上传中"
+    ]
+  },
+  "sections": [
+    {
+      "name": "基础",
+      "cases": [
+        {
+          "name": "触发按钮与提示文字存在",
+          "target": {
+            "label": "upload-trigger",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "upload-trigger"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "点击上传",
+              "target": {
+                "label": "upload-trigger"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "支持单次或批量上传",
+              "target": {
+                "label": "upload-hint"
+              }
+            }
+          ]
+        },
+        {
+          "name": "done 与 error 文件项存在",
+          "target": {
+            "label": "upload-item"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 2,
+              "target": {
+                "label": "upload-item"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "site-design.png",
+              "target": {
+                "label": "upload-name"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "draft.psd",
+              "target": {
+                "label": "upload-name",
+                "index": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "点删除移除文件项",
+          "target": {
+            "label": "upload-remove",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "absent",
+              "target": {
+                "label": "upload-name",
+                "text": "site-design.png"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "上传中",
+      "cases": [
+        {
+          "name": "uploading 项显示百分比 60%",
+          "target": {
+            "label": "upload-item",
+            "text": "logo.mov"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "upload-item",
+                "text": "logo.mov"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "60%",
+              "target": {
+                "label": "upload-item",
+                "text": "logo.mov"
+              }
+            }
+          ]
+        },
+        {
+          "name": "项内嵌进度条主色填充",
+          "target": {
+            "label": "progress",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "progress"
+              }
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.15,
+                0.35,
+                0.35,
+                0.65
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.3,
+              "tol": 14,
+              "target": {
+                "label": "progress"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
