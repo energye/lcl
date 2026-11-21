@@ -2,6 +2,7 @@
   "id": "table",
   "structure": {
     "sections": [
+      "固定列",
       "分页表格",
       "四列混排"
     ],
@@ -9,6 +10,70 @@
     "minElements": 12
   },
   "sections": [
+    {
+      "name": "固定列",
+      "cases": [
+        {
+          "name": "冻结列字段（左列）文本在冻结层可见",
+          "target": {
+            "label": "table-row",
+            "text": "id"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "横向滚动 300 后冻结列字段仍在视口左缘（不随滚）",
+          "target": {
+            "label": "table-frozen-cell"
+          },
+          "when": [
+            {
+              "wheel": 300,
+              "wheelAxis": "x"
+            },
+            {
+              "wait": 400
+            }
+          ],
+          "then": [
+            {
+              "kind": "geometry",
+              "xBetween": [
+                72,
+                140
+              ],
+              "target": {
+                "label": "table-frozen-cell"
+              }
+            }
+          ]
+        },
+        {
+          "name": "横向滚动到尽头后备注列进入视口右半（x ∈ [620,700]）",
+          "target": {
+            "label": "table-row",
+            "text": "备注 id"
+          },
+          "then": [
+            {
+              "kind": "geometry",
+              "xBetween": [
+                620,
+                700
+              ],
+              "target": {
+                "label": "table-row",
+                "text": "备注 id"
+              }
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "分页表格",
       "cases": [

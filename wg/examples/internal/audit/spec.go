@@ -78,7 +78,8 @@ type SpecAction struct {
 	Hover    *SpecClick `json:"hover,omitempty"`
 	TypeText string     `json:"typeText,omitempty"`
 	Key      string     `json:"key,omitempty"`
-	Wheel    *float32   `json:"wheel,omitempty"`
+	Wheel     *float32 `json:"wheel,omitempty"`
+	WheelAxis string   `json:"wheelAxis,omitempty"` // "x"=横向滚轮（Delta.X）
 	MoveOut  bool       `json:"moveOut,omitempty"`
 	Wait     int        `json:"wait,omitempty"` // 毫秒（Tooltip 悬停延迟等）
 }
@@ -108,6 +109,9 @@ type SpecAssertion struct {
 	Below         *SpecTarget `json:"below,omitempty"`
 	WidthAtLeast  float32     `json:"widthAtLeast,omitempty"`
 	WidthBetween  []float32   `json:"widthBetween,omitempty"`
+	// XBetween 根坐标 Min.X 落区间（冻结列"不随横向滚动"验证——
+	// 滚动前后单元格 Min.X 都应留在视口左缘区间）。
+	XBetween []float32 `json:"xBetween,omitempty"`
 	HeightBetween []float32   `json:"heightBetween,omitempty"`
 	CenterYWithin []float32   `json:"centerYWithin,omitempty"`
 	InViewport    bool        `json:"inViewport,omitempty"`
@@ -528,7 +532,16 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 		r.c.PushEvent(&input.KeyEvent{Kind: input.KeyDown, Code: code, Time: time.Now()})
 		time.Sleep(20 * time.Millisecond)
 	case a.Wheel != nil:
-		injectWheel(r.c, 1035, 400, *a.Wheel)
+		if a.WheelAxis == "x" {
+			// 横向滚轮（Delta.X）：固定列表格横向滚动用。
+			r.c.PushEvent(&input.WheelEvent{
+				Pos:   geom.Pt(300, 300),
+				Delta: geom.Pt(*a.Wheel, 0),
+				Time:  time.Now(),
+			})
+		} else {
+			injectWheel(r.c, 1035, 400, *a.Wheel)
+		}
 	case a.MoveOut:
 		injectLeave(r.c)
 	case a.Wait > 0:
@@ -873,6 +886,14 @@ func (r *specRunner) assertGeometry(caseName string, target *SpecTarget, as Spec
 				detail string
 			}{b.Min.Y >= ob.Max.Y-1, fmt.Sprintf("y %.0f ≥ 上邻底缘 %.0f", b.Min.Y, ob.Max.Y)})
 		}
+	}
+	if len(as.XBetween) == 2 {
+		x := b.Min.X
+		checks = append(checks, struct {
+			ok     bool
+			detail string
+		}{x >= as.XBetween[0] && x <= as.XBetween[1],
+			fmt.Sprintf("x %.0f ∈ [%.0f,%.0f]", x, as.XBetween[0], as.XBetween[1])})
 	}
 	if as.WidthAtLeast > 0 {
 		checks = append(checks, struct {

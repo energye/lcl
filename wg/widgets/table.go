@@ -45,6 +45,9 @@ type TableColumn struct {
 	Align    scene.Alignment
 	// Formatter 自定义单元格文本；返回空串时回退到默认格式化。
 	Formatter func(row int, value any) string
+	// Fixed 冻结列（antd fixed）："" 不冻结 / "left" 左缘冻结 /
+	// "right" 右缘冻结——横向滚动时该列不随内容滚动（叠层实现）。
+	Fixed string
 }
 
 // Table 是虚拟表格。Rows 为行数据；每行是 []any，与 Columns 对齐。
@@ -85,8 +88,9 @@ type Table struct {
 	sorts     []*ui.GestureDetector // 跨 Build 存活
 	rowTaps   []*ui.GestureDetector
 	// 虚拟窗口与滚动条（原地滚动用）
-	rowNodes   []*scene.Node
-	rowVis     []int
+	rowNodes    []*scene.Node
+	freezeNodes []*scene.Node // 左冻结列行的同步副本（横向滚动不随动）
+	rowVis      []int
 	builtFirst int
 	builtLast  int
 	bar        *Scrollbar
@@ -126,6 +130,11 @@ func (t *Table) SetScrollOffset(v float32) {
 	}
 	for i, n := range t.rowNodes {
 		n.SetStackPosition(geom.Pt(0, t.HeaderH+float32(t.rowVis[i])*t.RowHeight-v))
+	}
+	for i, n := range t.freezeNodes {
+		if i < len(t.rowVis) {
+			n.SetStackPosition(geom.Pt(0, t.HeaderH+float32(t.rowVis[i])*t.RowHeight-v))
+		}
 	}
 	if t.node != nil {
 		t.node.MarkNeedsPaint()
@@ -250,6 +259,45 @@ func (t *Table) cellText(col, row int) string {
 }
 
 // columnWidths 按 Q9 三档计算列宽（像素数组）。
+// hScrollNeeded 判断是否需要横向滚动：各列内容宽总和 > Width。
+func (t *Table) hScrollNeeded(fontSize float32) bool {
+	_, total := t.contentWidths(fontSize)
+	return total > t.Width
+}
+
+// contentWidths 折算各列"内容宽"（Auto=内容最大宽、Fixed=像素、
+// Flex=Min 或内容宽）与总和——横向滚动判定与布局共用。
+func (t *Table) contentWidths(fontSize float32) ([]float32, float32) {
+	n := len(t.Columns)
+	if n == 0 {
+		return nil, 0
+	}
+	out := make([]float32, n)
+	font := text.DefaultFont(fontSize)
+	total := float32(0)
+	for i, c := range t.Columns {
+		w := c.Width
+		switch c.Mode {
+		case ColumnFixed:
+		default: // Auto/Flex 都取内容最大宽（Flex 上限 Min/Max 仍生效）
+			for r := range t.Rows {
+				if lw := text.Measure(t.cellText(i, r), font).W; lw > w {
+					w = lw
+				}
+			}
+		}
+		if c.Min > 0 && w < c.Min {
+			w = c.Min
+		}
+		if c.Max > 0 && w > c.Max {
+			w = c.Max
+		}
+		out[i] = w + 12
+		total += out[i]
+	}
+	return out, total
+}
+
 func (t *Table) columnWidths(fontSize float32) []float32 {
 	n := len(t.Columns)
 	if n == 0 {
@@ -259,6 +307,12 @@ func (t *Table) columnWidths(fontSize float32) []float32 {
 	remaining := t.Width
 	flexTotal := float32(0)
 	font := text.DefaultFont(fontSize)
+	// 横向滚动模式（列内容总宽>Width）：Auto/Flex 全部退回内容宽，
+	// 不做剩余分摊——列总宽超视口交给横向滚动。
+	if t.hScrollNeeded(fontSize) {
+		cw, _ := t.contentWidths(fontSize)
+		return cw
+	}
 	for i, c := range t.Columns {
 		switch c.Mode {
 		case ColumnFixed:
@@ -351,9 +405,14 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 			hi = total
 		}
 		idx = idx[lo:hi]
-		inner := t.buildInner(ctx, th, idx)
+		inner, freeze, _ := t.buildInner(ctx, th, idx)
+		tableArea := scene.Stack().SetSize2(t.Width, t.ViewportHeight())
+		tableArea.Add(inner)
+		if freeze != nil {
+			tableArea.Add(freeze)
+		}
 		col := scene.Flex(scene.Vertical, th.Space.SM)
-		col.Add(inner)
+		col.Add(tableArea)
 		// 底部分页器行（Pagination 组件组合复用；Total=总条目数语义）。
 		if t.pagePager == nil {
 			t.pagePager = &Pagination{}
@@ -373,16 +432,72 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 		return col
 	}
 
-	return t.buildInner(ctx, th, idx)
+	inner, freeze, hscroll := t.buildInner(ctx, th, idx)
+	if !hscroll {
+		return inner
+	}
+	// 横向滚动包装：内容行进 Horizontal Scroll（视口宽=Table.Width）；
+	// 冻结列叠层覆盖其上不随滚动（Z 序：Scroll 下、freeze 上）。
+	wrapped := scene.Scroll(scene.Horizontal, inner)
+	wrapped.SetWidth(t.Width)
+	wrapped.SetHeight(t.ViewportHeight())
+	wrapped.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-hscroll"})
+	// 横向滚轮：scene.Scroll 节点本身无 handler，Delta.X 需在此消费
+	// （SetScrollOffset 自动 clamp 到内容范围；Delta.Y 冒泡给页面）。
+	if ctx.Input != nil {
+		ctx.Input.Set(wrapped, input.Handler{Wheel: func(ev *input.WheelEvent) bool {
+			if ev.Delta.X == 0 {
+				return false
+			}
+			wrapped.SetScrollOffset(wrapped.ScrollOffset() + ev.Delta.X)
+			if ctx.RequestFrame != nil {
+				ctx.RequestFrame()
+			}
+			return true
+		}})
+	}
+	stack := scene.Stack().SetSize2(t.Width, t.ViewportHeight())
+	stack.Add(wrapped)
+	if freeze != nil {
+		freeze.SetPositionKeepSize(true)
+		freeze.SetStackPosition(geom.Pt(0, 0))
+		stack.Add(freeze)
+	}
+	stack.SetHit(scene.HitSpec{Label: "table-hscroll-wrap"})
+	return stack
 }
 
 // buildInner 构建表格本体（表头+虚拟行[+滚动条]），idx 为已排序（可能
 // 已分页切片）的数据行下标。
-func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) *scene.Node {
+func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*scene.Node, *scene.Node, bool) {
 	widths := t.columnWidths(th.Font.SizeSM)
+	hscroll := t.hScrollNeeded(th.Font.SizeSM)
 
 	col := scene.Flex(scene.Vertical, 0).SetWidth(t.Width).SetHeight(t.ViewportHeight())
 	col.SetOverflow(true)
+	// 横向滚动模式：容器与行宽=列内容总宽（列不再分摊 Flex/剩余）。
+	contentW := float32(0)
+	for _, w := range widths {
+		contentW += w
+	}
+	freezeW := float32(0)
+	var freeze *scene.Node
+	if hscroll {
+		col.SetWidth(contentW)
+		widths, _ = t.contentWidths(th.Font.SizeSM)
+		for _, w := range widths {
+			_ = w
+		}
+		for ci := range t.Columns {
+			if t.Columns[ci].Fixed == "left" {
+				freezeW += widths[ci]
+			}
+		}
+		if freezeW > 0 {
+			freeze = scene.Flex(scene.Vertical, 0).SetWidth(freezeW).SetHeight(t.ViewportHeight())
+			freeze.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-freeze"})
+		}
+	}
 
 	// 表头
 	header := scene.Flex(scene.Horizontal, 0).SetHeight(t.HeaderH)
@@ -488,6 +603,43 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) *sce
 		col.Add(row)
 		t.rowNodes = append(t.rowNodes, row)
 		t.rowVis = append(t.rowVis, vi)
+		// 左冻结列副本行：只渲染 Fixed=="left" 的单元格（白底盖住滚动
+		// 内容，右缘描边做冻结分界线）。横向滚动时此副本不随内容平移。
+		if freezeW > 0 {
+			fRow := scene.Flex(scene.Horizontal, 0).SetWidth(freezeW).SetHeight(t.RowHeight)
+			fRow.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface)})
+			fx := float32(0)
+			for ci, w := range widths {
+				if t.Columns[ci].Fixed != "left" {
+					fx += w
+					continue
+				}
+				fcell := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface)}).SetWidth(w).SetHeight(t.RowHeight)
+				ftxt := t.cellText(ci, dataRow)
+				fl := text.LayoutText(ftxt, text.DefaultFont(th.Font.SizeSM), text.Options{})
+				ftv := scene.Text(scene.TextSpec{Src: ftxt, Layout: fl, Color: th.Color.Text})
+				ftv.SetMargin(geom.InLTRB(6, (t.RowHeight-fl.Size.H)/2, 0, 0))
+				ftv2 := ftv
+				_ = ftv2
+				fcell.Add(ftv)
+				fcell.SetStackPosition(geom.Pt(fx, 0))
+				fcell.SetPositionKeepSize(true)
+				// 冻结副本单元格独立锚（gapBetween 验证"不随滚"——滚动层
+				// 的 table-row 锚随内容平移，冻结层恒定）。
+				fcell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-frozen-cell"})
+				fRow.Add(fcell)
+				fx += w
+			}
+			// 冻结分界线：副本行右缘 2px 竖线。
+			edge := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetWidth(2).SetHeight(t.RowHeight)
+			edge.SetStackPosition(geom.Pt(freezeW-2, 0))
+			edge.SetPositionKeepSize(true)
+			fRow.Add(edge)
+			fRow.SetStackPosition(geom.Pt(0, t.HeaderH+float32(vi)*t.RowHeight-t.offset))
+			fRow.SetPositionKeepSize(true)
+			freeze.Add(fRow)
+			t.freezeNodes = append(t.freezeNodes, fRow)
+		}
 	}
 	t.node = col
 
@@ -504,12 +656,40 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) *sce
 	}
 
 	max := t.maxOffset()
-	show := max > 0
+	show := max > 0 && !hscroll // 横向滚动模式分页替代纵向滚动，双滚动条互斥
 	if t.ShowScrollbar != nil {
 		show = *t.ShowScrollbar
 	}
-	if !show {
-		return col
+	if !show || hscroll {
+		// 横向滚动模式：col 进 Horizontal Scroll，冻结叠层覆盖其上。
+		wrapped := scene.Scroll(scene.Horizontal, col)
+		wrapped.SetWidth(t.Width)
+		wrapped.SetHeight(t.ViewportHeight())
+		wrapped.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-hscroll"})
+		stack := scene.Stack().SetSize2(t.Width, t.ViewportHeight())
+		stack.Add(wrapped)
+		if freeze != nil {
+			// 冻结层 HitOpaque 挡住下层 wrapped 的 Wheel handler——Delta.X
+			// 在此转发给 wrapped（Delta.Y 返回 false 冒泡给页面纵向滚动）。
+			if ctx.Input != nil {
+				wh := wrapped
+				ctx.Input.Set(freeze, input.Handler{Wheel: func(ev *input.WheelEvent) bool {
+					if ev.Delta.X == 0 {
+						return false
+					}
+					wh.SetScrollOffset(wh.ScrollOffset() + ev.Delta.X)
+					if ctx.RequestFrame != nil {
+						ctx.RequestFrame()
+					}
+					return true
+				}})
+			}
+			freeze.SetPositionKeepSize(true)
+			freeze.SetStackPosition(geom.Pt(0, 0))
+			stack.Add(freeze)
+		}
+		stack.SetHit(scene.HitSpec{Label: "table-hscroll-wrap"})
+		return stack, freeze, hscroll
 	}
 	if t.bar == nil {
 		t.bar = &Scrollbar{}
@@ -529,5 +709,5 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) *sce
 	barNode.SetPositionKeepSize(true)
 	barNode.SetStackPosition(geom.Pt(t.Width-scrollbarThickness-scrollbarInset, scrollbarInset))
 	stack.Add(barNode)
-	return stack
+	return stack, freeze, hscroll
 }

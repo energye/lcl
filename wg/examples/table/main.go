@@ -42,9 +42,30 @@ func init() {
 	tblPage.Width, tblPage.Height = 620, 180
 	tblPage.ShowPagination = true
 	tblPage.PageSize = 5
+
+	// tblFreeze 固定列卡：列总宽 900 > 视口 620 → 横向滚动，
+	// 左两列 Fixed="left" 冻结（叠层不随滚动）。
+	fcols := []widgets.TableColumn{
+		{Title: "字段", Mode: widgets.ColumnAuto, Fixed: "left"},
+		{Title: "主键", Mode: widgets.ColumnFixed, Width: 70, Fixed: "left"},
+		{Title: "类型", Mode: widgets.ColumnFixed, Width: 110},
+		{Title: "默认值", Mode: widgets.ColumnFixed, Width: 120},
+		{Title: "说明", Mode: widgets.ColumnFixed, Width: 200},
+		{Title: "备注", Mode: widgets.ColumnFixed, Width: 200},
+	}
+	var frows [][]any
+	for _, r := range rows {
+		frows = append(frows, []any{r[0], r[2], r[1], "—", "说明 " + r[0].(string), "备注 " + r[0].(string)})
+	}
+	tblFreeze = widgets.NewTable(fcols, frows)
+	tblFreeze.Width = 620
+	tblFreeze.Height = 150
 }
 
-var tblPage *widgets.Table
+var (
+	tblPage   *widgets.Table
+	tblFreeze *widgets.Table
+)
 
 func main() {
 	launcher.Main(doc.Meta{
@@ -58,6 +79,9 @@ func main() {
 		Demos: []doc.Demo{
 			{Title: "分页表格", Note: "23 行 × 每页 5 行：底部分页器翻页（组合复用 Pagination）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tblPage
+			}},
+			{Title: "固定列", Note: "列总宽 900>视口 620：横向滚动，左两列冻结不随动（antd fixed=left）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return tblFreeze
 			}},
 			{Title: "四列混排", Note: "Auto+Fixed+Flex 三档列宽；点击「字段」表头排序", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tbl
