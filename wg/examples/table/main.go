@@ -43,6 +43,15 @@ func init() {
 	tblPage.ShowPagination = true
 	tblPage.PageSize = 5
 
+	// tblFilter 筛选卡（Filters）：类型列筛选（Dropdown 组合复用弹选项）。
+	fcols2 := []widgets.TableColumn{
+		{Title: "字段", Mode: widgets.ColumnAuto},
+		{Title: "类型", Mode: widgets.ColumnAuto, Filters: []string{"INTEGER", "TEXT", "DATETIME"}},
+		{Title: "说明", Mode: widgets.ColumnFlex, Flex: 1},
+	}
+	tblFilter = widgets.NewTable(fcols2, rows)
+	tblFilter.Width, tblFilter.Height = 620, 180
+
 	// tblFreeze 固定列卡：列总宽 900 > 视口 620 → 横向滚动，
 	// 左两列 Fixed="left" 冻结（叠层不随滚动）。
 	fcols := []widgets.TableColumn{
@@ -64,6 +73,7 @@ func init() {
 
 var (
 	tblPage   *widgets.Table
+	tblFilter *widgets.Table
 	tblFreeze *widgets.Table
 )
 
@@ -79,6 +89,9 @@ func main() {
 		Demos: []doc.Demo{
 			{Title: "分页表格", Note: "23 行 × 每页 5 行：底部分页器翻页（组合复用 Pagination）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tblPage
+			}},
+			{Title: "列筛选", Note: "类型列 Filters：漏斗图标点击弹选项菜单（组合复用 Dropdown）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return tblFilter
 			}},
 			{Title: "固定列", Note: "列总宽 900>视口 620：横向滚动，左两列冻结不随动（antd fixed=left）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tblFreeze

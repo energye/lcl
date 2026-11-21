@@ -48,6 +48,9 @@ type TableColumn struct {
 	// Fixed 冻结列（antd fixed）："" 不冻结 / "left" 左缘冻结 /
 	// "right" 右缘冻结——横向滚动时该列不随内容滚动（叠层实现）。
 	Fixed string
+	// Filters 筛选选项（antd filters）：非空时列头渲染筛选图标，点击
+	// 弹出选项菜单（Dropdown 组合复用），选中值经 OnFilter 回调。
+	Filters []string
 }
 
 // Table 是虚拟表格。Rows 为行数据；每行是 []any，与 Columns 对齐。
@@ -75,6 +78,11 @@ type Table struct {
 	// ShowPagination 底部分页器（antd pagination，**Pagination 组件组合
 	// 复用**）：开启后 Page 从 1 起、每页 PageSize 行（默认 10）。
 	ShowPagination bool
+	// Filtered 列筛选值（列下标→选中值，空串=清除筛选）。
+	Filtered          map[int]string
+	filterDropdowns   []*Dropdown
+	// OnFilter 筛选变化回调（列下标、选中值）。
+	OnFilter func(col int, value string)
 	// PageSize 每页行数（ShowPagination 时生效，默认 10）。
 	PageSize      int
 	pageNo        int        // 当前页（1 起，内部状态）
@@ -380,6 +388,19 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(t)
 	th := ctx.ThemeOr()
 	idx := t.sortedIndex()
+	// 筛选应用：Filtered 非空列按单元格文本过滤（筛选项与文本精确匹配）。
+	for col2, fv := range t.Filtered {
+		if fv == "" {
+			continue
+		}
+		var kept []int
+		for _, r := range idx {
+			if t.cellText(col2, r) == fv {
+				kept = append(kept, r)
+			}
+		}
+		idx = kept
+	}
 
 	// 分页模式：排序结果按页切片（Pagination 组件组合复用管页码），
 	// 页内行子集仍走虚拟化窗口。
@@ -525,6 +546,43 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 			g := &ui.GestureDetector{OnTap: func(geom.Point) { t.Sort(cc, cAsc) }}
 			t.sorts = append(t.sorts, g)
 			ctx.Input.Set(cell, g.Handler())
+		}
+		// 列筛选：Filters 非空时列头右缘漏斗图标，点击弹出选项菜单
+		// （**Dropdown 组件组合复用**——菜单项点击回调设筛选值）。
+		if len(c.Filters) > 0 && ctx.Input != nil {
+			colIdx := ci
+			filters := c.Filters
+			funnel := (&Icon{Name: "search", Size: 13,
+				Color: map[bool]geom.Color{true: th.Color.Primary}[t.Filtered[ci] != ""]}).Build(ctx)
+			funnel.SetPositionKeepSize(true)
+			funnel.SetStackPosition(geom.Pt(w-18, (t.HeaderH-13)/2))
+			funnel.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-filter", Cursor: scene.CursorPointer})
+			fd := &Dropdown{Items: func() []*MenuItem {
+				out := []*MenuItem{{Key: "", Label: "全部"}}
+				for _, f := range filters {
+					out = append(out, &MenuItem{Key: f, Label: f})
+				}
+				return out
+			}()}
+			fd.OnClick = func(key string) {
+				if t.Filtered == nil {
+					t.Filtered = make(map[int]string)
+				}
+				t.Filtered[colIdx] = key
+				t.MarkDirty()
+				if t.OnFilter != nil {
+					t.OnFilter(colIdx, key)
+				}
+			}
+			// 漏斗图标+菜单项的手势：down 弹出（Dropdown 公开 Show），
+			// HideOn 选择后自动关闭。
+			gf := &ui.GestureDetector{OnTap: func(geom.Point) {
+				fd.Show(ctx)
+			}}
+			t.sorts = append(t.sorts, gf)
+			ctx.Input.Set(funnel, gf.Handler())
+			t.filterDropdowns = append(t.filterDropdowns, fd)
+			cell.Add(funnel)
 		}
 		header.Add(cell)
 	}
