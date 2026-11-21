@@ -1,0 +1,143 @@
+{
+  "id": "image",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "基础与预览",
+      "加载失败占位"
+    ]
+  },
+  "sections": [
+    {
+      "name": "基础与预览",
+      "cases": [
+        {
+          "name": "点击弹 BandModal 预览",
+          "target": {
+            "label": "image",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "image-preview"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "image-close"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点关闭钮退出预览",
+          "target": {
+            "label": "image",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "image-close"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        },
+        {
+          "name": "Esc 退出预览",
+          "target": {
+            "label": "image",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "escape"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "加载失败占位",
+      "cases": [
+        {
+          "name": "占位文本与不可预览",
+          "target": {
+            "label": "image",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "图片加载失败",
+              "target": {
+                "label": "image",
+                "text": "图片加载失败"
+              }
+            }
+          ],
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "image",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
