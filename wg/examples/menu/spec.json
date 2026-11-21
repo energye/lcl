@@ -2,7 +2,11 @@
   "id": "menu",
   "structure": {
     "apiRows": 6,
-    "sections": ["横向菜单", "纵向菜单"]
+    "sections": [
+      "横向菜单",
+      "纵向菜单",
+      "子菜单与分组"
+    ]
   },
   "sections": [
     {
@@ -10,18 +14,60 @@
       "cases": [
         {
           "name": "选中项（首页）文字为 Primary",
-          "target": {"label": "menu-item", "text": "首页"},
+          "target": {
+            "label": "menu-item",
+            "text": "首页"
+          },
           "then": [
-            {"kind": "colorRatio", "frac": [0.1, 0.25, 0.6, 0.7], "expect": {"token": "Primary"}, "minRatio": 0.02, "tol": 24}
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.25,
+                0.6,
+                0.7
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.02,
+              "tol": 24
+            }
           ]
         },
         {
           "name": "点击文档切换选中（文字转主色）",
-          "target": {"label": "menu-item", "text": "文档"},
-          "when": [{"click": {}}, {"wait": 300}],
+          "target": {
+            "label": "menu-item",
+            "text": "文档"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
           "then": [
-            {"kind": "colorRatio", "frac": [0.1, 0.25, 0.6, 0.7], "expect": {"token": "Primary"}, "minRatio": 0.02, "tol": 24,
-             "target": {"label": "menu-item", "text": "文档"}}
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.25,
+                0.6,
+                0.7
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.02,
+              "tol": 24,
+              "target": {
+                "label": "menu-item",
+                "text": "文档"
+              }
+            }
           ]
         }
       ]
@@ -31,25 +77,201 @@
       "cases": [
         {
           "name": "选中项（邮件）底色为 InfoBg",
-          "target": {"label": "menu-item", "text": "邮件"},
+          "target": {
+            "label": "menu-item",
+            "text": "邮件"
+          },
           "then": [
-            {"kind": "colorRatio", "frac": [0.3, 0.3, 0.5, 0.5], "expect": {"token": "InfoBg"}, "minRatio": 0.3, "tol": 14}
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "InfoBg"
+              },
+              "minRatio": 0.3,
+              "tol": 14
+            }
           ]
         },
         {
           "name": "未选项（文件）为透明底（无 InfoBg 像素）",
-          "target": {"label": "menu-item", "text": "文件"},
+          "target": {
+            "label": "menu-item",
+            "text": "文件"
+          },
           "then": [
-            {"kind": "colorRatio", "frac": [0.3, 0.3, 0.5, 0.5], "expect": {"token": "InfoBg"}, "minRatio": 0.0, "tol": 14, "note": "反向验证：占比 0 即未选中（minRatio 0 恒真，靠 detail 人工核对）"}
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "InfoBg"
+              },
+              "minRatio": 0.0,
+              "tol": 14,
+              "note": "反向验证：占比 0 即未选中（minRatio 0 恒真，靠 detail 人工核对）"
+            }
           ]
         },
         {
           "name": "点击用户切换选中（InfoBg 迁移）",
-          "target": {"label": "menu-item", "text": "用户"},
-          "when": [{"click": {}}, {"wait": 300}],
+          "target": {
+            "label": "menu-item",
+            "text": "用户"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
           "then": [
-            {"kind": "colorRatio", "frac": [0.3, 0.3, 0.5, 0.5], "expect": {"token": "InfoBg"}, "minRatio": 0.3, "tol": 14,
-             "target": {"label": "menu-item", "text": "用户"}}
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "InfoBg"
+              },
+              "minRatio": 0.3,
+              "tol": 14,
+              "target": {
+                "label": "menu-item",
+                "text": "用户"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "子菜单与分组",
+      "cases": [
+        {
+          "name": "分组标题存在（置灰小字）",
+          "target": {
+            "label": "menu",
+            "text": "项目分组"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "项目分组"
+            }
+          ]
+        },
+        {
+          "name": "展开态子项可见（OpenKeys 预置 nav）",
+          "target": {
+            "label": "menu-item",
+            "text": "布局设置"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "分组子项恒显示（分组无折叠语义）",
+          "target": {
+            "label": "menu",
+            "text": "项目分组"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "menu-item",
+                "text": "成员一"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击「导航配置」收起（子项消失）",
+          "target": {
+            "label": "menu-item",
+            "text": "导航配置"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "absent",
+              "target": {
+                "label": "menu-item",
+                "text": "布局设置"
+              }
+            }
+          ]
+        },
+        {
+          "name": "再点击展开（子项回归）",
+          "target": {
+            "label": "menu-item",
+            "text": "导航配置"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "menu-item",
+                "text": "布局设置"
+              }
+            }
+          ]
+        },
+        {
+          "name": "选中子项浅主色底（nav-a 预置选中）",
+          "target": {
+            "label": "menu-item",
+            "text": "布局设置"
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "InfoBg"
+              },
+              "minRatio": 0.3,
+              "tol": 14
+            }
           ]
         }
       ]

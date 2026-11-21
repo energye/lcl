@@ -30,6 +30,12 @@ type MenuItem struct {
 	Label string
 	// Icon 左侧图标名（Icon 组件组合复用；空=无图标）。
 	Icon string
+	// Children 子项（antd SubMenu）：非空时为父项——纵向模式**内联展开**
+	// （缩进渲染子项+展开箭头），横向模式点击弹出子菜单浮层。
+	Children []*MenuItem
+	// Group 分组标题（antd itemGroup）：Label 渲染为置灰标题行，
+	// 不可点、不参与选中。
+	Group bool
 }
 
 // Menu 是导航菜单（扁平项；子菜单浮层为后续轮）。
@@ -42,6 +48,9 @@ type Menu struct {
 	// Width 纵向模式宽度（默认 200；横向模式自适应内容）。
 	Width  float32
 	OnClick func(key string)
+
+	// OpenKeys 展开的子菜单 Key 集合（纵向内联展开状态）。
+	OpenKeys map[string]bool
 
 	// items 跨重建持有：页签的 hover 态与手势实例必须稳定（教训⑨）。
 	items []*menuItem
@@ -60,6 +69,7 @@ type menuItem struct {
 	key    string
 	label  string
 	icon   string
+	depth  int
 	hover  bool
 	parent *Menu
 }
@@ -81,20 +91,57 @@ func (m *Menu) Build(ctx *ui.BuildContext) *scene.Node {
 		m.items[i].label = it.Label
 		m.items[i].icon = it.Icon
 	}
+	if m.Mode == MenuVertical {
+		n := scene.Flex(scene.Vertical, 0)
+		n.SetWidth(m.Width)
+		m.buildVerticalItems(ctx, n, m.Items, 0)
+		n.SetHit(scene.HitSpec{Label: "menu"})
+		m.node = n
+		return n
+	}
 	children := make([]*scene.Node, 0, len(m.items))
 	for _, mi := range m.items {
 		children = append(children, mi.Build(ctx))
 	}
-	var n *scene.Node
-	if m.Mode == MenuVertical {
-		n = scene.Flex(scene.Vertical, 0, children...)
-		n.SetWidth(m.Width)
-	} else {
-		n = scene.Flex(scene.Horizontal, 0, children...)
-	}
+	n := scene.Flex(scene.Horizontal, 0, children...)
 	n.SetHit(scene.HitSpec{Label: "menu"})
 	m.node = n
 	return n
+}
+
+// buildVerticalItems 递归构建纵向菜单项（含分组标题/子菜单内联展开）。
+func (m *Menu) buildVerticalItems(ctx *ui.BuildContext, col *scene.Node, items []*MenuItem, depth int) {
+	for _, it := range items {
+		if it.Group {
+			// 分组标题行：置灰小字、不可点（伪 MenuItem 走标题渲染）。
+			mi := &menuItem{key: it.Key, label: it.Label, parent: m, index: len(m.items)}
+			col.Add(mi.buildGroupTitle(ctx, depth))
+			m.buildVerticalItems(ctx, col, it.Children, depth)
+			continue
+		}
+		mi := &menuItem{key: it.Key, label: it.Label, icon: it.Icon, parent: m, index: len(m.items), depth: depth}
+		col.Add(mi.Build(ctx))
+		if len(it.Children) > 0 {
+			open := m.OpenKeys[it.Key]
+			// 展开箭头（▸/▾）替代 icon 位：父项渲染箭头提示。
+			if open {
+				m.buildVerticalItems(ctx, col, it.Children, depth+1)
+			}
+		}
+	}
+}
+
+// buildGroupTitle 构建分组标题行：置灰小字、不可点、缩进同子项。
+func (mi *menuItem) buildGroupTitle(ctx *ui.BuildContext, depth int) *scene.Node {
+	th := ctx.ThemeOr()
+	row := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
+	row.SetHeight(32)
+	font := text.DefaultFont(th.Font.SizeXS)
+	layout := text.LayoutText(mi.label, font, text.Options{})
+	t := scene.Text(scene.TextSpec{Src: mi.label, Layout: layout, Color: th.Color.TextFaint})
+	t.SetMargin(geom.InLTRB(float32(depth)*14+12, (32-layout.Size.H)/2, 0, 0))
+	row.Add(t)
+	return row
 }
 
 // Build 实现 ui.Widget（菜单项）。
@@ -119,6 +166,10 @@ func (mi *menuItem) Build(ctx *ui.BuildContext) *scene.Node {
 			bg = th.Color.FillHover
 		}
 		row.SetBox(scene.BoxSpec{Fill: scene.Solid(bg)})
+		// 缩进（子项 depth>0）。
+		if mi.depth > 0 {
+			row.Add(scene.Box(scene.BoxSpec{}).SetWidth(float32(mi.depth) * 14).SetHeight(1))
+		}
 		if active {
 			ind := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary)}).SetWidth(3).SetHeight(24)
 			row.Add(ind)
@@ -132,6 +183,23 @@ func (mi *menuItem) Build(ctx *ui.BuildContext) *scene.Node {
 			}()}).Build(ctx)
 			row.Add(ic)
 		}
+		// 展开箭头（父项）：▾ 展开 / ▸ 收起。
+		isParent := false
+		arrow := ""
+		for _, it := range m.Items {
+			if it.Key == mi.key && len(it.Children) > 0 {
+				isParent = true
+				if m.OpenKeys[mi.key] {
+					arrow = "▾"
+				} else {
+					arrow = "▸"
+				}
+			}
+		}
+		if isParent {
+			al := text.LayoutText(arrow, text.DefaultFont(th.Font.SizeXS), text.Options{})
+			row.Add(scene.Text(scene.TextSpec{Src: arrow, Layout: al, Color: th.Color.TextMuted}))
+		}
 		lc := th.Color.Text
 		if active {
 			lc = th.Color.Primary
@@ -139,6 +207,15 @@ func (mi *menuItem) Build(ctx *ui.BuildContext) *scene.Node {
 		row.Add(scene.Text(scene.TextSpec{Src: mi.label, Layout: layout, Color: lc}))
 		row.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "menu-item", Cursor: scene.CursorPointer})
 		mi.attach(ctx, row, mi.tapHandler(ctx, false, func() {
+			if isParent {
+				// 父项点击=切换展开（antd inline SubMenu）。
+				if m.OpenKeys == nil {
+					m.OpenKeys = make(map[string]bool)
+				}
+				m.OpenKeys[mi.key] = !m.OpenKeys[mi.key]
+				m.MarkDirty()
+				return
+			}
 			m.Selected = mi.key
 			m.MarkDirty()
 			if m.OnClick != nil {

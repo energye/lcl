@@ -7,6 +7,20 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
+var vSub = widgets.NewMenu(
+	&widgets.MenuItem{Key: "grp", Label: "项目分组", Group: true,
+		Children: []*widgets.MenuItem{
+			{Key: "g1", Label: "成员一"},
+			{Key: "g2", Label: "成员二"},
+		}},
+	&widgets.MenuItem{Key: "nav", Label: "导航配置", Icon: "setting",
+		Children: []*widgets.MenuItem{
+			{Key: "nav-a", Label: "布局设置"},
+			{Key: "nav-b", Label: "主题设置"},
+		}},
+	&widgets.MenuItem{Key: "about", Label: "关于", Icon: "info-circle"},
+)
+
 var (
 	hMenu = widgets.NewMenu(
 		&widgets.MenuItem{Key: "home", Label: "首页", Icon: "home"},
@@ -25,6 +39,9 @@ func init() {
 	hMenu.Selected = "home"
 	vMenu.Mode = widgets.MenuVertical
 	vMenu.Selected = "mail"
+	vSub.Mode = widgets.MenuVertical
+	vSub.Selected = "nav-a"
+	vSub.OpenKeys = map[string]bool{"nav": true}
 }
 
 func main() {
@@ -41,6 +58,9 @@ func main() {
 			}},
 			{Title: "纵向菜单", Note: "Mode=Vertical：宽 200，选中浅主色底+左指示条", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return vMenu
+			}},
+			{Title: "子菜单与分组", Note: "纵向内联展开：点击父项切换展开（▾/▸）；分组标题置灰不可点", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return vSub
 			}},
 		},
 		API: []doc.APIRow{
