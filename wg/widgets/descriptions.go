@@ -18,10 +18,13 @@ import (
 	"github.com/energye/lcl/wg/ui"
 )
 
-// DescriptionItem 是描述项（antd items 项的文本子集）。
+// DescriptionItem 是描述项（antd items 项）。
 type DescriptionItem struct {
 	Label   string
 	Content string
+	// Widget 内容 Widget（antd children 任意节点；非空时优先于
+	// Content 文本——深化轮）。
+	Widget ui.Widget
 }
 
 // Descriptions 是描述列表。
@@ -69,7 +72,7 @@ func (d *Descriptions) Build(ctx *ui.BuildContext) *scene.Node {
 	var cells []*scene.Node
 	for _, it := range d.Items {
 		cells = append(cells, d.labelCell(ctx, th, it.Label, cellW))
-		cells = append(cells, d.valueCell(ctx, th, it.Content, cellW))
+		cells = append(cells, d.valueCell(ctx, th, it, cellW))
 	}
 	gap := th.Space.XS
 	if d.Bordered {
@@ -104,7 +107,8 @@ func (d *Descriptions) labelCell(ctx *ui.BuildContext, th *theme.Data, label str
 }
 
 // valueCell content 格：bordered 描边白底格；默认正文。
-func (d *Descriptions) valueCell(ctx *ui.BuildContext, th *theme.Data, content string, w float32) *scene.Node {
+// Widget 非空时渲染 Widget（antd children 任意节点——深化轮）。
+func (d *Descriptions) valueCell(ctx *ui.BuildContext, th *theme.Data, it DescriptionItem, w float32) *scene.Node {
 	box := scene.Box(scene.BoxSpec{})
 	box.SetWidth(w).SetHeight(34)
 	if d.Bordered {
@@ -113,8 +117,16 @@ func (d *Descriptions) valueCell(ctx *ui.BuildContext, th *theme.Data, content s
 			Border: scene.Stroke(th.Color.Border, 1),
 		})
 	}
-	l := text.LayoutText(content, text.DefaultFont(th.Font.SizeSM), text.Options{})
-	t := scene.Text(scene.TextSpec{Src: content, Layout: l, Color: th.Color.Text})
+	if it.Widget != nil {
+		if wn := it.Widget.Build(ctx); wn != nil {
+			wn.SetMargin(geom.InLTRB(10, (34-wn.Size().H)/2, 0, 0))
+			wn.SetHit(scene.HitSpec{Label: "desc-value"})
+			box.Add(wn)
+		}
+		return box
+	}
+	l := text.LayoutText(it.Content, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	t := scene.Text(scene.TextSpec{Src: it.Content, Layout: l, Color: th.Color.Text})
 	t.SetMargin(geom.InLTRB(10, (34-l.Size.H)/2, 0, 0))
 	t.SetHit(scene.HitSpec{Label: "desc-value"})
 	box.Add(t)

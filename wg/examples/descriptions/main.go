@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/energye/lcl/wg/examples/doc"
 	"github.com/energye/lcl/wg/examples/internal/launcher"
+	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/ui"
 	"github.com/energye/lcl/wg/widgets"
 )
@@ -15,7 +16,8 @@ var (
 		{Label: "手机号", Content: "138-1234-5678"},
 		{Label: "邮箱", Content: "zhangsan@example.com"},
 		{Label: "性别", Content: "男"},
-		{Label: "备注", Content: "内测用户"},
+		// Widget 内容（antd children 任意节点——深化轮）。
+		{Label: "状态", Widget: &widgets.Tag{Text: "活跃", Color: geom.RGBA(82, 196, 26)}},
 	})
 	descPlain = widgets.NewDescriptions([]widgets.DescriptionItem{
 		{Label: "创建时间", Content: "2026-11-21 10:24"},

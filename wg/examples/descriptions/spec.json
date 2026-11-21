@@ -19,7 +19,7 @@
           ]
         }, 
         {
-          "name": "六组 label/value 存在（column=2 三行）", 
+          "name": "六组 label/value 存在（含 Widget 状态项）", 
           "target": {
             "label": "desc-label"
           }, 
@@ -53,6 +53,24 @@
                 "text": "zhangsan@example.com"
               }, 
               "text": "zhangsan@example.com"
+            }, 
+            {
+              "expect": {
+                "hex": "#E4F6DB"
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.3, 
+              "target": {
+                "label": "desc-value", 
+                "text": "活跃"
+              }, 
+              "tol": 20
             }
           ]
         }, 
