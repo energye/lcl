@@ -1,0 +1,324 @@
+{
+  "id": "timepicker",
+  "structure": {
+    "apiRows": 6,
+    "sections": [
+      "基础",
+      "带初值"
+    ]
+  },
+  "sections": [
+    {
+      "name": "基础",
+      "cases": [
+        {
+          "name": "占位触发框显示请选择时间",
+          "target": {
+            "label": "time-picker",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "请选择时间",
+              "target": {
+                "label": "time-picker",
+                "index": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击触发框弹三列面板",
+          "target": {
+            "label": "time-picker",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-panel"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-h"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-m"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-s"
+              }
+            }
+          ]
+        },
+        {
+          "name": "选择不关面板且触发框更新为 02:00",
+          "target": {
+            "label": "time-picker",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-picker",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "time-cell-h",
+                  "text": "02"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-panel"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "02:00",
+              "target": {
+                "label": "time-picker",
+                "index": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击确定关面板且显示 06:00:00",
+          "target": {
+            "label": "time-picker",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-picker",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "time-cell-h",
+                  "text": "06"
+                }
+              }
+            },
+            {
+              "wait": 200
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "time-ok"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "text",
+              "text": "06:00:00",
+              "target": {
+                "label": "time-picker",
+                "index": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击现在填当前时刻且面板保持（占位消失）",
+          "target": {
+            "label": "time-picker",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-picker",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "time-now"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "text",
+              "text": "请选择时间",
+              "notContains": true,
+              "target": {
+                "label": "time-picker",
+                "index": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "Esc 关闭面板",
+          "target": {
+            "label": "time-picker",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-picker",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "escape"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "带初值",
+      "cases": [
+        {
+          "name": "触发框显示 09:30:00",
+          "target": {
+            "label": "time-picker",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "09:30:00",
+              "target": {
+                "label": "time-picker",
+                "index": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "面板选中 09 格主色实底（滚动定位可见）",
+          "target": {
+            "label": "time-picker",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-picker",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 14,
+              "target": {
+                "label": "time-cell-h",
+                "text": "09"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
