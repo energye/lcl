@@ -1,0 +1,136 @@
+{
+  "id": "descriptions", 
+  "sections": [
+    {
+      "cases": [
+        {
+          "name": "标题行存在", 
+          "target": {
+            "label": "descriptions-title"
+          }, 
+          "then": [
+            {
+              "kind": "text", 
+              "target": {
+                "label": "descriptions-title"
+              }, 
+              "text": "用户信息"
+            }
+          ]
+        }, 
+        {
+          "name": "六组 label/value 存在（column=2 三行）", 
+          "target": {
+            "label": "desc-label"
+          }, 
+          "then": [
+            {
+              "count": 6, 
+              "kind": "exists", 
+              "target": {
+                "label": "desc-label"
+              }
+            }, 
+            {
+              "kind": "text", 
+              "target": {
+                "label": "desc-label", 
+                "text": "用户名"
+              }, 
+              "text": "用户名"
+            }, 
+            {
+              "kind": "text", 
+              "target": {
+                "label": "desc-value"
+              }, 
+              "text": "张三"
+            }, 
+            {
+              "kind": "text", 
+              "target": {
+                "label": "desc-value", 
+                "text": "zhangsan@example.com"
+              }, 
+              "text": "zhangsan@example.com"
+            }
+          ]
+        }, 
+        {
+          "name": "bordered label 格灰底", 
+          "target": {
+            "label": "desc-label", 
+            "text": "用户名"
+          }, 
+          "then": [
+            {
+              "expect": {
+                "hex": "#F5F5F5"
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.3, 
+              "target": {
+                "label": "desc-label", 
+                "text": "用户名"
+              }, 
+              "tol": 14
+            }
+          ]
+        }
+      ], 
+      "name": "带边框"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "label 带冒号且无边框（灰底占比为零）", 
+          "target": {
+            "label": "desc-label"
+          }, 
+          "then": [
+            {
+              "kind": "text", 
+              "target": {
+                "label": "desc-label", 
+                "text": "创建时间"
+              }, 
+              "text": "创建时间:"
+            }, 
+            {
+              "expect": {
+                "hex": "#F5F5F5"
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.0, 
+              "target": {
+                "label": "desc-label", 
+                "text": "创建时间"
+              }, 
+              "tol": 8
+            }
+          ]
+        }
+      ], 
+      "name": "默认无边框"
+    }
+  ], 
+  "structure": {
+    "apiRows": 6, 
+    "sections": [
+      "带边框", 
+      "默认无边框"
+    ]
+  }
+}
