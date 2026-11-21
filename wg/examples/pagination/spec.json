@@ -1,8 +1,9 @@
 {
   "id": "pagination",
   "structure": {
-    "apiRows": 11,
+    "apiRows": 12,
     "sections": [
+      "ellipsis 省略号",
       "simple 简易",
       "8 页导航",
       "pageSize 切换",
@@ -10,6 +11,82 @@
     ]
   },
   "sections": [
+    {
+      "name": "ellipsis 省略号",
+      "cases": [
+        {
+          "name": "末页 50 恒显（页尾锚）",
+          "target": {
+            "label": "page",
+            "text": "50"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "首页 1 恒显",
+          "target": {
+            "label": "page",
+            "text": "1"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "省略号单元格存在（右缘）",
+          "target": {
+            "label": "page-ellipsis"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "name": "点击省略号跳 +5（Page 1→6，窗口重算）",
+          "target": {
+            "label": "page-ellipsis"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "page",
+                "text": "6"
+              }
+            }
+          ]
+        },
+        {
+          "name": "跳 5 后左缘省略号出现（回程对照）",
+          "target": {
+            "label": "page-ellipsis"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 2
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "simple 简易",
       "cases": [

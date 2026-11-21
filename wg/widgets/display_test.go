@@ -119,16 +119,21 @@ func TestSegmentedClick(t *testing.T) {
 
 func TestPaginationPagesAndClick(t *testing.T) {
 	p := NewPagination(1, 20)
-	if got := p.visiblePages(); len(got) != 5 || got[0] != 1 || got[4] != 5 {
-		t.Fatalf("首页可见页码 = %v", got)
+	// ellipsis 语义：首末恒显 + 窗口 ±2 + 间隙省略号（pageCell）。
+	got := p.visiblePages()
+	if len(got) != 5 || got[0].page != 1 || got[0].ellipsis != 0 ||
+		got[3].ellipsis != 5 || got[4].page != 20 {
+		t.Fatalf("首页可见序列 = %+v", got)
 	}
 	p.Page = 10
-	if got := p.visiblePages(); len(got) != 5 || got[0] != 8 || got[4] != 12 {
-		t.Fatalf("中间页可见页码 = %v", got)
+	got = p.visiblePages()
+	if len(got) != 9 || got[1].ellipsis != -5 || got[7].ellipsis != 5 || got[8].page != 20 {
+		t.Fatalf("中间页可见序列 = %+v", got)
 	}
 	p.Page = 20
-	if got := p.visiblePages(); got[len(got)-1] != 20 {
-		t.Fatalf("末页可见页码 = %v", got)
+	got = p.visiblePages()
+	if got[len(got)-1].page != 20 || got[1].ellipsis != -5 {
+		t.Fatalf("末页可见序列 = %+v", got)
 	}
 	p.Page = 1
 

@@ -1061,9 +1061,14 @@ func (p *Pagination) buildPages(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 		}
 	}
 	row := scene.Flex(scene.Horizontal, th.Space.XS)
-	for i, page := range pages {
+	for i, cell := range pages {
 		b := p.buttons[i]
-		b.page, b.current, b.label = page, page == p.Page, fmt.Sprintf("%d", page)
+		if cell.ellipsis != 0 {
+			// 省略号单元格：文本 "…"，点击跳 ±5 页（antd ellipsis 快捷跳转）。
+			b.ellipsis, b.page, b.current, b.label = cell.ellipsis, 0, false, "…"
+		} else {
+			b.ellipsis, b.page, b.current, b.label = 0, cell.page, cell.page == p.Page, fmt.Sprintf("%d", cell.page)
+		}
 		row.Add(b.Build(ctx))
 	}
 	return row
@@ -1116,35 +1121,57 @@ func (p *Pagination) buildJumper(ctx *ui.BuildContext, th *theme.Data) *scene.No
 	return inner
 }
 
-func (p *Pagination) visiblePages() []int {
+// pageCell 是页码行的一个单元格：页码或省略号。
+type pageCell struct {
+	page int
+	// ellipsis 非 0 = 省略号单元格（点击跳 |ellipsis| 页：+5/-5）。
+	ellipsis int
+}
+
+// visiblePages 折算页码单元格序列（antd ellipsis 语义）：
+// 首页 1 与末页 total 恒显示；当前页 ±2 窗口；窗口与首/末之间有间隙
+// 时插省略号（点击跳 ±5）。页数 ≤7 全显无省略。
+func (p *Pagination) visiblePages() []pageCell {
 	total := p.totalPages()
 	if total < 1 {
-		return []int{1}
+		return []pageCell{{page: 1}}
 	}
-	lo, hi := 1, total
-	if total > 7 {
-		lo, hi = p.Page-2, p.Page+2
-		if lo < 1 {
-			lo, hi = 1, 5
+	if total <= 7 {
+		out := make([]pageCell, 0, total)
+		for i := 1; i <= total; i++ {
+			out = append(out, pageCell{page: i})
 		}
-		if hi > total {
-			hi, lo = total, total-4
-		}
+		return out
 	}
-	out := make([]int, 0, hi-lo+1)
+	out := []pageCell{{page: 1}}
+	lo, hi := p.Page-2, p.Page+2
+	if lo < 2 {
+		lo = 2
+	}
+	if hi > total-1 {
+		hi = total - 1
+	}
+	if lo > 2 {
+		out = append(out, pageCell{ellipsis: -5})
+	}
 	for i := lo; i <= hi; i++ {
-		out = append(out, i)
+		out = append(out, pageCell{page: i})
 	}
+	if hi < total-1 {
+		out = append(out, pageCell{ellipsis: 5})
+	}
+	out = append(out, pageCell{page: total})
 	return out
 }
 
 // pageButton 是单个页码按钮（内部组件）。
 type pageButton struct {
 	controlBase
-	page    int
-	current bool
-	label   string
-	parent  *Pagination
+	page     int
+	current  bool
+	label    string
+	ellipsis int // 非 0=省略号单元格（点击跳 |ellipsis| 页）
+	parent   *Pagination
 }
 
 func (b *pageButton) Build(ctx *ui.BuildContext) *scene.Node {
@@ -1166,6 +1193,16 @@ func (b *pageButton) Build(ctx *ui.BuildContext) *scene.Node {
 	t := scene.Text(scene.TextSpec{Src: b.label, Layout: layout, Color: fg})
 	t.SetMargin(geom.InLTRB((w-layout.Size.W)/2, (26-layout.Size.H)/2, 0, 0))
 	n.Add(t)
+	if b.ellipsis != 0 {
+		// 省略号单元格：独立锚（page-ellipsis），点击跳 ±5。
+		n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "page-ellipsis", Cursor: scene.CursorPointer})
+		parent, jump := b.parent, b.ellipsis
+		hnd := b.tapHandler(ctx, false, func() {
+			parent.SetPage(parent.Page + jump)
+		})
+		b.attach(ctx, n, hnd, false)
+		return n
+	}
 	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "page", Cursor: scene.CursorPointer})
 	parent, page := b.parent, b.page
 	hnd := b.tapHandler(ctx, false, func() {

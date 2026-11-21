@@ -32,6 +32,12 @@ var (
 		p.Simple = true
 		return p
 	}()
+
+	// pageMany：ellipsis 形态（总页>7）：首末恒显+省略号点击跳 ±5。
+	pageMany = func() *widgets.Pagination {
+		p := widgets.NewPagination(1, 50)
+		return p
+	}()
 )
 
 func main() {
@@ -43,6 +49,9 @@ func main() {
 			"快速跳页：输入页码回车直达，超出范围自动钳制",
 		},
 		Demos: []doc.Demo{
+			{Title: "ellipsis 省略号", Note: "总页 50>7：首末恒显+窗口 ±2+省略号点击跳 ±5", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return pageMany
+			}},
 			{Title: "simple 简易", Note: "Simple=true：「{当前}/{总页}」+跳页输入（无页码按钮行）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return pageSimple
 			}},
@@ -65,6 +74,7 @@ func main() {
 			{Name: "ShowSizeChanger", Type: "bool", Desc: "显示\"X 条/页\"切换器（需 PageSize>0）"},
 			{Name: "ShowQuickJumper", Type: "bool", Desc: "显示\"跳至 X 页\"输入框（回车提交）"},
 			{Name: "Simple", Type: "bool", Desc: "简易形态：当前/总页+跳页输入（antd simple）"},
+			{Name: "ellipsis", Type: "自动", Desc: "总页>7 时省略号单元格（点击跳 ±5）"},
 			{Name: "SetPage", Type: "func(n int)", Desc: "程序化跳页（钳制+回调）"},
 			{Name: "OnChange", Type: "func(int)", Desc: "页码切换回调"},
 			{Name: "OnPageSize", Type: "func(int)", Desc: "每页条数变化回调"},
