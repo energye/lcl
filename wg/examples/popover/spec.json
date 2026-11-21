@@ -1,0 +1,71 @@
+{
+  "id": "popover",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "点击弹出卡片"
+    ]
+  },
+  "sections": [
+    {
+      "name": "点击弹出卡片",
+      "cases": [
+        {
+          "name": "点击按钮弹出卡片",
+          "target": {
+            "label": "button",
+            "text": "点我看详情"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "text",
+              "text": "卡片标题",
+              "target": {
+                "label": "popover",
+                "text": "卡片标题"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "这里是富内容区域",
+              "target": {
+                "label": "popover",
+                "text": "这里是富内容区域"
+              }
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.5,
+              "tol": 14,
+              "target": {
+                "label": "popover",
+                "text": "卡片标题"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
