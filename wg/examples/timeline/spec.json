@@ -1,0 +1,101 @@
+{
+  "id": "timeline",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "发布流程"
+    ]
+  },
+  "sections": [
+    {
+      "name": "发布流程",
+      "cases": [
+        {
+          "name": "四项内容与时间存在",
+          "target": {
+            "label": "timeline"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 4,
+              "target": {
+                "label": "timeline-dot"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "创建发布单",
+              "target": {
+                "label": "timeline-item",
+                "text": "创建发布单"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "2026-11-21 09:30",
+              "target": {
+                "label": "timeline-time",
+                "text": "09:30"
+              }
+            }
+          ]
+        },
+        {
+          "name": "节点色语义（首点主色/第二点绿）",
+          "target": {
+            "label": "timeline-dot",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.4,
+              "tol": 20,
+              "target": {
+                "label": "timeline-dot",
+                "index": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "驳回节点为危险红",
+          "target": {
+            "label": "timeline-dot",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.2,
+                0.2,
+                0.6,
+                0.6
+              ],
+              "expect": {
+                "token": "Danger"
+              },
+              "minRatio": 0.4,
+              "tol": 20,
+              "target": {
+                "label": "timeline-dot",
+                "index": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
