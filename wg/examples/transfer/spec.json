@@ -1,0 +1,189 @@
+{
+  "id": "transfer",
+  "structure": {
+    "apiRows": 6,
+    "sections": [
+      "基础",
+      "带初值"
+    ]
+  },
+  "sections": [
+    {
+      "name": "基础",
+      "cases": [
+        {
+          "name": "双栏与操作列存在",
+          "target": {
+            "label": "transfer"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "transfer"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "源 0 / 5 项",
+              "target": {
+                "label": "transfer-head-左"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "目标 0 / 0 项",
+              "target": {
+                "label": "transfer-head-右"
+              }
+            }
+          ]
+        },
+        {
+          "name": "勾选两项后标题计数更新",
+          "target": {
+            "label": "transfer-item"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "transfer-name",
+                  "text": "内容一"
+                }
+              }
+            },
+            {
+              "wait": 200
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "transfer-name",
+                  "text": "内容二"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "源 2 / 5 项",
+              "target": {
+                "label": "transfer-head-左"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点右移按钮勾选项进入右栏",
+          "target": {
+            "label": "transfer-btn-right"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "transfer-btn-right"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "目标 0 / 2 项",
+              "target": {
+                "label": "transfer-head-右"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "内容一",
+              "target": {
+                "label": "transfer-list-右"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "源 0 / 3 项",
+              "target": {
+                "label": "transfer-head-左"
+              }
+            }
+          ]
+        },
+        {
+          "name": "全左按钮清空右栏",
+          "target": {
+            "label": "transfer-btn-left-all"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "transfer-btn-left-all"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "目标 0 / 0 项",
+              "target": {
+                "label": "transfer-head-右"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "源 0 / 5 项",
+              "target": {
+                "label": "transfer-head-左"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "带初值",
+      "cases": [
+        {
+          "name": "初值 TargetKeys 驱动右栏",
+          "target": {
+            "label": "transfer",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "目标 0 / 2 项",
+              "target": {
+                "label": "transfer-head-右",
+                "index": 1
+              }
+            },
+            {
+              "kind": "text",
+              "text": "内容二",
+              "target": {
+                "label": "transfer-list-右",
+                "index": 1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
