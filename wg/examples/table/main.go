@@ -5,6 +5,7 @@ import (
 
 	"github.com/energye/lcl/wg/examples/doc"
 	"github.com/energye/lcl/wg/examples/internal/launcher"
+	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/ui"
 	"github.com/energye/lcl/wg/widgets"
 )
@@ -75,7 +76,38 @@ var (
 	tblPage   *widgets.Table
 	tblFilter *widgets.Table
 	tblFreeze *widgets.Table
+	tblRender *widgets.Table
+	tblRenderInited bool
 )
+
+func init() {
+	// 单元格渲染卡（antd render 组件级对应）：状态列 Tag、操作列链接。
+	rcols := []widgets.TableColumn{
+		{Title: "名称", Mode: widgets.ColumnAuto,
+			// Formatter 与 Render 优先级验证：Render 非空时 Formatter 失效。
+			Formatter: func(int, any) string { return "不应显示" },
+			Render: func(row int, v any) ui.Widget {
+				return &widgets.Label{Text: v.(string)}
+			}},
+		{Title: "状态", Mode: widgets.ColumnFixed, Width: 90,
+			Render: func(row int, _ any) ui.Widget {
+				if row%2 == 0 {
+					return &widgets.Tag{Text: "已上线", Color: geom.RGBA(82, 196, 26)}
+				}
+				return &widgets.Tag{Text: "开发中", Color: geom.RGBA(250, 140, 22)}
+			}},
+		{Title: "操作", Mode: widgets.ColumnFixed, Width: 120,
+			Render: func(int, any) ui.Widget {
+				return &widgets.Button{Text: "编辑", Type: widgets.TypeLink, Size: ui.SizeSmall}
+			}},
+	}
+	tblRender = widgets.NewTable(rcols, [][]any{
+		{"用户表", 0}, {"订单表", 1}, {"商品表", 0},
+	})
+	tblRender.Width = 360
+	tblRender.Height = 110
+	_ = tblRenderInited
+}
 
 func main() {
 	launcher.Main(doc.Meta{
@@ -98,6 +130,9 @@ func main() {
 			}},
 			{Title: "四列混排", Note: "Auto+Fixed+Flex 三档列宽；点击「字段」表头排序", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tbl
+			}},
+			{Title: "单元格渲染", Note: "antd render 组件级对应：状态列 Tag 组合复用、操作列链接按钮；Render 优先于 Formatter", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return tblRender
 			}},
 		},
 		API: []doc.APIRow{

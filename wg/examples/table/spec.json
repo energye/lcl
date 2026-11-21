@@ -1,244 +1,334 @@
 {
-  "id": "table",
-  "structure": {
-    "sections": [
-      "固定列",
-      "分页表格",
-      "四列混排"
-    ],
-    "apiRows": 8,
-    "minElements": 12
-  },
+  "id": "table", 
   "sections": [
     {
-      "name": "固定列",
       "cases": [
         {
-          "name": "冻结列字段（左列）文本在冻结层可见",
+          "name": "冻结列字段（左列）文本在冻结层可见", 
           "target": {
-            "label": "table-row",
+            "label": "table-row", 
             "text": "id"
-          },
+          }, 
           "then": [
             {
               "kind": "exists"
             }
           ]
-        },
+        }, 
         {
-          "name": "横向滚动 300 后冻结列字段仍在视口左缘（不随滚）",
+          "name": "横向滚动 300 后冻结列字段仍在视口左缘（不随滚）", 
           "target": {
             "label": "table-frozen-cell"
-          },
+          }, 
+          "then": [
+            {
+              "kind": "geometry", 
+              "target": {
+                "label": "table-frozen-cell"
+              }, 
+              "xBetween": [
+                72, 
+                140
+              ]
+            }
+          ], 
           "when": [
             {
-              "wheel": 300,
+              "wheel": 300, 
               "wheelAxis": "x"
-            },
+            }, 
             {
               "wait": 400
             }
-          ],
-          "then": [
-            {
-              "kind": "geometry",
-              "xBetween": [
-                72,
-                140
-              ],
-              "target": {
-                "label": "table-frozen-cell"
-              }
-            }
           ]
-        },
+        }, 
         {
-          "name": "横向滚动到尽头后备注列进入视口右半（x ∈ [620,700]）",
+          "name": "横向滚动到尽头后备注列进入视口右半（x ∈ [620,700]）", 
           "target": {
-            "label": "table-row",
+            "label": "table-row", 
             "text": "备注 id"
-          },
+          }, 
           "then": [
             {
-              "kind": "geometry",
-              "xBetween": [
-                620,
-                700
-              ],
+              "kind": "geometry", 
               "target": {
-                "label": "table-row",
+                "label": "table-row", 
                 "text": "备注 id"
-              }
+              }, 
+              "xBetween": [
+                620, 
+                700
+              ]
             }
           ]
         }
-      ]
-    },
+      ], 
+      "name": "固定列"
+    }, 
     {
-      "name": "分页表格",
       "cases": [
         {
-          "name": "分页器存在且页码 1（首页）",
+          "name": "分页器存在且页码 1（首页）", 
           "target": {
-            "label": "page",
+            "label": "page", 
             "text": "1"
-          },
+          }, 
           "then": [
             {
               "kind": "exists"
             }
           ]
-        },
+        }, 
         {
-          "name": "总条数文字 23 条",
+          "name": "总条数文字 23 条", 
           "target": {
             "label": "page-total"
-          },
+          }, 
           "then": [
             {
-              "kind": "text",
+              "kind": "text", 
               "text": "共 23 条"
             }
           ]
-        },
+        }, 
         {
-          "name": "第 1 页首行为 field_01",
+          "name": "第 1 页首行为 field_01", 
           "target": {
-            "label": "table-row",
+            "label": "table-row", 
             "text": "field_01"
-          },
+          }, 
           "then": [
             {
               "kind": "exists"
             }
           ]
-        },
+        }, 
         {
-          "name": "点击页码 3 翻页（field_11 入窗）",
+          "name": "点击页码 3 翻页（field_11 入窗）", 
           "target": {
-            "label": "page",
+            "label": "page", 
             "text": "3"
-          },
-          "when": [
-            {
-              "click": {}
-            },
-            {
-              "wait": 300
-            }
-          ],
+          }, 
           "then": [
             {
-              "kind": "exists",
+              "kind": "exists", 
               "target": {
-                "label": "table-row",
+                "label": "table-row", 
                 "text": "field_11"
               }
             }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
           ]
-        },
+        }, 
         {
-          "name": "翻页后 field_01 出窗（absent）",
+          "name": "翻页后 field_01 出窗（absent）", 
           "target": {
-            "label": "table-row",
+            "label": "table-row", 
             "text": "field_01"
-          },
+          }, 
           "then": [
             {
-              "kind": "absent",
+              "kind": "absent", 
               "target": {
-                "label": "table-row",
+                "label": "table-row", 
                 "text": "field_01"
               }
             }
           ]
         }
-      ]
-    },
+      ], 
+      "name": "分页表格"
+    }, 
     {
-      "name": "四列混排",
       "cases": [
         {
-          "name": "行悬停出现浅色底反馈",
+          "name": "行悬停出现浅色底反馈", 
           "target": {
-            "label": "table-row",
-            "index": 2
-          },
+            "index": 2, 
+            "label": "table-row"
+          }, 
+          "then": [
+            {
+              "kind": "colorDelta", 
+              "minRatio": 0.03, 
+              "tolPeak": 3
+            }
+          ], 
           "when": [
             {
               "hover": {}
-            },
+            }, 
             {
               "wait": 200
             }
-          ],
-          "then": [
-            {
-              "kind": "colorDelta",
-              "tolPeak": 3,
-              "minRatio": 0.03
-            }
           ]
-        },
+        }, 
         {
-          "name": "行点击选中背景（token Selection）",
+          "name": "行点击选中背景（token Selection）", 
           "target": {
-            "label": "table-row",
-            "index": 1
-          },
-          "when": [],
+            "index": 1, 
+            "label": "table-row"
+          }, 
           "then": [
             {
-              "kind": "template",
+              "kind": "template", 
               "template": "table-row-select"
             }
-          ]
-        },
+          ], 
+          "when": []
+        }, 
         {
-          "name": "点击字段表头首次排序为降序",
+          "name": "点击字段表头首次排序为降序", 
           "target": {
-            "label": "table-sort",
-            "index": 0
-          },
+            "index": 0, 
+            "label": "table-sort"
+          }, 
+          "then": [
+            {
+              "kind": "text", 
+              "target": {
+                "index": 0, 
+                "label": "table-sort"
+              }, 
+              "text": "↓"
+            }
+          ], 
           "when": [
             {
               "click": {}
             }
-          ],
+          ]
+        }, 
+        {
+          "name": "再次点击表头切回升序", 
+          "target": {
+            "index": 0, 
+            "label": "table-sort"
+          }, 
           "then": [
             {
-              "kind": "text",
-              "text": "↓",
+              "kind": "text", 
               "target": {
-                "label": "table-sort",
-                "index": 0
-              }
+                "index": 0, 
+                "label": "table-sort"
+              }, 
+              "text": "↑"
             }
-          ]
-        },
-        {
-          "name": "再次点击表头切回升序",
-          "target": {
-            "label": "table-sort",
-            "index": 0
-          },
+          ], 
           "when": [
             {
               "click": {}
-            }
-          ],
-          "then": [
-            {
-              "kind": "text",
-              "text": "↑",
-              "target": {
-                "label": "table-sort",
-                "index": 0
-              }
             }
           ]
         }
-      ]
+      ], 
+      "name": "四列混排"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "状态列 Tag 渲染且绿底", 
+          "target": {
+            "label": "tag", 
+            "text": "已上线"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "tag", 
+                "text": "已上线"
+              }
+            }, 
+            {
+              "expect": {
+                "hex": "#E4F6DB"
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.3, 
+              "target": {
+                "label": "tag", 
+                "text": "已上线"
+              }, 
+              "tol": 20
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "tag", 
+                "text": "开发中"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "操作列链接按钮存在", 
+          "target": {
+            "label": "button", 
+            "text": "编辑"
+          }, 
+          "then": [
+            {
+              "count": 3, 
+              "kind": "exists", 
+              "target": {
+                "label": "button", 
+                "text": "编辑"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "Render 优先于 Formatter（名称列显示原值）", 
+          "target": {
+            "label": "table-row", 
+            "text": "用户表"
+          }, 
+          "then": [
+            {
+              "kind": "text", 
+              "target": {
+                "label": "table-row", 
+                "text": "用户表"
+              }, 
+              "text": "用户表"
+            }, 
+            {
+              "kind": "text", 
+              "notContains": true, 
+              "target": {
+                "label": "table-row", 
+                "text": "用户表"
+              }, 
+              "text": "不应显示"
+            }
+          ]
+        }
+      ], 
+      "name": "单元格渲染"
     }
-  ]
+  ], 
+  "structure": {
+    "apiRows": 8, 
+    "minElements": 12, 
+    "sections": [
+      "固定列", 
+      "分页表格", 
+      "四列混排", 
+      "单元格渲染"
+    ]
+  }
 }

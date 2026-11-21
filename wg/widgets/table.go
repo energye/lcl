@@ -45,6 +45,10 @@ type TableColumn struct {
 	Align    scene.Alignment
 	// Formatter 自定义单元格文本；返回空串时回退到默认格式化。
 	Formatter func(row int, value any) string
+	// Render 自定义单元格渲染（antd render 的组件级对应）：返回
+	// Widget（Tag/Badge/按钮组等组合）。非空时优先于 Formatter 与
+	// 默认格式化；列宽建议 Fixed/Width（Render 内容宽不可静态测量）。
+	Render func(row int, value any) ui.Widget
 	// Fixed 冻结列（antd fixed）："" 不冻结 / "left" 左缘冻结 /
 	// "right" 右缘冻结——横向滚动时该列不随内容滚动（叠层实现）。
 	Fixed string
@@ -622,11 +626,25 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 		row.SetBox(scene.BoxSpec{Fill: scene.Solid(bg)})
 		for ci, w := range widths {
 			cell := scene.Box(scene.BoxSpec{}).SetWidth(w).SetHeight(t.RowHeight)
-			txt := t.cellText(ci, dataRow)
-			l := text.LayoutText(txt, text.DefaultFont(th.Font.SizeSM), text.Options{})
-			tv := scene.Text(scene.TextSpec{Src: txt, Layout: l, Color: th.Color.Text})
-			tv.SetMargin(geom.InLTRB(6, (t.RowHeight-l.Size.H)/2, 0, 0))
-			cell.Add(tv)
+			if c := t.Columns[ci]; c.Render != nil {
+				// antd render：组件级单元格渲染（Tag/按钮组等组合）。
+				// 行数组列数可能少于列定义（cellText 有界保护同款语义）。
+				var val any
+				if dataRow < len(t.Rows) && ci < len(t.Rows[dataRow]) {
+					val = t.Rows[dataRow][ci]
+				}
+				if wgt := c.Render(dataRow, val); wgt != nil {
+					rn := wgt.Build(ctx)
+					rn.SetMargin(geom.InLTRB(6, (t.RowHeight-rn.Size().H)/2, 0, 0))
+					cell.Add(rn)
+				}
+			} else {
+				txt := t.cellText(ci, dataRow)
+				l := text.LayoutText(txt, text.DefaultFont(th.Font.SizeSM), text.Options{})
+				tv := scene.Text(scene.TextSpec{Src: txt, Layout: l, Color: th.Color.Text})
+				tv.SetMargin(geom.InLTRB(6, (t.RowHeight-l.Size.H)/2, 0, 0))
+				cell.Add(tv)
+			}
 			if ctx.Input != nil {
 				cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: rowLabel, Cursor: scene.CursorPointer})
 				r := dataRow
@@ -673,13 +691,23 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 					continue
 				}
 				fcell := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface)}).SetWidth(w).SetHeight(t.RowHeight)
-				ftxt := t.cellText(ci, dataRow)
-				fl := text.LayoutText(ftxt, text.DefaultFont(th.Font.SizeSM), text.Options{})
-				ftv := scene.Text(scene.TextSpec{Src: ftxt, Layout: fl, Color: th.Color.Text})
-				ftv.SetMargin(geom.InLTRB(6, (t.RowHeight-fl.Size.H)/2, 0, 0))
-				ftv2 := ftv
-				_ = ftv2
-				fcell.Add(ftv)
+				if c := t.Columns[ci]; c.Render != nil {
+					var fval any
+					if dataRow < len(t.Rows) && ci < len(t.Rows[dataRow]) {
+						fval = t.Rows[dataRow][ci]
+					}
+					if wgt := c.Render(dataRow, fval); wgt != nil {
+						rn := wgt.Build(ctx)
+						rn.SetMargin(geom.InLTRB(6, (t.RowHeight-rn.Size().H)/2, 0, 0))
+						fcell.Add(rn)
+					}
+				} else {
+					ftxt := t.cellText(ci, dataRow)
+					fl := text.LayoutText(ftxt, text.DefaultFont(th.Font.SizeSM), text.Options{})
+					ftv := scene.Text(scene.TextSpec{Src: ftxt, Layout: fl, Color: th.Color.Text})
+					ftv.SetMargin(geom.InLTRB(6, (t.RowHeight-fl.Size.H)/2, 0, 0))
+					fcell.Add(ftv)
+				}
 				fcell.SetStackPosition(geom.Pt(fx, 0))
 				fcell.SetPositionKeepSize(true)
 				// 冻结副本单元格独立锚（gapBetween 验证"不随滚"——滚动层
