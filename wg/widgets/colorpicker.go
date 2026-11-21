@@ -221,7 +221,7 @@ func (c *ColorPicker) openPanel(ctx *ui.BuildContext, anchor *scene.Node, th *th
 			// down 即执行；Pos 已是节点空间：x→s、y→1-v。
 			s := clamp01(ev.Pos.X / 220)
 			v := clamp01(1 - ev.Pos.Y/160)
-			c.h, c.s, c.v = c.h, s, v
+			c.s, c.v = s, v
 			c.commit(ctx)
 			return true
 		}})
