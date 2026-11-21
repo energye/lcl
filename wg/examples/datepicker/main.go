@@ -7,7 +7,11 @@ import (
 	"github.com/energye/lcl/wg/widgets"
 )
 
-var dp = widgets.NewDatePicker()
+var (
+	dp          = widgets.NewDatePicker()
+	dpRange     = widgets.NewDatePicker()
+	rangeInited bool
+)
 
 func main() {
 	launcher.Main(doc.Meta{
@@ -20,6 +24,15 @@ func main() {
 		Demos: []doc.Demo{
 			{Title: "日期选择", Note: "点击触发框弹面板；‹›切换月份；点击日期格选择并关闭", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return dp
+			}},
+			{Title: "范围选择", Note: "Range=true：双触发框，面板两击选起止（第二击早于第一击自动交换）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				if !rangeInited {
+					dpRange.Range = true
+					dpRange.Placeholder = "开始日期"
+					dpRange.Placeholder2 = "结束日期"
+					rangeInited = true
+				}
+				return dpRange
 			}},
 		},
 		API: []doc.APIRow{

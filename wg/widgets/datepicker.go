@@ -32,6 +32,14 @@ type DatePicker struct {
 	OnChange     func(t time.Time)
 	Disabled     bool
 	PlaceholderT string // 面板无值时显示的占位（内部）
+	// Range 范围选择模式（antd RangePicker）：双触发框，面板两次点击
+	// 选起止（第二击早于第一击自动交换）。
+	Range         bool
+	Value2        time.Time
+	Placeholder2  string
+	OnChangeRange func(t1, t2 time.Time)
+	// rangeStage 范围选择进行到的阶段（0=未开始/已完成，1=已选起待选止）。
+	rangeStage int
 
 	handle    overlay.Handle
 	fb        feedbackHost
@@ -51,6 +59,9 @@ func NewDatePicker() *DatePicker {
 func (d *DatePicker) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(d)
 	th := ctx.ThemeOr()
+	if d.Range {
+		return d.buildRangeTrigger(ctx, th)
+	}
 	w := d.Width
 	if w <= 0 {
 		w = 200
@@ -96,6 +107,71 @@ func (d *DatePicker) Build(ctx *ui.BuildContext) *scene.Node {
 	d.childNode = n
 	return n
 }
+
+// buildRangeTrigger 构建范围选择双触发框（起框 ~ 止框，antd RangePicker）。
+func (d *DatePicker) buildRangeTrigger(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
+	w := d.Width
+	if w <= 0 {
+		w = 130
+	}
+	h := ui.MetricsFor(th, ui.SizeMedium).Height
+	row := scene.Flex(scene.Horizontal, th.Space.XS).SetCrossAlign(scene.CrossCenter)
+	sep := text.LayoutText("~", text.DefaultFont(th.Font.SizeBase), text.Options{})
+	row.Add(scene.Text(scene.TextSpec{Src: "~", Layout: sep, Color: th.Color.TextFaint}))
+	for _, seg := range []struct {
+		val      time.Time
+		ph       string
+	}{
+		{d.Value, d.Placeholder},
+		{d.Value2, d.Placeholder2},
+	} {
+		display := seg.val.Format("2006-01-02")
+		txtColor := th.Color.Text
+		if seg.val.IsZero() {
+			display, txtColor = seg.ph, th.Color.TextPlaceholder
+		}
+		if seg.ph == "" {
+			display, txtColor = "开始日期", th.Color.TextPlaceholder
+		}
+		font := text.DefaultFont(th.Font.SizeBase)
+		layout := text.LayoutText(display, font, text.Options{})
+		n := scene.Box(scene.BoxSpec{
+			Fill:   scene.Solid(th.Color.Surface),
+			Border: scene.Stroke(th.Color.Border, 1),
+			Radius: th.Radius.Base,
+		}).SetSize2(w, h)
+		label := scene.Text(scene.TextSpec{Src: display, Layout: layout, Color: txtColor})
+		label.SetMargin(geom.InLTRB(11, (h-layout.Size.H)/2, 0, 0))
+		n.Add(label)
+		ic := (&Icon{Name: "calendar", Size: 14, Color: th.Color.TextFaint}).Build(ctx)
+		ic.SetPositionKeepSize(true)
+		ic.SetStackPosition(geom.Pt(w-11-14, (h-14)/2))
+		n.Add(ic)
+		n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-picker", Cursor: scene.CursorPointer})
+		if ctx.Input != nil {
+			anchor := n
+			g := &ui.GestureDetector{OnTap: func(geom.Point) {
+				d.openPanel(ctx, anchor, th)
+			}}
+			ctx.Input.Set(n, g.Handler())
+		}
+		row.Add(n)
+	}
+	d.childNode = row
+	return row
+}
+
+// Show 程序化打开面板（锚=最近构建的触发框节点；测试/自动化用）。
+func (d *DatePicker) Show(ctx *ui.BuildContext) {
+	if d.childNode == nil {
+		return
+	}
+	th := ctx.ThemeOr()
+	d.openPanel(ctx, d.childNode, th)
+}
+
+// IsOpen 返回面板是否打开。
+func (d *DatePicker) IsOpen() bool { return d.panelOpen }
 
 // openPanel 打开日历面板（BandPopup+PlacementBottomStart，Dropdown 同通道）。
 func (d *DatePicker) openPanel(ctx *ui.BuildContext, anchor *scene.Node, th *theme.Data) {
@@ -203,8 +279,11 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 		cell := scene.Flex(scene.Vertical, 0).SetCrossAlign(scene.CrossCenter).SetWidth(38).SetHeight(28)
 		bg := geom.Color{}
 		fg := th.Color.Text
+		inRange := d.Range && !d.Value.IsZero() && !t.Before(d.Value) && !d.Value2.Before(t)
 		if selected {
 			bg, fg = th.Color.Primary, th.Color.OnPrimary
+		} else if inRange && d.Value != d.Value2 {
+			bg = th.Color.InfoBg // 区间内浅主色底（antd RangePicker 高亮带）
 		} else if isToday {
 			fg = th.Color.Primary
 		}
@@ -219,6 +298,26 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 			ctx.Input.Set(cell, input.Handler{Pointer: func(ev *input.PointerEvent) bool {
 				if !ev.Down() {
 					return false
+				}
+				if d.Range {
+					// 范围模式：两击选起止（第二击早于第一击自动交换），
+					// 期间面板保持打开（区间高亮实时刷新）。
+					if d.rangeStage == 0 {
+						d.Value, d.Value2 = t, t
+						d.rangeStage = 1
+					} else {
+						if t.Before(d.Value) {
+							d.Value, d.Value2 = t, d.Value
+						} else {
+							d.Value2 = t
+						}
+						d.rangeStage = 0
+						if d.OnChangeRange != nil {
+							d.OnChangeRange(d.Value, d.Value2)
+						}
+					}
+					d.MarkDirty()
+					return true
 				}
 				d.Value = t
 				d.MarkDirty()

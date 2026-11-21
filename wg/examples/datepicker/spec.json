@@ -1,12 +1,75 @@
 {
   "id": "datepicker",
   "structure": {
-    "apiRows": 5,
+    "apiRows": 6,
     "sections": [
+      "范围选择",
       "日期选择"
     ]
   },
   "sections": [
+    {
+      "name": "范围选择",
+      "cases": [
+        {
+          "name": "双触发框存在（开始/结束占位）",
+          "target": {
+            "label": "date-picker"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "点击起框弹面板",
+          "target": {
+            "label": "date-picker"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "name": "点击起框弹出面板（overlay 1）",
+          "target": {
+            "label": "date-picker",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "日期选择",
       "cases": [
