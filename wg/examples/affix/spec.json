@@ -1,0 +1,115 @@
+{
+  "id": "affix",
+  "structure": {
+    "apiRows": 5,
+    "sections": [
+      "滚动固定"
+    ]
+  },
+  "sections": [
+    {
+      "name": "滚动固定",
+      "cases": [
+        {
+          "name": "初始未固定（普通边框）",
+          "target": {
+            "label": "affix"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "affix"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "固钉内容",
+              "target": {
+                "label": "affix"
+              }
+            }
+          ]
+        },
+        {
+          "name": "模拟滚动后进入固定态（InfoBg 底+主色边框+角标）",
+          "target": {
+            "label": "affix"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "text": "模拟滚动"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "affix-badge"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "已固定",
+              "target": {
+                "label": "affix-badge"
+              }
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "InfoBg"
+              },
+              "minRatio": 0.3,
+              "tol": 14,
+              "target": {
+                "label": "affix"
+              }
+            }
+          ]
+        },
+        {
+          "name": "模拟回滚还原未固定",
+          "target": {
+            "label": "affix"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "text": "模拟回滚"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "absent",
+              "target": {
+                "label": "affix-badge"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
