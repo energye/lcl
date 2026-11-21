@@ -1,0 +1,69 @@
+{
+  "id": "app",
+  "structure": {
+    "apiRows": 4,
+    "sections": [
+      "消息注入"
+    ]
+  },
+  "sections": [
+    {
+      "name": "消息注入",
+      "cases": [
+        {
+          "name": "应用内容存在",
+          "target": {
+            "label": "app"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "app"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "App 组合暴露反馈宿主",
+              "target": {
+                "label": "app"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点按钮弹全局消息（BandToast）",
+          "target": {
+            "label": "app"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "text": "触发全局消息"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "text",
+              "text": "保存成功：所有更改已同步",
+              "target": {
+                "label": "message"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
