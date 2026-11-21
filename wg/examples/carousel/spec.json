@@ -1,0 +1,113 @@
+{
+  "id": "carousel", 
+  "sections": [
+    {
+      "cases": [
+        {
+          "name": "初始第一页与三个圆点", 
+          "target": {
+            "label": "carousel"
+          }, 
+          "then": [
+            {
+              "kind": "text", 
+              "target": {
+                "label": "carousel", 
+                "text": "第一页：产品发布"
+              }, 
+              "text": "第一页：产品发布"
+            }, 
+            {
+              "count": 3, 
+              "kind": "exists", 
+              "target": {
+                "label": "carousel-dot"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "当前点主色实底", 
+          "target": {
+            "index": 0, 
+            "label": "carousel-dot"
+          }, 
+          "then": [
+            {
+              "expect": {
+                "token": "Primary"
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.6, 
+                0.6
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.4, 
+              "target": {
+                "index": 0, 
+                "label": "carousel-dot"
+              }, 
+              "tol": 14
+            }
+          ]
+        }, 
+        {
+          "name": "点第二圆点切页", 
+          "target": {
+            "label": "carousel"
+          }, 
+          "then": [
+            {
+              "kind": "text", 
+              "target": {
+                "label": "carousel", 
+                "text": "第二页：版本更新"
+              }, 
+              "text": "第二页：版本更新"
+            }, 
+            {
+              "expect": {
+                "token": "Primary"
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.6, 
+                0.6
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.4, 
+              "target": {
+                "index": 1, 
+                "label": "carousel-dot"
+              }, 
+              "tol": 14
+            }
+          ], 
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "index": 1, 
+                  "label": "carousel-dot"
+                }
+              }
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }
+      ], 
+      "name": "三页走马灯"
+    }
+  ], 
+  "structure": {
+    "apiRows": 4, 
+    "sections": [
+      "三页走马灯"
+    ]
+  }
+}
