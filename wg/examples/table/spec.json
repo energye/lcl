@@ -319,16 +319,146 @@
         }
       ], 
       "name": "单元格渲染"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "初始展开首行：展开内容可见", 
+          "target": {
+            "label": "table-expanded-row", 
+            "text": "用户服务 · 部署详情"
+          }, 
+          "then": [
+            {
+              "kind": "exists"
+            }, 
+            {
+              "kind": "text", 
+              "target": {
+                "label": "table-expanded-row", 
+                "text": "用户服务 · 部署详情"
+              }, 
+              "text": "实例 2 个"
+            }
+          ]
+        }, 
+        {
+          "name": "展开行高 48（ExpandedRowHeight 默认值）", 
+          "target": {
+            "label": "table-expanded-row", 
+            "text": "用户服务 · 部署详情"
+          }, 
+          "then": [
+            {
+              "kind": "geometry", 
+              "heightBetween": [
+                46, 
+                52
+              ]
+            }
+          ]
+        }, 
+        {
+          "name": "展开行紧跟父行（below 用户服务行）", 
+          "target": {
+            "label": "table-expanded-row", 
+            "text": "用户服务 · 部署详情"
+          }, 
+          "then": [
+            {
+              "kind": "geometry", 
+              "below": {
+                "label": "table-row", 
+                "text": "用户服务"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "收起图标点击后展开行消失（caret down→切换）", 
+          "target": {
+            "index": 0, 
+            "label": "table-expand"
+          }, 
+          "then": [
+            {
+              "kind": "absent", 
+              "target": {
+                "label": "table-expanded-row", 
+                "text": "用户服务 · 部署详情"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }, 
+        {
+          "name": "再次点击展开图标后内容行回来", 
+          "target": {
+            "index": 0, 
+            "label": "table-expand"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "table-expanded-row", 
+                "text": "用户服务 · 部署详情"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }, 
+        {
+          "name": "展开第二行（订单服务）内容可见", 
+          "target": {
+            "index": 1, 
+            "label": "table-expand"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "table-expanded-row", 
+                "text": "订单服务 · 部署详情"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }
+      ], 
+      "name": "展开行"
     }
   ], 
   "structure": {
-    "apiRows": 8, 
+    "apiRows": 9, 
     "minElements": 12, 
     "sections": [
       "固定列", 
       "分页表格", 
       "四列混排", 
-      "单元格渲染"
+      "单元格渲染", 
+      "展开行"
     ]
   }
 }

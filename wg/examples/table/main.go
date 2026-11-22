@@ -77,6 +77,7 @@ var (
 	tblFilter *widgets.Table
 	tblFreeze *widgets.Table
 	tblRender *widgets.Table
+	tblExpand *widgets.Table
 	tblRenderInited bool
 )
 
@@ -107,6 +108,30 @@ func init() {
 	tblRender.Width = 360
 	tblRender.Height = 110
 	_ = tblRenderInited
+
+	// 展开行卡（antd expandable）：DefaultExpandRows 初始展开首行；
+	// 图标点击切换，展开内容为说明文本组合。
+	ecols := []widgets.TableColumn{
+		{Title: "名称", Mode: widgets.ColumnAuto},
+		{Title: "状态", Mode: widgets.ColumnFixed, Width: 90},
+		{Title: "说明", Mode: widgets.ColumnFlex, Flex: 1},
+	}
+	erows := [][]any{
+		{"用户服务", "运行中", "核心账户服务"},
+		{"订单服务", "运行中", "交易主链路"},
+		{"报表服务", "已停止", "夜间批处理"},
+	}
+	tblExpand = widgets.NewTable(ecols, erows)
+	tblExpand.Width, tblExpand.Height = 620, 170
+	tblExpand.Expandable = widgets.TableExpandable{
+		ExpandedRowRender: func(row int) ui.Widget {
+			return &widgets.Column{Gap: 4, Children: []ui.Widget{
+				&widgets.Label{Text: fmt.Sprintf("%s · 部署详情", erows[row][0]), Size: 12},
+				&widgets.Label{Text: "实例 2 个 · 最近发布 2026-11-20 · 内存 512MB", Size: 12},
+			}}
+		},
+		DefaultExpandRows: []int{0},
+	}
 }
 
 func main() {
@@ -116,6 +141,7 @@ func main() {
 			"虚拟化表格：只构建可见区 ±Overscan 行的节点，十万行也不撑爆节点树",
 			"列宽三档（Q9）：Auto 按内容 / Fixed 固定 / Flex 按权重分配",
 			"点击可排序列的表头排序（稳定排序）；斑马纹 + 行选中",
+			"展开行（antd expandable）：折叠图标/行点击展开内容行",
 			"计划（M9）：固定列/列拖宽/行悬停/分页/筛选/自定义单元格渲染",
 		},
 		Demos: []doc.Demo{
@@ -134,6 +160,9 @@ func main() {
 			{Title: "单元格渲染", Note: "antd render 组件级对应：状态列 Tag 组合复用、操作列链接按钮；Render 优先于 Formatter", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tblRender
 			}},
+			{Title: "展开行", Note: "antd expandable 对应：首列折叠图标点击展开内容行（ExpandedRowRender），DefaultExpandRows 初始展开首行", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return tblExpand
+			}},
 		},
 		API: []doc.APIRow{
 			{Name: "NewTable", Type: "func(cols []TableColumn, rows [][]any) *Table", Desc: "构造"},
@@ -144,6 +173,7 @@ func main() {
 			{Name: "SortColumn/Asc", Type: "int / bool", Desc: "排序状态（点表头切换）"},
 			{Name: "OnSort", Type: "func(col int, asc bool)", Desc: "排序回调"},
 			{Name: "OnSelect", Type: "func(row int)", Desc: "行选中回调"},
+			{Name: "Expandable", Type: "TableExpandable", Desc: "展开行（ExpandedRowRender/DefaultExpandRows/ExpandRowByClick/ExpandedRowHeight）"},
 			{Name: "SetScrollOffset", Type: "func(v float32)", Desc: "滚动偏移（虚拟化唯一真相）"},
 		},
 	})

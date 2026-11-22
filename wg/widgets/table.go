@@ -57,6 +57,22 @@ type TableColumn struct {
 	Filters []string
 }
 
+// TableExpandable 是表格展开行配置（antd expandable）。
+type TableExpandable struct {
+	// ExpandedRowRender 展开内容渲染（antd expandedRowRender）：返回
+	// Widget（描述文本/表单/按钮组等组合）。每次构建都会调用（与
+	// 单元格 Render 同款契约）。非空时启用展开行。
+	ExpandedRowRender func(row int) ui.Widget
+	// DefaultExpandRows 初始展开的行（数据索引；antd defaultExpandAllRows
+	// 的按行版）。展开态按数据索引记忆，排序后跟随数据行。
+	DefaultExpandRows []int
+	// ExpandRowByClick 点击整行切换展开（antd expandRowByClick）；开启后
+	// 首列不再渲染展开图标。
+	ExpandRowByClick bool
+	// ExpandedRowHeight 展开行高（<=0 时用默认 48）。
+	ExpandedRowHeight float32
+}
+
 // Table 是虚拟表格。Rows 为行数据；每行是 []any，与 Columns 对齐。
 // SortColumn >= 0 时按该列排序；Asc 决定方向（稳定排序）。
 type Table struct {
@@ -92,6 +108,12 @@ type Table struct {
 	pageNo        int        // 当前页（1 起，内部状态）
 	pagePager     *Pagination // 分页器实例池（跨重建持有）
 
+	// Expandable 展开行配置（antd expandable）。ExpandedRowRender 非空时
+	// 启用；展开态按数据索引记忆（排序/翻页跟随数据行）。
+	Expandable  TableExpandable
+	expanded    map[int]bool // 展开态（数据索引集，跨 Build 持有）
+	expandTaps  []*ui.GestureDetector
+
 	hoverRow int // 行悬停（antd 行 hover 浅色反馈）；-1 = 无
 
 	offset    float32
@@ -103,14 +125,68 @@ type Table struct {
 	rowNodes    []*scene.Node
 	freezeNodes []*scene.Node // 左冻结列行的同步副本（横向滚动不随动）
 	rowVis      []int
-	builtFirst int
-	builtLast  int
-	bar        *Scrollbar
-	reqFrame   func()
+	builtFirst  int
+	builtLast   int
+	lastIdx     []int     // 最近一次 buildInner 生效的 idx（排序筛选分页后）
+	lastRowY    []float32 // lastIdx 的行 y 前缀和（展开行不恒定高定位用）
+	bar         *Scrollbar
+	reqFrame    func()
 }
 
 // DefaultTableHeight 是未设置 Height 时的视口高。
 const DefaultTableHeight float32 = 240
+
+// DefaultExpandRowH 是未设置 ExpandedRowHeight 时的展开行高。
+const DefaultExpandRowH float32 = 48
+
+// expandH 返回展开行高。
+func (t *Table) expandH() float32 {
+	if t.Expandable.ExpandedRowHeight > 0 {
+		return t.Expandable.ExpandedRowHeight
+	}
+	return DefaultExpandRowH
+}
+
+// expandEnabled 返回展开行是否启用。
+func (t *Table) expandEnabled() bool {
+	return t.Expandable.ExpandedRowRender != nil
+}
+
+// isExpanded 返回数据行是否处于展开态。
+func (t *Table) isExpanded(row int) bool { return t.expanded[row] }
+
+// toggleExpand 切换展开态并重建（展开改变行高布局，走 MarkDirty 全量
+// 重建前缀和——展开切换不频繁，不做增量）。
+func (t *Table) toggleExpand(row int) {
+	if t.expanded == nil {
+		t.expanded = map[int]bool{}
+	}
+	if t.expanded[row] {
+		delete(t.expanded, row)
+	} else {
+		t.expanded[row] = true
+	}
+	t.MarkDirty()
+}
+
+// rowHeightAt 返回视口序 vi 行的总高度（行高 + 展开内容高）。
+func (t *Table) rowHeightAt(vi int, idx []int) float32 {
+	h := t.RowHeight
+	if t.expandEnabled() && t.isExpanded(idx[vi]) {
+		h += t.expandH()
+	}
+	return h
+}
+
+// rowYPrefixSum 计算视口行的 y 前缀和（len(idx)+1 项；rowY[k] 为第 k 行
+// 顶缘相对内容区顶的偏移）。展开使行高不再恒定，虚拟化定位统一走它。
+func (t *Table) rowYPrefixSum(idx []int) []float32 {
+	rowY := make([]float32, len(idx)+1)
+	for vi := range idx {
+		rowY[vi+1] = rowY[vi] + t.rowHeightAt(vi, idx)
+	}
+	return rowY
+}
 
 // NewTable 创建表格。
 func NewTable(cols []TableColumn, rows [][]any) *Table {
@@ -140,12 +216,19 @@ func (t *Table) SetScrollOffset(v float32) {
 		t.MarkDirty()
 		return
 	}
+	// 展开行启用时行高不恒定，用构建时缓存的前缀和定位；否则线性公式。
+	y := func(vi int) float32 {
+		if t.lastRowY != nil && vi < len(t.lastRowY)-1 {
+			return t.lastRowY[vi]
+		}
+		return float32(vi) * t.RowHeight
+	}
 	for i, n := range t.rowNodes {
-		n.SetStackPosition(geom.Pt(0, t.HeaderH+float32(t.rowVis[i])*t.RowHeight-v))
+		n.SetStackPosition(geom.Pt(0, t.HeaderH+y(t.rowVis[i])-v))
 	}
 	for i, n := range t.freezeNodes {
 		if i < len(t.rowVis) {
-			n.SetStackPosition(geom.Pt(0, t.HeaderH+float32(t.rowVis[i])*t.RowHeight-v))
+			n.SetStackPosition(geom.Pt(0, t.HeaderH+y(t.rowVis[i])-v))
 		}
 	}
 	if t.node != nil {
@@ -160,14 +243,45 @@ func (t *Table) SetScrollOffset(v float32) {
 }
 
 // rowWindow 返回当前偏移下应构建的行窗口 [first,last)。
+// 展开行启用时行高不恒定：先按前缀和找偏移命中的首行，再向后累计到
+// 视口底；否则用 O(1) 线性公式。
 func (t *Table) rowWindow() (int, int) {
 	vh := t.ViewportHeight()
+	n := len(t.Rows)
+	if t.expandEnabled() {
+		rowY := t.rowYPrefixSum(t.lastIdx)
+		// 二分：找最后一个 y <= offset 的行
+		first := 0
+		lo, hi := 0, len(t.lastIdx)
+		for lo < hi {
+			mid := (lo + hi) / 2
+			if rowY[mid+1] <= t.offset {
+				lo = mid + 1
+			} else {
+				hi = mid
+			}
+		}
+		first = lo - t.Overscan
+		if first < 0 {
+			first = 0
+		}
+		// 从 first 向后累计到覆盖视口高
+		last := first
+		for last < len(t.lastIdx) && rowY[last]-rowY[first] < vh+t.expandH() {
+			last++
+		}
+		last += t.Overscan
+		if last > len(t.lastIdx) {
+			last = len(t.lastIdx)
+		}
+		return first, last
+	}
 	first := int(t.offset/t.RowHeight) - t.Overscan
 	if first < 0 {
 		first = 0
 	}
 	last := first + int(vh/t.RowHeight) + t.Overscan*2 + 2
-	if n := len(t.Rows); last > n {
+	if last > n {
 		last = n
 	}
 	return first, last
@@ -186,6 +300,10 @@ func (t *Table) ViewportHeight() float32 {
 
 func (t *Table) maxOffset() float32 {
 	total := t.HeaderH + float32(len(t.Rows))*t.RowHeight
+	if t.expandEnabled() {
+		rowY := t.rowYPrefixSum(t.lastIdx)
+		total = t.HeaderH + rowY[len(rowY)-1]
+	}
 	h := t.ViewportHeight()
 	if total <= h {
 		return 0
@@ -369,18 +487,19 @@ func (t *Table) columnWidths(fontSize float32) []float32 {
 
 // VisibleRows 返回当前可见的数据行索引（供诊断/自动化断言）。
 func (t *Table) VisibleRows() []int {
-	idx := t.sortedIndex()
-	vh := t.ViewportHeight()
-	first := int(t.offset/t.RowHeight) - t.Overscan
-	if first < 0 {
-		first = 0
+	idx := t.lastIdx
+	if idx == nil {
+		idx = t.sortedIndex()
 	}
-	last := first + int(vh/t.RowHeight) + t.Overscan*2 + 2
+	first, last := t.rowWindow()
+	if first > len(idx) {
+		first = len(idx)
+	}
 	if last > len(idx) {
 		last = len(idx)
 	}
-	if first > len(idx) {
-		first = len(idx)
+	if first > last {
+		first = last
 	}
 	return idx[first:last]
 }
@@ -392,6 +511,13 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(t)
 	th := ctx.ThemeOr()
 	idx := t.sortedIndex()
+	// 展开行启用：DefaultExpandRows 初始化展开态（首次构建生效）。
+	if t.expandEnabled() && t.expanded == nil && len(t.Expandable.DefaultExpandRows) > 0 {
+		t.expanded = map[int]bool{}
+		for _, r := range t.Expandable.DefaultExpandRows {
+			t.expanded[r] = true
+		}
+	}
 	// 筛选应用：Filtered 非空列按单元格文本过滤（筛选项与文本精确匹配）。
 	for col2, fv := range t.Filtered {
 		if fv == "" {
@@ -495,6 +621,11 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 // buildInner 构建表格本体（表头+虚拟行[+滚动条]），idx 为已排序（可能
 // 已分页切片）的数据行下标。
 func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*scene.Node, *scene.Node, bool) {
+	t.lastIdx = idx
+	t.lastRowY = nil
+	if t.expandEnabled() {
+		t.lastRowY = t.rowYPrefixSum(idx)
+	}
 	widths := t.columnWidths(th.Font.SizeSM)
 	hscroll := t.hScrollNeeded(th.Font.SizeSM)
 
@@ -594,15 +725,42 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 
 	// 虚拟行：只构建可见区 ± Overscan
 	vh := t.ViewportHeight()
-	first := int(t.offset/t.RowHeight) - t.Overscan
-	if first < 0 {
-		first = 0
-	}
-	last := first + int(vh/t.RowHeight) + t.Overscan*2 + 2
-	if last > len(idx) {
-		last = len(idx)
+	var first, last int
+	if t.expandEnabled() {
+		// 展开行启用：行高不恒定，前缀和定位可见窗口（rowY 长度 = len(idx)+1）。
+		lo, hi := 0, len(idx)
+		for lo < hi {
+			mid := (lo + hi) / 2
+			if t.lastRowY[mid+1] <= t.offset {
+				lo = mid + 1
+			} else {
+				hi = mid
+			}
+		}
+		first = lo - t.Overscan
+		if first < 0 {
+			first = 0
+		}
+		last = first
+		for last < len(idx) && t.lastRowY[last]-t.lastRowY[first] < vh+t.expandH() {
+			last++
+		}
+		last += t.Overscan
+		if last > len(idx) {
+			last = len(idx)
+		}
+	} else {
+		first = int(t.offset/t.RowHeight) - t.Overscan
+		if first < 0 {
+			first = 0
+		}
+		last = first + int(vh/t.RowHeight) + t.Overscan*2 + 2
+		if last > len(idx) {
+			last = len(idx)
+		}
 	}
 	t.rowTaps = t.rowTaps[:0]
+	t.expandTaps = t.expandTaps[:0]
 	t.rowNodes = t.rowNodes[:0]
 	t.rowVis = t.rowVis[:0]
 	t.builtFirst, t.builtLast = first, last
@@ -611,8 +769,19 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 	if rowLabel == "" {
 		rowLabel = "table-row"
 	}
+	// 行 y 定位：展开启用走前缀和，否则线性公式。
+	rowYAt := func(vi int) float32 {
+		if t.lastRowY != nil {
+			return t.lastRowY[vi]
+		}
+		return float32(vi) * t.RowHeight
+	}
 	for vi := first; vi < last; vi++ {
 		dataRow := idx[vi]
+		expanded := t.expandEnabled() && t.isExpanded(dataRow)
+		// 展开图标列：ExpandRowByClick=false 时首列前插图标单元格
+		//（antd expandable 每行首列的折叠按钮）。列宽模型不变——图标
+		// 占用首列单元格左缘内边距区。
 		row := scene.Flex(scene.Horizontal, 0).SetWidth(t.Width).SetHeight(t.RowHeight)
 		bg := geom.Color{}
 		if dataRow == t.Selected {
@@ -626,6 +795,22 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 		row.SetBox(scene.BoxSpec{Fill: scene.Solid(bg)})
 		for ci, w := range widths {
 			cell := scene.Box(scene.BoxSpec{}).SetWidth(w).SetHeight(t.RowHeight)
+			// 展开图标：首列且非行点击模式时渲染 caret（right=收起/down=展开）。
+			if ci == 0 && t.expandEnabled() && !t.Expandable.ExpandRowByClick {
+				name := "right"
+				if expanded {
+					name = "down"
+				}
+				ic := (&Icon{Name: name, Size: 12, Color: th.Color.TextFaint}).Build(ctx)
+				ic.SetPositionKeepSize(true)
+				ic.SetStackPosition(geom.Pt(8, (t.RowHeight-12)/2))
+				ic.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-expand", Cursor: scene.CursorPointer})
+				r0 := dataRow
+				g := &ui.GestureDetector{OnTap: func(geom.Point) { t.toggleExpand(r0) }}
+				t.expandTaps = append(t.expandTaps, g)
+				ctx.Input.Set(ic, g.Handler())
+				cell.Add(ic)
+			}
 			if c := t.Columns[ci]; c.Render != nil {
 				// antd render：组件级单元格渲染（Tag/按钮组等组合）。
 				// 行数组列数可能少于列定义（cellText 有界保护同款语义）。
@@ -635,14 +820,22 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 				}
 				if wgt := c.Render(dataRow, val); wgt != nil {
 					rn := wgt.Build(ctx)
-					rn.SetMargin(geom.InLTRB(6, (t.RowHeight-rn.Size().H)/2, 0, 0))
+					padL := float32(6)
+					if ci == 0 && t.expandEnabled() && !t.Expandable.ExpandRowByClick {
+						padL = 24 // 首列给展开图标让位
+					}
+					rn.SetMargin(geom.InLTRB(padL, (t.RowHeight-rn.Size().H)/2, 0, 0))
 					cell.Add(rn)
 				}
 			} else {
 				txt := t.cellText(ci, dataRow)
 				l := text.LayoutText(txt, text.DefaultFont(th.Font.SizeSM), text.Options{})
 				tv := scene.Text(scene.TextSpec{Src: txt, Layout: l, Color: th.Color.Text})
-				tv.SetMargin(geom.InLTRB(6, (t.RowHeight-l.Size.H)/2, 0, 0))
+				padL := float32(6)
+				if ci == 0 && t.expandEnabled() && !t.Expandable.ExpandRowByClick {
+					padL = 24
+				}
+				tv.SetMargin(geom.InLTRB(padL, (t.RowHeight-l.Size.H)/2, 0, 0))
 				cell.Add(tv)
 			}
 			if ctx.Input != nil {
@@ -650,6 +843,9 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 				r := dataRow
 				g := &ui.GestureDetector{OnTap: func(geom.Point) {
 					t.Selected = r
+					if t.expandEnabled() && t.Expandable.ExpandRowByClick {
+						t.toggleExpand(r)
+					}
 					t.MarkDirty()
 					if t.OnSelect != nil {
 						t.OnSelect(r)
@@ -674,11 +870,26 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 			}
 			row.Add(cell)
 		}
-		row.SetStackPosition(geom.Pt(0, t.HeaderH+float32(vi)*t.RowHeight-t.offset))
+		row.SetStackPosition(geom.Pt(0, t.HeaderH+rowYAt(vi)-t.offset))
 		row.SetPositionKeepSize(true)
 		col.Add(row)
 		t.rowNodes = append(t.rowNodes, row)
 		t.rowVis = append(t.rowVis, vi)
+		// 展开内容行：紧跟父行，整行宽、浅底（antd 展开行 fillQuaternary
+		// 视觉 ≈ 白底 FillHover 合成色）。
+		if expanded {
+			eRow := scene.Flex(scene.Horizontal, 0).SetWidth(t.Width).SetHeight(t.expandH())
+			eRow.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.FillHover)})
+			if wgt := t.Expandable.ExpandedRowRender(dataRow); wgt != nil {
+				en := wgt.Build(ctx)
+				en.SetMargin(geom.InLTRB(24, 8, 12, 8))
+				eRow.Add(en)
+			}
+			eRow.SetHit(scene.HitSpec{Label: "table-expanded-row"})
+			eRow.SetStackPosition(geom.Pt(0, t.HeaderH+rowYAt(vi)+t.RowHeight-t.offset))
+			eRow.SetPositionKeepSize(true)
+			col.Add(eRow)
+		}
 		// 左冻结列副本行：只渲染 Fixed=="left" 的单元格（白底盖住滚动
 		// 内容，右缘描边做冻结分界线）。横向滚动时此副本不随内容平移。
 		if freezeW > 0 {
@@ -721,7 +932,7 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 			edge.SetStackPosition(geom.Pt(freezeW-2, 0))
 			edge.SetPositionKeepSize(true)
 			fRow.Add(edge)
-			fRow.SetStackPosition(geom.Pt(0, t.HeaderH+float32(vi)*t.RowHeight-t.offset))
+			fRow.SetStackPosition(geom.Pt(0, t.HeaderH+rowYAt(vi)-t.offset))
 			fRow.SetPositionKeepSize(true)
 			freeze.Add(fRow)
 			t.freezeNodes = append(t.freezeNodes, fRow)
