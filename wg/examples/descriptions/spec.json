@@ -4,7 +4,7 @@
     {
       "cases": [
         {
-          "name": "标题行存在", 
+          "name": "\u6807\u9898\u884c\u5b58\u5728", 
           "target": {
             "label": "descriptions-title"
           }, 
@@ -14,12 +14,12 @@
               "target": {
                 "label": "descriptions-title"
               }, 
-              "text": "用户信息"
+              "text": "\u7528\u6237\u4fe1\u606f"
             }
           ]
         }, 
         {
-          "name": "六组 label/value 存在（含 Widget 状态项）", 
+          "name": "\u516d\u7ec4 label/value \u5b58\u5728\uff08\u542b Widget \u72b6\u6001\u9879\uff09", 
           "target": {
             "label": "desc-label"
           }, 
@@ -35,16 +35,16 @@
               "kind": "text", 
               "target": {
                 "label": "desc-label", 
-                "text": "用户名"
+                "text": "\u7528\u6237\u540d"
               }, 
-              "text": "用户名"
+              "text": "\u7528\u6237\u540d"
             }, 
             {
               "kind": "text", 
               "target": {
                 "label": "desc-value"
               }, 
-              "text": "张三"
+              "text": "\u5f20\u4e09"
             }, 
             {
               "kind": "text", 
@@ -68,17 +68,17 @@
               "minRatio": 0.3, 
               "target": {
                 "label": "desc-value", 
-                "text": "活跃"
+                "text": "\u6d3b\u8dc3"
               }, 
               "tol": 20
             }
           ]
         }, 
         {
-          "name": "bordered label 格灰底", 
+          "name": "bordered label \u683c\u7070\u5e95", 
           "target": {
             "label": "desc-label", 
-            "text": "用户名"
+            "text": "\u7528\u6237\u540d"
           }, 
           "then": [
             {
@@ -95,19 +95,19 @@
               "minRatio": 0.3, 
               "target": {
                 "label": "desc-label", 
-                "text": "用户名"
+                "text": "\u7528\u6237\u540d"
               }, 
               "tol": 14
             }
           ]
         }
       ], 
-      "name": "带边框"
+      "name": "\u5e26\u8fb9\u6846"
     }, 
     {
       "cases": [
         {
-          "name": "label 带冒号且无边框（灰底占比为零）", 
+          "name": "label \u5e26\u5192\u53f7\u4e14\u65e0\u8fb9\u6846\uff08\u7070\u5e95\u5360\u6bd4\u4e3a\u96f6\uff09", 
           "target": {
             "label": "desc-label"
           }, 
@@ -116,9 +116,9 @@
               "kind": "text", 
               "target": {
                 "label": "desc-label", 
-                "text": "创建时间"
+                "text": "\u521b\u5efa\u65f6\u95f4"
               }, 
-              "text": "创建时间:"
+              "text": "\u521b\u5efa\u65f6\u95f4:"
             }, 
             {
               "expect": {
@@ -134,21 +134,108 @@
               "minRatio": 0.0, 
               "target": {
                 "label": "desc-label", 
-                "text": "创建时间"
+                "text": "\u521b\u5efa\u65f6\u95f4"
               }, 
               "tol": 8
             }
           ]
         }
       ], 
-      "name": "默认无边框"
+      "name": "\u9ed8\u8ba4\u65e0\u8fb9\u6846"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "\u7ad6\u6392 label \u5728 content \u4e0a\u65b9\uff08\u5b9e\u4f8b ID \u5b58\u5728\uff09", 
+          "target": {
+            "label": "desc-label", 
+            "text": "\u5b9e\u4f8b ID"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "desc-label", 
+                "text": "\u5b9e\u4f8b ID"
+              }
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "desc-value", 
+                "text": "i-2ze8f3a1"
+              }
+            }
+          ]
+        }
+      ], 
+      "name": "\u7ad6\u6392"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "span=2 \u5907\u6ce8\u5185\u5bb9\u5b58\u5728", 
+          "target": {
+            "label": "desc-value", 
+            "text": "\u8de8\u53cc\u5217\u7684\u957f\u5907\u6ce8\u5185\u5bb9"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "desc-value", 
+                "text": "\u8de8\u53cc\u5217\u7684\u957f\u5907\u6ce8\u5185\u5bb9"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "Item.Extra \u64cd\u4f5c\u94fe\u63a5\u5b58\u5728", 
+          "target": {
+            "label": "desc-extra"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "desc-extra"
+              }
+            }
+          ]
+        }
+      ], 
+      "name": "\u8de8\u5217\u4e0e\u64cd\u4f5c\u533a"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "\u5c0f\u5c3a\u5bf8\u533a\u57df\u9879\u5b58\u5728", 
+          "target": {
+            "label": "desc-value", 
+            "text": "cn-hangzhou"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "desc-value", 
+                "text": "cn-hangzhou"
+              }
+            }
+          ]
+        }
+      ], 
+      "name": "\u5c0f\u5c3a\u5bf8"
     }
   ], 
   "structure": {
-    "apiRows": 6, 
+    "apiRows": 9, 
     "sections": [
-      "带边框", 
-      "默认无边框"
+      "\u5e26\u8fb9\u6846", 
+      "\u9ed8\u8ba4\u65e0\u8fb9\u6846", 
+      "\u7ad6\u6392", 
+      "\u8de8\u5217\u4e0e\u64cd\u4f5c\u533a", 
+      "\u5c0f\u5c3a\u5bf8"
     ]
   }
 }
