@@ -1,0 +1,128 @@
+{
+  "id": "splitter", 
+  "sections": [
+    {
+      "cases": [
+        {
+          "name": "双面板与把手存在", 
+          "target": {
+            "label": "split-panel"
+          }, 
+          "then": [
+            {
+              "count": 2, 
+              "kind": "exists", 
+              "target": {
+                "label": "split-panel"
+              }
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "split-dragger"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "左面板初始 240px（DefaultSize）", 
+          "target": {
+            "index": 0, 
+            "label": "split-card"
+          }, 
+          "then": [
+            {
+              "kind": "geometry", 
+              "widthBetween": [
+                230, 
+                250
+              ]
+            }
+          ]
+        }
+      ], 
+      "name": "水平分栏"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "上下双面板存在", 
+          "target": {
+            "label": "split-panel"
+          }, 
+          "then": [
+            {
+              "count": 2, 
+              "kind": "exists", 
+              "target": {
+                "label": "split-panel"
+              }
+            }
+          ]
+        }
+      ], 
+      "name": "垂直分栏"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "点左右对调：OnResize 日志出现", 
+          "target": {
+            "label": "button", 
+            "text": "左右对调"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "splitter-log", 
+                "text": "对调后"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }, 
+        {
+          "name": "点右吃满：A 钳 Min 120", 
+          "target": {
+            "label": "button", 
+            "text": "右面板吃满"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "splitter-log", 
+                "text": "B 吃满余差"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }
+      ], 
+      "name": "编程驱动"
+    }
+  ], 
+  "structure": {
+    "apiRows": 8, 
+    "sections": [
+      "水平分栏", 
+      "垂直分栏", 
+      "编程驱动"
+    ]
+  }
+}
