@@ -54,18 +54,19 @@ func init() {
 	tblFilter.Width, tblFilter.Height = 620, 180
 
 	// tblFreeze 固定列卡：列总宽 900 > 视口 620 → 横向滚动，
-	// 左两列 Fixed="left" 冻结（叠层不随滚动）。
+	// 左两列 Fixed="left" + 右一列 Fixed="right" 同时冻结（antd fixed
+	// 双侧形态；右冻结叠层贴视口右缘不随滚动）。
 	fcols := []widgets.TableColumn{
 		{Title: "字段", Mode: widgets.ColumnAuto, Fixed: "left"},
 		{Title: "主键", Mode: widgets.ColumnFixed, Width: 70, Fixed: "left"},
 		{Title: "类型", Mode: widgets.ColumnFixed, Width: 110},
 		{Title: "默认值", Mode: widgets.ColumnFixed, Width: 120},
 		{Title: "说明", Mode: widgets.ColumnFixed, Width: 200},
-		{Title: "备注", Mode: widgets.ColumnFixed, Width: 200},
+		{Title: "操作", Mode: widgets.ColumnFixed, Width: 120, Fixed: "right"},
 	}
 	var frows [][]any
 	for _, r := range rows {
-		frows = append(frows, []any{r[0], r[2], r[1], "—", "说明 " + r[0].(string), "备注 " + r[0].(string)})
+		frows = append(frows, []any{r[0], r[2], r[1], "—", "说明 " + r[0].(string), "操作"})
 	}
 	tblFreeze = widgets.NewTable(fcols, frows)
 	tblFreeze.Width = 620
@@ -151,7 +152,7 @@ func main() {
 			{Title: "列筛选", Note: "类型列 Filters：漏斗图标点击弹选项菜单（组合复用 Dropdown）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tblFilter
 			}},
-			{Title: "固定列", Note: "列总宽 900>视口 620：横向滚动，左两列冻结不随动（antd fixed=left）", Build: func(ctx *ui.BuildContext) ui.Widget {
+			{Title: "固定列", Note: "列总宽 900>视口 620：横向滚动，左两列+右一列双侧冻结不随动（antd fixed left/right）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tblFreeze
 			}},
 			{Title: "四列混排", Note: "Auto+Fixed+Flex 三档列宽；点击「字段」表头排序", Build: func(ctx *ui.BuildContext) ui.Widget {

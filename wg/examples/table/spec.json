@@ -4,67 +4,107 @@
     {
       "cases": [
         {
-          "name": "冻结列字段（左列）文本在冻结层可见", 
+          "name": "冻结列字段（左列）文本在冻结层可见",
           "target": {
-            "label": "table-row", 
+            "label": "table-row",
             "text": "id"
-          }, 
+          },
           "then": [
             {
               "kind": "exists"
             }
           ]
-        }, 
+        },
         {
-          "name": "横向滚动 300 后冻结列字段仍在视口左缘（不随滚）", 
+          "name": "横向滚动 300 后冻结列字段仍在视口左缘（不随滚）",
           "target": {
             "label": "table-frozen-cell"
-          }, 
+          },
           "then": [
             {
-              "kind": "geometry", 
+              "kind": "geometry",
               "target": {
                 "label": "table-frozen-cell"
-              }, 
+              },
               "xBetween": [
-                72, 
+                72,
                 140
               ]
             }
-          ], 
+          ],
           "when": [
             {
-              "wheel": 300, 
+              "wheel": 300,
               "wheelAxis": "x"
-            }, 
+            },
             {
               "wait": 400
             }
           ]
-        }, 
+        },
         {
-          "name": "横向滚动到尽头后备注列进入视口右半（x ∈ [620,700]）", 
+          "name": "右冻结操作列恒贴视口右缘（滚动后 x ∈ [500,620]）",
           "target": {
-            "label": "table-row", 
-            "text": "备注 id"
-          }, 
+            "label": "table-frozen-cell-right"
+          },
           "then": [
             {
-              "kind": "geometry", 
+              "kind": "geometry",
               "target": {
-                "label": "table-row", 
-                "text": "备注 id"
-              }, 
+                "label": "table-frozen-cell-right"
+              },
               "xBetween": [
-                620, 
-                700
+                500,
+                620
               ]
+            }
+          ],
+          "when": [
+            {
+              "wheel": 300,
+              "wheelAxis": "x"
+            },
+            {
+              "wait": 400
+            }
+          ]
+        },
+        {
+          "name": "右冻结表头副本可见（操作列表头不随滚）",
+          "target": {
+            "label": "table-frozen-head-right",
+            "text": "操作"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "滚到尽头后中间说明列内容滚入视口（说明 id 可见）",
+          "target": {
+            "label": "table-row",
+            "text": "说明 id"
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ],
+          "when": [
+            {
+            "wheel": 2000,
+            "wheelAxis": "x"
+            },
+            {
+              "wait": 400
             }
           ]
         }
-      ], 
+      ],
       "name": "固定列"
-    }, 
+    },
     {
       "cases": [
         {

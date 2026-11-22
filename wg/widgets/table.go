@@ -5,10 +5,10 @@ import (
 	"strconv"
 
 	"github.com/energye/lcl/wg/geom"
-	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
+	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
 )
 
@@ -99,20 +99,20 @@ type Table struct {
 	// 复用**）：开启后 Page 从 1 起、每页 PageSize 行（默认 10）。
 	ShowPagination bool
 	// Filtered 列筛选值（列下标→选中值，空串=清除筛选）。
-	Filtered          map[int]string
-	filterDropdowns   []*Dropdown
+	Filtered        map[int]string
+	filterDropdowns []*Dropdown
 	// OnFilter 筛选变化回调（列下标、选中值）。
 	OnFilter func(col int, value string)
 	// PageSize 每页行数（ShowPagination 时生效，默认 10）。
-	PageSize      int
-	pageNo        int        // 当前页（1 起，内部状态）
-	pagePager     *Pagination // 分页器实例池（跨重建持有）
+	PageSize  int
+	pageNo    int         // 当前页（1 起，内部状态）
+	pagePager *Pagination // 分页器实例池（跨重建持有）
 
 	// Expandable 展开行配置（antd expandable）。ExpandedRowRender 非空时
 	// 启用；展开态按数据索引记忆（排序/翻页跟随数据行）。
-	Expandable  TableExpandable
-	expanded    map[int]bool // 展开态（数据索引集，跨 Build 持有）
-	expandTaps  []*ui.GestureDetector
+	Expandable TableExpandable
+	expanded   map[int]bool // 展开态（数据索引集，跨 Build 持有）
+	expandTaps []*ui.GestureDetector
 
 	hoverRow int // 行悬停（antd 行 hover 浅色反馈）；-1 = 无
 
@@ -122,15 +122,19 @@ type Table struct {
 	sorts     []*ui.GestureDetector // 跨 Build 存活
 	rowTaps   []*ui.GestureDetector
 	// 虚拟窗口与滚动条（原地滚动用）
-	rowNodes    []*scene.Node
-	freezeNodes []*scene.Node // 左冻结列行的同步副本（横向滚动不随动）
-	rowVis      []int
-	builtFirst  int
-	builtLast   int
-	lastIdx     []int     // 最近一次 buildInner 生效的 idx（排序筛选分页后）
-	lastRowY    []float32 // lastIdx 的行 y 前缀和（展开行不恒定高定位用）
-	bar         *Scrollbar
-	reqFrame    func()
+	rowNodes     []*scene.Node
+	freezeNodes  []*scene.Node // 左冻结列行的同步副本（横向滚动不随动）
+	freezeRNodes []*scene.Node // 右冻结列行的同步副本（镜像左冻结）
+	rowVis       []int
+	builtFirst   int
+	builtLast    int
+	lastIdx      []int     // 最近一次 buildInner 生效的 idx（排序筛选分页后）
+	lastRowY     []float32 // lastIdx 的行 y 前缀和（展开行不恒定高定位用）
+	// 右冻结层宿主定位缓存（buildInner 产出、Build 包装定位）。
+	lastFreezeRight  *scene.Node
+	lastFreezeRightW float32
+	bar              *Scrollbar
+	reqFrame         func()
 }
 
 // DefaultTableHeight 是未设置 Height 时的视口高。
@@ -227,6 +231,11 @@ func (t *Table) SetScrollOffset(v float32) {
 		n.SetStackPosition(geom.Pt(0, t.HeaderH+y(t.rowVis[i])-v))
 	}
 	for i, n := range t.freezeNodes {
+		if i < len(t.rowVis) {
+			n.SetStackPosition(geom.Pt(0, t.HeaderH+y(t.rowVis[i])-v))
+		}
+	}
+	for i, n := range t.freezeRNodes {
 		if i < len(t.rowVis) {
 			n.SetStackPosition(geom.Pt(0, t.HeaderH+y(t.rowVis[i])-v))
 		}
@@ -562,6 +571,12 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 		if freeze != nil {
 			tableArea.Add(freeze)
 		}
+		// 分页模式同样叠右冻结层（贴视口右缘）。
+		if freezeR := t.lastFreezeRight; freezeR != nil {
+			freezeR.SetPositionKeepSize(true)
+			freezeR.SetStackPosition(geom.Pt(t.Width-t.lastFreezeRightW, 0))
+			tableArea.Add(freezeR)
+		}
 		col := scene.Flex(scene.Vertical, th.Space.SM)
 		col.Add(tableArea)
 		// 底部分页器行（Pagination 组件组合复用；Total=总条目数语义）。
@@ -614,6 +629,12 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 		freeze.SetStackPosition(geom.Pt(0, 0))
 		stack.Add(freeze)
 	}
+	// 右冻结层贴视口右缘（buildInner 不知宿主 x，此处定位）。
+	if freezeR := t.lastFreezeRight; freezeR != nil {
+		freezeR.SetPositionKeepSize(true)
+		freezeR.SetStackPosition(geom.Pt(t.Width-t.lastFreezeRightW, 0))
+		stack.Add(freezeR)
+	}
 	stack.SetHit(scene.HitSpec{Label: "table-hscroll-wrap"})
 	return stack
 }
@@ -637,7 +658,8 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 		contentW += w
 	}
 	freezeW := float32(0)
-	var freeze *scene.Node
+	freezeRightW := float32(0)
+	var freeze, freezeRight *scene.Node
 	if hscroll {
 		col.SetWidth(contentW)
 		widths, _ = t.contentWidths(th.Font.SizeSM)
@@ -645,15 +667,24 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 			_ = w
 		}
 		for ci := range t.Columns {
-			if t.Columns[ci].Fixed == "left" {
+			switch t.Columns[ci].Fixed {
+			case "left":
 				freezeW += widths[ci]
+			case "right":
+				freezeRightW += widths[ci]
 			}
 		}
 		if freezeW > 0 {
 			freeze = scene.Flex(scene.Vertical, 0).SetWidth(freezeW).SetHeight(t.ViewportHeight())
 			freeze.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-freeze"})
 		}
+		if freezeRightW > 0 {
+			freezeRight = scene.Flex(scene.Vertical, 0).SetWidth(freezeRightW).SetHeight(t.ViewportHeight())
+			freezeRight.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-freeze-right"})
+		}
 	}
+	t.lastFreezeRight = freezeRight
+	t.lastFreezeRightW = freezeRightW
 
 	// 表头
 	header := scene.Flex(scene.Horizontal, 0).SetHeight(t.HeaderH)
@@ -723,6 +754,37 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 	}
 	col.Add(header)
 
+	// 右冻结表头副本：只渲染 Fixed=="right" 的表头单元格（白底盖住滚动
+	// 内容，左缘描边做冻结分界线——与左冻结右缘线镜像）。
+	if freezeRight != nil {
+		hRow := scene.Flex(scene.Horizontal, 0).SetWidth(freezeRightW).SetHeight(t.HeaderH)
+		hRow.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface)})
+		hx := float32(0)
+		for ci, w := range widths {
+			if t.Columns[ci].Fixed != "right" {
+				continue
+			}
+			hcell := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.SurfaceSunken), Border: scene.Stroke(th.Color.Border, 1)}).SetWidth(w).SetHeight(t.HeaderH)
+			hl := text.LayoutText(t.Columns[ci].Title, text.DefaultFont(th.Font.SizeSM), text.Options{})
+			htv := scene.Text(scene.TextSpec{Src: t.Columns[ci].Title, Layout: hl, Color: th.Color.TextMuted})
+			htv.SetMargin(geom.InLTRB(6, (t.HeaderH-hl.Size.H)/2, 0, 0))
+			hcell.Add(htv)
+			hcell.SetStackPosition(geom.Pt(hx, 0))
+			hcell.SetPositionKeepSize(true)
+			hcell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-frozen-head-right"})
+			hRow.Add(hcell)
+			hx += w
+		}
+		// 冻结分界线：副本行左缘 2px 竖线（左冻结右缘线镜像）。
+		edge := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetWidth(2).SetHeight(t.HeaderH)
+		edge.SetStackPosition(geom.Pt(0, 0))
+		edge.SetPositionKeepSize(true)
+		hRow.Add(edge)
+		hRow.SetStackPosition(geom.Pt(0, 0))
+		hRow.SetPositionKeepSize(true)
+		freezeRight.Add(hRow)
+	}
+
 	// 虚拟行：只构建可见区 ± Overscan
 	vh := t.ViewportHeight()
 	var first, last int
@@ -762,6 +824,8 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 	t.rowTaps = t.rowTaps[:0]
 	t.expandTaps = t.expandTaps[:0]
 	t.rowNodes = t.rowNodes[:0]
+	t.freezeNodes = t.freezeNodes[:0]
+	t.freezeRNodes = t.freezeRNodes[:0]
 	t.rowVis = t.rowVis[:0]
 	t.builtFirst, t.builtLast = first, last
 	t.reqFrame = ctx.RequestFrame
@@ -937,6 +1001,50 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 			freeze.Add(fRow)
 			t.freezeNodes = append(t.freezeNodes, fRow)
 		}
+		// 右冻结列副本行：只渲染 Fixed=="right" 的单元格（白底盖住滚动
+		// 内容，左缘描边做冻结分界线）。镜像左冻结叠层。
+		if freezeRightW > 0 {
+			fRow := scene.Flex(scene.Horizontal, 0).SetWidth(freezeRightW).SetHeight(t.RowHeight)
+			fRow.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface)})
+			fx := float32(0)
+			for ci, w := range widths {
+				if t.Columns[ci].Fixed != "right" {
+					continue
+				}
+				fcell := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface)}).SetWidth(w).SetHeight(t.RowHeight)
+				if c := t.Columns[ci]; c.Render != nil {
+					var fval any
+					if dataRow < len(t.Rows) && ci < len(t.Rows[dataRow]) {
+						fval = t.Rows[dataRow][ci]
+					}
+					if wgt := c.Render(dataRow, fval); wgt != nil {
+						rn := wgt.Build(ctx)
+						rn.SetMargin(geom.InLTRB(6, (t.RowHeight-rn.Size().H)/2, 0, 0))
+						fcell.Add(rn)
+					}
+				} else {
+					ftxt := t.cellText(ci, dataRow)
+					fl := text.LayoutText(ftxt, text.DefaultFont(th.Font.SizeSM), text.Options{})
+					ftv := scene.Text(scene.TextSpec{Src: ftxt, Layout: fl, Color: th.Color.Text})
+					ftv.SetMargin(geom.InLTRB(6, (t.RowHeight-fl.Size.H)/2, 0, 0))
+					fcell.Add(ftv)
+				}
+				fcell.SetStackPosition(geom.Pt(fx, 0))
+				fcell.SetPositionKeepSize(true)
+				fcell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "table-frozen-cell-right"})
+				fRow.Add(fcell)
+				fx += w
+			}
+			// 冻结分界线：副本行左缘 2px 竖线。
+			edge := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetWidth(2).SetHeight(t.RowHeight)
+			edge.SetStackPosition(geom.Pt(0, 0))
+			edge.SetPositionKeepSize(true)
+			fRow.Add(edge)
+			fRow.SetStackPosition(geom.Pt(0, t.HeaderH+rowYAt(vi)-t.offset))
+			fRow.SetPositionKeepSize(true)
+			freezeRight.Add(fRow)
+			t.freezeRNodes = append(t.freezeRNodes, fRow)
+		}
 	}
 	t.node = col
 
@@ -984,6 +1092,25 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 			freeze.SetPositionKeepSize(true)
 			freeze.SetStackPosition(geom.Pt(0, 0))
 			stack.Add(freeze)
+		}
+		if freezeRight != nil {
+			// 右冻结层贴视口右缘（左冻结镜像）；wheel 转发同左冻结。
+			if ctx.Input != nil {
+				wh := wrapped
+				ctx.Input.Set(freezeRight, input.Handler{Wheel: func(ev *input.WheelEvent) bool {
+					if ev.Delta.X == 0 {
+						return false
+					}
+					wh.SetScrollOffset(wh.ScrollOffset() + ev.Delta.X)
+					if ctx.RequestFrame != nil {
+						ctx.RequestFrame()
+					}
+					return true
+				}})
+			}
+			freezeRight.SetPositionKeepSize(true)
+			freezeRight.SetStackPosition(geom.Pt(t.Width-freezeRightW, 0))
+			stack.Add(freezeRight)
 		}
 		stack.SetHit(scene.HitSpec{Label: "table-hscroll-wrap"})
 		return stack, freeze, hscroll
