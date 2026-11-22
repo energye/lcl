@@ -2,6 +2,8 @@ package widgets
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/input"
@@ -374,12 +376,117 @@ func RequiredRule(msg string) Validator {
 	}
 }
 
+// FormRule 是声明式校验规则（antd Rule 直译）。
+// 校验顺序：required → whitespace → len/min/max → pattern → email/url
+// → validator（首个失败即停，antd validateFirst 默认语义）。
+type FormRule struct {
+	// Required 必填（非空）。
+	Required bool
+	// Whitespace 仅空白也算空（配合 Required；antd whitespace）。
+	Whitespace bool
+	// Len 精确长度（>0 生效；antd len）。
+	Len int
+	// Min/MinRune 最小长度（>0 生效；antd min——按 rune 计，中文友好）。
+	Min int
+	// Max 最大长度（>0 生效；antd max——按 rune 计）。
+	Max int
+	// Pattern 正则（Go regexp 语法；antd pattern）。
+	Pattern string
+	// Email/URL 内置格式校验（antd type:"email"/"url"）。
+	Email bool
+	URL   bool
+	// Validator 自定义校验（antd validator——wg 无 Promise，同步函数
+	// 替代；返回空串=通过）。空值时跳过（required 单独管空）。
+	Validator func(value string) string
+	// Message 自定义报错（覆盖内置模板；antd message）。
+	Message string
+}
+
+// FormRule 校验一个值，返回错误信息（空串=通过）。
+func (r FormRule) check(value string) string {
+	fail := func(defaultTpl string) string {
+		if r.Message != "" {
+			return r.Message
+		}
+		return defaultTpl
+	}
+	if r.Required && value == "" {
+		return fail("此项必填")
+	}
+	if r.Whitespace && value != "" && isBlankString(value) {
+		return fail("不能只有空白字符")
+	}
+	// len/min/max 按 rune 计（中文友好；antd 对 string 同语义）。
+	runes := []rune(value)
+	n := len(runes)
+	if r.Len > 0 && n != r.Len {
+		return fail(fmt.Sprintf("长度必须为 %d", r.Len))
+	}
+	if r.Min > 0 && n < r.Min {
+		return fail(fmt.Sprintf("长度不能少于 %d", r.Min))
+	}
+	if r.Max > 0 && n > r.Max {
+		return fail(fmt.Sprintf("长度不能超过 %d", r.Max))
+	}
+	if r.Pattern != "" && value != "" {
+		re, err := regexp.Compile(r.Pattern)
+		if err != nil {
+			return fail("规则正则无效: " + r.Pattern)
+		}
+		if !re.MatchString(value) {
+			return fail("格式不正确")
+		}
+	}
+	if r.Email && value != "" && !isEmail(value) {
+		return fail("邮箱格式不正确")
+	}
+	if r.URL && value != "" && !isURL(value) {
+		return fail("网址格式不正确")
+	}
+	if r.Validator != nil && value != "" {
+		if msg := r.Validator(value); msg != "" {
+			return msg
+		}
+	}
+	return ""
+}
+
+// isBlankString 仅空白字符（空格/制表/换行）。
+func isBlankString(s string) bool {
+	for _, r := range s {
+		if r != ' ' && r != '\t' && r != '\n' && r != '\r' {
+			return false
+		}
+	}
+	return true
+}
+
+// isEmail 宽松邮箱格式（x@y.z 形态，antd type:"email" 近似）。
+func isEmail(s string) bool {
+	at := strings.IndexByte(s, '@')
+	if at <= 0 || at == len(s)-1 {
+		return false
+	}
+	dot := strings.LastIndexByte(s[at+1:], '.')
+	return dot > 0 && at+1+dot < len(s)-1
+}
+
+// isURL http(s):// 前缀 + 非空主机（antd type:"url" 近似）。
+func isURL(s string) bool {
+	if !strings.HasPrefix(s, "http://") && !strings.HasPrefix(s, "https://") {
+		return false
+	}
+	host := strings.TrimPrefix(strings.TrimPrefix(s, "https://"), "http://")
+	return host != "" && !strings.HasPrefix(host, "/")
+}
+
 // Form 是表单容器。校验器按字段名注册，Validate 汇总错误。
 type Form struct {
 	ui.Base
 	Items      []FormItem
 	Values     map[string]string
 	Validators map[string][]Validator
+	RuleSet    map[string][]FormRule
 	Errors     map[string]string
 }
 
@@ -388,13 +495,20 @@ func NewForm() *Form {
 	return &Form{
 		Values:     make(map[string]string),
 		Validators: make(map[string][]Validator),
+		RuleSet:    make(map[string][]FormRule),
 		Errors:     make(map[string]string),
 	}
 }
 
-// Rule 为字段注册校验器。
+// Rule 为字段注册过程式校验器。
 func (f *Form) Rule(field string, v ...Validator) *Form {
 	f.Validators[field] = append(f.Validators[field], v...)
+	return f
+}
+
+// Rules 为字段注册声明式规则（antd rules 直译；先于 Validator 执行）。
+func (f *Form) Rules(field string, rules ...FormRule) *Form {
+	f.RuleSet[field] = append(f.RuleSet[field], rules...)
 	return f
 }
 
@@ -415,7 +529,19 @@ func (f *Form) Validate() bool {
 		}
 	}
 	ok := true
+	for field, rules := range f.RuleSet {
+		for _, r := range rules {
+			if msg := r.check(f.Values[field]); msg != "" {
+				f.Errors[field] = msg
+				ok = false
+				break
+			}
+		}
+	}
 	for field, rules := range f.Validators {
+		if f.Errors[field] != "" {
+			continue // 声明式规则已报错，过程式校验器跳过（首错即停）
+		}
 		for _, v := range rules {
 			if msg := v(f.Values[field]); msg != "" {
 				f.Errors[field] = msg

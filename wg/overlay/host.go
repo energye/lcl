@@ -368,6 +368,12 @@ func (h *Host) relayout() {
 	h.root.SetSize2(vp.W(), vp.H())
 	for _, e := range h.Entries() {
 		anchor := e.Anchor.Resolve()
+		// AnchorNone 的居中语义以**视口中心**为锚（antd Modal 居中相对
+		// 视口）：AnchorNone 解析为零矩形，Place(Center) 会算出负坐标、
+		// 再被 Resolve 挤压拉回左上角（实测 modal 贴左上角而非居中）。
+		if e.Anchor.Kind == AnchorNone && e.Placement == PlacementCenter && !vp.IsEmpty() {
+			anchor = geom.RectXYWH(vp.W()/2, vp.H()/2, 0, 0)
+		}
 		// 高度 0 = 高度自适应：按内容根的自然高度定位（antd 对话框形态——
 		// 高度随内容；固定 220 会截断多内容）。宽度仍用 Entry.Size。
 		// content 若还没走过布局（Show 当帧），先按视口宽松约束测一次。
@@ -401,6 +407,13 @@ func (h *Host) relayout() {
 		// 浮层的根因）。SetStackPositionPaint **同步**写 offset（含
 		// parent.ContentOrigin），定位当帧坐标即刻正确。
 		e.content.SetStackPositionPaint(p.Rect.Min)
+		// content 子树的 positioned 节点（modal 关闭钮等 Stack 内绝对
+		// 定位）offset 仍依赖一次布局折算：若 Show→rebuild 后恰好有帧
+		// 在 relayout 前跑了布局，子节点按 content 旧原点 (0,0) 折算，
+		// 之后 MarkNeedsPaint 不触发布局——静窗（审计）下 stale offset
+		// 永存（实测 image-close bounds y=10 误判越界）。强制重排整
+		// 子树让折算与新原点一致。
+		e.content.Relayout(scene.LooseConstraints(geom.Sz(size.W, size.H)))
 	}
 }
 

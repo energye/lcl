@@ -1,9 +1,10 @@
 {
   "id": "form",
   "structure": {
-    "apiRows": 7,
+    "apiRows": 9,
     "sections": [
-      "必填校验"
+      "必填校验",
+      "规则集"
     ]
   },
   "sections": [
@@ -107,6 +108,290 @@
                 "token": "Border"
               },
               "tol": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "规则集",
+      "cases": [
+        {
+          "name": "空规则集卡提交：required 报错（用户名+邮箱）",
+          "target": {
+            "label": "button",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "button",
+                "index": 1
+              },
+              "text": "校验失败"
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "form-error",
+                "text": "此项必填"
+              },
+              "count": 2
+            }
+          ]
+        },
+        {
+          "name": "min 触发：用户名 1 字提交报长度错误",
+          "target": {
+            "label": "input",
+            "index": 2
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "input",
+                  "index": 2
+                }
+              }
+            },
+            {
+              "typeText": "w"
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "input",
+                  "index": 3
+                }
+              }
+            },
+            {
+              "typeText": "name@example.com"
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "form-error",
+                "text": "长度不能少于 2"
+              }
+            }
+          ]
+        },
+        {
+          "name": "pattern 触发：验证码非 4 位数字提交报自定义错误",
+          "target": {
+            "label": "input",
+            "index": 5
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "input",
+                  "index": 5
+                }
+              }
+            },
+            {
+              "typeText": "12ab"
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "form-error",
+                "text": "验证码为 4 位数字"
+              }
+            }
+          ]
+        },
+        {
+          "name": "validator 触发：密码 3 位提交报至少 6 位",
+          "target": {
+            "label": "input",
+            "index": 6
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "input",
+                  "index": 6
+                }
+              }
+            },
+            {
+              "typeText": "123"
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "form-error",
+                "text": "密码至少 6 位"
+              }
+            }
+          ]
+        },
+        {
+          "name": "全字段填合法值提交通过",
+          "target": {
+            "label": "input",
+            "index": 2
+          },
+          "when": [
+            {
+              "clear": {
+                "label": "input",
+                "index": 2
+              }
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "input",
+                  "index": 2
+                }
+              }
+            },
+            {
+              "typeText": "wg用户"
+            },
+            {
+              "clear": {
+                "label": "input",
+                "index": 3
+              }
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "input",
+                  "index": 3
+                }
+              }
+            },
+            {
+              "typeText": "name@example.com"
+            },
+            {
+              "clear": {
+                "label": "input",
+                "index": 4
+              }
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "input",
+                  "index": 4
+                }
+              }
+            },
+            {
+              "typeText": "https://example.com"
+            },
+            {
+              "clear": {
+                "label": "input",
+                "index": 5
+              }
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "input",
+                  "index": 5
+                }
+              }
+            },
+            {
+              "typeText": "1234"
+            },
+            {
+              "clear": {
+                "label": "input",
+                "index": 6
+              }
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "input",
+                  "index": 6
+                }
+              }
+            },
+            {
+              "typeText": "secret"
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 200
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "button",
+                "index": 1
+              },
+              "text": "校验通过"
             }
           ]
         }

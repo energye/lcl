@@ -155,6 +155,75 @@ func TestFormValidation(t *testing.T) {
 	}
 }
 
+func TestFormRuleSet(t *testing.T) {
+	// 声明式规则集：required/min/email/url/pattern/validator 全路径。
+	f := NewForm()
+	f.Rules("用户名", FormRule{Required: true, Min: 2}, FormRule{Whitespace: true, Message: "此项必填"})
+	f.Rules("邮箱", FormRule{Required: true, Email: true})
+	f.Rules("网址", FormRule{URL: true})
+	f.Rules("验证码", FormRule{Pattern: `^\d{4}$`, Message: "验证码为 4 位数字"})
+	f.Rules("密码", FormRule{Validator: func(v string) string {
+		if len([]rune(v)) < 6 {
+			return "密码至少 6 位"
+		}
+		return ""
+	}})
+	if f.Validate() {
+		t.Fatal("空表单应校验失败")
+	}
+	if f.Errors["用户名"] != "此项必填" || f.Errors["邮箱"] != "此项必填" {
+		t.Fatalf("required 报错 = %v", f.Errors)
+	}
+	f.Values["用户名"] = "w"  // min 2 触发
+	f.Values["邮箱"] = "bad" // email 触发
+	f.Values["网址"] = "notaurl"
+	f.Values["验证码"] = "12ab" // pattern 触发
+	f.Values["密码"] = "123"   // validator 触发
+	if f.Validate() {
+		t.Fatal("非法值应校验失败")
+	}
+	if f.Errors["用户名"] != "长度不能少于 2" {
+		t.Fatalf("min 报错 = %q", f.Errors["用户名"])
+	}
+	if f.Errors["邮箱"] != "邮箱格式不正确" {
+		t.Fatalf("email 报错 = %q", f.Errors["邮箱"])
+	}
+	if f.Errors["网址"] != "网址格式不正确" {
+		t.Fatalf("url 报错 = %q", f.Errors["网址"])
+	}
+	if f.Errors["验证码"] != "验证码为 4 位数字" {
+		t.Fatalf("pattern 报错 = %q", f.Errors["验证码"])
+	}
+	if f.Errors["密码"] != "密码至少 6 位" {
+		t.Fatalf("validator 报错 = %q", f.Errors["密码"])
+	}
+	// 合法值全通过（含 whitespace/len 边界）。
+	f.Values["用户名"] = "wg用户"
+	f.Values["邮箱"] = "name@example.com"
+	f.Values["网址"] = "https://example.com"
+	f.Values["验证码"] = "1234"
+	f.Values["密码"] = "secret"
+	if !f.Validate() {
+		t.Fatalf("合法值应通过: %v", f.Errors)
+	}
+	// whitespace：显式开启的规则里纯空白算空（antd whitespace opt-in）。
+	f.Values["用户名"] = "   "
+	if f.Validate() {
+		t.Fatal("纯空白应校验失败")
+	}
+	if f.Errors["用户名"] != "此项必填" {
+		t.Fatalf("whitespace 报错 = %q", f.Errors["用户名"])
+	}
+	// 声明式规则与过程式校验器并存：首错即停。
+	f2 := NewForm()
+	f2.Rules("字段", FormRule{Required: true, Message: "规则报错"})
+	f2.Rule("字段", func(v string) string { return "校验器报错" })
+	f2.Validate()
+	if f2.Errors["字段"] != "规则报错" {
+		t.Fatalf("首错即停 = %q", f2.Errors["字段"])
+	}
+}
+
 func TestSelectOptionsAndValue(t *testing.T) {
 	s := NewSelect([]string{"北京", "上海", "广州"})
 	if s.Selected != -1 {

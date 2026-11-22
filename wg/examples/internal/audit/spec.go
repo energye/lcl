@@ -74,14 +74,17 @@ type SpecGiven struct {
 
 // SpecAction 是一次操作。
 type SpecAction struct {
-	Click    *SpecClick `json:"click,omitempty"`
-	Hover    *SpecClick `json:"hover,omitempty"`
-	TypeText string     `json:"typeText,omitempty"`
-	Key      string     `json:"key,omitempty"`
-	Wheel     *float32 `json:"wheel,omitempty"`
-	WheelAxis string   `json:"wheelAxis,omitempty"` // "x"=横向滚轮（Delta.X）
-	MoveOut  bool       `json:"moveOut,omitempty"`
-	Wait     int        `json:"wait,omitempty"` // 毫秒（Tooltip 悬停延迟等）
+	Click     *SpecClick `json:"click,omitempty"`
+	Hover     *SpecClick `json:"hover,omitempty"`
+	TypeText  string     `json:"typeText,omitempty"`
+	Key       string     `json:"key,omitempty"`
+	Wheel     *float32   `json:"wheel,omitempty"`
+	WheelAxis string     `json:"wheelAxis,omitempty"` // "x"=横向滚轮（Delta.X）
+	MoveOut   bool       `json:"moveOut,omitempty"`
+	Wait      int        `json:"wait,omitempty"` // 毫秒（Tooltip 悬停延迟等）
+	// Clear 清空目标输入框（click 聚焦+全选+Delete——Input 值跨 case
+	// 残留的根治；多 case 复用同一表单时 typeText 是追加语义）。
+	Clear *SpecTarget `json:"clear,omitempty"`
 }
 
 // SpecClick 是点击/悬停位置（目标锚内的 frac，默认中心；Target 可覆盖锚）。
@@ -105,16 +108,16 @@ type SpecAssertion struct {
 	Template string      `json:"template,omitempty"`
 
 	// geometry
-	RightOf       *SpecTarget `json:"rightOf,omitempty"`
-	Below         *SpecTarget `json:"below,omitempty"`
-	WidthAtLeast  float32     `json:"widthAtLeast,omitempty"`
-	WidthBetween  []float32   `json:"widthBetween,omitempty"`
+	RightOf      *SpecTarget `json:"rightOf,omitempty"`
+	Below        *SpecTarget `json:"below,omitempty"`
+	WidthAtLeast float32     `json:"widthAtLeast,omitempty"`
+	WidthBetween []float32   `json:"widthBetween,omitempty"`
 	// XBetween 根坐标 Min.X 落区间（冻结列"不随横向滚动"验证——
 	// 滚动前后单元格 Min.X 都应留在视口左缘区间）。
-	XBetween []float32 `json:"xBetween,omitempty"`
-	HeightBetween []float32   `json:"heightBetween,omitempty"`
-	CenterYWithin []float32   `json:"centerYWithin,omitempty"`
-	InViewport    bool        `json:"inViewport,omitempty"`
+	XBetween      []float32 `json:"xBetween,omitempty"`
+	HeightBetween []float32 `json:"heightBetween,omitempty"`
+	CenterYWithin []float32 `json:"centerYWithin,omitempty"`
+	InViewport    bool      `json:"inViewport,omitempty"`
 
 	// overlay / scroll / text
 	Band        string   `json:"band,omitempty"`
@@ -361,6 +364,24 @@ func clickPoint(b geom.Rect, frac []float32) geom.Point {
 	return geom.Point{X: b.Min.X + b.W()*frac[0], Y: b.Min.Y + b.H()*frac[1]}
 }
 
+// inViewport 判断节点是否在可视域内（ensureVisible 同判定口径）。
+// 首判 false 时等布局落定再重判一次：浮层刚 Show 时子节点 offset
+// 可能未被布局折算（SetStackPosition 只标异步脏），BoundsInRoot 读到
+// position 原值会误判越界——布局跑完 offset 折算后坐标才正确。
+func (r *specRunner) inViewport(n *scene.Node) bool {
+	if !r.inViewportOnce(n) {
+		time.Sleep(250 * time.Millisecond)
+		return r.inViewportOnce(n)
+	}
+	return true
+}
+
+func (r *specRunner) inViewportOnce(n *scene.Node) bool {
+	b := n.BoundsInRoot()
+	vh := r.c.Scene().Size().H
+	return b.Max.Y > 48 && b.Min.Y < vh-48
+}
+
 // ── 用例执行 ────────────────────────────────────────────────────────
 
 // allAssertionsNotContains 判断一个用例的全部断言是否都是 text 的
@@ -484,9 +505,18 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 			return false
 		}
 		n, ok := r.locate(*t)
-		if !ok {
-			r.add(caseName, "操作", false, "click 目标不存在："+targetDesc(t))
-			return false
+		if !ok || !r.inViewport(n) {
+			// 长页多卡：操作序列中途的目标可能滚出视口（case 锚只保证
+			// 首目标可见）。先滚入再定位，滚不进才算失败。
+			if !r.ensureVisible(*t) {
+				r.add(caseName, "操作", false, "click 目标不可见："+targetDesc(t))
+				return false
+			}
+			n, ok = r.locate(*t)
+			if !ok {
+				r.add(caseName, "操作", false, "click 目标不存在："+targetDesc(t))
+				return false
+			}
 		}
 		p := clickPoint(n.BoundsInRoot(), a.Click.Frac)
 		injectDown(r.c, p.X, p.Y)
@@ -502,9 +532,16 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 			return false
 		}
 		n, ok := r.locate(*t)
-		if !ok {
-			r.add(caseName, "操作", false, "hover 目标不存在："+targetDesc(t))
-			return false
+		if !ok || !r.inViewport(n) {
+			if !r.ensureVisible(*t) {
+				r.add(caseName, "操作", false, "hover 目标不可见："+targetDesc(t))
+				return false
+			}
+			n, ok = r.locate(*t)
+			if !ok {
+				r.add(caseName, "操作", false, "hover 目标不存在："+targetDesc(t))
+				return false
+			}
 		}
 		p := clickPoint(n.BoundsInRoot(), a.Hover.Frac)
 		hoverAt(r.c, p.X, p.Y)
@@ -523,6 +560,24 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 			injectChar(r.c, ch)
 			time.Sleep(15 * time.Millisecond)
 		}
+	case a.Clear != nil:
+		// 清空输入框：click 聚焦 → Ctrl+A 全选 → Delete 删除。
+		// Input 值跨 case 残留的根治（typeText 是追加语义）。
+		n, ok := r.locate(*a.Clear)
+		if !ok {
+			r.add(caseName, "操作", false, "clear 目标不存在："+targetDesc(a.Clear))
+			return false
+		}
+		p := clickPoint(n.BoundsInRoot(), nil)
+		injectDown(r.c, p.X, p.Y)
+		time.Sleep(60 * time.Millisecond)
+		injectUp(r.c, p.X, p.Y)
+		time.Sleep(150 * time.Millisecond)
+		r.c.PushEvent(&input.KeyEvent{Kind: input.KeyDown, Code: input.CodeA,
+			Mods: input.ModControl, Time: time.Now()})
+		time.Sleep(40 * time.Millisecond)
+		r.c.PushEvent(&input.KeyEvent{Kind: input.KeyDown, Code: input.CodeDelete, Time: time.Now()})
+		time.Sleep(100 * time.Millisecond)
 	case a.Key != "":
 		code, ok := keyCodeOf(a.Key)
 		if !ok {
