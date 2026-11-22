@@ -1,16 +1,14 @@
 package widgets
 
-// ── QRCode 二维码（M12 长尾）─────────────────────────────────────
+// ── QRCode 二维码（M12 长尾；第一百零五轮接标准编码）─────────────
 //
-// antd：<QRCode value size status> 二维码图。
-// **编码引擎未集成**（QR 需要 Reed-Solomon 纠错+掩码选择，标准库
-// 无实现）：组件只做**矩阵渲染**（Matrix [][]bool 注入——真实编码
-// 由外部库算好后传入）；同时提供 Value 展示下方文本（antd status
-// 提示形态）。视觉形态对齐：白底+黑模块+三定位角（finder pattern
-// ——若 Matrix 为空则按 Value 的确定性哈希生成**演示矩阵**——非标
-// 准编码，如实标注）。
-// 未实现（如实标注）：标准 QR 编码、纠错等级、ErrorLevel、
-// status 扫描动画、icon 叠加。
+// antd：<QRCode value size status errorLevel> 二维码图。
+// **标准编码引擎已集成**（QREncode——纯 Go byte 模式 v1-10 四级别：
+// RS 纠错+掩码择优，见 qrencode.go）：Value 默认走标准编码；Matrix
+// 注入通道保留（v11+/其他模式仍由外部库算好传入）。视觉形态：白底
+// +黑模块+三定位角+对齐图案+timing+format 信息。
+// 未实现（如实标注）：v11-40、kanji/numeric 模式、status 扫描动画、
+// icon 叠加。
 
 import (
 	"fmt"
@@ -24,12 +22,16 @@ import (
 	"github.com/energye/lcl/wg/ui"
 )
 
-// QRCode 是二维码组件（矩阵渲染；编码由外部注入或演示哈希）。
+// QRCode 是二维码组件（标准编码；Matrix 注入优先）。
 type QRCode struct {
-	// Value 二维码文本（antd value；Matrix 为空时用于演示矩阵哈希）。
+	// Value 二维码文本（antd value；Matrix 为空时经 QREncode 标准编码）。
 	Value string
-	// Matrix 模块矩阵（true=黑块；外部库注入标准编码；nil=演示哈希矩阵）。
+	// Matrix 模块矩阵（true=黑块；显式注入优先于内置编码——外部库
+	// 通道，v11+/kanji 等内置引擎未覆盖的形态）。
 	Matrix [][]bool
+	// ErrorLevel 纠错级别（antd errorLevel；默认 QRMedium——antd 同款
+	// 最常用档）。
+	ErrorLevel QRErrorLevel
 	// Size 显示尺寸（默认 160，antd 默认 160）。
 	Size float32
 	// OnClick 点击回调（antd 无；预览场景用）。
@@ -104,6 +106,11 @@ func (q *QRCode) Build(ctx *ui.BuildContext) *scene.Node {
 
 	m := q.Matrix
 	if m == nil {
+		m = QREncode(q.Value, q.ErrorLevel)
+	}
+	if m == nil {
+		// 超出内置引擎容量（v10 上限）：回退演示矩阵（视觉形态兜底，
+		// 不再是标准编码——调用方应自行注入大容量 Matrix）。
 		m = demoMatrix(q.Value)
 	}
 	n := len(m)

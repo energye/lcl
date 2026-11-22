@@ -1,87 +1,160 @@
 {
-  "id": "qrcode",
-  "structure": {
-    "apiRows": 4,
-    "sections": [
-      "演示矩阵"
-    ]
-  },
+  "id": "qrcode", 
   "sections": [
     {
-      "name": "演示矩阵",
       "cases": [
         {
-          "name": "二维码与 Value 文本展示",
+          "name": "二维码与 Value 文本展示", 
           "target": {
             "label": "qrcode"
-          },
+          }, 
           "then": [
             {
-              "kind": "exists",
+              "kind": "exists", 
               "target": {
                 "label": "qrcode"
               }
-            },
+            }, 
             {
-              "kind": "text",
-              "text": "https://example.com/join?token=abc123",
+              "kind": "text", 
               "target": {
                 "label": "qrcode-value"
-              }
+              }, 
+              "text": "https://example.com/join?token=abc123"
             }
           ]
-        },
+        }, 
         {
-          "name": "定位角黑块存在（左上角心）",
+          "name": "定位角黑块存在（左上角心）", 
           "target": {
             "label": "qrcode"
-          },
+          }, 
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.02,
-                0.02,
-                0.04,
-                0.04
-              ],
               "expect": {
                 "hex": "#000000"
-              },
-              "minRatio": 0.6,
-              "tol": 20,
+              }, 
+              "frac": [
+                0.09, 
+                0.09, 
+                0.09, 
+                0.09
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.5, 
               "target": {
                 "label": "qrcode"
-              }
+              }, 
+              "tol": 20
             }
           ]
-        },
+        }, 
         {
-          "name": "中心区黑白混合（模块分布非空白）",
+          "name": "中心区黑白混合（模块分布非空白）", 
           "target": {
             "label": "qrcode"
-          },
+          }, 
           "then": [
             {
-              "kind": "colorRatio",
+              "expect": {
+                "hex": "#000000"
+              }, 
               "frac": [
-                0.4,
-                0.4,
-                0.2,
+                0.4, 
+                0.4, 
+                0.2, 
                 0.2
-              ],
-              "expect": {
-                "hex": "#000000"
-              },
-              "minRatio": 0.1,
-              "tol": 20,
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.1, 
               "target": {
                 "label": "qrcode"
-              }
+              }, 
+              "tol": 20
+            }
+          ]
+        }, 
+        {
+          "name": "标准编码 v2 对齐图案黑心（ISO 布置才有）", 
+          "target": {
+            "label": "qrcode"
+          }, 
+          "then": [
+            {
+              "expect": {
+                "hex": "#000000"
+              }, 
+              "frac": [
+                0.72, 
+                0.66, 
+                0.03, 
+                0.03
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.3, 
+              "target": {
+                "label": "qrcode"
+              }, 
+              "tol": 20
             }
           ]
         }
-      ]
+      ], 
+      "name": "标准编码"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "两张码并排存在", 
+          "target": {
+            "label": "qrcode"
+          }, 
+          "then": [
+            {
+              "count": 2, 
+              "kind": "exists", 
+              "target": {
+                "label": "qrcode"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "H 级码定位角存在", 
+          "target": {
+            "index": 0, 
+            "label": "qrcode"
+          }, 
+          "then": [
+            {
+              "expect": {
+                "hex": "#000000"
+              }, 
+              "frac": [
+                0.09, 
+                0.09, 
+                0.09, 
+                0.09
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.5, 
+              "target": {
+                "index": 0, 
+                "label": "qrcode"
+              }, 
+              "tol": 20
+            }
+          ]
+        }
+      ], 
+      "name": "纠错级别对比"
     }
-  ]
+  ], 
+  "structure": {
+    "apiRows": 5, 
+    "sections": [
+      "标准编码", 
+      "纠错级别对比"
+    ]
+  }
 }
