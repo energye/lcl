@@ -31,6 +31,9 @@ type controlBase struct {
 	pressed bool
 	tap     *ui.GestureDetector
 	ctlKey  string // 跨重建稳定的实例身份（悬停差分认"换节点不换控件"用）
+	// onHoverVisual 悬停原地刷视觉回调（非 nil 时 tapHandler 的
+	// Enter/Leave 不 MarkDirty 整树重建——TimePicker SetBox 手法推广）。
+	onHoverVisual func(node *scene.Node, hover bool)
 }
 
 // Node 返回最近一次构建出的场景节点（诊断/自动化点击用）。
@@ -117,12 +120,23 @@ func (b *controlBase) tapHandler(ctx *ui.BuildContext, disabled bool, onTap func
 		//（路径里同一控件出现两次等边角）不再触发重建。
 		if !disabled && !b.hover {
 			b.hover = true
+			// 原地通道：组件注册 onHoverVisual 时 Enter/Leave 不走
+			// 整树重建（TimePicker SetBox 手法推广——hover 是最高频
+			// 的重建源，§21.6），由组件对捕获节点 SetBox 刷视觉。
+			if b.onHoverVisual != nil {
+				b.onHoverVisual(b.node, true)
+				return
+			}
 			b.MarkDirty()
 		}
 	}
 	h.Leave = func(*input.PointerEvent) {
 		if b.hover || b.pressed {
 			b.hover, b.pressed = false, false
+			if b.onHoverVisual != nil && !b.pressed {
+				b.onHoverVisual(b.node, false)
+				return
+			}
 			b.MarkDirty()
 		}
 	}
@@ -130,6 +144,12 @@ func (b *controlBase) tapHandler(ctx *ui.BuildContext, disabled bool, onTap func
 	// 存在控件上而不是局部变量，避免 GC 后回调消失。
 	b.tap = g
 	return h
+}
+
+// setHoverVisual 注册悬停原地刷视觉回调（非 nil 时 Enter/Leave 不再
+// MarkDirty 整树重建；node 为 attach 捕获的命中节点）。
+func (b *controlBase) setHoverVisual(fn func(node *scene.Node, hover bool)) {
+	b.onHoverVisual = fn
 }
 
 // tapHandlerPressed 在 tapHandler 基础上追踪按下态（antd :active 视觉）。

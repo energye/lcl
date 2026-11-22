@@ -254,6 +254,21 @@ func (mi *menuItem) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		row.Add(scene.Text(scene.TextSpec{Src: mi.label, Layout: layout, Color: lc}))
 		row.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "menu-item", Cursor: scene.CursorPointer})
+		// hover 原地化（TimePicker SetBox 推广）：hover 只影响 bg 底
+		//（FillHover），active 底/indicator 不受 hover 干扰——选中项
+		// 不叠 hover 底。回调捕获的 row/active 是本次构建的闭包值，
+		// 选中态重建后新闭包自动跟上。
+		mi.setHoverVisual(func(node *scene.Node, hover bool) {
+			if active {
+				return
+			}
+			if hover {
+				node.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.FillHover)})
+			} else {
+				node.SetBox(scene.BoxSpec{})
+			}
+			node.MarkNeedsPaint()
+		})
 		mi.attach(ctx, row, mi.tapHandler(ctx, false, func() {
 			if isParent {
 				// 父项点击=切换展开（antd inline SubMenu）。
@@ -289,6 +304,19 @@ func (mi *menuItem) Build(ctx *ui.BuildContext) *scene.Node {
 	label := scene.Text(scene.TextSpec{Src: mi.label, Layout: layout, Color: lc})
 	label.SetMargin(geom.InLTRB(th.Space.SM, (40-layout.Size.H)/2, 0, 0))
 	n.Add(label)
+	// hover 原地化：文字色 Text↔PrimaryHover 原地刷（active 时文字恒
+	// 主色不参与 hover——与纵向选中项纪律一致）。
+	mi.setHoverVisual(func(node *scene.Node, hover bool) {
+		if active {
+			return
+		}
+		c := th.Color.Text
+		if hover {
+			c = th.Color.PrimaryHover
+		}
+		label.SetTextPaint(scene.TextSpec{Src: mi.label, Layout: layout, Color: c})
+		label.MarkNeedsPaint()
+	})
 	if mi.icon != "" {
 		ic := (&Icon{Name: mi.icon, Size: 16, Color: lc}).Build(ctx)
 		ic.SetMargin(geom.InLTRB(0, (40-16)/2, th.Space.XS, 0))

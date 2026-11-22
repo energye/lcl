@@ -847,7 +847,10 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 		//（antd expandable 每行首列的折叠按钮）。列宽模型不变——图标
 		// 占用首列单元格左缘内边距区。
 		row := scene.Flex(scene.Horizontal, 0).SetWidth(t.Width).SetHeight(t.RowHeight)
+		// 行底三态：选中 Selection > hover FillHover > 斑马 SurfaceSunken。
+		// zebra 记录本行斑马底（hover 原地迁移时保留斑马底仍判选中）。
 		bg := geom.Color{}
+		zebra := false
 		if dataRow == t.Selected {
 			bg = th.Color.Selection
 		} else if dataRow == t.hoverRow {
@@ -855,6 +858,7 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 			bg = th.Color.FillHover
 		} else if vi%2 == 1 {
 			bg = th.Color.SurfaceSunken
+			zebra = true
 		}
 		row.SetBox(scene.BoxSpec{Fill: scene.Solid(bg)})
 		for ci, w := range widths {
@@ -916,17 +920,31 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 					}
 				}}
 				h := g.Handler()
-				// 行悬停：Enter/Leave 维护 hoverRow（优先级低于选中/斑马）。
+				// 行悬停：Enter/Leave 原地迁移行底（TimePicker SetBox 推广
+				// ——不再 MarkDirty 整树重建）。hover 底 FillHover 只在非
+				// 选中行叠加（选中行底恒 Selection）；斑马行迁出时回
+				// SurfaceSunken。hoverRow 字段仍维护——选中/排序等真重建
+				// 场景消费同一状态。
 				h.Enter = func(*input.PointerEvent) {
-					if t.hoverRow != r {
+					if t.hoverRow != r && r != t.Selected {
 						t.hoverRow = r
-						t.MarkDirty()
+						row.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.FillHover)})
+						row.MarkNeedsPaint()
+					} else if t.hoverRow != r {
+						t.hoverRow = r
 					}
 				}
 				h.Leave = func(*input.PointerEvent) {
 					if t.hoverRow == r {
 						t.hoverRow = -1
-						t.MarkDirty()
+						if r != t.Selected {
+							base := geom.Color{}
+							if zebra {
+								base = th.Color.SurfaceSunken
+							}
+							row.SetBox(scene.BoxSpec{Fill: scene.Solid(base)})
+							row.MarkNeedsPaint()
+						}
 					}
 				}
 				t.rowTaps = append(t.rowTaps, g)
