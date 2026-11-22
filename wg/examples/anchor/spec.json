@@ -1,0 +1,112 @@
+{
+  "id": "anchor", 
+  "sections": [
+    {
+      "cases": [
+        {
+          "name": "三锚项与墨条存在", 
+          "target": {
+            "label": "anchor-item"
+          }, 
+          "then": [
+            {
+              "count": 3, 
+              "kind": "exists", 
+              "target": {
+                "label": "anchor-item"
+              }
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "anchor-ink"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "点击第二项：OnChange 日志出现", 
+          "target": {
+            "label": "anchor-item", 
+            "text": "何时使用"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "anchor-log", 
+                "text": "点击: usage"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }
+      ], 
+      "name": "竖排锚点"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "横排三锚项存在", 
+          "target": {
+            "label": "anchor-item"
+          }, 
+          "then": [
+            {
+              "count": 3, 
+              "kind": "exists", 
+              "target": {
+                "label": "anchor-item"
+              }
+            }
+          ]
+        }
+      ], 
+      "name": "横排锚点"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "模拟滚动到 API 区块：高亮翻转日志", 
+          "target": {
+            "label": "button", 
+            "text": "模拟滚动到 API 区块"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "anchor-log", 
+                "text": "高亮 api"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }
+      ], 
+      "name": "滚动监听"
+    }
+  ], 
+  "structure": {
+    "apiRows": 8, 
+    "sections": [
+      "竖排锚点", 
+      "横排锚点", 
+      "滚动监听"
+    ]
+  }
+}
