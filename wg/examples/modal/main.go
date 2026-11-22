@@ -18,6 +18,12 @@ var (
 	successBtn = widgets.NewButton("操作成功")
 	warningBtn = widgets.NewButton("警告")
 	errorBtn   = widgets.NewButton("错误")
+	// footer 卡按钮（antd footer 自定义：重置/帮助/提交，提交关框）。
+	footerBtn   = widgets.NewButton("自定义 footer")
+	noFooterBtn = widgets.NewButton("无 footer")
+	resetB      = widgets.NewButton("重置")
+	helpB       = widgets.NewButton("帮助")
+	submitB     = widgets.NewButton("提交")
 )
 
 func init() {
@@ -44,6 +50,38 @@ func init() {
 	successBtn.OnClick = show(widgets.ModalSuccess, "操作成功")
 	warningBtn.OnClick = show(widgets.ModalWarning, "警告")
 	errorBtn.OnClick = show(widgets.ModalError, "错误")
+
+	// footer 自定义卡（antd footer ReactNode 对应）：Footer 替换默认
+	// 按钮组；提交按钮回调里 Close（关闭由调用方驱动）。
+	footerBtn.OnClick = func() {
+		if ctxRef == nil || ctxRef.Overlay == nil {
+			return
+		}
+		m := widgets.NewModal("自定义 footer", doc.Node(func(c *ui.BuildContext) *scene.Node {
+			return (&widgets.Label{Text: "底部按钮组由 Footer 属性替换"}).Build(c)
+		}))
+		submitB.OnClick = func() { m.Close() }
+		m.Footer = doc.Node(func(c *ui.BuildContext) *scene.Node {
+			row := scene.Flex(scene.Horizontal, 8)
+			row.SetMainAlign(scene.MainEnd)
+			row.Add(resetB.Build(c))
+			row.Add(helpB.Build(c))
+			row.Add(submitB.Build(c))
+			return row
+		})
+		m.Show(ctxRef)
+	}
+	// 无 footer 卡（antd footer={null} 对应）：FooterNull 显式隐藏底部。
+	noFooterBtn.OnClick = func() {
+		if ctxRef == nil || ctxRef.Overlay == nil {
+			return
+		}
+		m := widgets.NewModal("无 footer", doc.Node(func(c *ui.BuildContext) *scene.Node {
+			return (&widgets.Label{Text: "FooterNull=true：底部按钮组整体隐藏（Esc 关闭）"}).Build(c)
+		}))
+		m.FooterNull = true
+		m.Show(ctxRef)
+	}
 }
 
 func main() {
@@ -70,10 +108,20 @@ func main() {
 					return row
 				})
 			}},
+			{Title: "自定义 footer", Note: "Footer ui.Widget 替换默认按钮组（重置/帮助/提交，提交关框——antd footer ReactNode 对应）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				doc.CaptureCtx(&ctxRef, ctx)
+				return footerBtn
+			}},
+			{Title: "无 footer", Note: "FooterNull=true 显式隐藏底部（antd footer={null} 对应，Esc 关闭）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				doc.CaptureCtx(&ctxRef, ctx)
+				return noFooterBtn
+			}},
 		},
 		API: []doc.APIRow{
 			{Name: "NewModal", Type: "func(title, content string|ui.Widget) *Modal", Desc: "构造"},
 			{Name: "Confirm/Cancel", Type: "string", Default: "确定 / 取消", Desc: "按钮文字"},
+			{Name: "Footer", Type: "ui.Widget", Desc: "自定义底部内容（替换默认按钮组，antd footer 对应）"},
+			{Name: "FooterNull", Type: "bool", Default: "false", Desc: "显式隐藏 footer（antd footer={null} 对应）"},
 			{Name: "Width", Type: "float32", Default: "400", Desc: "对话框宽度（居中 400×220）"},
 			{Name: "OnConfirm/OnCancel", Type: "func()", Desc: "按钮回调"},
 			{Name: "Show", Type: "func(ctx *ui.BuildContext)", Desc: "打开（需 Build 期捕获的 ctx）"},

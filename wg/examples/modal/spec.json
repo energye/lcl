@@ -1,441 +1,561 @@
 {
-  "id": "modal",
-  "structure": {
-    "apiRows": 9,
-    "sections": [
-      "打开模态",
-      "预设系列"
-    ]
-  },
+  "id": "modal", 
   "sections": [
     {
-      "name": "打开模态",
       "cases": [
         {
-          "name": "点击打开模态（BandModal）",
+          "name": "点击打开模态（BandModal）", 
           "target": {
-            "label": "button",
+            "label": "button", 
             "text": "打开模态框"
-          },
-          "when": [
-            {
-              "click": {}
-            }
-          ],
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 1,
-              "band": "modal"
+              "band": "modal", 
+              "count": 1, 
+              "kind": "overlay"
             }
-          ]
-        },
-        {
-          "name": "点确定按钮关闭模态",
-          "target": {
-            "label": "button",
-            "text": "打开模态框"
-          },
+          ], 
           "when": [
             {
               "click": {}
-            },
+            }
+          ]
+        }, 
+        {
+          "name": "点确定按钮关闭模态", 
+          "target": {
+            "label": "button", 
+            "text": "打开模态框"
+          }, 
+          "then": [
+            {
+              "band": "modal", 
+              "count": 0, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
             {
               "wait": 300
-            },
+            }, 
             {
               "click": {
                 "target": {
-                  "label": "button",
+                  "label": "button", 
                   "text": "确定"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
             }
-          ],
+          ]
+        }, 
+        {
+          "name": "点取消按钮关闭模态", 
+          "target": {
+            "label": "button", 
+            "text": "打开模态框"
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 0,
-              "band": "modal"
+              "band": "modal", 
+              "count": 0, 
+              "kind": "overlay"
             }
-          ]
-        },
-        {
-          "name": "点取消按钮关闭模态",
-          "target": {
-            "label": "button",
-            "text": "打开模态框"
-          },
+          ], 
           "when": [
             {
               "click": {}
-            },
+            }, 
             {
               "wait": 300
-            },
+            }, 
             {
               "click": {
                 "target": {
-                  "label": "button",
+                  "label": "button", 
                   "text": "取消"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
             }
-          ],
+          ]
+        }, 
+        {
+          "name": "打开后 Esc 关闭", 
+          "target": {
+            "label": "button", 
+            "text": "打开模态框"
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 0,
-              "band": "modal"
+              "band": "modal", 
+              "count": 0, 
+              "kind": "overlay"
             }
-          ]
-        },
-        {
-          "name": "打开后 Esc 关闭",
-          "target": {
-            "label": "button",
-            "text": "打开模态框"
-          },
+          ], 
           "when": [
             {
               "click": {}
-            },
+            }, 
             {
               "key": "escape"
             }
-          ],
-          "then": [
-            {
-              "kind": "overlay",
-              "count": 0,
-              "band": "modal"
-            }
           ]
         }
-      ]
-    },
+      ], 
+      "name": "打开模态"
+    }, 
     {
-      "name": "预设系列",
       "cases": [
         {
-          "name": "信息提示：图标圆底为 Primary 且单「知道了」按钮",
+          "name": "信息提示：图标圆底为 Primary 且单「知道了」按钮", 
           "target": {
-            "label": "button",
+            "label": "button", 
             "text": "信息提示"
-          },
-          "when": [
-            {
-              "click": {}
-            },
-            {
-              "wait": 300
-            }
-          ],
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 1
-            },
+              "count": 1, 
+              "kind": "overlay"
+            }, 
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.3,
-                0.3,
-                0.4,
-                0.4
-              ],
               "expect": {
                 "token": "Primary"
-              },
-              "minRatio": 0.4,
-              "tol": 14,
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.4, 
+                0.4
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.4, 
               "target": {
                 "label": "modal-preset-icon"
-              }
-            },
+              }, 
+              "tol": 14
+            }, 
             {
-              "kind": "text",
-              "text": "知道了",
+              "kind": "text", 
               "target": {
-                "label": "button",
+                "label": "button", 
                 "text": "知道了"
-              }
+              }, 
+              "text": "知道了"
             }
-          ]
-        },
-        {
-          "name": "信息提示：点「知道了」关闭",
-          "target": {
-            "label": "button",
-            "text": "信息提示"
-          },
+          ], 
           "when": [
             {
               "click": {}
-            },
+            }, 
             {
               "wait": 300
-            },
+            }
+          ]
+        }, 
+        {
+          "name": "信息提示：点「知道了」关闭", 
+          "target": {
+            "label": "button", 
+            "text": "信息提示"
+          }, 
+          "then": [
+            {
+              "count": 0, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }, 
             {
               "click": {
                 "target": {
-                  "label": "button",
+                  "label": "button", 
                   "text": "知道了"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
-            }
-          ],
-          "then": [
-            {
-              "kind": "overlay",
-              "count": 0
             }
           ]
-        },
+        }, 
         {
-          "name": "操作成功：图标圆底为 Success 且单「知道了」按钮",
+          "name": "操作成功：图标圆底为 Success 且单「知道了」按钮", 
           "target": {
-            "label": "button",
+            "label": "button", 
             "text": "操作成功"
-          },
-          "when": [
-            {
-              "click": {}
-            },
-            {
-              "wait": 300
-            }
-          ],
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 1
-            },
+              "count": 1, 
+              "kind": "overlay"
+            }, 
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.3,
-                0.3,
-                0.4,
-                0.4
-              ],
               "expect": {
                 "token": "Success"
-              },
-              "minRatio": 0.4,
-              "tol": 14,
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.4, 
+                0.4
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.4, 
               "target": {
                 "label": "modal-preset-icon"
-              }
-            },
+              }, 
+              "tol": 14
+            }, 
             {
-              "kind": "text",
-              "text": "知道了",
+              "kind": "text", 
               "target": {
-                "label": "button",
+                "label": "button", 
                 "text": "知道了"
-              }
+              }, 
+              "text": "知道了"
             }
-          ]
-        },
-        {
-          "name": "操作成功：点「知道了」关闭",
-          "target": {
-            "label": "button",
-            "text": "操作成功"
-          },
+          ], 
           "when": [
             {
               "click": {}
-            },
+            }, 
             {
               "wait": 300
-            },
+            }
+          ]
+        }, 
+        {
+          "name": "操作成功：点「知道了」关闭", 
+          "target": {
+            "label": "button", 
+            "text": "操作成功"
+          }, 
+          "then": [
+            {
+              "count": 0, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }, 
             {
               "click": {
                 "target": {
-                  "label": "button",
+                  "label": "button", 
                   "text": "知道了"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
-            }
-          ],
-          "then": [
-            {
-              "kind": "overlay",
-              "count": 0
             }
           ]
-        },
+        }, 
         {
-          "name": "警告：图标圆底为 Warning 且单「知道了」按钮",
+          "name": "警告：图标圆底为 Warning 且单「知道了」按钮", 
           "target": {
-            "label": "button",
+            "label": "button", 
             "text": "警告"
-          },
-          "when": [
-            {
-              "click": {}
-            },
-            {
-              "wait": 300
-            }
-          ],
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 1
-            },
+              "count": 1, 
+              "kind": "overlay"
+            }, 
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.3,
-                0.3,
-                0.4,
-                0.4
-              ],
               "expect": {
                 "token": "Warning"
-              },
-              "minRatio": 0.4,
-              "tol": 14,
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.4, 
+                0.4
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.4, 
               "target": {
                 "label": "modal-preset-icon"
-              }
-            },
+              }, 
+              "tol": 14
+            }, 
             {
-              "kind": "text",
-              "text": "知道了",
+              "kind": "text", 
               "target": {
-                "label": "button",
+                "label": "button", 
                 "text": "知道了"
-              }
+              }, 
+              "text": "知道了"
             }
-          ]
-        },
-        {
-          "name": "警告：点「知道了」关闭",
-          "target": {
-            "label": "button",
-            "text": "警告"
-          },
+          ], 
           "when": [
             {
               "click": {}
-            },
+            }, 
             {
               "wait": 300
-            },
+            }
+          ]
+        }, 
+        {
+          "name": "警告：点「知道了」关闭", 
+          "target": {
+            "label": "button", 
+            "text": "警告"
+          }, 
+          "then": [
+            {
+              "count": 0, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }, 
             {
               "click": {
                 "target": {
-                  "label": "button",
+                  "label": "button", 
                   "text": "知道了"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
-            }
-          ],
-          "then": [
-            {
-              "kind": "overlay",
-              "count": 0
             }
           ]
-        },
+        }, 
         {
-          "name": "错误：图标圆底为 Danger 且单「知道了」按钮",
+          "name": "错误：图标圆底为 Danger 且单「知道了」按钮", 
           "target": {
-            "label": "button",
+            "label": "button", 
             "text": "错误"
-          },
-          "when": [
-            {
-              "click": {}
-            },
-            {
-              "wait": 300
-            }
-          ],
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 1
-            },
+              "count": 1, 
+              "kind": "overlay"
+            }, 
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.3,
-                0.3,
-                0.4,
-                0.4
-              ],
               "expect": {
                 "token": "Danger"
-              },
-              "minRatio": 0.4,
-              "tol": 14,
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.4, 
+                0.4
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.4, 
               "target": {
                 "label": "modal-preset-icon"
-              }
-            },
+              }, 
+              "tol": 14
+            }, 
             {
-              "kind": "text",
-              "text": "知道了",
+              "kind": "text", 
               "target": {
-                "label": "button",
+                "label": "button", 
                 "text": "知道了"
-              }
+              }, 
+              "text": "知道了"
             }
-          ]
-        },
-        {
-          "name": "错误：点「知道了」关闭",
-          "target": {
-            "label": "button",
-            "text": "错误"
-          },
+          ], 
           "when": [
             {
               "click": {}
-            },
-            {
-              "wait": 300
-            },
-            {
-              "click": {
-                "target": {
-                  "label": "button",
-                  "text": "知道了"
-                }
-              }
-            },
+            }, 
             {
               "wait": 300
             }
-          ],
+          ]
+        }, 
+        {
+          "name": "错误：点「知道了」关闭", 
+          "target": {
+            "label": "button", 
+            "text": "错误"
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 0
+              "count": 0, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }, 
+            {
+              "click": {
+                "target": {
+                  "label": "button", 
+                  "text": "知道了"
+                }
+              }
+            }, 
+            {
+              "wait": 300
             }
           ]
         }
-      ]
+      ], 
+      "name": "预设系列"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "Footer 替换默认按钮组：提交/帮助可见，确定/取消 absent", 
+          "target": {
+            "label": "button", 
+            "text": "自定义 footer"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "button", 
+                "text": "提交"
+              }
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "button", 
+                "text": "帮助"
+              }
+            }, 
+            {
+              "kind": "absent", 
+              "target": {
+                "label": "button", 
+                "text": "确定"
+              }
+            }, 
+            {
+              "kind": "absent", 
+              "target": {
+                "label": "button", 
+                "text": "取消"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }, 
+        {
+          "name": "点自定义提交按钮关闭模态", 
+          "target": {
+            "label": "button", 
+            "text": "自定义 footer"
+          }, 
+          "then": [
+            {
+              "band": "modal", 
+              "count": 0, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }, 
+            {
+              "click": {
+                "target": {
+                  "label": "button", 
+                  "text": "提交"
+                }
+              }
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }, 
+        {
+          "name": "FooterNull 隐藏 footer：模态打开但无按钮组", 
+          "target": {
+            "label": "button", 
+            "text": "无 footer"
+          }, 
+          "then": [
+            {
+              "band": "modal", 
+              "count": 1, 
+              "kind": "overlay"
+            }, 
+            {
+              "kind": "absent", 
+              "target": {
+                "label": "button", 
+                "text": "确定"
+              }
+            }, 
+            {
+              "kind": "absent", 
+              "target": {
+                "label": "button", 
+                "text": "提交"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }
+      ], 
+      "name": "自定义 footer"
     }
-  ]
+  ], 
+  "structure": {
+    "apiRows": 11, 
+    "sections": [
+      "打开模态", 
+      "预设系列", 
+      "自定义 footer"
+    ]
+  }
 }

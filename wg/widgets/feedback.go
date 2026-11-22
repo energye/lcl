@@ -60,6 +60,13 @@ type Modal struct {
 	Kind ModalKind
 	// OKText 预设按钮文字（默认"知道了"）。
 	OKText string
+	// Footer 自定义底部内容（antd footer ReactNode 对应）：非空时替换
+	// 默认按钮组（普通形态的 确定/取消 与预设形态的单 OK 均适用）；
+	// 关闭由调用方在按钮回调里调 Close。
+	Footer ui.Widget
+	// FooterNull 显式隐藏 footer（antd footer={null} 对应；优先级
+	// 高于 Footer 与默认按钮组）。
+	FooterNull bool
 
 	handle overlay.Handle
 	fb     feedbackHost
@@ -135,27 +142,36 @@ func (m *Modal) Show(ctx *ui.BuildContext) {
 					col.Add(buildChild(ctx, content))
 				}
 			}
-			// 按钮行右对齐（antd footer 按钮靠右）。
-			row := scene.Flex(scene.Horizontal, th.Space.SM)
-			row.SetMainAlign(scene.MainEnd)
-			row.SetCrossAlign(scene.CrossCenter)
-			if cancel != "" {
-				row.Add(modalButton(ctx, cancel, false, th, func() {
-					m.close()
-					if onCancel != nil {
-						onCancel()
-					}
-				}))
+			// footer 三态：FooterNull 显式隐藏 > Footer 自定义 > 默认
+			// 按钮组（antd footer={null} / footer={node} / 默认）。
+			switch {
+			case m.FooterNull:
+				// 无底部区。
+			case m.Footer != nil:
+				col.Add(buildChild(ctx, m.Footer))
+			default:
+				// 按钮行右对齐（antd footer 按钮靠右）。
+				row := scene.Flex(scene.Horizontal, th.Space.SM)
+				row.SetMainAlign(scene.MainEnd)
+				row.SetCrossAlign(scene.CrossCenter)
+				if cancel != "" {
+					row.Add(modalButton(ctx, cancel, false, th, func() {
+						m.close()
+						if onCancel != nil {
+							onCancel()
+						}
+					}))
+				}
+				if confirm != "" {
+					row.Add(modalButton(ctx, confirm, true, th, func() {
+						m.close()
+						if onConfirm != nil {
+							onConfirm()
+						}
+					}))
+				}
+				col.Add(row)
 			}
-			if confirm != "" {
-				row.Add(modalButton(ctx, confirm, true, th, func() {
-					m.close()
-					if onConfirm != nil {
-						onConfirm()
-					}
-				}))
-			}
-			col.Add(row)
 			return col
 		},
 	})
@@ -465,11 +481,11 @@ func (n *Notification) Show(ctx *ui.BuildContext) {
 		Anchor:    overlay.Anchor{Kind: overlay.AnchorNone},
 		Placement: overlay.PlacementTopEnd,
 		// 高度 0 = 按内容自适应（正文长不被截断，[引擎] 浮层高度自适应）。
-		Size:      geom.Size{W: 280},
-		Dismiss:   overlay.DismissTimeout | overlay.DismissOutsideClick,
-		Duration:  dur,
-		Tag:       "notification",
-		OnClose:   func() { n.handle = 0 },
+		Size:     geom.Size{W: 280},
+		Dismiss:  overlay.DismissTimeout | overlay.DismissOutsideClick,
+		Duration: dur,
+		Tag:      "notification",
+		OnClose:  func() { n.handle = 0 },
 		Build: func() *scene.Node {
 			col := scene.Flex(scene.Vertical, 4).SetWidth(280)
 			col.SetBox(scene.BoxSpec{
@@ -583,7 +599,7 @@ func (m *Message) Show(ctx *ui.BuildContext) {
 		Build: func() *scene.Node {
 			row := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
 			row.SetBox(scene.BoxSpec{
-				Fill:   scene.Solid(th.Color.Surface),
+				Fill: scene.Solid(th.Color.Surface),
 				Shadow: func() *scene.ShadowSpec {
 					if len(th.Elevation) > 0 {
 						e := th.Elevation[0]
