@@ -1,110 +1,112 @@
 {
-  "id": "calendar",
-  "structure": {
-    "apiRows": 6,
-    "sections": [
-      "全屏日历"
-    ]
-  },
+  "id": "calendar", 
   "sections": [
     {
-      "name": "全屏日历",
       "cases": [
         {
-          "name": "页头标题含当前年月",
+          "name": "\u9875\u5934\u6807\u9898\u542b\u5f53\u524d\u5e74\u6708", 
           "target": {
             "label": "calendar-title"
-          },
+          }, 
           "then": [
             {
-              "kind": "text",
-              "text": "2026年11月",
+              "kind": "text", 
               "target": {
                 "label": "calendar-title"
-              }
+              }, 
+              "text": "2026\u5e7411\u6708"
             }
           ]
-        },
+        }, 
         {
-          "name": "日期格 30 个存在（11 月）",
+          "name": "\u65e5\u671f\u683c 30 \u4e2a\u5b58\u5728\uff0811 \u6708\uff09", 
           "target": {
             "label": "calendar-cell"
-          },
+          }, 
           "then": [
             {
-              "kind": "exists",
-              "count": 30,
+              "count": 30, 
+              "kind": "exists", 
               "target": {
                 "label": "calendar-cell"
               }
             }
           ]
-        },
+        }, 
         {
-          "name": "today 格主色描边",
+          "name": "today \u683c\u4e3b\u8272\u63cf\u8fb9", 
           "target": {
-            "label": "calendar-cell",
+            "label": "calendar-cell", 
             "text": "21"
-          },
+          }, 
           "then": [
             {
-              "kind": "borderColor",
               "expect": {
                 "token": "Primary"
-              },
-              "tol": 24,
+              }, 
+              "kind": "borderColor", 
               "target": {
-                "label": "calendar-cell",
+                "label": "calendar-cell", 
                 "text": "21"
-              }
+              }, 
+              "tol": 24
             }
           ]
-        },
+        }, 
         {
-          "name": "点击日期格选中实底迁移",
+          "name": "\u70b9\u51fb\u65e5\u671f\u683c\u9009\u4e2d\u5b9e\u5e95\u8fc1\u79fb", 
           "target": {
-            "label": "calendar-cell",
+            "label": "calendar-cell", 
             "text": "15"
-          },
+          }, 
+          "then": [
+            {
+              "expect": {
+                "token": "Primary"
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.4, 
+              "target": {
+                "label": "calendar-cell", 
+                "text": "15"
+              }, 
+              "tol": 14
+            }
+          ], 
           "when": [
             {
               "click": {
                 "target": {
-                  "label": "calendar-cell",
+                  "label": "calendar-cell", 
                   "text": "15"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
             }
-          ],
-          "then": [
-            {
-              "kind": "colorRatio",
-              "frac": [
-                0.3,
-                0.3,
-                0.5,
-                0.5
-              ],
-              "expect": {
-                "token": "Primary"
-              },
-              "minRatio": 0.4,
-              "tol": 14,
-              "target": {
-                "label": "calendar-cell",
-                "text": "15"
-              }
-            }
           ]
-        },
+        }, 
         {
-          "name": "点下月切到 12 月",
+          "name": "\u70b9\u4e0b\u6708\u5207\u5230 12 \u6708", 
           "target": {
             "label": "calendar-title"
-          },
+          }, 
+          "then": [
+            {
+              "kind": "text", 
+              "target": {
+                "label": "calendar-title"
+              }, 
+              "text": "2026\u5e7412\u6708"
+            }
+          ], 
           "when": [
             {
               "click": {
@@ -112,26 +114,44 @@
                   "label": "calendar-nav-next"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
             }
-          ],
-          "then": [
-            {
-              "kind": "text",
-              "text": "2026年12月",
-              "target": {
-                "label": "calendar-title"
-              }
-            }
           ]
-        },
+        }, 
         {
-          "name": "今天按钮回 11 月并选中今天",
+          "name": "\u4eca\u5929\u6309\u94ae\u56de 11 \u6708\u5e76\u9009\u4e2d\u4eca\u5929", 
           "target": {
             "label": "calendar-title"
-          },
+          }, 
+          "then": [
+            {
+              "kind": "text", 
+              "target": {
+                "label": "calendar-title"
+              }, 
+              "text": "2026\u5e7411\u6708"
+            }, 
+            {
+              "expect": {
+                "token": "Primary"
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.4, 
+              "target": {
+                "label": "calendar-cell", 
+                "text": "21"
+              }, 
+              "tol": 14
+            }
+          ], 
           "when": [
             {
               "click": {
@@ -139,89 +159,153 @@
                   "label": "calendar-nav-today"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
             }
-          ],
+          ]
+        }, 
+        {
+          "name": "DateCellRender\uff1a15 \u683c\u5b50\u8ffd\u52a0\u4e8b\u4ef6 Badge\uff08\u53d1\u5e03\u7a97\u53e3\uff09", 
+          "target": {
+            "label": "badge", 
+            "text": "\u53d1\u5e03\u7a97\u53e3"
+          }, 
           "then": [
             {
-              "kind": "text",
-              "text": "2026年11月",
+              "kind": "exists", 
               "target": {
-                "label": "calendar-title"
-              }
-            },
-            {
-              "kind": "colorRatio",
-              "frac": [
-                0.3,
-                0.3,
-                0.5,
-                0.5
-              ],
-              "expect": {
-                "token": "Primary"
-              },
-              "minRatio": 0.4,
-              "tol": 14,
-              "target": {
-                "label": "calendar-cell",
-                "text": "21"
+                "label": "badge", 
+                "text": "\u53d1\u5e03\u7a97\u53e3"
               }
             }
           ]
-        },
+        }, 
         {
-          "name": "DateCellRender：15 格子追加事件 Badge（发布窗口）",
+          "name": "DateCellRender\uff1a11 \u683c\u5b50\u8ffd\u52a0\u91cc\u7a0b\u7891\u8bc4\u5ba1 Badge", 
           "target": {
-            "label": "badge",
-            "text": "发布窗口"
-          },
+            "label": "badge", 
+            "text": "\u91cc\u7a0b\u7891\u8bc4\u5ba1"
+          }, 
           "then": [
             {
-              "kind": "exists",
+              "kind": "exists", 
               "target": {
-                "label": "badge",
-                "text": "发布窗口"
+                "label": "badge", 
+                "text": "\u91cc\u7a0b\u7891\u8bc4\u5ba1"
               }
             }
           ]
-        },
+        }, 
         {
-          "name": "DateCellRender：11 格子追加里程碑评审 Badge",
+          "name": "DateCellRender\uff1a\u4e8b\u4ef6\u683c\u6570\u5b57\u4ecd\u5728\uff08\u6570\u5b57+\u8ffd\u52a0\u5e76\u5b58\uff09", 
           "target": {
-            "label": "badge",
-            "text": "里程碑评审"
-          },
-          "then": [
-            {
-              "kind": "exists",
-              "target": {
-                "label": "badge",
-                "text": "里程碑评审"
-              }
-            }
-          ]
-        },
-        {
-          "name": "DateCellRender：事件格数字仍在（数字+追加并存）",
-          "target": {
-            "label": "calendar-cell",
+            "label": "calendar-cell", 
             "text": "15"
-          },
+          }, 
           "then": [
             {
-              "kind": "text",
-              "text": "15",
+              "kind": "text", 
               "target": {
-                "label": "calendar-cell",
+                "label": "calendar-cell", 
                 "text": "15"
-              }
+              }, 
+              "text": "15"
             }
           ]
         }
-      ]
+      ], 
+      "name": "\u5168\u5c4f\u65e5\u5386"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "\u5e74\u9762\u677f\u6807\u9898 2026 + 12 \u6708\u683c\u5b58\u5728", 
+          "target": {
+            "label": "calendar-title", 
+            "text": "2026"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "calendar-year-title", 
+                "text": "2026"
+              }
+            }, 
+            {
+              "count": 12, 
+              "kind": "exists", 
+              "target": {
+                "label": "calendar-month-cell"
+              }
+            }
+          ], 
+          "when": []
+        }, 
+        {
+          "name": "\u70b9 12 \u6708\u683c\u5207\u5230 12 \u6708\u65e5\u5386\u9762\u677f", 
+          "target": {
+            "label": "calendar-month-cell", 
+            "text": "12\u6708"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "calendar-title", 
+                "text": "2026\u5e7412\u6708"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }
+      ], 
+      "name": "\u5e74\u9762\u677f"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "\u8303\u56f4\u5185 15 \u65e5\u53ef\u9009\uff08\u70b9\u51fb\u540e\u683c\u4ecd\u5728\uff09", 
+          "target": {
+            "label": "calendar-cell", 
+            "text": "15"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "calendar-cell", 
+                "text": "15"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 200
+            }
+          ]
+        }
+      ], 
+      "name": "\u6709\u6548\u8303\u56f4"
     }
-  ]
+  ], 
+  "structure": {
+    "apiRows": 8, 
+    "sections": [
+      "\u5168\u5c4f\u65e5\u5386", 
+      "\u5e74\u9762\u677f", 
+      "\u6709\u6548\u8303\u56f4"
+    ]
+  }
 }
