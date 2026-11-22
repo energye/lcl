@@ -14,6 +14,7 @@ var (
 	dp          = widgets.NewDatePicker()
 	dpRange     = widgets.NewDatePicker()
 	dpCell      = widgets.NewDatePicker()
+	dpDis       = widgets.NewDatePicker()
 	rangeInited bool
 )
 
@@ -36,6 +37,12 @@ func init() {
 		}
 		return nil
 	}
+
+	// 禁用日期卡（antd disabledDate）：周末（六/日）灰置不可选。
+	dpDis.Value = time.Date(2026, 11, 6, 12, 0, 0, 0, time.Local) // 2026-11-06 避开与其他卡触发框文本撞车
+	dpDis.DisabledDate = func(date time.Time) bool {
+		return date.Weekday() == time.Saturday || date.Weekday() == time.Sunday
+	}
 }
 
 func main() {
@@ -46,6 +53,7 @@ func main() {
 			"面板：月标题+‹›切换（跨年自动进退位）+星期行+6×7 日期格（Grid 组合复用）",
 			"日期格选择：主色实底选中态；today 主色文字；选择后自动关闭面板",
 			"DateCellRender：面板日期格数字下方追加自定义内容（antd cellRender 对应）",
+			"点标题切年面板（4×3 月格点月回日历）；DisabledDate 禁用日期灰置不可选",
 		},
 		Demos: []doc.Demo{
 			{Title: "日期选择", Note: "点击触发框弹面板；‹›切换月份；点击日期格选择并关闭", Build: func(ctx *ui.BuildContext) ui.Widget {
@@ -59,6 +67,9 @@ func main() {
 					rangeInited = true
 				}
 				return dpRange
+			}},
+			{Title: "禁用日期", Note: "DisabledDate：周末灰置不可选（date-cell-disabled 锚）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return dpDis
 			}},
 			{Title: "自定义单元格", Note: "DateCellRender：面板日期格数字下方追加事件 Badge（11 评审/15 发布/27 停机，antd cellRender 对应）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return dpCell

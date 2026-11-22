@@ -1,11 +1,12 @@
 {
   "id": "datepicker",
   "structure": {
-    "apiRows": 9,
+    "apiRows": 10,
     "sections": [
       "范围选择",
       "日期选择",
-      "自定义单元格"
+      "自定义单元格",
+      "禁用日期"
     ]
   },
   "sections": [
@@ -534,6 +535,85 @@
             {
               "kind": "overlay",
               "count": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "禁用日期",
+      "cases": [
+        {
+          "name": "开面板后周末格灰置（11 月周末 9 天）",
+          "target": {
+            "label": "date-picker",
+            "text": "2026-11-06"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker",
+                  "text": "2026-11-06"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "count": 9,
+              "target": {
+                "label": "date-cell-disabled"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点标题切年面板（date-year-title + 12 月格）",
+          "target": {
+            "label": "date-picker",
+            "text": "2026-11-06"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker",
+                  "text": "2026-11-06"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-panel-title"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-year-title"
+              }
+            },
+            {
+              "kind": "exists",
+              "count": 12,
+              "target": {
+                "label": "date-month-cell"
+              }
             }
           ]
         }

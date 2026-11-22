@@ -42,6 +42,9 @@ type DatePicker struct {
 	// 追加"形态）：非空时该格在日期数字下方渲染返回的 Widget；返回
 	// nil = 无自定义内容。每次构建调用（与单元格 Render 同款契约）。
 	DateCellRender func(date time.Time) ui.Widget
+	// DisabledDate 禁用日期判定（antd disabledDate）：true=该格灰置
+	// 不可选（down 吞事件）。
+	DisabledDate func(date time.Time) bool
 	// rangeStage 范围选择进行到的阶段（0=未开始/已完成，1=已选起待选止）。
 	rangeStage int
 
@@ -51,6 +54,13 @@ type DatePicker struct {
 	viewYear  int // 面板当前年份
 	viewMonth int // 面板当前月份（1-12）
 	panelOpen bool
+	// panelMode 面板模式（antd mode：month 默认 / year 年面板——
+	// 点标题切换，年面板点月回 month）。
+	panelMode string
+	// panelNode/showCtx 浮层面板根与构建 ctx（refreshPanel 原地换
+	// 内容用——浮层子树不随根重建）。
+	panelNode *scene.Node
+	showCtx   *ui.BuildContext
 }
 
 // NewDatePicker 创建日期选择器（默认当前日期）。
@@ -206,6 +216,11 @@ func (d *DatePicker) openPanel(ctx *ui.BuildContext, anchor *scene.Node, th *the
 	}
 	d.panelOpen = true
 	panel := d.buildPanel(ctx, th)
+	// panelNode 持有面板根（**Entry.Build 只在 Show 时调一次**——浮层
+	// 子树不随根重建；模式切换/月切换经 refreshPanel 原地换内容，
+	// TreeSelect 手法）。
+	d.panelNode = panel
+	d.showCtx = ctx
 	d.handle = ctx.Overlay.Show(overlay.Entry{
 		Band:      theme.BandPopup,
 		Anchor:    overlay.NodeAnchor(anchor),
@@ -230,8 +245,28 @@ func (d *DatePicker) closePanel(ctx *ui.BuildContext) {
 	d.panelOpen = false
 }
 
+// refreshPanel 原地重建浮层面板子树（模式切换/月切换后换内容）。
+// 浮层子树不随根重建（Entry.Build 只在 Show 时调一次）——不重开
+// Entry：内容节点同一批，Overlay.Relayout 重算面板高度（TreeSelect
+// 手法；真窗 down 分发中途重开丢内容——探针实证）。
+func (d *DatePicker) refreshPanel() {
+	ctx := d.showCtx
+	if ctx == nil || ctx.Overlay == nil || d.panelNode == nil {
+		return
+	}
+	th := ctx.ThemeOr()
+	d.panelNode.RemoveAll()
+	d.panelNode.Add(d.buildPanel(ctx, th))
+	d.panelNode.MarkNeedsLayout()
+	ctx.Overlay.Relayout()
+}
+
 // buildPanel 构建日历面板：月标题+切换箭头+星期行+6×7 日期格。
+// panelMode="year" 时构建年面板（4×3 月格，点月回 month）。
 func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
+	if d.panelMode == "year" {
+		return d.buildYearPanel(ctx, th)
+	}
 	panel := scene.Flex(scene.Vertical, th.Space.XS).SetWidth(280)
 	panel.SetBox(scene.BoxSpec{
 		Fill:   scene.Solid(th.Color.Surface),
@@ -241,12 +276,25 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 	panel.SetPadding(geom.InLTRB(th.Space.SM, th.Space.SM, th.Space.SM, th.Space.SM))
 
 	// 月标题行：‹ 2026年11月 ›（切换箭头用 Icon 组件组合复用）。
+	// 标题**可点**：切年面板（antd 点月标题弹年选择层语义）。
 	head := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
 	head.SetHit(scene.HitSpec{Label: "date-panel-head"})
 	title := fmt.Sprintf("%d年%d月", d.viewYear, d.viewMonth)
 	tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	ht := scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text})
-	ht.SetHit(scene.HitSpec{Label: "date-panel-title"})
+	ht.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-panel-title", Cursor: scene.CursorPointer})
+	if ctx.Input != nil {
+		// 浮层内 tap 配对永不触发（DatePicker 轮结论）——标题切年用
+		// down 即执行（date-cell 同款）。
+		ctx.Input.Set(ht, input.Handler{Pointer: func(ev *input.PointerEvent) bool {
+			if !ev.Down() {
+				return false
+			}
+			d.panelMode = "year"
+			time.AfterFunc(0, d.refreshPanel)
+			return true
+		}})
+	}
 	head.Add(ht)
 	sp := scene.Box(scene.BoxSpec{}).SetFlex(1, scene.FlexTight)
 	head.Add(sp)
@@ -307,12 +355,16 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 		selected := !d.Value.IsZero() &&
 			d.Value.Year() == t.Year() && d.Value.Month() == t.Month() && d.Value.Day() == t.Day()
 		isToday := today.Year() == t.Year() && today.Month() == t.Month() && today.Day() == t.Day()
+		// DisabledDate 禁用判定：灰置（TextFaint）不可选。
+		disabled := d.DisabledDate != nil && d.DisabledDate(t)
 		cell := scene.Flex(scene.Vertical, 0).SetCrossAlign(scene.CrossCenter).SetWidth(38).SetHeight(28)
 		bg := geom.Color{}
 		fg := th.Color.Text
 		inRange := d.Range && !d.Value.IsZero() && !t.Before(d.Value) && !d.Value2.Before(t)
 		if selected {
 			bg, fg = th.Color.Primary, th.Color.OnPrimary
+		} else if disabled {
+			fg = th.Color.TextFaint
 		} else if inRange && d.Value != d.Value2 {
 			bg = th.Color.InfoBg // 区间内浅主色底（antd RangePicker 高亮带）
 		} else if isToday {
@@ -330,6 +382,16 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 				wn.SetMargin(geom.InLTRB(0, 0, 0, 0))
 				cell.Add(wn)
 			}
+		}
+		if disabled {
+			// 禁用格：锚改 disabled 标记（审计断言用），无点击手势。
+			cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-cell-disabled"})
+			weekRow.Add(cell)
+			daysThisRow++
+			if daysThisRow == 7 {
+				flushRow()
+			}
+			continue
 		}
 		cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-cell", Cursor: scene.CursorPointer})
 		weekRow.Add(cell)
@@ -360,7 +422,8 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 							d.OnChangeRange(d.Value, d.Value2)
 						}
 					}
-					d.MarkDirty()
+					time.AfterFunc(0, d.refreshPanel)
+					d.MarkDirty() // 触发框文档流文本同步（浮层内不重开 Entry，文本随根重建）
 					return true
 				}
 				d.Value = t
@@ -398,7 +461,76 @@ func (d *DatePicker) shiftMonth(dx int) {
 		d.viewYear++
 	}
 	d.viewMonth = m
-	d.MarkDirty()
+	time.AfterFunc(0, d.refreshPanel)
+}
+
+// buildYearPanel 年面板（antd 点标题弹年选择）：4×3 月格，点月回
+// month 面板；页头年份+返回。
+func (d *DatePicker) buildYearPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
+	panel := scene.Flex(scene.Vertical, th.Space.XS).SetWidth(280)
+	panel.SetBox(scene.BoxSpec{
+		Fill:   scene.Solid(th.Color.Surface),
+		Border: scene.Stroke(th.Color.Border, 1),
+		Radius: th.Radius.Base,
+	})
+	panel.SetPadding(geom.InLTRB(th.Space.SM, th.Space.SM, th.Space.SM, th.Space.SM))
+
+	head := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
+	head.SetHit(scene.HitSpec{Label: "date-panel-head"})
+	title := fmt.Sprintf("%d年", d.viewYear)
+	tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeBase), text.Options{})
+	ht := scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text})
+	ht.SetHit(scene.HitSpec{Label: "date-year-title"})
+	head.Add(ht)
+	sp := scene.Box(scene.BoxSpec{}).SetFlex(1, scene.FlexTight)
+	head.Add(sp)
+	back := text.LayoutText("返回", text.DefaultFont(th.Font.SizeSM), text.Options{})
+	bt := scene.Text(scene.TextSpec{Src: "返回", Layout: back, Color: th.Color.Primary})
+	bt.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-year-back", Cursor: scene.CursorPointer})
+	if ctx.Input != nil {
+		g := &ui.GestureDetector{OnTap: func(geom.Point) {
+			d.panelMode = "month"
+			d.refreshPanel()
+		}}
+		ctx.Input.Set(bt, g.Handler())
+	}
+	head.Add(bt)
+	panel.Add(head)
+
+	// 4×3 月格。
+	grid := scene.Grid(4, th.Space.XS)
+	for m := 1; m <= 12; m++ {
+		m := m
+		cell := scene.Box(scene.BoxSpec{
+			Fill:   scene.Solid(th.Color.Surface),
+			Border: scene.Stroke(th.Color.Border, 1),
+		}).SetHeight(56)
+		isCur := m == d.viewMonth
+		txtColor := th.Color.Text
+		if isCur {
+			txtColor = th.Color.Primary
+		}
+		l := text.LayoutText(fmt.Sprintf("%d月", m), text.DefaultFont(th.Font.SizeBase), text.Options{})
+		tv := scene.Text(scene.TextSpec{Src: fmt.Sprintf("%d月", m), Layout: l, Color: txtColor})
+		tv.SetMargin(geom.InLTRB(14, (56-l.Size.H)/2, 0, 0))
+		cell.Add(tv)
+		cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-month-cell", Cursor: scene.CursorPointer})
+		if ctx.Input != nil {
+			ctx.Input.Set(cell, input.Handler{Pointer: func(ev *input.PointerEvent) bool {
+				if !ev.Down() {
+					return false
+				}
+				d.viewMonth = m
+				d.panelMode = "month" // 点月回日历面板
+				time.AfterFunc(0, d.refreshPanel)
+				return true
+			}})
+		}
+		grid.Add(cell)
+	}
+	panel.Add(grid)
+	panel.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-panel"})
+	return panel
 }
 
 // Close 关闭面板。
