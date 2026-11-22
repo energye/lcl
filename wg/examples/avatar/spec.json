@@ -1,195 +1,243 @@
 {
-  "id": "avatar",
-  "structure": {
-    "apiRows": 6,
-    "sections": [
-      "三档尺寸",
-      "图标头像",
-      "头像组"
-    ]
-  },
+  "id": "avatar", 
   "sections": [
     {
-      "name": "三档尺寸",
       "cases": [
         {
-          "name": "三档头像存在",
+          "name": "\u4e09\u6863\u5934\u50cf\u5b58\u5728", 
           "target": {
             "label": "avatar"
-          },
+          }, 
           "then": [
             {
-              "kind": "exists",
-              "count": 3
+              "count": 3, 
+              "kind": "exists"
             }
           ]
-        },
+        }, 
         {
-          "name": "36 档尺寸直径 36",
+          "name": "36 \u6863\u5c3a\u5bf8\u76f4\u5f84 36", 
           "target": {
-            "label": "avatar",
-            "index": 1
-          },
+            "index": 1, 
+            "label": "avatar"
+          }, 
           "then": [
             {
-              "kind": "geometry",
+              "kind": "geometry", 
               "widthBetween": [
-                36,
+                36, 
                 36
               ]
             }
           ]
-        },
+        }, 
         {
-          "name": "默认头像为灰底（colorFillTertiary）",
+          "name": "\u9ed8\u8ba4\u5934\u50cf\u4e3a\u7070\u5e95\uff08colorFillTertiary\uff09", 
           "target": {
-            "label": "avatar",
-            "index": 0
-          },
+            "index": 0, 
+            "label": "avatar"
+          }, 
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.25,
-                0.15,
-                0.5,
-                0.2
-              ],
               "expect": {
                 "token": "SurfaceActive"
-              },
-              "minRatio": 0.5,
+              }, 
+              "frac": [
+                0.25, 
+                0.15, 
+                0.5, 
+                0.2
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.5, 
               "tol": 14
             }
           ]
-        },
+        }, 
         {
-          "name": "默认头像文字为深色（colorText）",
+          "name": "\u9ed8\u8ba4\u5934\u50cf\u6587\u5b57\u4e3a\u6df1\u8272\uff08colorText\uff09", 
           "target": {
-            "label": "avatar",
-            "index": 0
-          },
+            "index": 0, 
+            "label": "avatar"
+          }, 
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.3,
-                0.3,
-                0.4,
-                0.4
-              ],
               "expect": {
                 "token": "Text"
-              },
-              "minRatio": 0.05,
+              }, 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.4, 
+                0.4
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.05, 
               "tol": 24
             }
           ]
-        },
+        }, 
         {
-          "name": "48 档尺寸直径 48",
+          "name": "48 \u6863\u5c3a\u5bf8\u76f4\u5f84 48", 
           "target": {
-            "label": "avatar",
-            "index": 2
-          },
+            "index": 2, 
+            "label": "avatar"
+          }, 
           "then": [
             {
-              "kind": "geometry",
+              "kind": "geometry", 
               "widthBetween": [
-                48,
+                48, 
                 48
               ]
             }
           ]
         }
-      ]
-    },
+      ], 
+      "name": "\u4e09\u6863\u5c3a\u5bf8"
+    }, 
     {
-      "name": "图标头像",
       "cases": [
         {
-          "name": "灰底 user 图标头像存在",
+          "name": "\u56fe\u7247\u5934\u50cf\u6e32\u67d3\uff08\u4f4d\u56fe\u975e\u7eaf\u8272\u5e95\u2014\u2014\u4e2d\u5fc3\u91c7\u6837\u975e\u7070\u5e95\uff09", 
           "target": {
-            "label": "avatar",
-            "index": 0
-          },
+            "index": 3, 
+            "label": "avatar"
+          }, 
+          "then": [
+            {
+              "expect": {
+                "hex": "#6F8CC4"
+              }, 
+              "frac": [
+                0.35, 
+                0.35, 
+                0.3, 
+                0.3
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.25, 
+              "target": {
+                "index": 3, 
+                "label": "avatar"
+              }, 
+              "tol": 60
+            }
+          ]
+        }, 
+        {
+          "name": "\u53cc\u5c3a\u5bf8\u56fe\u7247\u5934\u50cf\u5b58\u5728", 
+          "target": {
+            "label": "avatar"
+          }, 
+          "then": [
+            {
+              "count": 2, 
+              "kind": "exists", 
+              "target": {
+                "label": "avatar"
+              }
+            }
+          ]
+        }
+      ], 
+      "name": "\u56fe\u7247\u5934\u50cf"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "\u7070\u5e95 user \u56fe\u6807\u5934\u50cf\u5b58\u5728", 
+          "target": {
+            "index": 0, 
+            "label": "avatar"
+          }, 
           "then": [
             {
               "kind": "exists"
             }
           ]
-        },
+        }, 
         {
-          "name": "主色底头像文字为白（OnPrimary）",
+          "name": "\u4e3b\u8272\u5e95\u5934\u50cf\u6587\u5b57\u4e3a\u767d\uff08OnPrimary\uff09", 
           "target": {
-            "label": "avatar",
-            "index": 1
-          },
+            "index": 1, 
+            "label": "avatar"
+          }, 
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.4,
-                0.35,
-                0.3,
-                0.3
-              ],
               "expect": {
                 "token": "OnPrimary"
-              },
-              "minRatio": 0.05,
+              }, 
+              "frac": [
+                0.4, 
+                0.35, 
+                0.3, 
+                0.3
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.05, 
               "tol": 24
             }
           ]
         }
-      ]
-    },
+      ], 
+      "name": "\u56fe\u6807\u5934\u50cf"
+    }, 
     {
-      "name": "头像组",
       "cases": [
         {
-          "name": "尾项文本为 +2（唯一文本锚）",
+          "name": "\u5c3e\u9879\u6587\u672c\u4e3a +2\uff08\u552f\u4e00\u6587\u672c\u951a\uff09", 
           "target": {
-            "label": "avatar",
+            "label": "avatar", 
             "text": "+"
-          },
+          }, 
           "then": [
             {
-              "kind": "text",
+              "kind": "text", 
               "text": "+2"
             }
           ]
-        },
+        }, 
         {
-          "name": "组内第 3 成员（Max 内最后一位）显示首字",
+          "name": "\u7ec4\u5185\u7b2c 3 \u6210\u5458\uff08Max \u5185\u6700\u540e\u4e00\u4f4d\uff09\u663e\u793a\u9996\u5b57", 
           "target": {
-            "label": "avatar",
-            "text": "王"
-          },
+            "label": "avatar", 
+            "text": "\u738b"
+          }, 
           "then": [
             {
-              "kind": "text",
-              "text": "王"
+              "kind": "text", 
+              "text": "\u738b"
             }
           ]
-        },
+        }, 
         {
-          "name": "尾项尺寸与组员一致 32",
+          "name": "\u5c3e\u9879\u5c3a\u5bf8\u4e0e\u7ec4\u5458\u4e00\u81f4 32", 
           "target": {
-            "label": "avatar",
+            "label": "avatar", 
             "text": "+"
-          },
+          }, 
           "then": [
             {
-              "kind": "geometry",
+              "kind": "geometry", 
               "widthBetween": [
-                30,
+                30, 
                 34
               ]
             }
           ]
         }
-      ]
+      ], 
+      "name": "\u5934\u50cf\u7ec4"
     }
-  ]
+  ], 
+  "structure": {
+    "apiRows": 7, 
+    "sections": [
+      "\u4e09\u6863\u5c3a\u5bf8", 
+      "\u56fe\u7247\u5934\u50cf", 
+      "\u56fe\u6807\u5934\u50cf", 
+      "\u5934\u50cf\u7ec4"
+    ]
+  }
 }

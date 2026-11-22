@@ -7,6 +7,7 @@ package widgets
 
 import (
 	"fmt"
+	"image"
 	"math"
 	"strconv"
 	"strings"
@@ -31,7 +32,7 @@ type Card struct {
 	Footer  ui.Widget
 	// Cover 封面区（antd Card.cover）：渲染在卡片最顶部、**通栏无内边距**
 	// （封面图元直贴卡片边缘，与 antd cover 语义一致）。
-	Cover   ui.Widget
+	Cover ui.Widget
 	// Actions 操作区（antd Card actions）：渲染在卡片底部，顶部 hairline
 	// 分隔、横排均分（MainSpaceEvenly）、无左右内边距。
 	Actions  []ui.Widget
@@ -238,7 +239,7 @@ type Tag struct {
 	// Preset 预设色名（antd color 预设值）："success"/"error"/
 	// "warning"/"processing"/"default"；设置后按语义色渲染（浅底+
 	// 同色文字+淡描边），Preset 解析优先于显式 Color。
-	Preset string
+	Preset  string
 	OnClose func()
 	OnCheck func(bool)
 
@@ -349,6 +350,10 @@ type Avatar struct {
 	// Icon 图标头像（antd Avatar.icon）：设置后优先于 Text（组合复用
 	// Icon 组件，颜色随文字语义）。
 	Icon string
+	// Src 图片头像（antd Avatar.src）：内存位图（image.Image），圆形
+	// 裁剪 CustomPaint 绘制；非空时优先于 Icon/Text（引擎位图通道
+	// render.ImageFrom 现成——Image 组件同款）。
+	Src image.Image
 	// FullText 整体显示 Text 不截首字符（"+N" 尾项等短语义文本用）。
 	FullText bool
 }
@@ -377,6 +382,17 @@ func (a *Avatar) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	n := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: s / 2}).SetSize2(s, s)
 	switch {
+	case a.Src != nil:
+		// 图片头像：圆形裁剪位图（render.ImageFrom 双线性；clip 圆形
+		// 路径——Image 组件矩形绘制不同，头像圆口语义）。
+		ref := render.ImageFrom(a.Src)
+		return scene.CustomPaintNode(func(cv render.Canvas, sz geom.Size) {
+			cv.Save()
+			clip := render.NewPath().AddCircle(s/2, s/2, s/2)
+			cv.ClipPath(clip)
+			cv.DrawImage(ref, geom.RectXYWH(0, 0, s, s), render.ImageBilinear)
+			cv.Restore()
+		}).SetSize2(s, s).SetHit(scene.HitSpec{Label: "avatar"})
 	case a.Icon != "":
 		// 图标头像：Icon 组件居中（尺寸 ≈ size×0.5，antd 语义）。
 		ic := (&Icon{Name: a.Icon, Size: s * 0.5, Color: fg}).Build(ctx)
@@ -915,8 +931,8 @@ type Pagination struct {
 	ShowQuickJumper bool
 	// Simple 简易形态（antd simple）：「{当前}/{总页}」+ 跳页输入，
 	// 不渲染页码按钮行。
-	Simple bool
-	OnChange        func(int)
+	Simple   bool
+	OnChange func(int)
 	// OnPageSize 每页条数变化回调（切换后 Page 已钳制到新总页数范围）。
 	OnPageSize func(int)
 

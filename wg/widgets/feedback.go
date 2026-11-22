@@ -359,11 +359,22 @@ type Drawer struct {
 	Content ui.Widget
 	Edge    DrawerEdge
 	Width   float32
-	OnClose func()
+	// PresetSize 预设宽度（antd Drawer width 预设：378 默认 / 736 宽），
+	// 覆盖 Width（>0 时生效；antd size="default"|"large" 对应）。
+	PresetSize float32
+	OnClose    func()
 
 	handle overlay.Handle
 	fb     feedbackHost
 }
+
+// Drawer 预设宽度（antd size 语义）。
+const (
+	// DrawerSizeDefault 默认宽 378。
+	DrawerSizeDefault float32 = 378
+	// DrawerSizeLarge 宽 736。
+	DrawerSizeLarge float32 = 736
+)
 
 // NewDrawer 创建抽屉。
 func NewDrawer(title string, content ui.Widget) *Drawer {
@@ -382,6 +393,9 @@ func (d *Drawer) Show(ctx *ui.BuildContext) {
 		DrawerTop: overlay.PlacementTopStart, DrawerBottom: overlay.PlacementBottomStart,
 	}[d.Edge]
 	w := d.Width
+	if d.PresetSize > 0 {
+		w = d.PresetSize // antd size 预设优先（378/736）
+	}
 	if w <= 0 {
 		w = 320
 	}
@@ -418,7 +432,9 @@ func (d *Drawer) Show(ctx *ui.BuildContext) {
 			col.SetPadding(geom.InLTRB(th.Space.LG, th.Space.LG, th.Space.LG, th.Space.LG))
 			if title != "" {
 				tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeLG), text.Options{})
-				col.Add(scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text}))
+				dt := scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text})
+				dt.SetHit(scene.HitSpec{Label: "drawer-title"}) // 被动锚：标题文本断言用
+				col.Add(dt)
 			}
 			if content != nil {
 				col.Add(buildChild(ctx, content))
@@ -456,8 +472,11 @@ type Notification struct {
 	Title    string
 	Body     string
 	Duration time.Duration
-	handle   overlay.Handle
-	fb       feedbackHost
+	// Type 语义图标（antd notification type：info/success/warning/
+	// error——复用 Message 的 messagePalette 语义色+图标；零值无图标）。
+	Type   MessageType
+	handle overlay.Handle
+	fb     feedbackHost
 }
 
 // NewNotification 创建通知。
@@ -493,7 +512,21 @@ func (n *Notification) Show(ctx *ui.BuildContext) {
 				Border: scene.Stroke(th.Color.Border, 1), Radius: th.Radius.Base,
 			})
 			col.SetPadding(geom.InLTRB(12, 10, 12, 10))
-			if title != "" {
+			// Type 语义图标（antd notification 图标在标题左侧；零值=
+			// 无图标纯文本形态；loading 旋转同 Message）。
+			if n.Type != 0 {
+				if fg, icon, spin := messagePalette(th, n.Type); icon != "" {
+					row := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
+					ic := &Icon{Name: icon, Size: 18, Color: fg, Spin: spin}
+					row.Add(ic.Build(ctx))
+					if title != "" {
+						tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeBase), text.Options{})
+						row.Add(scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text}))
+					}
+					col.Add(row)
+					title = "" // 标题已并入图标行
+				}
+			} else if title != "" {
 				tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeBase), text.Options{})
 				col.Add(scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text}))
 			}

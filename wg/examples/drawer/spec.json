@@ -1,102 +1,137 @@
 {
-  "id": "drawer",
-  "structure": {
-    "apiRows": 5,
-    "sections": [
-      "左侧抽屉"
-    ]
-  },
+  "id": "drawer", 
   "sections": [
     {
-      "name": "左侧抽屉",
       "cases": [
         {
-          "name": "点击打开抽屉（BandModal）",
+          "name": "\u70b9\u51fb\u6253\u5f00\u62bd\u5c49\uff08BandModal\uff09", 
           "target": {
-            "label": "button",
-            "text": "从左侧滑出抽屉"
-          },
-          "when": [
-            {
-              "click": {}
-            }
-          ],
+            "label": "button", 
+            "text": "\u4ece\u5de6\u4fa7\u6ed1\u51fa\u62bd\u5c49"
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 1,
-              "band": "modal"
+              "band": "modal", 
+              "count": 1, 
+              "kind": "overlay"
             }
-          ]
-        },
-        {
-          "name": "打开后 Esc 关闭",
-          "target": {
-            "label": "button",
-            "text": "从左侧滑出抽屉"
-          },
+          ], 
           "when": [
             {
               "click": {}
-            },
+            }
+          ]
+        }, 
+        {
+          "name": "\u6253\u5f00\u540e Esc \u5173\u95ed", 
+          "target": {
+            "label": "button", 
+            "text": "\u4ece\u5de6\u4fa7\u6ed1\u51fa\u62bd\u5c49"
+          }, 
+          "then": [
+            {
+              "band": "modal", 
+              "count": 0, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
             {
               "key": "escape"
             }
-          ],
+          ]
+        }, 
+        {
+          "name": "\u62bd\u5c49\u901a\u680f\u9ad8\uff08\u9876\u90e8\u4e0e\u5e95\u90e8\u5747\u4e3a\u62bd\u5c49\u767d\u5e95\uff09", 
+          "target": {
+            "label": "button", 
+            "text": "\u4ece\u5de6\u4fa7\u6ed1\u51fa\u62bd\u5c49"
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 0,
-              "band": "modal"
+              "expect": {
+                "token": "Surface"
+              }, 
+              "frac": [
+                0.05, 
+                0.05, 
+                0.2, 
+                0.1
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.6, 
+              "tol": 14
+            }, 
+            {
+              "expect": {
+                "token": "Surface"
+              }, 
+              "frac": [
+                0.05, 
+                0.85, 
+                0.2, 
+                0.1
+              ], 
+              "kind": "colorRatio", 
+              "minRatio": 0.6, 
+              "tol": 14
             }
-          ]
-        },
-        {
-          "name": "抽屉通栏高（顶部与底部均为抽屉白底）",
-          "target": {
-            "label": "button",
-            "text": "从左侧滑出抽屉"
-          },
+          ], 
           "when": [
             {
               "click": {}
-            },
+            }, 
             {
               "wait": 400
             }
-          ],
+          ]
+        }
+      ], 
+      "name": "\u5de6\u4fa7\u62bd\u5c49"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "\u5bbd\u62bd\u5c49\u6253\u5f00\uff08PresetSize 736\uff09", 
+          "target": {
+            "label": "button", 
+            "text": "\u5bbd\u62bd\u5c49\uff08736\uff09"
+          }, 
           "then": [
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.05,
-                0.05,
-                0.2,
-                0.1
-              ],
-              "expect": {
-                "token": "Surface"
-              },
-              "minRatio": 0.6,
-              "tol": 14
-            },
+              "band": "modal", 
+              "count": 1, 
+              "kind": "overlay"
+            }, 
             {
-              "kind": "colorRatio",
-              "frac": [
-                0.05,
-                0.85,
-                0.2,
-                0.1
-              ],
-              "expect": {
-                "token": "Surface"
-              },
-              "minRatio": 0.6,
-              "tol": 14
+              "kind": "text", 
+              "target": {
+                "label": "drawer-title"
+              }, 
+              "text": "\u5bbd\u62bd\u5c49"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
             }
           ]
         }
-      ]
+      ], 
+      "name": "\u9884\u8bbe\u5c3a\u5bf8"
     }
-  ]
+  ], 
+  "structure": {
+    "apiRows": 6, 
+    "sections": [
+      "\u5de6\u4fa7\u62bd\u5c49", 
+      "\u9884\u8bbe\u5c3a\u5bf8"
+    ]
+  }
 }

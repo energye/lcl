@@ -1,68 +1,124 @@
 {
-  "id": "notification",
-  "structure": {
-    "apiRows": 4,
-    "sections": [
-      "弹出通知"
-    ]
-  },
+  "id": "notification", 
   "sections": [
     {
-      "name": "弹出通知",
       "cases": [
         {
-          "name": "点击弹出通知（BandToast）",
+          "name": "\u70b9\u51fb\u5f39\u51fa\u901a\u77e5\uff08BandToast\uff09", 
           "target": {
-            "label": "button",
-            "text": "弹出通知"
-          },
-          "when": [
-            {
-              "click": {}
-            }
-          ],
+            "label": "button", 
+            "text": "\u5f39\u51fa\u901a\u77e5"
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 1,
-              "band": "toast"
+              "band": "toast", 
+              "count": 1, 
+              "kind": "overlay"
             }
-          ]
-        },
-        {
-          "name": "常驻通知点内容树处关闭（OutsideClick）",
-          "target": {
-            "label": "button",
-            "text": "弹出通知"
-          },
+          ], 
           "when": [
             {
               "click": {}
-            },
+            }
+          ]
+        }, 
+        {
+          "name": "\u5e38\u9a7b\u901a\u77e5\u70b9\u5185\u5bb9\u6811\u5904\u5173\u95ed\uff08OutsideClick\uff09", 
+          "target": {
+            "label": "button", 
+            "text": "\u5f39\u51fa\u901a\u77e5"
+          }, 
+          "then": [
+            {
+              "band": "toast", 
+              "count": 0, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
             {
               "wait": 300
-            },
+            }, 
             {
               "click": {
                 "target": {
-                  "label": "label",
-                  "text": "常驻通知（需手动关）"
+                  "label": "label", 
+                  "text": "\u5e38\u9a7b\u901a\u77e5\uff08\u9700\u624b\u52a8\u5173\uff09"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
             }
-          ],
+          ]
+        }
+      ], 
+      "name": "\u5f39\u51fa\u901a\u77e5"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "\u6210\u529f\u901a\u77e5\uff1a\u7eff\u52fe\u56fe\u6807+\u6807\u9898\u540c\u6392", 
+          "target": {
+            "label": "button", 
+            "text": "\u6210\u529f\u901a\u77e5"
+          }, 
           "then": [
             {
-              "kind": "overlay",
-              "count": 0,
-              "band": "toast"
+              "kind": "exists", 
+              "target": {
+                "label": "icon"
+              }
+            }, 
+            {
+              "band": "toast", 
+              "count": 1, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }, 
+        {
+          "name": "\u8b66\u544a\u901a\u77e5\uff1a\u56fe\u6807+\u6587\u6848", 
+          "target": {
+            "label": "button", 
+            "text": "\u8b66\u544a\u901a\u77e5"
+          }, 
+          "then": [
+            {
+              "band": "toast", 
+              "count": 1, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
             }
           ]
         }
-      ]
+      ], 
+      "name": "\u8bed\u4e49\u56fe\u6807"
     }
-  ]
+  ], 
+  "structure": {
+    "apiRows": 5, 
+    "sections": [
+      "\u5f39\u51fa\u901a\u77e5", 
+      "\u8bed\u4e49\u56fe\u6807"
+    ]
+  }
 }
