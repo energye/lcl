@@ -1,10 +1,11 @@
 {
   "id": "datepicker",
   "structure": {
-    "apiRows": 8,
+    "apiRows": 9,
     "sections": [
       "范围选择",
-      "日期选择"
+      "日期选择",
+      "自定义单元格"
     ]
   },
   "sections": [
@@ -388,6 +389,140 @@
                 "target": {
                   "label": "date-cell",
                   "index": 10
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "自定义单元格",
+      "cases": [
+        {
+          "name": "触发框存在且显示固定日期",
+          "target": {
+            "label": "date-picker",
+            "text": "2026-11-21"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-picker",
+                "text": "2026-11-21"
+              }
+            }
+          ]
+        },
+        {
+          "name": "开面板后 15 格子追加事件 Badge（发布）",
+          "target": {
+            "label": "date-picker"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker",
+                  "text": "2026-11-21"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "badge",
+                "text": "发布"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "badge",
+                "text": "评审"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "badge",
+                "text": "停机"
+              }
+            }
+          ]
+        },
+        {
+          "name": "事件格数字仍在（数字+追加并存）",
+          "target": {
+            "label": "date-picker"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker",
+                  "text": "2026-11-21"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-cell",
+                "text": "15"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-cell",
+                "text": "11"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击事件格选择功能不回归（关面板）",
+          "target": {
+            "label": "date-picker"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker",
+                  "text": "2026-11-21"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "text": "15"
                 }
               }
             },

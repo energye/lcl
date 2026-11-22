@@ -38,14 +38,18 @@ type DatePicker struct {
 	Value2        time.Time
 	Placeholder2  string
 	OnChangeRange func(t1, t2 time.Time)
+	// DateCellRender 自定义面板日期格内容（antd cellRender 的"数字+
+	// 追加"形态）：非空时该格在日期数字下方渲染返回的 Widget；返回
+	// nil = 无自定义内容。每次构建调用（与单元格 Render 同款契约）。
+	DateCellRender func(date time.Time) ui.Widget
 	// rangeStage 范围选择进行到的阶段（0=未开始/已完成，1=已选起待选止）。
 	rangeStage int
 
 	handle    overlay.Handle
 	fb        feedbackHost
 	childNode *scene.Node
-	viewYear  int  // 面板当前年份
-	viewMonth int  // 面板当前月份（1-12）
+	viewYear  int // 面板当前年份
+	viewMonth int // 面板当前月份（1-12）
 	panelOpen bool
 }
 
@@ -119,8 +123,8 @@ func (d *DatePicker) buildRangeTrigger(ctx *ui.BuildContext, th *theme.Data) *sc
 	sep := text.LayoutText("~", text.DefaultFont(th.Font.SizeBase), text.Options{})
 	row.Add(scene.Text(scene.TextSpec{Src: "~", Layout: sep, Color: th.Color.TextFaint}))
 	for i, seg := range []struct {
-		val      time.Time
-		ph       string
+		val time.Time
+		ph  string
 	}{
 		{d.Value, d.Placeholder},
 		{d.Value2, d.Placeholder2},
@@ -319,6 +323,14 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 		txt := scene.Text(scene.TextSpec{Src: fmt.Sprintf("%d", day), Layout: l, Color: fg})
 		txt.SetMargin(geom.InLTRB(0, (28-l.Size.H)/2, 0, 0))
 		cell.Add(txt)
+		// 自定义面板日期格内容：数字下方追加（antd cellRender 语义）。
+		if d.DateCellRender != nil {
+			if wgt := d.DateCellRender(t); wgt != nil {
+				wn := wgt.Build(ctx)
+				wn.SetMargin(geom.InLTRB(0, 0, 0, 0))
+				cell.Add(wn)
+			}
+		}
 		cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-cell", Cursor: scene.CursorPointer})
 		weekRow.Add(cell)
 		daysThisRow++

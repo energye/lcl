@@ -30,6 +30,10 @@ type Calendar struct {
 	// OnPanelChange 面板月份切换回调。
 	OnPanelChange func(month time.Time)
 	Width         float32
+	// DateCellRender 自定义日期格内容（antd cellRender 的"数字+追加"
+	// 形态）：非空时该格在日期数字下方渲染返回的 Widget；返回 nil =
+	// 无自定义内容。每次构建调用（与单元格 Render 同款契约）。
+	DateCellRender func(date time.Time) ui.Widget
 
 	viewYear  int
 	viewMonth int
@@ -154,6 +158,15 @@ func (c *Calendar) Build(ctx *ui.BuildContext) *scene.Node {
 		num := scene.Text(scene.TextSpec{Src: fmt.Sprintf("%d", day), Layout: l, Color: txtColor})
 		num.SetMargin(geom.InLTRB(8, 6, 0, 0))
 		cell.Add(num)
+		// 自定义日期格内容：数字下方追加（antd cellRender 语义——数字
+		// 仍在，自定义内容渲染在其下）。nil 返回=纯数字格。
+		if c.DateCellRender != nil {
+			if wgt := c.DateCellRender(date); wgt != nil {
+				wn := wgt.Build(ctx)
+				wn.SetMargin(geom.InLTRB(8, 2, 2, 0))
+				cell.Add(wn)
+			}
+		}
 		cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "calendar-cell", Cursor: scene.CursorPointer})
 		if ctx.Input != nil {
 			ctx.Input.Set(cell, input.Handler{Pointer: func(ev *input.PointerEvent) bool {

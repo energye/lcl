@@ -1,7 +1,7 @@
 {
   "id": "calendar",
   "structure": {
-    "apiRows": 5,
+    "apiRows": 6,
     "sections": [
       "全屏日历"
     ]
@@ -168,6 +168,55 @@
               "target": {
                 "label": "calendar-cell",
                 "text": "21"
+              }
+            }
+          ]
+        },
+        {
+          "name": "DateCellRender：15 格子追加事件 Badge（发布窗口）",
+          "target": {
+            "label": "badge",
+            "text": "发布窗口"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "badge",
+                "text": "发布窗口"
+              }
+            }
+          ]
+        },
+        {
+          "name": "DateCellRender：11 格子追加里程碑评审 Badge",
+          "target": {
+            "label": "badge",
+            "text": "里程碑评审"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "badge",
+                "text": "里程碑评审"
+              }
+            }
+          ]
+        },
+        {
+          "name": "DateCellRender：事件格数字仍在（数字+追加并存）",
+          "target": {
+            "label": "calendar-cell",
+            "text": "15"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "15",
+              "target": {
+                "label": "calendar-cell",
+                "text": "15"
               }
             }
           ]
