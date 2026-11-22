@@ -1,29 +1,29 @@
 {
-  "id": "icon",
-  "structure": {
-    "apiRows": 5,
-    "sections": [
-      "全部内置图标",
-      "语义色与旋转"
-    ]
-  },
+  "id": "icon", 
   "sections": [
     {
-      "name": "全部内置图标",
       "cases": [
         {
-          "name": "图标集存在（≥20）",
+          "name": "图标集存在（≥84——第一百零九轮扩展）", 
           "target": {
             "label": "icon"
-          },
+          }, 
           "then": [
             {
-              "kind": "exists",
-              "count": 20
+              "count": 84, 
+              "kind": "exists"
             }
           ]
         }
-      ]
+      ], 
+      "name": "全部内置图标"
     }
-  ]
+  ], 
+  "structure": {
+    "apiRows": 5, 
+    "sections": [
+      "全部内置图标", 
+      "语义色与旋转"
+    ]
+  }
 }

@@ -12,7 +12,7 @@ func main() {
 	launcher.Main(doc.Meta{
 		ID: "icon", Title: "Icon 图标", Group: doc.GroupBasic,
 		What: []string{
-			"语义图标：内置 26 个常用线性图标（对齐 @ant-design/icons 的 outline 风格命名）",
+			"语义图标：内置 84 个常用线性图标（对齐 @ant-design/icons 的 outline 风格命名——方向/数据/操作/编辑/状态/其他六类）",
 			"实现是 wg 自绘的 render.Path（24×24 视口、2px 圆帽描边）——**近似**而非官方 SVG 逐点复刻；需要精确图标时用自定义路径扩展",
 			"Color 零值取主题文字色；放按钮里传 Foreground 即实现 currentColor 继承",
 		},
@@ -39,11 +39,11 @@ func main() {
 			}},
 		},
 		API: []doc.APIRow{
-			{Name: "Name", Type: "string", Desc: "图标名：plus/minus/close/check/search/up/down/left/right/menu/calendar/clock/user/home/eye/delete/edit/setting/info-circle/question-circle/warning-circle/check-circle/close-circle/download/upload/copy/more/star/heart/loading"},
+			{Name: "Name", Type: "string", Desc: "图标名 84 个：方向（up/down/left/right + circle 系 + double/arrow）/数据（database/folder/file/image/mail/link/printer）/操作（lock/key/reload/undo/zoom/fullscreen/drag）/编辑（bold/italic/underline/align）/状态（play/pause/sound/wifi/cloud/thunderbolt/smile）/其他（shopping-cart/car/phone/bell/book/global/team 等）"},
 			{Name: "Size", Type: "float32", Default: "16", Desc: "边长（正方形视口）"},
 			{Name: "Color", Type: "geom.Color", Default: "Color.Text", Desc: "着色；零值取主题"},
 			{Name: "Spin", Type: "bool", Default: "false", Desc: "旋转动画（用于 loading）"},
-			{Name: "IconNames", Type: "func() []string", Desc: "内置图标名清单"},
+			{Name: "IconNames", Type: "func() []string", Desc: "内置图标名清单（排序稳定）"},
 		},
 	})
 }

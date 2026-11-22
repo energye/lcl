@@ -168,6 +168,269 @@ var iconPainters = map[string]iconDef{
 	"loading": {stroke: func(b iconBrush) {
 		b.p.AddArc(geom.RectXYWH(4.5, 4.5, 15, 15), 0, 4.2)
 	}},
+
+	// ── 第一百零九轮扩展（26 → 84）：方向 ─────────────────────────
+	"up-circle": {stroke: func(b iconBrush) {
+		b.circle(12, 12, 8.5)
+		b.seg(8, 14, 12, 10, 16, 14)
+	}},
+	"down-circle": {stroke: func(b iconBrush) {
+		b.circle(12, 12, 8.5)
+		b.seg(8, 10, 12, 14, 16, 10)
+	}},
+	"left-circle": {stroke: func(b iconBrush) {
+		b.circle(12, 12, 8.5)
+		b.seg(14, 8, 10, 12, 14, 16)
+	}},
+	"right-circle": {stroke: func(b iconBrush) {
+		b.circle(12, 12, 8.5)
+		b.seg(10, 8, 14, 12, 10, 16)
+	}},
+	"double-left": {stroke: func(b iconBrush) {
+		b.seg(11, 6, 6, 12, 11, 18).seg(18, 6, 13, 12, 18, 18)
+	}},
+	"double-right": {stroke: func(b iconBrush) {
+		b.seg(6, 6, 11, 12, 6, 18).seg(13, 6, 18, 12, 13, 18)
+	}},
+	"arrow-left": {stroke: func(b iconBrush) {
+		b.seg(20, 12, 4, 12).seg(10, 6, 4, 12, 10, 18)
+	}},
+	"arrow-right": {stroke: func(b iconBrush) {
+		b.seg(4, 12, 20, 12).seg(14, 6, 20, 12, 14, 18)
+	}},
+
+	// ── 数据 ─────────────────────────────────────────────────────────
+	"database": {stroke: func(b iconBrush) {
+		b.p.AddOval(geom.RectXYWH(5, 3, 14, 5))
+		b.seg(5, 5.5, 5, 12).seg(5, 12, 5, 18.5)
+		b.seg(19, 5.5, 19, 12).seg(19, 12, 19, 18.5)
+		b.p.AddArc(geom.RectXYWH(5, 9.5, 14, 5), 3.14159, 3.14159)
+		b.p.AddArc(geom.RectXYWH(5, 16, 14, 5), 3.14159, 3.14159)
+	}},
+	"folder": {stroke: func(b iconBrush) {
+		b.seg(3.5, 5, 10, 5, 12, 7.5, 20.5, 7.5, 20.5, 19, 3.5, 19, 3.5, 5)
+	}},
+	"folder-open": {stroke: func(b iconBrush) {
+		b.seg(3.5, 5, 10, 5, 12, 7.5, 20.5, 7.5, 20.5, 10)
+		b.seg(20.5, 10, 18.5, 19, 3.5, 19, 3.5, 5)
+	}},
+	"file": {stroke: func(b iconBrush) {
+		b.seg(6, 3, 14, 3, 18, 7, 18, 21, 6, 21, 6, 3)
+		b.seg(14, 3, 14, 7, 18, 7)
+	}},
+	"file-text": {stroke: func(b iconBrush) {
+		b.seg(6, 3, 14, 3, 18, 7, 18, 21, 6, 21, 6, 3)
+		b.seg(14, 3, 14, 7, 18, 7)
+		b.seg(9, 11, 15, 11).seg(9, 14, 15, 14).seg(9, 17, 13, 17)
+	}},
+	"image": {stroke: func(b iconBrush) {
+		b.seg(3.5, 3.5, 20.5, 3.5, 20.5, 20.5, 3.5, 20.5, 3.5, 3.5)
+		b.circle(9, 9, 1.8)
+		b.seg(5, 18, 11, 12, 14.5, 15.5, 17, 13, 20, 16.5)
+	}},
+	"mail": {stroke: func(b iconBrush) {
+		b.seg(3, 5, 21, 5, 21, 19, 3, 19, 3, 5)
+		b.seg(3.5, 6, 12, 12.5, 20.5, 6)
+	}},
+	"link": {stroke: func(b iconBrush) {
+		b.seg(10, 14, 14, 10)
+		b.seg(8.5, 9, 7, 7.5, 7, 5.5, 8.5, 4, 10.5, 4, 12.5, 5.5, 14, 7)
+		b.seg(10, 6.5, 12.5, 4)
+		b.seg(15.5, 15, 17, 16.5, 17, 18.5, 15.5, 20, 13.5, 20, 11.5, 18.5, 10, 17)
+		b.seg(14, 17.5, 11.5, 20)
+	}},
+	"paper-clip": {stroke: func(b iconBrush) {
+		b.seg(8, 12.5, 15, 5.5, 18, 8.5, 10, 16.5, 7, 13.5, 14.5, 6)
+	}},
+	"printer": {stroke: func(b iconBrush) {
+		b.seg(7, 8, 7, 3.5, 17, 3.5, 17, 8)
+		b.seg(5, 8, 19, 8, 19, 15, 17, 15)
+		b.seg(7, 13, 7, 20.5, 17, 20.5, 17, 13)
+		b.seg(7, 15, 5, 15, 5, 8)
+	}},
+
+	// ── 操作 ─────────────────────────────────────────────────────────
+	"lock": {stroke: func(b iconBrush) {
+		b.seg(5.5, 11, 18.5, 11, 18.5, 20, 5.5, 20, 5.5, 11)
+		b.seg(8, 11, 8, 7, 9.5, 4.5, 12, 4.5, 14.5, 4.5, 16, 7, 16, 11)
+		b.seg(12, 14, 12, 16.5)
+	}},
+	"unlock": {stroke: func(b iconBrush) {
+		b.seg(5.5, 11, 18.5, 11, 18.5, 20, 5.5, 20, 5.5, 11)
+		b.seg(8, 11, 8, 7, 9.5, 4.5, 12, 4.5, 14.5, 4.5, 16, 7, 16, 8)
+		b.seg(12, 14, 12, 16.5)
+	}},
+	"key": {stroke: func(b iconBrush) {
+		b.circle(8, 14, 4)
+		b.seg(11, 11, 20, 2).seg(16, 6, 18.5, 8.5).seg(14, 8, 16, 10)
+	}},
+	"poweroff": {stroke: func(b iconBrush) {
+		b.p.AddArc(geom.RectXYWH(5, 5, 14, 14), -2.2, 4.4)
+		b.seg(12, 3, 12, 11)
+	}},
+	"reload": {stroke: func(b iconBrush) {
+		b.p.AddArc(geom.RectXYWH(5, 5, 14, 14), 0.6, 4.6)
+		b.seg(18, 3.5, 19.3, 8, 14.8, 9)
+	}},
+	"redo": {stroke: func(b iconBrush) {
+		b.seg(4, 18, 6.5, 11, 15, 10.5)
+		b.seg(12, 6, 16.5, 10.5, 12, 15)
+	}},
+	"undo": {stroke: func(b iconBrush) {
+		b.seg(20, 18, 17.5, 11, 9, 10.5)
+		b.seg(12, 6, 7.5, 10.5, 12, 15)
+	}},
+	"zoom-in": {stroke: func(b iconBrush) {
+		b.circle(10.5, 10.5, 6.5)
+		b.seg(15.5, 15.5, 20.5, 20.5)
+		b.seg(7.8, 10.5, 13.2, 10.5).seg(10.5, 7.8, 10.5, 13.2)
+	}},
+	"zoom-out": {stroke: func(b iconBrush) {
+		b.circle(10.5, 10.5, 6.5)
+		b.seg(15.5, 15.5, 20.5, 20.5)
+		b.seg(7.8, 10.5, 13.2, 10.5)
+	}},
+	"fullscreen": {stroke: func(b iconBrush) {
+		b.seg(4, 9, 4, 4, 9, 4).seg(15, 4, 20, 4, 20, 9)
+		b.seg(20, 15, 20, 20, 15, 20).seg(9, 20, 4, 20, 4, 15)
+	}},
+	"fullscreen-exit": {stroke: func(b iconBrush) {
+		b.seg(9, 4, 9, 9, 4, 9).seg(15, 9, 20, 9, 20, 4)
+		b.seg(20, 15, 20, 20, 15, 20).seg(9, 20, 4, 20, 4, 15)
+	}},
+	"drag": {stroke: func(b iconBrush) {
+		b.seg(12, 3, 12, 9).seg(9, 6, 12, 3, 15, 6)
+		b.seg(12, 15, 12, 21).seg(9, 18, 12, 21, 15, 18)
+		b.seg(3, 12, 9, 12).seg(6, 9, 3, 12, 6, 15)
+		b.seg(15, 12, 21, 12).seg(18, 9, 21, 12, 18, 15)
+	}},
+
+	// ── 编辑 ─────────────────────────────────────────────────────────
+	"form": {stroke: func(b iconBrush) {
+		b.seg(5, 4.5, 19, 4.5).seg(5, 10, 12, 10)
+		b.seg(17.5, 9.5, 20, 12, 15.5, 19, 12.5, 20, 12, 16.5, 17.5, 9.5)
+		b.seg(5, 15.5, 10, 15.5)
+	}},
+	"highlight": {stroke: func(b iconBrush) {
+		b.seg(12.5, 4.5, 18, 10, 11, 17, 7.5, 17, 7, 13.5, 12.5, 4.5)
+		b.seg(5, 20.5, 10, 20.5)
+	}},
+	"bold": {stroke: func(b iconBrush) {
+		b.seg(7, 4, 7, 20)
+		b.seg(7, 4, 13, 4, 16.5, 6.5, 16.5, 10.5, 13, 12, 7, 12)
+		b.seg(7, 12, 14, 12, 17, 14.5, 17, 17.5, 14, 20, 7, 20)
+	}},
+	"italic": {stroke: func(b iconBrush) {
+		b.seg(10, 4, 19, 4).seg(5, 20, 14, 20).seg(14.5, 4, 9.5, 20)
+	}},
+	"underline": {stroke: func(b iconBrush) {
+		b.seg(7, 4, 7, 11, 8.5, 15.5, 12, 17, 15.5, 15.5, 17, 11, 17, 4)
+		b.seg(5, 20.5, 19, 20.5)
+	}},
+	"align-left": {stroke: func(b iconBrush) {
+		b.seg(4, 5, 20, 5).seg(4, 10, 14, 10).seg(4, 15, 20, 15).seg(4, 20, 14, 20)
+	}},
+	"align-center": {stroke: func(b iconBrush) {
+		b.seg(5, 5, 19, 5).seg(8, 10, 16, 10).seg(5, 15, 19, 15).seg(8, 20, 16, 20)
+	}},
+	"align-right": {stroke: func(b iconBrush) {
+		b.seg(4, 5, 20, 5).seg(10, 10, 20, 10).seg(4, 15, 20, 15).seg(10, 20, 20, 20)
+	}},
+
+	// ── 状态 / 媒体 ─────────────────────────────────────────────────
+	"play-circle": {stroke: func(b iconBrush) {
+		b.circle(12, 12, 8.5)
+		b.seg(10, 8.5, 15.5, 12, 10, 15.5, 10, 8.5)
+	}},
+	"pause-circle": {stroke: func(b iconBrush) {
+		b.circle(12, 12, 8.5)
+		b.seg(9.5, 8.5, 9.5, 15.5).seg(14.5, 8.5, 14.5, 15.5)
+	}},
+	"sound": {stroke: func(b iconBrush) {
+		b.seg(4, 9.5, 8, 9.5, 13, 5, 13, 19, 8, 14.5, 4, 14.5, 4, 9.5)
+		b.p.AddArc(geom.RectXYWH(13, 7, 8, 10), -0.9, 1.8)
+	}},
+	"wifi": {stroke: func(b iconBrush) {
+		b.p.AddArc(geom.RectXYWH(4, 6, 16, 16), -2.3, 4.6)
+		b.p.AddArc(geom.RectXYWH(7, 9, 10, 10), -2.3, 4.6)
+	}, fill: func(b iconBrush) { b.circle(12, 18.5, 1.6) }},
+	"cloud": {stroke: func(b iconBrush) {
+		b.seg(7, 18, 6, 18, 4, 16, 4, 13, 6, 11, 8.5, 11)
+		b.seg(9, 8, 12, 6, 15, 7, 17, 10, 19.5, 11.5, 20, 13.5, 19, 16, 17, 18, 7, 18)
+	}},
+	"cloud-download": {stroke: func(b iconBrush) {
+		b.seg(7, 13, 6, 13, 4, 11, 4, 8.5, 6, 6.5, 8.5, 6.5)
+		b.seg(9, 3.5, 12, 1.5, 15, 2.5, 17, 5.5, 19.5, 7, 20, 9, 19, 11.5, 17, 13, 7, 13)
+		b.seg(12, 11, 12, 18).seg(9, 15.5, 12, 18.5, 15, 15.5)
+	}},
+	"cloud-upload": {stroke: func(b iconBrush) {
+		b.seg(7, 17, 6, 17, 4, 15, 4, 12.5, 6, 10.5, 8.5, 10.5)
+		b.seg(9, 7.5, 12, 5.5, 15, 6.5, 17, 9.5, 19.5, 11, 20, 13, 19, 15.5, 17, 17, 7, 17)
+		b.seg(12, 20, 12, 13).seg(9, 15.5, 12, 12.5, 15, 15.5)
+	}},
+	"thunderbolt": {stroke: func(b iconBrush) {
+		b.seg(13, 2.5, 5.5, 13.5, 11, 13.5, 10, 21.5, 18.5, 10.5, 13, 10.5, 13, 2.5)
+	}},
+	"smile": {stroke: func(b iconBrush) {
+		b.circle(12, 12, 8.5)
+		b.p.AddArc(geom.RectXYWH(8, 10, 8, 8), 0.5, 2.1)
+	}, fill: func(b iconBrush) {
+		b.circle(9, 9.5, 1.1)
+		b.circle(15, 9.5, 1.1)
+	}},
+
+	// ── 其他 ─────────────────────────────────────────────────────────
+	"shopping-cart": {stroke: func(b iconBrush) {
+		b.seg(3, 4.5, 6, 4.5, 8.5, 15, 19, 15, 21, 7.5, 7, 7.5)
+	}, fill: func(b iconBrush) {
+		b.circle(10, 19, 1.6)
+		b.circle(17.5, 19, 1.6)
+	}},
+	"car": {stroke: func(b iconBrush) {
+		b.seg(4, 13, 6.5, 7.5, 17.5, 7.5, 20, 13, 20, 17, 4, 17, 4, 13)
+		b.seg(6.5, 7.5, 4, 13)
+	}, fill: func(b iconBrush) {
+		b.circle(7.5, 17.5, 1.6)
+		b.circle(16.5, 17.5, 1.6)
+	}},
+	"phone": {stroke: func(b iconBrush) {
+		b.seg(6, 3.5, 10, 3.5, 10.5, 8, 8.5, 10, 14, 15.5, 16, 13.5, 20.5, 14, 20.5, 18, 17, 20.5, 13, 18, 6, 11, 3.5, 7, 6, 3.5)
+	}},
+	"bell": {stroke: func(b iconBrush) {
+		b.seg(6, 16, 6, 10, 8, 5.5, 12, 4.5, 16, 5.5, 18, 10, 18, 16, 20, 18.5, 4, 18.5, 6, 16)
+		b.seg(10, 21, 12, 19.5, 14, 21)
+	}},
+	"book": {stroke: func(b iconBrush) {
+		b.seg(4, 5, 4, 19, 6, 20.5, 20, 20.5, 20, 4, 6, 4, 4, 5)
+		b.seg(8, 4, 8, 20.5)
+	}},
+	"tag-o": {stroke: func(b iconBrush) {
+		b.seg(4, 4, 11, 4, 20, 13, 13, 20, 4, 11, 4, 4)
+		b.circle(8, 8, 1.3)
+	}},
+	"audit": {stroke: func(b iconBrush) {
+		b.seg(5, 3.5, 19, 3.5, 19, 20.5, 5, 20.5, 5, 3.5)
+		b.seg(9, 7.5, 15, 7.5).seg(9, 11, 15, 11)
+		b.seg(9, 15, 11, 15).seg(13, 18, 15, 14)
+	}},
+	"global": {stroke: func(b iconBrush) {
+		b.circle(12, 12, 8.5)
+		b.seg(3.5, 12, 20.5, 12)
+		b.p.AddOval(geom.RectXYWH(8, 3.5, 8, 17))
+	}},
+	"apartment": {stroke: func(b iconBrush) {
+		b.seg(12, 3, 12, 7).seg(7, 7, 17, 7)
+		b.seg(7, 7, 7, 11).seg(17, 7, 17, 11)
+		b.seg(4.5, 14, 9.5, 14, 9.5, 20.5, 4.5, 20.5, 4.5, 14)
+		b.seg(14.5, 14, 19.5, 14, 19.5, 20.5, 14.5, 20.5, 14.5, 14)
+		b.seg(7, 11, 7, 14).seg(17, 11, 17, 14)
+	}},
+	"team": {stroke: func(b iconBrush) {
+		b.circle(9, 8.5, 3.2)
+		b.seg(3.5, 19.5, 4, 16.5, 6, 14.5, 9, 14, 12, 14.5, 14, 16.5, 14.5, 19.5)
+		b.circle(16.5, 9, 2.6)
+		b.seg(16, 14.5, 18.5, 15.5, 20, 17.5, 20.5, 19.5)
+	}},
 }
 
 // IconNames 返回内置图标名（诊断/文档用）。
