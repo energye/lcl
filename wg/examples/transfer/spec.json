@@ -1,10 +1,11 @@
 {
   "id": "transfer",
   "structure": {
-    "apiRows": 6,
+    "apiRows": 9,
     "sections": [
       "基础",
-      "带初值"
+      "带初值",
+      "搜索与全选"
     ]
   },
   "sections": [
@@ -179,6 +180,117 @@
               "target": {
                 "label": "transfer-list-右",
                 "index": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "搜索与全选",
+      "cases": [
+        {
+          "name": "搜索框存在（两侧）",
+          "target": {
+            "label": "transfer-search-\u5de6",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "exists"
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "transfer-search-\u53f3",
+                "index": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "搜索过滤左栏（typeText 内容）",
+          "target": {
+            "label": "transfer-search-\u5de6",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "typeText": "内容"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "内容一",
+              "target": {
+                "label": "transfer-list-左",
+                "index": 2
+              }
+            },
+            {
+              "kind": "text",
+              "notContains": true,
+              "text": "文章四",
+              "target": {
+                "label": "transfer-list-左",
+                "index": 2
+              }
+            }
+          ]
+        },
+        {
+          "name": "header 全选勾选左栏全部项",
+          "target": {
+            "label": "transfer-selall-\u5de6",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "源 5 / 5 项",
+              "target": {
+                "label": "transfer-head-左",
+                "index": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "再点全选反选清空勾选",
+          "target": {
+            "label": "transfer-selall-\u5de6",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "源 0 / 5 项",
+              "target": {
+                "label": "transfer-head-左",
+                "index": 0
               }
             }
           ]

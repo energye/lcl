@@ -195,6 +195,10 @@ type Checkbox struct {
 	Disabled      bool
 	Label         string
 	OnChange      func(bool)
+	// HitLabel 自定义命中标签（空 = "checkbox"）。嵌入复合组件（如
+	// Transfer header 全选）时设成非通用标签，避免被自动化审计当
+	// 通用复选框枚举/撞车。
+	HitLabel string
 }
 
 // NewCheckbox 创建复选框。
@@ -264,7 +268,11 @@ func (b *Checkbox) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		root.Add((&Label{Text: b.Label, Size: th.Font.SizeBase, Color: lc}).Build(ctx))
 	}
-	root.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "checkbox", Cursor: scene.CursorPointer, Disabled: b.Disabled})
+	hitLabel := b.HitLabel
+	if hitLabel == "" {
+		hitLabel = "checkbox"
+	}
+	root.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: hitLabel, Cursor: scene.CursorPointer, Disabled: b.Disabled})
 
 	toggle := func() {
 		if b.Disabled {

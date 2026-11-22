@@ -10,11 +10,15 @@ package widgets
 //
 // 组合复用：Checkbox（项勾选，池化实例跨 Build 持有）、Button
 // （操作列四钮——外包被动锚 transfer-btn-* 防撞全页 button）。
-// 未实现（如实标注）：showSearch 搜索框、拖拽排序、分页、
-// footer 插槽、render 自定义行、header 全选 checkbox（计数行）。
+// showSearch 搜索框（两侧输入框按 title 过滤，filterOption/onSearch
+// 可定制）；header 全选勾选框（showSelectAll，默认开启，勾选本栏
+// 可见项）。未实现（如实标注）：拖拽排序、分页、footer 插槽、
+// render 自定义行。
 
 import (
 	"fmt"
+	"strings"
+	"time"
 
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/input"
@@ -35,7 +39,7 @@ type TransferDirection uint8
 
 const (
 	TransferRight TransferDirection = iota // 左→右（选入）
-	TransferLeft                            // 右→左（移出）
+	TransferLeft                           // 右→左（移出）
 )
 
 // Transfer 是穿梭框。
@@ -46,18 +50,35 @@ type Transfer struct {
 	OnChange   func(targetKeys []string, dir TransferDirection, moveKeys []string)
 	Width      float32 // 单栏宽（默认 220）
 
+	// ShowSearch 搜索框（antd showSearch）：两侧面板顶部输入框过滤列表。
+	ShowSearch bool
+	// SearchPlaceholder 搜索框占位（antd locale.searchPlaceholder，默认「请输入搜索内容」）。
+	SearchPlaceholder string
+	// FilterOption 自定义过滤（antd filterOption(inputValue, option, direction)——
+	// direction 为 "left"/"right"；nil = 默认 title 不区分大小写子串匹配）。
+	FilterOption func(inputValue string, item TransferItem, direction string) bool
+	// OnSearch 搜索内容变化回调（antd onSearch(direction, value)）。
+	OnSearch func(direction string, value string)
+	// ShowSelectAll header 全选勾选框（antd showSelectAll，默认 true）。
+	ShowSelectAll bool
+
 	checked map[string]bool
 	// checks 池化复选框实例（跨 Build 持有——hover 态不丢，Tree.Checkable 先例）。
 	checks map[string]*Checkbox
 	// opBtns 池化操作按钮（Build 内新建实例按压态随重建丢失——教训⑨，Upload 先例）。
 	opBtns map[string]*Button
+	// 搜索框文本与池化 Input/全选 checkbox（跨 Build 持有，编辑态/焦点不丢）。
+	searchL, searchR string
+	searches         map[string]*Input
+	selAlls          map[string]*Checkbox
 }
 
 // NewTransfer 创建穿梭框。
 func NewTransfer(items []TransferItem) *Transfer {
-	return &Transfer{DataSource: items, Width: 220,
+	return &Transfer{DataSource: items, Width: 220, ShowSelectAll: true,
 		checked: map[string]bool{}, checks: map[string]*Checkbox{},
-		opBtns: map[string]*Button{}}
+		opBtns: map[string]*Button{}, searches: map[string]*Input{},
+		selAlls: map[string]*Checkbox{}}
 }
 
 // isTarget key 是否在右栏。
@@ -132,6 +153,103 @@ func (t *Transfer) moveAll(dir TransferDirection) {
 	}
 }
 
+// sideDir 面板方向（antd filterOption/onSearch 的 direction："left"/"right"）。
+func (t *Transfer) sideDir(side string) string {
+	if side == "右" {
+		return "right"
+	}
+	return "left"
+}
+
+// search 某侧当前搜索文本。
+func (t *Transfer) search(side string) string {
+	if side == "右" {
+		return t.searchR
+	}
+	return t.searchL
+}
+
+// setSearch 更新某侧搜索文本并重建列表。
+func (t *Transfer) setSearch(side, value string) {
+	if side == "右" {
+		t.searchR = value
+	} else {
+		t.searchL = value
+	}
+	if t.OnSearch != nil {
+		t.OnSearch(t.sideDir(side), value)
+	}
+	// 延迟重建列表（击键分发内直接重建扰动输入焦点——DatePicker
+	// refreshPanel 同款教训）。
+	time.AfterFunc(0, t.MarkDirty)
+}
+
+// filterItems 按搜索文本过滤列表（默认 title 不区分大小写子串匹配）。
+func (t *Transfer) filterItems(items []TransferItem, direction, q string) []TransferItem {
+	if q == "" {
+		return items
+	}
+	out := make([]TransferItem, 0, len(items))
+	for _, it := range items {
+		if t.FilterOption != nil {
+			if t.FilterOption(q, it, direction) {
+				out = append(out, it)
+			}
+		} else if strings.Contains(strings.ToLower(it.Title), strings.ToLower(q)) {
+			out = append(out, it)
+		}
+	}
+	return out
+}
+
+// sideItems 某侧（左=源/右=目标）全部项。
+func (t *Transfer) sideItems(side string) []TransferItem {
+	var items []TransferItem
+	for _, it := range t.DataSource {
+		if t.isTarget(it.Key) {
+			if side == "右" {
+				items = append(items, it)
+			}
+		} else if side == "左" {
+			items = append(items, it)
+		}
+	}
+	return items
+}
+
+// selectAll 全选/反选某侧可见（过滤后）项。
+func (t *Transfer) selectAll(side string, on bool) {
+	for _, it := range t.filterItems(t.sideItems(side), t.sideDir(side), t.search(side)) {
+		t.checked[it.Key] = on
+		if cb := t.checks[it.Key]; cb != nil {
+			cb.Checked = on
+			cb.Indeterminate = false
+		}
+	}
+	t.MarkDirty()
+}
+
+// selAllState 某侧全选勾选框状态（全可见勾选→checked；部分→indeterminate）。
+func (t *Transfer) selAllState(side string) (bool, bool) {
+	vis := t.filterItems(t.sideItems(side), t.sideDir(side), t.search(side))
+	if len(vis) == 0 {
+		return false, false
+	}
+	cnt := 0
+	for _, it := range vis {
+		if t.checked[it.Key] {
+			cnt++
+		}
+	}
+	if cnt == len(vis) {
+		return true, false
+	}
+	if cnt > 0 {
+		return false, true
+	}
+	return false, false
+}
+
 // Build 实现 ui.Widget：标题行+列表 ×2 + 中间操作列。
 func (t *Transfer) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(t)
@@ -186,9 +304,12 @@ func (t *Transfer) buildOps(ctx *ui.BuildContext, th *theme.Data, nSource, nTarg
 	return col
 }
 
-// buildSide 构建一栏（标题行+项列表）。
+// buildSide 构建一栏（标题行+搜索框+项列表）。
 func (t *Transfer) buildSide(ctx *ui.BuildContext, th *theme.Data, side, title, itemLabel string,
 	items []TransferItem, w float32) *scene.Node {
+	direction := t.sideDir(side)
+	vis := t.filterItems(items, direction, t.search(side))
+
 	col := scene.Flex(scene.Vertical, 0)
 	col.SetBox(scene.BoxSpec{
 		Fill:   scene.Solid(th.Color.Surface),
@@ -197,7 +318,7 @@ func (t *Transfer) buildSide(ctx *ui.BuildContext, th *theme.Data, side, title, 
 	})
 	col.SetWidth(w)
 
-	// 标题行：勾选/总数计数（antd "x/y items"）。
+	// 标题行：全选勾选框 + 勾选/总数计数（antd "x/y items"）。
 	checkedN := 0
 	for _, it := range items {
 		if t.checked[it.Key] {
@@ -208,6 +329,19 @@ func (t *Transfer) buildSide(ctx *ui.BuildContext, th *theme.Data, side, title, 
 	head.SetWidth(w)
 	head.SetPadding(geom.InLTRB(10, 6, 10, 6))
 	head.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.FillHover)})
+	if t.ShowSelectAll {
+		allCb, ok := t.selAlls[side]
+		if !ok {
+			allCb = NewCheckbox("", false)
+			allCb.HitLabel = "transfer-selall-" + side
+			t.selAlls[side] = allCb
+		}
+		allCb.OnChange = func(on bool) { t.selectAll(side, on) }
+		checked, indeterminate := t.selAllState(side)
+		allCb.Checked = checked
+		allCb.Indeterminate = indeterminate
+		head.Add(allCb.Build(ctx))
+	}
 	ht := fmt.Sprintf("%s %d / %d 项", title, checkedN, len(items))
 	hl := text.LayoutText(ht, text.DefaultFont(th.Font.SizeSM), text.Options{})
 	headText := scene.Text(scene.TextSpec{Src: ht, Layout: hl, Color: th.Color.Text})
@@ -215,9 +349,26 @@ func (t *Transfer) buildSide(ctx *ui.BuildContext, th *theme.Data, side, title, 
 	head.Add(headText)
 	col.Add(head)
 
-	// 项列表。
+	// 搜索框（antd showSearch）。
 	body := scene.Flex(scene.Vertical, 0)
-	for _, it := range items {
+	if t.ShowSearch {
+		ph := t.SearchPlaceholder
+		if ph == "" {
+			ph = "请输入搜索内容"
+		}
+		si, ok := t.searches[side]
+		if !ok {
+			si = &Input{HitLabel: "transfer-search-" + side}
+			t.searches[side] = si
+		}
+		si.Placeholder = ph
+		si.Value = t.search(side)
+		si.OnChanged = func(v string) { t.setSearch(side, v) }
+		body.Add(si.Build(ctx))
+	}
+
+	// 项列表（搜索过滤后）。
+	for _, it := range vis {
 		it := it
 		body.Add(t.buildItem(ctx, th, it, itemLabel, w))
 	}
