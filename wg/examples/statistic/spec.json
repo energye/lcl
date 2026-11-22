@@ -1,82 +1,179 @@
 {
-  "id": "statistic",
-  "structure": {
-    "apiRows": 5,
-    "sections": [
-      "金额",
-      "用户数"
-    ]
-  },
+  "id": "statistic", 
   "sections": [
     {
-      "name": "金额",
       "cases": [
         {
-          "name": "标题与前缀存在",
+          "name": "标题与前缀存在", 
           "target": {
             "label": "statistic"
-          },
+          }, 
           "then": [
             {
-              "kind": "text",
-              "text": "账户总余额",
+              "kind": "text", 
               "target": {
                 "label": "statistic-title"
-              }
-            },
+              }, 
+              "text": "账户总余额"
+            }, 
             {
-              "kind": "text",
-              "text": "¥",
+              "kind": "text", 
               "target": {
                 "label": "statistic-prefix"
-              }
+              }, 
+              "text": "¥"
             }
           ]
-        },
+        }, 
         {
-          "name": "数值千分位+两位小数",
+          "name": "数值千分位+两位小数", 
           "target": {
             "label": "statistic-value"
-          },
+          }, 
           "then": [
             {
-              "kind": "text",
-              "text": "189,345.25",
+              "kind": "text", 
               "target": {
                 "label": "statistic-value"
-              }
+              }, 
+              "text": "189,345.25"
             }
           ]
         }
-      ]
-    },
+      ], 
+      "name": "金额"
+    }, 
     {
-      "name": "用户数",
       "cases": [
         {
-          "name": "整数千分位+后缀",
+          "name": "整数千分位+后缀", 
           "target": {
             "label": "statistic"
-          },
+          }, 
           "then": [
             {
-              "kind": "text",
-              "text": "112,893",
+              "kind": "text", 
               "target": {
-                "label": "statistic-value",
-                "index": 1
-              }
-            },
+                "index": 1, 
+                "label": "statistic-value"
+              }, 
+              "text": "112,893"
+            }, 
             {
-              "kind": "text",
-              "text": "人",
+              "kind": "text", 
               "target": {
                 "label": "statistic-suffix"
+              }, 
+              "text": "人"
+            }
+          ]
+        }
+      ], 
+      "name": "用户数"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "距开售初始恒 02:30:00（Now 注入跨天确定性）", 
+          "target": {
+            "label": "countdown-value", 
+            "text": "02:30:00"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "countdown-value", 
+                "text": "02:30:00"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "大促天级格式 1 天 02:00:05", 
+          "target": {
+            "label": "countdown-value", 
+            "text": "1 天 02:00:05"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "countdown-value", 
+                "text": "1 天 02:00:05"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "标题与后缀存在", 
+          "target": {
+            "label": "countdown-title", 
+            "text": "距开售"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "countdown-title", 
+                "text": "距开售"
+              }
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "countdown-suffix", 
+                "text": "截止"
               }
             }
           ]
         }
-      ]
+      ], 
+      "name": "倒计时"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "CountUp 运行时长显示 mm:ss 形态（时:分:秒三位冒号）", 
+          "target": {
+            "label": "countdown"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "countdown"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "标题存在", 
+          "target": {
+            "label": "countdown-title", 
+            "text": "运行时长"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "countdown-title", 
+                "text": "运行时长"
+              }
+            }
+          ]
+        }
+      ], 
+      "name": "正计时"
     }
-  ]
+  ], 
+  "structure": {
+    "apiRows": 10, 
+    "sections": [
+      "金额", 
+      "用户数", 
+      "倒计时", 
+      "正计时"
+    ]
+  }
 }
