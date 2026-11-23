@@ -1,7 +1,7 @@
 {
   "id": "select",
   "structure": {
-    "apiRows": 12,
+    "apiRows": 11,
     "sections": [
       "label/value 分离",
       "基本单选",

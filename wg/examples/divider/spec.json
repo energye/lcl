@@ -1,7 +1,7 @@
 {
   "id": "divider",
   "structure": {
-    "apiRows": 4,
+    "apiRows": 5,
     "sections": [
       "水平分隔线",
       "带文字分隔线"

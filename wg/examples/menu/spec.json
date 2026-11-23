@@ -1,55 +1,49 @@
 {
-  "id": "menu", 
   "sections": [
     {
       "cases": [
         {
-          "name": "选中项（首页）文字为 Primary", 
-          "target": {
-            "label": "menu-item", 
-            "text": "首页"
-          }, 
           "then": [
             {
-              "expect": {
-                "token": "Primary"
-              }, 
+              "kind": "colorRatio", 
               "frac": [
                 0.1, 
                 0.25, 
                 0.6, 
                 0.7
               ], 
-              "kind": "colorRatio", 
-              "minRatio": 0.02, 
-              "tol": 24
-            }
-          ]
-        }, 
-        {
-          "name": "点击文档切换选中（文字转主色）", 
-          "target": {
-            "label": "menu-item", 
-            "text": "文档"
-          }, 
-          "then": [
-            {
               "expect": {
                 "token": "Primary"
               }, 
+              "tol": 24, 
+              "minRatio": 0.02
+            }
+          ], 
+          "name": "\u9009\u4e2d\u9879\uff08\u9996\u9875\uff09\u6587\u5b57\u4e3a Primary", 
+          "target": {
+            "text": "\u9996\u9875", 
+            "label": "menu-item"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "kind": "colorRatio", 
               "frac": [
                 0.1, 
                 0.25, 
                 0.6, 
                 0.7
               ], 
-              "kind": "colorRatio", 
-              "minRatio": 0.02, 
               "target": {
-                "label": "menu-item", 
-                "text": "文档"
+                "text": "\u6587\u6863", 
+                "label": "menu-item"
               }, 
-              "tol": 24
+              "expect": {
+                "token": "Primary"
+              }, 
+              "tol": 24, 
+              "minRatio": 0.02
             }
           ], 
           "when": [
@@ -59,223 +53,14 @@
             {
               "wait": 300
             }
-          ]
-        }
-      ], 
-      "name": "横向菜单"
-    }, 
-    {
-      "cases": [
-        {
-          "name": "选中项（邮件）底色为 InfoBg", 
-          "target": {
-            "label": "menu-item", 
-            "text": "邮件"
-          }, 
-          "then": [
-            {
-              "expect": {
-                "token": "InfoBg"
-              }, 
-              "frac": [
-                0.3, 
-                0.3, 
-                0.5, 
-                0.5
-              ], 
-              "kind": "colorRatio", 
-              "minRatio": 0.3, 
-              "tol": 14
-            }
-          ]
-        }, 
-        {
-          "name": "未选项（文件）为透明底（无 InfoBg 像素）", 
-          "target": {
-            "label": "menu-item", 
-            "text": "文件"
-          }, 
-          "then": [
-            {
-              "expect": {
-                "token": "InfoBg"
-              }, 
-              "frac": [
-                0.3, 
-                0.3, 
-                0.5, 
-                0.5
-              ], 
-              "kind": "colorRatio", 
-              "minRatio": 0.0, 
-              "note": "反向验证：占比 0 即未选中（minRatio 0 恒真，靠 detail 人工核对）", 
-              "tol": 14
-            }
-          ]
-        }, 
-        {
-          "name": "点击用户切换选中（InfoBg 迁移）", 
-          "target": {
-            "label": "menu-item", 
-            "text": "用户"
-          }, 
-          "then": [
-            {
-              "expect": {
-                "token": "InfoBg"
-              }, 
-              "frac": [
-                0.3, 
-                0.3, 
-                0.5, 
-                0.5
-              ], 
-              "kind": "colorRatio", 
-              "minRatio": 0.3, 
-              "target": {
-                "label": "menu-item", 
-                "text": "用户"
-              }, 
-              "tol": 14
-            }
           ], 
-          "when": [
-            {
-              "click": {}
-            }, 
-            {
-              "wait": 300
-            }
-          ]
-        }
-      ], 
-      "name": "纵向菜单"
-    }, 
-    {
-      "cases": [
-        {
-          "name": "分组标题存在（置灰小字）", 
+          "name": "\u70b9\u51fb\u6587\u6863\u5207\u6362\u9009\u4e2d\uff08\u6587\u5b57\u8f6c\u4e3b\u8272\uff09", 
           "target": {
-            "label": "menu", 
-            "text": "项目分组"
-          }, 
-          "then": [
-            {
-              "kind": "text", 
-              "text": "项目分组"
-            }
-          ]
+            "text": "\u6587\u6863", 
+            "label": "menu-item"
+          }
         }, 
         {
-          "name": "展开态子项可见（OpenKeys 预置 nav）", 
-          "target": {
-            "label": "menu-item", 
-            "text": "布局设置"
-          }, 
-          "then": [
-            {
-              "kind": "exists"
-            }
-          ]
-        }, 
-        {
-          "name": "分组子项恒显示（分组无折叠语义）", 
-          "target": {
-            "label": "menu", 
-            "text": "项目分组"
-          }, 
-          "then": [
-            {
-              "kind": "exists", 
-              "target": {
-                "label": "menu-item", 
-                "text": "成员一"
-              }
-            }
-          ]
-        }, 
-        {
-          "name": "点击「导航配置」收起（子项消失）", 
-          "target": {
-            "label": "menu-item", 
-            "text": "导航配置"
-          }, 
-          "then": [
-            {
-              "kind": "absent", 
-              "target": {
-                "label": "menu-item", 
-                "text": "布局设置"
-              }
-            }
-          ], 
-          "when": [
-            {
-              "click": {}
-            }, 
-            {
-              "wait": 300
-            }
-          ]
-        }, 
-        {
-          "name": "再点击展开（子项回归）", 
-          "target": {
-            "label": "menu-item", 
-            "text": "导航配置"
-          }, 
-          "then": [
-            {
-              "kind": "exists", 
-              "target": {
-                "label": "menu-item", 
-                "text": "布局设置"
-              }
-            }
-          ], 
-          "when": [
-            {
-              "click": {}
-            }, 
-            {
-              "wait": 300
-            }
-          ]
-        }, 
-        {
-          "name": "选中子项浅主色底（nav-a 预置选中）", 
-          "target": {
-            "label": "menu-item", 
-            "text": "布局设置"
-          }, 
-          "then": [
-            {
-              "expect": {
-                "token": "InfoBg"
-              }, 
-              "frac": [
-                0.3, 
-                0.3, 
-                0.5, 
-                0.5
-              ], 
-              "kind": "colorRatio", 
-              "minRatio": 0.3, 
-              "tol": 14
-            }
-          ]
-        }
-      ], 
-      "name": "子菜单与分组"
-    }, 
-    {
-      "cases": [
-        {
-          "name": "hover 设置项弹子面板", 
-          "target": {
-            "label": "menu-item", 
-            "text": "设置"
-          }, 
           "then": [
             {
               "count": 1, 
@@ -290,15 +75,15 @@
             {
               "kind": "exists", 
               "target": {
-                "label": "menu-sub-item", 
-                "text": "个人设置"
+                "text": "\u4e2a\u4eba\u8bbe\u7f6e", 
+                "label": "menu-sub-item"
               }
             }, 
             {
               "kind": "exists", 
               "target": {
-                "label": "menu-sub-item", 
-                "text": "系统设置"
+                "text": "\u7cfb\u7edf\u8bbe\u7f6e", 
+                "label": "menu-sub-item"
               }
             }
           ], 
@@ -306,52 +91,52 @@
             {
               "hover": {
                 "target": {
-                  "label": "menu-item", 
-                  "text": "设置"
+                  "text": "\u8bbe\u7f6e", 
+                  "label": "menu-item"
                 }
               }
             }, 
             {
               "wait": 400
             }
-          ]
+          ], 
+          "name": "hover \u8bbe\u7f6e\u9879\u5f39\u5b50\u9762\u677f", 
+          "target": {
+            "text": "\u8bbe\u7f6e", 
+            "label": "menu-item"
+          }
         }, 
         {
-          "name": "点子项个人设置后选中父项高亮且面板关", 
-          "target": {
-            "label": "menu-item", 
-            "text": "设置"
-          }, 
           "then": [
             {
               "count": 0, 
               "kind": "overlay"
             }, 
             {
-              "expect": {
-                "token": "Primary"
-              }, 
+              "kind": "colorRatio", 
               "frac": [
                 0.1, 
                 0.93, 
                 0.8, 
                 0.07
               ], 
-              "kind": "colorRatio", 
-              "minRatio": 0.3, 
               "target": {
-                "label": "menu-item", 
-                "text": "设置"
+                "text": "\u8bbe\u7f6e", 
+                "label": "menu-item"
               }, 
-              "tol": 14
+              "expect": {
+                "token": "Primary"
+              }, 
+              "tol": 14, 
+              "minRatio": 0.3
             }
           ], 
           "when": [
             {
               "hover": {
                 "target": {
-                  "label": "menu-item", 
-                  "text": "设置"
+                  "text": "\u8bbe\u7f6e", 
+                  "label": "menu-item"
                 }
               }
             }, 
@@ -361,22 +146,22 @@
             {
               "click": {
                 "target": {
-                  "label": "menu-sub-item", 
-                  "text": "个人设置"
+                  "text": "\u4e2a\u4eba\u8bbe\u7f6e", 
+                  "label": "menu-sub-item"
                 }
               }
             }, 
             {
               "wait": 400
             }
-          ]
+          ], 
+          "name": "\u70b9\u5b50\u9879\u4e2a\u4eba\u8bbe\u7f6e\u540e\u9009\u4e2d\u7236\u9879\u9ad8\u4eae\u4e14\u9762\u677f\u5173", 
+          "target": {
+            "text": "\u8bbe\u7f6e", 
+            "label": "menu-item"
+          }
         }, 
         {
-          "name": "Esc 关闭子面板", 
-          "target": {
-            "label": "menu-item", 
-            "text": "设置"
-          }, 
           "then": [
             {
               "count": 0, 
@@ -387,8 +172,8 @@
             {
               "hover": {
                 "target": {
-                  "label": "menu-item", 
-                  "text": "设置"
+                  "text": "\u8bbe\u7f6e", 
+                  "label": "menu-item"
                 }
               }
             }, 
@@ -401,27 +186,27 @@
             {
               "wait": 300
             }
-          ]
+          ], 
+          "name": "Esc \u5173\u95ed\u5b50\u9762\u677f", 
+          "target": {
+            "text": "\u8bbe\u7f6e", 
+            "label": "menu-item"
+          }
         }, 
         {
-          "name": "hover 系统设置展开孙面板", 
-          "target": {
-            "label": "menu-item", 
-            "text": "设置"
-          }, 
           "then": [
             {
               "kind": "exists", 
               "target": {
-                "label": "menu-sub-item", 
-                "text": "权限管理"
+                "text": "\u6743\u9650\u7ba1\u7406", 
+                "label": "menu-sub-item"
               }
             }, 
             {
               "kind": "exists", 
               "target": {
-                "label": "menu-sub-item", 
-                "text": "操作日志"
+                "text": "\u64cd\u4f5c\u65e5\u5fd7", 
+                "label": "menu-sub-item"
               }
             }
           ], 
@@ -429,8 +214,8 @@
             {
               "hover": {
                 "target": {
-                  "label": "menu-item", 
-                  "text": "设置"
+                  "text": "\u8bbe\u7f6e", 
+                  "label": "menu-item"
                 }
               }
             }, 
@@ -440,46 +225,74 @@
             {
               "hover": {
                 "target": {
-                  "label": "menu-sub-item", 
-                  "text": "系统设置"
+                  "text": "\u7cfb\u7edf\u8bbe\u7f6e", 
+                  "label": "menu-sub-item"
                 }
               }
             }, 
             {
               "wait": 400
             }
-          ]
+          ], 
+          "name": "hover \u7cfb\u7edf\u8bbe\u7f6e\u5c55\u5f00\u5b59\u9762\u677f", 
+          "target": {
+            "text": "\u8bbe\u7f6e", 
+            "label": "menu-item"
+          }
         }
       ], 
-      "name": "横向子菜单"
+      "name": "\u6a2a\u5411\u83dc\u5355"
     }, 
     {
       "cases": [
         {
-          "name": "↓ 移动键盘焦点（邮件底色迁移到文件）", 
-          "target": {
-            "label": "menu", 
-            "index": 1
-          }, 
-          "when": [
+          "then": [
             {
-              "click": {
-                "target": {
-                  "label": "menu-item", 
-                  "text": "邮件"
-                }
-              }
-            }, 
-            {
-              "wait": 300
-            }, 
-            {
-              "key": "down"
-            }, 
-            {
-              "wait": 300
+              "kind": "colorRatio", 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "expect": {
+                "token": "InfoBg"
+              }, 
+              "tol": 14, 
+              "minRatio": 0.3
             }
           ], 
+          "name": "\u9009\u4e2d\u9879\uff08\u90ae\u4ef6\uff09\u5e95\u8272\u4e3a InfoBg", 
+          "target": {
+            "text": "\u90ae\u4ef6", 
+            "label": "menu-item"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "kind": "colorRatio", 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "note": "\u53cd\u5411\u9a8c\u8bc1\uff1a\u5360\u6bd4 0 \u5373\u672a\u9009\u4e2d\uff08minRatio 0 \u6052\u771f\uff0c\u9760 detail \u4eba\u5de5\u6838\u5bf9\uff09", 
+              "expect": {
+                "token": "InfoBg"
+              }, 
+              "tol": 14, 
+              "minRatio": 0.0
+            }
+          ], 
+          "name": "\u672a\u9009\u9879\uff08\u6587\u4ef6\uff09\u4e3a\u900f\u660e\u5e95\uff08\u65e0 InfoBg \u50cf\u7d20\uff09", 
+          "target": {
+            "text": "\u6587\u4ef6", 
+            "label": "menu-item"
+          }
+        }, 
+        {
           "then": [
             {
               "kind": "colorRatio", 
@@ -490,7 +303,7 @@
                 0.5
               ], 
               "target": {
-                "text": "文件", 
+                "text": "\u7528\u6237", 
                 "label": "menu-item"
               }, 
               "expect": {
@@ -498,6 +311,163 @@
               }, 
               "tol": 14, 
               "minRatio": 0.3
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ], 
+          "name": "\u70b9\u51fb\u7528\u6237\u5207\u6362\u9009\u4e2d\uff08InfoBg \u8fc1\u79fb\uff09", 
+          "target": {
+            "text": "\u7528\u6237", 
+            "label": "menu-item"
+          }
+        }
+      ], 
+      "name": "\u7eb5\u5411\u83dc\u5355"
+    }, 
+    {
+      "cases": [
+        {
+          "then": [
+            {
+              "text": "\u9879\u76ee\u5206\u7ec4", 
+              "kind": "text"
+            }
+          ], 
+          "name": "\u5206\u7ec4\u6807\u9898\u5b58\u5728\uff08\u7f6e\u7070\u5c0f\u5b57\uff09", 
+          "target": {
+            "text": "\u9879\u76ee\u5206\u7ec4", 
+            "label": "menu"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ], 
+          "name": "\u5c55\u5f00\u6001\u5b50\u9879\u53ef\u89c1\uff08OpenKeys \u9884\u7f6e nav\uff09", 
+          "target": {
+            "text": "\u5e03\u5c40\u8bbe\u7f6e", 
+            "label": "menu-item"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "text": "\u6210\u5458\u4e00", 
+                "label": "menu-item"
+              }
+            }
+          ], 
+          "name": "\u5206\u7ec4\u5b50\u9879\u6052\u663e\u793a\uff08\u5206\u7ec4\u65e0\u6298\u53e0\u8bed\u4e49\uff09", 
+          "target": {
+            "text": "\u9879\u76ee\u5206\u7ec4", 
+            "label": "menu"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "kind": "absent", 
+              "target": {
+                "text": "\u5e03\u5c40\u8bbe\u7f6e", 
+                "label": "menu-item"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ], 
+          "name": "\u70b9\u51fb\u300c\u5bfc\u822a\u914d\u7f6e\u300d\u6536\u8d77\uff08\u5b50\u9879\u6d88\u5931\uff09", 
+          "target": {
+            "text": "\u5bfc\u822a\u914d\u7f6e", 
+            "label": "menu-item"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "text": "\u5e03\u5c40\u8bbe\u7f6e", 
+                "label": "menu-item"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ], 
+          "name": "\u518d\u70b9\u51fb\u5c55\u5f00\uff08\u5b50\u9879\u56de\u5f52\uff09", 
+          "target": {
+            "text": "\u5bfc\u822a\u914d\u7f6e", 
+            "label": "menu-item"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "kind": "colorRatio", 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "expect": {
+                "token": "InfoBg"
+              }, 
+              "tol": 14, 
+              "minRatio": 0.3
+            }
+          ], 
+          "name": "\u9009\u4e2d\u5b50\u9879\u6d45\u4e3b\u8272\u5e95\uff08nav-a \u9884\u7f6e\u9009\u4e2d\uff09", 
+          "target": {
+            "text": "\u5e03\u5c40\u8bbe\u7f6e", 
+            "label": "menu-item"
+          }
+        }
+      ], 
+      "name": "\u5b50\u83dc\u5355\u4e0e\u5206\u7ec4"
+    }, 
+    {
+      "cases": [
+        {
+          "then": [
+            {
+              "kind": "colorRatio", 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "target": {
+                "text": "\u6587\u4ef6", 
+                "label": "menu-item"
+              }, 
+              "minRatio": 0.3, 
+              "tol": 14, 
+              "expect": {
+                "token": "InfoBg"
+              }
             }, 
             {
               "kind": "colorRatio", 
@@ -508,29 +478,22 @@
                 0.5
               ], 
               "target": {
-                "text": "邮件", 
+                "text": "\u90ae\u4ef6", 
                 "label": "menu-item"
               }, 
+              "maxRatio": 0.05, 
               "expect": {
                 "token": "InfoBg"
               }, 
-              "tol": 14, 
-              "maxRatio": 0.05
+              "tol": 14
             }
-          ]
-        }, 
-        {
-          "name": "↓ 移到用户再 Enter 选中（指示条与选中态迁移）", 
-          "target": {
-            "label": "menu", 
-            "index": 1
-          }, 
+          ], 
           "when": [
             {
               "click": {
                 "target": {
-                  "label": "menu-item", 
-                  "text": "邮件"
+                  "text": "\u90ae\u4ef6", 
+                  "label": "menu-item"
                 }
               }
             }, 
@@ -541,21 +504,16 @@
               "key": "down"
             }, 
             {
-              "wait": 200
-            }, 
-            {
-              "key": "down"
-            }, 
-            {
-              "wait": 200
-            }, 
-            {
-              "key": "enter"
-            }, 
-            {
               "wait": 300
             }
           ], 
+          "name": "\u2193 \u79fb\u52a8\u952e\u76d8\u7126\u70b9\uff08\u90ae\u4ef6\u5e95\u8272\u8fc1\u79fb\u5230\u6587\u4ef6\uff09", 
+          "target": {
+            "index": 1, 
+            "label": "menu"
+          }
+        }, 
+        {
           "then": [
             {
               "kind": "colorRatio", 
@@ -566,14 +524,14 @@
                 0.7
               ], 
               "target": {
-                "text": "用户", 
+                "text": "\u7528\u6237", 
                 "label": "menu-item"
               }, 
+              "minRatio": 0.25, 
+              "tol": 14, 
               "expect": {
                 "token": "Primary"
-              }, 
-              "tol": 14, 
-              "minRatio": 0.25
+              }
             }, 
             {
               "kind": "colorRatio", 
@@ -584,166 +542,203 @@
                 0.5
               ], 
               "target": {
-                "text": "用户", 
+                "text": "\u7528\u6237", 
                 "label": "menu-item"
               }, 
-              "expect": {
-                "token": "InfoBg"
-              }, 
+              "minRatio": 0.3, 
               "tol": 14, 
-              "minRatio": 0.3
-            }
-          ]
-        }, 
-        {
-          "name": "子菜单卡 → 已展开父项进首子项（焦点跟随）",
-          "target": {
-            "label": "menu",
-            "index": 2
-          },
-          "when": [
-            {
-              "click": {
-                "target": {
-                  "label": "menu-item",
-                  "text": "导航配置"
-                }
-              }
-            },
-            {
-              "wait": 300
-            },
-            {
-              "click": {
-                "target": {
-                  "label": "menu-item",
-                  "text": "导航配置"
-                }
-              }
-            },
-            {
-              "wait": 300
-            },
-            {
-              "key": "right"
-            },
-            {
-              "wait": 300
-            }
-          ],
-          "then": [
-            {
-              "kind": "colorRatio",
-              "frac": [
-                0.3,
-                0.3,
-                0.5,
-                0.5
-              ],
-              "target": {
-                "text": "布局设置",
-                "label": "menu-item"
-              },
               "expect": {
                 "token": "InfoBg"
-              },
-              "tol": 14,
-              "minRatio": 0.3
+              }
             }
-          ]
-        },
-        {
-          "name": "Enter 选中焦点子项（选中态迁移）",
-          "target": {
-            "label": "menu",
-            "index": 2
-          },
+          ], 
           "when": [
             {
               "click": {
                 "target": {
-                  "label": "menu-item",
-                  "text": "导航配置"
+                  "text": "\u90ae\u4ef6", 
+                  "label": "menu-item"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
-            },
+            }, 
             {
-              "click": {
-                "target": {
-                  "label": "menu-item",
-                  "text": "导航配置"
-                }
-              }
-            },
-            {
-              "wait": 300
-            },
-            {
-              "key": "right"
-            },
+              "key": "down"
+            }, 
             {
               "wait": 200
-            },
+            }, 
+            {
+              "key": "down"
+            }, 
+            {
+              "wait": 200
+            }, 
             {
               "key": "enter"
-            },
+            }, 
             {
               "wait": 300
             }
-          ],
+          ], 
+          "name": "\u2193 \u79fb\u5230\u7528\u6237\u518d Enter \u9009\u4e2d\uff08\u6307\u793a\u6761\u4e0e\u9009\u4e2d\u6001\u8fc1\u79fb\uff09", 
+          "target": {
+            "index": 1, 
+            "label": "menu"
+          }
+        }, 
+        {
           "then": [
             {
-              "kind": "colorRatio",
+              "kind": "colorRatio", 
               "frac": [
-                0.08,
-                0.25,
-                0.5,
-                0.75
-              ],
-              "target": {
-                "text": "布局设置",
-                "label": "menu-item"
-              },
-              "expect": {
-                "token": "Primary"
-              },
-              "tol": 14,
-              "minRatio": 0.05
-            },
-            {
-              "kind": "colorRatio",
-              "frac": [
-                0.3,
-                0.3,
-                0.5,
+                0.3, 
+                0.3, 
+                0.5, 
                 0.5
-              ],
+              ], 
               "target": {
-                "text": "布局设置",
+                "text": "\u5e03\u5c40\u8bbe\u7f6e", 
                 "label": "menu-item"
-              },
+              }, 
+              "minRatio": 0.3, 
+              "tol": 14, 
               "expect": {
                 "token": "InfoBg"
-              },
-              "tol": 14,
-              "minRatio": 0.3
+              }
             }
-          ]
+          ], 
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "text": "\u5bfc\u822a\u914d\u7f6e", 
+                  "label": "menu-item"
+                }
+              }
+            }, 
+            {
+              "wait": 300
+            }, 
+            {
+              "click": {
+                "target": {
+                  "text": "\u5bfc\u822a\u914d\u7f6e", 
+                  "label": "menu-item"
+                }
+              }
+            }, 
+            {
+              "wait": 300
+            }, 
+            {
+              "key": "right"
+            }, 
+            {
+              "wait": 300
+            }
+          ], 
+          "name": "\u5b50\u83dc\u5355\u5361 \u2192 \u5df2\u5c55\u5f00\u7236\u9879\u8fdb\u9996\u5b50\u9879\uff08\u7126\u70b9\u8ddf\u968f\uff09", 
+          "target": {
+            "index": 2, 
+            "label": "menu"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "kind": "colorRatio", 
+              "frac": [
+                0.08, 
+                0.25, 
+                0.5, 
+                0.75
+              ], 
+              "target": {
+                "text": "\u5e03\u5c40\u8bbe\u7f6e", 
+                "label": "menu-item"
+              }, 
+              "minRatio": 0.05, 
+              "tol": 14, 
+              "expect": {
+                "token": "Primary"
+              }
+            }, 
+            {
+              "kind": "colorRatio", 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "target": {
+                "text": "\u5e03\u5c40\u8bbe\u7f6e", 
+                "label": "menu-item"
+              }, 
+              "minRatio": 0.3, 
+              "tol": 14, 
+              "expect": {
+                "token": "InfoBg"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "text": "\u5bfc\u822a\u914d\u7f6e", 
+                  "label": "menu-item"
+                }
+              }
+            }, 
+            {
+              "wait": 300
+            }, 
+            {
+              "click": {
+                "target": {
+                  "text": "\u5bfc\u822a\u914d\u7f6e", 
+                  "label": "menu-item"
+                }
+              }
+            }, 
+            {
+              "wait": 300
+            }, 
+            {
+              "key": "right"
+            }, 
+            {
+              "wait": 200
+            }, 
+            {
+              "key": "enter"
+            }, 
+            {
+              "wait": 300
+            }
+          ], 
+          "name": "Enter \u9009\u4e2d\u7126\u70b9\u5b50\u9879\uff08\u9009\u4e2d\u6001\u8fc1\u79fb\uff09", 
+          "target": {
+            "index": 2, 
+            "label": "menu"
+          }
         }
       ], 
-      "name": "键盘导航"
+      "name": "\u952e\u76d8\u5bfc\u822a"
     }
   ], 
+  "id": "menu", 
   "structure": {
     "apiRows": 7, 
     "sections": [
-      "横向菜单", 
-      "纵向菜单", 
-      "子菜单与分组", 
-      "键盘导航"
+      "\u6a2a\u5411\u83dc\u5355", 
+      "\u7eb5\u5411\u83dc\u5355", 
+      "\u5b50\u83dc\u5355\u4e0e\u5206\u7ec4", 
+      "\u952e\u76d8\u5bfc\u822a"
     ]
   }
 }

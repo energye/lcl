@@ -1,7 +1,7 @@
 {
   "id": "progress",
   "structure": {
-    "apiRows": 7,
+    "apiRows": 6,
     "sections": [
       "四档进度",
       "status 与百分比",

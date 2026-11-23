@@ -5,7 +5,8 @@
     "sections": [
       "基础",
       "带初值",
-      "多选"
+      "多选",
+      "多选折叠"
     ]
   },
   "sections": [
@@ -478,6 +479,150 @@
               "target": {
                 "label": "tree-select",
                 "index": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "多选折叠",
+      "cases": [
+        {
+          "name": "MaxTagCount=2 点三叶子出 2 tag+折叠 chip 且面板不关",
+          "target": {
+            "label": "tree-select",
+            "index": 3
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tree-select",
+                  "index": 3
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "组件"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "表单"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "输入框"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "选择器"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "展示"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "表格"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "count": 2,
+              "target": {
+                "label": "treeselect-tag"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "treeselect-tag-more"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Esc 关面板后触发框保留 2 tag+折叠 chip",
+          "target": {
+            "label": "tree-select",
+            "index": 3
+          },
+          "when": [
+            {
+              "key": "escape"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "exists",
+              "count": 2,
+              "target": {
+                "label": "treeselect-tag"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "treeselect-tag-more"
               }
             }
           ]

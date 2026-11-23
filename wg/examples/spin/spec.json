@@ -1,7 +1,7 @@
 {
   "id": "spin",
   "structure": {
-    "apiRows": 2,
+    "apiRows": 4,
     "sections": [
       "四个相位",
       "自动旋转",

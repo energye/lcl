@@ -190,6 +190,15 @@ func (d *Dropdown) Show(ctx *ui.BuildContext) {
 	d.show(ctx, child)
 }
 
+// ShowAt 程序化显示下拉浮层（显式锚——无 Child 的挂载场景：Table 列
+// 筛选漏斗等，Child=nil 时 Show 静默 return 的缺口补齐）。
+func (d *Dropdown) ShowAt(ctx *ui.BuildContext, anchor *scene.Node) {
+	if anchor == nil {
+		return
+	}
+	d.show(ctx, anchor)
+}
+
 // hide 隐藏下拉浮层。
 func (d *Dropdown) hide(ctx *ui.BuildContext) {
 	if ctx.Overlay == nil || d.handle == 0 {

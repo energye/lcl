@@ -1,7 +1,7 @@
 {
   "id": "steps",
   "structure": {
-    "apiRows": 5,
+    "apiRows": 4,
     "sections": [
       "四步进度",
       "error 状态",

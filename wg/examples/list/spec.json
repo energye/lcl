@@ -1,7 +1,7 @@
 {
   "id": "list",
   "structure": {
-    "apiRows": 8,
+    "apiRows": 5,
     "sections": [
       "分页列表",
       "空态",

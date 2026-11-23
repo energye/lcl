@@ -1,7 +1,7 @@
 {
   "id": "datepicker",
   "structure": {
-    "apiRows": 10,
+    "apiRows": 9,
     "sections": [
       "范围选择",
       "日期选择",

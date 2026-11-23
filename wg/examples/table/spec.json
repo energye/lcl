@@ -523,35 +523,135 @@
           ]
         }, 
         {
-          "name": "被合并行服务列为空（行 1 无第二个用户服务格）", 
+          "name": "被合并行服务列为空（行 1 无第二个用户服务格）",
           "target": {
-            "label": "table-row", 
+            "label": "table-row",
             "text": "用户服务"
-          }, 
+          },
           "then": [
             {
-              "kind": "exists", 
+              "kind": "exists",
               "target": {
-                "label": "table-row", 
+                "label": "table-row",
                 "text": "用户服务"
-              }, 
+              },
               "count": 1
             }
           ]
         }
       ]
+    },
+    {
+      "name": "列筛选",
+      "cases": [
+        {
+          "name": "筛选列头漏斗图标存在",
+          "target": {
+            "label": "table-filter"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "table-filter"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点漏斗弹选项菜单（Dropdown 组合复用）",
+          "target": {
+            "label": "table-filter"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "table-filter"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "dropdown-item",
+                "text": "INTEGER"
+              }
+            }
+          ]
+        },
+        {
+          "name": "选 INTEGER 后 TEXT 行被过滤（选值经 OnFilter 应用）",
+          "target": {
+            "label": "table-filter"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "table-filter"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "dropdown-item",
+                  "text": "INTEGER"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "table-row",
+                "text": "filter_id"
+              }
+            },
+            {
+              "kind": "absent",
+              "target": {
+                "label": "table-row",
+                "text": "filter_name"
+              }
+            }
+          ]
+        }
+      ]
     }
-  ], 
+  ],
   "structure": {
-    "apiRows": 10, 
+    "apiRows": 11, 
     "minElements": 12, 
     "sections": [
       "固定列", 
       "分页表格", 
       "四列混排", 
       "单元格渲染", 
-      "展开行", 
-      "行列合并"
+      "展开行",
+      "行列合并",
+      "列筛选"
     ]
   }
 }

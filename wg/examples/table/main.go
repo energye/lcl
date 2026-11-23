@@ -45,12 +45,19 @@ func init() {
 	tblPage.PageSize = 5
 
 	// tblFilter 筛选卡（Filters）：类型列筛选（Dropdown 组合复用弹选项）。
+	// 数据独立（filter_a… 前缀——text 锚全页唯一，过滤断言不被其他卡撞）。
 	fcols2 := []widgets.TableColumn{
 		{Title: "字段", Mode: widgets.ColumnAuto},
 		{Title: "类型", Mode: widgets.ColumnAuto, Filters: []string{"INTEGER", "TEXT", "DATETIME"}},
 		{Title: "说明", Mode: widgets.ColumnFlex, Flex: 1},
 	}
-	tblFilter = widgets.NewTable(fcols2, rows)
+	frows2 := [][]any{
+		{"filter_id", "INTEGER", "整数列"},
+		{"filter_name", "TEXT", "文本列"},
+		{"filter_created", "DATETIME", "时间列"},
+		{"filter_owner", "INTEGER", "外键列"},
+	}
+	tblFilter = widgets.NewTable(fcols2, frows2)
 	tblFilter.Width, tblFilter.Height = 620, 180
 
 	// tblFreeze 固定列卡：列总宽 900 > 视口 620 → 横向滚动，

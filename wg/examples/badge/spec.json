@@ -1,7 +1,7 @@
 {
   "id": "badge",
   "structure": {
-    "apiRows": 9,
+    "apiRows": 8,
     "sections": [
       "三态角标",
       "status 语义色",

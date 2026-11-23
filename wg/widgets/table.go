@@ -795,10 +795,11 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 					t.OnFilter(colIdx, key)
 				}
 			}
-			// 漏斗图标+菜单项的手势：down 弹出（Dropdown 公开 Show），
-			// HideOn 选择后自动关闭。
+			// 漏斗图标+菜单项的手势：down 弹出（**ShowAt 显式锚**——
+			// 筛选场景 Dropdown 无 Child，Show 取 childNode 会静默
+			// return——真窗点漏斗永不弹菜单的断链修复）。
 			gf := &ui.GestureDetector{OnTap: func(geom.Point) {
-				fd.Show(ctx)
+				fd.ShowAt(ctx, funnel)
 			}}
 			t.sorts = append(t.sorts, gf)
 			ctx.Input.Set(funnel, gf.Handler())
