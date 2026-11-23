@@ -16,10 +16,11 @@ func main() {
 		What: []string{
 			"**纯组合复用 Input**（持久实例+HitLabel 嵌入锚）+ 键入 @ 弹选项浮层（BandPopup，Select 同通道）",
 			"选项 **down 即执行** → 插入 \"@label \" 到文本（Input 重建同步 editor）+ OnChange",
+			"**键盘上下选**（Input.OnKey 外置钩子）：面板打开时 ↑↓ 移动高亮（InfoBg 底+主色文字原地迁移）、Enter 确认插入；Esc 关闭浮层",
 			"Esc/外部点击关闭浮层",
 		},
 		Demos: []doc.Demo{
-			{Title: "基础", Note: "键入 @ 弹出候选 → 点选 afc → 文本插入 \"@afc \"", Build: func(ctx *ui.BuildContext) ui.Widget {
+			{Title: "基础", Note: "键入 @ 弹出候选 → 点选 afc → 文本插入 \"@afc \"；↑↓ 移动高亮、Enter 确认", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return mn
 			}},
 		},

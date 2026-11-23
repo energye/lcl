@@ -73,6 +73,9 @@ type Input struct {
 	MaxLines  int
 	OnChanged func(string)
 	OnSubmit  func(string)
+	// OnKey 嵌入组件的外置键钩子（Mentions 键盘上下选等）：Key 链最前
+	// 调用，返回 true 消费（不落编辑模型）；nil 跳过。
+	OnKey func(*input.KeyEvent) bool
 
 	editor *input.TextEditor
 	keys   *input.TextKeyHandler
@@ -469,6 +472,11 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 		Key: func(ev *input.KeyEvent) bool {
 			if w.Disabled {
 				return false
+			}
+			// 嵌入组件的外置键钩子（Mentions 键盘上下选等——面板打开时
+			// 优先消费 ↑↓Enter；false 时落到编辑模型）。
+			if w.OnKey != nil && w.OnKey(ev) {
+				return true
 			}
 			if w.keys.Handle(ev) {
 				// Tab 在编辑模型里是 ActionNext，但它不认识焦点管理器。

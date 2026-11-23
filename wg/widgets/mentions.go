@@ -12,8 +12,10 @@ package widgets
 // 选项选中后文本末尾拼接 label+" "（antd 插入后跟分隔符）。
 // 未实现（如实标注）：自动定位光标处的 @、多个 prefix（数组）、
 // split 分隔、textarea 多行形态（Multiline 可经字段开启）、
-// 键盘上下选择+Enter、loading 选项、status/variant 定制（Input
-// 字段透传可加）。
+// loading 选项、status/variant 定制（Input 字段透传可加）。
+// 键盘上下选已交付（第一百三十二轮）：面板打开时 Input 的 Key 链
+// 拦截 ↑↓Enter——↑↓ 移动高亮项（activeIdx+原地迁移渲染）、Enter
+// 确认 pick；Esc 走浮层宿主关闭（DismissEsc 已有）。
 
 import (
 	"github.com/energye/lcl/wg/geom"
@@ -40,9 +42,24 @@ type Mentions struct {
 	fb        feedbackHost
 	anchor    *scene.Node
 	panelOpen bool
+	// activeIdx 键盘高亮项下标（↑↓ 移动、Enter 确认；-1=无高亮）。
+	activeIdx int
+	// rows 面板打开期间的行节点与文案（高亮原地迁移——Select 选项
+	// 同款 SetBox/SetTextPaint 手法）。
+	rows []mentionsRow
+	// curTh 面板主题快照（高亮迁移用——openPanel 时记）。
+	curTh *theme.Data
 	// inserting 程序化插入标志：插入后的重建会再次走 OnChanged 路径
 	// 前 Input.Value 已是新值，无需去重——保留字段供后续多前缀扩展。
 	inserting bool
+}
+
+// mentionsRow 一行的节点与排版（高亮迁移用）。
+type mentionsRow struct {
+	node   *scene.Node
+	txt    *scene.Node
+	src    string
+	layout *text.Layout
 }
 
 // NewMentions 创建提及输入框。
@@ -50,7 +67,7 @@ func NewMentions(options []string) *Mentions {
 	return &Mentions{Options: options, Placeholder: "输入 @ 唤起提及", Width: 260}
 }
 
-// Build 实现 ui.Widget：Input 组合。
+// Build 实现 ui.Widget：Input 组合（面板打开时 Key 链拦截 ↑↓Enter）。
 func (m *Mentions) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(m)
 	if m.input == nil {
@@ -70,13 +87,81 @@ func (m *Mentions) Build(ctx *ui.BuildContext) *scene.Node {
 		}
 		// 触发判定：文本末尾为 '@' → 弹选项浮层。
 		if len(s) > 0 && s[len(s)-1] == '@' && !m.panelOpen {
+			m.activeIdx = -1
 			m.openPanel(ctx, inputNode)
 		}
+	}
+	// 键盘上下选（antd 键盘交互）：面板打开时优先消费 ↑↓Enter——
+	// Input 组合的 Key 链在 Build 后替换（白拿 Input 焦点/聚焦链）。
+	m.input.OnKey = func(ev *input.KeyEvent) bool {
+		if !m.panelOpen {
+			return false
+		}
+		if ev.Kind == input.KeyUp {
+			return false
+		}
+		switch ev.Code {
+		case input.CodeDown:
+			if m.activeIdx < len(m.Options)-1 {
+				m.moveHighlight(m.activeIdx + 1)
+			} else if m.activeIdx < 0 {
+				m.moveHighlight(0)
+			}
+			return true
+		case input.CodeUp:
+			if m.activeIdx > 0 {
+				m.moveHighlight(m.activeIdx - 1)
+			} else if m.activeIdx < 0 {
+				m.moveHighlight(len(m.Options) - 1)
+			}
+			return true
+		case input.CodeEnter:
+			if m.activeIdx >= 0 && m.activeIdx < len(m.Options) {
+				m.pick(m.Options[m.activeIdx], ctx)
+				return true
+			}
+		}
+		return false
 	}
 	n := m.input.Build(ctx)
 	m.anchor = n
 	inputNode = n
 	return n
+}
+
+// moveHighlight 高亮项迁移（原地——Select 选项 SetBox/SetTextPaint 同款；
+// 越界钳制：无行时保持 -1）。
+func (m *Mentions) moveHighlight(idx int) {
+	if len(m.rows) == 0 {
+		m.activeIdx = -1
+		return
+	}
+	if idx < 0 {
+		idx = -1
+	}
+	if idx > len(m.rows)-1 {
+		idx = len(m.rows) - 1
+	}
+	if old := m.activeIdx; old >= 0 && old < len(m.rows) {
+		m.paintRow(m.rows[old], false)
+	}
+	m.activeIdx = idx
+	if idx >= 0 && idx < len(m.rows) {
+		m.paintRow(m.rows[idx], true)
+	}
+}
+
+// paintRow 原地刷行高亮（InfoBg 浅底——antd mentions 高亮视觉）。
+func (m *Mentions) paintRow(r mentionsRow, on bool) {
+	spec := scene.BoxSpec{}
+	color := m.curTh.Color.Text
+	if on {
+		spec = scene.BoxSpec{Fill: scene.Solid(m.curTh.Color.InfoBg)}
+		color = m.curTh.Color.Primary
+	}
+	r.node.SetBox(spec)
+	r.txt.SetTextPaint(scene.TextSpec{Src: r.src, Layout: r.layout, Color: color})
+	r.node.MarkNeedsPaint()
 }
 
 // Show 程序化弹出选项面板（测试/自动化用）。
@@ -102,7 +187,10 @@ func (m *Mentions) openPanel(ctx *ui.BuildContext, anchor *scene.Node) {
 		return
 	}
 	th := ctx.ThemeOr()
+	m.curTh = th
 	m.panelOpen = true
+	m.activeIdx = -1
+	m.rows = m.rows[:0]
 	w := m.Width
 	if w <= 0 {
 		w = 260
@@ -135,6 +223,7 @@ func (m *Mentions) openPanel(ctx *ui.BuildContext, anchor *scene.Node) {
 			}})
 		}
 		panel.Add(row)
+		m.rows = append(m.rows, mentionsRow{node: row, txt: txt, src: opt, layout: l})
 	}
 	m.handle = ctx.Overlay.Show(overlay.Entry{
 		Band:      theme.BandPopup,

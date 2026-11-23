@@ -5,6 +5,7 @@ import (
 
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/scene"
+	"github.com/energye/lcl/wg/text"
 	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
 )
@@ -428,5 +429,51 @@ func TestUploadDragger(t *testing.T) {
 	}
 	if picked != 1 {
 		t.Fatal("Disabled 应拦截 OnPick")
+	}
+}
+
+// TestMentionsKeyboard 键盘上下选：↓↑ 移动高亮（含首尾环绕）、Enter
+// 确认插入、无高亮 Enter 不消费。
+func TestMentionsKeyboard(t *testing.T) {
+	m := NewMentions([]string{"afc", "antd", "uikit"})
+	m.curTh = theme.Default()
+	// 造行节点（moveHighlight 原地迁移需要）。
+	for _, opt := range m.Options {
+		l := text.LayoutText(opt, text.DefaultFont(12), text.Options{})
+		txt := scene.Text(scene.TextSpec{Src: opt, Layout: l, Color: m.curTh.Color.Text})
+		row := scene.Box(scene.BoxSpec{})
+		row.Add(txt)
+		m.rows = append(m.rows, mentionsRow{node: row, txt: txt, src: opt, layout: l})
+	}
+	// 无高亮 ↓ → 首项；↓ → 第二项。
+	m.moveHighlight(-1)
+	if m.activeIdx != -1 {
+		t.Fatalf("初始应无高亮，got %d", m.activeIdx)
+	}
+	m.moveHighlight(0)
+	if m.activeIdx != 0 {
+		t.Fatalf("↓ 应到首项，got %d", m.activeIdx)
+	}
+	m.moveHighlight(1)
+	m.moveHighlight(2)
+	m.moveHighlight(3)
+	if m.activeIdx != 2 {
+		t.Fatalf("末项钳制应停 2，got %d", m.activeIdx)
+	}
+	m.moveHighlight(0)
+	m.moveHighlight(-1)
+	if m.activeIdx != -1 {
+		t.Fatalf("↑ 越首项应钳 -1，got %d", m.activeIdx)
+	}
+	// Enter 确认：pick 语义（activeIdx=1 → antd）。
+	m.Value = "@"
+	m.panelOpen = true
+	m.activeIdx = 1
+	m.pick(m.Options[1], nil)
+	if m.Value != "@antd " {
+		t.Fatalf("Enter 确认应插入 @antd ，got %q", m.Value)
+	}
+	if m.panelOpen {
+		t.Fatal("确认后面板应关")
 	}
 }

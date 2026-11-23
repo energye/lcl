@@ -148,6 +148,101 @@
           ]
         }
       ]
+    },
+    {
+      "name": "键盘选择",
+      "cases": [
+        {
+          "name": "键入 @ 后 ↓↓+Enter：高亮移动生效插入 @antd",
+          "target": {
+            "label": "mentions-input"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 200
+            },
+            {
+              "typeText": "@"
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "down"
+            },
+            {
+              "wait": 150
+            },
+            {
+              "key": "down"
+            },
+            {
+              "wait": 150
+            },
+            {
+              "key": "enter"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "text",
+              "text": "@antd",
+              "target": {
+                "label": "mentions-input"
+              }
+            }
+          ]
+        },
+        {
+          "name": "无高亮时 Enter 不消费（面板保持）",
+          "target": {
+            "label": "mentions-input"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 200
+            },
+            {
+              "typeText": "@"
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "enter"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "mentions-option",
+                "text": "afc"
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }
