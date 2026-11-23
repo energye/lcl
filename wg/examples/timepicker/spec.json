@@ -1,10 +1,12 @@
 {
   "id": "timepicker",
   "structure": {
-    "apiRows": 6,
+    "apiRows": 8,
     "sections": [
       "基础",
-      "带初值"
+      "带初值",
+      "12 小时制",
+      "步进"
     ]
   },
   "sections": [
@@ -314,6 +316,105 @@
               "target": {
                 "label": "time-cell-h",
                 "text": "09"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "12 小时制",
+      "cases": [
+        {
+          "name": "初值 15:20 触发框显示 下午 03:20:00",
+          "target": {
+            "label": "time-picker",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "下午 03:20:00",
+              "target": {
+                "label": "time-picker",
+                "index": 2
+              }
+            }
+          ]
+        },
+        {
+          "name": "面板 4 列（上午/下午列存在且选中下午）",
+          "target": {
+            "label": "time-picker",
+            "index": 2
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-picker",
+                  "index": 2
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-ap",
+                "text": "下午"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-ap",
+                "text": "上午"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "步进",
+      "cases": [
+        {
+          "name": "点开步进面板（时列只渲染步长倍数——cell 数减半不可直断，验证面板打开+时格存在）",
+          "target": {
+            "label": "time-picker",
+            "index": 3
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-picker",
+                  "index": 3
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-h",
+                "text": "02"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-h",
+                "text": "20"
               }
             }
           ]

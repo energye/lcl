@@ -19,10 +19,13 @@ package widgets
 // 组合复用：Icon（clock）、Scroll（三列滚动视口，Select 选项列表
 // 同款）、BandPopup+PlacementBottomStart（Select/DatePicker 同通道）、
 // Button（footer 文本按钮）。
-// 未实现（如实标注）：use12Hours / hourStep·minuteStep·secondStep /
-// disabledTime 系列 / hideDisabledOptions / allowClear 清除图标 /
-// format 列裁剪（列固定三列）/ RangePicker / 受控 open / placement
-// 四向 / changeOnScroll / 无值时滚动定位到当前时刻。
+// use12Hours（第一百二十九轮）：12 小时列+上午/下午第 4 列（antd
+// use12Hours——触发框 h:mm:ss AM/PM 形态；12 列值 12,1..11 与 AM/PM
+// 组合还原 24h）；hourStep/minuteStep/secondStep 列生成按步长过滤
+//（antd hourStep 等——值集合为步长倍数）。
+// 未实现（如实标注）：disabledTime 系列 / hideDisabledOptions /
+// allowClear 清除图标 / format 列裁剪（列固定）/ RangePicker / 受控
+// open / placement 四向 / changeOnScroll / 无值时滚动定位到当前时刻。
 
 import (
 	"fmt"
@@ -59,6 +62,14 @@ type TimePicker struct {
 	Placeholder string
 	Width       float32
 	OnChange    func(t time.Time)
+	// Use12Hours 12 小时制（antd use12Hours）：面板加上午/下午第 4 列，
+	// 小时列 12 格（值 12,1..11），触发框显示 "hh:mm:ss 上午/下午"。
+	Use12Hours bool
+	// HourStep/MinuteStep/SecondStep 列值步长（antd hourStep 等——列
+	// 只渲染步长倍数；0/1=不步进）。
+	HourStep   int
+	MinuteStep int
+	SecondStep int
 
 	handle    overlay.Handle
 	fb        feedbackHost
@@ -67,8 +78,9 @@ type TimePicker struct {
 	curTh     *theme.Data
 
 	// 面板打开期间的 cell 表与选中下标（选中/hover 原地改，零重建）。
-	cellsByCol [3][]*timeCellInfo
-	selIdx     [3]int // -1 = 该列未选中
+	// 12h 模式 4 列：0=小时(0..11 映射)、1..2=分/秒、3=上午/下午。
+	cellsByCol [4][]*timeCellInfo
+	selIdx     [4]int // -1 = 该列未选中；3 列模式第 4 列恒 -1
 }
 
 // NewTimePicker 创建时间选择器（默认无值——显示占位）。
@@ -86,7 +98,7 @@ func (t *TimePicker) Build(ctx *ui.BuildContext) *scene.Node {
 		w = 120
 	}
 	h := ui.MetricsFor(th, ui.SizeMedium).Height
-	display := t.Value.Format("15:04:05")
+	display := t.displayText()
 	txtColor := th.Color.Text
 	if t.Value.IsZero() {
 		display, txtColor = t.Placeholder, th.Color.TextPlaceholder
@@ -141,12 +153,69 @@ func (t *TimePicker) Close() {
 	}
 }
 
+// displayText 触发框显示：24h "15:04:05"；12h "hh:mm:ss 上午/下午"
+//（antd use12Hours 默认 format h:mm:ss a 的中文语境形态）。
+func (t *TimePicker) displayText() string {
+	if t.Use12Hours {
+		h := t.Value.Hour()
+		ampm := "上午"
+		h12 := h
+		if h >= 12 {
+			ampm = "下午"
+			h12 = h - 12
+		}
+		if h12 == 0 {
+			h12 = 12
+		}
+		return fmt.Sprintf("%02d:%02d:%02d %s", h12, t.Value.Minute(), t.Value.Second(), ampm)
+	}
+	return t.Value.Format("15:04:05")
+}
+
 // selectedParts 当前选中的时/分/秒（无值 {-1,-1,-1}）。
 func (t *TimePicker) selectedParts() [3]int {
 	if t.Value.IsZero() {
 		return [3]int{-1, -1, -1}
 	}
 	return [3]int{t.Value.Hour(), t.Value.Minute(), t.Value.Second()}
+}
+
+// stepValues 列值集合：步长倍数（antd hourStep 等——0/1 视为 1）。
+func stepValues(count, step int) []int {
+	if step <= 0 || step == 1 {
+		out := make([]int, count)
+		for i := range out {
+			out[i] = i
+		}
+		return out
+	}
+	var out []int
+	for v := 0; v < count; v += step {
+		out = append(out, v)
+	}
+	return out
+}
+
+// hourValues 小时列值集合：24h=0..23；12h=12,1..11（antd 12 列顺序，
+// 显示 %02d、内部按 12h 值映射）。
+func (t *TimePicker) hourValues() []int {
+	if t.Use12Hours {
+		out := []int{12}
+		for i := 1; i <= 11; i++ {
+			out = append(out, i)
+		}
+		if t.HourStep > 1 {
+			var filtered []int
+			for _, v := range out {
+				if (v-1)%t.HourStep == 0 {
+					filtered = append(filtered, v)
+				}
+			}
+			return filtered
+		}
+		return out
+	}
+	return stepValues(24, t.HourStep)
 }
 
 // openPanel 打开三列面板（BandPopup+PlacementBottomStart，Select 同通道）。
@@ -156,13 +225,31 @@ func (t *TimePicker) openPanel(ctx *ui.BuildContext, anchor *scene.Node, th *the
 	}
 	t.curTh = th
 	t.panelOpen = true
-	t.selIdx = t.selectedParts()
+	sel := t.selectedParts()
+	t.selIdx = [4]int{sel[0], sel[1], sel[2], -1}
+	if t.Use12Hours && !t.Value.IsZero() {
+		// 第 4 列（上午/下午）选中下标：0=上午 12=下午。
+		if t.Value.Hour() >= 12 {
+			t.selIdx[3] = 1
+		} else {
+			t.selIdx[3] = 0
+		}
+	} else {
+		t.selIdx[3] = -1
+	}
 	panel := t.buildPanel(ctx, th)
+	colN := 3
+	w := timeColW*3 + 2
+	if t.Use12Hours {
+		colN = 4
+		w = timeColW*4 + 3
+	}
+	_ = colN
 	t.handle = ctx.Overlay.Show(overlay.Entry{
 		Band:      theme.BandPopup,
 		Anchor:    overlay.NodeAnchor(anchor),
 		Placement: overlay.PlacementBottomStart,
-		Size:      geom.Size{W: timeColW*3 + 2, H: 0}, // 高自适应（三列+footer）
+		Size:      geom.Size{W: w, H: 0}, // 高自适应（列+footer）
 		Dismiss:   overlay.DismissOutsideClick | overlay.DismissEsc,
 		Tag:       "timepicker",
 		OnClose: func() {
@@ -192,17 +279,31 @@ func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 	})
 	panel.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "time-panel"})
 
-	// 三列：Scroll 组合复用（Select 选项列表同款视口）；列间 1px 分隔。
+	// 列：时/分/秒（12h 加上午/下午第 4 列）；Scroll 组合复用（Select
+	// 选项列表同款视口）；列间 1px 分隔。
 	cols := scene.Flex(scene.Horizontal, 0)
-	cellLabels := []string{"time-cell-h", "time-cell-m", "time-cell-s"}
-	counts := []int{24, 60, 60}
+	colN, panelW := 3, timeColW*3+2
+	type colSpec struct {
+		label string
+		vals  []int
+	}
+	specs := []colSpec{
+		{"time-cell-h", t.hourValues()},
+		{"time-cell-m", stepValues(60, t.MinuteStep)},
+		{"time-cell-s", stepValues(60, t.SecondStep)},
+	}
+	if t.Use12Hours {
+		specs = append(specs, colSpec{"time-cell-ap", []int{0, 1}})
+		colN, panelW = 4, timeColW*4+3
+	}
 	sel := t.selectedParts()
-	for i := 0; i < 3; i++ {
-		col := t.buildColumn(ctx, th, i, counts[i], cellLabels[i])
+	for i := 0; i < colN; i++ {
+		sp := specs[i]
+		col := t.buildColumn(ctx, th, i, sp.vals, sp.label)
 		scroll := &Scroll{Axis: scene.Vertical, Width: timeColW, Height: timeViewportH,
 			Child: nodeFn(func(ctx *ui.BuildContext) *scene.Node { return col })}
 		// 选中项尽量居中：offset = idx*cellH - (viewport-cellH)/2。
-		if sel[i] >= 0 {
+		if sel[i] >= 0 && i < 3 {
 			off := float32(sel[i])*timeCellH - (timeViewportH-timeCellH)/2
 			if off < 0 {
 				off = 0
@@ -213,17 +314,17 @@ func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 		wrap.Add(scroll.Build(ctx))
 		wrap.SetHit(scene.HitSpec{Label: fmt.Sprintf("time-col-%d", i)})
 		cols.Add(wrap)
-		if i < 2 {
+		if i < colN-1 {
 			cols.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetSize2(1, timeViewportH))
 		}
 	}
 	panel.Add(cols)
 
 	// 底部："现在/确定"（Button 文本按钮组合复用）。
-	panel.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetSize2(timeColW*3+2, 1))
+	panel.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetSize2(panelW, 1))
 	footer := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
 	footer.SetPadding(geom.InLTRB(th.Space.SM, th.Space.XS, th.Space.SM, th.Space.XS))
-	footer.SetWidth(timeColW*3 + 2)
+	footer.SetWidth(panelW)
 	sp := scene.Box(scene.BoxSpec{}).SetFlex(1, scene.FlexTight)
 	footer.Add(sp)
 	btnNow := &Button{Text: "现在", Type: TypeText, Size: ui.SizeSmall, OnClick: func() {
@@ -257,14 +358,25 @@ func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 	return panel
 }
 
-// buildColumn 构建一列的 cell 纵向列表（24/60/60 个，28px 高）。
-func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx, count int, cellLabel string) *scene.Node {
+// buildColumn 构建一列的 cell 纵向列表（vals 为列值集合，28px 高）。
+// 12h 小时列（colIdx 0 且 Use12Hours）：显示 %02d（12,01..11）、值存
+// 12h 表示；上午/下午列显示中文、值 0=上午/1=下午。pick 负责还原 24h。
+func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx int, vals []int, cellLabel string) *scene.Node {
 	sel := t.selectedParts()
 	col := scene.Flex(scene.Vertical, 0)
-	t.cellsByCol[colIdx] = make([]*timeCellInfo, 0, count)
-	for v := 0; v < count; v++ {
+	t.cellsByCol[colIdx] = make([]*timeCellInfo, 0, len(vals))
+	isHour12 := colIdx == 0 && t.Use12Hours
+	isAP := colIdx == 3
+	for _, v := range vals {
 		v := v
 		src := fmt.Sprintf("%02d", v)
+		if isAP {
+			if v == 0 {
+				src = "上午"
+			} else {
+				src = "下午"
+			}
+		}
 		l := text.LayoutText(src, text.DefaultFont(th.Font.SizeSM), text.Options{})
 		info := &timeCellInfo{src: src, layout: l}
 		info.txt = scene.Text(scene.TextSpec{Src: src, Layout: l, Color: th.Color.Text})
@@ -275,7 +387,23 @@ func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx, c
 		cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: cellLabel, Cursor: scene.CursorPointer})
 		info.cell = cell
 		t.cellsByCol[colIdx] = append(t.cellsByCol[colIdx], info)
-		if sel[colIdx] == v {
+		// 选中判定：时列 24h 直等；12h 换算（12→0 点、1..11→13..23 侧依
+		// AM/PM）；上午/下午列按 selIdx[3]（openPanel 已填）。
+		selected := false
+		if isAP {
+			selected = t.selIdx[3] == v
+		} else if isHour12 {
+			if sel[0] >= 0 {
+				h12 := sel[0] % 12
+				if h12 == 0 {
+					h12 = 12
+				}
+				selected = h12 == v && t.selIdx[3] == hourToAP(sel[0])
+			}
+		} else {
+			selected = sel[colIdx] == v
+		}
+		if selected {
 			t.selIdx[colIdx] = v
 			t.paintSelected(info, true)
 		}
@@ -308,6 +436,73 @@ func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx, c
 	return col
 }
 
+// hourToAP 24h 小时的上午/下午侧（0=上午 1=下午）。
+func hourToAP(h int) int {
+	if h >= 12 {
+		return 1
+	}
+	return 0
+}
+
+// pick 选中某列某值：高亮原地迁移 + 合成完整时刻。12h 模式：小时列值
+// （12,1..11）+上午/下午列还原 24h；分/秒列原值。
+func (t *TimePicker) pick(colIdx, v int) {
+	if t.selIdx[colIdx] >= 0 {
+		t.paintSelected(t.cellsByCol[colIdx][t.selIdx[colIdx]], false)
+	}
+	t.selIdx[colIdx] = v
+	t.paintSelected(t.cellsByCol[colIdx][v], true)
+	// 合成完整时刻：未选列保持原值（无值列取 0）。
+	parts := t.selectedParts()
+	if t.Value.IsZero() {
+		parts = [3]int{0, 0, 0}
+	}
+	if t.Use12Hours {
+		// 由列集合推导 24h 小时：h12 + 上午/下午侧。
+		if colIdx == 0 {
+			h12 := v
+			ap := 0
+			if t.selIdx[3] >= 0 {
+				ap = t.selIdx[3]
+			} else {
+				ap = hourToAP(parts[0])
+			}
+			parts[0] = ap12To24(h12, ap)
+		} else if colIdx == 3 {
+			h12 := parts[0] % 12
+			if h12 == 0 {
+				h12 = 12
+			}
+			parts[0] = ap12To24(h12, v)
+		} else {
+			parts[colIdx] = v
+		}
+	} else {
+		parts[colIdx] = v
+	}
+	nv := time.Date(0, 1, 1, parts[0], parts[1], parts[2], 0, time.Local)
+	t.Value = nv
+	t.MarkDirty() // 触发框文本随根重建刷新
+	if t.OnChange != nil {
+		t.OnChange(nv)
+	}
+}
+
+// ap12To24 12h 值（12,1..11）+上午/下午侧 → 24h 小时。
+func ap12To24(h12, ap int) int {
+	if ap == 1 { // 下午
+		if h12 == 12 {
+			return 12
+		}
+		return h12 + 12
+	}
+	// 上午
+	if h12 == 12 {
+		return 0
+	}
+	return h12
+}
+
 // paintSelected 原地切换一格的选中样式（主色实底+白字 / 常态）。
 func (t *TimePicker) paintSelected(info *timeCellInfo, sel bool) {
 	th := t.curTh
@@ -322,35 +517,45 @@ func (t *TimePicker) paintSelected(info *timeCellInfo, sel bool) {
 	info.cell.MarkNeedsPaint()
 }
 
-// pick 选中某列某值：高亮原地迁移 + 合成完整时刻。
-func (t *TimePicker) pick(colIdx, v int) {
-	if t.selIdx[colIdx] >= 0 {
-		t.paintSelected(t.cellsByCol[colIdx][t.selIdx[colIdx]], false)
-	}
-	t.selIdx[colIdx] = v
-	t.paintSelected(t.cellsByCol[colIdx][v], true)
-	// 合成完整时刻：未选列保持原值（无值列取 0）。
-	parts := t.selectedParts()
-	if t.Value.IsZero() {
-		parts = [3]int{0, 0, 0}
-	}
-	parts[colIdx] = v
-	nv := time.Date(0, 1, 1, parts[0], parts[1], parts[2], 0, time.Local)
-	t.Value = nv
-	t.MarkDirty() // 触发框文本随根重建刷新
-	if t.OnChange != nil {
-		t.OnChange(nv)
-	}
-}
-
-// highlightAll "现在"：三列高亮整体迁移到当前时刻（原地，零重建）。
+// highlightAll "现在"：列高亮整体迁移到当前时刻（原地，零重建）。
+// 12h 模式：小时/上午下午列按 12h 值定位（cellsByCol 内按显示值匹配）。
 func (t *TimePicker) highlightAll(h, m, s int) {
 	vals := [3]int{h, m, s}
 	for i := 0; i < 3; i++ {
 		if t.selIdx[i] >= 0 {
 			t.paintSelected(t.cellsByCol[i][t.selIdx[i]], false)
 		}
-		t.selIdx[i] = vals[i]
-		t.paintSelected(t.cellsByCol[i][vals[i]], true)
+		v := vals[i]
+		if t.Use12Hours && i == 0 {
+			// 小时列 cell 存 12h 值——找匹配下标。
+			h12 := h % 12
+			if h12 == 0 {
+				h12 = 12
+			}
+			v = -1
+			for idx, info := range t.cellsByCol[0] {
+				if info.src == fmt.Sprintf("%02d", h12) {
+					v = idx
+					break
+				}
+			}
+			if v < 0 {
+				continue
+			}
+		} else if v >= len(t.cellsByCol[i]) {
+			// 步进列："现在"时刻可能不在步长倍数集合——钳到最后一格。
+			v = len(t.cellsByCol[i]) - 1
+		}
+		t.selIdx[i] = v
+		t.paintSelected(t.cellsByCol[i][v], true)
+	}
+	if t.Use12Hours {
+		// 上午/下午列迁移。
+		if t.selIdx[3] >= 0 {
+			t.paintSelected(t.cellsByCol[3][t.selIdx[3]], false)
+		}
+		ap := hourToAP(h)
+		t.selIdx[3] = ap
+		t.paintSelected(t.cellsByCol[3][ap], true)
 	}
 }
