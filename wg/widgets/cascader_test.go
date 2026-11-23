@@ -60,3 +60,61 @@ func TestCascaderSelectPath(t *testing.T) {
 		t.Fatalf("选中后应清搜索，got %q", c.search)
 	}
 }
+
+// TestCascaderMultiToggle 多选 toggle：点行勾选/取消完整路径（antd
+// value 形态 string[][]）、hasPath 判定、tagShown 折叠。
+func TestCascaderMultiToggle(t *testing.T) {
+	c := NewCascader()
+	c.Multiple = true
+	var got [][]string
+	c.OnValuesChange = func(paths [][]string) { got = paths }
+
+	c.togglePath(nil, []string{"zj", "hz", "xihu"})
+	if len(c.Values) != 1 || c.Values[0][2] != "xihu" {
+		t.Fatalf("首次点选应入集合，got %v", c.Values)
+	}
+	if !c.hasPath([]string{"zj", "hz", "xihu"}) {
+		t.Fatal("hasPath 应命中")
+	}
+	c.togglePath(nil, []string{"js", "nj", "xw"})
+	if len(c.Values) != 2 || len(got) != 2 {
+		t.Fatalf("第二条应入集合，got %v", c.Values)
+	}
+	// 再点已选路径=移除。
+	c.togglePath(nil, []string{"zj", "hz", "xihu"})
+	if len(c.Values) != 1 || c.Values[0][0] != "js" {
+		t.Fatalf("再点已选应移除，got %v", c.Values)
+	}
+	if c.hasPath([]string{"zj", "hz", "xihu"}) {
+		t.Fatal("移除后 hasPath 不应命中")
+	}
+	// MaxTagCount 折叠（触发框 buildMultiTrigger 消费同款逻辑）。
+	c.MaxTagCount = 1
+	if len(c.Values) != 1 {
+		t.Fatal("前置")
+	}
+	c.Values = [][]string{{"a", "b"}, {"c", "d"}, {"e", "f"}}
+	shown, overflow := c.Values, 0
+	if c.MaxTagCount > 0 && len(c.Values) > c.MaxTagCount {
+		shown, overflow = c.Values[:c.MaxTagCount], len(c.Values)-c.MaxTagCount
+	}
+	if len(shown) != 1 || overflow != 2 {
+		t.Fatalf("折叠应为 1+2，got %d+%d", len(shown), overflow)
+	}
+}
+
+// TestCascaderLeafLabel 叶子 Label 折算：正常链取末级 Label、断链兜底 Value。
+func TestCascaderLeafLabel(t *testing.T) {
+	c := NewCascader()
+	c.Options = []*CascaderOption{
+		{Value: "zj", Label: "浙江", Children: []*CascaderOption{
+			{Value: "hz", Label: "杭州"},
+		}},
+	}
+	if l := c.leafLabel([]string{"zj", "hz"}); l != "杭州" {
+		t.Fatalf("叶子 Label 应为杭州，got %q", l)
+	}
+	if l := c.leafLabel([]string{"xx", "yy"}); l != "yy" {
+		t.Fatalf("断链应兜底末位 Value，got %q", l)
+	}
+}

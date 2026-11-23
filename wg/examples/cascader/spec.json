@@ -1,11 +1,12 @@
 {
   "id": "cascader",
   "structure": {
-    "apiRows": 9,
+    "apiRows": 12,
     "sections": [
       "基础",
       "带初值",
-      "搜索"
+      "搜索",
+      "多选"
     ]
   },
   "sections": [
@@ -318,6 +319,154 @@
               "text": "江苏",
               "target": {
                 "label": "cascader-panel"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "多选",
+      "cases": [
+        {
+          "name": "初值 2 条路径 tag 渲染（叶子 Label+× 可删）",
+          "target": {
+            "label": "cascader",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 2,
+              "target": {
+                "label": "cascader-tag"
+              }
+            },
+            {
+              "kind": "exists",
+              "count": 2,
+              "target": {
+                "label": "cascader-tag-x"
+              }
+            },
+            {
+              "kind": "text",
+              "text": "西湖区",
+              "target": {
+                "label": "cascader-tag",
+                "index": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "面板点行 toggle：勾第三条后 tag ×3 且面板不关",
+          "target": {
+            "label": "cascader",
+            "index": 3
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "cascader",
+                  "index": 3
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "cascader-item",
+                  "text": "浙江"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "cascader-item",
+                  "text": "宁波"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "cascader-item",
+                  "text": "海曙区"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "count": 3,
+              "target": {
+                "label": "cascader-tag"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "cascader-check",
+                "text": ""
+              }
+            }
+          ]
+        },
+        {
+          "name": "tag × 删除（海曙区 tag 移除剩 2）",
+          "target": {
+            "label": "cascader-tag-x",
+            "index": 2
+          },
+          "when": [
+            {
+              "key": "escape"
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "cascader-tag-x",
+                  "index": 2
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "exists",
+              "count": 2,
+              "target": {
+                "label": "cascader-tag"
               }
             }
           ]
