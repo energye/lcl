@@ -1,11 +1,12 @@
 {
   "id": "steps",
   "structure": {
-    "apiRows": 4,
+    "apiRows": 5,
     "sections": [
       "四步进度",
       "error 状态",
-      "垂直方向"
+      "垂直方向",
+      "自定义图标"
     ]
   },
   "sections": [
@@ -179,6 +180,119 @@
               },
               "minRatio": 0.08,
               "tol": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "自定义图标",
+      "cases": [
+        {
+          "name": "图标卡整体存在（账户标签可见）",
+          "target": {
+            "label": "steps",
+            "index": 3
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "steps-circle",
+                "text": ""
+              }
+            }
+          ]
+        },
+        {
+          "name": "process 步图标容器主色实底（支付=第 3 步 Current）",
+          "target": {
+            "label": "steps-circle",
+            "index": 14
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.06,
+                0.06,
+                0.2,
+                0.2
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.3,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "finish 步图标容器白底（账户=第 1 步已完成）",
+          "target": {
+            "label": "steps-circle",
+            "index": 12
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.35,
+                0.35,
+                0.65,
+                0.65
+              ],
+              "expect": {
+                "token": "Surface"
+              },
+              "minRatio": 0.3,
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "wait 步图标容器灰边空心（完成=第 4 步）",
+          "target": {
+            "label": "steps-circle",
+            "index": 15
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.0,
+                0.0,
+                1.0,
+                1.0
+              ],
+              "expect": {
+                "token": "BorderStrong"
+              },
+              "minRatio": 0.05,
+              "tol": 24
+            }
+          ]
+        },
+        {
+          "name": "finish 步 icon 墨迹主色（设置步 icon=Primary）",
+          "target": {
+            "label": "steps-circle",
+            "index": 13
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.1,
+                0.1,
+                0.9,
+                0.9
+              ],
+              "expect": {
+                "token": "Primary"
+              },
+              "minRatio": 0.03,
+              "tol": 40
             }
           ]
         }

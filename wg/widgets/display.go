@@ -677,11 +677,83 @@ type Steps struct {
 	// Vertical 垂直方向（antd direction="vertical"）：步骤纵向排布，
 	// 连接线转竖直，标签在圆点右侧。
 	Vertical bool
+	// Icons 每步自定义图标名（antd items[].icon——Icon 组件组合复用；
+	// 空=默认数字/对勾/×）。设置后该步容器 32×32（antd customIconSize），
+	// 状态色随状态：process 主色实底+白 icon、finish 主色边框白底+
+	// 主色 icon（icon 即内容不叠对勾）、wait 灰边灰 icon、error 红。
+	Icons []string
 }
 
 // NewSteps 创建步骤条（ErrorStep=-1 无错误步）。
 func NewSteps(labels []string, current int) *Steps {
 	return &Steps{Labels: labels, Current: current, ErrorStep: -1}
+}
+
+// stepIcon 构建一步的图标节点：默认 20×20 圆点（数字/✓/×），有自定义
+// 图标时 32×32（antd customIconSize）——process 主色实底白 icon、finish
+// 白底主色边框主色 icon、wait 灰边灰 icon、error 红底白 icon。
+func (s Steps) stepIcon(ctx *ui.BuildContext, th *theme.Data, i int) *scene.Node {
+	wait := i > s.Current
+	errorStep := i == s.ErrorStep
+	if icon := s.iconOf(i); icon != "" {
+		fill := geom.Color{}
+		var border geom.Color
+		ic := th.Color.TextMuted
+		switch {
+		case errorStep:
+			fill, ic = th.Color.Danger, th.Color.OnDanger
+		case i < s.Current:
+			border, ic = th.Color.Primary, th.Color.Primary
+		case i == s.Current:
+			fill, ic = th.Color.Primary, th.Color.OnPrimary
+		default:
+			border = th.Color.BorderStrong
+		}
+		n := scene.Box(scene.BoxSpec{
+			Fill:   scene.Solid(fill),
+			Border: scene.Stroke(border, 1),
+			Radius: 16,
+		}).SetSize2(32, 32)
+		if wait && !errorStep && border == (geom.Color{}) {
+			n = scene.Box(scene.BoxSpec{Border: scene.Stroke(th.Color.BorderStrong, 2), Radius: 16}).SetSize2(32, 32)
+		}
+		n.SetHit(scene.HitSpec{Label: "steps-circle"})
+		in := (&Icon{Name: icon, Size: 16, Color: ic}).Build(ctx)
+		in.SetPositionKeepSize(true)
+		in.SetStackPosition(geom.Pt(8, 8))
+		n.Add(in)
+		return n
+	}
+	fill, fg := th.Color.SurfaceActive, th.Color.TextMuted
+	if errorStep {
+		fill, fg = th.Color.Danger, th.Color.OnDanger
+	} else if !wait {
+		fill, fg = th.Color.Primary, th.Color.OnPrimary
+	}
+	circle := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: 10}).SetSize2(20, 20)
+	if wait && !errorStep {
+		circle = scene.Box(scene.BoxSpec{Border: scene.Stroke(th.Color.BorderStrong, 2), Radius: 10}).SetSize2(20, 20)
+	}
+	circle.SetHit(scene.HitSpec{Label: "steps-circle"}) // 被动锚：步骤圆点断言
+	cap := fmt.Sprintf("%d", i+1)
+	if errorStep {
+		cap = "×"
+	} else if i < s.Current {
+		cap = "✓"
+	}
+	fl := text.LayoutText(cap, text.DefaultFont(th.Font.SizeXS), text.Options{})
+	ct := scene.Text(scene.TextSpec{Src: cap, Layout: fl, Color: fg})
+	ct.SetMargin(geom.InLTRB((20-fl.Size.W)/2, (20-fl.Size.H)/2, 0, 0))
+	circle.Add(ct)
+	return circle
+}
+
+// iconOf 取第 i 步的自定义图标名（越界/未设返回空）。
+func (s Steps) iconOf(i int) string {
+	if i < len(s.Icons) && s.Icons[i] != "" {
+		return s.Icons[i]
+	}
+	return ""
 }
 
 // Build 实现 ui.Widget。
@@ -697,36 +769,8 @@ func (s Steps) Build(ctx *ui.BuildContext) *scene.Node {
 	for i, label := range s.Labels {
 		step := scene.Flex(scene.Vertical, th.Space.XS)
 		step.SetCrossAlign(scene.CrossCenter)
-		fill := th.Color.SurfaceActive
-		fg := th.Color.TextMuted
-		// antd wait 步的圆点是**空心描边圆**（透明底 + 灰边），完成/进行步
-		// 是主色实心圆。此前 wait 用实心灰底，与 antd 官方对照不符。
-		wait := i > s.Current
-		errorStep := i == s.ErrorStep
-		if errorStep {
-			// antd status="error"：圆点与符号转红（colorError）。
-			fill, fg = th.Color.Danger, th.Color.OnDanger
-		} else if i <= s.Current {
-			fill, fg = th.Color.Primary, th.Color.OnPrimary
-		}
-		circle := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: 10}).SetSize2(20, 20)
-		if wait && !errorStep {
-			circle = scene.Box(scene.BoxSpec{Border: scene.Stroke(th.Color.BorderStrong, 2), Radius: 10}).SetSize2(20, 20)
-		}
-		circle.SetHit(scene.HitSpec{Label: "steps-circle"}) // 被动锚：步骤圆点断言
-		cap := fmt.Sprintf("%d", i+1)
-		if errorStep {
-			cap = "×"
-		} else if i < s.Current {
-			cap = "✓"
-		}
-		fl := text.LayoutText(cap, text.DefaultFont(th.Font.SizeXS), text.Options{})
-		ct := scene.Text(scene.TextSpec{Src: cap, Layout: fl, Color: fg})
-		ct.SetMargin(geom.InLTRB((20-fl.Size.W)/2, (20-fl.Size.H)/2, 0, 0))
-		circle.Add(ct)
-		step.Add(circle)
-		ll := text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{})
-		step.Add(scene.Text(scene.TextSpec{Src: label, Layout: ll, Color: th.Color.Text}))
+		step.Add(s.stepIcon(ctx, th, i))
+		step.Add(scene.Text(scene.TextSpec{Src: label, Layout: text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{}), Color: th.Color.Text}))
 		n.Add(step)
 		if i < len(s.Labels)-1 {
 			line := th.Color.Border
@@ -747,33 +791,8 @@ func (s Steps) buildVertical(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
 	n := scene.Flex(scene.Vertical, 0)
 	for i, label := range s.Labels {
 		row := scene.Flex(scene.Horizontal, th.Space.SM)
-		wait := i > s.Current
-		errorStep := i == s.ErrorStep
-		fill := th.Color.Primary
-		fg := th.Color.OnPrimary
-		if errorStep {
-			fill, fg = th.Color.Danger, th.Color.OnDanger
-		} else if wait {
-			fill, fg = th.Color.Surface, th.Color.TextMuted
-		}
-		circle := scene.Box(scene.BoxSpec{Fill: scene.Solid(fill), Radius: 10}).SetSize2(20, 20)
-		if wait && !errorStep {
-			circle = scene.Box(scene.BoxSpec{Border: scene.Stroke(th.Color.BorderStrong, 2), Radius: 10}).SetSize2(20, 20)
-		}
-		circle.SetHit(scene.HitSpec{Label: "steps-circle"})
-		cap := fmt.Sprintf("%d", i+1)
-		if errorStep {
-			cap = "×"
-		} else if i < s.Current {
-			cap = "✓"
-		}
-		fl := text.LayoutText(cap, text.DefaultFont(th.Font.SizeXS), text.Options{})
-		ct := scene.Text(scene.TextSpec{Src: cap, Layout: fl, Color: fg})
-		ct.SetMargin(geom.InLTRB((20-fl.Size.W)/2, (20-fl.Size.H)/2, 0, 0))
-		circle.Add(ct)
-		row.Add(circle)
-		ll := text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{})
-		row.Add(scene.Text(scene.TextSpec{Src: label, Layout: ll, Color: th.Color.Text}))
+		row.Add(s.stepIcon(ctx, th, i))
+		row.Add(scene.Text(scene.TextSpec{Src: label, Layout: text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{}), Color: th.Color.Text}))
 		n.Add(row)
 		if i < len(s.Labels)-1 {
 			line := th.Color.Border

@@ -97,6 +97,39 @@ func TestSteps(t *testing.T) {
 	}
 }
 
+// TestStepsIcons 自定义图标：32×32 容器+Icon 子节点（icon 即内容不叠
+// 数字/对勾），未设图标步维持 20×20 默认圆点。
+func TestStepsIcons(t *testing.T) {
+	s := &Steps{Labels: []string{"账户", "设置", "支付", "完成"}, Current: 2,
+		Icons: []string{"user", "setting", "shopping-cart", "check-circle"}}
+	n := s.Build(testCtx())
+	n.Layout(scene.Unbounded())
+	for i, ch := range n.Children() {
+		if i%2 == 1 {
+			continue // 连接线
+		}
+		// 步节点首个子节点是图标容器。
+		iconNode := ch.Children()[0]
+		sz := iconNode.Size()
+		if sz.W != 32 || sz.H != 32 {
+			t.Fatalf("icon 步 %d 容器应 32×32，got %.0fx%.0f", i/2, sz.W, sz.H)
+		}
+		if len(iconNode.Children()) != 1 {
+			t.Fatalf("icon 步 %d 容器应只含 1 个 Icon 子节点，got %d", i/2, len(iconNode.Children()))
+		}
+	}
+	if s.iconOf(1) != "setting" || s.iconOf(4) != "" {
+		t.Fatalf("iconOf 取值错误: %q %q", s.iconOf(1), s.iconOf(4))
+	}
+	// 未设图标：容器回到 20×20 默认圆点。
+	d := (&Steps{Labels: []string{"a", "b"}, Current: 0}).Build(testCtx())
+	d.Layout(scene.Unbounded())
+	sz := d.Children()[0].Children()[0].Size()
+	if sz.W != 20 || sz.H != 20 {
+		t.Fatalf("默认圆点应 20×20，got %.0fx%.0f", sz.W, sz.H)
+	}
+}
+
 // ── 交互组件的点击 ────────────────────────────────────────────────
 
 func TestSegmentedClick(t *testing.T) {
