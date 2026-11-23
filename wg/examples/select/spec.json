@@ -1,12 +1,13 @@
 {
   "id": "select",
   "structure": {
-    "apiRows": 11,
+    "apiRows": 12,
     "sections": [
       "label/value 分离",
       "基本单选",
       "分组 + 搜索",
-      "多选"
+      "多选",
+      "多选折叠"
     ]
   },
   "sections": [
@@ -208,6 +209,104 @@
             {
               "kind": "template",
               "template": "select-open-close"
+            }
+          ]
+        },
+        {
+          "name": "初值 2 tag 渲染（灰底圆角 × 可删）",
+          "target": {
+            "label": "select-tag",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "count": 2,
+              "target": {
+                "label": "select-tag"
+              }
+            },
+            {
+              "kind": "exists",
+              "count": 2,
+              "target": {
+                "label": "select-tag-x"
+              }
+            }
+          ]
+        },
+        {
+          "name": "tag × 删除（初值渲染→删 1 剩 1）",
+          "target": {
+            "label": "select-tag-x",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "select-tag-x",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "count": 1,
+              "target": {
+                "label": "select-tag"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "多选折叠",
+      "cases": [
+        {
+          "name": "MaxTagCount=2 初值 3 个折叠 +1 chip",
+          "target": {
+            "label": "select-tag",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "select",
+                  "index": 3
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "escape"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "count": 2,
+              "target": {
+                "label": "select-tag"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "select-tag-more"
+              }
             }
           ]
         }

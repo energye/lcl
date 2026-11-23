@@ -1,6 +1,7 @@
 package widgets
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/energye/lcl/wg/geom"
@@ -41,6 +42,9 @@ type Select struct {
 	Selected    int            // 单选语义
 	Values      []string       // 多选语义（Multiple=true）
 	Multiple    bool
+	// MaxTagCount 触发框最多显示的 tag 数，超出折叠 "+N"（0=不限制；
+	// antd maxTagCount——TreeSelect 同款语义）。
+	MaxTagCount int
 	ShowSearch  bool
 	Width       float32
 	MaxHeight   float32
@@ -60,6 +64,16 @@ type Select struct {
 // NewSelect 创建下拉框。
 func NewSelect(options []string) *Select {
 	return &Select{Options: options, Selected: -1, Width: 180, MaxHeight: 240, Placeholder: "请选择"}
+}
+
+// tagShown 多选触发框折叠计算：返回实际显示的 Values 前缀与折叠数
+// （MaxTagCount=0 不限制；值数=MaxTagCount 时无折叠——语义与 TreeSelect
+// 同款）。
+func (s *Select) tagShown() (shown []string, overflow int) {
+	if s.MaxTagCount > 0 && len(s.Values) > s.MaxTagCount {
+		return s.Values[:s.MaxTagCount], len(s.Values) - s.MaxTagCount
+	}
+	return s.Values, 0
 }
 
 // labels 返回扁平化选项文本（Items 优先）。
@@ -182,7 +196,8 @@ func (s *Select) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 
 	// 多选：触发框内渲染可删除 tag（视觉对齐 antd select-demo-multiple：
-	// 灰底圆角 tag + × 删除；按宽度换行、触发框高度自适应）。
+	// 灰底圆角 tag + × 删除；按宽度换行、触发框高度自适应）。MaxTagCount
+	// 超出折叠 "+N" chip（antd maxTagCount——TreeSelect 同款语义）。
 	if s.Multiple && len(s.Values) > 0 {
 		const (
 			tagH      = float32(22)
@@ -194,7 +209,11 @@ func (s *Select) Build(ctx *ui.BuildContext) *scene.Node {
 		avail := s.Width - innerPad*2 - arrowZone
 		x, y := innerPad, innerPad
 		rows := 1
-		for _, v := range s.Values {
+		shown, overflow := s.Values, 0
+		if s.MaxTagCount > 0 && len(s.Values) > s.MaxTagCount {
+			shown, overflow = s.Values[:s.MaxTagCount], len(s.Values)-s.MaxTagCount
+		}
+		for _, v := range shown {
 			lv := text.LayoutText(v, text.DefaultFont(th.Font.SizeXS), text.Options{})
 			tagW := lv.Size.W + tagPad*2 + 12            // 文本 + 左右内边距 + ×
 			if x+tagW > innerPad+avail && x > innerPad { // 换行（首个超宽 tag 强放首行）
@@ -236,6 +255,21 @@ func (s *Select) Build(ctx *ui.BuildContext) *scene.Node {
 			tag.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "select-tag", Cursor: scene.CursorPointer})
 			n.Add(tag)
 			x += tagW + tagGap
+		}
+		if overflow > 0 {
+			chipText := fmt.Sprintf("+%d", overflow)
+			cl := text.LayoutText(chipText, text.DefaultFont(th.Font.SizeXS), text.Options{})
+			chipW := cl.Size.W + tagPad*2
+			chip := scene.Box(scene.BoxSpec{
+				Fill:   scene.Solid(th.Color.SurfaceSunken),
+				Radius: th.Radius.SM,
+			}).SetSize2(chipW, tagH)
+			chip.SetPositionKeepSize(true).SetStackPosition(geom.Pt(x, y))
+			ct := scene.Text(scene.TextSpec{Src: chipText, Layout: cl, Color: th.Color.TextMuted})
+			ct.SetMargin(geom.InLTRB(tagPad, (tagH-cl.Size.H)/2, 0, 0))
+			chip.Add(ct)
+			chip.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "select-tag-more"})
+			n.Add(chip)
 		}
 		h := y + tagH + innerPad
 		if h < 34 {

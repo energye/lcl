@@ -17,6 +17,8 @@ var (
 	grouped = widgets.NewSelect(nil)
 	multi   = widgets.NewSelect(nil)
 	mStat   = widgets.NewButton("多选：[]")
+	multiMax = widgets.NewSelect(nil)
+	mMaxStat = widgets.NewButton("折叠多选：[]")
 )
 
 // lvSel label-value 分离演示：显示语言名，提交语言代码。
@@ -63,6 +65,16 @@ func init() {
 		mStat.Text = fmt.Sprintf("多选：%v", vs)
 		mStat.MarkDirty()
 	}
+	// 多选折叠卡（antd maxTagCount）：MaxTagCount=2 超出折叠 +N。
+	multiMax.Width, multiMax.Multiple = 260, true
+	multiMax.MaxTagCount = 2
+	multiMax.Options = []string{"渲染", "布局", "输入", "浮层", "主题"}
+	multiMax.Values = []string{"渲染", "输入", "浮层"}
+	multiMax.OnValues = func(vs []string) {
+		multiMax.Values = vs
+		mMaxStat.Text = fmt.Sprintf("折叠多选：%v", vs)
+		mMaxStat.MarkDirty()
+	}
 }
 
 func main() {
@@ -89,10 +101,16 @@ func main() {
 			{Title: "分组 + 搜索", Note: "ShowSearch 过滤 contains；Group 标题行置灰", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return grouped
 			}},
-			{Title: "多选", Note: "选中行显示对勾、选中不收起；触发框逗号连接", Build: func(ctx *ui.BuildContext) ui.Widget {
+			{Title: "多选", Note: "tag 形态触发框（灰底圆角+× 删除、换行高度自适应）；选中行显示对勾、选中不收起", Build: func(ctx *ui.BuildContext) ui.Widget {
 				col := scene.Flex(scene.Vertical, 10)
 				col.Add(multi.Build(ctx))
 				col.Add(mStat.Build(ctx))
+				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
+			}},
+			{Title: "多选折叠", Note: "MaxTagCount=2：初值 3 个折叠 +1；点选第 4 项 +2；tag × 仍可删", Build: func(ctx *ui.BuildContext) ui.Widget {
+				col := scene.Flex(scene.Vertical, 10)
+				col.Add(multiMax.Build(ctx))
+				col.Add(mMaxStat.Build(ctx))
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
 			}},
 		},
@@ -102,6 +120,7 @@ func main() {
 			{Name: "Value/OptionValue", Type: "func() string / func(i int) string", Desc: "选中项提交值 / 第 i 项提交值（label-value 分离）"},
 			{Name: "ShowSearch", Type: "bool", Default: "false", Desc: "弹层顶部搜索行（antd showSearch）"},
 			{Name: "Multiple", Type: "bool", Default: "false", Desc: "多选（antd multiple；选中不收起）"},
+			{Name: "MaxTagCount", Type: "int", Default: "0", Desc: "触发框最多显示 tag 数，超出折叠 +N（antd maxTagCount）"},
 			{Name: "Selected/Values", Type: "int / []string", Desc: "单选下标 / 多选集合"},
 			{Name: "Width/MaxHeight", Type: "float32", Default: "180 / 240", Desc: "触发框宽 / 弹层最大高"},
 			{Name: "Placeholder", Type: "string", Default: "请选择", Desc: "未选占位"},
