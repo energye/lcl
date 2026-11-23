@@ -3,6 +3,7 @@ package widgets
 import (
 	"testing"
 
+	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
 )
@@ -243,5 +244,92 @@ func TestSelectOptionsAndValue(t *testing.T) {
 	data := s.Build(dataCtx())
 	if data == nil {
 		t.Fatal("Select 构建失败")
+	}
+}
+
+// TestTableCellSpan 行/列合并（antd onCell rowSpan/colSpan 直译）：
+// span 0 格不渲染（covered 占位）、colSpan>1 加宽吃右列、rowSpan>1
+// 跨行格绝对定位、spanAt 缓存与负值钳制。
+func TestTableCellSpan(t *testing.T) {
+	rows := [][]any{
+		{1, "甲", "甲组"},
+		{2, "乙", "甲组"},
+		{3, "丙", "乙组"},
+	}
+	cols := []TableColumn{
+		{Title: "ID", Mode: ColumnFixed, Width: 60},
+		{Title: "姓名", Mode: ColumnFixed, Width: 80},
+		{Title: "组", Mode: ColumnFixed, Width: 80},
+	}
+	tbl := NewTable(cols, rows)
+	tbl.Width = 220
+	tbl.Height = 120
+	// 组列：行 0-1 合并（rowSpan=2）、行 2 独立；姓名列行 1 跨 2 列（colSpan=2）。
+	tbl.CellSpan = func(row, col int) (rs, cs int) {
+		if col == 2 && row == 0 {
+			return 2, 1
+		}
+		if col == 1 && row == 1 {
+			return 1, 2
+		}
+		if col == 2 && row == 1 {
+			return 0, 0 // 被 (0,2) 的 rowSpan 覆盖
+		}
+		if col == 2 && row == 2 {
+			return 0, 0 // 被 (1,1) 的 colSpan 覆盖
+		}
+		return 1, 1
+	}
+	n := tbl.Build(dataCtx())
+	n.Layout(scene.Unbounded())
+	// spanAt 缓存+负值钳制。
+	sp := &spanCache{t: tbl, rows: map[int]map[int][2]int{}, colsN: len(cols)}
+	rs, cs := sp.at(0, 2)
+	if rs != 2 || cs != 1 {
+		t.Fatalf("spanAt(0,2) 应 (2,1)，got (%d,%d)", rs, cs)
+	}
+	tbl.CellSpan = func(int, int) (int, int) { return -3, -3 }
+	sp2 := &spanCache{t: tbl, rows: map[int]map[int][2]int{}, colsN: len(cols)}
+	rs, cs = sp2.at(9, 9)
+	if rs != 1 || cs != 1 {
+		t.Fatalf("CellSpan 返回负值应钳为 1，实际 (%d,%d)", rs, cs)
+	}
+	tbl.CellSpan = func(row, col int) (int, int) {
+		if col == 2 && row == 0 {
+			return 2, 1
+		}
+		if col == 1 && row == 1 {
+			return 1, 2
+		}
+		if col == 2 && row == 1 {
+			return 0, 0
+		}
+		if col == 2 && row == 2 {
+			return 0, 0
+		}
+		return 1, 1
+	}
+	sp3 := &spanCache{t: tbl, rows: map[int]map[int][2]int{}, colsN: len(cols)}
+	// 行 1 组列被覆盖（covered）：渲染为透明占位（无 hit、无文本）。
+	if !sp3.covered(1, 2) {
+		t.Fatal("(1,2) 应被 (0,2) rowSpan=2 覆盖")
+	}
+	if sp3.covered(2, 0) {
+		t.Fatal("(2,0) 无合并不应覆盖")
+	}
+	if sp3.covered(0, 1) {
+		t.Fatal("(0,1) 无合并不应覆盖")
+	}
+	// 节点级断言：跨行格绝对定位（不在行 Flex 流内）——高=2 行高、
+	// 宽≥组列定义宽（列宽按内容溢出模式重算，比定义宽大）。
+	spanCells := 0
+	tbl.node.Walk(func(nd *scene.Node) bool {
+		if nd.Size().H == tbl.RowHeight*2 && nd.Size().W >= cols[2].Width {
+			spanCells++
+		}
+		return true
+	})
+	if spanCells != 1 {
+		t.Fatalf("跨行合并格应恰 1 个（高=%v），got %d", tbl.RowHeight*2, spanCells)
 	}
 }

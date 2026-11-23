@@ -114,6 +114,14 @@ type Table struct {
 	expanded   map[int]bool // 展开态（数据索引集，跨 Build 持有）
 	expandTaps []*ui.GestureDetector
 
+	// CellSpan 单元格行/列合并（antd onCell 的 rowSpan/colSpan 直译）：
+	// 返回该格 rowSpan 与 colSpan——1=普通格；0=**该格不渲染**（被合并
+	// 格覆盖，antd「设值为 0 时不会渲染」同语义）；>1=跨 rowSpan 行 /
+	// colSpan 列（格子加高加宽覆盖被合并格，被覆盖格渲染占位空格）。
+	// 跨行合并基于**数据行号**（排序/筛选/翻页后合并关系按数据行走，
+	// 显示序错位与 antd 排序破坏合并同——如实标注）。nil=全普通格。
+	CellSpan func(row, col int) (rowSpan, colSpan int)
+
 	hoverRow int // 行悬停（antd 行 hover 浅色反馈）；-1 = 无
 
 	offset    float32
@@ -641,6 +649,53 @@ func (t *Table) Build(ctx *ui.BuildContext) *scene.Node {
 
 // buildInner 构建表格本体（表头+虚拟行[+滚动条]），idx 为已排序（可能
 // 已分页切片）的数据行下标。
+// spanCache 是 buildInner 期间的合并格速查（数据行→列→(rowSpan,colSpan)）。
+type spanCache struct {
+	t     *Table
+	rows  map[int]map[int][2]int
+	colsN int
+}
+
+// at 查 (row,col) 合并跨度（CellSpan 每格只调一次缓存；负值钳 1）。
+func (s *spanCache) at(row, col int) (rs, cs int) {
+	rs, cs = 1, 1
+	if s.t.CellSpan == nil || col < 0 || col >= s.colsN {
+		return
+	}
+	m, ok := s.rows[row]
+	if !ok {
+		m = map[int][2]int{}
+		s.rows[row] = m
+	}
+	if v, ok := m[col]; ok {
+		return v[0], v[1]
+	}
+	rs, cs = s.t.CellSpan(row, col)
+	if rs < 0 {
+		rs = 1
+	}
+	if cs < 0 {
+		cs = 1
+	}
+	m[col] = [2]int{rs, cs}
+	return
+}
+
+// covered 判断 (row,col) 是否被上方/左侧合并格覆盖（span 0 格不渲染）。
+func (s *spanCache) covered(row, col int) bool {
+	for r := row - 1; r >= 0 && r >= row-16; r-- {
+		if rs, _ := s.at(r, col); rs > 1 && r+rs > row {
+			return true
+		}
+	}
+	for c := col - 1; c >= 0 && c >= col-16; c-- {
+		if _, cs := s.at(row, c); cs > 1 && c+cs > col {
+			return true
+		}
+	}
+	return false
+}
+
 func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*scene.Node, *scene.Node, bool) {
 	t.lastIdx = idx
 	t.lastRowY = nil
@@ -840,6 +895,8 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 		}
 		return float32(vi) * t.RowHeight
 	}
+	// 合并格速查：spanAt/covered（数据行→列缓存；行循环/覆盖判断共用）。
+	sp := &spanCache{t: t, rows: map[int]map[int][2]int{}, colsN: len(t.Columns)}
 	for vi := first; vi < last; vi++ {
 		dataRow := idx[vi]
 		expanded := t.expandEnabled() && t.isExpanded(dataRow)
@@ -862,7 +919,29 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 		}
 		row.SetBox(scene.BoxSpec{Fill: scene.Solid(bg)})
 		for ci, w := range widths {
-			cell := scene.Box(scene.BoxSpec{}).SetWidth(w).SetHeight(t.RowHeight)
+			// 合并语义（antd onCell rowSpan/colSpan）：span 0=格不渲染
+			//（被合并格覆盖）；colSpan>1 格加宽吃掉右侧列；rowSpan>1 格
+			// 脱离行流绝对定位跨行覆盖。占位逻辑：covered 格渲染透明
+			// 占位保住列 x 布局（不挂 hit——点击落在覆盖格上）。
+			rs, cs := sp.at(dataRow, ci)
+			if sp.covered(dataRow, ci) {
+				ph := scene.Box(scene.BoxSpec{}).SetWidth(w).SetHeight(t.RowHeight)
+				row.Add(ph)
+				continue
+			}
+			cellW := w
+			if cs > 1 {
+				for k := 1; k < cs && ci+k < len(widths); k++ {
+					cellW += widths[ci+k]
+				}
+			}
+			cell := scene.Box(scene.BoxSpec{}).SetWidth(cellW).SetHeight(t.RowHeight)
+			if rs > 1 {
+				// 跨行格：脱离行流，绝对定位到 bar 层（高度=rs 行高，
+				// 白底盖住下方被合并行——同冻结列叠层手法）。
+				spanH := float32(rs) * t.RowHeight
+				cell = scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface)}).SetWidth(cellW).SetHeight(spanH)
+			}
 			// 展开图标：首列且非行点击模式时渲染 caret（right=收起/down=展开）。
 			if ci == 0 && t.expandEnabled() && !t.Expandable.ExpandRowByClick {
 				name := "right"
@@ -950,7 +1029,22 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 				t.rowTaps = append(t.rowTaps, g)
 				ctx.Input.Set(cell, h)
 			}
-			row.Add(cell)
+			if rs > 1 {
+				// 跨行格：绝对定位覆盖（x=前序列宽前缀和，y=本行顶延伸
+				// rs 行；白底盖住被合并行——同冻结列叠层手法）。
+				// 注意：跨行格与展开行/斑马行并存时白底覆盖斑马——antd
+				// 合并格视觉即整块底色，语义一致。
+				cx := float32(0)
+				for k := 0; k < ci && k < len(widths); k++ {
+					cx += widths[k]
+				}
+				cell.SetStackPosition(geom.Pt(cx, t.HeaderH+rowYAt(vi)-t.offset))
+				cell.SetPositionKeepSize(true)
+				col.Add(cell)
+				t.rowNodes = append(t.rowNodes, cell) // 随行节点集维护（滚动重建窗口一致）
+			} else {
+				row.Add(cell)
+			}
 		}
 		row.SetStackPosition(geom.Pt(0, t.HeaderH+rowYAt(vi)-t.offset))
 		row.SetPositionKeepSize(true)

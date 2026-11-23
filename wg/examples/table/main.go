@@ -79,6 +79,7 @@ var (
 	tblFreeze *widgets.Table
 	tblRender *widgets.Table
 	tblExpand *widgets.Table
+	tblSpan   *widgets.Table
 	tblRenderInited bool
 )
 
@@ -133,6 +134,31 @@ func init() {
 		},
 		DefaultExpandRows: []int{0},
 	}
+
+	// 行列合并卡（antd onCell rowSpan/colSpan）：服务列行 0-1 同名
+	// rowSpan=2 合并（跨行格白底覆盖被合并行）、span 0 格不渲染。
+	scols := []widgets.TableColumn{
+		{Title: "服务", Mode: widgets.ColumnAuto},
+		{Title: "环境", Mode: widgets.ColumnFixed, Width: 110},
+		{Title: "状态", Mode: widgets.ColumnFixed, Width: 90},
+	}
+	srows := [][]any{
+		{"用户服务", "生产", "运行中"},
+		{"用户服务", "预发", "运行中"},
+		{"订单服务", "生产", "运行中"},
+		{"报表服务", "生产", "已停止"},
+	}
+	tblSpan = widgets.NewTable(scols, srows)
+	tblSpan.Width, tblSpan.Height = 620, 150
+	tblSpan.CellSpan = func(row, col int) (rs, cs int) {
+		if col == 0 && row == 0 {
+			return 2, 1
+		}
+		if col == 0 && row == 1 {
+			return 0, 0
+		}
+		return 1, 1
+	}
 }
 
 func main() {
@@ -143,6 +169,7 @@ func main() {
 			"列宽三档（Q9）：Auto 按内容 / Fixed 固定 / Flex 按权重分配",
 			"点击可排序列的表头排序（稳定排序）；斑马纹 + 行选中",
 			"展开行（antd expandable）：折叠图标/行点击展开内容行",
+			"行列合并（antd onCell rowSpan/colSpan 直译）：CellSpan 按数据行声明跨度，0=格不渲染；排序/筛选后合并关系按数据行走（显示序错位与 antd 一致——如实标注）",
 			"计划（M9）：固定列/列拖宽/行悬停/分页/筛选/自定义单元格渲染",
 		},
 		Demos: []doc.Demo{
@@ -164,11 +191,15 @@ func main() {
 			{Title: "展开行", Note: "antd expandable 对应：首列折叠图标点击展开内容行（ExpandedRowRender），DefaultExpandRows 初始展开首行", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tblExpand
 			}},
+			{Title: "行列合并", Note: "antd onCell rowSpan/colSpan：服务列行 0-1 rowSpan=2 合并（跨行白底覆盖），span 0 格不渲染", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return tblSpan
+			}},
 		},
 		API: []doc.APIRow{
 			{Name: "NewTable", Type: "func(cols []TableColumn, rows [][]any) *Table", Desc: "构造"},
 			{Name: "Columns", Type: "[]TableColumn", Desc: "列定义（Title/Mode/Width/Flex/Sortable/Align/Formatter）"},
 			{Name: "Rows", Type: "[][]any", Desc: "行数据；单元格 any → 默认格式化为文本"},
+			{Name: "CellSpan", Type: "func(row, col int) (rowSpan, colSpan int)", Desc: "行列合并（antd onCell 直译；0=该格不渲染被覆盖）"},
 			{Name: "Width/Height", Type: "float32", Default: "640 / 240", Desc: "视口尺寸"},
 			{Name: "RowHeight", Type: "float32", Default: "30", Desc: "行高"},
 			{Name: "SortColumn/Asc", Type: "int / bool", Desc: "排序状态（点表头切换）"},

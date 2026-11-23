@@ -488,17 +488,70 @@
         }
       ], 
       "name": "展开行"
+    }, 
+    {
+      "name": "行列合并", 
+      "cases": [
+        {
+          "name": "合并格文本唯一（用户服务 ×1）", 
+          "target": {
+            "label": "table-row", 
+            "text": "生产"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "table-row", 
+                "text": "用户服务"
+              }
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "table-row", 
+                "text": "预发"
+              }
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "table-row", 
+                "text": "已停止"
+              }
+            }
+          ]
+        }, 
+        {
+          "name": "被合并行服务列为空（行 1 无第二个用户服务格）", 
+          "target": {
+            "label": "table-row", 
+            "text": "用户服务"
+          }, 
+          "then": [
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "table-row", 
+                "text": "用户服务"
+              }, 
+              "count": 1
+            }
+          ]
+        }
+      ]
     }
   ], 
   "structure": {
-    "apiRows": 9, 
+    "apiRows": 10, 
     "minElements": 12, 
     "sections": [
       "固定列", 
       "分页表格", 
       "四列混排", 
       "单元格渲染", 
-      "展开行"
+      "展开行", 
+      "行列合并"
     ]
   }
 }
