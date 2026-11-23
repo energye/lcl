@@ -2,14 +2,16 @@ package widgets
 
 // ── Affix 固钉（M12 收尾）────────────────────────────────────────
 //
-// antd：<Affix offsetTop onChange> 滚动固定：页面滚动超阈值时元素
-// 转为固定态。**滚动上下文注入**（Calendar.Now 同款可测性设计）：
+// antd：<Affix offsetTop offsetBottom onChange> 滚动固定：页面滚动超
+// 阈值（offsetTop）或距底部不足（offsetBottom，吸底场景）时元素转为
+// 固定态。**滚动上下文注入**（Calendar.Now 同款可测性设计）：
 // ScrollOffset func() float32 由宿主提供（如组合在 Scroll 内时闭
-// 包捕获 Scroll.Offset）；宿主滚动触发外层重建 → Affix.Build 重跑
-// → 查询切换 affixed 态。视觉：固定态加主色边框+"已固定"角标
-// （antd 固定态语义视觉简化）。
+// 包捕获 Scroll.Offset）；BottomOffset func() float32 提供距底查询
+// （吸底场景——宿主闭包捕获内容高-可见高等折算）；宿主滚动触发外层
+// 重建 → Affix.Build 重跑 → 查询切换 affixed 态。视觉：固定态加主色
+// 边框+"已固定"角标（antd 固定态语义视觉简化）。
 // 未实现（如实标注）：真实 fixed 定位（引擎无视口固定层级——固定
-// 态为语义视觉）、OffsetBottom、target 容器、刷新时序。
+// 态为语义视觉）、target 容器、刷新时序。
 
 import (
 	"github.com/energye/lcl/wg/geom"
@@ -25,8 +27,14 @@ type Affix struct {
 	Child ui.Widget
 	// OffsetTop 触发阈值（滚动 offset ≥ 此值进入固定态）。
 	OffsetTop float32
-	// ScrollOffset 滚动查询注入（宿主闭包；nil=永不触发）。
+	// OffsetBottom 距底触发阈值（antd offsetBottom——距底部 ≤ 此值进入
+	// 固定态，吸底场景；0=不启用）。
+	OffsetBottom float32
+	// ScrollOffset 滚动查询注入（宿主闭包；nil=顶部永不触发）。
 	ScrollOffset func() float32
+	// BottomOffset 距底查询注入（宿主闭包——内容高-可见高-滚动 offset
+	// 等折算；nil=底部永不触发）。
+	BottomOffset func() float32
 	// OnAffixChange 固定态变化回调。
 	OnAffixChange func(affixed bool)
 	Width         float32
@@ -57,12 +65,17 @@ func (a *Affix) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 
 	// 查询滚动 → 切换 affixed（翻转只同步+通知，不自标脏防循环——
-	// 本次 Build 已是新状态，宿主滚动帧会再次进来）。
-	off := float32(0)
-	if a.ScrollOffset != nil {
-		off = a.ScrollOffset()
+	// 本次 Build 已是新状态，宿主滚动帧会再次进来）。双阈值独立启用：
+	// 顶部判定要求 ScrollOffset 注入、底部判定要求 BottomOffset 注入
+	// 且 OffsetBottom>0（antd offsetTop/offsetBottom undefined=不参与
+	// 的语义——吸底卡不注入 ScrollOffset 时顶部判定不误触发）。
+	affixed := false
+	if a.ScrollOffset != nil && a.ScrollOffset() >= a.OffsetTop {
+		affixed = true
 	}
-	affixed := off >= a.OffsetTop
+	if !affixed && a.OffsetBottom > 0 && a.BottomOffset != nil && a.BottomOffset() <= a.OffsetBottom {
+		affixed = true
+	}
 	if affixed != a.affixed {
 		a.affixed = affixed
 		if a.OnAffixChange != nil {

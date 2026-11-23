@@ -1,7 +1,7 @@
 {
   "id": "affix",
   "structure": {
-    "apiRows": 5,
+    "apiRows": 7,
     "sections": [
       "滚动固定"
     ]
@@ -93,6 +93,82 @@
                 "target": {
                   "label": "button",
                   "text": "模拟回滚"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "absent",
+              "target": {
+                "label": "affix-badge"
+              }
+            }
+          ]
+        },
+        {
+          "name": "滚到底部进入吸底态（距底 80<120）",
+          "target": {
+            "label": "affix",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "text": "滚到底部"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "affix-badge",
+                "text": "已固定",
+                "index": 1
+              }
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "expect": {
+                "token": "InfoBg"
+              },
+              "minRatio": 0.3,
+              "tol": 14,
+              "target": {
+                "label": "affix",
+                "index": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "滚回顶部还原未吸底（且滚动卡保持未固定——双卡态互不干扰）",
+          "target": {
+            "label": "affix",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "text": "滚回顶部"
                 }
               }
             },
