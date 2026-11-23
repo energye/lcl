@@ -63,11 +63,12 @@ func main() {
 		ID: "tabs", Title: "Tabs 标签页", Group: doc.GroupControl,
 		What: []string{
 			"标签页：点击标签切换内容区，当前实现会重建内容子树",
+			"line 线型指示条为 bar 层单一元素（antd 真实形态）：切换时在页签间平滑滑动（motionDurationMid 0.2s EaseOut，ReduceMotion 归零直落）",
 			"card 卡片型：灰底描边方块页签、选中白底+顶部主色线（antd type=card）",
 			"closable 可关闭：页签右侧 × 热区点击触发 OnEdit(remove)",
 		},
 		Demos: []doc.Demo{
-			{Title: "三页切换", Note: "line 线型（默认）：主色文字+底部指示条", Build: func(ctx *ui.BuildContext) ui.Widget {
+			{Title: "三页切换", Note: "line 线型（默认）：主色文字+底部指示条（切换动画滑动）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tabs
 			}},
 			{Title: "card 卡片型", Note: "Type=TabsCard：灰底描边方块、选中白底+顶部主色线", Build: func(ctx *ui.BuildContext) ui.Widget {

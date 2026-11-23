@@ -19,7 +19,10 @@ func TestTabsSwitch(t *testing.T) {
 		Tab{Key: "b", Label: "B", Content: Label{Text: "page-b"}},
 	)
 	node := r.mount(tabs)
-	headers := node.Children()[0].Children()
+	// line 型：bar 提升为 Stack(headers 行, 指示条)——headers 行是
+	// Stack 的第一个孩子（antd 指示条跨页签滑动形态）。
+	bar := node.Children()[0]
+	headers := bar.Children()[0].Children()
 	if len(headers) != 2 {
 		t.Fatalf("页签数 = %d", len(headers))
 	}
@@ -33,8 +36,43 @@ func TestTabsSwitch(t *testing.T) {
 	}
 }
 
-func TestTooltipShowsAndHides(t *testing.T) {
-	root := scene.Stack().SetSize2(400, 300)
+// TestTabsIndicatorAnim 切换动画：startIndicatorAnim 记录起止页签、
+// barGeometry 计算含间距的前缀几何；ReduceMotion 归零直落完成态。
+func TestTabsIndicatorAnim(t *testing.T) {
+	r := newControlRig()
+	tabs := NewTabs(
+		Tab{Key: "a", Label: "AAAA", Content: nil},
+		Tab{Key: "b", Label: "BB", Content: nil},
+	)
+	r.mount(tabs)
+	m := ui.MetricsFor(theme.Default(), ui.SizeMedium)
+	gap := theme.Default().Space.SM
+	g0 := tabs.barGeometry(0, gap, m)
+	g1 := tabs.barGeometry(1, gap, m)
+	w0 := tabs.headerWidth(0, m)
+	if g0.x != 0 || g0.w != w0 {
+		t.Fatalf("第 0 页签几何应为 (0,%v)，got %v", w0, g0)
+	}
+	if g1.x != w0+gap {
+		t.Fatalf("第 1 页签 x 应为 %v，got %v", w0+gap, g1.x)
+	}
+	// 启动动画：状态机置位、时长归零（rig ctx 无 Scheduler 请求被跳过
+	// 但 anim.Forward dur>0 会等待 Step——直接归零验证 ReduceMotion 路径）。
+	r.ctx.Media.ReduceMotion = true
+	tabs.prevActive = 0
+	tabs.Active = 1
+	tabs.startIndicatorAnim(r.ctx)
+	if !tabs.animating || tabs.prevActive != 0 {
+		t.Fatalf("动画未启动: animating=%v prev=%d", tabs.animating, tabs.prevActive)
+	}
+	// ReduceMotion→Motion 归零：Forward 立即落终值（Controller 零时长
+	// 语义），不需要等待 Step。
+	if tabs.anim.Value() != 1 || tabs.anim.Status() != ui.AnimCompleted {
+		t.Fatalf("归零时长应直落终值 1（completed），got v=%v st=%v", tabs.anim.Value(), tabs.anim.Status())
+	}
+}
+
+func TestTooltipShowsAndHides(t *testing.T) {	root := scene.Stack().SetSize2(400, 300)
 	disp := input.NewDispatcher(root)
 	root.Layout(scene.TightConstraints(geom.Size{W: 400, H: 300}))
 	ov := overlay.New(overlay.Options{

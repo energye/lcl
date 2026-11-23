@@ -1,6 +1,8 @@
 package widgets
 
 import (
+	"time"
+
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/overlay"
@@ -51,6 +53,49 @@ type Tabs struct {
 	headers []*tabHeader
 	taps    []*ui.GestureDetector // × 关闭/切换手势实例池（跨重建持有）
 	node    *scene.Node
+
+	// prevActive/lastActive 动画起止页签下标（startIndicatorAnim 记录）。
+	prevActive int
+	lastActive int
+
+	// anim 指示条切换动画（antd motionDurationMid 0.2s——line 型指示条
+	// 在页签间平滑滑动；ReduceMotion 归零直落）。bar 层单一指示条元素
+	// （antd 真实形态）从旧 Active 几何插值到新 Active 几何。
+	anim      *ui.Controller
+	animFrom  animGeom // 动画起点几何
+	animTo    animGeom // 动画终点几何（driveIndicator 原地迁移用）
+	animating bool
+	// indicator 跨 Build 持有的指示条节点（动画期间原地迁移不重建——
+	// SetAnimating 是 60Hz 重录 paint 通道不重建，整树重建型动画不可用；
+	// 内容淡入同源通道不做如实标注：antd 内容区 fade+move wg 暂无）。
+	indicator *scene.Node
+	indW      float32 // 指示条当前宽（OnUpdate 迁移用）
+	indY      float32 // 指示条 y（bar 高-2，driveIndicator 迁移用）
+}
+
+// animGeom 是指示条几何（相对 bar）。
+type animGeom struct {
+	x, w float32
+}
+
+// headerWidth 计算第 i 页签宽（Build 与动画插值共用一份几何）。
+func (t *Tabs) headerWidth(i int, m ui.Metrics) float32 {
+	font := text.DefaultFont(m.Font)
+	layout := text.LayoutText(t.Items[i].Label, font, text.Options{})
+	w := layout.Size.W + m.Padding.Min.X + m.Padding.Max.X
+	if t.Items[i].Closable {
+		w += 14
+	}
+	return w
+}
+
+// barGeometry 计算第 i 页签的指示条几何（相对 bar；含页签间距）。
+func (t *Tabs) barGeometry(i int, gap float32, m ui.Metrics) animGeom {
+	x := float32(0)
+	for k := 0; k < i; k++ {
+		x += t.headerWidth(k, m) + gap
+	}
+	return animGeom{x: x, w: t.headerWidth(i, m)}
 }
 
 // NewTabs 创建标签页。
@@ -88,12 +133,94 @@ func (t *Tabs) Build(ctx *ui.BuildContext) *scene.Node {
 		headers[i] = hdr
 	}
 	bar := scene.Flex(scene.Horizontal, th.Space.SM, buildChildren(ctx, headers)...)
+	gap := th.Space.SM
+	// line 型：指示条提升到 bar 层单一元素（antd 真实形态——切换时在
+	// 页签间平滑滑动）。动画进行中 OnUpdate 原地迁移几何；静止时直落
+	// 当前 Active 位置。
+	if t.Type == TabsLine {
+		geomTo := t.barGeometry(t.Active, gap, m)
+		x, w := geomTo.x, geomTo.w
+		if t.animating {
+			// 起点=切换前页签几何（startIndicatorAnim 记录 prevActive）。
+			// 首帧画在插值起点（随后 driveIndicator 原地迁移推进）。
+			t.animFrom = t.barGeometry(t.prevActive, gap, m)
+			t.animTo = geomTo
+			x, w = t.animFrom.x, t.animFrom.w
+			if v := t.anim.Value(); v > 0 {
+				x = ui.Lerp(t.animFrom.x, geomTo.x, v)
+				w = ui.Lerp(t.animFrom.w, geomTo.w, v)
+			}
+		}
+		ind := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary)}).SetSize2(w, 2)
+		ind.SetPositionKeepSize(true)
+		// SetStackPositionPaint 同步写 offset（Select 轮教训：异步折算
+		// SetStackPosition 在审计采样帧读到旧值/零——指示条位置必须当
+		// 帧即正确）。
+		ind.SetStackPositionPaint(geom.Pt(x, m.Height-2))
+		ind.SetHit(scene.HitSpec{Label: "tabs-indicator"})
+		t.indicator = ind
+		t.indW = w
+		t.indY = m.Height - 2
+		bar = scene.Stack(bar, ind)
+		bar.SetHit(scene.HitSpec{Label: "tabs-bar"})
+	}
 	col := scene.Flex(scene.Vertical, th.Space.MD, bar)
 	if c := buildChild(ctx, t.Items[t.Active].Content); c != nil {
 		col.Add(c)
 	}
 	t.node = col
+	// 动画推进：帧泵递归驱动（RequestFrameIn 16ms——Controller 只算插值
+	// 不自带定时器；SetAnimating 是 60Hz 重录 paint 不重建，对整树重建型
+	// 不可用——indicator 首帧后由 driveIndicator 原地迁移，不重建）。
+	if t.animating && ctx.Scheduler != nil {
+		t.driveIndicator(ctx)
+	}
 	return col
+}
+
+// driveIndicator 推进指示条动画一帧：Animating → MarkDirty 重建走插值
+// +AfterFunc(16ms) 自排程续帧（Countdown 递归同款——帧泵 RequestFrameIn
+// 只重录 paint 不重建，递归链在无 Build 的帧上断裂，探针实证停中点）；
+// 完成 → 复位并落终帧。
+func (t *Tabs) driveIndicator(ctx *ui.BuildContext) {
+	if t.anim == nil {
+		return
+	}
+	if t.anim.Step(time.Since(animBase)) {
+		time.AfterFunc(16*time.Millisecond, func() {
+			if t.animating {
+				t.MarkDirty()
+			}
+		})
+		return
+	}
+	t.animating = false
+	if ctx != nil {
+		ctx.SetAnimating(t, false)
+	}
+	t.MarkDirty() // 落终帧（消除插值误差）
+}
+
+// animBase 是指示条动画的墙钟起点（Step 用绝对时间）。
+var animBase = time.Now()
+
+// startIndicatorAnim 启动指示条切换动画（Active 已改后调用）。
+func (t *Tabs) startIndicatorAnim(ctx *ui.BuildContext) {
+	if ctx == nil {
+		return
+	}
+	if t.anim == nil {
+		t.anim = ui.NewController(0, theme.EaseOut)
+	}
+	t.anim.SetDuration(ctx.Motion(200 * time.Millisecond)) // ReduceMotion 归零直落
+	t.prevActive = t.lastActive
+	t.lastActive = t.Active
+	t.animating = true
+	t.anim.SetValue(0)
+	t.anim.Forward(time.Since(animBase))
+	if ctx.Scheduler != nil {
+		ctx.Scheduler.RequestFrame()
+	}
 }
 
 // tabHeader 是单个页签（内部组件，不导出）。
@@ -139,14 +266,9 @@ func (h *tabHeader) Build(ctx *ui.BuildContext) *scene.Node {
 			n.Add(ind)
 		}
 	} else {
-		// antd line 型页签：无底色按钮盒，文字色区分选中/悬停，选中带底部
-		// 下划线指示条（此前是实心主色圆角块，与官方 line 型不符）。
+		// antd line 型页签：无底色按钮盒，文字色区分选中/悬停；指示条
+		// 已提升到 bar 层（切换平滑滑动——antd 真实形态），页签内不画。
 		n = scene.Box(scene.BoxSpec{}).SetSize2(w, h.metrics.Height)
-		if active {
-			ind := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Primary)}).SetSize2(w, 2)
-			ind.SetPositionKeepSize(true).SetStackPosition(geom.Pt(0, h.metrics.Height-2))
-			n.Add(ind)
-		}
 	}
 	col := th.Color.Text
 	if active {
@@ -181,7 +303,9 @@ func (h *tabHeader) Build(ctx *ui.BuildContext) *scene.Node {
 			if tabs.Active == index {
 				return
 			}
+			tabs.prevActive = tabs.Active
 			tabs.Active = index
+			tabs.startIndicatorAnim(ctx)
 			tabs.MarkDirty()
 			if tabs.OnChange != nil {
 				tabs.OnChange(index)

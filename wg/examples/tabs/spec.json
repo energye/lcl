@@ -1,339 +1,442 @@
 {
-  "id": "tabs",
-  "structure": {
-    "apiRows": 8,
-    "sections": [
-      "三页切换",
-      "card 卡片型",
-      "closable 可关闭"
-    ]
-  },
   "sections": [
     {
-      "name": "三页切换",
       "cases": [
         {
-          "name": "选中页签文字为主色",
-          "target": {
-            "label": "tab",
-            "text": "第一页"
-          },
           "then": [
             {
-              "kind": "colorRatio",
+              "kind": "colorRatio", 
               "frac": [
-                0.15,
-                0.15,
-                0.7,
+                0.15, 
+                0.15, 
+                0.7, 
                 0.7
-              ],
+              ], 
               "expect": {
                 "token": "Primary"
-              },
-              "minRatio": 0.05,
-              "tol": 24
+              }, 
+              "tol": 24, 
+              "minRatio": 0.05
             }
-          ]
-        },
-        {
-          "name": "选中页签带主色下划线指示",
+          ], 
+          "name": "\u9009\u4e2d\u9875\u7b7e\u6587\u5b57\u4e3a\u4e3b\u8272", 
           "target": {
-            "label": "tab",
-            "text": "第一页"
-          },
+            "text": "\u7b2c\u4e00\u9875", 
+            "label": "tab"
+          }
+        }, 
+        {
           "then": [
             {
-              "kind": "colorRatio",
+              "kind": "colorRatio", 
               "frac": [
-                0.25,
-                0.75,
-                0.5,
+                0.25, 
+                0.75, 
+                0.5, 
                 0.25
-              ],
+              ], 
               "expect": {
                 "token": "Primary"
-              },
-              "minRatio": 0.1,
-              "tol": 24
+              }, 
+              "tol": 24, 
+              "minRatio": 0.1
             }
-          ]
-        },
-        {
-          "name": "未选中页签文字为普通文字色",
+          ], 
+          "name": "\u9009\u4e2d\u9875\u7b7e\u5e26\u4e3b\u8272\u4e0b\u5212\u7ebf\u6307\u793a", 
           "target": {
-            "label": "tab",
-            "text": "第三页"
-          },
+            "text": "\u7b2c\u4e00\u9875", 
+            "label": "tab"
+          }
+        }, 
+        {
           "then": [
             {
-              "kind": "colorRatio",
+              "kind": "colorRatio", 
               "frac": [
-                0.15,
-                0.15,
-                0.7,
+                0.15, 
+                0.15, 
+                0.7, 
                 0.7
-              ],
+              ], 
               "expect": {
                 "token": "Text"
-              },
-              "minRatio": 0.05,
-              "tol": 24
+              }, 
+              "tol": 24, 
+              "minRatio": 0.05
             }
-          ]
-        },
-        {
-          "name": "初始显示第一页内容",
+          ], 
+          "name": "\u672a\u9009\u4e2d\u9875\u7b7e\u6587\u5b57\u4e3a\u666e\u901a\u6587\u5b57\u8272", 
           "target": {
-            "label": "label",
-            "text": "第一页内容"
-          },
+            "text": "\u7b2c\u4e09\u9875", 
+            "label": "tab"
+          }
+        }, 
+        {
           "then": [
             {
-              "kind": "text",
-              "text": "第一页内容"
+              "text": "\u7b2c\u4e00\u9875\u5185\u5bb9", 
+              "kind": "text"
             }
-          ]
-        },
-        {
-          "name": "未选页签无其内容文字",
+          ], 
+          "name": "\u521d\u59cb\u663e\u793a\u7b2c\u4e00\u9875\u5185\u5bb9", 
           "target": {
-            "label": "label",
-            "text": "第二页内容"
-          },
+            "text": "\u7b2c\u4e00\u9875\u5185\u5bb9", 
+            "label": "label"
+          }
+        }, 
+        {
           "then": [
             {
-              "kind": "text",
-              "text": "第二页内容",
+              "text": "\u7b2c\u4e8c\u9875\u5185\u5bb9", 
+              "kind": "text", 
               "notContains": true
             }
-          ]
-        },
-        {
-          "name": "点击未选中页签切换",
+          ], 
+          "name": "\u672a\u9009\u9875\u7b7e\u65e0\u5176\u5185\u5bb9\u6587\u5b57", 
           "target": {
-            "label": "tab",
-            "text": "第二页"
-          },
+            "text": "\u7b2c\u4e8c\u9875\u5185\u5bb9", 
+            "label": "label"
+          }
+        }, 
+        {
           "then": [
             {
-              "kind": "template",
+              "kind": "template", 
               "template": "segment-select"
             }
-          ]
+          ], 
+          "name": "\u70b9\u51fb\u672a\u9009\u4e2d\u9875\u7b7e\u5207\u6362", 
+          "target": {
+            "text": "\u7b2c\u4e8c\u9875", 
+            "label": "tab"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "kind": "exists"
+            }, 
+            {
+              "kind": "colorRatio", 
+              "frac": [
+                0.0, 
+                0.0, 
+                1.0, 
+                1.0
+              ], 
+              "expect": {
+                "token": "Primary"
+              }, 
+              "tol": 14, 
+              "minRatio": 0.5
+            }
+          ], 
+          "name": "\u6307\u793a\u6761\u4e3a bar \u5c42\u72ec\u7acb\u951a\uff08tabs-indicator \u4e3b\u8272\u5b58\u5728\uff09", 
+          "target": {
+            "label": "tabs-indicator"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "text": "\u7b2c\u4e09\u9875\u5185\u5bb9", 
+              "kind": "text", 
+              "target": {
+                "text": "\u7b2c\u4e09\u9875\u5185\u5bb9", 
+                "label": "label"
+              }
+            }, 
+            {
+              "xBetween": [
+                210, 
+                236
+              ], 
+              "kind": "geometry", 
+              "target": {
+                "label": "tabs-indicator"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "text": "\u7b2c\u4e09\u9875", 
+                  "label": "tab"
+                }
+              }
+            }, 
+            {
+              "wait": 600
+            }
+          ], 
+          "name": "\u70b9\u51fb\u7b2c\u4e09\u9875\u7b7e\u540e\u6307\u793a\u6761\u6ed1\u5230\u7b2c\u4e09\u9875\u7b7e\u533a\u95f4\uff08\u7ec8\u6001\uff09", 
+          "target": {
+            "label": "tabs-indicator"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "text": "\u7b2c\u4e8c\u9875\u5185\u5bb9", 
+              "kind": "text", 
+              "target": {
+                "text": "\u7b2c\u4e8c\u9875\u5185\u5bb9", 
+                "label": "label"
+              }
+            }, 
+            {
+              "xBetween": [
+                134, 
+                160
+              ], 
+              "kind": "geometry", 
+              "target": {
+                "label": "tabs-indicator"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "text": "\u7b2c\u4e8c\u9875", 
+                  "label": "tab"
+                }
+              }
+            }, 
+            {
+              "wait": 600
+            }
+          ], 
+          "name": "\u70b9\u51fb\u7b2c\u4e8c\u9875\u7b7e\u540e\u6307\u793a\u6761\u6ed1\u56de\u7b2c\u4e8c\u9875\u7b7e\u533a\u95f4\uff08\u7ec8\u6001\uff09", 
+          "target": {
+            "label": "tabs-indicator"
+          }
         }
-      ]
-    },
+      ], 
+      "name": "\u4e09\u9875\u5207\u6362"
+    }, 
     {
-      "name": "card 卡片型",
       "cases": [
         {
-          "name": "card 页签为灰底（SurfaceActive）",
-          "target": {
-            "label": "tab",
-            "text": "设置"
-          },
           "then": [
             {
-              "kind": "colorRatio",
+              "kind": "colorRatio", 
               "frac": [
-                0.3,
-                0.3,
-                0.4,
+                0.3, 
+                0.3, 
+                0.4, 
                 0.4
-              ],
+              ], 
               "expect": {
                 "token": "SurfaceActive"
-              },
-              "minRatio": 0.3,
-              "tol": 14
+              }, 
+              "tol": 14, 
+              "minRatio": 0.3
             }
-          ]
-        },
-        {
-          "name": "选中 card 页签为白底（Surface）",
+          ], 
+          "name": "card \u9875\u7b7e\u4e3a\u7070\u5e95\uff08SurfaceActive\uff09", 
           "target": {
-            "label": "tab",
-            "text": "文档"
-          },
+            "text": "\u8bbe\u7f6e", 
+            "label": "tab"
+          }
+        }, 
+        {
           "then": [
             {
-              "kind": "colorRatio",
+              "kind": "colorRatio", 
               "frac": [
-                0.3,
-                0.5,
-                0.4,
+                0.3, 
+                0.5, 
+                0.4, 
                 0.3
-              ],
+              ], 
               "expect": {
                 "token": "Surface"
-              },
-              "minRatio": 0.4,
-              "tol": 14
+              }, 
+              "tol": 14, 
+              "minRatio": 0.4
             }
-          ]
-        },
-        {
-          "name": "card 页签有描边（Border）",
+          ], 
+          "name": "\u9009\u4e2d card \u9875\u7b7e\u4e3a\u767d\u5e95\uff08Surface\uff09", 
           "target": {
-            "label": "tab",
-            "text": "关于"
-          },
+            "text": "\u6587\u6863", 
+            "label": "tab"
+          }
+        }, 
+        {
           "then": [
             {
-              "kind": "borderColor",
+              "kind": "borderColor", 
               "expect": {
                 "token": "Border"
-              },
+              }, 
               "tol": 24
             }
-          ]
-        },
-        {
-          "name": "点击 card 页签切换内容",
+          ], 
+          "name": "card \u9875\u7b7e\u6709\u63cf\u8fb9\uff08Border\uff09", 
           "target": {
-            "label": "tab",
-            "text": "设置"
-          },
+            "text": "\u5173\u4e8e", 
+            "label": "tab"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "text": "\u8bbe\u7f6e\u5185\u5bb9", 
+              "kind": "text", 
+              "target": {
+                "text": "\u8bbe\u7f6e\u5185\u5bb9", 
+                "label": "label"
+              }
+            }
+          ], 
           "when": [
             {
               "click": {}
-            },
+            }, 
             {
               "wait": 300
             }
-          ],
-          "then": [
-            {
-              "kind": "text",
-              "text": "设置内容",
-              "target": {
-                "label": "label",
-                "text": "设置内容"
-              }
-            }
-          ]
+          ], 
+          "name": "\u70b9\u51fb card \u9875\u7b7e\u5207\u6362\u5185\u5bb9", 
+          "target": {
+            "text": "\u8bbe\u7f6e", 
+            "label": "tab"
+          }
         }
-      ]
-    },
+      ], 
+      "name": "card \u5361\u7247\u578b"
+    }, 
     {
-      "name": "closable 可关闭",
       "cases": [
         {
-          "name": "× 热区存在（tab-close 锚）",
+          "then": [
+            {
+              "count": 2, 
+              "kind": "exists"
+            }
+          ], 
+          "name": "\u00d7 \u70ed\u533a\u5b58\u5728\uff08tab-close \u951a\uff09", 
           "target": {
             "label": "tab-close"
-          },
+          }
+        }, 
+        {
           "then": [
             {
-              "kind": "exists",
-              "count": 2
+              "kind": "absent", 
+              "target": {
+                "text": "\u6807\u7b7e\u4e00", 
+                "label": "tab"
+              }
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "text": "\u6807\u7b7e\u4e8c", 
+                "label": "tab"
+              }
             }
-          ]
-        },
-        {
-          "name": "点击标签一的 × 移除（tab 计数 3→2）",
-          "target": {
-            "label": "tab",
-            "text": "标签一"
-          },
+          ], 
           "when": [
             {
               "click": {
-                "target": {
-                  "label": "tab",
-                  "text": "标签一"
-                },
                 "frac": [
-                  0.92,
+                  0.92, 
                   0.5
-                ]
-              }
-            },
-            {
-              "wait": 300
-            }
-          ],
-          "then": [
-            {
-              "kind": "absent",
-              "target": {
-                "label": "tab",
-                "text": "标签一"
-              }
-            },
-            {
-              "kind": "exists",
-              "target": {
-                "label": "tab",
-                "text": "标签二"
-              }
-            }
-          ]
-        },
-        {
-          "name": "再点标签二的 × 移除（仅剩固定页）",
-          "target": {
-            "label": "tab",
-            "text": "标签二"
-          },
-          "when": [
-            {
-              "click": {
+                ], 
                 "target": {
-                  "label": "tab",
-                  "text": "标签二"
-                },
-                "frac": [
-                  0.92,
-                  0.5
-                ]
-              }
-            },
-            {
-              "wait": 300
-            }
-          ],
-          "then": [
-            {
-              "kind": "exists",
-              "target": {
-                "label": "tab",
-                "text": "固定页"
-              }
-            }
-          ]
-        },
-        {
-          "name": "固定页（无 Closable）仍可切换选中",
-          "target": {
-            "label": "tab",
-            "text": "固定页"
-          },
-          "when": [
-            {
-              "click": {
-                "target": {
-                  "label": "tab",
-                  "text": "固定页"
+                  "text": "\u6807\u7b7e\u4e00", 
+                  "label": "tab"
                 }
               }
-            },
+            }, 
             {
               "wait": 300
             }
-          ],
+          ], 
+          "name": "\u70b9\u51fb\u6807\u7b7e\u4e00\u7684 \u00d7 \u79fb\u9664\uff08tab \u8ba1\u6570 3\u21922\uff09", 
+          "target": {
+            "text": "\u6807\u7b7e\u4e00", 
+            "label": "tab"
+          }
+        }, 
+        {
           "then": [
             {
-              "kind": "text",
-              "text": "固定页内容",
+              "kind": "exists", 
               "target": {
-                "label": "label",
-                "text": "固定页内容"
+                "text": "\u56fa\u5b9a\u9875", 
+                "label": "tab"
               }
             }
-          ]
+          ], 
+          "when": [
+            {
+              "click": {
+                "frac": [
+                  0.92, 
+                  0.5
+                ], 
+                "target": {
+                  "text": "\u6807\u7b7e\u4e8c", 
+                  "label": "tab"
+                }
+              }
+            }, 
+            {
+              "wait": 300
+            }
+          ], 
+          "name": "\u518d\u70b9\u6807\u7b7e\u4e8c\u7684 \u00d7 \u79fb\u9664\uff08\u4ec5\u5269\u56fa\u5b9a\u9875\uff09", 
+          "target": {
+            "text": "\u6807\u7b7e\u4e8c", 
+            "label": "tab"
+          }
+        }, 
+        {
+          "then": [
+            {
+              "text": "\u56fa\u5b9a\u9875\u5185\u5bb9", 
+              "kind": "text", 
+              "target": {
+                "text": "\u56fa\u5b9a\u9875\u5185\u5bb9", 
+                "label": "label"
+              }
+            }
+          ], 
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "text": "\u56fa\u5b9a\u9875", 
+                  "label": "tab"
+                }
+              }
+            }, 
+            {
+              "wait": 300
+            }
+          ], 
+          "name": "\u56fa\u5b9a\u9875\uff08\u65e0 Closable\uff09\u4ecd\u53ef\u5207\u6362\u9009\u4e2d", 
+          "target": {
+            "text": "\u56fa\u5b9a\u9875", 
+            "label": "tab"
+          }
         }
-      ]
+      ], 
+      "name": "closable \u53ef\u5173\u95ed"
     }
-  ]
+  ], 
+  "id": "tabs", 
+  "structure": {
+    "apiRows": 8, 
+    "sections": [
+      "\u4e09\u9875\u5207\u6362", 
+      "card \u5361\u7247\u578b", 
+      "closable \u53ef\u5173\u95ed"
+    ]
+  }
 }
