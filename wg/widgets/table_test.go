@@ -3,6 +3,7 @@ package widgets
 import (
 	"testing"
 
+	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
@@ -398,5 +399,34 @@ func TestTreeAsyncLoad(t *testing.T) {
 	tr.SetChildren("db-x", []TreeNode{{Key: "x-1", Label: "X"}})
 	if calls != 1 || !tr.LoadedKeys["db-x"] {
 		t.Fatalf("异步形态应调用一次且置位，calls=%d", calls)
+	}
+}
+
+// TestUploadDragger 拖拽区形态：OnPick 点击回调、Disabled 拦截、
+// 主行文案由 buildDragger 内部替换（字段保持原值）。
+func TestUploadDragger(t *testing.T) {
+	r := newControlRig()
+	up := NewUpload()
+	up.Dragger = true
+	up.Hint = "单次不超过 10MB"
+	picked := 0
+	up.OnPick = func() { picked++ }
+	n := r.mount(up)
+	n.Layout(scene.Unbounded())
+	if n == nil {
+		t.Fatal("Dragger 构建失败")
+	}
+	for _, g := range up.draggerTaps {
+		g.OnTap(geom.Point{})
+	}
+	if picked != 1 {
+		t.Fatalf("Dragger 点击应触发 OnPick，got %d", picked)
+	}
+	up.Disabled = true
+	for _, g := range up.draggerTaps {
+		g.OnTap(geom.Point{})
+	}
+	if picked != 1 {
+		t.Fatal("Disabled 应拦截 OnPick")
 	}
 }

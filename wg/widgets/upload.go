@@ -11,7 +11,11 @@ package widgets
 // 组合复用：Button（触发按钮）、Icon（upload/delete/check-circle/
 // close-circle）、Progress（uploading 项内嵌线形进度条）。
 // 状态机：uploading（进度条+百分比）→ done（绿勾）/ error（红叉）。
-// 未实现（如实标注）：拖拽区 Dragger 形态、picture-list 卡片形态、
+// Dragger（第一百三十一轮，antd type="drag"）：触发区渲染为虚线描边
+// 圆角大框（antd dragger 令牌：104px 高、虚线边框、内含大图标+主行
+// 文字+副行提示），点击仍走 OnPick（宿主接文件对话框）。OS 文件拖放
+// 事件引擎无原语（如实标注）——drop 注入待引擎层支持。
+// 未实现（如实标注）：OS 文件拖入事件、picture-list 卡片形态、
 // beforeUpload/自定义 request、目录上传、maxCount 截断、
 // showUploadList 开关、受控 fileList 之外的内部上传引擎。
 
@@ -19,6 +23,7 @@ import (
 	"fmt"
 
 	"github.com/energye/lcl/wg/geom"
+	"github.com/energye/lcl/wg/render"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
 	"github.com/energye/lcl/wg/theme"
@@ -47,6 +52,9 @@ type Upload struct {
 	ButtonText string // 默认"点击上传"
 	Hint       string // 按钮旁提示文字（antd 默认空）
 	Disabled   bool
+	// Dragger 拖拽区形态（antd type="drag"）：触发区渲染为虚线描边大框
+	//（inbox 大图标+主行文字+Hint 副行），点击仍走 OnPick。
+	Dragger bool
 	// OnPick 触发按钮点击（宿主接平台文件对话框；nil 则无操作）。
 	OnPick func()
 	// OnChange 文件列表变化（Add/Remove/进度/完成都触发）。
@@ -58,6 +66,8 @@ type Upload struct {
 	// trigger 触发按钮持久实例（Build 内新建实例会让按压态随重建丢失
 	// ——教训⑨第四次现身，真窗 heuristic press 反馈为 0 实证）。
 	trigger *Button
+	// draggerTaps Dragger 框点击手势（跨 Build 持有）。
+	draggerTaps []*ui.GestureDetector
 }
 
 // NewUpload 创建上传组件。
@@ -116,7 +126,7 @@ func (u *Upload) FinishUpload(uid string, status string) {
 	u.notify()
 }
 
-// Build 实现 ui.Widget：按钮触发区 + 文件列表。
+// Build 实现 ui.Widget：触发区（按钮形态/Dragger 拖拽区形态）+ 文件列表。
 func (u *Upload) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(u)
 	th := ctx.ThemeOr()
@@ -126,31 +136,37 @@ func (u *Upload) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	col := scene.Flex(scene.Vertical, th.Space.XS)
 
-	// 触发行：上传按钮（组合复用 Button+upload 图标）+ 提示文字。
-	row := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
-	if u.trigger == nil {
-		u.trigger = &Button{Icon: &Icon{Name: "upload", Size: 14}}
-	}
-	// 字段同步（持久实例跨 Build 复用——按压态不丢）。
-	u.trigger.Text = u.ButtonText
-	u.trigger.Disabled = u.Disabled
-	u.trigger.OnClick = func() {
-		if u.OnPick != nil {
-			u.OnPick()
+	// Dragger 拖拽区形态（antd type="drag"）：虚线描边圆角大框——
+	// inbox 大图标+主行文字+Hint 副行；点击走 OnPick。
+	if u.Dragger {
+		col.Add(u.buildDragger(ctx, th, w))
+	} else {
+		// 触发行：上传按钮（组合复用 Button+upload 图标）+ 提示文字。
+		row := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
+		if u.trigger == nil {
+			u.trigger = &Button{Icon: &Icon{Name: "upload", Size: 14}}
 		}
+		// 字段同步（持久实例跨 Build 复用——按压态不丢）。
+		u.trigger.Text = u.ButtonText
+		u.trigger.Disabled = u.Disabled
+		u.trigger.OnClick = func() {
+			if u.OnPick != nil {
+				u.OnPick()
+			}
+		}
+		btnWrap := scene.Flex(scene.Horizontal, 0)
+		btnWrap.Add(u.trigger.Build(ctx))
+		// 被动锚：Button 自带 hit label 会撞全页 button（锚唯一化）。
+		btnWrap.SetHit(scene.HitSpec{Label: "upload-trigger"})
+		row.Add(btnWrap)
+		if u.Hint != "" {
+			hl := text.LayoutText(u.Hint, text.DefaultFont(th.Font.SizeSM), text.Options{})
+			hint := scene.Text(scene.TextSpec{Src: u.Hint, Layout: hl, Color: th.Color.TextFaint})
+			hint.SetHit(scene.HitSpec{Label: "upload-hint"})
+			row.Add(hint)
+		}
+		col.Add(row)
 	}
-	btnWrap := scene.Flex(scene.Horizontal, 0)
-	btnWrap.Add(u.trigger.Build(ctx))
-	// 被动锚：Button 自带 hit label 会撞全页 button（锚唯一化）。
-	btnWrap.SetHit(scene.HitSpec{Label: "upload-trigger"})
-	row.Add(btnWrap)
-	if u.Hint != "" {
-		hl := text.LayoutText(u.Hint, text.DefaultFont(th.Font.SizeSM), text.Options{})
-		hint := scene.Text(scene.TextSpec{Src: u.Hint, Layout: hl, Color: th.Color.TextFaint})
-		hint.SetHit(scene.HitSpec{Label: "upload-hint"})
-		row.Add(hint)
-	}
-	col.Add(row)
 
 	// 文件列表。
 	for _, f := range u.Files {
@@ -158,6 +174,48 @@ func (u *Upload) Build(ctx *ui.BuildContext) *scene.Node {
 		col.Add(u.buildItem(ctx, th, f, w))
 	}
 	return col
+}
+
+// buildDragger 构建拖拽区大框（antd dragger 令牌：高 104、虚线边框、
+// hover 边框主色——hover 原地迁移；内含 inbox 图标+主行+副行）。
+func (u *Upload) buildDragger(ctx *ui.BuildContext, th *theme.Data, w float32) *scene.Node {
+	main := u.ButtonText
+	if main == "" || main == "点击上传" {
+		main = "点击或拖拽文件到此区域上传"
+	}
+	// 虚线描边（antd dragger 形态——render.Dashed 成对实/空段）。
+	box := scene.Box(scene.BoxSpec{
+		Border: render.Dashed(th.Color.Border, 1, 4, 4),
+		Radius: th.Radius.Base,
+	}).SetSize2(w, 104)
+	iconCol := scene.Flex(scene.Vertical, 4).SetCrossAlign(scene.CrossCenter)
+	ic := (&Icon{Name: "upload", Size: 28, Color: th.Color.TextFaint}).Build(ctx)
+	iconCol.Add(ic)
+	ml := text.LayoutText(main, text.DefaultFont(th.Font.SizeBase), text.Options{})
+	mt := scene.Text(scene.TextSpec{Src: main, Layout: ml, Color: th.Color.Text})
+	iconCol.Add(mt)
+	if u.Hint != "" {
+		hl := text.LayoutText(u.Hint, text.DefaultFont(th.Font.SizeXS), text.Options{})
+		ht := scene.Text(scene.TextSpec{Src: u.Hint, Layout: hl, Color: th.Color.TextFaint})
+		iconCol.Add(ht)
+	}
+	// 居中内容：图标列 Stack 定位框中心。
+	iconCol.SetPositionKeepSize(true)
+	cw, ch := iconCol.Size().W, iconCol.Size().H
+	iconCol.SetStackPosition(geom.Pt((w-cw)/2, (104-ch)/2))
+	box.Add(iconCol)
+	box.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "upload-dragger", Cursor: scene.CursorPointer, Disabled: u.Disabled})
+	u.draggerTaps = u.draggerTaps[:0]
+	if ctx.Input != nil {
+		g := &ui.GestureDetector{OnTap: func(geom.Point) {
+			if !u.Disabled && u.OnPick != nil {
+				u.OnPick()
+			}
+		}}
+		u.draggerTaps = append(u.draggerTaps, g)
+		ctx.Input.Set(box, g.Handler())
+	}
+	return box
 }
 
 // buildItem 构建单个文件项（上行 name+状态图标+删除；下行 uploading 进度条）。

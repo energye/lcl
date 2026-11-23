@@ -1,10 +1,11 @@
 {
   "id": "upload",
   "structure": {
-    "apiRows": 8,
+    "apiRows": 9,
     "sections": [
       "基础",
-      "上传中"
+      "上传中",
+      "拖拽区"
     ]
   },
   "sections": [
@@ -151,6 +152,68 @@
               "tol": 14,
               "target": {
                 "label": "progress"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "拖拽区",
+      "cases": [
+        {
+          "name": "Dragger 大框存在（主行+副行文字可见）",
+          "target": {
+            "label": "upload-dragger"
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "upload-dragger",
+                "text": "点击或拖拽文件到此区域上传"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "upload-dragger",
+                "text": "单次不超过 10MB"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点击拖拽区触发 OnPick（宿主回显文件项 done）",
+          "target": {
+            "label": "upload-dragger"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "upload-dragger"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "upload-item",
+                "text": "dropped.txt"
               }
             }
           ]
