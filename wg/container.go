@@ -773,7 +773,12 @@ func (c *Container) HandlePointer(ev *input.PointerEvent) bool {
 			// 浮层是"最上面的一层纸"；模态遮罩无 content 命中，自然被挡）。
 			return d.PointerIn(content, ev)
 		}
-		ov.HandlePointer(ev, ev.PosRoot) // 未命中：OutsideClick 关闭判定
+		// 未命中浮层矩形：宿主判定 OutsideClick 关闭 / 模态遮罩吞掉
+		// （返回 false=点击不透传内容树——§B12；忽略它会让模态遮罩
+		// 外的点击穿透到下层按钮，selftest「点遮罩不透传」实证）。
+		if !ov.HandlePointer(ev, ev.PosRoot) {
+			return false
+		}
 	}
 	if d == nil {
 		return false

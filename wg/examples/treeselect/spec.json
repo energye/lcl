@@ -1,10 +1,11 @@
 {
   "id": "treeselect",
   "structure": {
-    "apiRows": 7,
+    "apiRows": 10,
     "sections": [
       "基础",
-      "带初值"
+      "带初值",
+      "多选"
     ]
   },
   "sections": [
@@ -288,6 +289,195 @@
               "target": {
                 "label": "tree-node",
                 "text": "选择器"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "多选",
+      "cases": [
+        {
+          "name": "点叶子触发框出现 tag 且面板不关",
+          "target": {
+            "label": "tree-select",
+            "index": 2
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tree-select",
+                  "index": 2
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "组件"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "表单"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "输入框"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "treeselect-tag",
+                "text": "输入框"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "选择器"
+              }
+            }
+          ]
+        },
+        {
+          "name": "再点已选叶子移出且面板保持",
+          "target": {
+            "label": "tree-select",
+            "index": 2
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tree-select",
+                  "index": 2
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "输入框"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "absent",
+              "target": {
+                "label": "treeselect-tag"
+              }
+            }
+          ]
+        },
+        {
+          "name": "tag × 删除（面板关后触发框 tag 消失）",
+          "target": {
+            "label": "tree-select",
+            "index": 2
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tree-select",
+                  "index": 2
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "输入框"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "escape"
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "treeselect-tag-x"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "absent",
+              "target": {
+                "label": "treeselect-tag"
+              }
+            },
+            {
+              "kind": "text",
+              "notContains": true,
+              "text": "输入框",
+              "target": {
+                "label": "tree-select",
+                "index": 2
               }
             }
           ]

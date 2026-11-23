@@ -21,12 +21,15 @@ type TreeNode struct {
 	Children []TreeNode
 }
 
-// Tree 是可展开树。Expanded 存展开节点的 Key 集合；Selected 为选中 Key。
+// Tree 是可展开树。Expanded 存展开节点的 Key 集合；Selected 为选中 Key；
+// SelectedSet 是多选集合（TreeSelect 多选 tags 用，与 Selected 独立读取）。
 type Tree struct {
 	controlBase
 	Nodes    []TreeNode
 	Expanded map[string]bool
 	Selected string
+	// SelectedSet 多行选中高亮（优先级低于 Selected——非空时多行同亮）。
+	SelectedSet map[string]bool
 	Indent   float32
 	RowH     float32
 	Width    float32
@@ -259,7 +262,7 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 
 			ll := text.LayoutText(n.Label, text.DefaultFont(th.Font.SizeSM), text.Options{})
 			fg := th.Color.Text
-			if n.Key == t.Selected {
+			if n.Key == t.Selected || t.SelectedSet[n.Key] {
 				fg = th.Color.Primary
 				row.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.Selection)})
 			}
