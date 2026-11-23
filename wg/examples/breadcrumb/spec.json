@@ -1,9 +1,10 @@
 {
   "id": "breadcrumb",
   "structure": {
-    "apiRows": 2,
+    "apiRows": 4,
     "sections": [
-      "三级路径"
+      "三级路径",
+      "下拉菜单"
     ]
   },
   "sections": [
@@ -79,6 +80,162 @@
             {
               "kind": "text",
               "text": "点击了：首页"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "下拉菜单",
+      "cases": [
+        {
+          "name": "点击带菜单项弹出下拉面板（子项可见）",
+          "target": {
+            "label": "breadcrumb",
+            "text": "控制台"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "breadcrumb",
+                  "text": "控制台"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "breadcrumb-menu-item",
+                "text": "General"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "breadcrumb-menu-item",
+                "text": "Navigation"
+              }
+            }
+          ]
+        },
+        {
+          "name": "子项 down 即执行回调回显且面板关",
+          "target": {
+            "label": "breadcrumb",
+            "text": "控制台"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "breadcrumb",
+                  "text": "控制台"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "breadcrumb-menu-item",
+                  "text": "Layout"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "text",
+              "text": "菜单：控制台 / Layout",
+              "target": {
+                "label": "button",
+                "index": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Esc 关闭下拉面板",
+          "target": {
+            "label": "breadcrumb",
+            "text": "控制台"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "breadcrumb",
+                  "text": "控制台"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "escape"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        },
+        {
+          "name": "无菜单项点击仍走 OnClick（应用中心回显）",
+          "target": {
+            "label": "breadcrumb",
+            "text": "应用中心"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "breadcrumb",
+                  "text": "应用中心"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            },
+            {
+              "kind": "text",
+              "text": "点击了：应用中心",
+              "target": {
+                "label": "button",
+                "index": 1
+              }
             }
           ]
         }

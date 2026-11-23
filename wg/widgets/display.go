@@ -14,6 +14,8 @@ import (
 	"time"
 
 	"github.com/energye/lcl/wg/geom"
+	"github.com/energye/lcl/wg/input"
+	"github.com/energye/lcl/wg/overlay"
 	"github.com/energye/lcl/wg/render"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
@@ -1253,12 +1255,113 @@ func (b *pageButton) Build(ctx *ui.BuildContext) *scene.Node {
 type Breadcrumb struct {
 	Items   []string
 	OnClick func(int)
-	node    *scene.Node
-	taps    []*ui.GestureDetector // 跨 Build 存活，避免回调闭包被 GC
+	// OnMenuClick 下拉菜单子项点击回调（参数=面包屑项下标+子项 label）。
+	OnMenuClick func(itemIndex int, label string)
+	// Menus 按项下标挂下拉菜单（antd items[].menu——overlay）：非空时
+	// 该项渲染 down 图标（antd dropdownIcon 默认 DownOutlined），点击弹
+	// BandPopup 浮层（Dropdown 同款白底圆角+阴影），子项 down 即执行
+	// （浮层 tap 配对不可靠结论）选中回调并关面板。
+	Menus [][]string
+	node  *scene.Node
+	taps  []*ui.GestureDetector // 跨 Build 存活，避免回调闭包被 GC
+	// handles 浮层句柄（Menus 多面板：每项一个；0=未开）。
+	handles map[int]overlay.Handle
 }
 
 // Node 返回最近一次构建出的场景节点。
 func (b *Breadcrumb) Node() *scene.Node { return b.node }
+
+// menuOf 取第 i 项的菜单项列表（越界/未设返回 nil）。
+func (b *Breadcrumb) menuOf(i int) []string {
+	if i < len(b.Menus) {
+		return b.Menus[i]
+	}
+	return nil
+}
+
+// closeMenus 关闭全部已开菜单面板。
+func (b *Breadcrumb) closeMenus(ctx *ui.BuildContext) {
+	if ctx != nil && ctx.Overlay != nil {
+		for _, h := range b.handles {
+			if h != 0 {
+				ctx.Overlay.Close(h)
+			}
+		}
+	}
+	b.handles = nil
+}
+
+// showMenu 弹出第 i 项的下拉菜单浮层（Dropdown 同款形态）。
+func (b *Breadcrumb) showMenu(ctx *ui.BuildContext, anchor *scene.Node, idx int) {
+	if ctx == nil || ctx.Overlay == nil {
+		return
+	}
+	menu := b.menuOf(idx)
+	if len(menu) == 0 {
+		return
+	}
+	th := ctx.ThemeOr()
+	b.closeMenus(ctx)
+	col := scene.Flex(scene.Vertical, 2)
+	col.SetBox(scene.BoxSpec{
+		Fill:   scene.Solid(th.Color.Surface),
+		Radius: th.Radius.Base,
+		Shadow: func() *scene.ShadowSpec {
+			if len(th.Elevation) > 1 {
+				e := th.Elevation[1]
+				return &scene.ShadowSpec{Dx: e.Dx, Dy: e.Dy, Blur: e.Blur, Color: e.Color}
+			}
+			return nil
+		}(),
+	})
+	col.SetPadding(geom.InLTRB(4, 4, 4, 4))
+	maxW := float32(0)
+	for _, label := range menu {
+		layout := text.LayoutText(label, text.DefaultFont(th.Font.SizeBase), text.Options{})
+		w := layout.Size.W + 40
+		if w > maxW {
+			maxW = w
+		}
+	}
+	for _, label := range menu {
+		label := label
+		row := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
+		row.SetHeight(32).SetWidth(maxW)
+		row.SetPadding(geom.InLTRB(10, 0, 10, 0))
+		row.Add(scene.Text(scene.TextSpec{Src: label, Layout: text.LayoutText(label, text.DefaultFont(th.Font.SizeBase), text.Options{}), Color: th.Color.Text}))
+		row.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "breadcrumb-menu-item", Cursor: scene.CursorPointer})
+		if ctx.Input != nil {
+			ctx.Input.Set(row, input.Handler{Pointer: func(ev *input.PointerEvent) bool {
+				if !ev.Down() {
+					return false
+				}
+				b.closeMenus(ctx)
+				if b.OnMenuClick != nil {
+					b.OnMenuClick(idx, label)
+				}
+				return true
+			}})
+		}
+		col.Add(row)
+	}
+	if b.handles == nil {
+		b.handles = make(map[int]overlay.Handle)
+	}
+	b.handles[idx] = ctx.Overlay.Show(overlay.Entry{
+		Band:      theme.BandPopup,
+		Anchor:    overlay.NodeAnchor(anchor),
+		Placement: overlay.PlacementBottomStart,
+		Size:      geom.Size{W: maxW, H: 0}, // 高自适应
+		Dismiss:   overlay.DismissOutsideClick | overlay.DismissEsc,
+		Tag:       "breadcrumb-menu",
+		OnClose: func() {
+			if b.handles != nil {
+				delete(b.handles, idx)
+			}
+		},
+		Build: func() *scene.Node { return col },
+	})
+}
 
 // Build 实现 ui.Widget。
 func (b *Breadcrumb) Build(ctx *ui.BuildContext) *scene.Node {
@@ -1282,16 +1385,42 @@ func (b *Breadcrumb) Build(ctx *ui.BuildContext) *scene.Node {
 			// 颜色断言永远无法采样——加锚只此一处，不碰可点项。
 			item.SetHit(scene.HitSpec{Label: "breadcrumb-item"})
 		}
-		if !last && b.OnClick != nil {
+		if menu := b.menuOf(i); len(menu) > 0 && !last {
+			// 菜单项：文本 + down 图标（antd dropdownIcon 默认 DownOutlined），
+			// 点击开/关下拉浮层（antd dropdownProps.trigger click 语义；
+			// headless 审计 click 可靠）。
 			idx := i
-			g := &ui.GestureDetector{OnTap: func(geom.Point) { b.OnClick(idx) }}
+			wrap := scene.Flex(scene.Horizontal, 4).SetCrossAlign(scene.CrossCenter)
+			wrap.Add(item)
+			ic := (&Icon{Name: "down", Size: 10, Color: th.Color.TextFaint}).Build(ctx)
+			wrap.Add(ic)
+			wrap.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "breadcrumb", Cursor: scene.CursorPointer})
+			g := &ui.GestureDetector{OnTap: func(geom.Point) {
+				if b.handles != nil && b.handles[idx] != 0 {
+					b.closeMenus(ctx)
+					return
+				}
+				b.showMenu(ctx, wrap, idx)
+			}}
 			b.taps = append(b.taps, g)
-			item.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "breadcrumb", Cursor: scene.CursorPointer})
 			if ctx.Input != nil {
-				ctx.Input.Set(item, g.Handler())
+				ctx.Input.Set(wrap, g.Handler())
 			}
+			row.Add(wrap)
+		} else {
+			if !last && (b.OnClick != nil || len(b.menuOf(i)) > 0) {
+				idx := i
+				item.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "breadcrumb", Cursor: scene.CursorPointer})
+				if b.OnClick != nil {
+					g := &ui.GestureDetector{OnTap: func(geom.Point) { b.OnClick(idx) }}
+					b.taps = append(b.taps, g)
+					if ctx.Input != nil {
+						ctx.Input.Set(item, g.Handler())
+					}
+				}
+			}
+			row.Add(item)
 		}
-		row.Add(item)
 	}
 	b.node = row
 	return row

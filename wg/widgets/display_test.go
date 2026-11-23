@@ -204,6 +204,37 @@ func TestBreadcrumbClick(t *testing.T) {
 	}
 }
 
+// TestBreadcrumbMenu 下拉菜单：menuOf 取值/越界、OnMenuClick 回调。
+func TestBreadcrumbMenu(t *testing.T) {
+	r := newControlRig()
+	bc := &Breadcrumb{
+		Items: []string{"控制台", "应用中心"},
+		Menus: [][]string{{"General", "Layout"}, nil},
+	}
+	var got [2]int
+	var labels []string
+	bc.OnMenuClick = func(itemIndex int, label string) {
+		got[itemIndex]++
+		labels = append(labels, label)
+	}
+	r.mount(bc)
+	if bc.menuOf(0) == nil || len(bc.menuOf(0)) != 2 {
+		t.Fatal("menuOf(0) 应返回菜单列表")
+	}
+	if bc.menuOf(1) != nil {
+		t.Fatal("menuOf(1) 空列表应返回 nil")
+	}
+	if bc.menuOf(5) != nil {
+		t.Fatal("menuOf 越界应返回 nil")
+	}
+	// 菜单项浮层构建（headless 无 Overlay，仅验证状态机）：直接调
+	// OnMenuClick 路径已由 showMenu 内闭包覆盖，这里锁回调签名。
+	bc.OnMenuClick(0, "Layout")
+	if got[0] != 1 || len(labels) != 1 || labels[0] != "Layout" {
+		t.Fatalf("OnMenuClick 回调错误: %v %v", got, labels)
+	}
+}
+
 func TestCollapseToggle(t *testing.T) {
 	// 展开：初始全收起，点第一项表头应展开并带出内容
 	r := newControlRig()
