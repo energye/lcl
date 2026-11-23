@@ -1,10 +1,11 @@
 {
   "id": "cascader",
   "structure": {
-    "apiRows": 7,
+    "apiRows": 9,
     "sections": [
       "基础",
-      "带初值"
+      "带初值",
+      "搜索"
     ]
   },
   "sections": [
@@ -263,6 +264,58 @@
           "then": [
             {
               "kind": "exists",
+              "target": {
+                "label": "cascader-panel"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "搜索",
+      "cases": [
+        {
+          "name": "搜索框存在（触发框可输入）",
+          "target": {
+            "label": "cascader",
+            "index": 2
+          },
+          "then": [
+            {
+              "kind": "exists"
+            }
+          ]
+        },
+        {
+          "name": "搜索过滤（typeText 杭州）",
+          "target": {
+            "label": "cascader",
+            "index": 2
+          },
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "typeText": "杭州"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "text": "浙江 / 杭州",
+              "target": {
+                "label": "cascader-panel"
+              }
+            },
+            {
+              "kind": "text",
+              "notContains": true,
+              "text": "江苏",
               "target": {
                 "label": "cascader-panel"
               }
