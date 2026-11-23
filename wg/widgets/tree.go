@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/input"
@@ -54,6 +55,16 @@ type Tree struct {
 	// DatePicker 轮结论）。独立 Tree 窗（内容树）保持默认 false。
 	TapDownExec bool
 
+	// LoadData 异步加载子节点注入（antd loadData 直译——wg 无网络层，
+	// 宿主闭包从内存/文件/模拟源取数据）：**首次展开**未加载的无子节点
+	// 时触发；同步模式返回子节点直接挂载，异步模式返回 nil、宿主取数后
+	// 调 SetChildren(key, children) 挂载（AfterFunc 延迟——模拟网络）。
+	// LoadedKeys 标记已触发节点不重复加载。
+	LoadData func(key string) []TreeNode
+	LoadedKeys map[string]bool
+	// loadingKeys 加载中集合（渲染 loading 态——箭头转 loading 旋转）。
+	loadingKeys map[string]bool
+
 	taps []*ui.GestureDetector
 	// checks 跨 Build 持有复选框实例（按 Key 池化）：Build 内新建实例
 	// 会让 hover 态随重建丢失（Pagination/Tabs 先例）。
@@ -76,6 +87,76 @@ func (t *Tree) Toggle(key string) {
 	t.MarkDirty()
 	if t.OnToggle != nil {
 		t.OnToggle(key, next)
+	}
+}
+
+// needLoad 判断节点是否需要异步加载（antd loadData 语义）：LoadData
+// 注入、未加载过、当前无子节点——三者同时成立才触发（有静态 Children
+// 的节点不触发）。
+func (t *Tree) needLoad(key string) bool {
+	if t.LoadData == nil || t.LoadedKeys[key] {
+		return false
+	}
+	var walk func(ns []TreeNode) *TreeNode
+	walk = func(ns []TreeNode) *TreeNode {
+		for i := range ns {
+			if ns[i].Key == key {
+				return &ns[i]
+			}
+			if r := walk(ns[i].Children); r != nil {
+				return r
+			}
+		}
+		return nil
+	}
+	n := walk(t.Nodes)
+	return n != nil && len(n.Children) == 0
+}
+
+// SetChildren 挂载异步加载的子节点（宿主取数完成后调用——直接改 Nodes
+// 树上该节点的 Children；MarkDirty 重建渲染）。加载中态同时清除。
+func (t *Tree) SetChildren(key string, children []TreeNode) {
+	var set func(ns []TreeNode) bool
+	set = func(ns []TreeNode) bool {
+		for i := range ns {
+			if ns[i].Key == key {
+				ns[i].Children = children
+				return true
+			}
+			if set(ns[i].Children) {
+				return true
+			}
+		}
+		return false
+	}
+	if set(t.Nodes) {
+		if t.loadingKeys != nil {
+			delete(t.loadingKeys, key)
+		}
+		t.LoadedKeys[key] = true
+		t.MarkDirty()
+	}
+}
+
+// triggerLoad 首次展开触发异步加载（同步返回数据直接挂载；异步由宿主
+// AfterFunc 延迟 SetChildren——antd loading 态期间箭头转 loading）。
+func (t *Tree) triggerLoad(key string) {
+	if t.loadingKeys == nil {
+		t.loadingKeys = map[string]bool{}
+	}
+	t.loadingKeys[key] = true
+	t.MarkDirty() // 箭头转 loading 态
+	if t.LoadedKeys == nil {
+		t.LoadedKeys = map[string]bool{}
+	}
+	// LoadedKeys 在 triggerLoad 即置位（防重复触发；SetChildren 兜底重置
+	// loading 态）。
+	t.LoadedKeys[key] = true
+	kids := t.LoadData(key)
+	if kids != nil {
+		// 同步模式：延迟一拍挂载（Toggle 的 MarkDirty 已入队，挂载走
+		// 同一重建帧——直改会与本帧渲染竞争）。
+		time.AfterFunc(0, func() { t.SetChildren(key, kids) })
 	}
 }
 
@@ -179,9 +260,16 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 			n := nodes[i]
 			row := scene.Flex(scene.Horizontal, 4).SetHeight(t.RowH).SetWidth(t.Width)
 			hasKids := len(n.Children) > 0
+			// 异步加载（antd loadData）：可加载节点（LoadData 注入+未加载+
+			// 无静态 Children）显示展开箭头——点击展开触发 LoadData；加载
+			// 中箭头转 loading（旋转 Icon）。
+			loadable := t.LoadData != nil && !t.LoadedKeys[n.Key] && !hasKids
+			loading := t.loadingKeys != nil && t.loadingKeys[n.Key]
 			arrow := ""
-			if hasKids {
-				if t.Expanded[n.Key] {
+			if hasKids || loadable {
+				if loading {
+					arrow = "◐" // loading 占位（真实旋转走 Icon Spin——行内
+				} else if t.Expanded[n.Key] {
 					arrow = "▾"
 				} else {
 					arrow = "▸"
@@ -270,12 +358,22 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 			lt.SetMargin(geom.InLTRB(0, (t.RowH-ll.Size.H)/2, 0, 0))
 			row.Add(lt)
 
-			if ctx.Input != nil && (hasKids || t.OnSelect != nil) {
+			if ctx.Input != nil && (hasKids || loadable || t.OnSelect != nil) {
 				row.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "tree-node", Cursor: scene.CursorPointer})
 				key, kids := n.Key, hasKids
+				loadableKey, loadableRow := n.Key, loadable
 				onTap := func(geom.Point) {
 					if kids {
 						t.Toggle(key)
+					} else if loadableRow {
+						// 首次展开可加载节点：展开态置位+触发 LoadData。
+						if !t.Expanded[loadableKey] {
+							t.Expanded[loadableKey] = true
+						}
+						t.triggerLoad(loadableKey)
+						if t.OnToggle != nil {
+							t.OnToggle(loadableKey, true)
+						}
 					}
 					// 选中态与回调解耦：OnSelect 为 nil 时点击节点仍默认选中
 					// （antd 点击节点即选中，不依赖调用方是否监听）。

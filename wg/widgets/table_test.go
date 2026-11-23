@@ -333,3 +333,70 @@ func TestTableCellSpan(t *testing.T) {
 		t.Fatalf("跨行合并格应恰 1 个（高=%v），got %d", tbl.RowHeight*2, spanCells)
 	}
 }
+
+// TestTreeAsyncLoad 异步加载：needLoad 三条件判定、triggerLoad 置
+// LoadedKeys/loading、SetChildren 挂载并清 loading；同步 LoadData 直返。
+func TestTreeAsyncLoad(t *testing.T) {
+	tr := NewTree([]TreeNode{
+		{Key: "a", Label: "静态", Children: []TreeNode{{Key: "a-1", Label: "静态子"}}},
+		{Key: "b", Label: "动态"},
+	})
+	loaded := 0
+	tr.LoadData = func(key string) []TreeNode {
+		loaded++
+		if key == "b" {
+			return []TreeNode{{Key: "b-1", Label: "动态子"}}
+		}
+		return nil
+	}
+	// 静态节点（有 Children）不需要加载。
+	if tr.needLoad("a") {
+		t.Fatal("静态节点不该触发加载")
+	}
+	if !tr.needLoad("b") {
+		t.Fatal("动态节点应触发加载")
+	}
+	// 首次触发：LoadedKeys/loading 置位+同步数据延迟挂载。
+	tr.triggerLoad("b")
+	if loaded != 1 {
+		t.Fatalf("LoadData 应调用一次，got %d", loaded)
+	}
+	if tr.LoadedKeys["b"] != true {
+		t.Fatal("LoadedKeys 应置位")
+	}
+	// 重复触发被拦。
+	if tr.needLoad("b") {
+		t.Fatal("已加载节点不该再触发")
+	}
+	// SetChildren 挂载（同步延迟帧后验证）。
+	tr.SetChildren("b", []TreeNode{{Key: "b-1", Label: "动态子"}})
+	var found bool
+	var walk func(ns []TreeNode)
+	walk = func(ns []TreeNode) {
+		for _, c := range ns {
+			if c.Key == "b-1" {
+				found = true
+			}
+			walk(c.Children)
+		}
+	}
+	walk(tr.Nodes)
+	if !found {
+		t.Fatal("SetChildren 应挂载子节点")
+	}
+	if tr.loadingKeys["b"] {
+		t.Fatal("挂载后 loading 态应清除")
+	}
+	// 异步形态：LoadData 返回 nil，宿主直接调 SetChildren。
+	tr.LoadedKeys = map[string]bool{}
+	calls := 0
+	tr.LoadData = func(key string) []TreeNode {
+		calls++
+		return nil
+	}
+	tr.triggerLoad("db-x")
+	tr.SetChildren("db-x", []TreeNode{{Key: "x-1", Label: "X"}})
+	if calls != 1 || !tr.LoadedKeys["db-x"] {
+		t.Fatalf("异步形态应调用一次且置位，calls=%d", calls)
+	}
+}

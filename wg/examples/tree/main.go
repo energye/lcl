@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/energye/lcl/wg/examples/doc"
 	"github.com/energye/lcl/wg/examples/internal/launcher"
 	"github.com/energye/lcl/wg/ui"
@@ -42,7 +44,35 @@ var (
 			{Key: "grp-media", Label: "图库"}, // 无子节点：压缩卡高（页尾卡滚动可达性）
 		}},
 	})
+
+	// treeAsync 异步加载卡（antd loadData）：LoadData 注入模拟取数，
+	// 异步形态——AfterFunc 300ms 延迟 SetChildren（loading 态可见）。
+	treeAsync = widgets.NewTree([]widgets.TreeNode{
+		{Key: "srv", Label: "服务列表"},
+		{Key: "db", Label: "数据库"},
+	})
 )
+
+func init() {
+	treeAsync.LoadData = func(key string) []widgets.TreeNode {
+		// 异步形态：返回 nil + 宿主延迟挂载（模拟网络往返）。
+		go func() {
+			time.Sleep(300 * time.Millisecond)
+			switch key {
+			case "srv":
+				treeAsync.SetChildren(key, []widgets.TreeNode{
+					{Key: "srv-1", Label: "用户服务"},
+					{Key: "srv-2", Label: "订单服务"},
+				})
+			case "db":
+				treeAsync.SetChildren(key, []widgets.TreeNode{
+					{Key: "db-1", Label: "主库"},
+				})
+			}
+		}()
+		return nil
+	}
+}
 
 func init() {
 	treeCheck.Checkable = true
@@ -75,6 +105,9 @@ func main() {
 			{Title: "级联勾选", Note: "CheckStrictly=false：预置「手册 A」勾选 →「手册」半选；勾「全部资料」级联全选", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return treeCascade
 			}},
+			{Title: "异步加载", Note: "LoadData 注入+宿主延迟 SetChildren：首次展开触发加载（loading 态），300ms 后子节点挂载", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return treeAsync
+			}},
 		},
 		API: []doc.APIRow{
 			{Name: "NewTree", Type: "func(nodes []TreeNode) *Tree", Desc: "构造；TreeNode{Key,Label,Children}"},
@@ -88,6 +121,8 @@ func main() {
 			{Name: "Checkable/Checked", Type: "bool / map[string]bool", Desc: "复选模式与勾选集合"},
 			{Name: "CheckStrictly", Type: "bool", Default: "false", Desc: "true=独立勾选 / false=级联（父全选子孙+半选联动）"},
 			{Name: "OnCheck", Type: "func(checkedKeys []string)", Desc: "勾选变化回调"},
+			{Name: "LoadData", Type: "func(key string) []TreeNode", Desc: "异步加载子节点注入（首次展开触发；同步返回数据/异步 nil+SetChildren）"},
+			{Name: "SetChildren", Type: "func(key string, children []TreeNode)", Desc: "宿主挂载异步加载结果（MarkDirty 刷新）"},
 		},
 	})
 }

@@ -1,11 +1,12 @@
 {
   "id": "tree",
   "structure": {
-    "apiRows": 11,
+    "apiRows": 13,
     "sections": [
       "目录树",
       "checkable 复选",
-      "级联勾选"
+      "级联勾选",
+      "异步加载"
     ]
   },
   "sections": [
@@ -341,6 +342,87 @@
               "tol": 14,
               "target": {
                 "label": "checkbox-box"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "异步加载",
+      "cases": [
+        {
+          "name": "首次展开触发加载：loading 态后子节点挂载",
+          "target": {
+            "label": "tree-node",
+            "text": "服务列表"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "服务列表"
+                }
+              }
+            },
+            {
+              "wait": 800
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "用户服务"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "订单服务"
+              }
+            }
+          ]
+        },
+        {
+          "name": "已加载节点不重复触发（收起再展开子节点秒回）",
+          "target": {
+            "label": "tree-node",
+            "text": "服务列表"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "服务列表"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "tree-node",
+                  "text": "服务列表"
+                }
+              }
+            },
+            {
+              "wait": 500
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "tree-node",
+                "text": "用户服务"
               }
             }
           ]
