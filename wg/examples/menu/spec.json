@@ -452,14 +452,298 @@
         }
       ], 
       "name": "横向子菜单"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "↓ 移动键盘焦点（邮件底色迁移到文件）", 
+          "target": {
+            "label": "menu", 
+            "index": 1
+          }, 
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "menu-item", 
+                  "text": "邮件"
+                }
+              }
+            }, 
+            {
+              "wait": 300
+            }, 
+            {
+              "key": "down"
+            }, 
+            {
+              "wait": 300
+            }
+          ], 
+          "then": [
+            {
+              "kind": "colorRatio", 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "target": {
+                "text": "文件", 
+                "label": "menu-item"
+              }, 
+              "expect": {
+                "token": "InfoBg"
+              }, 
+              "tol": 14, 
+              "minRatio": 0.3
+            }, 
+            {
+              "kind": "colorRatio", 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "target": {
+                "text": "邮件", 
+                "label": "menu-item"
+              }, 
+              "expect": {
+                "token": "InfoBg"
+              }, 
+              "tol": 14, 
+              "maxRatio": 0.05
+            }
+          ]
+        }, 
+        {
+          "name": "↓ 移到用户再 Enter 选中（指示条与选中态迁移）", 
+          "target": {
+            "label": "menu", 
+            "index": 1
+          }, 
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "menu-item", 
+                  "text": "邮件"
+                }
+              }
+            }, 
+            {
+              "wait": 300
+            }, 
+            {
+              "key": "down"
+            }, 
+            {
+              "wait": 200
+            }, 
+            {
+              "key": "down"
+            }, 
+            {
+              "wait": 200
+            }, 
+            {
+              "key": "enter"
+            }, 
+            {
+              "wait": 300
+            }
+          ], 
+          "then": [
+            {
+              "kind": "colorRatio", 
+              "frac": [
+                0.02, 
+                0.3, 
+                0.06, 
+                0.7
+              ], 
+              "target": {
+                "text": "用户", 
+                "label": "menu-item"
+              }, 
+              "expect": {
+                "token": "Primary"
+              }, 
+              "tol": 14, 
+              "minRatio": 0.25
+            }, 
+            {
+              "kind": "colorRatio", 
+              "frac": [
+                0.3, 
+                0.3, 
+                0.5, 
+                0.5
+              ], 
+              "target": {
+                "text": "用户", 
+                "label": "menu-item"
+              }, 
+              "expect": {
+                "token": "InfoBg"
+              }, 
+              "tol": 14, 
+              "minRatio": 0.3
+            }
+          ]
+        }, 
+        {
+          "name": "子菜单卡 → 已展开父项进首子项（焦点跟随）",
+          "target": {
+            "label": "menu",
+            "index": 2
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "menu-item",
+                  "text": "导航配置"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "menu-item",
+                  "text": "导航配置"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "right"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "target": {
+                "text": "布局设置",
+                "label": "menu-item"
+              },
+              "expect": {
+                "token": "InfoBg"
+              },
+              "tol": 14,
+              "minRatio": 0.3
+            }
+          ]
+        },
+        {
+          "name": "Enter 选中焦点子项（选中态迁移）",
+          "target": {
+            "label": "menu",
+            "index": 2
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "menu-item",
+                  "text": "导航配置"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "menu-item",
+                  "text": "导航配置"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "key": "right"
+            },
+            {
+              "wait": 200
+            },
+            {
+              "key": "enter"
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.08,
+                0.25,
+                0.5,
+                0.75
+              ],
+              "target": {
+                "text": "布局设置",
+                "label": "menu-item"
+              },
+              "expect": {
+                "token": "Primary"
+              },
+              "tol": 14,
+              "minRatio": 0.05
+            },
+            {
+              "kind": "colorRatio",
+              "frac": [
+                0.3,
+                0.3,
+                0.5,
+                0.5
+              ],
+              "target": {
+                "text": "布局设置",
+                "label": "menu-item"
+              },
+              "expect": {
+                "token": "InfoBg"
+              },
+              "tol": 14,
+              "minRatio": 0.3
+            }
+          ]
+        }
+      ], 
+      "name": "键盘导航"
     }
   ], 
   "structure": {
-    "apiRows": 6, 
+    "apiRows": 7, 
     "sections": [
       "横向菜单", 
       "纵向菜单", 
-      "子菜单与分组"
+      "子菜单与分组", 
+      "键盘导航"
     ]
   }
 }

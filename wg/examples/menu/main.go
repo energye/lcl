@@ -39,6 +39,11 @@ var (
 		&widgets.MenuItem{Key: "files", Label: "文件", Icon: "copy"},
 		&widgets.MenuItem{Key: "users", Label: "用户", Icon: "user"},
 	)
+	vKb = widgets.NewMenu(
+		&widgets.MenuItem{Key: "mail", Label: "邮件", Icon: "edit"},
+		&widgets.MenuItem{Key: "files", Label: "文件", Icon: "copy"},
+		&widgets.MenuItem{Key: "users", Label: "用户", Icon: "user"},
+	)
 )
 
 func init() {
@@ -49,6 +54,8 @@ func init() {
 	vSub.Mode = widgets.MenuVertical
 	vSub.Selected = "nav-a"
 	vSub.OpenKeys = map[string]bool{"nav": true}
+	vKb.Mode = widgets.MenuVertical
+	vKb.Selected = "mail"
 }
 
 func main() {
@@ -69,12 +76,16 @@ func main() {
 			{Title: "子菜单与分组", Note: "纵向内联展开：点击父项切换展开（▾/▸）；分组标题置灰不可点", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return vSub
 			}},
+			{Title: "键盘导航", Note: "点击菜单聚焦后：↓↑ 在可见项间移动焦点（浅主色底）、→ 展开父项并进首子项、← 收起焦点回父项、Enter 选中", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return vKb
+			}},
 		},
 		API: []doc.APIRow{
 			{Name: "NewMenu", Type: "func(items ...*MenuItem) *Menu", Desc: "构造"},
 			{Name: "Items", Type: "[]*MenuItem{Key,Label,Icon}", Desc: "菜单项（Icon 组合复用 Icon 组件）"},
 			{Name: "Mode", Type: "MenuMode", Desc: "Horizontal 横向 / Vertical 纵向"},
 			{Name: "Selected", Type: "string", Desc: "选中项 Key（空=首项）"},
+			{Name: "FocusedKey", Type: "string", Desc: "键盘焦点项 Key（↓↑←→/Enter 导航；点击跟随）"},
 			{Name: "OnClick", Type: "func(key string)", Desc: "点击回调"},
 			{Name: "Width", Type: "float32", Default: "200", Desc: "纵向模式宽度"},
 		},

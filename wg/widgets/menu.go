@@ -9,8 +9,13 @@ package widgets
 // 展开** BandPopup（Dropdown 同款延迟隐藏 150ms——鼠标移向浮层的
 // Leave 间隙不闪断，浮层项 Enter 取消定时器）；子项 down 即执行
 // （浮层 tap 配对不可靠结论）选中+回调+关面板。
-// 未实现（如实标注）：分组（group）、内联折叠、多层嵌套子菜单
-// （横向子面板只渲染一层）、子面板键盘导航。
+// 键盘导航已对齐（第一百二十轮，antd roving tabindex）：纵向模式
+// 整菜单一个焦点节点，↓↑ 在**可见项**间移动焦点、→ 展开/← 收起、
+// Enter 选中（父项=切换展开）；焦点项 InfoBg 浅底（antd focus 视觉
+// 同选中底色系但指示条不动——指示条只跟 Selected）。点击项自请焦点
+// 并跟随 FocusedKey。
+// 未实现（如实标注）：横向模式键盘导航（↓ 展开子面板）、分组
+// （group）、内联折叠、多层嵌套子菜单（横向子面板只渲染一层）。
 
 import (
 	"time"
@@ -62,6 +67,10 @@ type Menu struct {
 	// OpenKeys 展开的子菜单 Key 集合（纵向内联展开状态）。
 	OpenKeys map[string]bool
 
+	// FocusedKey 键盘焦点项 Key（roving tabindex：↓↑ 移动、点击跟随）；
+	// 空=无键盘焦点（焦点视觉不渲染）。
+	FocusedKey string
+
 	// items 跨重建持有：页签的 hover 态与手势实例必须稳定（教训⑨）。
 	items []*menuItem
 	node  *scene.Node
@@ -108,6 +117,176 @@ func kidsFrom(items []*MenuItem) []menuKid {
 	return out
 }
 
+// navItem 是键盘导航的可见项快照（key+是否父项）。
+type navItem struct {
+	key    string
+	parent bool // 有子项（→ 展开 / Enter 切换展开）
+}
+
+// navItems 收集当前**可见**的可导航项（分组标题跳过、未展开父项的
+// 子项跳过——antd 键盘导航只在可见项间移动）。
+func (m *Menu) navItems() []navItem {
+	var out []navItem
+	var walk func(items []*MenuItem)
+	walk = func(items []*MenuItem) {
+		for _, it := range items {
+			if it.Group {
+				continue
+			}
+			out = append(out, navItem{key: it.Key, parent: len(it.Children) > 0})
+			if len(it.Children) > 0 && m.OpenKeys[it.Key] {
+				walk(it.Children)
+			}
+		}
+	}
+	walk(m.Items)
+	return out
+}
+
+// attachKeyboard 给纵向菜单挂焦点节点与按键处理（roving tabindex）。
+// 整菜单一个 FocusNode：焦点在菜单整体上，FocusedKey 标记项内位置
+// （antd Menu 同构——焦点框在菜单容器，导航键在项间移动）。
+func (m *Menu) attachKeyboard(ctx *ui.BuildContext, n *scene.Node) {
+	h := input.Handler{
+		Key: func(ev *input.KeyEvent) bool {
+			if ev.Kind == input.KeyUp {
+				return false
+			}
+			if m.handleNavKey(ev, ctx) {
+				return true
+			}
+			return ctx.Focus != nil && ctx.Focus.HandleKey(ev)
+		},
+	}
+	m.attach(ctx, n, h, true)
+}
+
+// handleNavKey 处理导航键：↓↑ 移动焦点、→ 展开、← 收起、Enter 选中。
+// 返回是否消费。
+func (m *Menu) handleNavKey(ev *input.KeyEvent, ctx *ui.BuildContext) bool {
+	nav := m.navItems()
+	if len(nav) == 0 {
+		return false
+	}
+	idx := -1
+	for i, it := range nav {
+		if it.key == m.FocusedKey {
+			idx = i
+			break
+		}
+	}
+	switch ev.Code {
+	case input.CodeDown:
+		if idx < 0 {
+			m.FocusedKey = nav[0].key
+		} else if idx < len(nav)-1 {
+			m.FocusedKey = nav[idx+1].key
+		}
+	case input.CodeUp:
+		if idx < 0 {
+			m.FocusedKey = nav[0].key
+		} else if idx > 0 {
+			m.FocusedKey = nav[idx-1].key
+		}
+	case input.CodeRight:
+		if idx < 0 {
+			return false
+		}
+		if nav[idx].parent && !m.OpenKeys[nav[idx].key] {
+			if m.OpenKeys == nil {
+				m.OpenKeys = make(map[string]bool)
+			}
+			m.OpenKeys[nav[idx].key] = true
+		} else if nav[idx].parent && m.OpenKeys[nav[idx].key] {
+			// 已展开：→ 进首个子项（antd SubMenu 键盘语义）。
+			m.FocusedKey = m.firstChildKey(nav[idx].key)
+		} else {
+			return false
+		}
+	case input.CodeLeft:
+		if idx < 0 {
+			return false
+		}
+		if m.closeParentOf(nav[idx].key) {
+			// 收起后焦点回父项（antd 语义）。
+			m.FocusedKey = m.parentKeyOf(nav[idx].key)
+		} else {
+			return false
+		}
+	case input.CodeEnter:
+		if idx < 0 {
+			return false
+		}
+		if nav[idx].parent {
+			if m.OpenKeys == nil {
+				m.OpenKeys = make(map[string]bool)
+			}
+			m.OpenKeys[nav[idx].key] = !m.OpenKeys[nav[idx].key]
+		} else {
+			if m.Selected == nav[idx].key {
+				return true
+			}
+			m.Selected = nav[idx].key
+			if m.OnClick != nil {
+				m.OnClick(nav[idx].key)
+			}
+		}
+	default:
+		return false
+	}
+	m.MarkDirty()
+	return true
+}
+
+// firstChildKey 返回父项 Key 的首个子项 Key（展开状态下子项可见）。
+func (m *Menu) firstChildKey(parentKey string) string {
+	var walk func(items []*MenuItem) string
+	walk = func(items []*MenuItem) string {
+		for _, it := range items {
+			if it.Key == parentKey {
+				if len(it.Children) > 0 && !it.Children[0].Group {
+					return it.Children[0].Key
+				}
+				return ""
+			}
+			if r := walk(it.Children); r != "" {
+				return r
+			}
+		}
+		return ""
+	}
+	return walk(m.Items)
+}
+
+// parentKeyOf 返回子项的父项 Key（根层返回 ""）。
+func (m *Menu) parentKeyOf(key string) string {
+	var walk func(items []*MenuItem) string
+	walk = func(items []*MenuItem) string {
+		for _, it := range items {
+			for _, c := range it.Children {
+				if c.Key == key {
+					return it.Key
+				}
+			}
+			if r := walk(it.Children); r != "" {
+				return r
+			}
+		}
+		return ""
+	}
+	return walk(m.Items)
+}
+
+// closeParentOf 收起包含 key 的最近父项；返回是否收起动作发生。
+func (m *Menu) closeParentOf(key string) bool {
+	p := m.parentKeyOf(key)
+	if p == "" || !m.OpenKeys[p] {
+		return false
+	}
+	m.OpenKeys[p] = false
+	return true
+}
+
 // Build 实现 ui.Widget。
 func (m *Menu) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(m)
@@ -135,6 +314,7 @@ func (m *Menu) Build(ctx *ui.BuildContext) *scene.Node {
 		m.buildVerticalItems(ctx, n, m.Items, 0)
 		n.SetHit(scene.HitSpec{Label: "menu"})
 		m.node = n
+		m.attachKeyboard(ctx, n)
 		return n
 	}
 	children := make([]*scene.Node, 0, len(m.items))
@@ -207,9 +387,12 @@ func (mi *menuItem) Build(ctx *ui.BuildContext) *scene.Node {
 	if m.Mode == MenuVertical {
 		row := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossCenter)
 		row.SetHeight(40)
+		// 焦点项（antd roving focus 视觉）：浅主色底——与选中同色系，
+		// 但左指示条不动（指示条只跟 Selected）；非焦点项才画 hover 底。
+		focused := m.FocusedKey == mi.key
 		bg := geom.Color{}
-		if active {
-			bg = th.Color.InfoBg // antd 选中浅主色底
+		if active || focused {
+			bg = th.Color.InfoBg // antd 选中/焦点浅主色底
 		} else if mi.hover {
 			bg = th.Color.FillHover
 		}
@@ -269,7 +452,10 @@ func (mi *menuItem) Build(ctx *ui.BuildContext) *scene.Node {
 			}
 			node.MarkNeedsPaint()
 		})
-		mi.attach(ctx, row, mi.tapHandler(ctx, false, func() {
+		// 点击跟随焦点（roving tabindex——antd 键盘鼠标焦点统一）+ 自请
+		// 焦点（键盘注入先 click 聚焦——Input 同款链路）。
+		h := mi.tapHandler(ctx, false, func() {
+			m.FocusedKey = mi.key
 			if isParent {
 				// 父项点击=切换展开（antd inline SubMenu）。
 				if m.OpenKeys == nil {
@@ -284,7 +470,15 @@ func (mi *menuItem) Build(ctx *ui.BuildContext) *scene.Node {
 			if m.OnClick != nil {
 				m.OnClick(mi.key)
 			}
-		}), false)
+		})
+		oldDown := h.Pointer
+		h.Pointer = func(ev *input.PointerEvent) bool {
+			if ev != nil && ev.Down() && ctx.Focus != nil && m.focus != nil {
+				ctx.Focus.Focus(m.focus)
+			}
+			return oldDown != nil && oldDown(ev)
+		}
+		mi.attach(ctx, row, h, false)
 		return row
 	}
 
