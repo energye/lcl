@@ -1,9 +1,10 @@
 {
   "id": "colorpicker",
   "structure": {
-    "apiRows": 6,
+    "apiRows": 7,
     "sections": [
-      "基础"
+      "基础",
+      "透明度"
     ]
   },
   "sections": [
@@ -173,6 +174,124 @@
             {
               "kind": "overlay",
               "count": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "透明度",
+      "cases": [
+        {
+          "name": "初值 #1677FF80 触发框显示 8 位 hex",
+          "target": {
+            "label": "color-picker",
+            "index": 1
+          },
+          "then": [
+            {
+              "kind": "text",
+              "text": "#1677FF80",
+              "target": {
+                "label": "color-picker",
+                "index": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "面板 alpha 条存在（点开透明度卡）",
+          "target": {
+            "label": "color-picker",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "color-picker",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "color-alpha"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点 alpha 条左缘→透明度 0（HEX 尾 00）",
+          "target": {
+            "label": "color-picker",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "color-picker",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "color-preset",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "color-alpha",
+                  "frac": [
+                    0.02,
+                    0.5
+                  ]
+                }
+              }
+            },
+            {
+              "wait": 500
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "notContains": true,
+              "text": "#1677FF80",
+              "target": {
+                "label": "color-picker",
+                "index": 1
+              }
+            },
+            {
+              "kind": "text",
+              "text": "#FA541C",
+              "target": {
+                "label": "color-picker",
+                "index": 1
+              }
             }
           ]
         }

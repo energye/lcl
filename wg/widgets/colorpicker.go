@@ -9,9 +9,11 @@ package widgets
 // scene.Solid 即 render.Fill，同族）；点击取色经事件节点坐标换算
 // （x→s、y→1-v；hue 条 x→h·360）。down 即执行（浮层结论复用）。
 //
-// 未实现（如实标注）：透明度通道/alpha 条、RGB/HSB 输入切换、
-// format 定制、disabledAlpha、自定义触发器/panelRender、
-// 拖拽连续取色（仅点击单点取色）、child 触发器。
+// 未实现（如实标注）：RGB/HSB 输入切换、format 定制、disabledAlpha、
+// 自定义触发器/panelRender、拖拽连续取色（仅点击单点取色）、child 触发器。
+// Alpha 通道已交付（第一百三十三轮，antd showAlpha）：alpha 条（棋盘
+// 底+白→纯色横渐变，点击取透明度）+ Value 形态 #RRGGBBAA（alpha=1 时
+// 6 位兼容）+ 触发框色块半透明合成（白底格上叠色）。
 
 import (
 	"fmt"
@@ -30,24 +32,39 @@ import (
 // ColorPicker 是颜色选择器（HSV 状态机）。
 type ColorPicker struct {
 	controlBase
-	Value    string // 当前 hex（如 #1677FF）
+	Value    string // 当前 hex（#RRGGBB；alpha<1 时 #RRGGBBAA）
 	Defaults string // 无值时初始色（antd defaultValue）
 	Presets  []string
 	OnChange func(hex string)
 	Width    float32 // 触发框宽（默认 0=仅色块形态 42）
+	// ShowAlpha 透明度通道（antd showAlpha）：面板加 alpha 条，Value
+	// 输出 #RRGGBBAA（alpha=1 时 6 位）。
+	ShowAlpha bool
 
 	handle    overlay.Handle
 	fb        feedbackHost
 	childNode *scene.Node
 	panelOpen bool
 
-	h, s, v float32 // HSV：h 0-360、s/v 0-1
-	curTh   *theme.Data
+	h, s, v   float32 // HSV：h 0-360、s/v 0-1
+	alpha     float32 // 0-1（默认 1）
+	curTh     *theme.Data
 }
 
 // NewColorPicker 创建颜色选择器（默认 #1677FF）。
 func NewColorPicker() *ColorPicker {
 	return &ColorPicker{Value: "#1677FF"}
+}
+
+// hsvToHexA HSV(0-360,0-1,0-1,alpha) → hex；alpha=1 输出 #RRGGBB，
+// alpha<1 输出 #RRGGBBAA（antd showAlpha 的 rgba 等价形态）。
+func hsvToHexA(h, s, v, a float32) string {
+	base := hsvToHex(h, s, v)
+	if a >= 1 {
+		return base
+	}
+	av := uint8(a*255 + 0.5)
+	return base + fmt.Sprintf("%02X", av)
 }
 
 // hsvToHex HSV(0-360,0-1,0-1) → #RRGGBB。
@@ -81,9 +98,9 @@ func hueColor(h float32) geom.Color {
 	return geom.RGBA(r, g, b)
 }
 
-// parseHex #RRGGBB → (r,g,b)；失败返回黑。
+// parseHex #RRGGBB（8 位 #RRGGBBAA 时取前 6 位）→ (r,g,b)；失败返回黑。
 func parseHex(hex string) (uint8, uint8, uint8) {
-	if len(hex) != 7 || hex[0] != '#' {
+	if (len(hex) != 7 && len(hex) != 9) || hex[0] != '#' {
 		return 0, 0, 0
 	}
 	v := uint32(0)
@@ -105,6 +122,30 @@ func parseHex(hex string) (uint8, uint8, uint8) {
 	return uint8(v >> 16), uint8(v >> 8), uint8(v)
 }
 
+// parseHexAlpha #RRGGBBAA 末两位 → alpha 0-1（6 位/失败返回 1）。
+func parseHexAlpha(hex string) float32 {
+	if len(hex) != 9 || hex[0] != '#' {
+		return 1
+	}
+	v := uint32(0)
+	for i := 7; i < 9; i++ {
+		c := hex[i]
+		var d uint32
+		switch {
+		case c >= '0' && c <= '9':
+			d = uint32(c - '0')
+		case c >= 'A' && c <= 'F':
+			d = uint32(c-'A') + 10
+		case c >= 'a' && c <= 'f':
+			d = uint32(c-'a') + 10
+		default:
+			return 1
+		}
+		v = v<<4 | d
+	}
+	return float32(v) / 255
+}
+
 // Build 实现 ui.Widget：触发框（圆角色块+HEX 文本）。
 func (c *ColorPicker) Build(ctx *ui.BuildContext) *scene.Node {
 	ctx.BindState(c)
@@ -123,14 +164,31 @@ func (c *ColorPicker) Build(ctx *ui.BuildContext) *scene.Node {
 		c.Value = "#1677FF"
 	}
 	hr, hg, hb := parseHex(c.Value)
-	blockColor := geom.RGBA(hr, hg, hb)
+	blockColor := geom.RGBAa(hr, hg, hb, uint8(c.alpha*255+0.5))
 
 	row := scene.Flex(scene.Horizontal, th.Space.XS).SetCrossAlign(scene.CrossCenter)
-	block := scene.Box(scene.BoxSpec{
-		Fill:   scene.Solid(blockColor),
-		Border: scene.Stroke(th.Color.Border, 1),
-		Radius: th.Radius.SM,
-	}).SetSize2(24, 24)
+	// alpha<1 时色块半透明合成：白底格上叠色（antd swatch 语义）。
+	var block *scene.Node
+	if c.alpha < 1 {
+		bgc := scene.Box(scene.BoxSpec{
+			Fill: render.FillWith(render.NewLinearGradient(
+				geom.Pt(0, 0), geom.Pt(24, 24),
+				render.Stop{Offset: 0, Color: geom.RGBA(204, 204, 204)},
+				render.Stop{Offset: 1, Color: geom.RGBA(255, 255, 255)},
+			)),
+			Border: scene.Stroke(th.Color.Border, 1),
+			Radius: th.Radius.SM,
+		}).SetSize2(24, 24)
+		ov := scene.Box(scene.BoxSpec{Fill: scene.Solid(blockColor), Radius: th.Radius.SM}).SetSize2(24, 24)
+		bgc.Add(ov)
+		block = bgc
+	} else {
+		block = scene.Box(scene.BoxSpec{
+			Fill:   scene.Solid(blockColor),
+			Border: scene.Stroke(th.Color.Border, 1),
+			Radius: th.Radius.SM,
+		}).SetSize2(24, 24)
+	}
 	block.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "color-swatch", Cursor: scene.CursorPointer})
 	row.Add(block)
 	hex := c.Value
@@ -183,6 +241,7 @@ func (c *ColorPicker) openPanel(ctx *ui.BuildContext, anchor *scene.Node, th *th
 		r, g, b := parseHex(c.Value)
 		c.setFromRGB(r, g, b)
 	}
+	c.alpha = parseHexAlpha(c.Value) // 每次开面板从 Value 同步 alpha
 	panel := scene.Flex(scene.Vertical, th.Space.SM)
 	panel.SetBox(scene.BoxSpec{
 		Fill:   scene.Solid(th.Color.Surface),
@@ -254,6 +313,38 @@ func (c *ColorPicker) openPanel(ctx *ui.BuildContext, anchor *scene.Node, th *th
 		}})
 	}
 	panel.Add(hue)
+
+	// alpha 条（antd showAlpha）：棋盘底 + 当前色透明→不透明横渐变，
+	// 点击 x→alpha。位于色相条下方。
+	if c.ShowAlpha {
+		// 棋盘底（简化双渐变近似——antd 实际为方格 pattern）。
+		abg := scene.Stack()
+		abg.SetSize2(220, 14)
+		abg.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(geom.RGBA(255, 255, 255))}).SetSize2(220, 14))
+		abg.Add(scene.Box(scene.BoxSpec{Fill: render.FillWith(render.NewLinearGradient(
+			geom.Pt(0, 0), geom.Pt(220, 14),
+			render.Stop{Offset: 0, Color: geom.RGBA(180, 180, 180)},
+			render.Stop{Offset: 1, Color: geom.RGBA(255, 255, 255)},
+		))}).SetSize2(220, 14))
+		r2, g2, b2 := parseHex(hsvToHex(c.h, c.s, c.v))
+		abg.Add(scene.Box(scene.BoxSpec{Fill: render.FillWith(render.NewLinearGradient(
+			geom.Pt(0, 0), geom.Pt(220, 0),
+			render.Stop{Offset: 0, Color: geom.RGBAa(r2, g2, b2, 0)},
+			render.Stop{Offset: 1, Color: geom.RGBAa(r2, g2, b2, 255)},
+		))}).SetSize2(220, 14))
+		abg.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "color-alpha", Cursor: scene.CursorPointer})
+		if ctx.Input != nil {
+			ctx.Input.Set(abg, input.Handler{Pointer: func(ev *input.PointerEvent) bool {
+				if !ev.Down() {
+					return false
+				}
+				c.alpha = clamp01(ev.Pos.X / 220)
+				c.commit(ctx)
+				return true
+			}})
+		}
+		panel.Add(abg)
+	}
 
 	// 预设色板（网格）。
 	if len(c.Presets) > 0 {
@@ -342,8 +433,13 @@ func (c *ColorPicker) setFromRGB(r, g, b uint8) {
 
 // commit HSV → hex：更新 Value、回调。**不关面板**（antd 连续调色
 // 语义——SV/色相/预设点击后面板保持，外点/Esc/再点触发框关闭）。
+// ShowAlpha 时输出 #RRGGBBAA（alpha=1 时 6 位——hsvToHexA）。
 func (c *ColorPicker) commit(ctx *ui.BuildContext) {
-	c.Value = hsvToHex(c.h, c.s, c.v)
+	if c.ShowAlpha {
+		c.Value = hsvToHexA(c.h, c.s, c.v, c.alpha)
+	} else {
+		c.Value = hsvToHex(c.h, c.s, c.v)
+	}
 	c.MarkDirty() // 触发框色块/HEX 随根重建刷新
 	if c.OnChange != nil {
 		c.OnChange(c.Value)

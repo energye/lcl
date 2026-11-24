@@ -477,3 +477,37 @@ func TestMentionsKeyboard(t *testing.T) {
 		t.Fatal("确认后面板应关")
 	}
 }
+
+// TestColorPickerAlpha alpha 通道：hsvToHexA 8 位输出/parseHex 兼容 8 位/
+// parseHexAlpha 提取/commit ShowAlpha 分支。
+func TestColorPickerAlpha(t *testing.T) {
+	if got := hsvToHexA(210, 1, 1, 0.5); got != "#0080FF80" {
+		t.Fatalf("hsvToHexA 0.5 应 8 位尾 80，got %s", got)
+	}
+	if got := hsvToHexA(210, 1, 1, 1); len(got) != 7 {
+		t.Fatalf("alpha=1 应 6 位，got %s", got)
+	}
+	r, g, b := parseHex("#1677FF80")
+	if r != 0x16 || g != 0x77 || b != 0xFF {
+		t.Fatalf("parseHex 8 位应取前 6 位，got %02X %02X %02X", r, g, b)
+	}
+	if a := parseHexAlpha("#1677FF80"); a < 0.49 || a > 0.51 {
+		t.Fatalf("parseHexAlpha 0x80 应 ≈0.5，got %v", a)
+	}
+	if a := parseHexAlpha("#1677FF"); a != 1 {
+		t.Fatalf("6 位应默认 1，got %v", a)
+	}
+	// commit 分支：ShowAlpha 时 alpha<1 输出 8 位。
+	c := NewColorPicker()
+	c.ShowAlpha = true
+	c.h, c.s, c.v, c.alpha = 210, 1, 1, 0.5
+	c.commit(nil)
+	if c.Value != "#0080FF80" {
+		t.Fatalf("commit 应输出 8 位，got %s", c.Value)
+	}
+	c.alpha = 1
+	c.commit(nil)
+	if len(c.Value) != 7 {
+		t.Fatalf("alpha=1 commit 应 6 位，got %s", c.Value)
+	}
+}
