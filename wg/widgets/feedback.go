@@ -132,7 +132,14 @@ func (m *Modal) Show(ctx *ui.BuildContext) {
 			col.SetPadding(geom.InLTRB(th.Space.LG, th.Space.LG, th.Space.LG, th.Space.LG))
 			if preset {
 				if m.Loading {
-					// loading 替换正文（预设正文含图标/标题，整体替换为骨架屏）。
+					if title != "" {
+						tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeLG), text.Options{})
+						tt := scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text})
+						tt.SetHit(scene.HitSpec{Label: "modal-title"})
+						col.Add(tt)
+						col.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).
+							SetHeight(1).SetFlex(1, scene.FlexTight))
+					}
 					col.Add(loadingSkeleton(ctx, th, w))
 				} else {
 					// 预设确认形态：状态图标圆底 + 右列（标题+内容）。

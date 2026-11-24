@@ -3,10 +3,13 @@ package widgets
 import (
 	"testing"
 	"time"
+
+	"github.com/energye/lcl/wg/theme"
+	"github.com/energye/lcl/wg/ui"
 )
 
 // TestTimePickerUse12Hours 12 小时制：displayText 形态与 24h 还原
-//（ap12To24 双向映射语义锁）。
+// （ap12To24 双向映射语义锁）。
 func TestTimePickerUse12Hours(t *testing.T) {
 	tp := NewTimePicker()
 	tp.Use12Hours = true
@@ -59,5 +62,80 @@ func TestTimePickerSteps(t *testing.T) {
 	tp.HourStep = 2
 	if got := tp.hourValues(); len(got) != 12 {
 		t.Fatalf("24h HourStep=2 应 12 格，got %d", len(got))
+	}
+}
+
+func TestTimePickerSelectionIndices(t *testing.T) {
+	tests := []struct {
+		name                 string
+		setup                func(*TimePicker)
+		want                 [4]int
+		pickCol, pickIdx     int
+		wantHour, wantMinute int
+	}{
+		{
+			name: "12h 午夜",
+			setup: func(tp *TimePicker) {
+				tp.Use12Hours = true
+				tp.Value = time.Date(0, 1, 1, 0, 0, 0, 0, time.Local)
+			},
+			want: [4]int{0, 0, 0, 0}, pickCol: 0, pickIdx: 1, wantHour: 1,
+		},
+		{
+			name: "12h 下午",
+			setup: func(tp *TimePicker) {
+				tp.Use12Hours = true
+				tp.Value = time.Date(0, 1, 1, 15, 20, 0, 0, time.Local)
+			},
+			want: [4]int{3, 20, 0, 1}, pickCol: -1,
+		},
+		{
+			name: "分钟步进",
+			setup: func(tp *TimePicker) {
+				tp.MinuteStep = 10
+				tp.Value = time.Date(0, 1, 1, 9, 20, 0, 0, time.Local)
+			},
+			want: [4]int{9, 2, 0, -1}, pickCol: 1, pickIdx: 4, wantHour: 9, wantMinute: 40,
+		},
+		{
+			name: "步进集合无当前值",
+			setup: func(tp *TimePicker) {
+				tp.MinuteStep = 10
+				tp.Value = time.Date(0, 1, 1, 9, 25, 0, 0, time.Local)
+			},
+			want: [4]int{9, -1, 0, -1}, pickCol: 1, pickIdx: 3, wantHour: 9, wantMinute: 30,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctx := &ui.BuildContext{Theme: theme.Default()}
+			tp := NewTimePicker()
+			tt.setup(tp)
+			tp.curTh = ctx.ThemeOr()
+			tp.buildPanel(ctx, ctx.ThemeOr())
+			if tp.selIdx != tt.want {
+				t.Fatalf("selIdx=%v, want %v", tp.selIdx, tt.want)
+			}
+			if tt.pickCol >= 0 {
+				tp.pick(tt.pickCol, tt.pickIdx)
+				if tp.Value.Hour() != tt.wantHour || tp.Value.Minute() != tt.wantMinute {
+					t.Fatalf("pick 后时刻=%02d:%02d, want %02d:%02d", tp.Value.Hour(), tp.Value.Minute(), tt.wantHour, tt.wantMinute)
+				}
+			}
+		})
+	}
+}
+
+func TestTimePickerHighlightAllUsesCellIndices(t *testing.T) {
+	ctx := &ui.BuildContext{Theme: theme.Default()}
+	tp := NewTimePicker()
+	tp.Use12Hours = true
+	tp.MinuteStep = 10
+	tp.Value = time.Date(0, 1, 1, 15, 20, 0, 0, time.Local)
+	tp.curTh = ctx.ThemeOr()
+	tp.buildPanel(ctx, ctx.ThemeOr())
+	tp.highlightAll(0, 35, 0)
+	if tp.selIdx[0] != 0 || tp.selIdx[1] != 5 || tp.selIdx[3] != 0 {
+		t.Fatalf("highlightAll 后 selIdx=%v, want [0 5 0 0]", tp.selIdx)
 	}
 }

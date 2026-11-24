@@ -52,6 +52,7 @@ type timeCellInfo struct {
 	cell   *scene.Node
 	txt    *scene.Node
 	src    string
+	value  int
 	layout *text.Layout
 }
 
@@ -154,7 +155,7 @@ func (t *TimePicker) Close() {
 }
 
 // displayText 触发框显示：24h "15:04:05"；12h "hh:mm:ss 上午/下午"
-//（antd use12Hours 默认 format h:mm:ss a 的中文语境形态）。
+// （antd use12Hours 默认 format h:mm:ss a 的中文语境形态）。
 func (t *TimePicker) displayText() string {
 	if t.Use12Hours {
 		h := t.Value.Hour()
@@ -225,18 +226,6 @@ func (t *TimePicker) openPanel(ctx *ui.BuildContext, anchor *scene.Node, th *the
 	}
 	t.curTh = th
 	t.panelOpen = true
-	sel := t.selectedParts()
-	t.selIdx = [4]int{sel[0], sel[1], sel[2], -1}
-	if t.Use12Hours && !t.Value.IsZero() {
-		// 第 4 列（上午/下午）选中下标：0=上午 12=下午。
-		if t.Value.Hour() >= 12 {
-			t.selIdx[3] = 1
-		} else {
-			t.selIdx[3] = 0
-		}
-	} else {
-		t.selIdx[3] = -1
-	}
 	panel := t.buildPanel(ctx, th)
 	colN := 3
 	w := timeColW*3 + 2
@@ -297,15 +286,17 @@ func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 		colN, panelW = 4, timeColW*4+3
 	}
 	sel := t.selectedParts()
+	t.selIdx = [4]int{-1, -1, -1, -1}
+	if t.Use12Hours && sel[0] >= 0 {
+		t.selIdx[3] = hourToAP(sel[0])
+	}
 	for i := 0; i < colN; i++ {
 		sp := specs[i]
 		col := t.buildColumn(ctx, th, i, sp.vals, sp.label)
 		scroll := &Scroll{Axis: scene.Vertical, Width: timeColW, Height: timeViewportH,
 			Child: nodeFn(func(ctx *ui.BuildContext) *scene.Node { return col })}
-		// 选中项尽量居中：offset = idx*cellH - (viewport-cellH)/2。
-		// i<3 先判（sel 为时/分/秒三元组，12h 第 4 列 AM/PM 无选中项）。
-		if i < 3 && sel[i] >= 0 {
-			off := float32(sel[i])*timeCellH - (timeViewportH-timeCellH)/2
+		if selected := t.selIdx[i]; selected >= 0 {
+			off := float32(selected)*timeCellH - (timeViewportH-timeCellH)/2
 			if off < 0 {
 				off = 0
 			}
@@ -368,8 +359,8 @@ func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx in
 	t.cellsByCol[colIdx] = make([]*timeCellInfo, 0, len(vals))
 	isHour12 := colIdx == 0 && t.Use12Hours
 	isAP := colIdx == 3
-	for _, v := range vals {
-		v := v
+	for idx, v := range vals {
+		idx, v := idx, v
 		src := fmt.Sprintf("%02d", v)
 		if isAP {
 			if v == 0 {
@@ -379,7 +370,7 @@ func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx in
 			}
 		}
 		l := text.LayoutText(src, text.DefaultFont(th.Font.SizeSM), text.Options{})
-		info := &timeCellInfo{src: src, layout: l}
+		info := &timeCellInfo{src: src, value: v, layout: l}
 		info.txt = scene.Text(scene.TextSpec{Src: src, Layout: l, Color: th.Color.Text})
 		info.txt.SetMargin(geom.InLTRB((timeColW-l.Size.W)/2, (timeCellH-l.Size.H)/2, 0, 0))
 		cell := scene.Box(scene.BoxSpec{})
@@ -389,10 +380,10 @@ func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx in
 		info.cell = cell
 		t.cellsByCol[colIdx] = append(t.cellsByCol[colIdx], info)
 		// 选中判定：时列 24h 直等；12h 换算（12→0 点、1..11→13..23 侧依
-		// AM/PM）；上午/下午列按 selIdx[3]（openPanel 已填）。
+		// AM/PM）；上午/下午列按 selIdx[3]（buildPanel 已填）。
 		selected := false
 		if isAP {
-			selected = t.selIdx[3] == v
+			selected = t.selIdx[3] == idx
 		} else if isHour12 {
 			if sel[0] >= 0 {
 				h12 := sel[0] % 12
@@ -405,19 +396,19 @@ func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx in
 			selected = sel[colIdx] == v
 		}
 		if selected {
-			t.selIdx[colIdx] = v
+			t.selIdx[colIdx] = idx
 			t.paintSelected(info, true)
 		}
 		if ctx.Input != nil {
 			ctx.Input.Set(cell, input.Handler{
 				Enter: func(*input.PointerEvent) {
-					if t.selIdx[colIdx] != v { // 选中项不叠加 hover 底
+					if t.selIdx[colIdx] != idx { // 选中项不叠加 hover 底
 						info.cell.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.FillHover)})
 						info.cell.MarkNeedsPaint()
 					}
 				},
 				Leave: func(*input.PointerEvent) {
-					if t.selIdx[colIdx] != v {
+					if t.selIdx[colIdx] != idx {
 						info.cell.SetBox(scene.BoxSpec{})
 						info.cell.MarkNeedsPaint()
 					}
@@ -427,7 +418,7 @@ func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx in
 						return false
 					}
 					// down 即执行（浮层内 tap 配对不可靠结论复用）。
-					t.pick(colIdx, v)
+					t.pick(colIdx, idx)
 					return true
 				},
 			})
@@ -447,12 +438,14 @@ func hourToAP(h int) int {
 
 // pick 选中某列某值：高亮原地迁移 + 合成完整时刻。12h 模式：小时列值
 // （12,1..11）+上午/下午列还原 24h；分/秒列原值。
-func (t *TimePicker) pick(colIdx, v int) {
+func (t *TimePicker) pick(colIdx, idx int) {
 	if t.selIdx[colIdx] >= 0 {
 		t.paintSelected(t.cellsByCol[colIdx][t.selIdx[colIdx]], false)
 	}
-	t.selIdx[colIdx] = v
-	t.paintSelected(t.cellsByCol[colIdx][v], true)
+	t.selIdx[colIdx] = idx
+	info := t.cellsByCol[colIdx][idx]
+	v := info.value
+	t.paintSelected(info, true)
 	// 合成完整时刻：未选列保持原值（无值列取 0）。
 	parts := t.selectedParts()
 	if t.Value.IsZero() {
@@ -519,39 +512,33 @@ func (t *TimePicker) paintSelected(info *timeCellInfo, sel bool) {
 }
 
 // highlightAll "现在"：列高亮整体迁移到当前时刻（原地，零重建）。
-// 12h 模式：小时/上午下午列按 12h 值定位（cellsByCol 内按显示值匹配）。
 func (t *TimePicker) highlightAll(h, m, s int) {
 	vals := [3]int{h, m, s}
 	for i := 0; i < 3; i++ {
 		if t.selIdx[i] >= 0 {
 			t.paintSelected(t.cellsByCol[i][t.selIdx[i]], false)
 		}
-		v := vals[i]
+		target := vals[i]
 		if t.Use12Hours && i == 0 {
-			// 小时列 cell 存 12h 值——找匹配下标。
-			h12 := h % 12
-			if h12 == 0 {
-				h12 = 12
+			target = h % 12
+			if target == 0 {
+				target = 12
 			}
-			v = -1
-			for idx, info := range t.cellsByCol[0] {
-				if info.src == fmt.Sprintf("%02d", h12) {
-					v = idx
-					break
-				}
-			}
-			if v < 0 {
-				continue
-			}
-		} else if v >= len(t.cellsByCol[i]) {
-			// 步进列："现在"时刻可能不在步长倍数集合——钳到最后一格。
-			v = len(t.cellsByCol[i]) - 1
 		}
-		t.selIdx[i] = v
-		t.paintSelected(t.cellsByCol[i][v], true)
+		idx := -1
+		for j, info := range t.cellsByCol[i] {
+			if info.value == target {
+				idx = j
+				break
+			}
+		}
+		if idx < 0 {
+			idx = len(t.cellsByCol[i]) - 1
+		}
+		t.selIdx[i] = idx
+		t.paintSelected(t.cellsByCol[i][idx], true)
 	}
 	if t.Use12Hours {
-		// 上午/下午列迁移。
 		if t.selIdx[3] >= 0 {
 			t.paintSelected(t.cellsByCol[3][t.selIdx[3]], false)
 		}
