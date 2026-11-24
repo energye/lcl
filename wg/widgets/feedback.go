@@ -395,6 +395,10 @@ type Drawer struct {
 	// PresetSize 预设宽度（antd Drawer width 预设：378 默认 / 736 宽），
 	// 覆盖 Width（>0 时生效；antd size="default"|"large" 对应）。
 	PresetSize float32
+	// Footer 自定义底部内容（antd footer ReactNode 对应）；nil 时默认无 footer。
+	Footer ui.Widget
+	// FooterNull 显式隐藏 footer（antd footer={null} 对应，优先于 Footer）。
+	FooterNull bool
 	OnClose    func()
 
 	handle overlay.Handle
@@ -433,6 +437,7 @@ func (d *Drawer) Show(ctx *ui.BuildContext) {
 		w = 320
 	}
 	title, content := d.Title, d.Content
+	footer, footerNull := d.Footer, d.FooterNull
 	onClose := d.OnClose
 	// 通栏尺寸（antd Drawer 全高/全宽）：左右抽屉高=视口高，上下抽屉宽=
 	// 视口宽。ViewportRect 未就绪（零矩形）时退回默认 400。
@@ -480,6 +485,21 @@ func (d *Drawer) Show(ctx *ui.BuildContext) {
 			})
 			closeBtn.SetStackPosition(geom.Pt(size.W-90, 8)).SetPositionKeepSize(true)
 			col.Add(closeBtn)
+			if !footerNull && footer != nil {
+				contentW := size.W - 2*th.Space.LG
+				if contentW <= 0 {
+					contentW = size.W
+				}
+				col.Add(scene.Box(scene.BoxSpec{}).SetFlex(1, scene.FlexTight))
+				footerBox := scene.Flex(scene.Vertical, 0).SetWidth(contentW)
+				footerBox.SetHit(scene.HitSpec{Label: "drawer-footer"})
+				footerBox.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetSize2(contentW, 1))
+				footerRow := scene.Flex(scene.Horizontal, th.Space.SM).SetWidth(contentW)
+				footerRow.SetPadding(geom.InLTRB(th.Space.SM, th.Space.MD, th.Space.SM, th.Space.MD))
+				footerRow.Add(buildChild(ctx, footer))
+				footerBox.Add(footerRow)
+				col.Add(footerBox)
+			}
 			return col
 		},
 	})

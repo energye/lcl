@@ -95,43 +95,161 @@
     {
       "cases": [
         {
-          "name": "\u5bbd\u62bd\u5c49\u6253\u5f00\uff08PresetSize 736\uff09", 
+          "name": "\u5bbd\u62bd\u5c49\u6253\u5f00\uff08PresetSize 736\uff09",
           "target": {
-            "label": "button", 
+            "label": "button",
             "text": "\u5bbd\u62bd\u5c49\uff08736\uff09"
-          }, 
+          },
           "then": [
             {
-              "band": "modal", 
-              "count": 1, 
+              "band": "modal",
+              "count": 1,
               "kind": "overlay"
-            }, 
+            },
             {
-              "kind": "text", 
+              "kind": "text",
               "target": {
                 "label": "drawer-title"
-              }, 
+              },
               "text": "\u5bbd\u62bd\u5c49"
             }
-          ], 
+          ],
           "when": [
             {
               "click": {}
-            }, 
+            },
             {
               "wait": 300
             }
           ]
         }
-      ], 
+      ],
       "name": "\u9884\u8bbe\u5c3a\u5bf8"
+    },
+    {
+      "cases": [
+        {
+          "name": "\u81ea\u5b9a\u4e49 footer \u6e32\u67d3\u91cd\u7f6e/\u5e2e\u52a9/\u63d0\u4ea4",
+          "target": {
+            "label": "button",
+            "text": "\u81ea\u5b9a\u4e49 footer"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "drawer-footer"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "\u91cd\u7f6e"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "\u5e2e\u52a9"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "button",
+                "text": "\u63d0\u4ea4"
+              }
+            }
+          ],
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ]
+        },
+        {
+          "name": "\u70b9\u81ea\u5b9a\u4e49 footer \u63d0\u4ea4\u5173\u95ed",
+          "target": {
+            "label": "button",
+            "text": "\u81ea\u5b9a\u4e49 footer"
+          },
+          "then": [
+            {
+              "band": "modal",
+              "count": 0,
+              "kind": "overlay"
+            }
+          ],
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "button",
+                  "text": "\u63d0\u4ea4"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "name": "\u81ea\u5b9a\u4e49 footer"
+    },
+    {
+      "cases": [
+        {
+          "name": "FooterNull \u4f18\u5148\u9690\u85cf Footer",
+          "target": {
+            "label": "button",
+            "text": "\u65e0 footer"
+          },
+          "then": [
+            {
+              "band": "modal",
+              "count": 1,
+              "kind": "overlay"
+            },
+            {
+              "kind": "absent",
+              "target": {
+                "label": "drawer-footer"
+              }
+            },
+            {
+              "kind": "absent",
+              "target": {
+                "label": "button",
+                "text": "\u9690\u85cf\u6309\u94ae"
+              }
+            }
+          ],
+          "when": [
+            {
+              "click": {}
+            },
+            {
+              "wait": 300
+            }
+          ]
+        }
+      ],
+      "name": "\u65e0 footer"
     }
-  ], 
+  ],
   "structure": {
-    "apiRows": 6, 
+    "apiRows": 8,
     "sections": [
-      "\u5de6\u4fa7\u62bd\u5c49", 
-      "\u9884\u8bbe\u5c3a\u5bf8"
+      "\u5de6\u4fa7\u62bd\u5c49",
+      "\u9884\u8bbe\u5c3a\u5bf8",
+      "\u81ea\u5b9a\u4e49 footer",
+      "\u65e0 footer"
     ]
   }
 }

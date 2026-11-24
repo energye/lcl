@@ -66,6 +66,45 @@ func TestDrawerEdges(t *testing.T) {
 	}
 }
 
+func TestDrawerFooter(t *testing.T) {
+	tests := []struct {
+		name       string
+		footer     ui.Widget
+		footerNull bool
+		wantFooter bool
+	}{
+		{name: "默认无 footer"},
+		{name: "自定义 footer", footer: NewButton("自定义"), wantFooter: true},
+		{name: "FooterNull 优先", footer: NewButton("自定义"), footerNull: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctx, host := feedbackCtx()
+			d := NewDrawer("设置", Label{Text: "内容"})
+			d.Footer = tt.footer
+			d.FooterNull = tt.footerNull
+			d.Show(ctx)
+			root := host.Entries()[0].Build()
+			var hasFooter, hasCustom bool
+			root.Walk(func(n *scene.Node) bool {
+				if n.HitSpec().Label == "drawer-footer" {
+					hasFooter = true
+				}
+				if spec := n.Text(); spec != nil && spec.Src == "自定义" {
+					hasCustom = true
+				}
+				return true
+			})
+			if hasFooter != tt.wantFooter {
+				t.Fatalf("drawer-footer=%v, want %v", hasFooter, tt.wantFooter)
+			}
+			if hasCustom != tt.wantFooter {
+				t.Fatalf("自定义 footer 内容=%v, want %v", hasCustom, tt.wantFooter)
+			}
+		})
+	}
+}
+
 func TestNotificationTimeout(t *testing.T) {
 	ctx, host := feedbackCtx()
 	n := NewNotification("保存成功", "数据已写入")
