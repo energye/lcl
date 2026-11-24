@@ -548,14 +548,91 @@
         }
       ], 
       "name": "自定义 footer"
+    }, 
+    {
+      "cases": [
+        {
+          "name": "打开加载态：内容区替换为骨架屏且 footer 隐藏", 
+          "target": {
+            "label": "button", 
+            "text": "加载中模态"
+          }, 
+          "then": [
+            {
+              "band": "modal", 
+              "count": 1, 
+              "kind": "overlay"
+            }, 
+            {
+              "kind": "exists", 
+              "target": {
+                "label": "skeleton"
+              }
+            }, 
+            {
+              "kind": "absent", 
+              "target": {
+                "label": "button", 
+                "text": "确定"
+              }
+            }, 
+            {
+              "kind": "absent", 
+              "target": {
+                "label": "button", 
+                "text": "取消"
+              }
+            }, 
+            {
+              "kind": "text", 
+              "target": {
+                "label": "modal-title"
+              }, 
+              "text": "加载中"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "wait": 300
+            }
+          ]
+        }, 
+        {
+          "name": "加载态可 Esc 关闭", 
+          "target": {
+            "label": "button", 
+            "text": "加载中模态"
+          }, 
+          "then": [
+            {
+              "band": "modal", 
+              "count": 0, 
+              "kind": "overlay"
+            }
+          ], 
+          "when": [
+            {
+              "click": {}
+            }, 
+            {
+              "key": "escape"
+            }
+          ]
+        }
+      ], 
+      "name": "加载中"
     }
   ], 
   "structure": {
-    "apiRows": 11, 
+    "apiRows": 12, 
     "sections": [
       "打开模态", 
       "预设系列", 
-      "自定义 footer"
+      "自定义 footer", 
+      "加载中"
     ]
   }
 }

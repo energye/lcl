@@ -67,6 +67,9 @@ type Modal struct {
 	// FooterNull 显式隐藏 footer（antd footer={null} 对应；优先级
 	// 高于 Footer 与默认按钮组）。
 	FooterNull bool
+	// Loading 加载中（antd loading，5.18.0）：内容区替换为骨架屏
+	// （4 行 active 呼吸），且 footer 整体隐藏（含自定义 Footer）。
+	Loading bool
 
 	handle overlay.Handle
 	fb     feedbackHost
@@ -128,23 +131,35 @@ func (m *Modal) Show(ctx *ui.BuildContext) {
 			})
 			col.SetPadding(geom.InLTRB(th.Space.LG, th.Space.LG, th.Space.LG, th.Space.LG))
 			if preset {
-				// 预设确认形态：状态图标圆底 + 右列（标题+内容）。
-				col.Add(presetBody(ctx, th, m.Kind, title, content))
+				if m.Loading {
+					// loading 替换正文（预设正文含图标/标题，整体替换为骨架屏）。
+					col.Add(loadingSkeleton(ctx, th, w))
+				} else {
+					// 预设确认形态：状态图标圆底 + 右列（标题+内容）。
+					col.Add(presetBody(ctx, th, m.Kind, title, content))
+				}
 			} else {
-				// 标题 + 分隔线（antd 对话框标题区有 hairline 分隔）。
+				// 标题 + 分隔线（antd 对话框标题区有 hairline 分隔；loading
+				// 时标题不受影响，仍渲染——antd title 与 body 独立）。
 				if title != "" {
 					tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeLG), text.Options{})
-					col.Add(scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text}))
+					tt := scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text})
+					tt.SetHit(scene.HitSpec{Label: "modal-title"}) // 被动锚：标题断言用
+					col.Add(tt)
 					col.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).
 						SetHeight(1).SetFlex(1, scene.FlexTight))
 				}
-				if content != nil {
+				if m.Loading {
+					col.Add(loadingSkeleton(ctx, th, w))
+				} else if content != nil {
 					col.Add(buildChild(ctx, content))
 				}
 			}
-			// footer 三态：FooterNull 显式隐藏 > Footer 自定义 > 默认
-			// 按钮组（antd footer={null} / footer={node} / 默认）。
+			// footer 四态：Loading 隐藏 > FooterNull 显式隐藏 > Footer 自定义
+			// > 默认按钮组（antd loading / footer={null} / footer={node} / 默认）。
 			switch {
+			case m.Loading:
+				// loading 时 footer 整体隐藏（含自定义 footer）。
 			case m.FooterNull:
 				// 无底部区。
 			case m.Footer != nil:
@@ -200,6 +215,17 @@ func modalButton(ctx *ui.BuildContext, label string, primary bool, th *theme.Dat
 		b.Type = TypePrimary
 	}
 	return b.Build(ctx)
+}
+
+// loadingSkeleton 构造 antd Modal loading 的骨架屏正文：title={false}、
+// paragraph rows 4、active 呼吸（墙钟驱动，1.4s/圈），宽度取正文内容宽
+// （w 减左右内边距）。
+func loadingSkeleton(ctx *ui.BuildContext, th *theme.Data, w float32) *scene.Node {
+	bodyW := w - 2*th.Space.LG
+	if bodyW <= 0 {
+		bodyW = w
+	}
+	return (&Skeleton{Rows: 4, Width: bodyW, Animated: true}).Build(ctx)
 }
 
 // presetBody 构建预设确认框内容区：状态图标圆底（Stack：语义色 32×32 圆

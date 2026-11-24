@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/energye/lcl/wg/overlay"
+	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
 )
@@ -115,4 +116,42 @@ func TestFeedbackWithoutOverlayNoPanic(t *testing.T) {
 	pc := NewPopconfirm("t", Label{Text: "x"})
 	pc.Build(ctx)
 	pc.show(ctx, nil)
+}
+
+// TestModalLoading 验证 loading 语义：内容区替换为骨架屏、footer 按钮隐藏、
+// 标题保留（antd loading：title 与 body 独立，仅替换 body 并隐藏 footer）。
+func TestModalLoading(t *testing.T) {
+	ctx, host := feedbackCtx()
+	m := NewModal("加载中", Label{Text: "内容加载中"})
+	m.Loading = true
+	m.Show(ctx)
+	if !m.IsOpen() || host.Count() != 1 {
+		t.Fatalf("Modal 未显示: open=%v count=%d", m.IsOpen(), host.Count())
+	}
+	root := host.Entries()[0].Build()
+	if root == nil {
+		t.Fatal("Modal 内容未构建")
+	}
+	var hasSkeleton, hasTitle bool
+	buttonCount := 0
+	root.Walk(func(n *scene.Node) bool {
+		switch n.HitSpec().Label {
+		case "skeleton":
+			hasSkeleton = true
+		case "modal-title":
+			hasTitle = true
+		case "button":
+			buttonCount++
+		}
+		return true
+	})
+	if !hasSkeleton {
+		t.Error("loading=true 时正文应出现骨架屏")
+	}
+	if !hasTitle {
+		t.Error("loading=true 时标题应保留")
+	}
+	if buttonCount != 0 {
+		t.Errorf("loading=true 时 footer 按钮应隐藏，实际 %d 个", buttonCount)
+	}
 }

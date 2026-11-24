@@ -326,7 +326,7 @@
       "name": "12 小时制",
       "cases": [
         {
-          "name": "初值 15:20 触发框显示 下午 03:20:00",
+          "name": "初值 15:20 触发框显示 03:20:00 下午",
           "target": {
             "label": "time-picker",
             "index": 2
@@ -334,7 +334,7 @@
           "then": [
             {
               "kind": "text",
-              "text": "下午 03:20:00",
+              "text": "03:20:00 下午",
               "target": {
                 "label": "time-picker",
                 "index": 2

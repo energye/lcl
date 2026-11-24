@@ -303,7 +303,8 @@ func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 		scroll := &Scroll{Axis: scene.Vertical, Width: timeColW, Height: timeViewportH,
 			Child: nodeFn(func(ctx *ui.BuildContext) *scene.Node { return col })}
 		// 选中项尽量居中：offset = idx*cellH - (viewport-cellH)/2。
-		if sel[i] >= 0 && i < 3 {
+		// i<3 先判（sel 为时/分/秒三元组，12h 第 4 列 AM/PM 无选中项）。
+		if i < 3 && sel[i] >= 0 {
 			off := float32(sel[i])*timeCellH - (timeViewportH-timeCellH)/2
 			if off < 0 {
 				off = 0

@@ -21,9 +21,11 @@ var (
 	// footer 卡按钮（antd footer 自定义：重置/帮助/提交，提交关框）。
 	footerBtn   = widgets.NewButton("自定义 footer")
 	noFooterBtn = widgets.NewButton("无 footer")
-	resetB      = widgets.NewButton("重置")
-	helpB       = widgets.NewButton("帮助")
-	submitB     = widgets.NewButton("提交")
+	// loading 卡按钮（antd loading：内容区替换为骨架屏、footer 隐藏）。
+	loadingBtn = widgets.NewButton("加载中模态")
+	resetB     = widgets.NewButton("重置")
+	helpB      = widgets.NewButton("帮助")
+	submitB    = widgets.NewButton("提交")
 )
 
 func init() {
@@ -82,6 +84,18 @@ func init() {
 		m.FooterNull = true
 		m.Show(ctxRef)
 	}
+	// loading 卡（antd loading 对应）：Loading=true 时内容区替换为骨架屏、
+	// footer 隐藏（标题仍保留）。
+	loadingBtn.OnClick = func() {
+		if ctxRef == nil || ctxRef.Overlay == nil {
+			return
+		}
+		m := widgets.NewModal("加载中", doc.Node(func(c *ui.BuildContext) *scene.Node {
+			return (&widgets.Label{Text: "内容加载中，请稍候…"}).Build(c)
+		}))
+		m.Loading = true
+		m.Show(ctxRef)
+	}
 }
 
 func main() {
@@ -116,12 +130,17 @@ func main() {
 				doc.CaptureCtx(&ctxRef, ctx)
 				return noFooterBtn
 			}},
+			{Title: "加载中", Note: "Loading=true：内容区替换为 4 行骨架屏（active 呼吸），footer 隐藏，标题保留（antd loading 对应）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				doc.CaptureCtx(&ctxRef, ctx)
+				return loadingBtn
+			}},
 		},
 		API: []doc.APIRow{
 			{Name: "NewModal", Type: "func(title, content string|ui.Widget) *Modal", Desc: "构造"},
 			{Name: "Confirm/Cancel", Type: "string", Default: "确定 / 取消", Desc: "按钮文字"},
 			{Name: "Footer", Type: "ui.Widget", Desc: "自定义底部内容（替换默认按钮组，antd footer 对应）"},
 			{Name: "FooterNull", Type: "bool", Default: "false", Desc: "显式隐藏 footer（antd footer={null} 对应）"},
+			{Name: "Loading", Type: "bool", Default: "false", Desc: "加载中：内容区替换为骨架屏且隐藏 footer（antd loading 对应）"},
 			{Name: "Width", Type: "float32", Default: "400", Desc: "对话框宽度（居中 400×220）"},
 			{Name: "OnConfirm/OnCancel", Type: "func()", Desc: "按钮回调"},
 			{Name: "Show", Type: "func(ctx *ui.BuildContext)", Desc: "打开（需 Build 期捕获的 ctx）"},
