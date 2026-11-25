@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "inputnumber-precision",
+  "title": "InputNumber precision 小数位格式化",
+  "component": "InputNumber",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "支持 Precision（int，-1=不限制）：显示按固定小数位四舍五入，步进/输入/钳制后都按 precision 格式化",
+    "precision=0 显示整数、precision=2 显示两位小数；触发框文本跟随格式化",
+    "spec 增加 precision 断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/input-number/spec.json"
+  ],
+  "probes": [
+    "inputnumber-precision"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/inputnumber-precision/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-04cfc2f3177805d019f166b7f695d0b4063ca1cb.json",
+    "verifiedTree": "b64e44095a0a538eb4df7ca5306493a93f32c636"
+  },
+  "createdAt": "2026-11-25T23:54:36.6943474+08:00",
+  "updatedAt": "2026-11-26T00:43:29.8934311+08:00",
+  "closedAt": "2026-11-26T00:43:29.8934311+08:00"
+}

@@ -130,6 +130,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "inputnumber-precision",
+      "covers": [
+        "wg/widgets/inputnumber.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeInputNumberPrecision$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

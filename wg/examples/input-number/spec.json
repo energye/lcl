@@ -3,10 +3,33 @@
   "structure": {
     "apiRows": 7,
     "sections": [
+      "小数位 precision",
       "0..100 步进 1"
     ]
   },
   "sections": [
+    {
+      "name": "小数位 precision",
+      "cases": [
+        {
+          "name": "precision 卡显示两位小数（12.35）",
+          "target": {
+            "label": "input-number",
+            "text": "12.35"
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "input-number",
+                "text": "12.35"
+              }
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "0..100 步进 1",
       "cases": [
@@ -14,7 +37,7 @@
           "name": "默认边框为 colorBorder 1px",
           "target": {
             "label": "input-number",
-            "index": 0
+            "index": 1
           },
           "then": [
             {
@@ -35,7 +58,7 @@
           "name": "聚焦边框转 colorPrimary",
           "target": {
             "label": "input-number",
-            "index": 0
+            "index": 1
           },
           "when": [
             {
@@ -97,7 +120,7 @@
           "name": "点击聚焦数字输入框",
           "target": {
             "label": "input-number",
-            "index": 0
+            "index": 1
           },
           "then": [
             {

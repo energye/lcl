@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "inputnumber-precision",
+  "treeHash": "b64e44095a0a538eb4df7ca5306493a93f32c636",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "inputnumber-precision",
+      "status": "PASS",
+      "durationMs": 3692,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\inputnumber-precision\\logs\\b64e44095a0a538eb4df7ca5306493a93f32c636\\probe_inputnumber-precision.log"
+    }
+  ]
+}

@@ -27,7 +27,10 @@ type InputNumber struct {
 	Disabled bool
 	Size     ui.Size
 	Width    float32
-	OnChange func(float32)
+	// Precision 小数位（antd precision）：>=0 时按固定位数四舍五入显示；
+	// -1 = 不限制（默认）。
+	Precision int
+	OnChange  func(float32)
 
 	editor *input.TextEditor
 	keys   *input.TextKeyHandler
@@ -35,7 +38,7 @@ type InputNumber struct {
 
 // NewInputNumber 创建数字输入框。
 func NewInputNumber(min, max, value float32) *InputNumber {
-	return &InputNumber{Min: min, Max: max, Value: value, Step: 1,
+	return &InputNumber{Min: min, Max: max, Value: value, Step: 1, Precision: -1,
 		Size: ui.SizeMedium, Width: 120}
 }
 
@@ -72,8 +75,12 @@ func (w *InputNumber) Build(ctx *ui.BuildContext) *scene.Node {
 		w.editor = input.NewTextEditor(false)
 		w.keys = input.NewTextKeyHandler(w.editor)
 	}
-	cur := fmtFloat(w.Value)
-	if w.editor.Value().Text != cur {
+	cur := w.displayText()
+	// 编辑中（聚焦）不强制同步格式化文本：precision 会把用户正在输入的
+	// "1." / "1.0" 立刻补成 "1.00"，光标被重置打断输入（antd userTyping
+	// 同款语义——输入期间按原样显示，失焦/步进后再格式化）。
+	editing := w.focus != nil && w.focus.Focused()
+	if !editing && w.editor.Value().Text != cur {
 		w.editor.SetValue(input.EditingValue{Text: cur,
 			Selection: input.RangeAt(input.RuneLen(cur))})
 	}
@@ -90,8 +97,9 @@ func (w *InputNumber) Build(ctx *ui.BuildContext) *scene.Node {
 			return
 		}
 		// 非法输入：回退上一个合法值（光标到末尾）。
-		w.editor.SetValue(input.EditingValue{Text: fmtFloat(w.Value),
-			Selection: input.RangeAt(input.RuneLen(fmtFloat(w.Value)))})
+		disp := w.displayText()
+		w.editor.SetValue(input.EditingValue{Text: disp,
+			Selection: input.RangeAt(input.RuneLen(disp))})
 	}
 	e := w.editor
 
@@ -208,6 +216,14 @@ func (w *InputNumber) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	w.attach(ctx, box, h, !w.Disabled)
 	return box
+}
+
+// displayText 显示文本：Precision>=0 按固定小数位四舍五入，否则 fmtFloat。
+func (w *InputNumber) displayText() string {
+	if w.Precision >= 0 {
+		return strconv.FormatFloat(float64(w.Value), 'f', w.Precision, 32)
+	}
+	return fmtFloat(w.Value)
 }
 
 // fmtFloat 数字文本（整数不带小数点）。

@@ -46,5 +46,11 @@
     "component": "TimePicker",
     "state": "CLOSED",
     "updatedAt": "2026-11-25T23:53:14.5800278+08:00"
+  },
+  {
+    "taskId": "inputnumber-precision",
+    "component": "InputNumber",
+    "state": "CLOSED",
+    "updatedAt": "2026-11-26T00:43:29.8965932+08:00"
   }
 ]
