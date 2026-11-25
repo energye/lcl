@@ -60,3 +60,45 @@ func TestProbeDatePickerShowTime(t *testing.T) {
 		t.Fatalf("ShowTime 面板高度=%v，超过 520（时间列未滚动裁剪？）", h)
 	}
 }
+
+// TestProbeDatePickerRangeShowTime 区间+时间联动：面板高度受控（时间列
+// 滚动裁剪）+ 首帧达标。
+func TestProbeDatePickerRangeShowTime(t *testing.T) {
+	c := wg.NewHeadless(wg.DefaultOptions())
+	defer c.Close()
+	c.Resize(1000, 800)
+	d := widgets.NewDatePicker()
+	d.Range = true
+	d.ShowTime = true
+	d.Value = time.Date(2026, 11, 10, 8, 15, 0, 0, time.Local)
+	d.Value2 = time.Date(2026, 11, 20, 18, 45, 0, 0, time.Local)
+	cap := &dpCap{child: d}
+	c.MountWidget(cap)
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	d.Show(cap.ctx)
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	d.Close()
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+
+	began := time.Now()
+	d.Show(cap.ctx)
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	if elapsed := time.Since(began); elapsed > 16*time.Millisecond {
+		t.Fatalf("区间时间面板首帧=%v，阈值 16ms", elapsed)
+	}
+	entries := cap.ctx.Overlay.Entries()
+	if len(entries) != 1 {
+		t.Fatalf("overlay=%d，want 1", len(entries))
+	}
+	if h := entries[0].Content().Size().H; h > 520 {
+		t.Fatalf("区间时间面板高度=%v，超过 520", h)
+	}
+}

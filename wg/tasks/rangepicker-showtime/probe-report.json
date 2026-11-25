@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "rangepicker-showtime",
+  "treeHash": "0c22abccaa5ff15e07944add0cecb0f9d27dfbd4",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "datepicker-showtime",
+      "status": "PASS",
+      "durationMs": 3788,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\rangepicker-showtime\\logs\\0c22abccaa5ff15e07944add0cecb0f9d27dfbd4\\probe_datepicker-showtime.log"
+    }
+  ]
+}

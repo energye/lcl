@@ -16,6 +16,7 @@ var (
 	dpCell      = widgets.NewDatePicker()
 	dpDis       = widgets.NewDatePicker()
 	dpTime      = widgets.NewDatePicker()
+	dpRangeTime = widgets.NewDatePicker()
 	rangeInited bool
 )
 
@@ -38,6 +39,12 @@ func init() {
 		}
 		return nil
 	}
+
+	// 区间时间联动卡（RangePicker showTime）：先起后止，时间列作用活动端。
+	dpRangeTime.Range = true
+	dpRangeTime.ShowTime = true
+	dpRangeTime.Placeholder = "起日"
+	dpRangeTime.Placeholder2 = "止日"
 
 	// 时间联动卡（antd showTime）：面板底部时/分两列+确定，选日期不关面板。
 	dpTime.Value = time.Date(2026, 11, 18, 9, 30, 0, 0, time.Local)
@@ -79,6 +86,9 @@ func main() {
 			}},
 			{Title: "日期时间", Note: "ShowTime=true：面板底部时/分两列选择，选日期不关面板，点确定提交（date-time-ok 锚）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return dpTime
+			}},
+			{Title: "区间时间", Note: "Range+ShowTime：先选起再选止，时间列作用于当前端；确定提交区间（date-time-ok）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return dpRangeTime
 			}},
 			{Title: "自定义单元格", Note: "DateCellRender：面板日期格数字下方追加事件 Badge（11 评审/15 发布/27 停机，antd cellRender 对应）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return dpCell

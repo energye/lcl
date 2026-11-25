@@ -56,6 +56,9 @@ type DatePicker struct {
 	OnOk func()
 	// rangeStage 范围选择进行到的阶段（0=未开始/已完成，1=已选起待选止）。
 	rangeStage int
+	// activeEnd 范围+时间联动时的活动端（0=起，1=止）：时间列作用于它，
+	// 选日期后自动切换（antd RangePicker showTime 先起后止）。
+	activeEnd int
 
 	handle    overlay.Handle
 	fb        feedbackHost
@@ -250,9 +253,30 @@ func (d *DatePicker) buildTimePanel(ctx *ui.BuildContext, th *theme.Data, panelW
 	cols.SetPadding(geom.InLTRB(0, th.Space.SM, 0, 0))
 	colW := (panelW - th.Space.SM) / 2
 
+	// 时间列作用于活动端：Range 模式按 activeEnd 取起/止时间，单选取 Value。
+	activeVal := d.Value
+	if d.Range && d.activeEnd == 1 {
+		activeVal = d.Value2
+	}
 	curHour, curMinute := 0, 0
-	if !d.Value.IsZero() {
-		curHour, curMinute = d.Value.Hour(), d.Value.Minute()
+	if !activeVal.IsZero() {
+		curHour, curMinute = activeVal.Hour(), activeVal.Minute()
+	}
+	// setActiveTime 把时/分写回活动端（日期部分保留；无值取今天）。
+	setActiveTime := func(hh, mm int) {
+		base := d.Value
+		if d.Range && d.activeEnd == 1 {
+			base = d.Value2
+		}
+		if base.IsZero() {
+			base = time.Now()
+		}
+		t := time.Date(base.Year(), base.Month(), base.Day(), hh, mm, 0, 0, time.Local)
+		if d.Range && d.activeEnd == 1 {
+			d.Value2 = t
+		} else {
+			d.Value = t
+		}
 	}
 
 	mkColumn := func(label, cellLabel string, values []int, selected int, apply func(v int)) *scene.Node {
@@ -319,18 +343,18 @@ func (d *DatePicker) buildTimePanel(ctx *ui.BuildContext, th *theme.Data, panelW
 	hours := timeSteps(24, d.HourStep)
 	minutes := timeSteps(60, d.MinuteStep)
 	cols.Add(mkColumn("时", "date-time-hour", hours, curHour, func(v int) {
-		base := d.Value
-		if base.IsZero() {
-			base = time.Now()
+		mm := 0
+		if !activeVal.IsZero() {
+			mm = activeVal.Minute()
 		}
-		d.Value = time.Date(base.Year(), base.Month(), base.Day(), v, base.Minute(), 0, 0, time.Local)
+		setActiveTime(v, mm)
 	}))
 	cols.Add(mkColumn("分", "date-time-minute", minutes, curMinute, func(v int) {
-		base := d.Value
-		if base.IsZero() {
-			base = time.Now()
+		hh := 0
+		if !activeVal.IsZero() {
+			hh = activeVal.Hour()
 		}
-		d.Value = time.Date(base.Year(), base.Month(), base.Day(), base.Hour(), v, 0, 0, time.Local)
+		setActiveTime(hh, v)
 	}))
 	box.Add(cols)
 
@@ -348,7 +372,18 @@ func (d *DatePicker) buildTimePanel(ctx *ui.BuildContext, th *theme.Data, panelW
 		if d.OnOk != nil {
 			d.OnOk()
 		}
-		if d.OnChange != nil && !d.Value.IsZero() {
+		if d.Range {
+			// 区间提交：起止都已选才回调（antd RangePicker onChange 语义）。
+			if !d.Value.IsZero() && !d.Value2.IsZero() {
+				if d.Value2.Before(d.Value) {
+					d.Value, d.Value2 = d.Value2, d.Value
+				}
+				d.rangeStage = 0
+				if d.OnChangeRange != nil {
+					d.OnChangeRange(d.Value, d.Value2)
+				}
+			}
+		} else if d.OnChange != nil && !d.Value.IsZero() {
 			d.OnChange(d.Value)
 		}
 		if ctx.Overlay != nil && d.handle != 0 {
@@ -376,6 +411,9 @@ func (d *DatePicker) openPanel(ctx *ui.BuildContext, anchor *scene.Node, th *the
 	} else {
 		d.viewYear, d.viewMonth = d.Value.Year(), int(d.Value.Month())
 	}
+	// 每次开面板重置范围/活动端：区间从头选（起→止）。
+	d.rangeStage = 0
+	d.activeEnd = 0
 	d.panelOpen = true
 	panel := d.buildPanel(ctx, th)
 	// panelNode 持有面板根（**Entry.Build 只在 Show 时调一次**——浮层
@@ -568,6 +606,37 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 					return false
 				}
 				if d.Range {
+					if d.ShowTime {
+						// 区间+时间联动：日期写入活动端（保留该端时分，无值 00:00），
+						// 不关面板；选完起端切到止端（antd RangePicker showTime）。
+						hh, mm := 0, 0
+						cur := d.Value
+						if d.activeEnd == 1 {
+							cur = d.Value2
+						}
+						if !cur.IsZero() {
+							hh, mm = cur.Hour(), cur.Minute()
+						}
+						nt := time.Date(t.Year(), t.Month(), t.Day(), hh, mm, 0, 0, time.Local)
+						if d.activeEnd == 1 {
+							if nt.Before(d.Value) {
+								// 止早于起：交换语义（区间自动校正）。
+								d.Value, d.Value2 = nt, d.Value
+							} else {
+								d.Value2 = nt
+							}
+							d.rangeStage = 0
+							d.activeEnd = 0
+						} else {
+							d.Value = nt
+							d.Value2 = nt
+							d.rangeStage = 1
+							d.activeEnd = 1
+						}
+						d.MarkDirty()
+						time.AfterFunc(0, d.refreshPanel)
+						return true
+					}
 					// 范围模式：两击选起止（第二击早于第一击自动交换），
 					// 期间面板保持打开（区间高亮实时刷新）。
 					if d.rangeStage == 0 {

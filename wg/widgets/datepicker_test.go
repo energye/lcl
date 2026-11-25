@@ -98,3 +98,29 @@ func findLabelIn(n *scene.Node, label string) *scene.Node {
 	}
 	return nil
 }
+
+// TestDatePickerRangeShowTime 区间+时间联动：时间列作用于活动端、
+// 选日期切换端、确定提交区间。
+func TestDatePickerRangeShowTime(t *testing.T) {
+	d := NewDatePicker()
+	d.Range = true
+	d.ShowTime = true
+	d.Value = time.Date(2026, 11, 10, 8, 15, 0, 0, time.Local)
+	d.Value2 = time.Date(2026, 11, 20, 18, 45, 0, 0, time.Local)
+	// 初始活动端=起：时间列应读起端 8:15。
+	d.activeEnd = 0
+	// 面板含时间区四锚。
+	n := d.buildPanel(dataCtx(), theme.Default())
+	for _, label := range []string{"date-time-panel", "date-time-hour", "date-time-minute", "date-time-ok"} {
+		if findLabelIn(n, label) == nil {
+			t.Fatalf("区间时间面板缺少 %s", label)
+		}
+	}
+	// 活动端切换后显示文本各自带时间。
+	if got := d.displayText(d.Value); got != "2026-11-10 08:15" {
+		t.Fatalf("起端显示=%q", got)
+	}
+	if got := d.displayText(d.Value2); got != "2026-11-20 18:45" {
+		t.Fatalf("止端显示=%q", got)
+	}
+}

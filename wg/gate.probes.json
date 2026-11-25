@@ -91,7 +91,7 @@
         "gateprobe",
         "./wg/internal/gate/probes",
         "-run",
-        "^TestProbeDatePickerShowTime$",
+        "^TestProbeDatePicker(ShowTime|RangeShowTime)$",
         "-count=1"
       ],
       "timeout": 120000000000

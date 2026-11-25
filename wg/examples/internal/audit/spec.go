@@ -356,6 +356,17 @@ func (r *specRunner) ensureVisible(t SpecTarget) bool {
 	return b.Max.Y > 48 && b.Min.Y < vh-48
 }
 
+// settleFrames 等待 PresentStats 帧号增长（一次重建必然触发一次重绘），
+// 直到 max 超时。高负载全量串行回归下"动作→重建→呈现"偶发超出固定
+// sleep，采样读到旧帧（聚焦边框读成 hover 色、像素占比 0.000 等）。
+func settleFrames(c *wg.Container, max time.Duration) {
+	f0 := c.PresentStats().Frames
+	deadline := time.Now().Add(max)
+	for c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
+		time.Sleep(20 * time.Millisecond)
+	}
+}
+
 // clickPoint 计算点击位置（目标锚 bounds 内 frac，默认中心）。
 func clickPoint(b geom.Rect, frac []float32) geom.Point {
 	if len(frac) != 2 {
@@ -469,11 +480,7 @@ func (r *specRunner) runCase(cs SpecCase) {
 			injectDown(r.c, p.X, p.Y)
 			injectUp(r.c, p.X, p.Y)
 			// 聚焦重建落帧等待（同 click）。
-			f0 := r.c.PresentStats().Frames
-			deadline := time.Now().Add(600 * time.Millisecond)
-			for r.c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
-				time.Sleep(20 * time.Millisecond)
-			}
+			settleFrames(r.c, 600*time.Millisecond)
 			time.Sleep(120 * time.Millisecond)
 		}
 	}
@@ -487,6 +494,11 @@ func (r *specRunner) runCase(cs SpecCase) {
 			return
 		}
 	}
+	// 断言前统一等落帧：动作（click/hover/键入）触发的重建在高负载全量
+	// 回归下"重建→呈现"可能超过固定 sleep，then 采样读到旧帧（input /
+	// input-number 聚焦边框读成 hover 色 PrimaryHover 实证）。等帧号
+	// 增长 + 余量，作为所有动作后的最后一道保险。
+	settleFrames(r.c, 250*time.Millisecond)
 	time.Sleep(250 * time.Millisecond)
 
 	// 断言。
@@ -537,15 +549,9 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 		injectDown(r.c, p.X, p.Y)
 		time.Sleep(60 * time.Millisecond)
 		injectUp(r.c, p.X, p.Y)
-		// 点击重建落帧等待：与 hover 同理——点击触发聚焦/选中重建，高负载
-		// 全量串行回归下"点击→重建→呈现"偶发超过后续 wait 窗口，采样读到
-		// 旧帧（input outlined 聚焦边框读成 hover 色 PrimaryHover 实证）。
-		f0 := r.c.PresentStats().Frames
-		deadline := time.Now().Add(600 * time.Millisecond)
-		for r.c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
-			time.Sleep(20 * time.Millisecond)
-		}
-		time.Sleep(120 * time.Millisecond) // 帧呈现到栅格化完成的余量
+		// 点击重建落帧等待（高负载下采样读到旧帧——见 settleFrames 注释）。
+		settleFrames(r.c, 600*time.Millisecond)
+		time.Sleep(120 * time.Millisecond)
 	case a.Hover != nil:
 		t := def
 		if a.Hover.Target != nil {
@@ -597,11 +603,7 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 		time.Sleep(60 * time.Millisecond)
 		injectUp(r.c, p.X, p.Y)
 		// 聚焦重建落帧等待（同 click：高负载下聚焦帧未落地就键入会丢字符）。
-		f0 := r.c.PresentStats().Frames
-		deadline := time.Now().Add(600 * time.Millisecond)
-		for r.c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
-			time.Sleep(20 * time.Millisecond)
-		}
+		settleFrames(r.c, 600*time.Millisecond)
 		time.Sleep(120 * time.Millisecond)
 		r.c.PushEvent(&input.KeyEvent{Kind: input.KeyDown, Code: input.CodeA,
 			Mods: input.ModControl, Time: time.Now()})

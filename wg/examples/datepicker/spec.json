@@ -7,7 +7,8 @@
       "日期选择",
       "自定义单元格",
       "禁用日期",
-      "日期时间"
+      "日期时间",
+      "区间时间"
     ]
   },
   "sections": [
@@ -738,6 +739,151 @@
             {
               "kind": "overlay",
               "count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "区间时间",
+      "cases": [
+        {
+          "name": "区间时间卡开面板出现时间区",
+          "target": {
+            "label": "date-range-start",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-range-start",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-time-panel"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-time-ok"
+              }
+            }
+          ]
+        },
+        {
+          "name": "先选起再选止后面板保持（时间联动）",
+          "target": {
+            "label": "date-range-start",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-range-start",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "index": 9
+                }
+              }
+            },
+            {
+              "wait": 250
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "index": 14
+                }
+              }
+            },
+            {
+              "wait": 250
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "name": "点确定提交区间并关面板",
+          "target": {
+            "label": "date-range-start",
+            "index": 1
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-range-start",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "index": 9
+                }
+              }
+            },
+            {
+              "wait": 250
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "index": 14
+                }
+              }
+            },
+            {
+              "wait": 250
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-time-ok"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
             }
           ]
         }

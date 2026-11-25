@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "rangepicker-showtime",
+  "title": "RangePicker 时间联动 showTime（双端时间+确定）",
+  "component": "DatePicker",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "Range=true 且 ShowTime=true 时，时间列作用于当前活动端（先起后止），选日期不关面板",
+    "确定按钮提交区间（OnChangeRange）并关闭；两端时间各自保留",
+    "spec 增加区间时间联动断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/datepicker/spec.json"
+  ],
+  "probes": [
+    "datepicker-showtime"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/rangepicker-showtime/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-3ca55c0aae7327a0a768d010226aee198ea5b362.json",
+    "verifiedTree": "0c22abccaa5ff15e07944add0cecb0f9d27dfbd4"
+  },
+  "createdAt": "2026-11-25T18:58:47.6914263+08:00",
+  "updatedAt": "2026-11-25T20:31:00.3539152+08:00",
+  "closedAt": "2026-11-25T20:31:00.3539152+08:00"
+}
