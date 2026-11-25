@@ -45,7 +45,7 @@ func usage() {
 	fmt.Fprintln(os.Stderr, "  wg-gate run [--tree <staged-tree>]")
 	fmt.Fprintln(os.Stderr, "  wg-gate check --tree <staged-tree>")
 	fmt.Fprintln(os.Stderr, "  wg-gate install-hook")
-	fmt.Fprintln(os.Stderr, "  wg-gate task new|status|verify|close ...")
+	fmt.Fprintln(os.Stderr, "  wg-gate task new|status|verify|close|reopen ...")
 	fmt.Fprintln(os.Stderr, "  wg-gate feedback import ...")
 	fmt.Fprintln(os.Stderr, "  wg-gate probe new ...")
 }

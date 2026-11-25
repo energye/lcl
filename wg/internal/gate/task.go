@@ -213,6 +213,28 @@ func SaveTask(root string, task Task) error {
 	return UpdateLedger(root, task)
 }
 
+// ReopenTask 把已关闭任务退回 IMPLEMENTED，允许在代码再次变化后重新
+// verify→close。只清空与具体暂存树绑定的证据（verifiedTree/gateReport）
+// 和关闭态字段；regression/probeReport 等输入侧证据保留。
+func ReopenTask(root, taskID string) (Task, error) {
+	task, err := LoadTask(root, taskID)
+	if err != nil {
+		return Task{}, err
+	}
+	if task.State != TaskClosed {
+		return Task{}, fmt.Errorf("只有 CLOSED 任务可以 reopen，当前状态 %s", task.State)
+	}
+	task.State = TaskImplemented
+	task.ClosedAt = nil
+	task.BlockedReason = ""
+	task.Evidence.VerifiedTree = ""
+	task.Evidence.GateReport = ""
+	if err := SaveTask(root, task); err != nil {
+		return Task{}, err
+	}
+	return task, nil
+}
+
 func UpdateLedger(root string, task Task) error {
 	path := filepath.Join(root, "wg", "tasks", "ledger.json")
 	entries := []LedgerEntry{}

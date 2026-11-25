@@ -30,6 +30,8 @@ func taskCommand(args []string) error {
 		return taskVerify(args[1:])
 	case "close":
 		return taskClose(args[1:])
+	case "reopen":
+		return taskReopen(args[1:])
 	default:
 		return fmt.Errorf("未知 task 子命令 %q", args[0])
 	}
@@ -118,6 +120,25 @@ func taskClose(args []string) error {
 		return err
 	}
 	fmt.Printf("任务 %s 已 CLOSED\n", *id)
+	return nil
+}
+
+func taskReopen(args []string) error {
+	fs := flag.NewFlagSet("task reopen", flag.ExitOnError)
+	id := fs.String("id", "", "任务 ID")
+	_ = fs.Parse(args)
+	if *id == "" {
+		return fmt.Errorf("task reopen 需要 --id")
+	}
+	repo, err := root()
+	if err != nil {
+		return err
+	}
+	task, err := gate.ReopenTask(repo, *id)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("任务 %s 已重开为 %s，需重新 verify→close\n", task.ID, task.State)
 	return nil
 }
 

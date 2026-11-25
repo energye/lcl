@@ -62,6 +62,22 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "gate-task-reopen",
+      "covers": [
+        "wg/internal/gate/task.go",
+        "wg/cmd/wg-gate/taskcmd.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "./wg/internal/gate",
+        "-run",
+        "^TestReopenTask$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

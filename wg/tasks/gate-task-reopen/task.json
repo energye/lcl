@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "gate-task-reopen",
+  "title": "wg-gate task 增加 reopen 子命令（CLOSED→IMPLEMENTED）",
+  "component": "wg-gate",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "CLOSED 任务在代码再次变化后需要重新 verify，当前状态机不允许，只能手工改 task.json；需提供 wg-gate task reopen --id \u003cid\u003e",
+    "reopen 将 CLOSED 重置为 IMPLEMENTED，清空 closedAt/blockedReason 与树绑定的 evidence（verifiedTree/gateReport），保留 regression 等输入证据，并同步 ledger",
+    "非 CLOSED 状态调用 reopen 应报错；reopen 后必须重新 verify→close 才能提交"
+  ],
+  "specs": [
+    "wg/internal/gate/task_test.go"
+  ],
+  "probes": [
+    "gate-task-reopen"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/gate-task-reopen/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-5d849a9e460fe4dddf39a27f28d75c30659e8473.json",
+    "verifiedTree": "69aef2f9ebd280e54582d06298dc227eb2ec99ab"
+  },
+  "createdAt": "2026-11-25T17:24:43.4399815+08:00",
+  "updatedAt": "2026-11-25T18:01:40.814674+08:00",
+  "closedAt": "2026-11-25T18:01:40.814674+08:00"
+}

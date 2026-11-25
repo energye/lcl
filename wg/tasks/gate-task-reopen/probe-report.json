@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "gate-task-reopen",
+  "treeHash": "69aef2f9ebd280e54582d06298dc227eb2ec99ab",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "gate-task-reopen",
+      "status": "PASS",
+      "durationMs": 2544,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\gate-task-reopen\\logs\\69aef2f9ebd280e54582d06298dc227eb2ec99ab\\probe_gate-task-reopen.log"
+    }
+  ]
+}

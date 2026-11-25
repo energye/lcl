@@ -175,3 +175,59 @@ func verifiedTaskForClose(t *testing.T) (string, string) {
 	gitOutputForTest(t, root, "add", "wg")
 	return root, taskID
 }
+
+func TestReopenTask(t *testing.T) {
+	root := t.TempDir()
+	now := time.Now()
+	closedAt := now
+	task := Task{
+		Version: 1, ID: "reopen-task", Title: "重开任务", Component: "Drawer", State: TaskClosed,
+		Source: TaskSource{Type: "plan"}, Requirements: []string{"宽度 378"},
+		Specs: []string{"wg/examples/drawer/spec.json"}, Probes: []string{"p1"},
+		Evidence: TaskEvidence{
+			Regression:   "wg/tasks/reopen-task/regression.json",
+			ProbeReport:  "wg/tasks/reopen-task/probe-report.json",
+			GateReport:   ".shots/gates/report-abc.json",
+			VerifiedTree: "abc123",
+		},
+		CreatedAt: now, UpdatedAt: now, ClosedAt: &closedAt,
+	}
+	if err := SaveTask(root, task); err != nil {
+		t.Fatal(err)
+	}
+
+	got, err := ReopenTask(root, "reopen-task")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.State != TaskImplemented {
+		t.Fatalf("state=%s，want IMPLEMENTED", got.State)
+	}
+	if got.ClosedAt != nil || got.Evidence.VerifiedTree != "" || got.Evidence.GateReport != "" {
+		t.Fatalf("关闭态证据未清空: %+v", got)
+	}
+	// 输入侧证据保留。
+	if got.Evidence.Regression == "" || got.Evidence.ProbeReport == "" {
+		t.Fatalf("输入证据被误清: %+v", got.Evidence)
+	}
+	// 落盘与 ledger 同步。
+	loaded, err := LoadTask(root, "reopen-task")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if loaded.State != TaskImplemented {
+		t.Fatalf("落盘 state=%s", loaded.State)
+	}
+	entries, err := os.ReadFile(filepath.Join(root, "wg", "tasks", "ledger.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(entries), "IMPLEMENTED") {
+		t.Fatalf("ledger 未同步: %s", entries)
+	}
+
+	// 非 CLOSED 状态 reopen 应报错。
+	if _, err := ReopenTask(root, "reopen-task"); err == nil {
+		t.Fatal("对 IMPLEMENTED 任务 reopen 应报错")
+	}
+}
