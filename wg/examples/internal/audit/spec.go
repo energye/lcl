@@ -585,6 +585,19 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 			time.Sleep(20 * time.Millisecond)
 		}
 		time.Sleep(250 * time.Millisecond) // 帧呈现到栅格化完成的余量（高负载下 80ms 偶发不够）
+		// 悬停弹浮层（Dropdown/Tooltip）额外轮询：hover 分发到 Child 的
+		// Enter 若在高负载下晚一拍，浮层尚未 Show，随后 overlay 断言读 0。
+		// 等浮层出现（最多 1s），出现后留渲染余量。
+		if ov := r.c.Overlay(); ov != nil {
+			deadline := time.Now().Add(time.Second)
+			for ov.Count() == 0 && time.Now().Before(deadline) {
+				time.Sleep(30 * time.Millisecond)
+			}
+			if ov.Count() > 0 {
+				settleFrames(r.c, 300*time.Millisecond)
+				time.Sleep(150 * time.Millisecond)
+			}
+		}
 	case a.TypeText != "":
 		for _, ch := range a.TypeText {
 			injectChar(r.c, ch)

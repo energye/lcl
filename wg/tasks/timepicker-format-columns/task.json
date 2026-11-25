@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "timepicker-format-columns",
+  "title": "TimePicker format 列裁剪（省略部分列消失）",
+  "component": "TimePicker",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "支持 Format 字段：format 省略分钟则分列消失、省略秒则秒列消失（antd hide-column 语义）",
+    "触发框显示文本跟随 format；12h 下 a 占位控制上午/下午列",
+    "spec 增加列裁剪断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/timepicker/spec.json"
+  ],
+  "probes": [
+    "timepicker-disabledtime"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/timepicker-format-columns/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-69b8c6585b00a89d9579cb61c65b60ad05569030.json",
+    "verifiedTree": "6ea2b492b242a6473f9be97c834ec3d97004f9c0"
+  },
+  "createdAt": "2026-11-25T21:25:05.0555739+08:00",
+  "updatedAt": "2026-11-25T22:59:31.6908564+08:00",
+  "closedAt": "2026-11-25T22:59:31.6908564+08:00"
+}

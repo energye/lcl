@@ -29,6 +29,7 @@ package widgets
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/energye/lcl/wg/geom"
@@ -82,6 +83,10 @@ type TimePicker struct {
 	// DisabledTime 禁用时段回调（antd disabledTime）：按当前值返回各列
 	// 不可选值；nil = 不禁用。禁用格灰置且点击无效。
 	DisabledTime func(now time.Time) DisabledTimeSpec
+	// Format 时间格式（Go 布局串，antd format 对应）：省略分钟则分列消失、
+	// 省略秒则秒列消失（antd hide-column 语义）。空 = 默认 15:04:05
+	// （12h 为 03:04:05 下午）。
+	Format string
 
 	handle    overlay.Handle
 	fb        feedbackHost
@@ -165,23 +170,45 @@ func (t *TimePicker) Close() {
 	}
 }
 
-// displayText 触发框显示：24h "15:04:05"；12h "hh:mm:ss 上午/下午"
-// （antd use12Hours 默认 format h:mm:ss a 的中文语境形态）。
-func (t *TimePicker) displayText() string {
-	if t.Use12Hours {
-		h := t.Value.Hour()
-		ampm := "上午"
-		h12 := h
-		if h >= 12 {
-			ampm = "下午"
-			h12 = h - 12
-		}
-		if h12 == 0 {
-			h12 = 12
-		}
-		return fmt.Sprintf("%02d:%02d:%02d %s", h12, t.Value.Minute(), t.Value.Second(), ampm)
+// effectiveFormat 生效的格式串：Format 非空用它，否则默认（12h 用
+// h:mm:ss a 形态、24h 用 15:04:05）。
+func (t *TimePicker) effectiveFormat() string {
+	if t.Format != "" {
+		return t.Format
 	}
-	return t.Value.Format("15:04:05")
+	if t.Use12Hours {
+		return "03:04:05 下午"
+	}
+	return "15:04:05"
+}
+
+// columns 返回可见列（按 format 裁剪）：[showHour, showMinute, showSecond]。
+// 小时列恒显示（antd TimePicker 至少保留小时）。判定用"基准时间 + 变化
+// 该字段看输出是否变"：分钟取两个不同分钟、秒取两个不同秒，格式化后若
+// 结果不同则说明该字段参与输出（列显示）。比字符串匹配布局标记可靠
+// （"15:04" 的 5 会误命中秒、":" 会干扰）。
+func (t *TimePicker) columns() [3]bool {
+	f := t.effectiveFormat()
+	base := time.Date(2026, 1, 2, 13, 45, 56, 0, time.Local)
+	otherMin := time.Date(2026, 1, 2, 13, 7, 56, 0, time.Local)
+	otherSec := time.Date(2026, 1, 2, 13, 45, 8, 0, time.Local)
+	showMin := base.Format(f) != otherMin.Format(f)
+	showSec := base.Format(f) != otherSec.Format(f)
+	return [3]bool{true, showMin, showSec}
+}
+
+// displayText 触发框显示：按 Format（默认 24h "15:04:05"；12h "hh:mm:ss 上午/下午"）。
+func (t *TimePicker) displayText() string {
+	f := t.effectiveFormat()
+	if t.Use12Hours {
+		// Go 布局里中文"下午"是字面量，会恒显下午——用标准 PM 标记格式化
+		// 后替换为中文，保证 AM/PM 正确。
+		out := t.Value.Format(strings.ReplaceAll(f, "下午", "PM"))
+		out = strings.ReplaceAll(out, "PM", "下午")
+		out = strings.ReplaceAll(out, "AM", "上午")
+		return out
+	}
+	return t.Value.Format(f)
 }
 
 // selectedParts 当前选中的时/分/秒（无值 {-1,-1,-1}）。
@@ -280,29 +307,34 @@ func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 	panel.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "time-panel"})
 
 	// 列：时/分/秒（12h 加上午/下午第 4 列）；Scroll 组合复用（Select
-	// 选项列表同款视口）；列间 1px 分隔。
+	// 选项列表同款视口）；列间 1px 分隔。format 裁剪：不显示的列直接跳过
+	// （列号语义保持 0=时/1=分/2=秒/3=AP，pick 与 selIdx 不受影响）。
 	cols := scene.Flex(scene.Horizontal, 0)
-	colN, panelW := 3, timeColW*3+2
 	type colSpec struct {
-		label string
-		vals  []int
+		colIdx int
+		label  string
+		vals   []int
 	}
-	specs := []colSpec{
-		{"time-cell-h", t.hourValues()},
-		{"time-cell-m", stepValues(60, t.MinuteStep)},
-		{"time-cell-s", stepValues(60, t.SecondStep)},
+	vis := t.columns()
+	specs := []colSpec{{0, "time-cell-h", t.hourValues()}}
+	if vis[1] {
+		specs = append(specs, colSpec{1, "time-cell-m", stepValues(60, t.MinuteStep)})
+	}
+	if vis[2] {
+		specs = append(specs, colSpec{2, "time-cell-s", stepValues(60, t.SecondStep)})
 	}
 	if t.Use12Hours {
-		specs = append(specs, colSpec{"time-cell-ap", []int{0, 1}})
-		colN, panelW = 4, timeColW*4+3
+		specs = append(specs, colSpec{3, "time-cell-ap", []int{0, 1}})
 	}
+	colN := len(specs)
+	panelW := timeColW*float32(colN) + float32(colN-1)
 	sel := t.selectedParts()
 	t.selIdx = [4]int{-1, -1, -1, -1}
 	if t.Use12Hours && sel[0] >= 0 {
 		t.selIdx[3] = hourToAP(sel[0])
 	}
-	for i := 0; i < colN; i++ {
-		sp := specs[i]
+	for k, sp := range specs {
+		i := sp.colIdx
 		col := t.buildColumn(ctx, th, i, sp.vals, sp.label)
 		scroll := &Scroll{Axis: scene.Vertical, Width: timeColW, Height: timeViewportH,
 			Child: nodeFn(func(ctx *ui.BuildContext) *scene.Node { return col })}
@@ -317,7 +349,7 @@ func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 		wrap.Add(scroll.Build(ctx))
 		wrap.SetHit(scene.HitSpec{Label: fmt.Sprintf("time-col-%d", i)})
 		cols.Add(wrap)
-		if i < colN-1 {
+		if k < colN-1 {
 			cols.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetSize2(1, timeViewportH))
 		}
 	}

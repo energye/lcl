@@ -6,6 +6,7 @@
       "基础",
       "带初值",
       "12 小时制",
+      "列裁剪",
       "禁用时段",
       "步进"
     ]
@@ -382,10 +383,10 @@
       ]
     },
     {
-      "name": "禁用时段",
+      "name": "列裁剪",
       "cases": [
         {
-          "name": "禁用时段卡出现灰置格",
+          "name": "列裁剪卡开面板只有两列（时分）",
           "target": {
             "label": "time-picker",
             "index": 3
@@ -396,6 +397,51 @@
                 "target": {
                   "label": "time-picker",
                   "index": 3
+                }
+              }
+            },
+            {
+              "wait": 350
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-h"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-m"
+              }
+            },
+            {
+              "kind": "absent",
+              "target": {
+                "label": "time-cell-s"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "禁用时段",
+      "cases": [
+        {
+          "name": "禁用时段卡出现灰置格",
+          "target": {
+            "label": "time-picker",
+            "index": 4
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-picker",
+                  "index": 4
                 }
               }
             },
@@ -422,14 +468,14 @@
           "name": "禁用格数量符合预期（8 时 + 2 分 = 10）",
           "target": {
             "label": "time-picker",
-            "index": 3
+            "index": 4
           },
           "when": [
             {
               "click": {
                 "target": {
                   "label": "time-picker",
-                  "index": 3
+                  "index": 4
                 }
               }
             },
@@ -456,14 +502,14 @@
           "name": "点开步进面板（时列只渲染步长倍数——cell 数减半不可直断，验证面板打开+时格存在）",
           "target": {
             "label": "time-picker",
-            "index": 4
+            "index": 5
           },
           "when": [
             {
               "click": {
                 "target": {
                   "label": "time-picker",
-                  "index": 4
+                  "index": 5
                 }
               }
             },

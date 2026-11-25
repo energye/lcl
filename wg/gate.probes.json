@@ -108,7 +108,7 @@
         "gateprobe",
         "./wg/internal/gate/probes",
         "-run",
-        "^TestProbeTimePickerDisabledTime$",
+        "^TestProbeTimePicker(DisabledTime|FormatColumns)$",
         "-count=1"
       ],
       "timeout": 120000000000

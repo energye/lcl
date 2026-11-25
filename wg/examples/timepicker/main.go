@@ -18,6 +18,7 @@ var (
 	tpStep   = widgets.NewTimePicker()
 	tpInit12 = widgets.NewTimePicker()
 	tpDis    = widgets.NewTimePicker()
+	tpFmt    = widgets.NewTimePicker()
 )
 
 func init() {
@@ -28,6 +29,10 @@ func init() {
 	tpInit12.Use12Hours = true
 	tpInit12.Width = 180
 	tpInit12.Value = time.Date(0, 1, 1, 15, 20, 0, 0, time.Local)
+	// 列裁剪卡（antd format hide-column）：HH:mm 省略秒→秒列消失。
+	tpFmt.Format = "15:04"
+	tpFmt.Value = time.Date(0, 1, 1, 14, 25, 0, 0, time.Local)
+
 	// 禁用时段卡（antd disabledTime）：夜间 22:00-05:59 不可选，且选
 	// 09 点时 30-59 分不可选（联动 disabledMinutes）。
 	tpDis.Value = time.Date(0, 1, 1, 9, 10, 0, 0, time.Local)
@@ -69,6 +74,9 @@ func main() {
 			{Title: "12 小时制", Note: "Use12Hours：初值 15:20=下午 03:20:00；面板 4 列（时/分/秒/上午下午）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tpInit12
 			}},
+			{Title: "列裁剪", Note: "Format=15:04（HH:mm）：秒列消失；触发框只显示 时:分", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return tpFmt
+			}},
 			{Title: "禁用时段", Note: "DisabledTime：22-05 时不可选、9 点的 30/45 分不可选（灰置 time-cell-disabled）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tpDis
 			}},
@@ -77,6 +85,7 @@ func main() {
 			}},
 		},
 		API: []doc.APIRow{
+			{Name: "Format", Type: "string", Default: "15:04:05", Desc: "时间格式（Go 布局）；省略分/秒则对应列消失（antd hide-column）"},
 			{Name: "DisabledTime", Type: "func(now time.Time) DisabledTimeSpec", Desc: "禁用时段（disabledHours/disabledMinutes(h)/disabledSeconds(h,m)），禁用格灰置不可点"},
 			{Name: "NewTimePicker", Type: "func() *TimePicker", Desc: "构造（默认无值显示占位）"},
 			{Name: "Value", Type: "time.Time", Desc: "选中时刻（仅时分秒参与显示与选择）"},

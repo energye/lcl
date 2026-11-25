@@ -1,6 +1,7 @@
 package widgets
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -180,5 +181,43 @@ func TestTimePickerDisabledTime(t *testing.T) {
 	tp2 := NewTimePicker()
 	if tp2.disabledSet(0) != nil {
 		t.Fatal("无 DisabledTime 应返回 nil")
+	}
+}
+
+// TestTimePickerFormatColumns format 列裁剪：省略分/秒列消失 + 显示文本。
+func TestTimePickerFormatColumns(t *testing.T) {
+	cases := []struct {
+		format string
+		want   [3]bool
+	}{
+		{"15:04:05", [3]bool{true, true, true}},
+		{"15:04", [3]bool{true, true, false}},
+		{"15", [3]bool{true, false, false}},
+		{"03:04:05 下午", [3]bool{true, true, true}},
+	}
+	for _, c := range cases {
+		tp := NewTimePicker()
+		tp.Format = c.format
+		if got := tp.columns(); got != c.want {
+			t.Fatalf("format=%q columns=%v，want %v", c.format, got, c.want)
+		}
+	}
+	// 显示文本跟随 format。
+	tp := NewTimePicker()
+	tp.Value = time.Date(0, 1, 1, 14, 25, 0, 0, time.Local)
+	tp.Format = "15:04"
+	if got := tp.displayText(); got != "14:25" {
+		t.Fatalf("displayText=%q，want 14:25", got)
+	}
+	// 12h AM/PM 中文替换（上午/下午随小时）。
+	tp2 := NewTimePicker()
+	tp2.Use12Hours = true
+	tp2.Value = time.Date(0, 1, 1, 9, 5, 0, 0, time.Local)
+	if got := tp2.displayText(); !strings.Contains(got, "上午") {
+		t.Fatalf("12h 上午显示=%q", got)
+	}
+	tp2.Value = time.Date(0, 1, 1, 15, 5, 0, 0, time.Local)
+	if got := tp2.displayText(); !strings.Contains(got, "下午") {
+		t.Fatalf("12h 下午显示=%q", got)
 	}
 }

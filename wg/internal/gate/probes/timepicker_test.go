@@ -63,3 +63,34 @@ func TestProbeTimePickerDisabledTime(t *testing.T) {
 		t.Fatalf("overlay=%d，want 1", n)
 	}
 }
+
+// TestProbeTimePickerFormatColumns format 列裁剪面板首帧。
+func TestProbeTimePickerFormatColumns(t *testing.T) {
+	c := wg.NewHeadless(wg.DefaultOptions())
+	defer c.Close()
+	c.Resize(1000, 800)
+	tp := widgets.NewTimePicker()
+	tp.Format = "15:04"
+	tp.Value = time.Date(0, 1, 1, 14, 25, 0, 0, time.Local)
+	cap := &tpCap{child: tp}
+	c.MountWidget(cap)
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	tp.Show(cap.ctx)
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	tp.Close()
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	began := time.Now()
+	tp.Show(cap.ctx)
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	if elapsed := time.Since(began); elapsed > 16*time.Millisecond {
+		t.Fatalf("列裁剪面板首帧=%v，阈值 16ms", elapsed)
+	}
+}
