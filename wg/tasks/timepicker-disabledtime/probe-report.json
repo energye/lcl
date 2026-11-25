@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "timepicker-disabledtime",
+  "treeHash": "bcdffa6a174f45f83558da031e775877f534a01a",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "timepicker-disabledtime",
+      "status": "PASS",
+      "durationMs": 4158,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\timepicker-disabledtime\\logs\\bcdffa6a174f45f83558da031e775877f534a01a\\probe_timepicker-disabledtime.log"
+    }
+  ]
+}

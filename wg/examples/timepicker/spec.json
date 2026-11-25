@@ -6,6 +6,7 @@
       "基础",
       "带初值",
       "12 小时制",
+      "禁用时段",
       "步进"
     ]
   },
@@ -381,10 +382,10 @@
       ]
     },
     {
-      "name": "步进",
+      "name": "禁用时段",
       "cases": [
         {
-          "name": "点开步进面板（时列只渲染步长倍数——cell 数减半不可直断，验证面板打开+时格存在）",
+          "name": "禁用时段卡出现灰置格",
           "target": {
             "label": "time-picker",
             "index": 3
@@ -395,6 +396,74 @@
                 "target": {
                   "label": "time-picker",
                   "index": 3
+                }
+              }
+            },
+            {
+              "wait": 350
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-disabled"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-panel"
+              }
+            }
+          ]
+        },
+        {
+          "name": "禁用格数量符合预期（8 时 + 2 分 = 10）",
+          "target": {
+            "label": "time-picker",
+            "index": 3
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-picker",
+                  "index": 3
+                }
+              }
+            },
+            {
+              "wait": 350
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-cell-disabled"
+              },
+              "count": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "步进",
+      "cases": [
+        {
+          "name": "点开步进面板（时列只渲染步长倍数——cell 数减半不可直断，验证面板打开+时格存在）",
+          "target": {
+            "label": "time-picker",
+            "index": 4
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-picker",
+                  "index": 4
                 }
               }
             },

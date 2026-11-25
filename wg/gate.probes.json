@@ -95,6 +95,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "timepicker-disabledtime",
+      "covers": [
+        "wg/widgets/timepicker.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeTimePickerDisabledTime$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

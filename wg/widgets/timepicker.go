@@ -47,6 +47,14 @@ const (
 	timeViewportH = float32(224)
 )
 
+// DisabledTimeSpec 是禁用时段（antd DisabledTime 返回结构）。
+// 各回调返回该列不可选的值列表；nil = 该列无禁用。
+type DisabledTimeSpec struct {
+	DisabledHours   func() []int
+	DisabledMinutes func(hour int) []int
+	DisabledSeconds func(hour, minute int) []int
+}
+
 // timeCellInfo 一格的节点与排版（原地改色所需）。
 type timeCellInfo struct {
 	cell   *scene.Node
@@ -71,6 +79,9 @@ type TimePicker struct {
 	HourStep   int
 	MinuteStep int
 	SecondStep int
+	// DisabledTime 禁用时段回调（antd disabledTime）：按当前值返回各列
+	// 不可选值；nil = 不禁用。禁用格灰置且点击无效。
+	DisabledTime func(now time.Time) DisabledTimeSpec
 
 	handle    overlay.Handle
 	fb        feedbackHost
@@ -350,6 +361,55 @@ func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 	return panel
 }
 
+// disabledSet 返回某列（colIdx）当前禁用的值集合。hour/minute 取当前
+// 选中值（无选中取 0），供 disabledMinutes/Seconds 的联动过滤。
+func (t *TimePicker) disabledSet(colIdx int) map[int]bool {
+	if t.DisabledTime == nil {
+		return nil
+	}
+	sel := t.selectedParts()
+	hh, mm := 0, 0
+	if sel[0] >= 0 {
+		hh = sel[0]
+	}
+	if sel[1] >= 0 {
+		mm = sel[1]
+	}
+	spec := t.DisabledTime(t.nowValue())
+	var vals []int
+	switch colIdx {
+	case 0:
+		if spec.DisabledHours != nil {
+			vals = spec.DisabledHours()
+		}
+	case 1:
+		if spec.DisabledMinutes != nil {
+			vals = spec.DisabledMinutes(hh)
+		}
+	case 2:
+		if spec.DisabledSeconds != nil {
+			vals = spec.DisabledSeconds(hh, mm)
+		}
+	}
+	if len(vals) == 0 {
+		return nil
+	}
+	set := make(map[int]bool, len(vals))
+	for _, v := range vals {
+		set[v] = true
+	}
+	return set
+}
+
+// nowValue 当前值（无值取今天 0 点，供 DisabledTime 参数）。
+func (t *TimePicker) nowValue() time.Time {
+	if !t.Value.IsZero() {
+		return t.Value
+	}
+	now := time.Now()
+	return time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
+}
+
 // buildColumn 构建一列的 cell 纵向列表（vals 为列值集合，28px 高）。
 // 12h 小时列（colIdx 0 且 Use12Hours）：显示 %02d（12,01..11）、值存
 // 12h 表示；上午/下午列显示中文、值 0=上午/1=下午。pick 负责还原 24h。
@@ -359,6 +419,7 @@ func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx in
 	t.cellsByCol[colIdx] = make([]*timeCellInfo, 0, len(vals))
 	isHour12 := colIdx == 0 && t.Use12Hours
 	isAP := colIdx == 3
+	disabled := t.disabledSet(colIdx)
 	for idx, v := range vals {
 		idx, v := idx, v
 		src := fmt.Sprintf("%02d", v)
@@ -369,13 +430,41 @@ func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx in
 				src = "下午"
 			}
 		}
+		// 12h 小时列显示值 12,01..11；disabledSet 用 24h 语义，这里换算。
+		disVal := v
+		if isHour12 {
+			if v == 12 {
+				disVal = 0
+			} else {
+				disVal = v
+			}
+		}
+		cellDisabled := disabled != nil && disabled[disVal]
 		l := text.LayoutText(src, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		info := &timeCellInfo{src: src, value: v, layout: l}
-		info.txt = scene.Text(scene.TextSpec{Src: src, Layout: l, Color: th.Color.Text})
+		txtColor := th.Color.Text
+		if cellDisabled {
+			txtColor = th.Color.TextFaint
+		}
+		info.txt = scene.Text(scene.TextSpec{Src: src, Layout: l, Color: txtColor})
 		info.txt.SetMargin(geom.InLTRB((timeColW-l.Size.W)/2, (timeCellH-l.Size.H)/2, 0, 0))
 		cell := scene.Box(scene.BoxSpec{})
 		cell.SetSize2(timeColW, timeCellH)
 		cell.Add(info.txt)
+		if cellDisabled {
+			// 禁用格：独立锚（审计断言用）+ 吞掉点击（不选中、也不让
+			// down 冒泡触发浮层 OutsideClick 关闭——antd 禁用格点击无效）。
+			cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "time-cell-disabled"})
+			if ctx.Input != nil {
+				ctx.Input.Set(cell, input.Handler{Pointer: func(ev *input.PointerEvent) bool {
+					return ev.Down()
+				}})
+			}
+			info.cell = cell
+			t.cellsByCol[colIdx] = append(t.cellsByCol[colIdx], info)
+			col.Add(cell)
+			continue
+		}
 		cell.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: cellLabel, Cursor: scene.CursorPointer})
 		info.cell = cell
 		t.cellsByCol[colIdx] = append(t.cellsByCol[colIdx], info)

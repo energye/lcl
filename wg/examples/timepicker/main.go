@@ -17,6 +17,7 @@ var (
 	tp12     = widgets.NewTimePicker()
 	tpStep   = widgets.NewTimePicker()
 	tpInit12 = widgets.NewTimePicker()
+	tpDis    = widgets.NewTimePicker()
 )
 
 func init() {
@@ -27,6 +28,23 @@ func init() {
 	tpInit12.Use12Hours = true
 	tpInit12.Width = 180
 	tpInit12.Value = time.Date(0, 1, 1, 15, 20, 0, 0, time.Local)
+	// 禁用时段卡（antd disabledTime）：夜间 22:00-05:59 不可选，且选
+	// 09 点时 30-59 分不可选（联动 disabledMinutes）。
+	tpDis.Value = time.Date(0, 1, 1, 9, 10, 0, 0, time.Local)
+	tpDis.DisabledTime = func(time.Time) widgets.DisabledTimeSpec {
+		return widgets.DisabledTimeSpec{
+			DisabledHours: func() []int {
+				return []int{22, 23, 0, 1, 2, 3, 4, 5}
+			},
+			DisabledMinutes: func(h int) []int {
+				if h == 9 {
+					return []int{30, 45}
+				}
+				return nil
+			},
+		}
+	}
+
 	// 步进卡（antd hourStep/minuteStep/secondStep）：列只渲染步长倍数。
 	tpStep.HourStep, tpStep.MinuteStep, tpStep.SecondStep = 2, 10, 15
 }
@@ -51,11 +69,15 @@ func main() {
 			{Title: "12 小时制", Note: "Use12Hours：初值 15:20=下午 03:20:00；面板 4 列（时/分/秒/上午下午）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tpInit12
 			}},
+			{Title: "禁用时段", Note: "DisabledTime：22-05 时不可选、9 点的 30/45 分不可选（灰置 time-cell-disabled）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return tpDis
+			}},
 			{Title: "步进", Note: "HourStep=2/MinuteStep=10/SecondStep=15：列只渲染步长倍数（时列 24→12 格）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tpStep
 			}},
 		},
 		API: []doc.APIRow{
+			{Name: "DisabledTime", Type: "func(now time.Time) DisabledTimeSpec", Desc: "禁用时段（disabledHours/disabledMinutes(h)/disabledSeconds(h,m)），禁用格灰置不可点"},
 			{Name: "NewTimePicker", Type: "func() *TimePicker", Desc: "构造（默认无值显示占位）"},
 			{Name: "Value", Type: "time.Time", Desc: "选中时刻（仅时分秒参与显示与选择）"},
 			{Name: "Use12Hours", Type: "bool", Default: "false", Desc: "12 小时制（上午/下午第 4 列，触发框 hh:mm:ss 上午/下午）"},

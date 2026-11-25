@@ -28,5 +28,11 @@
     "component": "DatePicker",
     "state": "CLOSED",
     "updatedAt": "2026-11-25T20:31:00.3572362+08:00"
+  },
+  {
+    "taskId": "timepicker-disabledtime",
+    "component": "TimePicker",
+    "state": "CLOSED",
+    "updatedAt": "2026-11-25T21:23:24.3058861+08:00"
   }
 ]

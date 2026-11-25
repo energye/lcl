@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "timepicker-disabledtime",
+  "title": "TimePicker disabledTime 禁用时段",
+  "component": "TimePicker",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "支持 DisabledTime 回调（antd 语义：disabledHours/disabledMinutes(h)/disabledSeconds(h,m)）",
+    "禁用格灰置（TextFaint）且点击无效；联动过滤：选了禁用小时则分/秒按小时过滤",
+    "spec 增加禁用时段断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/timepicker/spec.json"
+  ],
+  "probes": [
+    "timepicker-disabledtime"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/timepicker-disabledtime/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-208c1cd5cb30f1ab3af766d22a696d895db19a54.json",
+    "verifiedTree": "bcdffa6a174f45f83558da031e775877f534a01a"
+  },
+  "createdAt": "2026-11-25T20:33:32.7380859+08:00",
+  "updatedAt": "2026-11-25T21:23:24.3022091+08:00",
+  "closedAt": "2026-11-25T21:23:24.3022091+08:00"
+}

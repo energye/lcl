@@ -139,3 +139,46 @@ func TestTimePickerHighlightAllUsesCellIndices(t *testing.T) {
 		t.Fatalf("highlightAll 后 selIdx=%v, want [0 5 0 0]", tp.selIdx)
 	}
 }
+
+// TestTimePickerDisabledTime 禁用时段：disabledSet 各列取值 + 12h 换算。
+func TestTimePickerDisabledTime(t *testing.T) {
+	tp := NewTimePicker()
+	tp.Value = time.Date(0, 1, 1, 9, 10, 0, 0, time.Local)
+	tp.DisabledTime = func(time.Time) DisabledTimeSpec {
+		return DisabledTimeSpec{
+			DisabledHours: func() []int { return []int{22, 23, 0} },
+			DisabledMinutes: func(h int) []int {
+				if h == 9 {
+					return []int{30, 45}
+				}
+				return nil
+			},
+			DisabledSeconds: func(h, m int) []int {
+				if h == 9 && m == 10 {
+					return []int{5}
+				}
+				return nil
+			},
+		}
+	}
+	// 时列：22/23/0 禁用。
+	hs := tp.disabledSet(0)
+	if !hs[22] || !hs[23] || !hs[0] || hs[9] {
+		t.Fatalf("时列禁用集合错误: %v", hs)
+	}
+	// 分列：当前小时 9 → 30/45 禁用。
+	ms := tp.disabledSet(1)
+	if !ms[30] || !ms[45] || ms[10] {
+		t.Fatalf("分列禁用集合错误: %v", ms)
+	}
+	// 秒列：h=9,m=10 → 5 禁用。
+	ss := tp.disabledSet(2)
+	if !ss[5] || ss[10] {
+		t.Fatalf("秒列禁用集合错误: %v", ss)
+	}
+	// 无 DisabledTime 时返回 nil。
+	tp2 := NewTimePicker()
+	if tp2.disabledSet(0) != nil {
+		t.Fatal("无 DisabledTime 应返回 nil")
+	}
+}
