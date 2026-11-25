@@ -199,7 +199,7 @@ func (c *Countdown) Build(ctx *ui.BuildContext) *scene.Node {
 	col.SetHit(scene.HitSpec{Label: "countdown"})
 
 	if c.Title != "" {
-		tl := text.LayoutText(c.Title, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		tl := text.LayoutText(c.Title, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		title := scene.Text(scene.TextSpec{Src: c.Title, Layout: tl, Color: th.Color.TextMuted})
 		title.SetHit(scene.HitSpec{Label: "countdown-title"})
 		col.Add(title)
@@ -212,7 +212,7 @@ func (c *Countdown) Build(ctx *ui.BuildContext) *scene.Node {
 		row.Add(pv)
 	}
 	txt := formatDuration(c.remaining(), c.Format)
-	vf := text.DefaultFont(24).WithWeight(text.SemiBold)
+	vf := text.DefaultFont(th.Font.SizeTitle).WithWeight(text.SemiBold)
 	vl := text.LayoutText(txt, vf, text.Options{})
 	value := scene.Text(scene.TextSpec{Src: txt, Layout: vl, Color: th.Color.Text})
 	value.SetMargin(geom.InLTRB(0, (28-vl.Size.H)/2, 0, 0))

@@ -77,28 +77,28 @@ func (s *Statistic) Build(ctx *ui.BuildContext) *scene.Node {
 	col.SetHit(scene.HitSpec{Label: "statistic"})
 
 	if s.Title != "" {
-		tl := text.LayoutText(s.Title, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		tl := text.LayoutText(s.Title, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		title := scene.Text(scene.TextSpec{Src: s.Title, Layout: tl, Color: th.Color.TextMuted})
 		title.SetHit(scene.HitSpec{Label: "statistic-title"})
 		col.Add(title)
 	}
 
-	// 数值行：前后缀小字（antd 小字号灰度弱化）+ 数值大号粗体（SemiBold 600）。
+	// 数值行：前后缀继承 contentFontSize（antd 前后缀与数值同为 fontSizeHeading3=24），数值 SemiBold 600。
 	row := scene.Flex(scene.Horizontal, th.Space.XS)
 	if s.Prefix != "" {
-		pl := text.LayoutText(s.Prefix, text.DefaultFont(th.Font.SizeLG), text.Options{})
+		pl := text.LayoutText(s.Prefix, text.DefaultFont(th.Font.SizeTitle), text.Options{})
 		pv := scene.Text(scene.TextSpec{Src: s.Prefix, Layout: pl, Color: th.Color.TextMuted})
 		pv.SetHit(scene.HitSpec{Label: "statistic-prefix"})
 		row.Add(pv)
 	}
-	vf := text.DefaultFont(24).WithWeight(text.SemiBold)
+	vf := text.DefaultFont(th.Font.SizeTitle).WithWeight(text.SemiBold)
 	vl := text.LayoutText(s.formatValue(), vf, text.Options{})
 	value := scene.Text(scene.TextSpec{Src: s.formatValue(), Layout: vl, Color: th.Color.Text})
 	value.SetMargin(geom.InLTRB(0, (28-vl.Size.H)/2, 0, 0))
 	value.SetHit(scene.HitSpec{Label: "statistic-value"})
 	row.Add(value)
 	if s.Suffix != "" {
-		sl := text.LayoutText(s.Suffix, text.DefaultFont(th.Font.SizeLG), text.Options{})
+		sl := text.LayoutText(s.Suffix, text.DefaultFont(th.Font.SizeTitle), text.Options{})
 		sv := scene.Text(scene.TextSpec{Src: s.Suffix, Layout: sl, Color: th.Color.TextMuted})
 		sv.SetHit(scene.HitSpec{Label: "statistic-suffix"})
 		sv.SetMargin(geom.InLTRB(0, (28-sl.Size.H)/2, 0, 0))

@@ -417,7 +417,8 @@ func (b *Switch) Build(ctx *ui.BuildContext) *scene.Node {
 		labelText = b.UnCheckedChildren
 	}
 	if labelText != "" && !b.Small {
-		font := text.DefaultFont(11)
+		// antd switch-inner 文字 = fontSizeSM(12)。
+		font := text.DefaultFont(th.Font.SizeSM)
 		lay := text.LayoutText(labelText, font, text.Options{})
 		t := scene.Text(scene.TextSpec{Src: labelText, Layout: lay, Color: th.Color.OnPrimary})
 		tx := float32(4)

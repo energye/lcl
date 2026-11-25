@@ -343,7 +343,7 @@ func (t *Transfer) buildSide(ctx *ui.BuildContext, th *theme.Data, side, title, 
 		head.Add(allCb.Build(ctx))
 	}
 	ht := fmt.Sprintf("%s %d / %d 项", title, checkedN, len(items))
-	hl := text.LayoutText(ht, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	hl := text.LayoutText(ht, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	headText := scene.Text(scene.TextSpec{Src: ht, Layout: hl, Color: th.Color.Text})
 	headText.SetHit(scene.HitSpec{Label: "transfer-head-" + side})
 	head.Add(headText)

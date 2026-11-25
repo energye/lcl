@@ -369,7 +369,7 @@ func (t *TimePicker) buildColumn(ctx *ui.BuildContext, th *theme.Data, colIdx in
 				src = "下午"
 			}
 		}
-		l := text.LayoutText(src, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		l := text.LayoutText(src, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		info := &timeCellInfo{src: src, value: v, layout: l}
 		info.txt = scene.Text(scene.TextSpec{Src: src, Layout: l, Color: th.Color.Text})
 		info.txt.SetMargin(geom.InLTRB((timeColW-l.Size.W)/2, (timeCellH-l.Size.H)/2, 0, 0))

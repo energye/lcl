@@ -160,7 +160,7 @@ func (u *Upload) Build(ctx *ui.BuildContext) *scene.Node {
 		btnWrap.SetHit(scene.HitSpec{Label: "upload-trigger"})
 		row.Add(btnWrap)
 		if u.Hint != "" {
-			hl := text.LayoutText(u.Hint, text.DefaultFont(th.Font.SizeSM), text.Options{})
+			hl := text.LayoutText(u.Hint, text.DefaultFont(th.Font.SizeBase), text.Options{})
 			hint := scene.Text(scene.TextSpec{Src: u.Hint, Layout: hl, Color: th.Color.TextFaint})
 			hint.SetHit(scene.HitSpec{Label: "upload-hint"})
 			row.Add(hint)
@@ -228,7 +228,7 @@ func (u *Upload) buildItem(ctx *ui.BuildContext, th *theme.Data, f UploadFile, w
 	if f.Status == UploadError {
 		nameColor = th.Color.Danger
 	}
-	nl := text.LayoutText(f.Name, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	nl := text.LayoutText(f.Name, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	nameTxt := scene.Text(scene.TextSpec{Src: f.Name, Layout: nl, Color: nameColor})
 	nameTxt.SetHit(scene.HitSpec{Label: "upload-name"})
 	nameBox := scene.Box(scene.BoxSpec{})
@@ -244,7 +244,7 @@ func (u *Upload) buildItem(ctx *ui.BuildContext, th *theme.Data, f UploadFile, w
 		ic := (&Icon{Name: "close-circle", Size: 14, Color: th.Color.Danger}).Build(ctx)
 		row.Add(ic)
 	case UploadUploading:
-		pl := text.LayoutText(fmt.Sprintf("%d%%", f.Percent), text.DefaultFont(th.Font.SizeSM), text.Options{})
+		pl := text.LayoutText(fmt.Sprintf("%d%%", f.Percent), text.DefaultFont(th.Font.SizeBase), text.Options{})
 		row.Add(scene.Text(scene.TextSpec{Src: fmt.Sprintf("%d%%", f.Percent), Layout: pl, Color: th.Color.TextMuted}))
 	}
 

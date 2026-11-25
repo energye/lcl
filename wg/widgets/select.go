@@ -301,7 +301,7 @@ func (s *Select) Build(ctx *ui.BuildContext) *scene.Node {
 		// 不是 TextFaint（偏深）。
 		fg = th.Color.TextPlaceholder
 	}
-	l := text.LayoutText(caption, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	l := text.LayoutText(caption, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	tv := scene.Text(scene.TextSpec{Src: caption, Layout: l, Color: fg})
 	tv.SetMargin(geom.InLTRB(10, (h-l.Size.H)/2, 0, 0))
 	n.Add(tv)
@@ -410,7 +410,7 @@ func (s *Select) popupContent(ctx *ui.BuildContext, rowH float32) *scene.Node {
 		if s.filter != "" {
 			ph = s.filter
 		}
-		l := text.LayoutText(ph, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		l := text.LayoutText(ph, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		tv := scene.Text(scene.TextSpec{Src: ph, Layout: l, Color: th.Color.Text})
 		tv.SetMargin(geom.InLTRB(26, (28-l.Size.H)/2, 0, 0))
 		search.Add(tv)
@@ -486,7 +486,7 @@ func (s *Select) optionsColumn(ctx *ui.BuildContext, rowH float32) *scene.Node {
 			item.Add(cb)
 			indent += 16
 		}
-		l := text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		l := text.LayoutText(label, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		t := scene.Text(scene.TextSpec{Src: label, Layout: l, Color: fg})
 		t.SetMargin(geom.InLTRB(indent, (rowH-l.Size.H)/2, 0, 0))
 		item.Add(t)

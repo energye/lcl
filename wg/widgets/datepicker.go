@@ -371,7 +371,7 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 			fg = th.Color.Primary
 		}
 		cell.SetBox(scene.BoxSpec{Fill: scene.Solid(bg), Radius: th.Radius.SM})
-		l := text.LayoutText(fmt.Sprintf("%d", day), text.DefaultFont(th.Font.SizeSM), text.Options{})
+		l := text.LayoutText(fmt.Sprintf("%d", day), text.DefaultFont(th.Font.SizeBase), text.Options{})
 		txt := scene.Text(scene.TextSpec{Src: fmt.Sprintf("%d", day), Layout: l, Color: fg})
 		txt.SetMargin(geom.InLTRB(0, (28-l.Size.H)/2, 0, 0))
 		cell.Add(txt)

@@ -480,7 +480,7 @@ func (e Empty) Build(ctx *ui.BuildContext) *scene.Node {
 	t.SetStackPosition(geom.Pt((w-layout.Size.W)/2, 48)).SetPositionKeepSize(true)
 	n.Add(t)
 	if e.Subtext != "" {
-		sub := text.LayoutText(e.Subtext, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		sub := text.LayoutText(e.Subtext, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		st := scene.Text(scene.TextSpec{Src: e.Subtext, Layout: sub, Color: th.Color.TextFaint})
 		st.SetStackPosition(geom.Pt((w-sub.Size.W)/2, 70)).SetPositionKeepSize(true)
 		n.Add(st)
@@ -658,7 +658,7 @@ func (s Spin) Build(ctx *ui.BuildContext) *scene.Node {
 		// 容器包裹形态（antd Spin tip）：指示器下方显示文案。
 		col := scene.Flex(scene.Vertical, th.Space.SM).SetCrossAlign(scene.CrossCenter)
 		col.Add(n)
-		tl := text.LayoutText(s.Tip, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		tl := text.LayoutText(s.Tip, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		tip := scene.Text(scene.TextSpec{Src: s.Tip, Layout: tl, Color: th.Color.TextMuted})
 		tip.SetHit(scene.HitSpec{Label: "spin-tip"}) // 被动锚：tip 文案断言用
 		col.Add(tip)
@@ -772,7 +772,7 @@ func (s Steps) Build(ctx *ui.BuildContext) *scene.Node {
 		step := scene.Flex(scene.Vertical, th.Space.XS)
 		step.SetCrossAlign(scene.CrossCenter)
 		step.Add(s.stepIcon(ctx, th, i))
-		step.Add(scene.Text(scene.TextSpec{Src: label, Layout: text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{}), Color: th.Color.Text}))
+		step.Add(scene.Text(scene.TextSpec{Src: label, Layout: text.LayoutText(label, text.DefaultFont(th.Font.SizeLG), text.Options{}), Color: th.Color.Text}))
 		n.Add(step)
 		if i < len(s.Labels)-1 {
 			line := th.Color.Border
@@ -794,7 +794,7 @@ func (s Steps) buildVertical(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
 	for i, label := range s.Labels {
 		row := scene.Flex(scene.Horizontal, th.Space.SM)
 		row.Add(s.stepIcon(ctx, th, i))
-		row.Add(scene.Text(scene.TextSpec{Src: label, Layout: text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{}), Color: th.Color.Text}))
+		row.Add(scene.Text(scene.TextSpec{Src: label, Layout: text.LayoutText(label, text.DefaultFont(th.Font.SizeLG), text.Options{}), Color: th.Color.Text}))
 		n.Add(row)
 		if i < len(s.Labels)-1 {
 			line := th.Color.Border
@@ -897,7 +897,7 @@ func (s *segmentItem) Build(ctx *ui.BuildContext) *scene.Node {
 	} else if s.hover {
 		fill = th.Color.FillHover
 	}
-	font := text.DefaultFont(th.Font.SizeSM)
+	font := text.DefaultFont(th.Font.SizeBase)
 	layout := text.LayoutText(s.label, font, text.Options{})
 	w := layout.Size.W + th.Space.LG
 	if s.icon != "" {
@@ -1043,7 +1043,7 @@ func (p *Pagination) Build(ctx *ui.BuildContext) *scene.Node {
 	wrap := scene.Flex(scene.Horizontal, th.Space.MD).SetAlign(scene.Center)
 	if p.ShowTotal && p.PageSize > 0 {
 		total := fmt.Sprintf("共 %d 条", p.Total)
-		l := text.LayoutText(total, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		l := text.LayoutText(total, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		t := scene.Text(scene.TextSpec{Src: total, Layout: l, Color: th.Color.Text})
 		// 被动定位锚：total 文字无 hit，文本断言无法定位（breadcrumb 先例）。
 		t.SetHit(scene.HitSpec{Label: "page-total"})
@@ -1075,12 +1075,12 @@ func (p *Pagination) buildSimple(ctx *ui.BuildContext, th *theme.Data) *scene.No
 	}
 	wrap := scene.Flex(scene.Horizontal, th.Space.SM).SetAlign(scene.Center)
 	cur := fmt.Sprintf("%d", p.Page)
-	l := text.LayoutText(cur, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	l := text.LayoutText(cur, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	ct := scene.Text(scene.TextSpec{Src: cur, Layout: l, Color: th.Color.Primary})
 	ct.SetHit(scene.HitSpec{Label: "page-current"}) // 被动定位锚
 	wrap.Add(ct)
 	total := fmt.Sprintf("/ %d", p.totalPages())
-	l2 := text.LayoutText(total, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	l2 := text.LayoutText(total, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	wrap.Add(scene.Text(scene.TextSpec{Src: total, Layout: l2, Color: th.Color.Text}))
 	wrap.Add(p.jumper.Build(ctx))
 	p.node = wrap
@@ -1139,7 +1139,7 @@ func (p *Pagination) buildSizer(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 func (p *Pagination) buildJumper(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
 	inner := scene.Flex(scene.Horizontal, th.Space.XS).SetAlign(scene.Center)
 	jump := "跳至"
-	l := text.LayoutText(jump, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	l := text.LayoutText(jump, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	hint := scene.Text(scene.TextSpec{Src: jump, Layout: l, Color: th.Color.Text})
 	hint.SetHit(scene.HitSpec{Label: "page-jump-hint"}) // 被动定位锚
 	inner.Add(hint)
@@ -1153,7 +1153,7 @@ func (p *Pagination) buildJumper(ctx *ui.BuildContext, th *theme.Data) *scene.No
 	}
 	inner.Add(p.jumper.Build(ctx))
 	to := "页"
-	l2 := text.LayoutText(to, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	l2 := text.LayoutText(to, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	inner.Add(scene.Text(scene.TextSpec{Src: to, Layout: l2, Color: th.Color.Text}))
 	return inner
 }
@@ -1221,7 +1221,7 @@ func (b *pageButton) Build(ctx *ui.BuildContext) *scene.Node {
 	} else if b.hover {
 		fill = th.Color.FillHover
 	}
-	layout := text.LayoutText(b.label, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	layout := text.LayoutText(b.label, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	w := layout.Size.W + th.Space.MD
 	if w < 26 {
 		w = 26

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "font-size-align",
+  "treeHash": "eeb520382655efeffd9016c352b91404e604bcc3",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "font-size-align",
+      "status": "PASS",
+      "durationMs": 3644,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\font-size-align\\logs\\eeb520382655efeffd9016c352b91404e604bcc3\\probe_font-size-align.log"
+    }
+  ]
+}

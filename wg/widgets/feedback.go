@@ -367,7 +367,7 @@ func (a *Alert) Build(ctx *ui.BuildContext) *scene.Node {
 	col.Add(mainRow)
 
 	if a.Description != "" {
-		d := (&Label{Text: a.Description, Size: th.Font.SizeSM, Color: th.Color.TextMuted}).Build(ctx)
+		d := (&Label{Text: a.Description, Size: th.Font.SizeBase, Color: th.Color.TextMuted}).Build(ctx)
 		col.Add(d)
 	}
 	col.SetHit(scene.HitSpec{Label: "alert"})
@@ -585,7 +585,7 @@ func (n *Notification) Show(ctx *ui.BuildContext) {
 				col.Add(scene.Text(scene.TextSpec{Src: title, Layout: tl, Color: th.Color.Text}))
 			}
 			if body != "" {
-				bl := text.LayoutText(body, text.DefaultFont(th.Font.SizeSM), text.Options{})
+				bl := text.LayoutText(body, text.DefaultFont(th.Font.SizeBase), text.Options{})
 				col.Add(scene.Text(scene.TextSpec{Src: body, Layout: bl, Color: th.Color.TextMuted}))
 			}
 			return col
@@ -782,7 +782,7 @@ func (r *Result) Build(ctx *ui.BuildContext) *scene.Node {
 		col.Add((&Label{Text: r.Title, Size: th.Font.SizeLG, Color: th.Color.Text}).Build(ctx))
 	}
 	if r.SubTitle != "" {
-		col.Add((&Label{Text: r.SubTitle, Size: th.Font.SizeSM, Color: th.Color.TextMuted}).Build(ctx))
+		col.Add((&Label{Text: r.SubTitle, Size: th.Font.SizeBase, Color: th.Color.TextMuted}).Build(ctx))
 	}
 	if len(r.Extra) > 0 {
 		row := scene.Flex(scene.Horizontal, th.Space.SM)

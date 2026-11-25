@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "id": "font-size-align",
+  "title": "组件正文字号对齐 antd fontSize=14（SizeSM 误用清理）",
+  "component": "Theme/Widgets",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "主题 token 已对齐 antd（SizeBase=14/SizeLG=16），但组件层把正文字号写成 SizeSM(12)；需按 antd 组件 token 逐项校正",
+    "Table cellFontSize/cellFontSizeMD/cellFontSizeSM 恒为 14；Descriptions content、Select option/placeholder、Tree label、Statistic title、Upload 文件名等正文改为 14",
+    "提示/副标题/角标等 antd 本就用 fontSizeSM(12) 的位置保持 12，不得一刀切",
+    "全部受影响功能窗 spec 几何断言重新校准，真窗审计 failed=0、specFailed=0"
+  ],
+  "specs": [
+    "wg/widgets/fontsize_parity_test.go"
+  ],
+  "probes": [
+    "font-size-align"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/font-size-align/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-c6297f1d4ab8e28c22d9058ec840516ba3ffb5ca.json",
+    "verifiedTree": "eeb520382655efeffd9016c352b91404e604bcc3"
+  },
+  "createdAt": "2026-11-25T14:18:58.2066987+08:00",
+  "updatedAt": "2026-11-25T17:22:15.2450743+08:00",
+  "closedAt": "2026-11-25T17:22:15.2450743+08:00"
+}

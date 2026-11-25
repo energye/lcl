@@ -107,7 +107,7 @@ func (t *Tour) buildCard(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
 	title := scene.Text(scene.TextSpec{Src: step.Title, Layout: tl, Color: th.Color.Text})
 	title.SetHit(scene.HitSpec{Label: "tour-title"})
 	card.Add(title)
-	dl := text.LayoutText(step.Desc, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	dl := text.LayoutText(step.Desc, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	desc := scene.Text(scene.TextSpec{Src: step.Desc, Layout: dl, Color: th.Color.TextMuted})
 	desc.SetHit(scene.HitSpec{Label: "tour-desc"})
 	card.Add(desc)

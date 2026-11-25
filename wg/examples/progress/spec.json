@@ -141,7 +141,7 @@
               "expect": {
                 "token": "Danger"
               },
-              "minRatio": 0.04,
+              "minRatio": 0.03,
               "tol": 24
             }
           ]

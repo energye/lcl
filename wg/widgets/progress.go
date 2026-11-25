@@ -199,7 +199,8 @@ func (p Progress) buildLine(ctx *ui.BuildContext) *scene.Node {
 	}
 	row := scene.Flex(scene.Horizontal, 8).SetCrossAlign(scene.CrossCenter)
 	row.Add(track)
-	txt := (&Label{Text: pctText(v), Size: th.Font.SizeSM, Color: fillColor}).Build(ctx)
+	// antd Progress 文字继承 fontSize(14)；只有 small 档才降到 fontSizeSM。
+	txt := (&Label{Text: pctText(v), Size: th.Font.SizeBase, Color: fillColor}).Build(ctx)
 	txt.SetHit(scene.HitSpec{Label: "progress-text"}) // 被动锚：文字色断言
 	row.Add(txt)
 	row.SetHit(scene.HitSpec{Label: "progress"})

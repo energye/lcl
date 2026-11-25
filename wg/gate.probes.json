@@ -27,6 +27,41 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "font-size-align",
+      "covers": [
+        "wg/widgets/table.go",
+        "wg/widgets/display.go",
+        "wg/widgets/descriptions.go",
+        "wg/widgets/select.go",
+        "wg/widgets/tree.go",
+        "wg/widgets/statistic.go",
+        "wg/widgets/feedback.go",
+        "wg/widgets/upload.go",
+        "wg/widgets/autocomplete.go",
+        "wg/widgets/timepicker.go",
+        "wg/widgets/calendar.go",
+        "wg/widgets/transfer.go",
+        "wg/widgets/tour.go",
+        "wg/widgets/datepicker.go",
+        "wg/ui/style.go",
+        "wg/widgets/countdown.go",
+        "wg/widgets/image.go",
+        "wg/widgets/progress.go",
+        "wg/widgets/control.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeFontSizeAlign$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

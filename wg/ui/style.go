@@ -270,8 +270,9 @@ type Metrics struct {
 // MetricsFor 返回尺寸档的度量。
 //
 // M8 对齐 antd：控件高度 24/32/40（本就一致）；水平内边距对齐 antd 按钮
-// 的 paddingInline（small 7 / middle 15 / large 15）；字号对齐 fontSize
-// 12/14/16（主题 Font token 的 SM/Base/LG）。
+// 的 paddingInline（small 7 / middle 15 / large 15）。
+// 字号：antd 的 contentFontSizeSM 默认等于 fontSize（14），small 档并不
+// 缩小正文字号——只有高度/内边距收窄。此前误用 SizeSM(12) 已修正。
 func MetricsFor(t *theme.Data, s Size) Metrics {
 	if t == nil {
 		t = theme.Default()
@@ -279,7 +280,7 @@ func MetricsFor(t *theme.Data, s Size) Metrics {
 	sp := t.Space
 	switch s {
 	case SizeSmall:
-		return Metrics{Height: 24, Padding: geom.RectLTRB(7, 0, 7, 0), Font: t.Font.SizeSM, Gap: sp.XS}
+		return Metrics{Height: 24, Padding: geom.RectLTRB(7, 0, 7, 0), Font: t.Font.SizeBase, Gap: sp.XS}
 	case SizeLarge:
 		return Metrics{Height: 40, Padding: geom.RectLTRB(15, 0, 15, 0), Font: t.Font.SizeLG, Gap: sp.MD}
 	}

@@ -83,7 +83,7 @@ func (im *Image) Build(ctx *ui.BuildContext) *scene.Node {
 		if txt == "" {
 			txt = "图片加载失败"
 		}
-		l := text.LayoutText(txt, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		l := text.LayoutText(txt, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		tv := scene.Text(scene.TextSpec{Src: txt, Layout: l, Color: th.Color.TextFaint})
 		tv.SetMargin(geom.InLTRB(0, (h-l.Size.H)/2, 0, 0))
 		tv.SetPositionKeepSize(true)

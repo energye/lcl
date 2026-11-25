@@ -148,7 +148,7 @@ func (c *Calendar) Build(ctx *ui.BuildContext) *scene.Node {
 	week.SetPadding(geom.InLTRB(6, 0, 6, 0))
 	for _, wd := range []string{"一", "二", "三", "四", "五", "六", "日"} {
 		cell := scene.Box(scene.BoxSpec{}).SetFlex(1, scene.FlexTight).SetHeight(30)
-		l := text.LayoutText(wd, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		l := text.LayoutText(wd, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		tv := scene.Text(scene.TextSpec{Src: wd, Layout: l, Color: th.Color.TextMuted})
 		tv.SetMargin(geom.InLTRB(8, (30-l.Size.H)/2, 0, 0))
 		cell.Add(tv)

@@ -348,7 +348,7 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 				row.Add(cbn)
 			}
 
-			ll := text.LayoutText(n.Label, text.DefaultFont(th.Font.SizeSM), text.Options{})
+			ll := text.LayoutText(n.Label, text.DefaultFont(th.Font.SizeBase), text.Options{})
 			fg := th.Color.Text
 			if n.Key == t.Selected || t.SelectedSet[n.Key] {
 				fg = th.Color.Primary
@@ -433,7 +433,7 @@ func (f FormItem) Build(ctx *ui.BuildContext) *scene.Node {
 	// antd Form：必填星号红色（#ff4d4f）置于标签前；标签为正文色而非弱化灰。
 	labelRow := scene.Flex(scene.Horizontal, 0)
 	if f.Required {
-		font := text.DefaultFont(th.Font.SizeSM)
+		font := text.DefaultFont(th.Font.SizeBase)
 		star := scene.Text(scene.TextSpec{
 			Src: "*", Layout: text.LayoutText("*", font, text.Options{}),
 			Color: th.Color.Danger,
@@ -441,7 +441,7 @@ func (f FormItem) Build(ctx *ui.BuildContext) *scene.Node {
 		star.SetMargin(geom.InLTRB(0, 6, 3, 0))
 		labelRow.Add(star)
 	}
-	ll := text.LayoutText(f.Label, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	ll := text.LayoutText(f.Label, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	lt := scene.Text(scene.TextSpec{Src: f.Label, Layout: ll, Color: th.Color.Text})
 	lt.SetWidth(labelW).SetMargin(geom.InLTRB(0, 6, 0, 0))
 	labelRow.Add(lt)

@@ -124,7 +124,7 @@ func (d *Descriptions) Build(ctx *ui.BuildContext) *scene.Node {
 			if d.Bordered {
 				itemCol.SetBox(scene.BoxSpec{Border: scene.Stroke(th.Color.Border, 1)})
 			}
-			l := text.LayoutText(it.Label, text.DefaultFont(th.Font.SizeSM), text.Options{})
+			l := text.LayoutText(it.Label, text.DefaultFont(th.Font.SizeBase), text.Options{})
 			lt := scene.Text(scene.TextSpec{Src: it.Label, Layout: l, Color: th.Color.TextMuted})
 			lt.SetMargin(geom.InLTRB(10, 2, 0, 0))
 			lt.SetHit(scene.HitSpec{Label: "desc-label"})
@@ -221,7 +221,7 @@ func (d *Descriptions) labelCell(ctx *ui.BuildContext, th *theme.Data, label str
 	if !d.Bordered {
 		txt += ":"
 	}
-	l := text.LayoutText(txt, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	l := text.LayoutText(txt, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	t := scene.Text(scene.TextSpec{Src: txt, Layout: l, Color: th.Color.TextMuted})
 	t.SetMargin(geom.InLTRB(10, (h-l.Size.H)/2, 0, 0))
 	t.SetHit(scene.HitSpec{Label: "desc-label"})
@@ -248,7 +248,7 @@ func (d *Descriptions) valueCell(ctx *ui.BuildContext, th *theme.Data, it Descri
 		}
 		return box
 	}
-	l := text.LayoutText(it.Content, text.DefaultFont(th.Font.SizeSM), text.Options{})
+	l := text.LayoutText(it.Content, text.DefaultFont(th.Font.SizeBase), text.Options{})
 	t := scene.Text(scene.TextSpec{Src: it.Content, Layout: l, Color: th.Color.Text})
 	t.SetMargin(geom.InLTRB(10, (h-l.Size.H)/2, 0, 0))
 	t.SetHit(scene.HitSpec{Label: "desc-value"})

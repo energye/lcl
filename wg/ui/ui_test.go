@@ -128,8 +128,13 @@ func TestMetricsForSizes(t *testing.T) {
 	if !(s.Height < m.Height && m.Height < l.Height) {
 		t.Fatalf("高度不递增: %v %v %v", s.Height, m.Height, l.Height)
 	}
-	if !(s.Font < m.Font && m.Font < l.Font) {
-		t.Fatalf("字号不递增: %v %v %v", s.Font, m.Font, l.Font)
+	// antd contentFontSizeSM 默认等于 fontSize：small 只收窄高度/内边距，
+	// 正文字号与 medium 一致；large 用 fontSizeLG。
+	if s.Font != m.Font {
+		t.Fatalf("small 与 medium 字号应一致: %v %v", s.Font, m.Font)
+	}
+	if !(m.Font < l.Font) {
+		t.Fatalf("large 字号应更大: %v %v", m.Font, l.Font)
 	}
 }
 

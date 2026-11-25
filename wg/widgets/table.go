@@ -702,8 +702,8 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 	if t.expandEnabled() {
 		t.lastRowY = t.rowYPrefixSum(idx)
 	}
-	widths := t.columnWidths(th.Font.SizeSM)
-	hscroll := t.hScrollNeeded(th.Font.SizeSM)
+	widths := t.columnWidths(th.Font.SizeBase)
+	hscroll := t.hScrollNeeded(th.Font.SizeBase)
 
 	col := scene.Flex(scene.Vertical, 0).SetWidth(t.Width).SetHeight(t.ViewportHeight())
 	col.SetOverflow(true)
@@ -717,7 +717,7 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 	var freeze, freezeRight *scene.Node
 	if hscroll {
 		col.SetWidth(contentW)
-		widths, _ = t.contentWidths(th.Font.SizeSM)
+		widths, _ = t.contentWidths(th.Font.SizeBase)
 		for _, w := range widths {
 			_ = w
 		}
@@ -757,7 +757,7 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 				label += " ↕"
 			}
 		}
-		l := text.LayoutText(label, text.DefaultFont(th.Font.SizeSM), text.Options{})
+		l := text.LayoutText(label, text.DefaultFont(th.Font.SizeBase), text.Options{})
 		tv := scene.Text(scene.TextSpec{Src: label, Layout: l, Color: th.Color.TextMuted})
 		tv.SetMargin(geom.InLTRB(6, (t.HeaderH-l.Size.H)/2, 0, 0))
 		cell.Add(tv)
@@ -821,7 +821,7 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 				continue
 			}
 			hcell := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.SurfaceSunken), Border: scene.Stroke(th.Color.Border, 1)}).SetWidth(w).SetHeight(t.HeaderH)
-			hl := text.LayoutText(t.Columns[ci].Title, text.DefaultFont(th.Font.SizeSM), text.Options{})
+			hl := text.LayoutText(t.Columns[ci].Title, text.DefaultFont(th.Font.SizeBase), text.Options{})
 			htv := scene.Text(scene.TextSpec{Src: t.Columns[ci].Title, Layout: hl, Color: th.Color.TextMuted})
 			htv.SetMargin(geom.InLTRB(6, (t.HeaderH-hl.Size.H)/2, 0, 0))
 			hcell.Add(htv)
@@ -977,7 +977,7 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 				}
 			} else {
 				txt := t.cellText(ci, dataRow)
-				l := text.LayoutText(txt, text.DefaultFont(th.Font.SizeSM), text.Options{})
+				l := text.LayoutText(txt, text.DefaultFont(th.Font.SizeBase), text.Options{})
 				tv := scene.Text(scene.TextSpec{Src: txt, Layout: l, Color: th.Color.Text})
 				padL := float32(6)
 				if ci == 0 && t.expandEnabled() && !t.Expandable.ExpandRowByClick {
@@ -1091,7 +1091,7 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 					}
 				} else {
 					ftxt := t.cellText(ci, dataRow)
-					fl := text.LayoutText(ftxt, text.DefaultFont(th.Font.SizeSM), text.Options{})
+					fl := text.LayoutText(ftxt, text.DefaultFont(th.Font.SizeBase), text.Options{})
 					ftv := scene.Text(scene.TextSpec{Src: ftxt, Layout: fl, Color: th.Color.Text})
 					ftv.SetMargin(geom.InLTRB(6, (t.RowHeight-fl.Size.H)/2, 0, 0))
 					fcell.Add(ftv)
@@ -1137,7 +1137,7 @@ func (t *Table) buildInner(ctx *ui.BuildContext, th *theme.Data, idx []int) (*sc
 					}
 				} else {
 					ftxt := t.cellText(ci, dataRow)
-					fl := text.LayoutText(ftxt, text.DefaultFont(th.Font.SizeSM), text.Options{})
+					fl := text.LayoutText(ftxt, text.DefaultFont(th.Font.SizeBase), text.Options{})
 					ftv := scene.Text(scene.TextSpec{Src: ftxt, Layout: fl, Color: th.Color.Text})
 					ftv.SetMargin(geom.InLTRB(6, (t.RowHeight-fl.Size.H)/2, 0, 0))
 					fcell.Add(ftv)

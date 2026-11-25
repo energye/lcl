@@ -468,7 +468,13 @@ func (r *specRunner) runCase(cs SpecCase) {
 			p := clickPoint(b, nil)
 			injectDown(r.c, p.X, p.Y)
 			injectUp(r.c, p.X, p.Y)
-			time.Sleep(200 * time.Millisecond)
+			// 聚焦重建落帧等待（同 click）。
+			f0 := r.c.PresentStats().Frames
+			deadline := time.Now().Add(600 * time.Millisecond)
+			for r.c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
+				time.Sleep(20 * time.Millisecond)
+			}
+			time.Sleep(120 * time.Millisecond)
 		}
 	}
 	// 基线（colorDelta / 往返对照）。
@@ -517,11 +523,29 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 				r.add(caseName, "操作", false, "click 目标不存在："+targetDesc(t))
 				return false
 			}
+			// 滚动落定：ensureVisible 用注入滚轮，滚动有惯性/布局延迟，
+			// 立刻取 bounds 可能读到滚动前的旧坐标，点击落到邻居节点上
+			// （input filled 聚焦用例在高负载下点空、占比 0.000 实证）。
+			if !r.inViewport(n) {
+				time.Sleep(200 * time.Millisecond)
+				if n2, ok2 := r.locate(*t); ok2 {
+					n = n2
+				}
+			}
 		}
 		p := clickPoint(n.BoundsInRoot(), a.Click.Frac)
 		injectDown(r.c, p.X, p.Y)
 		time.Sleep(60 * time.Millisecond)
 		injectUp(r.c, p.X, p.Y)
+		// 点击重建落帧等待：与 hover 同理——点击触发聚焦/选中重建，高负载
+		// 全量串行回归下"点击→重建→呈现"偶发超过后续 wait 窗口，采样读到
+		// 旧帧（input outlined 聚焦边框读成 hover 色 PrimaryHover 实证）。
+		f0 := r.c.PresentStats().Frames
+		deadline := time.Now().Add(600 * time.Millisecond)
+		for r.c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
+			time.Sleep(20 * time.Millisecond)
+		}
+		time.Sleep(120 * time.Millisecond) // 帧呈现到栅格化完成的余量
 	case a.Hover != nil:
 		t := def
 		if a.Hover.Target != nil {
@@ -572,7 +596,13 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 		injectDown(r.c, p.X, p.Y)
 		time.Sleep(60 * time.Millisecond)
 		injectUp(r.c, p.X, p.Y)
-		time.Sleep(150 * time.Millisecond)
+		// 聚焦重建落帧等待（同 click：高负载下聚焦帧未落地就键入会丢字符）。
+		f0 := r.c.PresentStats().Frames
+		deadline := time.Now().Add(600 * time.Millisecond)
+		for r.c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
+			time.Sleep(20 * time.Millisecond)
+		}
+		time.Sleep(120 * time.Millisecond)
 		r.c.PushEvent(&input.KeyEvent{Kind: input.KeyDown, Code: input.CodeA,
 			Mods: input.ModControl, Time: time.Now()})
 		time.Sleep(40 * time.Millisecond)

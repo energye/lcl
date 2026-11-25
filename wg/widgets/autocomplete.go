@@ -115,7 +115,7 @@ func (a *AutoComplete) suggest(ctx *ui.BuildContext) {
 			for _, item := range items {
 				row := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Surface)}).
 					SetWidth(a.input.Width).SetHeight(rowH)
-				l := text.LayoutText(item, text.DefaultFont(th.Font.SizeSM), text.Options{})
+				l := text.LayoutText(item, text.DefaultFont(th.Font.SizeBase), text.Options{})
 				t := scene.Text(scene.TextSpec{Src: item, Layout: l, Color: th.Color.Text})
 				t.SetMargin(geom.InLTRB(11, (rowH-l.Size.H)/2, 0, 0))
 				row.Add(t)
