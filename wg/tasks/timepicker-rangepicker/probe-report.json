@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "timepicker-rangepicker",
+  "treeHash": "ebeed9dbd9066c52a463b1e9270035780fe588e7",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "timepicker-rangepicker",
+      "status": "PASS",
+      "durationMs": 4350,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\timepicker-rangepicker\\logs\\ebeed9dbd9066c52a463b1e9270035780fe588e7\\probe_timepicker-rangepicker.log"
+    }
+  ]
+}

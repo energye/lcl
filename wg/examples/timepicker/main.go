@@ -19,6 +19,7 @@ var (
 	tpInit12 = widgets.NewTimePicker()
 	tpDis    = widgets.NewTimePicker()
 	tpFmt    = widgets.NewTimePicker()
+	tpRange  = widgets.NewTimeRangePicker()
 )
 
 func init() {
@@ -29,6 +30,10 @@ func init() {
 	tpInit12.Use12Hours = true
 	tpInit12.Width = 180
 	tpInit12.Value = time.Date(0, 1, 1, 15, 20, 0, 0, time.Local)
+	// 区间时间卡（antd TimePicker.RangePicker）：双触发框+双面板并排。
+	tpRange.Start.Value = time.Date(0, 1, 1, 9, 0, 0, 0, time.Local)
+	tpRange.End.Value = time.Date(0, 1, 1, 18, 30, 0, 0, time.Local)
+
 	// 列裁剪卡（antd format hide-column）：HH:mm 省略秒→秒列消失。
 	tpFmt.Format = "15:04"
 	tpFmt.Value = time.Date(0, 1, 1, 14, 25, 0, 0, time.Local)
@@ -74,6 +79,9 @@ func main() {
 			{Title: "12 小时制", Note: "Use12Hours：初值 15:20=下午 03:20:00；面板 4 列（时/分/秒/上午下午）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tpInit12
 			}},
+			{Title: "区间时间", Note: "RangePicker：起~止双触发框，点开双面板并排，确定提交区间（起>止自动交换）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return tpRange
+			}},
 			{Title: "列裁剪", Note: "Format=15:04（HH:mm）：秒列消失；触发框只显示 时:分", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return tpFmt
 			}},
@@ -85,6 +93,7 @@ func main() {
 			}},
 		},
 		API: []doc.APIRow{
+			{Name: "NewTimeRangePicker", Type: "func() *TimeRangePicker", Desc: "区间时间选择：Start/End 双端 + OnChangeRange(start,end)"},
 			{Name: "Format", Type: "string", Default: "15:04:05", Desc: "时间格式（Go 布局）；省略分/秒则对应列消失（antd hide-column）"},
 			{Name: "DisabledTime", Type: "func(now time.Time) DisabledTimeSpec", Desc: "禁用时段（disabledHours/disabledMinutes(h)/disabledSeconds(h,m)），禁用格灰置不可点"},
 			{Name: "NewTimePicker", Type: "func() *TimePicker", Desc: "构造（默认无值显示占位）"},

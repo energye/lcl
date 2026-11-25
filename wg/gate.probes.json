@@ -112,6 +112,24 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "timepicker-rangepicker",
+      "covers": [
+        "wg/widgets/timerange.go",
+        "wg/widgets/timepicker.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeTimeRangePicker$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

@@ -98,6 +98,10 @@ type TimePicker struct {
 	// 12h 模式 4 列：0=小时(0..11 映射)、1..2=分/秒、3=上午/下午。
 	cellsByCol [4][]*timeCellInfo
 	selIdx     [4]int // -1 = 该列未选中；3 列模式第 4 列恒 -1
+
+	// OnValueChange 内部值变化钩子（区间选择器监听每端变化切端用；
+	// 不影响公开 OnChange 语义）。
+	OnValueChange func()
 }
 
 // NewTimePicker 创建时间选择器（默认无值——显示占位）。
@@ -296,19 +300,25 @@ func (t *TimePicker) closePanel(ctx *ui.BuildContext) {
 	t.panelOpen = false
 }
 
-// buildPanel 构建面板：三列（时/分/秒）+列分隔+底部分隔线+"现在/确定"。
-func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
-	panel := scene.Flex(scene.Vertical, 0)
-	panel.SetBox(scene.BoxSpec{
-		Fill:   scene.Solid(th.Color.Surface),
-		Border: scene.Stroke(th.Color.Border, 1),
-		Radius: th.Radius.Base,
-	})
-	panel.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "time-panel"})
+// columnsWidth 计算列组宽（不构建节点；供区间选择器算浮层宽）。
+func (t *TimePicker) columnsWidth() (cols int, width float32) {
+	vis := t.columns()
+	cols = 1
+	if vis[1] {
+		cols++
+	}
+	if vis[2] {
+		cols++
+	}
+	if t.Use12Hours {
+		cols++
+	}
+	return cols, timeColW*float32(cols) + float32(cols-1)
+}
 
-	// 列：时/分/秒（12h 加上午/下午第 4 列）；Scroll 组合复用（Select
-	// 选项列表同款视口）；列间 1px 分隔。format 裁剪：不显示的列直接跳过
-	// （列号语义保持 0=时/1=分/2=秒/3=AP，pick 与 selIdx 不受影响）。
+// buildColumns 构建列组（时/分/秒+可选 AP，含列间分隔），返回节点与总宽。
+// 单面板与区间双面板共用；sel 为当前选中时/分/秒（-1 表示无）。
+func (t *TimePicker) buildColumns(ctx *ui.BuildContext, th *theme.Data) (*scene.Node, float32) {
 	cols := scene.Flex(scene.Horizontal, 0)
 	type colSpec struct {
 		colIdx int
@@ -327,7 +337,7 @@ func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 		specs = append(specs, colSpec{3, "time-cell-ap", []int{0, 1}})
 	}
 	colN := len(specs)
-	panelW := timeColW*float32(colN) + float32(colN-1)
+	width := timeColW*float32(colN) + float32(colN-1)
 	sel := t.selectedParts()
 	t.selIdx = [4]int{-1, -1, -1, -1}
 	if t.Use12Hours && sel[0] >= 0 {
@@ -353,6 +363,23 @@ func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 			cols.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetSize2(1, timeViewportH))
 		}
 	}
+	return cols, width
+}
+
+// buildPanel 构建面板：三列（时/分/秒）+列分隔+底部分隔线+"现在/确定"。
+func (t *TimePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
+	panel := scene.Flex(scene.Vertical, 0)
+	panel.SetBox(scene.BoxSpec{
+		Fill:   scene.Solid(th.Color.Surface),
+		Border: scene.Stroke(th.Color.Border, 1),
+		Radius: th.Radius.Base,
+	})
+	panel.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "time-panel"})
+
+	// 列：时/分/秒（12h 加上午/下午第 4 列）；Scroll 组合复用（Select
+	// 选项列表同款视口）；列间 1px 分隔。format 裁剪：不显示的列直接跳过
+	// （列号语义保持 0=时/1=分/2=秒/3=AP，pick 与 selIdx 不受影响）。
+	cols, panelW := t.buildColumns(ctx, th)
 	panel.Add(cols)
 
 	// 底部："现在/确定"（Button 文本按钮组合复用）。
@@ -600,6 +627,9 @@ func (t *TimePicker) pick(colIdx, idx int) {
 	t.MarkDirty() // 触发框文本随根重建刷新
 	if t.OnChange != nil {
 		t.OnChange(nv)
+	}
+	if t.OnValueChange != nil {
+		t.OnValueChange()
 	}
 }
 

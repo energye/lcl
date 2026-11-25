@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "timepicker-rangepicker",
+  "title": "TimePicker.RangePicker 区间时间选择（双面板并排）",
+  "component": "TimePicker",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "新增 TimeRangePicker：双触发框（起~止），点开浮层内并排两个时间面板+共享确定",
+    "选起端切到止端；确定提交区间（起\u003e止自动交换）OnChangeRange；两端时间各自独立",
+    "spec 增加区间时间选择断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/timepicker/spec.json"
+  ],
+  "probes": [
+    "timepicker-rangepicker"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/timepicker-rangepicker/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-e9528632630f49a08ff75674faf6826a9089d50e.json",
+    "verifiedTree": "ebeed9dbd9066c52a463b1e9270035780fe588e7"
+  },
+  "createdAt": "2026-11-25T23:01:29.4353695+08:00",
+  "updatedAt": "2026-11-25T23:53:14.5768154+08:00",
+  "closedAt": "2026-11-25T23:53:14.5768154+08:00"
+}

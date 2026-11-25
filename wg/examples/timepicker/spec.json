@@ -6,6 +6,7 @@
       "基础",
       "带初值",
       "12 小时制",
+      "区间时间",
       "列裁剪",
       "禁用时段",
       "步进"
@@ -377,6 +378,98 @@
                 "label": "time-cell-ap",
                 "text": "上午"
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "区间时间",
+      "cases": [
+        {
+          "name": "区间时间卡双触发框存在",
+          "target": {
+            "label": "time-range-start"
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-range-start"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-range-end"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点开区间面板出现双面板+确定",
+          "target": {
+            "label": "time-range-start"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-range-start"
+                }
+              }
+            },
+            {
+              "wait": 400
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-range-panel"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "time-range-ok"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点确定关闭面板",
+          "target": {
+            "label": "time-range-start"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "time-range-start"
+                }
+              }
+            },
+            {
+              "wait": 400
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "time-range-ok"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
             }
           ]
         }

@@ -94,3 +94,34 @@ func TestProbeTimePickerFormatColumns(t *testing.T) {
 		t.Fatalf("列裁剪面板首帧=%v，阈值 16ms", elapsed)
 	}
 }
+
+// TestProbeTimeRangePicker 区间时间双面板首帧 + 宽度受控。
+func TestProbeTimeRangePicker(t *testing.T) {
+	c := wg.NewHeadless(wg.DefaultOptions())
+	defer c.Close()
+	c.Resize(1200, 800)
+	r := widgets.NewTimeRangePicker()
+	r.Start.Value = time.Date(0, 1, 1, 9, 0, 0, 0, time.Local)
+	r.End.Value = time.Date(0, 1, 1, 18, 30, 0, 0, time.Local)
+	cap := &tpCap{child: r}
+	c.MountWidget(cap)
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	r.Show(cap.ctx)
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	r.Close()
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	began := time.Now()
+	r.Show(cap.ctx)
+	if _, err := c.FrameOnce(); err != nil {
+		t.Fatal(err)
+	}
+	if elapsed := time.Since(began); elapsed > 16*time.Millisecond {
+		t.Fatalf("区间时间双面板首帧=%v，阈值 16ms", elapsed)
+	}
+}

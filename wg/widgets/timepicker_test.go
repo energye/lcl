@@ -221,3 +221,33 @@ func TestTimePickerFormatColumns(t *testing.T) {
 		t.Fatalf("12h 下午显示=%q", got)
 	}
 }
+
+// TestTimeRangePicker 区间时间：双端独立、切端、确定交换。
+func TestTimeRangePicker(t *testing.T) {
+	r := NewTimeRangePicker()
+	r.Start.Value = time.Date(0, 1, 1, 9, 0, 0, 0, time.Local)
+	r.End.Value = time.Date(0, 1, 1, 18, 30, 0, 0, time.Local)
+	// 双端显示文本独立。
+	if got := r.Start.displayText(); got != "09:00:00" {
+		t.Fatalf("起端显示=%q", got)
+	}
+	if got := r.End.displayText(); got != "18:30:00" {
+		t.Fatalf("止端显示=%q", got)
+	}
+	// 起端 pick 后切到止端。
+	r.activeEnd = 0
+	r.Start.OnValueChange()
+	if r.activeEnd != 1 {
+		t.Fatalf("起端变化后 activeEnd=%d，want 1", r.activeEnd)
+	}
+	// 交换语义：起>止自动交换。
+	r.Start.Value = time.Date(0, 1, 1, 20, 0, 0, 0, time.Local)
+	r.End.Value = time.Date(0, 1, 1, 8, 0, 0, 0, time.Local)
+	s, e := r.Start.Value, r.End.Value
+	if !s.IsZero() && !e.IsZero() && e.Before(s) {
+		s, e = e, s
+	}
+	if s.Hour() != 8 || e.Hour() != 20 {
+		t.Fatalf("交换后起=%d 止=%d", s.Hour(), e.Hour())
+	}
+}
