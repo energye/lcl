@@ -7,6 +7,7 @@
       "status 与尺寸",
       "前后缀与清除",
       "addon 与 count",
+      "多行自动增高",
       "文本编辑按键"
     ],
     "apiRows": 13,
@@ -44,7 +45,7 @@
               "frac": [
                 0.82,
                 0.25,
-                1.0,
+                1,
                 0.75
               ],
               "expect": {
@@ -409,6 +410,36 @@
             {
               "kind": "template",
               "template": "input-type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "多行自动增高",
+      "cases": [
+        {
+          "name": "多行输入框高度大于单行（autosize 生效）",
+          "target": {
+            "label": "input",
+            "text": "第一行"
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "input",
+                "text": "第一行"
+              }
+            },
+            {
+              "kind": "geometry",
+              "target": {
+                "label": "input",
+                "text": "第一行"
+              },
+              "heightAtLeast": 60
             }
           ]
         }

@@ -35,12 +35,21 @@ var (
 	suffixed   = widgets.NewInput("金额")
 	addoned    = widgets.NewInput("example.com 前缀")
 	counted    = widgets.NewInput("看右下角字数")
+	autoSizeIn = widgets.NewInput("多行自动增高：输入换行试试")
 )
 
 func init() {
 	inp.OnChanged = func(s string) {
 		status.SetText("当前内容：" + s)
 	}
+	autoSizeIn.Multiline = true
+	autoSizeIn.AutoSize = true
+	autoSizeIn.AutoMinRows = 2
+	autoSizeIn.AutoMaxRows = 6
+	autoSizeIn.Width = 320
+	autoSizeIn.Value = "第一行\n第二行\n第三行"
+	autoSizeIn.Editor().SetValue(input.EditingValue{Text: autoSizeIn.Value, Selection: input.RangeAt(input.RuneLen(autoSizeIn.Value))})
+
 	clear.OnClick = func() {
 		inp.Editor().SetValue(input.EditingValue{})
 		inp.Value = ""
@@ -107,6 +116,9 @@ func main() {
 			{Title: "addon 与 count", Note: "addonBefore/addonAfter 灰块；Count 右下角字数", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return widgets.Column{Gap: 12, Children: []ui.Widget{addoned, counted}}
 			}},
+			{Title: "多行自动增高", Note: "Multiline+AutoSize（minRows=2/maxRows=6）：高度随行数增长，超过 6 行封顶", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return autoSizeIn
+			}},
 			{Title: "文本编辑按键", Note: "编辑键统一处理；Enter/Tab 是语义动作不进入文本", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return edit
 			}},
@@ -122,6 +134,8 @@ func main() {
 			{Name: "Count", Type: "bool", Default: "false", Desc: "右下角字数（rune 计数）"},
 			{Name: "Placeholder/Value", Type: "string", Desc: "占位 / 当前文本"},
 			{Name: "Multiline/MaxLines", Type: "bool / int", Desc: "多行模式与最大行数"},
+			{Name: "AutoSize/MinRows/MaxRows", Type: "bool / int / int", Desc: "多行高度随内容自适应 + 行数范围"},
+			{Name: "Multiline/MaxLines2", Type: "bool / int", Desc: "多行模式与最大行数"},
 			{Name: "Disabled", Type: "bool", Default: "false", Desc: "禁用态（antd disabled 专色）"},
 			{Name: "OnChanged/OnSubmit", Type: "func(string)", Desc: "变化 / Enter 提交"},
 			{Name: "Editor/FocusNode", Type: "取模型", Desc: "编辑器与焦点节点"},

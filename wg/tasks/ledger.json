@@ -52,5 +52,11 @@
     "component": "InputNumber",
     "state": "CLOSED",
     "updatedAt": "2026-11-26T00:43:29.8965932+08:00"
+  },
+  {
+    "taskId": "input-autosize",
+    "component": "Input",
+    "state": "CLOSED",
+    "updatedAt": "2026-11-26T01:39:26.7024862+08:00"
   }
 ]

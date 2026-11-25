@@ -2,6 +2,7 @@ package widgets
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/input"
@@ -69,10 +70,17 @@ type Input struct {
 	Height      float32
 	// HitLabel 自定义命中标签（空 = "input"）。嵌入复合组件（如分页跳页框）
 	// 时设成非交互标签，避免被自动化审计当独立输入框枚举。
-	HitLabel  string
-	MaxLines  int
-	OnChanged func(string)
-	OnSubmit  func(string)
+	HitLabel string
+	MaxLines int
+	// AutoSize 多行高度随内容自适应（antd TextArea autoSize）：按换行+
+	// 自动折行计行，高度 = 行数 × 行高 + 上下内边距。
+	AutoSize bool
+	// AutoMinRows/AutoMaxRows 行数范围（antd autoSize.minRows/maxRows）：
+	// 0 = 不限。超过 AutoMaxRows 高度封顶，内容裁切。
+	AutoMinRows int
+	AutoMaxRows int
+	OnChanged   func(string)
+	OnSubmit    func(string)
 	// OnKey 嵌入组件的外置键钩子（Mentions 键盘上下选等）：Key 链最前
 	// 调用，返回 true 消费（不落编辑模型）；nil 跳过。
 	OnKey func(*input.KeyEvent) bool
@@ -254,6 +262,24 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 	if innerW < 24 {
 		innerW = 24
 	}
+	// autosize 多行：按内容行数算高度（换行+自动折行）。行数钳制在
+	// [AutoMinRows, AutoMaxRows]（0 不限）。先按行高与上下内边距估算。
+	if w.Multiline && w.AutoSize {
+		af := text.DefaultFont(m.Font)
+		lineH := text.Measure("Ag", af).H
+		lines := countLines(e.Value().Text, af, innerW)
+		if w.AutoMinRows > 0 && lines < w.AutoMinRows {
+			lines = w.AutoMinRows
+		}
+		if w.AutoMaxRows > 0 && lines > w.AutoMaxRows {
+			lines = w.AutoMaxRows
+		}
+		if lines < 1 {
+			lines = 1
+		}
+		// 上下内边距 ≈ (控件高 - 单行高)/2 的两倍；用 8px 近似 antd padding。
+		height = float32(lines)*lineH + 16
+	}
 	spec := scene.BoxSpec{Fill: scene.Solid(bg), Radius: st2radius(w.Size, th)}
 	if bw > 0 {
 		spec.Border = scene.Stroke(border, bw)
@@ -316,7 +342,12 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 		pn.SetStackPosition(geom.Pt(11, (height-pn.Bounds().H())/2))
 		n.Add(pn)
 	}
-	t.SetMargin(geom.InLTRB(textX-w.scrollX, (height-layout.Size.H)/2, 0, 0))
+	// 垂直位置：autosize 多行从顶部对齐（内容增高时向下生长）；其余垂直居中。
+	textY := (height - layout.Size.H) / 2
+	if w.Multiline && w.AutoSize {
+		textY = 8 // 顶部内边距（与高度公式的 16 上下对称）
+	}
+	t.SetMargin(geom.InLTRB(textX-w.scrollX, textY, 0, 0))
 	n.Add(t)
 
 	sx := width - 11 - sideSuffix
@@ -366,7 +397,11 @@ func (w *Input) Build(ctx *ui.BuildContext) *scene.Node {
 	n.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: hitLabel, Cursor: scene.CursorText, Disabled: w.Disabled})
 
 	// 光标（自绘）：聚焦时显示，位置由选区末端决定。
-	caretLocal := geom.RectXYWH(textX+caretX-w.scrollX, (height-lineH)/2, 2, lineH)
+	caretY := (height - lineH) / 2
+	if w.Multiline && w.AutoSize {
+		caretY = 8
+	}
+	caretLocal := geom.RectXYWH(textX+caretX-w.scrollX, caretY, 2, lineH)
 	w.textNode = t
 	if focused {
 		caret := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Text)}).SetSize2(2, lineH)
@@ -594,6 +629,26 @@ func textWidth(s string, n int, font text.Font) float32 {
 		return 0
 	}
 	return text.Measure(string(rs[:n]), font).W
+}
+
+// countLines 统计多行文本占用的行数：显式换行 + 超宽自动折行。
+func countLines(s string, font text.Font, maxW float32) int {
+	if maxW <= 0 {
+		maxW = 1
+	}
+	total := 0
+	for _, para := range strings.Split(s, "\n") {
+		w := text.Measure(para, font).W
+		n := int(w/maxW) + 1
+		if w <= 0 {
+			n = 1
+		}
+		total += n
+	}
+	if total < 1 {
+		total = 1
+	}
+	return total
 }
 
 // caretFromX 把点击的局部 x 换算成最近的 rune 光标位。

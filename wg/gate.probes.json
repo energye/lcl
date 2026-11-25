@@ -147,6 +147,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "input-autosize",
+      "covers": [
+        "wg/widgets/input.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeInputAutoSize$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

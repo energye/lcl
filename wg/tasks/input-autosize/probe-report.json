@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "input-autosize",
+  "treeHash": "2cf33e0d14bb902de46686e446539085d7217617",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "input-autosize",
+      "status": "PASS",
+      "durationMs": 3594,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\input-autosize\\logs\\2cf33e0d14bb902de46686e446539085d7217617\\probe_input-autosize.log"
+    }
+  ]
+}

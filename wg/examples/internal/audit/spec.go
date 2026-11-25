@@ -108,10 +108,11 @@ type SpecAssertion struct {
 	Template string      `json:"template,omitempty"`
 
 	// geometry
-	RightOf      *SpecTarget `json:"rightOf,omitempty"`
-	Below        *SpecTarget `json:"below,omitempty"`
-	WidthAtLeast float32     `json:"widthAtLeast,omitempty"`
-	WidthBetween []float32   `json:"widthBetween,omitempty"`
+	RightOf       *SpecTarget `json:"rightOf,omitempty"`
+	Below         *SpecTarget `json:"below,omitempty"`
+	WidthAtLeast  float32     `json:"widthAtLeast,omitempty"`
+	HeightAtLeast float32     `json:"heightAtLeast,omitempty"`
+	WidthBetween  []float32   `json:"widthBetween,omitempty"`
 	// XBetween 根坐标 Min.X 落区间（冻结列"不随横向滚动"验证——
 	// 滚动前后单元格 Min.X 都应留在视口左缘区间）。
 	XBetween      []float32 `json:"xBetween,omitempty"`
@@ -1000,6 +1001,12 @@ func (r *specRunner) assertGeometry(caseName string, target *SpecTarget, as Spec
 			ok     bool
 			detail string
 		}{b.W() >= as.WidthAtLeast, fmt.Sprintf("宽 %.0f ≥ %.0f", b.W(), as.WidthAtLeast)})
+	}
+	if as.HeightAtLeast > 0 {
+		checks = append(checks, struct {
+			ok     bool
+			detail string
+		}{b.H() >= as.HeightAtLeast, fmt.Sprintf("高 %.0f ≥ %.0f", b.H(), as.HeightAtLeast)})
 	}
 	if len(as.WidthBetween) == 2 {
 		checks = append(checks, struct {

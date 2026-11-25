@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "input-autosize",
+  "title": "Input autosize 多行高度自适应",
+  "component": "Input",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "Multiline + AutoSize：高度随内容行数自动增高（按换行+自动折行计行）",
+    "AutoMinRows/AutoMaxRows 限制行数范围；超过 MaxRows 高度封顶（内容裁切）",
+    "spec 增加 autosize 断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/input/spec.json"
+  ],
+  "probes": [
+    "input-autosize"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/input-autosize/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-5581b9a44a5a565c65031b422e06465c9c99909b.json",
+    "verifiedTree": "2cf33e0d14bb902de46686e446539085d7217617"
+  },
+  "createdAt": "2026-11-26T00:45:15.4281496+08:00",
+  "updatedAt": "2026-11-26T01:39:26.6982681+08:00",
+  "closedAt": "2026-11-26T01:39:26.6982681+08:00"
+}
