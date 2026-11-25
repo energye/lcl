@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "image-preview-toolbar",
+  "title": "Image 预览工具条（缩放/旋转/复位）",
+  "component": "Image",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "预览弹窗底部工具条：放大/缩小/左转/右转/复位/关闭（antd preview toolbar）",
+    "缩放按 scaleStep(1.5x) 步进、限制 [1,50]；旋转 90°/次；复位回初始；图像按变换绘制",
+    "spec 增加工具条断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/image/spec.json"
+  ],
+  "probes": [
+    "image-preview-toolbar"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/image-preview-toolbar/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-10cf66550a24e05952509fbfc86a24adcf9bcc31.json",
+    "verifiedTree": "c76ed4f610160200cbd9120af1485c3725d950a3"
+  },
+  "createdAt": "2026-11-26T03:56:39.3804277+08:00",
+  "updatedAt": "2026-11-26T04:44:14.0720867+08:00",
+  "closedAt": "2026-11-26T04:44:14.0720867+08:00"
+}

@@ -101,6 +101,88 @@
               "count": 0
             }
           ]
+        },
+        {
+          "name": "预览出现工具条（放大/缩小/旋转）",
+          "target": {
+            "label": "image",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "image",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 350
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "image-zoom-in"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "image-zoom-out"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "image-rotate-left"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "image-rotate-right"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点放大后预览仍开（变换不关面板）",
+          "target": {
+            "label": "image",
+            "index": 0
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "image",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "wait": 350
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "image-zoom-in"
+                }
+              }
+            },
+            {
+              "wait": 250
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
+            }
+          ]
         }
       ]
     },

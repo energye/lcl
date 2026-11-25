@@ -64,5 +64,11 @@
     "component": "Typography",
     "state": "CLOSED",
     "updatedAt": "2026-11-26T03:00:36.6396366+08:00"
+  },
+  {
+    "taskId": "image-preview-toolbar",
+    "component": "Image",
+    "state": "CLOSED",
+    "updatedAt": "2026-11-26T04:44:14.0760607+08:00"
   }
 ]

@@ -34,9 +34,10 @@ func main() {
 			"内存位图显示（render.ImageFrom+CustomPaint 双线性拉伸；引擎无网络/文件 IO——Src 由宿主注入）",
 			"**点击预览**：BandModal 遮罩+居中大图+右上关闭+Esc（Modal 同 overlay 模式）",
 			"Src 为 nil 渲染加载失败占位（antd fallback：灰底+提示文本）",
+			"预览工具条：放大/缩小/左转/右转（antd preview toolbar；缩放限 [1,50]、旋转 90°/次）",
 		},
 		Demos: []doc.Demo{
-			{Title: "基础与预览", Note: "渐变合成图 200×150：点击弹 BandModal 大图预览（2.5× 封顶 640）", Build: func(ctx *ui.BuildContext) ui.Widget {
+			{Title: "基础与预览", Note: "渐变合成图 200×150：点击弹预览，底部工具条放大/缩小/左转/右转（antd preview toolbar）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return imgBase
 			}},
 			{Title: "加载失败占位", Note: "Src=nil：灰底+「图片加载失败」文本（antd fallback）", Build: func(ctx *ui.BuildContext) ui.Widget {
@@ -49,6 +50,7 @@ func main() {
 			{Name: "Width / Height", Type: "float32", Desc: "显示尺寸"},
 			{Name: "Radius", Type: "float32", Default: "4", Desc: "圆角"},
 			{Name: "Preview", Type: "bool", Default: "true", Desc: "点击 BandModal 大图预览（Esc/关闭钮退出）"},
+			{Name: "预览工具条", Type: "内置", Desc: "放大/缩小（1.5× 步进，限 [1,50]）/左转/右转（90°/次）"},
 		},
 	})
 }

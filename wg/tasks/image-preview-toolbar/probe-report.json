@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "image-preview-toolbar",
+  "treeHash": "c76ed4f610160200cbd9120af1485c3725d950a3",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "image-preview-toolbar",
+      "status": "PASS",
+      "durationMs": 4121,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\image-preview-toolbar\\logs\\c76ed4f610160200cbd9120af1485c3725d950a3\\probe_image-preview-toolbar.log"
+    }
+  ]
+}

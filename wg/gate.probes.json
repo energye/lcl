@@ -182,6 +182,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "image-preview-toolbar",
+      "covers": [
+        "wg/widgets/image.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeImagePreviewToolbar$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }
