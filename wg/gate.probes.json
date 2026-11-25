@@ -78,6 +78,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "datepicker-showtime",
+      "covers": [
+        "wg/widgets/datepicker.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeDatePickerShowTime$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

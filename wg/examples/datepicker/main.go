@@ -15,6 +15,7 @@ var (
 	dpRange     = widgets.NewDatePicker()
 	dpCell      = widgets.NewDatePicker()
 	dpDis       = widgets.NewDatePicker()
+	dpTime      = widgets.NewDatePicker()
 	rangeInited bool
 )
 
@@ -38,6 +39,10 @@ func init() {
 		return nil
 	}
 
+	// 时间联动卡（antd showTime）：面板底部时/分两列+确定，选日期不关面板。
+	dpTime.Value = time.Date(2026, 11, 18, 9, 30, 0, 0, time.Local)
+	dpTime.ShowTime = true
+
 	// 禁用日期卡（antd disabledDate）：周末（六/日）灰置不可选。
 	dpDis.Value = time.Date(2026, 11, 6, 12, 0, 0, 0, time.Local) // 2026-11-06 避开与其他卡触发框文本撞车
 	dpDis.DisabledDate = func(date time.Time) bool {
@@ -54,6 +59,7 @@ func main() {
 			"日期格选择：主色实底选中态；today 主色文字；选择后自动关闭面板",
 			"DateCellRender：面板日期格数字下方追加自定义内容（antd cellRender 对应）",
 			"点标题切年面板（4×3 月格点月回日历）；DisabledDate 禁用日期灰置不可选",
+			"ShowTime 时间联动：面板底部时/分两列+确定按钮，选日期不关面板，确定后提交",
 		},
 		Demos: []doc.Demo{
 			{Title: "日期选择", Note: "点击触发框弹面板；‹›切换月份；点击日期格选择并关闭", Build: func(ctx *ui.BuildContext) ui.Widget {
@@ -71,6 +77,9 @@ func main() {
 			{Title: "禁用日期", Note: "DisabledDate：周末灰置不可选（date-cell-disabled 锚）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return dpDis
 			}},
+			{Title: "日期时间", Note: "ShowTime=true：面板底部时/分两列选择，选日期不关面板，点确定提交（date-time-ok 锚）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return dpTime
+			}},
 			{Title: "自定义单元格", Note: "DateCellRender：面板日期格数字下方追加事件 Badge（11 评审/15 发布/27 停机，antd cellRender 对应）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return dpCell
 			}},
@@ -82,6 +91,8 @@ func main() {
 			{Name: "Range", Type: "bool", Default: "false", Desc: "范围选择模式：双触发框，面板两击选起止"},
 			{Name: "Value2 / OnChangeRange", Type: "time.Time / func(t1,t2)", Desc: "范围结束日期 / 范围选择回调（第二击早于第一击自动交换）"},
 			{Name: "DateCellRender", Type: "func(date time.Time) ui.Widget", Desc: "自定义面板日期格内容（数字下方追加，antd cellRender 对应）"},
+			{Name: "ShowTime / HourStep / MinuteStep", Type: "bool / int / int", Default: "false", Desc: "时间联动：面板底部时/分选择，选日期不关面板，确定后提交"},
+			{Name: "OnOk", Type: "func()", Desc: "点确定回调（ShowTime 模式确认时触发）"},
 			{Name: "Placeholder / Placeholder2", Type: "string", Default: "请选择日期", Desc: "触发框占位文本（范围模式为起/止框）"},
 			{Name: "Show / Close / IsOpen / RangeStage", Type: "func(...)", Desc: "程序化开关面板 / 状态查询（RangeStage：0=未开始 1=已选起待选止）"},
 			{Name: "Width", Type: "float32", Default: "200", Desc: "触发框宽度（范围模式为单框宽）"},

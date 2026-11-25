@@ -45,6 +45,15 @@ type DatePicker struct {
 	// DisabledDate 禁用日期判定（antd disabledDate）：true=该格灰置
 	// 不可选（down 吞事件）。
 	DisabledDate func(date time.Time) bool
+	// ShowTime 启用时间联动（antd showTime）：面板底部追加时/分两列选择，
+	// 选日期不关面板，点「确定」才提交并关闭。触发框显示到分钟。
+	ShowTime bool
+	// HourStep/MinuteStep 时间列步长（antd showTime.hourStep/minuteStep，
+	// 0/1 = 每格）。
+	HourStep   int
+	MinuteStep int
+	// OnOk 点「确定」回调（antd onOk，ShowTime 模式下确认时触发）。
+	OnOk func()
 	// rangeStage 范围选择进行到的阶段（0=未开始/已完成，1=已选起待选止）。
 	rangeStage int
 
@@ -61,6 +70,8 @@ type DatePicker struct {
 	// 内容用——浮层子树不随根重建）。
 	panelNode *scene.Node
 	showCtx   *ui.BuildContext
+	// okBtn 时间区确定按钮持久实例（Build 内新建会丢按压态）。
+	okBtn *Button
 }
 
 // NewDatePicker 创建日期选择器（默认当前日期）。
@@ -81,7 +92,7 @@ func (d *DatePicker) Build(ctx *ui.BuildContext) *scene.Node {
 		w = 200
 	}
 	h := ui.MetricsFor(th, ui.SizeMedium).Height
-	display := d.Value.Format("2006-01-02")
+	display := d.displayText(d.Value)
 	if d.Value.IsZero() {
 		display = d.Placeholder
 	}
@@ -139,7 +150,7 @@ func (d *DatePicker) buildRangeTrigger(ctx *ui.BuildContext, th *theme.Data) *sc
 		{d.Value, d.Placeholder},
 		{d.Value2, d.Placeholder2},
 	} {
-		display := seg.val.Format("2006-01-02")
+		display := d.displayText(seg.val)
 		txtColor := th.Color.Text
 		if seg.val.IsZero() {
 			// 无值才显示占位；占位未设时按框位兜底（起/止各自的默认文案，
@@ -202,6 +213,157 @@ func (d *DatePicker) IsOpen() bool { return d.panelOpen }
 
 // RangeStage 返回范围选择阶段（0=未开始/完成，1=已选起待选止；诊断用）。
 func (d *DatePicker) RangeStage() int { return d.rangeStage }
+
+// displayText 触发框显示文本：普通日期 YYYY-MM-DD，ShowTime 时到分钟。
+func (d *DatePicker) displayText(t time.Time) string {
+	if d.ShowTime {
+		return t.Format("2006-01-02 15:04")
+	}
+	return t.Format("2006-01-02")
+}
+
+// timeSteps 时间列可取值（按步长过滤；步长 <=1 时为全部）。
+func timeSteps(max int, step int) []int {
+	if step <= 1 {
+		out := make([]int, max)
+		for i := 0; i < max; i++ {
+			out[i] = i
+		}
+		return out
+	}
+	var out []int
+	for i := 0; i < max; i += step {
+		out = append(out, i)
+	}
+	return out
+}
+
+// buildTimePanel 面板底部时间区（antd showTime：时/分两列 + 确定按钮）。
+// 点格子直接改 d.Value 的时分并原地刷新（不关面板）。
+func (d *DatePicker) buildTimePanel(ctx *ui.BuildContext, th *theme.Data, panelW float32) *scene.Node {
+	box := scene.Flex(scene.Vertical, 0).SetWidth(panelW)
+	box.SetHit(scene.HitSpec{Label: "date-time-panel"})
+	// 顶部分隔线（antd footer 上边线 colorSplit）。
+	box.Add(scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.Border)}).SetSize2(panelW, 1))
+
+	cols := scene.Flex(scene.Horizontal, th.Space.SM).SetCrossAlign(scene.CrossStart)
+	cols.SetPadding(geom.InLTRB(0, th.Space.SM, 0, 0))
+	colW := (panelW - th.Space.SM) / 2
+
+	curHour, curMinute := 0, 0
+	if !d.Value.IsZero() {
+		curHour, curMinute = d.Value.Hour(), d.Value.Minute()
+	}
+
+	mkColumn := func(label, cellLabel string, values []int, selected int, apply func(v int)) *scene.Node {
+		const cellH = float32(26)
+		const viewH = float32(168) // 约 6 格可视（antd 时间列固定高可滚动）
+		col := scene.Flex(scene.Vertical, 0).SetWidth(colW)
+		for _, v := range values {
+			v := v
+			sel := v == selected
+			row := scene.Flex(scene.Horizontal, 0).SetCrossAlign(scene.CrossCenter)
+			row.SetWidth(colW).SetHeight(cellH)
+			row.SetPadding(geom.InLTRB(8, 0, 8, 0))
+			if sel {
+				row.SetBox(scene.BoxSpec{Fill: scene.Solid(th.Color.InfoBg), Radius: th.Radius.SM})
+			}
+			fg := th.Color.Text
+			if sel {
+				fg = th.Color.Primary
+			}
+			txt := fmt.Sprintf("%02d", v)
+			l := text.LayoutText(txt, text.DefaultFont(th.Font.SizeBase), text.Options{})
+			row.Add(scene.Text(scene.TextSpec{Src: txt, Layout: l, Color: fg}))
+			row.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: cellLabel, Cursor: scene.CursorPointer})
+			if ctx.Input != nil {
+				ctx.Input.Set(row, input.Handler{Pointer: func(ev *input.PointerEvent) bool {
+					if !ev.Down() {
+						return false
+					}
+					apply(v)
+					time.AfterFunc(0, d.refreshPanel)
+					return true
+				}})
+			}
+			col.Add(row)
+		}
+		// 固定高滚动视口：24 小时全展开会把面板撑到上千像素、确定按钮被
+		// 挤出屏幕（实测 1805px）。选中项滚到视口中部。
+		scroll := &Scroll{Axis: scene.Vertical, Width: colW, Height: viewH,
+			Child: nodeFn(func(*ui.BuildContext) *scene.Node { return col })}
+		if selected >= 0 {
+			// selected 是值；步长过滤后找索引算滚动偏移。
+			idx := -1
+			for i, v := range values {
+				if v == selected {
+					idx = i
+					break
+				}
+			}
+			if idx >= 0 {
+				off := float32(idx)*cellH - (viewH-cellH)/2
+				if off < 0 {
+					off = 0
+				}
+				scroll.Offset = off
+			}
+		}
+		wrap := scene.Flex(scene.Vertical, 0)
+		wrap.Add(scroll.Build(ctx))
+		wrap.SetHit(scene.HitSpec{Label: cellLabel + "-col"})
+		_ = label
+		return wrap
+	}
+
+	hours := timeSteps(24, d.HourStep)
+	minutes := timeSteps(60, d.MinuteStep)
+	cols.Add(mkColumn("时", "date-time-hour", hours, curHour, func(v int) {
+		base := d.Value
+		if base.IsZero() {
+			base = time.Now()
+		}
+		d.Value = time.Date(base.Year(), base.Month(), base.Day(), v, base.Minute(), 0, 0, time.Local)
+	}))
+	cols.Add(mkColumn("分", "date-time-minute", minutes, curMinute, func(v int) {
+		base := d.Value
+		if base.IsZero() {
+			base = time.Now()
+		}
+		d.Value = time.Date(base.Year(), base.Month(), base.Day(), base.Hour(), v, 0, 0, time.Local)
+	}))
+	box.Add(cols)
+
+	// 确定按钮行（antd showTime 默认显示 OK）。
+	// Button 自带 hit label 会撞全页 button，且其内部 handler 会消费点击
+	// 使外层包裹的 handler 不执行——故按钮外包被动锚 + 用 OnClick 回调
+	// （持久实例，避免 Build 内新建丢按压态）。
+	okRow := scene.Flex(scene.Horizontal, 0).SetMainAlign(scene.MainEnd)
+	okRow.SetPadding(geom.InLTRB(0, th.Space.SM, 0, 0))
+	if d.okBtn == nil {
+		d.okBtn = &Button{Text: "确定", Type: TypePrimary, Size: ui.SizeSmall}
+	}
+	d.okBtn.OnClick = func() {
+		d.MarkDirty()
+		if d.OnOk != nil {
+			d.OnOk()
+		}
+		if d.OnChange != nil && !d.Value.IsZero() {
+			d.OnChange(d.Value)
+		}
+		if ctx.Overlay != nil && d.handle != 0 {
+			ctx.Overlay.Close(d.handle)
+		}
+		d.handle = 0
+		d.panelOpen = false
+	}
+	okWrap := scene.Flex(scene.Horizontal, 0)
+	okWrap.Add(d.okBtn.Build(ctx))
+	okWrap.SetHit(scene.HitSpec{Label: "date-time-ok"})
+	okRow.Add(okWrap)
+	box.Add(okRow)
+	return box
+}
 
 // openPanel 打开日历面板（BandPopup+PlacementBottomStart，Dropdown 同通道）。
 func (d *DatePicker) openPanel(ctx *ui.BuildContext, anchor *scene.Node, th *theme.Data) {
@@ -426,6 +588,18 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 					d.MarkDirty() // 触发框文档流文本同步（浮层内不重开 Entry，文本随根重建）
 					return true
 				}
+				if d.ShowTime {
+					// 时间联动：保留已选时分（无值取 00:00），不关面板，
+					// 等「确定」提交（antd showTime 语义）。
+					hh, mm := 0, 0
+					if !d.Value.IsZero() {
+						hh, mm = d.Value.Hour(), d.Value.Minute()
+					}
+					d.Value = time.Date(t.Year(), t.Month(), t.Day(), hh, mm, 0, 0, time.Local)
+					d.MarkDirty()
+					time.AfterFunc(0, d.refreshPanel)
+					return true
+				}
 				d.Value = t
 				d.MarkDirty()
 				// 关面板**直接用 ctx.Overlay**（d.fb.host 在该链路为 nil——
@@ -446,6 +620,9 @@ func (d *DatePicker) buildPanel(ctx *ui.BuildContext, th *theme.Data) *scene.Nod
 	}
 	flushRow() // 尾行（最后不满 7 天的一周）
 	panel.Add(grid)
+	if d.ShowTime {
+		panel.Add(d.buildTimePanel(ctx, th, 280-2*th.Space.SM))
+	}
 	panel.SetHit(scene.HitSpec{Behavior: scene.HitOpaque, Label: "date-panel"})
 	return panel
 }

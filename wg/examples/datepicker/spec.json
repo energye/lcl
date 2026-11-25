@@ -6,7 +6,8 @@
       "范围选择",
       "日期选择",
       "自定义单元格",
-      "禁用日期"
+      "禁用日期",
+      "日期时间"
     ]
   },
   "sections": [
@@ -70,7 +71,6 @@
             }
           ]
         },
-        
         {
           "name": "两击选起止后双触发框显示区间且面板保持",
           "target": {
@@ -614,6 +614,130 @@
               "target": {
                 "label": "date-month-cell"
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "日期时间",
+      "cases": [
+        {
+          "name": "开面板后出现时间区（时/分两列+确定）",
+          "target": {
+            "label": "date-picker",
+            "text": "2026-11-18 09:30"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker",
+                  "text": "2026-11-18 09:30"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-time-panel"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-time-hour"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-time-minute"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "date-time-ok"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点确定关闭面板",
+          "target": {
+            "label": "date-picker",
+            "text": "2026-11-18 09:30"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker",
+                  "text": "2026-11-18 09:30"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-time-ok"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 0
+            }
+          ]
+        },
+        {
+          "name": "选日期不关面板（ShowTime 联动）",
+          "target": {
+            "label": "date-picker",
+            "text": "2026-11-18 09:30"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "date-picker",
+                  "text": "2026-11-18 09:30"
+                }
+              }
+            },
+            {
+              "wait": 300
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "date-cell",
+                  "index": 9
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "overlay",
+              "count": 1
             }
           ]
         }

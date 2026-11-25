@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "datepicker-showtime",
+  "title": "DatePicker 时间联动 showTime（时/分列+确定）",
+  "component": "DatePicker",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "DatePicker 支持 ShowTime（antd showTime），面板底部追加时/分选择并回填到 Value",
+    "时间与日期联动：选日期不关面板，确认后才提交；面板显示当前时间",
+    "spec 增加时间联动断言，真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/datepicker/spec.json"
+  ],
+  "probes": [
+    "datepicker-showtime"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/datepicker-showtime/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-137de4136b70b904182f436d0d58166ba4173e3e.json",
+    "verifiedTree": "a67c58da2c982dd94597c6fd7cb0dec912b7681c"
+  },
+  "createdAt": "2026-11-25T18:03:42.2049218+08:00",
+  "updatedAt": "2026-11-25T18:56:31.8205821+08:00",
+  "closedAt": "2026-11-25T18:56:31.8205821+08:00"
+}
