@@ -415,7 +415,7 @@ const (
 
 // NewDrawer 创建抽屉。
 func NewDrawer(title string, content ui.Widget) *Drawer {
-	return &Drawer{Title: title, Content: content, Edge: DrawerLeft, Width: 320}
+	return &Drawer{Title: title, Content: content, Edge: DrawerLeft, Width: DrawerSizeDefault}
 }
 
 // Show 显示抽屉。
@@ -434,7 +434,7 @@ func (d *Drawer) Show(ctx *ui.BuildContext) {
 		w = d.PresetSize // antd size 预设优先（378/736）
 	}
 	if w <= 0 {
-		w = 320
+		w = DrawerSizeDefault
 	}
 	title, content := d.Title, d.Content
 	footer, footerNull := d.Footer, d.FooterNull
@@ -467,6 +467,7 @@ func (d *Drawer) Show(ctx *ui.BuildContext) {
 				Fill:   scene.Solid(th.Color.Surface),
 				Border: scene.Stroke(th.Color.Border, 1),
 			})
+			col.SetHit(scene.HitSpec{Label: "drawer-panel"})
 			col.SetPadding(geom.InLTRB(th.Space.LG, th.Space.LG, th.Space.LG, th.Space.LG))
 			if title != "" {
 				tl := text.LayoutText(title, text.DefaultFont(th.Font.SizeLG), text.Options{})

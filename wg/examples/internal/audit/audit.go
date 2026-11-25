@@ -131,6 +131,7 @@ type element struct {
 	name     string    // 中文名
 	bounds   geom.Rect // 枚举时的绝对 bounds
 	disabled bool      // 禁用态：点击不应有任何变化
+	key      string    // 文档坐标去重键（跨屏/跨重建同一元素只验一次）
 }
 
 // ── 像素采样 ────────────────────────────────────────────────────────
@@ -580,6 +581,9 @@ func Run(c *wg.Container, outDir string, spec *Spec) *Report {
 	// 会改变画面，永远"有变化"）。
 	prevOff = -1
 	page := 0
+	// 文档坐标去重：同一元素在多屏可见（或点击重建后 ID 变化）时只验一次，
+	// 否则长页面会把每屏元素重复验证，审计耗时线性膨胀。
+	done := map[string]bool{}
 	for page < 30 {
 		off := scrollPos()
 		if off == prevOff {
@@ -617,12 +621,17 @@ func Run(c *wg.Container, outDir string, spec *Spec) *Report {
 				}
 				seen[pid] = true
 			}
-			elems = append(elems, element{label: h.Label, name: name, bounds: b, disabled: h.Disabled})
+			key := fmt.Sprintf("%s|%.0f|%.0f", h.Label, b.Min.X, b.Min.Y+off)
+			if done[key] {
+				return true
+			}
+			elems = append(elems, element{label: h.Label, name: name, bounds: b, disabled: h.Disabled, key: key})
 			return true
 		})
 		rep.Elements += len(elems)
 		for _, el := range elems {
 			verifyElement(el)
+			done[el.key] = true
 		}
 
 		injectWheel(c, 1035, 400, -3)

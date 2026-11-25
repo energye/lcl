@@ -66,6 +66,12 @@ func TestDrawerEdges(t *testing.T) {
 	}
 }
 
+func TestDrawerDefaultWidth(t *testing.T) {
+	if got := NewDrawer("设置", nil).Width; got != DrawerSizeDefault {
+		t.Fatalf("Drawer 默认宽度=%v，want %v", got, DrawerSizeDefault)
+	}
+}
+
 func TestDrawerFooter(t *testing.T) {
 	tests := []struct {
 		name       string

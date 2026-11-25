@@ -201,7 +201,9 @@ func caseFormTabsSwitch() (string, error) {
 	if root == nil || len(root.Children()) == 0 {
 		return "找不到标签条", errors.New("Tabs 未构建")
 	}
-	headers := root.Children()[0].Children()
+	// line 型页签的指示条已提升到 bar 层 Stack，children 顺序不保证；
+	// 直接按 tab 命中锚收集页签表头。
+	headers := collectHitLabel(root, "tab")
 	if len(headers) < 2 {
 		return fmt.Sprintf("页签数=%d", len(headers)), errors.New("页签不足两个")
 	}
@@ -211,6 +213,21 @@ func caseFormTabsSwitch() (string, error) {
 		return got, errors.New("点击第二个页签没有切换")
 	}
 	return got, nil
+}
+
+// collectHitLabel 深度优先按文档序收集命中锚为 label 的节点。
+func collectHitLabel(n *scene.Node, label string) []*scene.Node {
+	if n == nil {
+		return nil
+	}
+	var out []*scene.Node
+	if n.HitSpec().Label == label {
+		out = append(out, n)
+	}
+	for _, c := range n.Children() {
+		out = append(out, collectHitLabel(c, label)...)
+	}
+	return out
 }
 
 func caseFormTooltip() (string, error) {

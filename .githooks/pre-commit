@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+tree=$(git write-tree)
+go run ./wg/cmd/wg-gate check --tree "$tree"

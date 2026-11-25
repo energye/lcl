@@ -1161,6 +1161,19 @@ func (r *specRunner) tplTableRowSelect(caseName string, t SpecTarget) {
 
 // tplSelectOpenClose：点击开浮层、Esc 关、再次点击能重新打开（覆盖句柄复位）。
 func (r *specRunner) tplSelectOpenClose(caseName string, t SpecTarget) {
+	base := r.overlayCount("")
+	// 轮询等待目标态而不是固定 sleep：机器负载高时帧泵延迟会让固定
+	// 300ms 读到过期的浮层计数（全量门禁偶发 0→0 实证）。
+	waitCount := func(want int) int {
+		deadline := time.Now().Add(2 * time.Second)
+		for {
+			got := r.overlayCount("")
+			if got == want || time.Now().After(deadline) {
+				return got
+			}
+			time.Sleep(30 * time.Millisecond)
+		}
+	}
 	open := func() int {
 		n, ok := r.locate(t)
 		if !ok {
@@ -1169,16 +1182,13 @@ func (r *specRunner) tplSelectOpenClose(caseName string, t SpecTarget) {
 		p := clickPoint(n.BoundsInRoot(), nil)
 		injectDown(r.c, p.X, p.Y)
 		injectUp(r.c, p.X, p.Y)
-		time.Sleep(300 * time.Millisecond)
-		return r.overlayCount("")
+		return waitCount(base + 1)
 	}
-	base := r.overlayCount("")
 	afterOpen := open()
 	r.add(caseName, "template:select-open-close", afterOpen == base+1,
 		fmt.Sprintf("点击后浮层 %d → %d", base, afterOpen))
 	injectEsc(r.c)
-	time.Sleep(250 * time.Millisecond)
-	afterEsc := r.overlayCount("")
+	afterEsc := waitCount(base)
 	r.add(caseName, "template:select-open-close", afterEsc == base,
 		fmt.Sprintf("Esc 后浮层 %d → %d", afterOpen, afterEsc))
 	afterReopen := open()

@@ -82,7 +82,7 @@ func main() {
 			"Footer 自定义底部内容；默认无 footer，FooterNull 显式隐藏（antd footer/null）",
 		},
 		Demos: []doc.Demo{
-			{Title: "左侧抽屉", Note: "Edge=Left，宽 320", Build: func(ctx *ui.BuildContext) ui.Widget {
+			{Title: "左侧抽屉", Note: "Edge=Left，默认宽 378", Build: func(ctx *ui.BuildContext) ui.Widget {
 				doc.CaptureCtx(&ctxRef, ctx)
 				return open
 			}},
@@ -102,7 +102,7 @@ func main() {
 		API: []doc.APIRow{
 			{Name: "NewDrawer", Type: "func(title string, content ui.Widget) *Drawer", Desc: "构造"},
 			{Name: "Edge", Type: "枚举", Default: "Left", Desc: "Left/Right/Top/Bottom"},
-			{Name: "Width", Type: "float32", Default: "320", Desc: "左右向宽度（上下向为高度 400）"},
+			{Name: "Width", Type: "float32", Default: "378", Desc: "左右向宽度（上下向为高度 400）"},
 			{Name: "PresetSize", Type: "float32", Desc: "预设宽度（DrawerSizeDefault 378 / DrawerSizeLarge 736），优先于 Width"},
 			{Name: "Footer", Type: "ui.Widget", Desc: "自定义底部内容（antd footer ReactNode）；默认无 footer"},
 			{Name: "FooterNull", Type: "bool", Default: "false", Desc: "显式隐藏 footer（antd footer={null}，优先于 Footer）"},

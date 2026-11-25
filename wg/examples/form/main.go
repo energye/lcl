@@ -13,6 +13,7 @@ import (
 var (
 	form     = widgets.NewForm()
 	formRule = widgets.NewForm()
+	demoForm = widgets.NewDemoForm()
 	result   = widgets.NewButton("点提交查看校验结果")
 	// 规则集卡的提交结果按钮（与必填卡按钮同款文本协议，spec 文本断言用）。
 	resultRule = widgets.NewButton("点提交查看校验结果")
@@ -69,6 +70,7 @@ func main() {
 			"表单容器：FormItem{Label,Child,Required} 组装字段行，Validate 汇总校验",
 			"过程式校验器（Rule/Validator）+ 声明式规则集（Rules/FormRule，antd rules 直译）",
 			"FormRule：required/whitespace/len/min/max/pattern/email/url/validator+message",
+			"集成表单页：NewDemoForm 组合 Input/Radio/Switch/Slider/Tabs/Tooltip/提交链路",
 			"计划（M12 尾）：横向布局、动态增删字段",
 		},
 		Demos: []doc.Demo{
@@ -83,6 +85,9 @@ func main() {
 				col.Add(formRule.Build(ctx))
 				col.Add(resultRule.Build(ctx))
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
+			}},
+			{Title: "集成表单页", Note: "NewDemoForm：中文输入、Radio、Switch、Slider、Tabs、Tooltip 与提交状态联动", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return demoForm
 			}},
 		},
 		API: []doc.APIRow{

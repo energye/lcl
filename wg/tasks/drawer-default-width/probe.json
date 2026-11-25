@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "taskId": "drawer-default-width",
+  "probeId": "drawer-default-width",
+  "covers": [
+    "wg/widgets/feedback.go"
+  ],
+  "command": [
+    "go",
+    "test",
+    "-tags",
+    "gateprobe",
+    "./wg/internal/gate/probes",
+    "-run",
+    "^TestProbeDrawerDefaultWidth$",
+    "-count=1"
+  ],
+  "timeout": 120000000000
+}

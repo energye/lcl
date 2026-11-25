@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "taskId": "drawer-default-width",
+  "caseName": "反馈回归：drawer-default-width-378",
+  "component": "Drawer",
+  "expected": "默认宽度为 378px，与 antd Drawer size=default 一致",
+  "actual": "默认宽度为 320px",
+  "status": "RED_REQUIRED"
+}

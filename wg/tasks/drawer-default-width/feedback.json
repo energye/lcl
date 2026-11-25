@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "id": "drawer-default-width-378",
+  "component": "Drawer",
+  "severity": "P2",
+  "steps": [
+    "使用 NewDrawer 创建抽屉，不设置 Width 或 PresetSize",
+    "打开抽屉并测量面板宽度"
+  ],
+  "expected": "默认宽度为 378px，与 antd Drawer size=default 一致",
+  "actual": "默认宽度为 320px",
+  "reviewer": "人工审核试跑",
+  "evidence": [
+    "antd Drawer mergedWidth 默认 378",
+    "wg/widgets/feedback.go NewDrawer Width=320"
+  ]
+}

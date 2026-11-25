@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "drawer-default-width",
+  "title": "drawer-default-width-378",
+  "component": "Drawer",
+  "state": "CLOSED",
+  "source": {
+    "type": "human-feedback",
+    "id": "drawer-default-width-378"
+  },
+  "requirements": [
+    "默认宽度为 378px，与 antd Drawer size=default 一致"
+  ],
+  "specs": [
+    "wg/examples/drawer/spec.json"
+  ],
+  "probes": [
+    "drawer-default-width"
+  ],
+  "evidence": {
+    "regression": "wg/tasks/drawer-default-width/regression.json",
+    "probeReport": "wg/tasks/drawer-default-width/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-3ccdee953e4614b15f21dd7d9f70cfb6f6e90ad7.json",
+    "verifiedTree": "e13671113752032bbea984a966163d81268b9c46"
+  },
+  "createdAt": "2026-11-25T05:27:43.3508451+08:00",
+  "updatedAt": "2026-11-25T13:40:03.4715121+08:00",
+  "closedAt": "2026-11-25T13:40:03.4715121+08:00"
+}

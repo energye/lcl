@@ -14,6 +14,13 @@
               "band": "modal", 
               "count": 1, 
               "kind": "overlay"
+            },
+            {
+              "kind": "geometry",
+              "target": {
+                "label": "drawer-panel"
+              },
+              "widthAtLeast": 377
             }
           ], 
           "when": [

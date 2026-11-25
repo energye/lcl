@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "drawer-default-width",
+  "treeHash": "e13671113752032bbea984a966163d81268b9c46",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "drawer-default-width",
+      "status": "PASS",
+      "durationMs": 3345,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\drawer-default-width\\logs\\e13671113752032bbea984a966163d81268b9c46\\probe_drawer-default-width.log"
+    }
+  ]
+}

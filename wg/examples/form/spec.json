@@ -4,7 +4,8 @@
     "apiRows": 9,
     "sections": [
       "必填校验",
-      "规则集"
+      "规则集",
+      "集成表单页"
     ]
   },
   "sections": [
@@ -392,6 +393,78 @@
                 "index": 1
               },
               "text": "校验通过"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "集成表单页",
+      "cases": [
+        {
+          "name": "空表单提交提示填写姓名",
+          "target": {
+            "label": "button",
+            "text": "提交"
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "text": "请填写姓名"
+              },
+              "text": "请填写姓名"
+            }
+          ]
+        },
+        {
+          "name": "切换偏好设置页签",
+          "target": {
+            "label": "tab",
+            "text": "偏好设置"
+          },
+          "when": [
+            {
+              "click": {}
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "text": "深色模式"
+              }
+            }
+          ]
+        },
+        {
+          "name": "深色模式开关可切换",
+          "target": {
+            "label": "switch",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "toggle"
+            }
+          ]
+        },
+        {
+          "name": "音量滑块可点击跳转",
+          "target": {
+            "label": "slider",
+            "index": 0
+          },
+          "then": [
+            {
+              "kind": "template",
+              "template": "slider-jump"
             }
           ]
         }
