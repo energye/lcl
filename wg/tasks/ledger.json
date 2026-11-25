@@ -58,5 +58,11 @@
     "component": "Input",
     "state": "CLOSED",
     "updatedAt": "2026-11-26T01:39:26.7024862+08:00"
+  },
+  {
+    "taskId": "typography-copyable",
+    "component": "Typography",
+    "state": "CLOSED",
+    "updatedAt": "2026-11-26T03:00:36.6396366+08:00"
   }
 ]

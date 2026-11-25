@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "typography-copyable",
+  "treeHash": "6cb45cb052a71e943aa64e652a6bc99afcb9cda2",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "typography-copyable",
+      "status": "PASS",
+      "durationMs": 3790,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\typography-copyable\\logs\\6cb45cb052a71e943aa64e652a6bc99afcb9cda2\\probe_typography-copyable.log"
+    }
+  ]
+}

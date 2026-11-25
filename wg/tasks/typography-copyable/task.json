@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "typography-copyable",
+  "title": "Typography copyable 复制（OnCopy 注入）",
+  "component": "Typography",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "Text/Paragraph/Title 支持 Copyable：文本右侧显示 copy 图标，点击后变 check（已复制态）",
+    "wg 无剪贴板通道——OnCopy(text) 回调注入宿主写剪贴板（与 Upload OnPick 同款）；CopyText 可覆盖复制内容",
+    "spec 增加 copyable 断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/typography/spec.json"
+  ],
+  "probes": [
+    "typography-copyable"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/typography-copyable/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-d3773edf25fe95ec4ba389fb4b06b4c079a02893.json",
+    "verifiedTree": "6cb45cb052a71e943aa64e652a6bc99afcb9cda2"
+  },
+  "createdAt": "2026-11-26T01:44:41.1061127+08:00",
+  "updatedAt": "2026-11-26T03:00:36.6352943+08:00",
+  "closedAt": "2026-11-26T03:00:36.6352943+08:00"
+}

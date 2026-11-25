@@ -5,6 +5,7 @@
     "sections": [
       "标题层级",
       "Text 语义",
+      "复制",
       "段落"
     ]
   },
@@ -139,6 +140,53 @@
               },
               "minRatio": 0.3,
               "tol": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "复制",
+      "cases": [
+        {
+          "name": "复制图标存在",
+          "target": {
+            "label": "typography-copy"
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "typography-copy"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点复制图标后回显已复制文本",
+          "target": {
+            "label": "typography-copy"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "typography-copy"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "typography",
+                "text": "已复制"
+              }
             }
           ]
         }

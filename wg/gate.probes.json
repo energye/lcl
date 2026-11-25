@@ -164,6 +164,24 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "typography-copyable",
+      "covers": [
+        "wg/widgets/typography_copyable.go",
+        "wg/widgets/typography.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeCopyableText$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }
