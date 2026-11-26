@@ -15,6 +15,7 @@ var (
 	formRule   = widgets.NewForm()
 	demoForm   = widgets.NewDemoForm()
 	formLayout = widgets.NewForm()
+	formList   = widgets.NewFormList("contacts", "name", "phone")
 	result     = widgets.NewButton("点提交查看校验结果")
 	// 规则集卡的提交结果按钮（与必填卡按钮同款文本协议，spec 文本断言用）。
 	resultRule = widgets.NewButton("点提交查看校验结果")
@@ -34,6 +35,9 @@ func init() {
 		}
 		result.MarkDirty()
 	}
+
+	// 动态项卡（antd Form.List）：动态行，Add/Remove 增删。
+	formList.RowLabels = []string{"姓名", "电话"}
 
 	// 布局卡（antd layout + labelCol）：vertical 标签在上、horizontal labelCol 栅格宽。
 	formLayout.Items = []widgets.FormItem{
@@ -76,6 +80,7 @@ func main() {
 		ID: "form", Title: "Form 表单", Group: doc.GroupData,
 		What: []string{
 			"表单容器：FormItem{Label,Child,Required} 组装字段行，Validate 汇总校验",
+			"FormList 动态项：Add/Remove 增删行（antd Form.List），字段键 name[i].field 按行独立",
 			"过程式校验器（Rule/Validator）+ 声明式规则集（Rules/FormRule，antd rules 直译）",
 			"FormRule：required/whitespace/len/min/max/pattern/email/url/validator+message",
 			"集成表单页：NewDemoForm 组合 Input/Radio/Switch/Slider/Tabs/Tooltip/提交链路",
@@ -97,6 +102,9 @@ func main() {
 			{Title: "表单布局", Note: "Layout：vertical 标签在上 / horizontal+labelCol span=6 栅格宽 / 默认水平", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return formLayout
 			}},
+			{Title: "动态增删行", Note: "FormList：每行姓名+电话+删除，底部添加；字段键 contacts[i].name/phone", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return formList
+			}},
 			{Title: "集成表单页", Note: "NewDemoForm：中文输入、Radio、Switch、Slider、Tabs、Tooltip 与提交状态联动", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return demoForm
 			}},
@@ -105,6 +113,7 @@ func main() {
 			{Name: "NewForm", Type: "func() *Form", Desc: "构造"},
 			{Name: "Items", Type: "[]FormItem{Label,Child,Required,Error,LabelW}", Desc: "字段行"},
 			{Name: "FormItem.Layout", Type: "FormLayout", Default: "FormHorizontal", Desc: "horizontal 标签左 / vertical 标签上 / inline 紧凑"},
+			{Name: "NewFormList", Type: "func(name string, fields ...string) *FormList", Desc: "动态行容器：Add/Remove/Values，字段键 name[i].field"},
 			{Name: "FormItem.LabelColSpan", Type: "int", Desc: "标签占 24 栅格数（antd labelCol.span），>0 覆盖 LabelW"},
 			{Name: "Values", Type: "map[string]string", Desc: "字段名 → 值"},
 			{Name: "Rule", Type: "func(field string, v ...Validator)", Desc: "按字段注册过程式校验器"},

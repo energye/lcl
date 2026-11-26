@@ -352,6 +352,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "form-list",
+      "covers": [
+        "wg/widgets/formlist.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeFormList$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

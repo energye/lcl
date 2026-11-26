@@ -6,6 +6,7 @@
       "必填校验",
       "规则集",
       "表单布局",
+      "动态增删行",
       "集成表单页"
     ]
   },
@@ -415,6 +416,96 @@
                 "label": "input",
                 "text": "标签在上"
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "动态增删行",
+      "cases": [
+        {
+          "name": "动态行初始 1 行（姓名+电话）",
+          "target": {
+            "label": "form-list"
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "form-list-row"
+              },
+              "count": 1
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "form-list-add"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点添加新增一行",
+          "target": {
+            "label": "form-list-add"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "form-list-add"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "form-list-row"
+              },
+              "count": 2
+            }
+          ]
+        },
+        {
+          "name": "点删除移除一行",
+          "target": {
+            "label": "form-list-remove"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "form-list-add"
+                }
+              }
+            },
+            {
+              "wait": 250
+            },
+            {
+              "click": {
+                "target": {
+                  "label": "form-list-remove"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "form-list-row"
+              },
+              "count": 1
             }
           ]
         }

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "form-list",
+  "treeHash": "38c29cef430b5723f1006ae8179f4601e3143e80",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "form-list",
+      "status": "PASS",
+      "durationMs": 4863,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\form-list\\logs\\38c29cef430b5723f1006ae8179f4601e3143e80\\probe_form-list.log"
+    }
+  ]
+}

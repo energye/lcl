@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "form-list",
+  "title": "Form 动态项（Form.List 增删行）",
+  "component": "Form",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "新增 FormList：动态字段行容器，Add/Remove 增删行（antd Form.List operation.add/remove）",
+    "每行字段键按 name[i] 命名（antd name path 数组），校验按行独立；行内 delete 按钮",
+    "spec 增加动态增删断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/form/spec.json"
+  ],
+  "probes": [
+    "form-list"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/form-list/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-57d3fcc5727c7dcf67dba9c34fc855f190732677.json",
+    "verifiedTree": "38c29cef430b5723f1006ae8179f4601e3143e80"
+  },
+  "createdAt": "2026-11-27T01:29:11.1534604+08:00",
+  "updatedAt": "2026-11-27T02:29:26.5380116+08:00",
+  "closedAt": "2026-11-27T02:29:26.5380116+08:00"
+}
