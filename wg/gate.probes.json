@@ -250,6 +250,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "grid-responsive",
+      "covers": [
+        "wg/widgets/grid.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeGridResponsive$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

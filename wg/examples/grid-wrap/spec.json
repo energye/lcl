@@ -3,7 +3,8 @@
   "structure": {
     "apiRows": 3,
     "sections": [
-      "Grid 3 列"
+      "Grid 3 列",
+      "响应式栅格"
     ]
   },
   "sections": [
@@ -16,6 +17,49 @@
             "label": "label",
             "text": "1"
           }
+        }
+      ]
+    },
+    {
+      "name": "响应式栅格",
+      "cases": [
+        {
+          "name": "响应式栅格四列存在",
+          "target": {
+            "label": "grid"
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "grid"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "grid-col"
+              },
+              "count": 4
+            }
+          ]
+        },
+        {
+          "name": "窄视口下卡片 1 仍可见（xs 单列）",
+          "target": {
+            "label": "grid"
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "卡片 1"
+              }
+            }
+          ]
         }
       ]
     }

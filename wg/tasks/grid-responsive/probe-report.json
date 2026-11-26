@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "grid-responsive",
+  "treeHash": "ee35014b8758e7bebdae43b0bf5d8e84bbcb231c",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "grid-responsive",
+      "status": "PASS",
+      "durationMs": 4125,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\grid-responsive\\logs\\ee35014b8758e7bebdae43b0bf5d8e84bbcb231c\\probe_grid-responsive.log"
+    }
+  ]
+}

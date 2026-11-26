@@ -8,7 +8,17 @@ import (
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/ui"
+	"github.com/energye/lcl/wg/widgets"
 )
+
+var respGrid = widgets.NewGrid(
+	widgets.GridCol{Child: widgets.Label{Text: "卡片 1"}, Span: 6, Md: intp(12), Xs: intp(24)},
+	widgets.GridCol{Child: widgets.Label{Text: "卡片 2"}, Span: 6, Md: intp(12), Xs: intp(24)},
+	widgets.GridCol{Child: widgets.Label{Text: "卡片 3"}, Span: 6, Md: intp(12), Xs: intp(24)},
+	widgets.GridCol{Child: widgets.Label{Text: "卡片 4"}, Span: 6, Md: intp(12), Xs: intp(24)},
+)
+
+func intp(v int) *int { return &v }
 
 func main() {
 	launcher.Main(doc.Meta{
@@ -16,6 +26,7 @@ func main() {
 		What: []string{
 			"Grid：固定列数网格，列宽由约束系统分配",
 			"Wrap：主轴排满自动换行，runGap 控制行间距，适合标签流",
+			"widgets.Grid：24 栅格 + 响应式断点（xs/sm/md/lg/xl），按视口宽自适应列数",
 		},
 		Demos: []doc.Demo{
 			{Title: "Grid 3 列", Note: "12 个单元格，列宽 flex 均分", Build: func(ctx *ui.BuildContext) ui.Widget {
@@ -25,6 +36,9 @@ func main() {
 					grid.Add(doc.Box(ctx, fmt.Sprintf("%d", i+1), th.Color.Primary, 0, 52).SetFlex(1, scene.FlexTight))
 				}
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return grid })
+			}},
+			{Title: "响应式栅格", Note: "widgets.Grid：24 栅格 + 断点（lg 4 列/md 2 列/xs 1 列，按视口宽自适应）", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return respGrid
 			}},
 			{Title: "Wrap 流式换行", Note: "标签排满自动换行，行距 6", Build: func(ctx *ui.BuildContext) ui.Widget {
 				th := ctx.ThemeOr()
@@ -38,6 +52,7 @@ func main() {
 		API: []doc.APIRow{
 			{Name: "scene.Grid", Type: "func(columns, gap int) *Node", Desc: "固定列数网格"},
 			{Name: "scene.Wrap", Type: "func(axis Axis, gap, runGap float32) *Node", Desc: "流式换行容器；runGap 是行间距"},
+			{Name: "widgets.NewGrid/GridCol", Type: "func(cols ...GridCol) *Grid", Desc: "24 栅格响应式布局；Span/Offset + Xs/Sm/Md/Lg/Xl 断点"},
 			{Name: "SetWidth", Type: "func(w float32)", Desc: "Grid/Wrap 都需要显式宽度才有换行边界"},
 		},
 	})

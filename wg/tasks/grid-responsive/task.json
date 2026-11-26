@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "grid-responsive",
+  "title": "Grid 响应式 span/offset（断点 xs/sm/md/lg）",
+  "component": "Grid",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "新增 widgets.Grid 组件：Col 支持响应式 Span/Offset（antd Col xs/sm/md/lg）",
+    "按视口宽选断点（antd 576/768/992/1200）——ViewportSize 登记依赖，resize 重排",
+    "spec 增加响应式断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/grid-wrap/spec.json"
+  ],
+  "probes": [
+    "grid-responsive"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/grid-responsive/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-3dd66f91f5f49742e6eb36c8838a3058e86215ca.json",
+    "verifiedTree": "ee35014b8758e7bebdae43b0bf5d8e84bbcb231c"
+  },
+  "createdAt": "2026-11-26T11:50:29.4317654+08:00",
+  "updatedAt": "2026-11-26T13:27:56.7187016+08:00",
+  "closedAt": "2026-11-26T13:27:56.7187016+08:00"
+}
