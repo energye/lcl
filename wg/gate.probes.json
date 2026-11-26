@@ -233,6 +233,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "carousel-arrows-fade",
+      "covers": [
+        "wg/widgets/carousel.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeCarouselArrowsFade$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

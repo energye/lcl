@@ -82,5 +82,11 @@
     "component": "Typography",
     "state": "CLOSED",
     "updatedAt": "2026-11-26T09:47:44.5965239+08:00"
+  },
+  {
+    "taskId": "carousel-arrows-fade",
+    "component": "Carousel",
+    "state": "CLOSED",
+    "updatedAt": "2026-11-26T11:49:02.8354775+08:00"
   }
 ]

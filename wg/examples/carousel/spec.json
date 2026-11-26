@@ -1,112 +1,167 @@
 {
-  "id": "carousel", 
+  "id": "carousel",
   "sections": [
     {
+      "name": "箭头与淡入",
       "cases": [
         {
-          "name": "初始第一页与三个圆点", 
+          "name": "箭头卡出现左右切换按钮",
           "target": {
-            "label": "carousel"
-          }, 
+            "label": "carousel-prev"
+          },
+          "when": [],
           "then": [
             {
-              "kind": "text", 
+              "kind": "exists",
               "target": {
-                "label": "carousel", 
-                "text": "第一页：产品发布"
-              }, 
-              "text": "第一页：产品发布"
-            }, 
+                "label": "carousel-prev"
+              }
+            },
             {
-              "count": 3, 
-              "kind": "exists", 
+              "kind": "exists",
               "target": {
-                "label": "carousel-dot"
+                "label": "carousel-next"
               }
             }
           ]
-        }, 
+        },
         {
-          "name": "当前点主色实底", 
+          "name": "点右箭头切到下一页（A→B）",
           "target": {
-            "index": 0, 
-            "label": "carousel-dot"
-          }, 
-          "then": [
-            {
-              "expect": {
-                "token": "Primary"
-              }, 
-              "frac": [
-                0.3, 
-                0.3, 
-                0.6, 
-                0.6
-              ], 
-              "kind": "colorRatio", 
-              "minRatio": 0.4, 
-              "target": {
-                "index": 0, 
-                "label": "carousel-dot"
-              }, 
-              "tol": 14
-            }
-          ]
-        }, 
-        {
-          "name": "点第二圆点切页", 
-          "target": {
-            "label": "carousel"
-          }, 
-          "then": [
-            {
-              "kind": "text", 
-              "target": {
-                "label": "carousel", 
-                "text": "第二页：版本更新"
-              }, 
-              "text": "第二页：版本更新"
-            }, 
-            {
-              "expect": {
-                "token": "Primary"
-              }, 
-              "frac": [
-                0.3, 
-                0.3, 
-                0.6, 
-                0.6
-              ], 
-              "kind": "colorRatio", 
-              "minRatio": 0.4, 
-              "target": {
-                "index": 1, 
-                "label": "carousel-dot"
-              }, 
-              "tol": 14
-            }
-          ], 
+            "label": "carousel-next"
+          },
           "when": [
             {
               "click": {
                 "target": {
-                  "index": 1, 
+                  "label": "carousel-next"
+                }
+              }
+            },
+            {
+              "wait": 400
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "label",
+                "text": "B：淡入淡出过渡"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cases": [
+        {
+          "name": "初始第一页与三个圆点",
+          "target": {
+            "label": "carousel"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "carousel",
+                "text": "第一页：产品发布"
+              },
+              "text": "第一页：产品发布"
+            },
+            {
+              "count": 3,
+              "kind": "exists",
+              "target": {
+                "label": "carousel-dot",
+                "index": 3
+              }
+            }
+          ]
+        },
+        {
+          "name": "当前点主色实底",
+          "target": {
+            "index": 3,
+            "label": "carousel-dot"
+          },
+          "then": [
+            {
+              "expect": {
+                "token": "Primary"
+              },
+              "frac": [
+                0.3,
+                0.3,
+                0.6,
+                0.6
+              ],
+              "kind": "colorRatio",
+              "minRatio": 0.4,
+              "target": {
+                "index": 3,
+                "label": "carousel-dot"
+              },
+              "tol": 14
+            }
+          ]
+        },
+        {
+          "name": "点第二圆点切页",
+          "target": {
+            "label": "carousel"
+          },
+          "then": [
+            {
+              "kind": "text",
+              "target": {
+                "label": "carousel",
+                "text": "第二页：版本更新"
+              },
+              "text": "第二页：版本更新"
+            },
+            {
+              "expect": {
+                "token": "Primary"
+              },
+              "frac": [
+                0.3,
+                0.3,
+                0.6,
+                0.6
+              ],
+              "kind": "colorRatio",
+              "minRatio": 0.4,
+              "target": {
+                "index": 4,
+                "label": "carousel-dot"
+              },
+              "tol": 14
+            }
+          ],
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "index": 4,
                   "label": "carousel-dot"
                 }
               }
-            }, 
+            },
             {
               "wait": 300
             }
           ]
         }
-      ], 
+      ],
       "name": "三页走马灯"
     }
-  ], 
+  ],
   "structure": {
-    "apiRows": 4, 
+    "apiRows": 4,
     "sections": [
+      "箭头与淡入",
       "三页走马灯"
     ]
   }

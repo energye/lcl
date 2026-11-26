@@ -580,10 +580,15 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 		// 呈现的链路偶发超过 200ms，固定 wait 后采样仍读到旧帧（borderColor
 		// 读到常态色 / colorDelta 读到 0.000，三次全量三个窗轮番 flake）。
 		// 等 PresentStats 帧号增长（hover 高亮必然触发一次重绘）再返回。
-		f0 := r.c.PresentStats().Frames
-		deadline := time.Now().Add(600 * time.Millisecond)
-		for r.c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
-			time.Sleep(20 * time.Millisecond)
+		// 等两轮帧增长：hover 触发的整树重建在高负载下可能跨两帧
+		// （重建帧 + 呈现帧），只等一次增长会采到重建中途的帧（button
+		// hover colorRatio 0.082↔0.012 摆动实证——文字色未跟上边框）。
+		for round := 0; round < 2; round++ {
+			f0 := r.c.PresentStats().Frames
+			deadline := time.Now().Add(600 * time.Millisecond)
+			for r.c.PresentStats().Frames <= f0 && time.Now().Before(deadline) {
+				time.Sleep(20 * time.Millisecond)
+			}
 		}
 		time.Sleep(250 * time.Millisecond) // 帧呈现到栅格化完成的余量（高负载下 80ms 偶发不够）
 		// 悬停弹浮层（Dropdown/Tooltip）额外轮询：hover 分发到 Child 的

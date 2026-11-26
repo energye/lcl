@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "carousel-arrows-fade",
+  "treeHash": "f37d10cf5fe2aac42c8312047dd13449f9ea39cc",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "carousel-arrows-fade",
+      "status": "PASS",
+      "durationMs": 3936,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\carousel-arrows-fade\\logs\\f37d10cf5fe2aac42c8312047dd13449f9ea39cc\\probe_carousel-arrows-fade.log"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "carousel-arrows-fade",
+  "title": "Carousel arrows 左右箭头 + fade 淡入淡出",
+  "component": "Carousel",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "Arrows 显示左右切换箭头（antd arrows，5.17.0）；点击切上/下一页",
+    "Fade 淡入淡出过渡（antd fade/effect）；默认 scrollx 保持现有叠层切页",
+    "spec 增加 arrows 与 fade 断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/carousel/spec.json"
+  ],
+  "probes": [
+    "carousel-arrows-fade"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/carousel-arrows-fade/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-3d0b96a7e855aae6d557a7b22609981533b94086.json",
+    "verifiedTree": "f37d10cf5fe2aac42c8312047dd13449f9ea39cc"
+  },
+  "createdAt": "2026-11-26T09:49:03.4046768+08:00",
+  "updatedAt": "2026-11-26T11:49:02.8315199+08:00",
+  "closedAt": "2026-11-26T11:49:02.8315199+08:00"
+}
