@@ -603,6 +603,9 @@ func (r *specRunner) doAction(caseName string, def *SpecTarget, a SpecAction) bo
 			injectChar(r.c, ch)
 			time.Sleep(15 * time.Millisecond)
 		}
+		// 键入后落帧等待：高负载下逐字符注入可能未全部落入编辑模型就
+		// 进入下一步（form 提交读到空用户名→校验失败偶发实证）。
+		settleFrames(r.c, 400*time.Millisecond)
 	case a.Clear != nil:
 		// 清空输入框：click 聚焦 → Ctrl+A 全选 → Delete 删除。
 		// Input 值跨 case 残留的根治（typeText 是追加语义）。

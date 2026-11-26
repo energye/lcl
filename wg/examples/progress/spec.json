@@ -6,6 +6,7 @@
       "四档进度",
       "status 与百分比",
       "circle 圆环",
+      "轨道色自定义",
       "dashboard 仪表盘"
     ]
   },
@@ -195,6 +196,38 @@
             {
               "kind": "text",
               "text": "75%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "轨道色自定义",
+      "cases": [
+        {
+          "name": "线形轨道为自定义蓝（非默认灰）",
+          "target": {
+            "label": "progress",
+            "index": 9
+          },
+          "then": [
+            {
+              "kind": "colorRatio",
+              "target": {
+                "label": "progress",
+                "index": 9
+              },
+              "frac": [
+                0.55,
+                0.1,
+                0.4,
+                0.8
+              ],
+              "expect": {
+                "hex": "#BAE0FF"
+              },
+              "minRatio": 0.3,
+              "tol": 16
             }
           ]
         }

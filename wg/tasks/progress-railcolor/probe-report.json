@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "progress-railcolor",
+  "treeHash": "2525c13565ed0962a44f07fe8b8898a3b0c55a7c",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "progress-railcolor",
+      "status": "PASS",
+      "durationMs": 4051,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\progress-railcolor\\logs\\2525c13565ed0962a44f07fe8b8898a3b0c55a7c\\probe_progress-railcolor.log"
+    }
+  ]
+}

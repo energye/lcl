@@ -6,6 +6,7 @@ import (
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/render"
 	"github.com/energye/lcl/wg/scene"
+	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
 )
 
@@ -51,6 +52,9 @@ type Progress struct {
 	StrokeWidth float32
 	// ShowInfo 在右侧（线形）/中心（圆环）显示百分比文字（antd showInfo）。
 	ShowInfo bool
+	// RailColor 未填充轨道色（antd railColor，原 trailColor）；零值取
+	// SurfaceActive（antd remainingColor 灰轨）。线形 track 底与圆环 trail 环共用。
+	RailColor geom.Color
 }
 
 // Build 实现 ui.Widget。
@@ -157,6 +161,14 @@ func (p Progress) buildRing(ctx *ui.BuildContext) *scene.Node {
 	return stack
 }
 
+// railColor 未填充轨道色：RailColor 非零优先，否则 SurfaceActive。
+func (p Progress) railColor(th *theme.Data) geom.Color {
+	if p.RailColor != (geom.Color{}) {
+		return p.RailColor
+	}
+	return th.Color.SurfaceActive
+}
+
 // buildLine 构建线形进度（原实现，行为不变）。
 func (p Progress) buildLine(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
@@ -170,7 +182,7 @@ func (p Progress) buildLine(ctx *ui.BuildContext) *scene.Node {
 	// trail 用 SurfaceActive（#F0F0F0，antd 线形进度条默认灰轨）——
 	// SurfaceSunken 与演示舞台同色，底轨会隐形。默认高 8 = antd Progress
 	// lineHeight（antd 默认轨道 8px，此前 6 偏细）。
-	track := scene.Box(scene.BoxSpec{Fill: scene.Solid(th.Color.SurfaceActive), Radius: h / 2}).SetSize2(w, h)
+	track := scene.Box(scene.BoxSpec{Fill: scene.Solid(p.railColor(th)), Radius: h / 2}).SetSize2(w, h)
 	v := p.Value
 	if v < 0 {
 		v = 0

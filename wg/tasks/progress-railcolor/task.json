@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "progress-railcolor",
+  "title": "Progress railColor 未填充轨道色自定义",
+  "component": "Progress",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "支持 RailColor（antd railColor，原 trailColor 废弃）：线形与圆环/仪表盘的未填充轨道色",
+    "零值取默认 SurfaceActive；线形 track 底与圆环 trail 环都应用",
+    "spec 增加 railColor 断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/progress/spec.json"
+  ],
+  "probes": [
+    "progress-railcolor"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/progress-railcolor/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-28eb292b802f425089e46bcb0980bc3ea1a3bb2a.json",
+    "verifiedTree": "2525c13565ed0962a44f07fe8b8898a3b0c55a7c"
+  },
+  "createdAt": "2026-11-26T15:07:26.122276+08:00",
+  "updatedAt": "2026-11-26T17:00:00.6603525+08:00",
+  "closedAt": "2026-11-26T17:00:00.6603525+08:00"
+}

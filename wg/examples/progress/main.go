@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/energye/lcl/wg/examples/doc"
 	"github.com/energye/lcl/wg/examples/internal/launcher"
+	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/ui"
 	"github.com/energye/lcl/wg/widgets"
@@ -13,7 +14,7 @@ func main() {
 		ID: "progress", Title: "Progress 进度条", Group: doc.GroupControl,
 		What: []string{
 			"线形进度条：M8 对齐 antd——status 语义色（success/exception）、满进度自动转绿、showInfo 百分比",
-			"未实现（M10 计划）：circle/dashboard 形态、trail 色自定义",
+			"RailColor 未填充轨道色（antd railColor）——线形 track 底与圆环 trail 环共用",
 		},
 		Demos: []doc.Demo{
 			{Title: "四档进度", Note: "0 / 25% / 60% / 100%（满进度自动转 success 绿）；末行用默认尺寸（高 8）", Build: func(ctx *ui.BuildContext) ui.Widget {
@@ -38,6 +39,13 @@ func main() {
 				row.Add((&widgets.Progress{Value: 1, Shape: widgets.ProgressCircle, ShowInfo: true}).Build(ctx))
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return row })
 			}},
+			{Title: "轨道色自定义", Note: "RailColor：未填充轨道色（antd railColor，原 trailColor）——线形与圆环共用", Build: func(ctx *ui.BuildContext) ui.Widget {
+				rail := geom.RGBA(186, 224, 255) // antd blue-2
+				return widgets.Column{Gap: 10, Children: []ui.Widget{
+					widgets.Progress{Value: 0.4, Width: 240, RailColor: rail},
+					widgets.Progress{Value: 0.4, Shape: widgets.ProgressCircle, RailColor: rail, ShowInfo: true},
+				}}
+			}},
 			{Title: "dashboard 仪表盘", Note: "Shape=ProgressDashboard：270° 缺口朝下（antd dashboard）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return doc.Node(func(c *ui.BuildContext) *scene.Node {
 					return (&widgets.Progress{Value: 0.6, Shape: widgets.ProgressDashboard, ShowInfo: true}).Build(c)
@@ -50,6 +58,7 @@ func main() {
 			{Name: "Status", Type: "widgets.ProgressStatus", Default: "Normal", Desc: "Normal/Success/Exception（满进度自动 Success）"},
 			{Name: "ShowInfo", Type: "bool", Default: "false", Desc: "右侧（线形）/中心（圆环）百分比文字"},
 			{Name: "Shape", Type: "ProgressShape", Default: "Line", Desc: "Line/Circle/Dashboard 三形态"},
+			{Name: "RailColor", Type: "geom.Color", Desc: "未填充轨道色（antd railColor，原 trailColor）；零值取 SurfaceActive"},
 			{Name: "StrokeWidth", Type: "float32", Default: "6", Desc: "圆环描边宽（antd strokeWidth）"},
 		},
 	})

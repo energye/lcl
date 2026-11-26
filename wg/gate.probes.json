@@ -284,6 +284,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "progress-railcolor",
+      "covers": [
+        "wg/widgets/progress.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeProgressRailColor$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }
