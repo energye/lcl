@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "form-layout",
+  "treeHash": "f6de57c651d2e5f64d0b2c7dd48e0beb63be8f13",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "form-layout",
+      "status": "PASS",
+      "durationMs": 5264,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\form-layout\\logs\\f6de57c651d2e5f64d0b2c7dd48e0beb63be8f13\\probe_form-layout.log"
+    }
+  ]
+}

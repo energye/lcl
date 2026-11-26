@@ -505,8 +505,8 @@ func (r *specRunner) runCase(cs SpecCase) {
 	// 回归下"重建→呈现"可能超过固定 sleep，then 采样读到旧帧（input /
 	// input-number 聚焦边框读成 hover 色 PrimaryHover 实证）。等帧号
 	// 增长 + 余量，作为所有动作后的最后一道保险。
-	settleFrames(r.c, 250*time.Millisecond)
-	time.Sleep(250 * time.Millisecond)
+	settleFrames(r.c, 400*time.Millisecond)
+	time.Sleep(400 * time.Millisecond)
 
 	// 断言。
 	for _, as := range cs.Then {

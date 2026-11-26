@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "form-layout",
+  "title": "Form 布局（horizontal/vertical/inline）+ labelCol",
+  "component": "Form",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "FormItem 支持 Layout（horizontal 默认/vertical 标签在上/inline 同行紧凑）",
+    "labelCol span 按 24 栅格比例控制标签宽（antd labelCol）；vertical 下标签占整行、控件在下方",
+    "spec 增加布局断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/form/spec.json"
+  ],
+  "probes": [
+    "form-layout"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/form-layout/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-47f4529f8f58879c7d82492656da9ac0a96f633e.json",
+    "verifiedTree": "f6de57c651d2e5f64d0b2c7dd48e0beb63be8f13"
+  },
+  "createdAt": "2026-11-26T22:33:38.8909407+08:00",
+  "updatedAt": "2026-11-27T01:27:33.6630836+08:00",
+  "closedAt": "2026-11-27T01:27:33.6630836+08:00"
+}

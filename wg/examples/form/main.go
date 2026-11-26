@@ -11,10 +11,11 @@ import (
 )
 
 var (
-	form     = widgets.NewForm()
-	formRule = widgets.NewForm()
-	demoForm = widgets.NewDemoForm()
-	result   = widgets.NewButton("点提交查看校验结果")
+	form       = widgets.NewForm()
+	formRule   = widgets.NewForm()
+	demoForm   = widgets.NewDemoForm()
+	formLayout = widgets.NewForm()
+	result     = widgets.NewButton("点提交查看校验结果")
 	// 规则集卡的提交结果按钮（与必填卡按钮同款文本协议，spec 文本断言用）。
 	resultRule = widgets.NewButton("点提交查看校验结果")
 )
@@ -32,6 +33,13 @@ func init() {
 			result.Text = fmt.Sprintf("校验失败：%v", form.Errors)
 		}
 		result.MarkDirty()
+	}
+
+	// 布局卡（antd layout + labelCol）：vertical 标签在上、horizontal labelCol 栅格宽。
+	formLayout.Items = []widgets.FormItem{
+		{Label: "垂直标签", Child: widgets.NewInput("标签在上"), Layout: widgets.FormVertical, Required: true},
+		{Label: "栅格标签", Child: widgets.NewInput("labelCol span=6"), LabelColSpan: 6},
+		{Label: "默认水平", Child: widgets.NewInput("LabelW=80")},
 	}
 
 	// 规则集卡（antd rules 直译）：required/min/email/url/pattern/
@@ -86,6 +94,9 @@ func main() {
 				col.Add(resultRule.Build(ctx))
 				return doc.Node(func(*ui.BuildContext) *scene.Node { return col })
 			}},
+			{Title: "表单布局", Note: "Layout：vertical 标签在上 / horizontal+labelCol span=6 栅格宽 / 默认水平", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return formLayout
+			}},
 			{Title: "集成表单页", Note: "NewDemoForm：中文输入、Radio、Switch、Slider、Tabs、Tooltip 与提交状态联动", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return demoForm
 			}},
@@ -93,6 +104,8 @@ func main() {
 		API: []doc.APIRow{
 			{Name: "NewForm", Type: "func() *Form", Desc: "构造"},
 			{Name: "Items", Type: "[]FormItem{Label,Child,Required,Error,LabelW}", Desc: "字段行"},
+			{Name: "FormItem.Layout", Type: "FormLayout", Default: "FormHorizontal", Desc: "horizontal 标签左 / vertical 标签上 / inline 紧凑"},
+			{Name: "FormItem.LabelColSpan", Type: "int", Desc: "标签占 24 栅格数（antd labelCol.span），>0 覆盖 LabelW"},
 			{Name: "Values", Type: "map[string]string", Desc: "字段名 → 值"},
 			{Name: "Rule", Type: "func(field string, v ...Validator)", Desc: "按字段注册过程式校验器"},
 			{Name: "Rules", Type: "func(field string, r ...FormRule)", Desc: "按字段注册声明式规则集（antd rules 直译）"},

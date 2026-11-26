@@ -335,6 +335,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "form-layout",
+      "covers": [
+        "wg/widgets/tree.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeFormLayout$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

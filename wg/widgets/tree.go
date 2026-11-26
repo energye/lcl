@@ -10,6 +10,7 @@ import (
 	"github.com/energye/lcl/wg/input"
 	"github.com/energye/lcl/wg/scene"
 	"github.com/energye/lcl/wg/text"
+	"github.com/energye/lcl/wg/theme"
 	"github.com/energye/lcl/wg/ui"
 )
 
@@ -31,11 +32,11 @@ type Tree struct {
 	Selected string
 	// SelectedSet 多行选中高亮（优先级低于 Selected——非空时多行同亮）。
 	SelectedSet map[string]bool
-	Indent   float32
-	RowH     float32
-	Width    float32
-	OnSelect func(key string)
-	OnToggle func(key string, expanded bool)
+	Indent      float32
+	RowH        float32
+	Width       float32
+	OnSelect    func(key string)
+	OnToggle    func(key string, expanded bool)
 
 	// Checkable 复选模式（antd checkable）：每行复选框是 **Checkbox 组件
 	// 实例**（组合复用——hover 主色边框/indeterminate 半选/Space 键/禁用态
@@ -60,7 +61,7 @@ type Tree struct {
 	// 时触发；同步模式返回子节点直接挂载，异步模式返回 nil、宿主取数后
 	// 调 SetChildren(key, children) 挂载（AfterFunc 延迟——模拟网络）。
 	// LoadedKeys 标记已触发节点不重复加载。
-	LoadData func(key string) []TreeNode
+	LoadData   func(key string) []TreeNode
 	LoadedKeys map[string]bool
 	// loadingKeys 加载中集合（渲染 loading 态——箭头转 loading 旋转）。
 	loadingKeys map[string]bool
@@ -414,21 +415,50 @@ func (t *Tree) Build(ctx *ui.BuildContext) *scene.Node {
 // ── Form / FormItem ───────────────────────────────────────────────
 
 // FormItem 是表单项：标签 + 控件 + 校验提示。
+// FormLayout 是表单项布局（antd Form layout）。
+type FormLayout uint8
+
+const (
+	// FormHorizontal 水平布局（标签左、控件右，默认）。
+	FormHorizontal FormLayout = iota
+	// FormVertical 垂直布局（标签在上、控件在下）。
+	FormVertical
+	// FormInline 行内紧凑（标签与控件同行，无整行宽度）。
+	FormInline
+)
+
 type FormItem struct {
 	Label    string
 	Child    ui.Widget
 	Required bool
 	Error    string
 	LabelW   float32
+	// Layout 表单项布局（antd Form layout）：horizontal 默认/vertical 标签在上/
+	// inline 同行紧凑。零值 = horizontal。
+	Layout FormLayout
+	// LabelColSpan 标签占 24 栅格数（antd labelCol.span）：>0 时按
+	// (span/24)×父宽 计算标签宽，覆盖 LabelW。
+	LabelColSpan int
 }
 
 // Build 实现 ui.Widget。
 func (f FormItem) Build(ctx *ui.BuildContext) *scene.Node {
 	th := ctx.ThemeOr()
+	// vertical：标签整行在上、控件在下（antd layout=vertical）。
+	if f.Layout == FormVertical {
+		return f.buildVertical(ctx, th)
+	}
 	row := scene.Flex(scene.Horizontal, th.Space.SM)
 	labelW := f.LabelW
 	if labelW <= 0 {
 		labelW = 80
+	}
+	// labelCol.span：按 (span/24)×父宽 算标签宽（antd labelCol 语义）。
+	if f.LabelColSpan > 0 {
+		pw := ctx.ViewportSize().W - 80
+		if pw > 0 {
+			labelW = pw * float32(f.LabelColSpan) / 24
+		}
 	}
 	// antd Form：必填星号红色（#ff4d4f）置于标签前；标签为正文色而非弱化灰。
 	labelRow := scene.Flex(scene.Horizontal, 0)
@@ -455,6 +485,36 @@ func (f FormItem) Build(ctx *ui.BuildContext) *scene.Node {
 		et := scene.Text(scene.TextSpec{Src: f.Error, Layout: el, Color: th.Color.Danger})
 		et.SetMargin(geom.InLTRB(labelW+th.Space.SM, 0, 0, 0))
 		// 被动定位锚：错误文字色断言用（scene.Text 直建，无 Label 锚）。
+		et.SetHit(scene.HitSpec{Label: "form-error"})
+		col.Add(et)
+	}
+	return col
+}
+
+// buildVertical 垂直布局：标签（含必填星）在上、控件在下，整行宽度。
+func (f FormItem) buildVertical(ctx *ui.BuildContext, th *theme.Data) *scene.Node {
+	col := scene.Flex(scene.Vertical, 4)
+	labelRow := scene.Flex(scene.Horizontal, 0)
+	if f.Required {
+		font := text.DefaultFont(th.Font.SizeBase)
+		star := scene.Text(scene.TextSpec{Src: "*", Layout: text.LayoutText("*", font, text.Options{}), Color: th.Color.Danger})
+		star.SetMargin(geom.InLTRB(0, 0, 3, 0))
+		labelRow.Add(star)
+	}
+	if f.Label != "" {
+		ll := text.LayoutText(f.Label, text.DefaultFont(th.Font.SizeBase), text.Options{})
+		lt := scene.Text(scene.TextSpec{Src: f.Label, Layout: ll, Color: th.Color.Text})
+		labelRow.Add(lt)
+	}
+	if len(labelRow.Children()) > 0 {
+		col.Add(labelRow)
+	}
+	if f.Child != nil {
+		col.Add(buildChild(ctx, f.Child))
+	}
+	if f.Error != "" {
+		el := text.LayoutText(f.Error, text.DefaultFont(th.Font.SizeXS), text.Options{})
+		et := scene.Text(scene.TextSpec{Src: f.Error, Layout: el, Color: th.Color.Danger})
 		et.SetHit(scene.HitSpec{Label: "form-error"})
 		col.Add(et)
 	}

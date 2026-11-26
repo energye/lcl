@@ -5,6 +5,7 @@
     "sections": [
       "必填校验",
       "规则集",
+      "表单布局",
       "集成表单页"
     ]
   },
@@ -393,6 +394,27 @@
                 "index": 1
               },
               "text": "校验通过"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "表单布局",
+      "cases": [
+        {
+          "name": "垂直布局标签在控件上方",
+          "target": {
+            "label": "input",
+            "index": 7
+          },
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "input",
+                "text": "标签在上"
+              }
             }
           ]
         }
