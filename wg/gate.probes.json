@@ -199,6 +199,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "typography-editable",
+      "covers": [
+        "wg/widgets/typography_editable.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeEditableText$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

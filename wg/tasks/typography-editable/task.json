@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "typography-editable",
+  "title": "Typography editable 点击编辑",
+  "component": "Typography",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "CopyableText 同族新增 EditableText：文本右侧 edit 图标，点击切换为 Input 编辑",
+    "Enter 提交（OnChange 回调）、Esc 取消（还原）、失焦提交；MaxLength 限制",
+    "spec 增加 editable 断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/typography/spec.json"
+  ],
+  "probes": [
+    "typography-editable"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/typography-editable/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-2b4685fd16acf29b16b158462fd24655072e9f5c.json",
+    "verifiedTree": "95c57d8ee6abda431a080cd2ddfae416794d4a77"
+  },
+  "createdAt": "2026-11-26T08:16:10.8854451+08:00",
+  "updatedAt": "2026-11-26T09:00:20.8866697+08:00",
+  "closedAt": "2026-11-26T09:00:20.8866697+08:00"
+}

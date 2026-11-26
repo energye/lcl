@@ -6,6 +6,7 @@
       "标题层级",
       "Text 语义",
       "复制",
+      "编辑",
       "段落"
     ]
   },
@@ -186,6 +187,52 @@
               "target": {
                 "label": "typography",
                 "text": "已复制"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "编辑",
+      "cases": [
+        {
+          "name": "编辑图标存在",
+          "target": {
+            "label": "typography-edit"
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "typography-edit"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点编辑图标切换为输入框",
+          "target": {
+            "label": "typography-edit"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "typography-edit"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "typography-edit-input"
               }
             }
           ]

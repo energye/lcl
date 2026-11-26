@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "typography-editable",
+  "treeHash": "95c57d8ee6abda431a080cd2ddfae416794d4a77",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "typography-editable",
+      "status": "PASS",
+      "durationMs": 3929,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\typography-editable\\logs\\95c57d8ee6abda431a080cd2ddfae416794d4a77\\probe_typography-editable.log"
+    }
+  ]
+}
