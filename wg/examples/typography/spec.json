@@ -7,6 +7,7 @@
       "Text 语义",
       "复制",
       "编辑",
+      "省略展开",
       "段落"
     ]
   },
@@ -233,6 +234,60 @@
               "kind": "exists",
               "target": {
                 "label": "typography-edit-input"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "省略展开",
+      "cases": [
+        {
+          "name": "省略文本与展开按钮存在",
+          "target": {
+            "label": "typography-expand"
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "typography-ellipsis"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "typography-expand"
+              }
+            }
+          ]
+        },
+        {
+          "name": "点展开后按钮文案变收起",
+          "target": {
+            "label": "typography-expand",
+            "text": "展开"
+          },
+          "when": [
+            {
+              "click": {
+                "target": {
+                  "label": "typography-expand"
+                }
+              }
+            },
+            {
+              "wait": 300
+            }
+          ],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "typography-expand",
+                "text": "收起"
               }
             }
           ]

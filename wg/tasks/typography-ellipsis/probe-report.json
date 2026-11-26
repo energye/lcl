@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "typography-ellipsis",
+  "treeHash": "0b2b8082ee3d468006be72ee2d52de47bac5fd86",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "typography-ellipsis",
+      "status": "PASS",
+      "durationMs": 3918,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\typography-ellipsis\\logs\\0b2b8082ee3d468006be72ee2d52de47bac5fd86\\probe_typography-ellipsis.log"
+    }
+  ]
+}

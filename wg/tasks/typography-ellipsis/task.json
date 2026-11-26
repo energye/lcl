@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "typography-ellipsis",
+  "title": "Typography ellipsis 多行省略+展开",
+  "component": "Typography",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "新增 EllipsisText：Rows 限制行数超出省略、可展开/收起（expandable）",
+    "展开按钮符号可自定义（默认 展开/收起）、OnExpand 回调、DefaultExpanded 初始态",
+    "spec 增加 ellipsis 展开断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/typography/spec.json"
+  ],
+  "probes": [
+    "typography-ellipsis"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/typography-ellipsis/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-ce34a1188cb2d736f9ff27237755748a3b54ebf4.json",
+    "verifiedTree": "0b2b8082ee3d468006be72ee2d52de47bac5fd86"
+  },
+  "createdAt": "2026-11-26T09:02:33.4616929+08:00",
+  "updatedAt": "2026-11-26T09:47:44.5922831+08:00",
+  "closedAt": "2026-11-26T09:47:44.5922831+08:00"
+}

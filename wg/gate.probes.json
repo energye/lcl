@@ -216,6 +216,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "typography-ellipsis",
+      "covers": [
+        "wg/widgets/typography_ellipsis.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeEllipsisText$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }
