@@ -38,6 +38,16 @@ func TestProbeImagePreviewToolbar(t *testing.T) {
 		}
 	}
 	im := widgets.NewImage(img, 200, 150)
+	// 预热一次：首次 Build 触发 render.ImageFrom 像素转换并缓存到 im.ref，
+	// 二次 Build 直接复用缓存——计时只含组件挂载与首帧光栅，不含位图
+	// 解码冷启动（否则 40×30 转换在高负载下让 mount 偶发破 50ms）。
+	{
+		warm := wg.NewHeadless(wg.DefaultOptions())
+		warm.Resize(200, 200)
+		warm.MountWidget(&imCap{child: im})
+		warm.FrameOnce()
+		warm.Close()
+	}
 	cap := &imCap{child: im}
 
 	began := time.Now()

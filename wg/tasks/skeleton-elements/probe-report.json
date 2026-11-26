@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "skeleton-elements",
+  "treeHash": "edfdb6047052ba701006c41d155895bc92b344df",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "skeleton-elements",
+      "status": "PASS",
+      "durationMs": 3850,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\skeleton-elements\\logs\\edfdb6047052ba701006c41d155895bc92b344df\\probe_skeleton-elements.log"
+    }
+  ]
+}

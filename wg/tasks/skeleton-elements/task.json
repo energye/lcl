@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "skeleton-elements",
+  "title": "Skeleton Button/Input/Image 小形态",
+  "component": "Skeleton",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "新增 SkeletonButton/SkeletonInput/SkeletonImage 独立组件（antd Skeleton.Button/Input/Image）",
+    "Button/Input 支持 Size 三档与 Shape（default/square/round/circle）、Block 撑满；Image 固定尺寸；均复用 Skeleton 呼吸底",
+    "spec 增加三形态断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/skeleton/spec.json"
+  ],
+  "probes": [
+    "skeleton-elements"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/skeleton-elements/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-2720befa3b24f694f9287682175d85ccb011a0a0.json",
+    "verifiedTree": "edfdb6047052ba701006c41d155895bc92b344df"
+  },
+  "createdAt": "2026-11-26T13:29:18.1313553+08:00",
+  "updatedAt": "2026-11-26T15:02:40.0137613+08:00",
+  "closedAt": "2026-11-26T15:02:40.0137613+08:00"
+}

@@ -5,6 +5,7 @@
     "sections": [
       "四行占位",
       "呼吸态",
+      "元素形态",
       "组合形态"
     ]
   },
@@ -70,6 +71,39 @@
               },
               "minRatio": 0.4,
               "tol": 14
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "元素形态",
+      "cases": [
+        {
+          "name": "按钮/输入/图片骨架三形态存在",
+          "target": {
+            "label": "skeleton-button"
+          },
+          "when": [],
+          "then": [
+            {
+              "kind": "exists",
+              "target": {
+                "label": "skeleton-button"
+              },
+              "count": 3
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "skeleton-input"
+              }
+            },
+            {
+              "kind": "exists",
+              "target": {
+                "label": "skeleton-image"
+              }
             }
           ]
         }

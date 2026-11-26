@@ -267,6 +267,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "skeleton-elements",
+      "covers": [
+        "wg/widgets/skeleton_elements.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeSkeletonElements$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }
