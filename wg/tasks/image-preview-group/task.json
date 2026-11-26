@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "image-preview-group",
+  "title": "Image PreviewGroup 多图切换",
+  "component": "Image",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "新增 ImageGroup：多张图并排缩略图，点击任一张打开预览",
+    "预览内左右切换按钮（image-prev/next）循环切图 + 计数 current/total + OnChange 回调",
+    "spec 增加多图切换断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/image/spec.json"
+  ],
+  "probes": [
+    "image-preview-group"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/image-preview-group/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-387f76e4bc64caed8fa1ec51f357a8939dca6639.json",
+    "verifiedTree": "1ab6aa4f7bf1fdd60731d18a1732da447760f69d"
+  },
+  "createdAt": "2026-11-26T21:01:53.1592934+08:00",
+  "updatedAt": "2026-11-26T21:55:37.8476265+08:00",
+  "closedAt": "2026-11-26T21:55:37.8476265+08:00"
+}

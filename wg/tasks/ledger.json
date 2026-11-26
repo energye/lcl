@@ -112,5 +112,11 @@
     "component": "Watermark",
     "state": "CLOSED",
     "updatedAt": "2026-11-26T20:58:50.4374371+08:00"
+  },
+  {
+    "taskId": "image-preview-group",
+    "component": "Image",
+    "state": "CLOSED",
+    "updatedAt": "2026-11-26T21:55:37.8528338+08:00"
   }
 ]

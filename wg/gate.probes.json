@@ -318,6 +318,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "image-preview-group",
+      "covers": [
+        "wg/widgets/imagegroup.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeImageGroup$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

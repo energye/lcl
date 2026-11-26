@@ -25,7 +25,24 @@ var gradientImg = func() image.Image {
 var (
 	imgBase   = widgets.NewImage(gradientImg, 200, 150)
 	imgBroken = widgets.NewImage(nil, 200, 150)
+
+	// 多图组（PreviewGroup）：三张缩略图，点击任一张开预览可左右切换。
+	imgAlt1  = widgets.NewImage(gradientImg, 120, 90)
+	imgAlt2  = widgets.NewImage(reverseImg, 120, 90)
+	imgAlt3  = widgets.NewImage(gradientImg, 120, 90)
+	imgGroup = widgets.NewImageGroup(imgAlt1, imgAlt2, imgAlt3)
 )
+
+// reverseImg 反向渐变（与 gradientImg 区分）。
+var reverseImg = func() image.Image {
+	img := image.NewNRGBA(image.Rect(0, 0, 120, 90))
+	for y := 0; y < 90; y++ {
+		for x := 0; x < 120; x++ {
+			img.SetNRGBA(x, y, color.NRGBA{R: uint8(230 - x), G: uint8(60 + y/2), B: uint8(80 + x/3), A: 255})
+		}
+	}
+	return img
+}()
 
 func main() {
 	launcher.Main(doc.Meta{
@@ -40,6 +57,9 @@ func main() {
 			{Title: "基础与预览", Note: "渐变合成图 200×150：点击弹预览，底部工具条放大/缩小/左转/右转（antd preview toolbar）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return imgBase
 			}},
+			{Title: "多图切换", Note: "ImageGroup：三张缩略图，点任一张开预览，左右按钮循环切图+计数 current/total", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return imgGroup
+			}},
 			{Title: "加载失败占位", Note: "Src=nil：灰底+「图片加载失败」文本（antd fallback）", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return imgBroken
 			}},
@@ -50,6 +70,7 @@ func main() {
 			{Name: "Width / Height", Type: "float32", Desc: "显示尺寸"},
 			{Name: "Radius", Type: "float32", Default: "4", Desc: "圆角"},
 			{Name: "Preview", Type: "bool", Default: "true", Desc: "点击 BandModal 大图预览（Esc/关闭钮退出）"},
+			{Name: "NewImageGroup", Type: "func(thumbs ...*Image) *ImageGroup", Desc: "多图预览组：缩略图并排，预览内左右切换+计数+OnChange"},
 			{Name: "预览工具条", Type: "内置", Desc: "放大/缩小（1.5× 步进，限 [1,50]）/左转/右转（90°/次）"},
 		},
 	})

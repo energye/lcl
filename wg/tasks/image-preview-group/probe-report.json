@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "image-preview-group",
+  "treeHash": "1ab6aa4f7bf1fdd60731d18a1732da447760f69d",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "image-preview-group",
+      "status": "PASS",
+      "durationMs": 4601,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\image-preview-group\\logs\\1ab6aa4f7bf1fdd60731d18a1732da447760f69d\\probe_image-preview-group.log"
+    }
+  ]
+}
