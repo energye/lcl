@@ -12,6 +12,7 @@ import (
 var (
 	wmContent = scene.Flex(scene.Vertical, 8)
 	wm        *widgets.Watermark
+	wmMulti   *widgets.Watermark
 )
 
 func init() {
@@ -31,6 +32,15 @@ func init() {
 	)
 	wm.Width = 480
 	wm.Height = 240
+
+	// 多行水印卡（antd content 数组）：三行纵向堆叠。
+	wmMulti = widgets.NewWatermark(
+		doc.Node(func(c *ui.BuildContext) *scene.Node { return wmContent }),
+		"",
+	)
+	wmMulti.Contents = []string{"机密文件", "2026 年度", "请勿外传"}
+	wmMulti.Width = 480
+	wmMulti.Height = 240
 }
 
 func main() {
@@ -39,9 +49,12 @@ func main() {
 		What: []string{
 			"Stack 底层 Child + **水印层 CustomPaint 单节点**（Save→Rotate→网格 DrawText→Restore——canvas 原生旋转 antd 默认 -22°）",
 			"alpha 语义：antd rgba(0,0,0,0.15) = geom.RGBAa(0,0,0,38)；覆盖范围按对角线扩展（旋转后盖满）",
-			"未实现：多行 content/图片水印/防篡改/zIndex",
+			"**多行水印**（Contents 数组逐行纵向堆叠、中心对齐）；未实现：图片水印/防篡改/zIndex",
 		},
 		Demos: []doc.Demo{
+			{Title: "多行水印", Note: "Contents 数组：三行纵向堆叠（机密文件 / 2026 年度 / 请勿外传），antd content 数组", Build: func(ctx *ui.BuildContext) ui.Widget {
+				return wmMulti
+			}},
 			{Title: "文本平铺水印", Note: "-22° 旋转灰字平铺（\"内部资料 · 请勿外传\"）盖在经营摘要上", Build: func(ctx *ui.BuildContext) ui.Widget {
 				return wm
 			}},
@@ -50,6 +63,7 @@ func main() {
 			{Name: "NewWatermark", Type: "func(child ui.Widget, content string) *Watermark", Desc: "构造（-22° 默认旋转）"},
 			{Name: "Child", Type: "ui.Widget", Desc: "被覆盖内容"},
 			{Name: "Content", Type: "string", Desc: "水印文本（单行）"},
+			{Name: "Contents", Type: "[]string", Desc: "多行水印文本（antd content 数组）；非空优先于 Content，逐行堆叠"},
 			{Name: "GapX / GapY", Type: "float32", Default: "100 / 80", Desc: "平铺间距"},
 			{Name: "FontSize / RotateDeg", Type: "float32", Default: "14 / -22", Desc: "字号/旋转角"},
 			{Name: "Width / Height", Type: "float32", Desc: "显式尺寸（Stack 必需）"},

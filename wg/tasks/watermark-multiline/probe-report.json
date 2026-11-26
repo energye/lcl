@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "watermark-multiline",
+  "treeHash": "086ae9ea6f5073ac528977967f329978858593f7",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "watermark-multiline",
+      "status": "PASS",
+      "durationMs": 4360,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\watermark-multiline\\logs\\086ae9ea6f5073ac528977967f329978858593f7\\probe_watermark-multiline.log"
+    }
+  ]
+}

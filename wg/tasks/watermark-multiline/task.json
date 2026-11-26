@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "watermark-multiline",
+  "title": "Watermark 多行内容",
+  "component": "Watermark",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "支持多行水印：Contents []string 每行纵向堆叠（antd content 数组）；Content 单行保持兼容",
+    "多行时整体按行高堆叠、行间距 SM、中心对齐；平铺矩阵按内容总尺寸偏移",
+    "spec 增加多行断言；真窗审计 failed=0 specFailed=0；§6A 探针覆盖"
+  ],
+  "specs": [
+    "wg/examples/watermark/spec.json"
+  ],
+  "probes": [
+    "watermark-multiline"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/watermark-multiline/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-ca45e4c1eacd55d54ec09f553b1a0826d1b0f097.json",
+    "verifiedTree": "086ae9ea6f5073ac528977967f329978858593f7"
+  },
+  "createdAt": "2026-11-26T20:05:39.9824575+08:00",
+  "updatedAt": "2026-11-26T20:58:50.4336995+08:00",
+  "closedAt": "2026-11-26T20:58:50.4336995+08:00"
+}

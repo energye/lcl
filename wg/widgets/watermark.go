@@ -25,6 +25,9 @@ type Watermark struct {
 	Child ui.Widget
 	// Content 水印文本（单行）。
 	Content string
+	// Contents 多行水印文本（antd content 数组）：非空时优先于 Content，
+	// 每行纵向堆叠、中心对齐。
+	Contents []string
 	// GapX/GapY 水印间距（默认 100/80）。
 	GapX, GapY float32
 	// FontSize 水印字号（默认 14）。
@@ -42,6 +45,7 @@ func NewWatermark(child ui.Widget, content string) *Watermark {
 
 // Build 实现 ui.Widget。
 func (w *Watermark) Build(ctx *ui.BuildContext) *scene.Node {
+	th := ctx.ThemeOr()
 	width := w.Width
 	if width <= 0 {
 		width = 480
@@ -79,7 +83,31 @@ func (w *Watermark) Build(ctx *ui.BuildContext) *scene.Node {
 	}
 	rad := float32(float64(deg) * math.Pi / 180)
 	font := text.DefaultFont(fs)
-	layout := text.LayoutText(content, font, text.Options{})
+	// 多行：Contents 优先，逐行排版纵向堆叠（行间距 SM=4）；单行回退 Content。
+	lines := w.Contents
+	if len(lines) == 0 {
+		lines = []string{content}
+	}
+	type lineLayout struct {
+		layout *text.Layout
+		y      float32 // 相对块顶的 y
+	}
+	var layouts []lineLayout
+	lineGap := th.Space.SM
+	blockH := float32(0)
+	for _, ln := range lines {
+		l := text.LayoutText(ln, font, text.Options{})
+		layouts = append(layouts, lineLayout{layout: l, y: blockH})
+		blockH += l.Size.H + lineGap
+	}
+	blockH -= lineGap // 末尾无间距
+	// 块总宽 = 最宽行。
+	blockW := float32(0)
+	for _, ll := range layouts {
+		if ll.layout.Size.W > blockW {
+			blockW = ll.layout.Size.W
+		}
+	}
 	wc := geom.RGBAa(0, 0, 0, 38) // antd rgba(0,0,0,0.15)
 
 	// 覆盖范围按对角线扩展（旋转后仍盖满）。
@@ -91,7 +119,13 @@ func (w *Watermark) Build(ctx *ui.BuildContext) *scene.Node {
 		half := diag / 2
 		for y := -half; y <= half; y += gy {
 			for x := -half; x <= half; x += gx {
-				cv.DrawText(layout, geom.Pt(x-layout.Size.W/2, y-layout.Size.H/2), wc)
+				// 块左上角对齐到 (x-blockW/2, y-blockH/2)，逐行居中绘制。
+				bx := x - blockW/2
+				by := y - blockH/2
+				for _, ll := range layouts {
+					lx := bx + (blockW-ll.layout.Size.W)/2
+					cv.DrawText(ll.layout, geom.Pt(lx, by+ll.y), wc)
+				}
 			}
 		}
 		cv.Restore()

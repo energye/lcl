@@ -301,6 +301,23 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "watermark-multiline",
+      "covers": [
+        "wg/widgets/watermark.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeWatermarkMultiline$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }
