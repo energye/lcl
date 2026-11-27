@@ -825,6 +825,13 @@ func (n *Node) placeScroll() {
 	s = addMargin(ch, s)
 	n.contentSize = s
 	n.scrollOffset = clampf(n.scrollOffset, 0, n.maxScroll())
+	// 偏移量化到整像素：blit 搬运要求平移量与像素格对齐（否则残影/抖动），
+	// 顺带让文字落在整像素上更锐利。这是软件渲染滚动的既定做法。
+	off := float32(int(n.scrollOffset + 0.5))
+	if off > n.maxScroll() {
+		off = n.maxScroll()
+	}
+	n.scrollOffset = off
 	ch.offset = geom.Pt(n.padding.Left, n.padding.Top)
 	if n.axis == Vertical {
 		ch.offset.Y -= n.scrollOffset

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "scroll-blit",
+  "title": "滚动 blit：纯平移帧像素搬运，滚动/拖滑块丝滑",
+  "component": "Scroll",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "滚动帧整视口重画（GDI文字64%+光栅32%）导致拖滑块卡顿；实现纯滚动帧 blit（平移已呈现像素+只重画新暴露边条+滚动条带），拖动滑块走 paint-only 不重排；像素等价门禁 + §6A 滚动帧≤16ms"
+  ],
+  "specs": [
+    "wg/examples/scroll/spec.json"
+  ],
+  "probes": [
+    "scroll-blit"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/scroll-blit/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-9afc576dbf9175e61fbee3ddfcebf24583dca58f.json",
+    "verifiedTree": "6edf30ef4b24a24a4486fc17aeb3e5ac452d54be"
+  },
+  "createdAt": "2026-11-27T18:48:36.3754709+08:00",
+  "updatedAt": "2026-11-27T22:16:53.9815966+08:00",
+  "closedAt": "2026-11-27T22:16:53.9815966+08:00"
+}

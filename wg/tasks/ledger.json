@@ -130,5 +130,17 @@
     "component": "Form",
     "state": "CLOSED",
     "updatedAt": "2026-11-27T02:29:26.5416209+08:00"
+  },
+  {
+    "taskId": "ledger-audit-erratum",
+    "component": "Docs",
+    "state": "CLOSED",
+    "updatedAt": "2026-11-27T22:19:05.357896+08:00"
+  },
+  {
+    "taskId": "scroll-blit",
+    "component": "Scroll",
+    "state": "CLOSED",
+    "updatedAt": "2026-11-27T22:16:53.9847529+08:00"
   }
 ]

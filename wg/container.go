@@ -121,6 +121,8 @@ type Container struct {
 	requested atomic.Bool
 	// lastDamage 是最近一帧提交的脏区（诊断与门禁用）。
 	lastDamage geom.Rect
+	// disableScrollBlit 关闭滚动 blit（A/B 对照与像素等价测试用）。
+	disableScrollBlit bool
 	// deferred 记录"帧内有人请求了下一帧"。帧内回调已经持锁，
 	// 直接走 RequestFrame 会自己和自己抢锁（死锁），因此先存标志、帧末合并。
 	deferred atomic.Bool
@@ -1352,6 +1354,27 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 		}
 	}
 
+	// 滚动 blit：纯平移帧把已呈现像素整体搬移、只重画新暴露边条。
+	//
+	// 为什么值得：滚动帧里 GDI 文字回放 + 软件光栅占大头，而内容只是平移，
+	// 已呈现的像素完全可以复用。blit 后 damage 从"整视口"收敛到"新暴露
+	// 边条 + 滚动条带"，滚动帧成本随之降到边条级别（丝滑的关键）。
+	//
+	// 安全前提（任一不满足就退回全量重画）：
+	//   - 本帧是纯滚动（PureScrollDelta），无布局/结构/其它节点变脏；
+	//   - 合成矩阵是 1:1 轴对齐（无 DPI 缩放），blit 像素量与设备像素一致；
+	//   - 滚动节点在根空间无旋转/缩放（FrameInRoot 轴对齐）。
+	if dirty && c.paint == nil && c.scene != nil && !root.StructureDirty() && !needLayout && !c.disableScrollBlit {
+		if sc, delta, ok := c.scene.PureScrollDelta(); ok {
+			if vp, ok2 := c.scrollBlit(c.comp.Backing(), sc, delta); ok2 {
+				c.comp.Damage().Clear()
+				for _, rc := range vp {
+					c.comp.Invalidate(rc)
+				}
+			}
+		}
+	}
+
 	// 两条绘制路径：
 	//   - 场景树 → Build 层树 → DrawTree：组透明/路径裁剪/滤镜/层缓存都在这条；
 	//   - 外部 Painter（c.paint）→ 扁平指令表 → Draw：兼容逃生舱，不带层。
@@ -1387,8 +1410,13 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 	st.RasterOps = cs.Raster.Ops
 	st.Degraded = cs.Raster.Degraded
 	st.TextLines = cs.TextLines
+	st.ClearDuration = cs.ClearDuration
+	st.RasterDuration = cs.RasterDuration
+	st.TextDuration = cs.TextDuration
+	st.Layers = cs.Layers
 	st.Nodes = countNodes(c.scene)
 	st.Damage = c.comp.LastPresented().Bounds()
+	st.DamageArea = cs.DamageArea
 	if cs.Presented {
 		c.lastDamage = st.Damage
 	}
@@ -1398,6 +1426,13 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 		root.ClearStructureDirty()
 		if c.scene != nil {
 			c.scene.ClearDirtyTree()
+			// 记录各滚动节点"当前偏移已呈现"，供下一帧算 blit 位移。
+			c.scene.Walk(func(n *scene.Node) bool {
+				if n.Kind() == scene.KindScroll {
+					n.MarkScrollRendered()
+				}
+				return true
+			})
 		}
 		// 最后一公里：把本帧合成结果交给 Presenter，驱动 WM_PAINT 提交到窗口。
 		// 必须在清脏之前取 Damage（st.Damage 已保存），且只在真窗下存在。
@@ -1424,6 +1459,139 @@ func (c *Container) FrameOnce() (frame.Stats, error) {
 		}
 	}
 	return st, nil
+}
+
+// scrollBlit 在纯滚动帧把已呈现像素整体平移，返回本帧真正需要重画的
+// 矩形。返回 false 表示不满足 blit 前提，调用方应退回全量重画。
+//
+// 前提：合成矩阵 1:1 轴对齐（无 DPI 缩放），滚动节点在根空间无旋转缩放。
+// 不满足时返回 false——blit 的像素量与设备像素对不上会错位。
+//
+// 滚动条是压在视口之上的不透明覆盖层。blit 平移整个视口后，条带区里
+// "被条盖住的内容"也一起搬了，而条自身位置变了——所以条带必须整块重画，
+// 且重画带要覆盖**条的整列（行）直到视口边缘**：条右边/下边那几像素
+// 内容被 blit 搬动过，不能留旧值，也不能漏画。
+func (c *Container) scrollBlit(dst *raster.Backing, sc *scene.Node, delta int) ([]geom.Rect, bool) {
+	if dst == nil || sc == nil {
+		return nil, false
+	}
+	m := sc.FrameInRoot()
+	if !m.IsAxisAligned() || m.ScaleFactor() != 1 {
+		return nil, false
+	}
+	view := m.MapRect(geom.RectXYWH(0, 0, sc.Size().W, sc.Size().H))
+	x0 := int(view.Min.X + 0.5)
+	y0 := int(view.Min.Y + 0.5)
+	x1 := int(view.Max.X + 0.5)
+	y1 := int(view.Max.Y + 0.5)
+	if x0 < 0 {
+		x0 = 0
+	}
+	if y0 < 0 {
+		y0 = 0
+	}
+	if x1 > dst.W() {
+		x1 = dst.W()
+	}
+	if y1 > dst.H() {
+		y1 = dst.H()
+	}
+	if x0 >= x1 || y0 >= y1 {
+		return nil, false
+	}
+
+	out := make([]geom.Rect, 0, 4)
+	bars := c.scrollBarsOverlapping(sc, view)
+
+	// blit 范围：沿滚动轴平移，但**交叉轴方向要避开垂直的那条条**——
+	// 否则横向滚动会把竖条的像素横向拖进内容区（纵向滚动同理拖横条），
+	// 红画带只覆盖条当前位置，被拖走的旧像素就留在内容里（花屏）。
+	bx1, by1 := x1, y1
+	for _, bar := range bars {
+		if !bar.VisibleInTree() {
+			continue
+		}
+		b := bar.BoundsInRoot().RoundOut()
+		if b.IsEmpty() {
+			continue
+		}
+		if sc.ScrollAxis() == scene.Vertical {
+			// 纵向滚动：横向滚动条（在底部）会被纵向拖进内容，限制 y 上界。
+			if bar.ScrollAxis() == scene.Horizontal {
+				if v := int(b.Min.Y + 0.5); v > y0 && v < by1 {
+					by1 = v
+				}
+			}
+		} else {
+			// 横向滚动：纵向滚动条（在右侧）会被横向拖进内容，限制 x 上界。
+			if bar.ScrollAxis() == scene.Vertical {
+				if v := int(b.Min.X + 0.5); v > x0 && v < bx1 {
+					bx1 = v
+				}
+			}
+		}
+	}
+
+	// 1) blit 视口（交叉轴裁到避让条后的范围）。
+	var dx, dy int
+	if sc.ScrollAxis() == scene.Vertical {
+		dy = -delta
+	} else {
+		dx = -delta
+	}
+	if x0 < bx1 && y0 < by1 {
+		exposed := dst.ScrollBlit(geom.RectLTRB(float32(x0), float32(y0), float32(bx1), float32(by1)), dx, dy)
+		if !exposed.IsEmpty() {
+			out = append(out, exposed)
+		}
+	}
+
+	// 2) 滚动条带：每条整列（行）重画，从条的近侧边缘一直到视口边缘。
+	for _, bar := range bars {
+		if !bar.VisibleInTree() {
+			continue
+		}
+		b := bar.BoundsInRoot().RoundOut()
+		if b.IsEmpty() {
+			continue
+		}
+		var band geom.Rect
+		if bar.ScrollAxis() == scene.Horizontal {
+			by := int(b.Min.Y + 0.5)
+			band = geom.RectLTRB(float32(x0), float32(by), float32(x1), float32(y1))
+		} else {
+			bx := int(b.Min.X + 0.5)
+			band = geom.RectLTRB(float32(bx), float32(y0), float32(x1), float32(y1))
+		}
+		if !band.IsEmpty() {
+			out = append(out, band)
+		}
+	}
+	if len(out) == 0 {
+		return nil, false
+	}
+	return out, true
+}
+
+// scrollBarsOverlapping 返回与给定视口（根空间矩形）相交的所有滚动条节点。
+//
+// 不能只找视口的兄弟节点：Both 模式下纵向视口嵌套在横向视口里，两条滚动条
+// 是更外层 Stack 的兄弟，与内层滚动节点不同父。全树按"覆盖带与视口相交"
+// 收集，才能同时覆盖单轴与双轴（含嵌套）情形。
+func (c *Container) scrollBarsOverlapping(sc *scene.Node, view geom.Rect) []*scene.Node {
+	if c.scene == nil {
+		return nil
+	}
+	var out []*scene.Node
+	c.scene.Walk(func(n *scene.Node) bool {
+		if n != sc && n.IsScrollBar() && n.VisibleInTree() {
+			if n.BoundsInRoot().RoundOut().Intersects(view) {
+				out = append(out, n)
+			}
+		}
+		return true
+	})
+	return out
 }
 
 // countNodes 统计场景节点数（诊断用）。

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "ledger-audit-erratum",
+  "title": "台账勘误：Avatar/Badge 图片头像缺口已交付",
+  "component": "Docs",
+  "state": "CLOSED",
+  "source": {
+    "type": "plan"
+  },
+  "requirements": [
+    "核实 Avatar.Src 图片头像与 Badge.Child 包裹头像均已完整实现（代码+demo+spec 齐全）",
+    "coverage-audit 数据展示段删除 Avatar（图片位图头像）/Badge（图片头像）过时缺口标注",
+    "不改代码；全量门禁 PASS 验证无回退"
+  ],
+  "specs": [
+    "wg/examples/avatar/spec.json"
+  ],
+  "probes": [
+    "ledger-audit-erratum"
+  ],
+  "evidence": {
+    "probeReport": "wg/tasks/ledger-audit-erratum/probe-report.json",
+    "gateReport": "E:\\app\\workspace\\lcl\\.shots\\gates\\report-fe6585b7dffa476fced0fdb5f5d53f99adcb85a6.json",
+    "verifiedTree": "5251e4213006f8243cc721a3645721c3b145170b"
+  },
+  "createdAt": "2026-11-27T08:44:27.7814353+08:00",
+  "updatedAt": "2026-11-27T22:19:05.3536794+08:00",
+  "closedAt": "2026-11-27T22:19:05.3536794+08:00"
+}

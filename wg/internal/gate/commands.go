@@ -150,6 +150,10 @@ func diagSteps(diag string) []StepSpec {
 			Timeout: 5 * time.Minute,
 		})
 	}
+	// --bench 走扁平 painter 路径（SetPainter→Draw），真实窗口走场景树
+	// DrawTree。因此：WG_AA 对 bench 有真实对照意义（关闭 AA 直接降光栅成本）；
+	// WG_LAYERS/WG_CACHE 在扁平路径下不适用（扁平路径不建层、不查层缓存），
+	// 保留这两步仅作"改动后仍 ≥59 FPS"的回归冒烟，不构成层/缓存 A/B 证据。
 	steps = append(steps,
 		StepSpec{ID: "diag:bench-aa-off", Args: []string{diag, "--bench", "--frames", "120"}, Env: []string{"WG_AA=0"}, Timeout: 5 * time.Minute},
 		StepSpec{ID: "diag:bench-layers-off", Args: []string{diag, "--bench", "--frames", "120"}, Env: []string{"WG_LAYERS=0"}, Timeout: 5 * time.Minute},

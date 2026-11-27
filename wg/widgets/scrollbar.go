@@ -83,6 +83,32 @@ func (b *Scrollbar) syncThumb() {
 	}
 }
 
+// syncThumbPaint 交互路径专用：滑块已布局过时只改 offset（标绘制脏，
+// 不触发重排），让滚动帧只剩"blit + 条带重画"；未布局时退回布局路径，
+// 让尺寸/offset 由 placeStackLike 算定（否则首帧滑块位置错乱）。
+//
+// 拖动滑块/滚轮是高频操作；走 SetStackPosition 会 MarkNeedsLayout，让整页
+// 重排、并阻断滚动 blit（blit 要求无布局脏）——这是"滚动/拖滑块卡顿"的根源。
+func (b *Scrollbar) syncThumbPaint() {
+	if b.thumb == nil {
+		return
+	}
+	if !b.thumb.LaidOut() {
+		b.syncThumb()
+		return
+	}
+	pos, _ := b.thumbGeometry()
+	o := geom.Point{}
+	if p := b.thumb.Parent(); p != nil {
+		o = p.ContentOrigin()
+	}
+	if b.Axis == scene.Vertical {
+		b.thumb.SetOffsetPaint(geom.Pt(o.X, o.Y+pos))
+	} else {
+		b.thumb.SetOffsetPaint(geom.Pt(o.X+pos, o.Y))
+	}
+}
+
 func (b *Scrollbar) emit(v float32) {
 	if v < 0 {
 		v = 0
@@ -94,7 +120,7 @@ func (b *Scrollbar) emit(v float32) {
 		return
 	}
 	b.Value = v
-	b.syncThumb()
+	b.syncThumbPaint()
 	if b.OnChange != nil {
 		b.OnChange(v)
 	}

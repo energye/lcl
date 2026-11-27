@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "ledger-audit-erratum",
+  "treeHash": "5251e4213006f8243cc721a3645721c3b145170b",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "ledger-audit-erratum",
+      "status": "PASS",
+      "durationMs": 4679,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\ledger-audit-erratum\\logs\\5251e4213006f8243cc721a3645721c3b145170b\\probe_ledger-audit-erratum.log"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "taskId": "scroll-blit",
+  "treeHash": "6edf30ef4b24a24a4486fc17aeb3e5ac452d54be",
+  "status": "PASS",
+  "results": [
+    {
+      "probeId": "scroll-blit",
+      "status": "PASS",
+      "durationMs": 5782,
+      "detail": "exit 0",
+      "logFile": "E:\\app\\workspace\\lcl\\wg\\tasks\\scroll-blit\\logs\\6edf30ef4b24a24a4486fc17aeb3e5ac452d54be\\probe_scroll-blit.log"
+    }
+  ]
+}

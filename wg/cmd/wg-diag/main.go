@@ -124,7 +124,10 @@ func main() {
 
 	if *benchFlag {
 		ran = true
-		res, err := diag.Bench(diag.BenchOptions{Width: *width, Height: *height, Frames: *frames})
+		res, err := diag.Bench(diag.BenchOptions{
+			Width: *width, Height: *height, Frames: *frames,
+			DisableAA: os.Getenv("WG_AA") == "0",
+		})
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "wg-diag --bench:", err)
 			exit = 1

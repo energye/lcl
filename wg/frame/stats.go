@@ -28,6 +28,10 @@ type Stats struct {
 
 	// Damage 是本帧提交的脏区（DIP，已上卷并合并且裁到根）。
 	Damage geom.Rect
+	// DamageArea 是本帧实际提交的**像素面积**（多矩形之和，非外包矩形）。
+	// 与 Damage（外包矩形）区分：滚动 blit 后脏区是"边条 + 条带"几个小矩形，
+	// 外包常等于整视口，但真实绘制面积远小——看这个才能确认 blit 生效。
+	DamageArea float32
 	// Dirty 表示本帧是否有实际绘制内容。静止帧为 false，此时不提交。
 	Dirty bool
 	// Presented 表示本帧是否真的走到提交（有脏区且完成光栅）。
@@ -39,6 +43,12 @@ type Stats struct {
 	// TextLines 是文字通道绘制的行数。
 	TextLines int
 
+	// 分段耗时（§6A 热点定位用）：Clear 脏区清屏、Raster 形状光栅、
+	// Text 文字通道回放。树路径下文字在各层内回放，归入 Raster。
+	ClearDuration  time.Duration
+	RasterDuration time.Duration
+	TextDuration   time.Duration
+
 	// FrameDuration 是本帧总耗时。
 	FrameDuration time.Duration
 }
@@ -49,10 +59,10 @@ func (s Stats) String() string {
 	if s.Dirty {
 		state = "dirty"
 	}
-	return fmt.Sprintf("frame=%d t=%s d=%s surfaces=%d nodes=%d layers=%d damage=[%.1f,%.1f %.1fx%.1f] %s %s",
+	return fmt.Sprintf("frame=%d t=%s d=%s surfaces=%d nodes=%d layers=%d damage=[%.1f,%.1f %.1fx%.1f] %s %s clear=%s raster=%s text=%s",
 		s.Index, s.Now, s.Delta, s.Surfaces, s.Nodes, s.Layers,
 		s.Damage.Min.X, s.Damage.Min.Y, s.Damage.W(), s.Damage.H(),
-		state, s.FrameDuration)
+		state, s.FrameDuration, s.ClearDuration, s.RasterDuration, s.TextDuration)
 }
 
 // Idle 表示这是一帧无内容变更的静止帧（契约 C14：静止零帧）。

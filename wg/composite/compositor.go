@@ -57,6 +57,15 @@ type Stats struct {
 	// Frame 是帧序号。
 	Frame int
 
+	// ── 分段耗时（调优用，对应 §6A 定位热点） ──
+	//
+	// ClearDuration 是脏区清屏，RasterDuration 是形状光栅，TextDuration 是
+	// 文字通道回放。三者之和 ≈ Duration 的主体（树路径下文字在各层内回放，
+	// 归入 RasterDuration；扁平 Draw 路径分段精确）。
+	ClearDuration  time.Duration
+	RasterDuration time.Duration
+	TextDuration   time.Duration
+
 	// ── 层与缓存（M2 新增） ──
 	//
 	// Layers 是层总数，LayerGroups 是其中需要合并语义的组层数。
@@ -112,6 +121,8 @@ type frameAcc struct {
 	layerHits   int
 	layerSkip   int
 	blended     int
+	rasterTime  time.Duration
+	textTime    time.Duration
 }
 
 // New 创建合成器。
@@ -235,19 +246,25 @@ func (c *Compositor) Draw(dl *render.DisplayList) (Stats, error) {
 	}
 
 	// 1) 只清脏区，不做整屏清屏
+	tClear := time.Now()
 	for _, rc := range c.damage.Rects() {
 		c.dst.FillRect(rc, c.bg)
 	}
+	st.ClearDuration = time.Since(tClear)
 
 	// 2) 形状光栅
 	if dl != nil && !dl.Empty() {
+		tRaster := time.Now()
 		st.Raster = c.backend.Draw(c.dst, dl, clip)
+		st.RasterDuration = time.Since(tRaster)
 	}
 
 	// 3) 文字回放（像素已就位，设备空间）
 	if dl != nil && dl.HasText() {
 		if c.text != nil {
+			tText := time.Now()
 			c.st.textLines += c.text.PaintText(c.dst, dl, clip)
+			st.TextDuration = time.Since(tText)
 		} else {
 			c.st.textSkipped = true
 		}
@@ -290,20 +307,35 @@ func (c *Compositor) DrawTree(t *Tree) (Stats, error) {
 		c.endFrame(&st, began, false)
 		return st, nil
 	}
-	clip := c.damage.Bounds().Intersect(c.dst.Bounds())
-	if clip.IsEmpty() {
+	if c.damage.Bounds().Intersect(c.dst.Bounds()).IsEmpty() {
 		c.damage.Clear()
 		c.endFrame(&st, began, false)
 		return st, nil
 	}
 
+	// 逐脏矩形绘制：每个矩形独立清屏 + 独立裁剪回放。
+	//
+	// 为什么不再用「脏区外包矩形」一刀切：滚动 blit 把整视口重画收敛成
+	// 「新暴露边条 + 滚动条带」两三个小矩形，它们的**外包**往往就是整视口
+	// （底边条 ∪ 右侧竖条 = 全屏）——用外包矩形绘制等于白 blit。逐矩形
+	// 绘制后，每个小矩形只回放与它相交的图元（软件后端按 bounds 快速跳过
+	// 不相交者），滚动帧成本随之降到边条级别。
+	//
+	// 单矩形脏区（绝大多数帧）行为不变：循环一次，等价于原逻辑。
+	tClear := time.Now()
+	root := t.Root()
 	for _, rc := range c.damage.Rects() {
-		c.dst.FillRect(rc, c.bg)
+		clip := rc.Intersect(c.dst.Bounds())
+		if clip.IsEmpty() {
+			continue
+		}
+		c.dst.FillRect(clip, c.bg)
+		if root != nil {
+			c.drawLayer(root, c.dst, 0, 0, clip, 1)
+		}
 	}
+	st.ClearDuration = time.Since(tClear)
 
-	if root := t.Root(); root != nil {
-		c.drawLayer(root, c.dst, 0, 0, clip, 1)
-	}
 
 	c.endFrame(&st, began, true)
 	return st, nil
@@ -329,6 +361,13 @@ func (c *Compositor) endFrame(st *Stats, began time.Time, presented bool) {
 	if presented {
 		st.Raster.Ops += c.st.ops
 		st.Raster.Degraded += c.st.degraded
+		// 树路径：文字在各层内回放，分段耗时已在 drawPicture 累计。
+		if st.RasterDuration == 0 {
+			st.RasterDuration = c.st.rasterTime
+		}
+		if st.TextDuration == 0 {
+			st.TextDuration = c.st.textTime
+		}
 		// 4) 提交：记录本帧区域后清空 damage（一次提交，C13）
 		c.last.Clear()
 		c.last.AddRegion(&c.damage)

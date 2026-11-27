@@ -1,6 +1,8 @@
 package composite
 
 import (
+	"time"
+
 	"github.com/energye/lcl/wg/geom"
 	"github.com/energye/lcl/wg/raster"
 	"github.com/energye/lcl/wg/render"
@@ -58,10 +60,14 @@ func (c *Compositor) drawPicture(dst *raster.Backing, dl *render.DisplayList, dx
 	if dx != 0 || dy != 0 {
 		dl = dl.OffsetBy(float32(dx), float32(dy))
 	}
+	tRaster := time.Now()
 	st := c.backend.Draw(dst, dl, clip)
+	c.st.rasterTime += time.Since(tRaster)
 	if dl.HasText() {
 		if c.text != nil {
+			tText := time.Now()
 			c.st.textLines += c.text.PaintText(dst, dl, clip)
+			c.st.textTime += time.Since(tText)
 		} else {
 			c.st.textSkipped = true
 		}

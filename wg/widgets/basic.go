@@ -466,6 +466,7 @@ func (s *Scroll) Build(ctx *ui.BuildContext) *scene.Node {
 
 	barNode := bar.Build(ctx)
 	barNode.SetPositionKeepSize(true)
+	barNode.SetScrollBar(true) // 纯滚动帧判定：滑块移动不算"其它脏源"
 	if vertical {
 		barNode.SetStackPosition(geom.Pt(w-thick-scrollbarInset, scrollbarInset))
 	} else {
@@ -608,6 +609,7 @@ func (s *Scroll) buildBoth(ctx *ui.BuildContext) *scene.Node {
 		}
 		node := bar.Build(ctx)
 		node.SetPositionKeepSize(true)
+		node.SetScrollBar(true) // 纯滚动帧判定：滑块移动不算"其它脏源"
 		node.SetStackPosition(pos)
 		stack.Add(node)
 	}

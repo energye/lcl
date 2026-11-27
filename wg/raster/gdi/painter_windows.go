@@ -110,7 +110,13 @@ func (p *Painter) PaintText(dst *raster.Backing, dl *render.DisplayList, clip ge
 
 // backingOpaque 报告各矩形区域是否全部不透明（alpha=255）。
 // 只扫文字覆盖的像素，主缓冲一次命中，成本可忽略。
+//
+// 主缓冲被不透明清屏填满时 Backing 已维护 Opaque 标记，直接短路——
+// 省掉每帧对全部文字区域的逐像素扫描。
 func backingOpaque(dst *raster.Backing, areas []geom.Rect) bool {
+	if dst.Opaque() {
+		return true
+	}
 	for _, r := range areas {
 		x0, y0, x1, y1 := clampRect(r, dst.W(), dst.H(), dst.W(), dst.H())
 		for y := y0; y < y1; y++ {

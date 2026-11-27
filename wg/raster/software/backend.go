@@ -37,8 +37,8 @@ type Backend struct {
 
 	fill filler
 
-	polys   []render.Polyline
-	outline [][]geom.Point
+	polys    []render.Polyline
+	outline  strokeBuf
 	// scratch 是"变换后的折线"暂存缓冲：addPolyline 只读取点、不保留引用，
 	// 因此同一条折线可以整批复用，避免每条折线都 make 一个新切片。
 	scratch []geom.Point
@@ -214,13 +214,14 @@ func (b *Backend) strokePath(dst *raster.Backing, path *render.Path, m geom.Matr
 	polys := path.Flatten(tol, b.polys)
 	b.polys = polys
 
-	b.outline = strokePolygons(polys, paint, b.outline[:0])
+	b.outline.reset()
+	strokePolygons(polys, paint, &b.outline)
 
 	b.fill.reset()
 	b.fill.aa = b.aa && paint.AntiAlias
 	b.fill.mask, b.fill.maskW = b.mask, b.maskW
-	for _, poly := range b.outline {
-		b.fill.addPolyline(b.transform(poly, m))
+	for i := 0; i < b.outline.count(); i++ {
+		b.fill.addPolyline(b.transform(b.outline.poly(i), m))
 	}
 	// 描边一律 nonzero：线段四边形与拐角补丁会重叠，靠环绕数求并
 	inv, ok := m.Invert()
@@ -290,28 +291,39 @@ func (b *Backend) fillRect(dst *raster.Backing, r geom.Rect, paint *render.Paint
 
 	if iy0 < iy1 && ix0 < ix1 {
 		n := ix1 - ix0
-		for y := iy0; y < iy1; y++ {
-			row := dst.Row(y)
-			switch {
-			case shader != nil:
-				// 渐变横向变化，只能逐像素采样
+		switch {
+		case shader != nil:
+			// 渐变横向变化，只能逐像素采样
+			for y := iy0; y < iy1; y++ {
+				row := dst.Row(y)
 				for x := ix0; x < ix1; x++ {
 					lp := geom.Pt(float32(x)+0.5, float32(y)+0.5)
 					col := shader.Sample(shader.GradientT(lp))
 					cr, cg, cb, ca := premulScaled(col, 255)
 					row[x] = blendPremul(row[x], cr, cg, cb, ca)
 				}
-			case opaque || sa0 == 255:
-				// 覆盖满、颜色不透明 → 纯存储，无读改写
-				for x := ix0; x < ix1; x++ {
-					row[x] = base
-				}
-			default:
+				st.Pixels += n
+			}
+		case opaque || sa0 == 255:
+			// 覆盖满、颜色不透明 → 纯存储。先铺首行，其余行整行拷贝：
+			// memmove 比逐像素写快数倍，全屏背景矩形是每帧面积最大的指令。
+			row := dst.Row(iy0)
+			for x := ix0; x < ix1; x++ {
+				row[x] = base
+			}
+			span := row[ix0:ix1]
+			for y := iy0 + 1; y < iy1; y++ {
+				copy(dst.Row(y)[ix0:ix1], span)
+			}
+			st.Pixels += n * (iy1 - iy0)
+		default:
+			for y := iy0; y < iy1; y++ {
+				row := dst.Row(y)
 				for x := ix0; x < ix1; x++ {
 					row[x] = blendPremul(row[x], sr0, sg0, sb0, sa0)
 				}
+				st.Pixels += n
 			}
-			st.Pixels += n
 		}
 		st.Spans += iy1 - iy0
 	}

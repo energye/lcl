@@ -159,11 +159,15 @@ func (b *Backing) FillRect(r geom.Rect, c geom.Color) {
 		return
 	}
 	v := c.PremulBGRA()
-	for y := y0; y < y1; y++ {
-		row := b.pix[y*b.w : y*b.w+b.w]
-		for x := x0; x < x1; x++ {
-			row[x] = v
-		}
+	row := b.pix[y0*b.w : y0*b.w+b.w]
+	// 先铺首行，其余行整行拷贝：memmove 比逐像素写快数倍，
+	// 清屏与全屏背景矩形是每帧面积最大的两条指令（§12 实测）。
+	for x := x0; x < x1; x++ {
+		row[x] = v
+	}
+	span := row[x0:x1]
+	for y := y0 + 1; y < y1; y++ {
+		copy(b.pix[y*b.w+x0:y*b.w+x1], span)
 	}
 	// 不透明标记的维护规则：
 	//   - 半透明填充 → 整块不再保证不透明；
@@ -254,6 +258,97 @@ func (b *Backing) CopyRect(src *Backing, srcRect geom.Rect, dx, dy int) bool {
 		copy(dst, srow)
 	}
 	return true
+}
+
+// ScrollBlit 把矩形 r 的内容按 (dx,dy) 平移（像素），仅平移 r 内、平移后
+// 仍落在 r 内的部分；返回未被覆盖的"新暴露"区域（需要用背景清屏后重画）。
+//
+// 用于滚动视口：内容整体平移时，已呈现的像素直接搬运，只重画新露出的边条，
+// 避免整视口重画（GDI 文字回放是滚动帧的主要成本）。
+//
+// 重叠搬运必须按方向选择行序/列序，否则源会被目标覆盖（memmove 语义）。
+// r 会先与缓冲边界求交；r 为空或平移量为 0 时不做任何事。
+func (b *Backing) ScrollBlit(r geom.Rect, dx, dy int) (exposed geom.Rect) {
+	x0, y0, x1, y1, ok := b.clipRect(r)
+	if !ok {
+		return geom.ZeroRect
+	}
+	if dx == 0 && dy == 0 {
+		return geom.ZeroRect
+	}
+	// 水平方向新暴露的列带（左或右），垂直方向新暴露的行带（上或下）。
+	if dx > 0 {
+		exposed = geom.RectLTRB(float32(x0), float32(y0), float32(x0+dx), float32(y1))
+	} else if dx < 0 {
+		exposed = geom.RectLTRB(float32(x1+dx), float32(y0), float32(x1), float32(y1))
+	}
+	if dy > 0 {
+		v := geom.RectLTRB(float32(x0), float32(y0), float32(x1), float32(y0+dy))
+		exposed = unionOr(exposed, v)
+	} else if dy < 0 {
+		v := geom.RectLTRB(float32(x0), float32(y1+dy), float32(x1), float32(y1))
+		exposed = unionOr(exposed, v)
+	}
+
+	// 源/目标在 r 内的有效交集（平移后仍在 r 内的部分）。
+	sx0, sx1 := x0, x1
+	sy0, sy1 := y0, y1
+	if dx > 0 {
+		sx1 -= dx
+	} else if dx < 0 {
+		sx0 -= dx
+	}
+	if dy > 0 {
+		sy1 -= dy
+	} else if dy < 0 {
+		sy0 -= dy
+	}
+	if sx0 >= sx1 || sy0 >= sy1 {
+		return exposed
+	}
+	// 行搬运顺序：dy>0（内容下移）从底部开始，避免覆盖未搬的源。
+	if dy >= 0 {
+		for y := sy1 - 1; y >= sy0; y-- {
+			srow := b.pix[y*b.w : y*b.w+b.w]
+			drow := b.pix[(y+dy)*b.w : (y+dy)*b.w+b.w]
+			scrollCopyRow(drow, srow, sx0, sx1, dx)
+		}
+	} else {
+		for y := sy0; y < sy1; y++ {
+			srow := b.pix[y*b.w : y*b.w+b.w]
+			drow := b.pix[(y+dy)*b.w : (y+dy)*b.w+b.w]
+			scrollCopyRow(drow, srow, sx0, sx1, dx)
+		}
+	}
+	return exposed
+}
+
+// scrollCopyRow 把 src 的 [x0,x1) 按 dx 平移拷到 dst（同行宽）。
+func scrollCopyRow(dst, src []uint32, x0, x1, dx int) {
+	if dx > 0 {
+		// 右移：从右往左拷
+		for x := x1 - 1; x >= x0; x-- {
+			dst[x+dx] = src[x]
+		}
+	} else if dx < 0 {
+		// 左移：从左往右拷
+		for x := x0; x < x1; x++ {
+			dst[x+dx] = src[x]
+		}
+	} else {
+		copy(dst[x0:x1], src[x0:x1])
+	}
+}
+
+// unionOr 合并两个矩形（任一为空返回另一个）。
+func unionOr(a, b geom.Rect) geom.Rect {
+	if a.IsEmpty() {
+		return b
+	}
+	if b.IsEmpty() {
+		return a
+	}
+	return a.Union(b)
 }
 
 // clipRect 把 DIP 矩形取整并向内裁到缓冲范围，返回半开像素区间。

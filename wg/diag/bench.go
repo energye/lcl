@@ -25,6 +25,8 @@ type BenchOptions struct {
 	Frames        int
 	// Components 是场景里组件数量的下限（每 4 个图元算 1 个组件）。
 	Components int
+	// DisableAA 关闭抗锯齿（A/B 对照，对应 WG_AA=0）。
+	DisableAA bool
 }
 
 // BenchResult 是 --bench 的结果。
@@ -37,6 +39,11 @@ type BenchResult struct {
 	RasterOps int
 	Damaged   float32 // 平均每帧提交面积
 	Samples   []time.Duration
+
+	// 分段耗时中位数（§6A 热点定位）：清屏 / 形状光栅 / 文字通道。
+	MedianClear  time.Duration
+	MedianRaster time.Duration
+	MedianText   time.Duration
 }
 
 // OK 判定是否达到门禁：1440×880 / 20+ 组件 / AA on ≥ 59 FPS。
@@ -44,8 +51,9 @@ func (r BenchResult) OK() bool { return r.FPS >= 59 }
 
 // String 返回可读摘要。
 func (r BenchResult) String() string {
-	return fmt.Sprintf("bench: %d 帧, 中位数 %v, P95 %v, 最好 %v, %.1f FPS, 平均提交 %.0f px²",
-		r.Frames, r.Median, r.P95, r.Best, r.FPS, r.Damaged)
+	return fmt.Sprintf("bench: %d 帧, 中位数 %v, P95 %v, 最好 %v, %.1f FPS, 平均提交 %.0f px², 分段 clear=%v raster=%v text=%v",
+		r.Frames, r.Median, r.P95, r.Best, r.FPS, r.Damaged,
+		r.MedianClear, r.MedianRaster, r.MedianText)
 }
 
 // Bench 在无窗口环境下测"一帧从录制到提交"的完整开销。
@@ -67,7 +75,9 @@ func Bench(opts BenchOptions) (BenchResult, error) {
 		opts.Components = 24
 	}
 
-	c := wg.NewHeadless(wg.DefaultOptions())
+	wo := wg.DefaultOptions()
+	wo.AA = !opts.DisableAA
+	c := wg.NewHeadless(wo)
 	defer c.Close()
 	c.Resize(opts.Width, opts.Height)
 	clk := frame.NewManualClock(0, frame.DefaultStep)
@@ -78,6 +88,9 @@ func Bench(opts BenchOptions) (BenchResult, error) {
 
 	var res BenchResult
 	res.Samples = make([]time.Duration, 0, opts.Frames)
+	clearSamples := make([]time.Duration, 0, opts.Frames)
+	rasterSamples := make([]time.Duration, 0, opts.Frames)
+	textSamples := make([]time.Duration, 0, opts.Frames)
 
 	// 首帧包含分配与首次字体度量，单独计入但不参与统计
 	if _, err := c.FrameOnce(); err != nil {
@@ -93,6 +106,9 @@ func Bench(opts BenchOptions) (BenchResult, error) {
 			return res, err
 		}
 		res.Samples = append(res.Samples, st.FrameDuration)
+		clearSamples = append(clearSamples, st.ClearDuration)
+		rasterSamples = append(rasterSamples, st.RasterDuration)
+		textSamples = append(textSamples, st.TextDuration)
 		res.RasterOps += st.RasterOps
 		res.Damaged += st.Damage.W() * st.Damage.H()
 		clk.Advance()
@@ -103,6 +119,9 @@ func Bench(opts BenchOptions) (BenchResult, error) {
 	res.Frames = len(res.Samples)
 	res.Median = frame.Median(res.Samples)
 	res.P95 = frame.Percentile(res.Samples, 95)
+	res.MedianClear = frame.Median(clearSamples)
+	res.MedianRaster = frame.Median(rasterSamples)
+	res.MedianText = frame.Median(textSamples)
 	res.Best = res.Samples[0]
 	for _, d := range res.Samples {
 		if d < res.Best {

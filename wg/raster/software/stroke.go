@@ -17,11 +17,86 @@ import (
 // 这就是 appendPoly 里那道 signedArea 检查的原因，删掉它会导致
 // "斜线交叉处出现透明缝"。
 
-// strokePolygons 把折线集转成描边多边形集（局部坐标，未变换）。
-func strokePolygons(polys []render.Polyline, paint *render.Paint, out [][]geom.Point) [][]geom.Point {
+// strokeBuf 是描边多边形的扁平缓冲。
+//
+// 所有多边形的点首尾相接存于 pts，polyOffs 记录每个多边形的起始下标。
+// 用扁平缓冲而不是 [][]geom.Point，是为了消掉"每个线段/拐角一个小切片"
+// 的分配：一个圆角卡片描边有几十个拐角，24 个卡片每帧上千次分配，
+// 是帧分配的绝对大头（GC 压力直接体现为 P95 帧尖刺）。缓冲跨帧复用，
+// 稳态零分配。
+type strokeBuf struct {
+	pts      []geom.Point
+	polyOffs []int
+}
+
+func (b *strokeBuf) reset() {
+	b.pts = b.pts[:0]
+	b.polyOffs = b.polyOffs[:0]
+}
+
+// count 返回已生成的多边形数。
+func (b *strokeBuf) count() int { return len(b.polyOffs) }
+
+// poly 返回第 i 个多边形（pts 的子切片，只读）。
+func (b *strokeBuf) poly(i int) []geom.Point {
+	start := b.polyOffs[i]
+	end := len(b.pts)
+	if i+1 < len(b.polyOffs) {
+		end = b.polyOffs[i+1]
+	}
+	return b.pts[start:end]
+}
+
+// begin 开始一个新多边形。
+func (b *strokeBuf) begin() { b.polyOffs = append(b.polyOffs, len(b.pts)) }
+
+// end 结束当前多边形：不足 3 点丢弃，否则统一成逆时针（正面积）。
+// 方向必须一致——nonzero 填充下反向多边形会把环绕数抵消成空洞。
+func (b *strokeBuf) end() {
+	start := b.polyOffs[len(b.polyOffs)-1]
+	poly := b.pts[start:]
+	if len(poly) < 3 {
+		b.pts = b.pts[:start]
+		b.polyOffs = b.polyOffs[:len(b.polyOffs)-1]
+		return
+	}
+	if signedArea(poly) < 0 {
+		for i, j := 0, len(poly)-1; i < j; i, j = i+1, j-1 {
+			poly[i], poly[j] = poly[j], poly[i]
+		}
+	}
+}
+
+func (b *strokeBuf) quad(p0, p1, p2, p3 geom.Point) {
+	b.begin()
+	b.pts = append(b.pts, p0, p1, p2, p3)
+	b.end()
+}
+
+func (b *strokeBuf) tri(p0, p1, p2 geom.Point) {
+	b.begin()
+	b.pts = append(b.pts, p0, p1, p2)
+	b.end()
+}
+
+// circle 追加正多边形近似的圆。
+func (b *strokeBuf) circle(c geom.Point, r float32, segs int) {
+	if segs < 6 {
+		segs = 6
+	}
+	b.begin()
+	for i := 0; i < segs; i++ {
+		ang := 6.283185307179586 * float32(i) / float32(segs)
+		b.pts = append(b.pts, geom.Pt(c.X+r*cosf(ang), c.Y+r*sinf(ang)))
+	}
+	b.end()
+}
+
+// strokePolygons 把折线集转成描边多边形集（局部坐标，未变换），写入扁平缓冲。
+func strokePolygons(polys []render.Polyline, paint *render.Paint, b *strokeBuf) {
 	width := paint.StrokeWidthOr()
 	if width <= 0 {
-		return out
+		return
 	}
 	hw := width * 0.5
 	dash := paint.Dash
@@ -29,9 +104,8 @@ func strokePolygons(polys []render.Polyline, paint *render.Paint, out [][]geom.P
 		polys = applyDash(polys, dash, paint.DashPhase)
 	}
 	for _, pl := range polys {
-		out = strokeOne(simplify(pl, hw), hw, paint.Cap, paint.Join, paint.MiterLimit, out)
+		strokeOne(simplify(pl, hw), hw, paint.Cap, paint.Join, paint.MiterLimit, b)
 	}
-	return out
 }
 
 // simplify 共线抽稀：把与前后点连线偏差小于 hw/8 的点丢弃（Collins-Ramer
@@ -66,21 +140,21 @@ func simplify(pl render.Polyline, hw float32) render.Polyline {
 	return pl
 }
 
-// strokeOne 处理单条折线。
-func strokeOne(pl render.Polyline, hw float32, capStyle render.Cap, join render.Join, miterLimit float32, out [][]geom.Point) [][]geom.Point {
+// strokeOne 处理单条折线，结果写入扁平缓冲 b。
+func strokeOne(pl render.Polyline, hw float32, capStyle render.Cap, join render.Join, miterLimit float32, b *strokeBuf) {
 	pts := pl.Pts
 	// 去掉连续重复点，避免零长度线段产生 NaN 方向
 	pts = dedup(pts)
 	n := len(pts)
 	if n == 0 {
-		return out
+		return
 	}
 	if n == 1 {
 		// 退化成一个点：圆头/方头画点，平头不画
 		if capStyle == render.CapRound {
-			out = appendCircle(out, pts[0], hw, 12)
+			b.circle(pts[0], hw, 12)
 		}
-		return out
+		return
 	}
 	if miterLimit <= 0 {
 		miterLimit = 4
@@ -93,8 +167,8 @@ func strokeOne(pl render.Polyline, hw float32, capStyle render.Cap, join render.
 	}
 	for i := 0; i < segCount; i++ {
 		a := pts[i]
-		b := pts[(i+1)%n]
-		out = appendSegment(out, a, b, hw)
+		bpt := pts[(i+1)%n]
+		appendSegment(b, a, bpt, hw)
 	}
 
 	// 拐角
@@ -109,29 +183,26 @@ func strokeOne(pl render.Polyline, hw float32, capStyle render.Cap, join render.
 		if pl.Closed && n == 2 {
 			break
 		}
-		out = appendJoin(out, prev, cur, next, hw, join, miterLimit)
+		appendJoin(b, prev, cur, next, hw, join, miterLimit)
 	}
 
 	// 端帽（闭合折线没有端帽）
 	if !pl.Closed {
-		out = appendCap(out, pts[0], pts[1], hw, capStyle, true)
-		out = appendCap(out, pts[n-1], pts[n-2], hw, capStyle, false)
+		appendCap(b, pts[0], pts[1], hw, capStyle, true)
+		appendCap(b, pts[n-1], pts[n-2], hw, capStyle, false)
 	}
-	return out
 }
 
 // appendSegment 追加一条线段对应的四边形。
-func appendSegment(out [][]geom.Point, a, b geom.Point, hw float32) [][]geom.Point {
-	d := b.Sub(a)
+func appendSegment(b *strokeBuf, a, bpt geom.Point, hw float32) {
+	d := bpt.Sub(a)
 	l := d.Len()
 	if l == 0 {
-		return out
+		return
 	}
 	d = d.Mul(1 / l)
 	nrm := geom.Pt(-d.Y*hw, d.X*hw)
-	return appendPoly(out, []geom.Point{
-		a.Add(nrm), b.Add(nrm), b.Sub(nrm), a.Sub(nrm),
-	})
+	b.quad(a.Add(nrm), bpt.Add(nrm), bpt.Sub(nrm), a.Sub(nrm))
 }
 
 // appendJoin 追加拐角补丁。
@@ -139,7 +210,7 @@ func appendSegment(out [][]geom.Point, a, b geom.Point, hw float32) [][]geom.Poi
 // 两侧都补：内侧虽然被线段四边形盖住，但多补一个三角形不会有副作用
 // （nonzero 下重叠区域环绕数更大，仍然是填充），却省掉了"判断哪一侧是外侧"
 // 这个容易出符号错误的分支。
-func appendJoin(out [][]geom.Point, prev, cur, next geom.Point, hw float32, join render.Join, miterLimit float32) [][]geom.Point {
+func appendJoin(b *strokeBuf, prev, cur, next geom.Point, hw float32, join render.Join, miterLimit float32) {
 	d0 := cur.Sub(prev)
 	d1 := next.Sub(cur)
 	l0, l1 := d0.Len(), d1.Len()
@@ -151,88 +222,59 @@ func appendJoin(out [][]geom.Point, prev, cur, next geom.Point, hw float32, join
 	if l0 > 1e-5 && l1 > 1e-5 {
 		cosTheta := (d0.X*d1.X + d0.Y*d1.Y) / (l0 * l1)
 		if cosTheta > 0.99999 {
-			return out
+			return
 		}
 	}
 	if l0 == 0 || l1 == 0 {
-		return out
+		return
 	}
 	d0 = d0.Mul(1 / l0)
 	d1 = d1.Mul(1 / l1)
 
 	if join == render.JoinRound {
 		// 圆角：一个圆覆盖面两侧的所有缺口
-		return appendCircle(out, cur, hw, circleSegs(hw))
+		b.circle(cur, hw, circleSegs(hw))
+		return
 	}
 
 	n0 := geom.Pt(-d0.Y*hw, d0.X*hw)
 	n1 := geom.Pt(-d1.Y*hw, d1.X*hw)
 	for _, s := range []float32{1, -1} {
 		a := cur.Add(n0.Mul(s))
-		b := cur.Add(n1.Mul(s))
+		bp := cur.Add(n1.Mul(s))
 		if join == render.JoinMiter {
-			if p, ok := lineIntersect(a, d0, b, d1); ok {
+			if p, ok := lineIntersect(a, d0, bp, d1); ok {
 				if p.Sub(cur).Len() <= miterLimit*hw {
-					out = appendPoly(out, []geom.Point{a, p, b, cur})
+					b.quad(a, p, bp, cur)
 					continue
 				}
 			}
 		}
 		// 斜切兜底
-		out = appendPoly(out, []geom.Point{cur, a, b})
+		b.tri(cur, a, bp)
 	}
-	return out
 }
 
 // appendCap 追加端帽。atStart 表示这是起点帽（方向取反向）。
-func appendCap(out [][]geom.Point, end, inner geom.Point, hw float32, capStyle render.Cap, atStart bool) [][]geom.Point {
+func appendCap(b *strokeBuf, end, inner geom.Point, hw float32, capStyle render.Cap, atStart bool) {
 	switch capStyle {
 	case render.CapRound:
-		return appendCircle(out, end, hw, circleSegs(hw))
+		b.circle(end, hw, circleSegs(hw))
 	case render.CapSquare:
 		d := end.Sub(inner)
 		l := d.Len()
 		if l == 0 {
-			return out
+			return
 		}
 		d = d.Mul(1 / l)
 		if atStart {
 			d = d.Mul(-1) // 起点帽向外延伸
 		}
 		nrm := geom.Pt(-d.Y*hw, d.X*hw)
-		return appendPoly(out, []geom.Point{
-			end.Add(nrm), end.Add(nrm).Add(d.Mul(hw)),
-			end.Sub(nrm).Add(d.Mul(hw)), end.Sub(nrm),
-		})
+		b.quad(end.Add(nrm), end.Add(nrm).Add(d.Mul(hw)),
+			end.Sub(nrm).Add(d.Mul(hw)), end.Sub(nrm))
 	default: // CapButt
-		return out
 	}
-}
-
-// appendCircle 追加正多边形近似的圆。
-func appendCircle(out [][]geom.Point, c geom.Point, r float32, segs int) [][]geom.Point {
-	if segs < 6 {
-		segs = 6
-	}
-	pts := make([]geom.Point, segs)
-	for i := 0; i < segs; i++ {
-		ang := 6.283185307179586 * float32(i) / float32(segs)
-		pts[i] = geom.Pt(c.X+r*cosf(ang), c.Y+r*sinf(ang))
-	}
-	return appendPoly(out, pts)
-}
-
-// appendPoly 追加多边形，并保证逆时针（正面积）方向。
-func appendPoly(out [][]geom.Point, pts []geom.Point) [][]geom.Point {
-	if len(pts) < 3 {
-		return out
-	}
-	if signedArea(pts) < 0 {
-		for i, j := 0, len(pts)-1; i < j; i, j = i+1, j-1 {
-			pts[i], pts[j] = pts[j], pts[i]
-		}
-	}
-	return append(out, pts)
 }
 
 // signedArea 返回多边形有符号面积（逆时针为正，y 向下的坐标系里符号相反，

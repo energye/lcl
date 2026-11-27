@@ -324,6 +324,13 @@ type Node struct {
 	// Scroll 参数
 	contentSize  geom.Size
 	scrollOffset float32
+	// renderedScroll 是上一次成功呈现时的滚动偏移；容器据此算本帧平移量，
+	// 纯平移帧可把已呈现像素整体搬移、只重画新暴露边条（滚动丝滑的关键）。
+	renderedScroll float32
+	hasRendered    bool
+	// scrollBar 标记"本节点是滚动条"：纯滚动帧里滑块的移动不算"其它脏源"，
+	// 容器会整条重画滚动条带而不是拒绝 blit。
+	scrollBar bool
 
 	// ── 绘制 ─────────────────────────────────────────────────────────
 	transform geom.Matrix
@@ -653,6 +660,9 @@ func (n *Node) Count() int {
 
 // Size 返回布局得到的尺寸。
 func (n *Node) Size() geom.Size { return n.size }
+
+// LaidOut 报告本节点是否已完成过一次布局（尺寸/offset 已算定）。
+func (n *Node) LaidOut() bool { return n.laidOut }
 
 // SetSize 直接设置尺寸（仅"直接式"改属性时用，会标 needsPaint）。
 func (n *Node) SetSize(s geom.Size) *Node {
@@ -1140,6 +1150,80 @@ func (n *Node) SetScrollOffset(v float32) *Node {
 
 // ScrollOffset 返回滚动偏移。
 func (n *Node) ScrollOffset() float32 { return n.scrollOffset }
+
+// MarkScrollRendered 记录"当前偏移已呈现"，供下一帧算 blit 位移。
+func (n *Node) MarkScrollRendered() {
+	n.renderedScroll = n.scrollOffset
+	n.hasRendered = true
+}
+
+// SetScrollBar 标记本节点是滚动条（纯滚动帧判定用）。
+func (n *Node) SetScrollBar(v bool) *Node { n.scrollBar = v; return n }
+
+// IsScrollBar 报告本节点是否为滚动条。
+func (n *Node) IsScrollBar() bool { return n.scrollBar }
+
+// ScrollAxis 返回滚动轴向（仅 KindScroll 有意义）。
+func (n *Node) ScrollAxis() Axis { return n.axis }
+
+// PureScrollDelta 判定整棵树是否处于"纯滚动"帧，返回那个滚动节点与
+// 整数像素平移量（正=向下/向右滚，内容上移）。
+//
+// 纯滚动 = 唯一实质变化是某个 Scroll 节点的偏移，且其余 selfDirty 节点
+// 全部落在滚动条内部（滑块移动）。满足时容器可 blit 已呈现像素、只重画
+// 新暴露边条，而不整视口重画。任何布局脏、结构脏或其它节点变脏都返回
+// ok=false（退回全量重画，宁可不省也不能花屏）。
+func (n *Node) PureScrollDelta() (scroller *Node, delta int, ok bool) {
+	if n == nil || n.needsLayout {
+		return nil, 0, false
+	}
+	var scrolls []*Node
+	var otherDirty bool
+	var walk func(*Node)
+	walk = func(x *Node) {
+		if otherDirty {
+			return
+		}
+		if x.needsLayout {
+			otherDirty = true
+			return
+		}
+		if x.kind == KindScroll && x.hasRendered {
+			if d := x.scrollOffset - x.renderedScroll; d != 0 {
+				scrolls = append(scrolls, x)
+			}
+		}
+		// selfDirty 只允许出现在滚动节点或滚动条子树上；其余一律拒绝。
+		if x.selfDirty && x.kind != KindScroll && !x.underScrollBar() {
+			otherDirty = true
+			return
+		}
+		for _, c := range x.children {
+			walk(c)
+		}
+	}
+	walk(n)
+	if otherDirty || len(scrolls) != 1 {
+		return nil, 0, false
+	}
+	s := scrolls[0]
+	d := s.scrollOffset - s.renderedScroll
+	di := int(d)
+	if di == 0 || float32(di) != d {
+		return nil, 0, false // 亚像素平移不做 blit（量化到整像素才安全）
+	}
+	return s, di, true
+}
+
+// underScrollBar 报告本节点或其祖先是否被标记为滚动条。
+func (n *Node) underScrollBar() bool {
+	for x := n; x != nil; x = x.parent {
+		if x.scrollBar {
+			return true
+		}
+	}
+	return false
+}
 
 // ContentSize 返回滚动内容尺寸。
 func (n *Node) ScrollContentSize() geom.Size { return n.contentSize }

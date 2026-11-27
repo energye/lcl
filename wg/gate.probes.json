@@ -369,6 +369,51 @@
         "-count=1"
       ],
       "timeout": 120000000000
+    },
+    {
+      "id": "ledger-audit-erratum",
+      "covers": [
+        "wg/widgets/display.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeLedgerErratum$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
+    },
+    {
+      "id": "scroll-blit",
+      "covers": [
+        "wg/container.go",
+        "wg/composite/compositor.go",
+        "wg/composite/draw.go",
+        "wg/frame/stats.go",
+        "wg/raster/backing.go",
+        "wg/raster/gdi/painter_windows.go",
+        "wg/raster/software/backend.go",
+        "wg/raster/software/stroke.go",
+        "wg/scene/layout.go",
+        "wg/scene/node.go",
+        "wg/widgets/basic.go",
+        "wg/widgets/scrollbar.go"
+      ],
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "gateprobe",
+        "./wg/internal/gate/probes",
+        "-run",
+        "^TestProbeScrollFrame$",
+        "-count=1"
+      ],
+      "timeout": 120000000000
     }
   ]
 }

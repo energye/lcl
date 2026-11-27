@@ -162,3 +162,59 @@ func TestFormatString(t *testing.T) {
 		t.Fatal("格式名错误")
 	}
 }
+
+func TestScrollBlitVertical(t *testing.T) {
+	// 10x10，每行填行号，向上滚动 3 行。
+	b := NewBacking(10, 10)
+	for y := 0; y < 10; y++ {
+		row := b.Row(y)
+		for x := 0; x < 10; x++ {
+			row[x] = uint32(y) << 24 // A=行号，便于断言
+		}
+	}
+	exposed := b.ScrollBlit(geom.RectXYWH(0, 0, 10, 10), 0, -3)
+	// 滚动后第 y 行应等于原第 y+3 行。
+	for y := 0; y < 7; y++ {
+		if got := b.Row(y)[0] >> 24; got != uint32(y+3) {
+			t.Fatalf("行 %d 期望 %d 实得 %d", y, y+3, got)
+		}
+	}
+	// 新暴露区应是底部 3 行。
+	if exposed.IsEmpty() || exposed.Min.Y != 7 || exposed.Max.Y != 10 {
+		t.Fatalf("新暴露区错误: %+v", exposed)
+	}
+}
+
+func TestScrollBlitDown(t *testing.T) {
+	b := NewBacking(10, 10)
+	for y := 0; y < 10; y++ {
+		row := b.Row(y)
+		for x := 0; x < 10; x++ {
+			row[x] = uint32(y) << 24
+		}
+	}
+	// 向下滚动 2 行：重叠区必须从底部搬，避免覆盖。
+	b.ScrollBlit(geom.RectXYWH(0, 0, 10, 10), 0, 2)
+	for y := 2; y < 10; y++ {
+		if got := b.Row(y)[0] >> 24; got != uint32(y-2) {
+			t.Fatalf("行 %d 期望 %d 实得 %d", y, y-2, got)
+		}
+	}
+}
+
+func TestScrollBlitHorizontal(t *testing.T) {
+	b := NewBacking(10, 4)
+	for y := 0; y < 4; y++ {
+		row := b.Row(y)
+		for x := 0; x < 10; x++ {
+			row[x] = uint32(x) << 24
+		}
+	}
+	// 向右滚动 3 列：重叠区从右往左搬。
+	b.ScrollBlit(geom.RectXYWH(0, 0, 10, 4), 3, 0)
+	for x := 3; x < 10; x++ {
+		if got := b.Row(0)[x] >> 24; got != uint32(x-3) {
+			t.Fatalf("列 %d 期望 %d 实得 %d", x, x-3, got)
+		}
+	}
+}
